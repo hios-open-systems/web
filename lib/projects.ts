@@ -65,7 +65,7 @@ export function getProjectBySlug(slug: string): ProjectMeta | null {
             if (type === 'pdf' || (type === 'md' && file !== 'README.md')) {
                 files.push({
                     name: file,
-                    path: `/projects/${slug}/${file}`,
+                    path: `/downloads/${slug}/${file}`,
                     type,
                 });
             }

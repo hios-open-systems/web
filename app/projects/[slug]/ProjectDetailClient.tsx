@@ -29,6 +29,8 @@ const projectStories: Record<string, {
     struggle?: string;
     whatWorks?: string[];
     whatDoesnt?: string[];
+    tools?: { name: string; url: string; description: string }[];
+    resources?: { name: string; url: string }[];
 }> = {
     btdac: {
         moment: 'El momento en que salió sonido limpio en lugar de ruido fue increíble. Después de 3 días de debugging, finalmente funcionó. Grité "¡SÍ!" a las 2am.',
@@ -43,6 +45,18 @@ const projectStories: Record<string, {
             'Case design — funcional pero feo',
             'Sin control físico de volumen',
             'A veces tarda 2 intentos para parear',
+        ],
+        tools: [
+            { name: 'VS Code', url: 'https://code.visualstudio.com/', description: 'Editor de código con PlatformIO' },
+            { name: 'PlatformIO', url: 'https://platformio.org/', description: 'Toolchain para ESP32' },
+            { name: 'KiCad', url: 'https://www.kicad.org/', description: 'Diseño de esquemáticos y PCB' },
+            { name: 'FreeCAD', url: 'https://www.freecad.org/', description: 'Diseño 3D del case' },
+            { name: 'ESP Web Tools', url: 'https://esphome.github.io/esp-web-tools/', description: 'Flasheo desde el navegador' },
+        ],
+        resources: [
+            { name: 'ESP32-A2DP Library', url: 'https://github.com/pschatzmann/ESP32-A2DP' },
+            { name: 'PCM5102 Datasheet', url: 'https://www.ti.com/product/PCM5102' },
+            { name: 'ESP32 Pinout Reference', url: 'https://randomnerdtutorials.com/esp32-pinout-reference-gpios/' },
         ],
     },
 };
@@ -386,6 +400,123 @@ export function ProjectDetailClient({ project }: Props) {
                 </section>
             )}
 
+            {/* Tools & Resources */}
+            {story && (story.tools || story.resources) && (
+                <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 40px' }}>
+                    <Row gutter={[16, 16]}>
+                        {story.tools && (
+                            <Col xs={24} md={12}>
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.4, delay: 0.5 }}
+                                >
+                                    <Card
+                                        style={{
+                                            background: mode === 'dark' ? 'rgba(99,102,241,0.08)' : 'rgba(99,102,241,0.05)',
+                                            border: `1px solid ${mode === 'dark' ? 'rgba(99,102,241,0.2)' : 'rgba(99,102,241,0.15)'}`,
+                                            borderRadius: '12px',
+                                        }}
+                                        styles={{ body: { padding: '20px' } }}
+                                    >
+                                        <Text style={{
+                                            color: '#6366f1',
+                                            fontWeight: 600,
+                                            fontSize: '13px',
+                                            textTransform: 'uppercase',
+                                            letterSpacing: '1px',
+                                            display: 'block',
+                                            marginBottom: '16px',
+                                        }}>
+                                            🛠 Herramientas Usadas
+                                        </Text>
+                                        <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                                            {story.tools.map((tool, idx) => (
+                                                <a
+                                                    key={idx}
+                                                    href={tool.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    style={{
+                                                        display: 'block',
+                                                        padding: '8px 12px',
+                                                        background: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
+                                                        borderRadius: '8px',
+                                                        textDecoration: 'none',
+                                                        transition: 'background 0.2s',
+                                                    }}
+                                                >
+                                                    <Text style={{ color: mode === 'dark' ? '#a5b4fc' : '#4f46e5', fontWeight: 500 }}>
+                                                        {tool.name}
+                                                    </Text>
+                                                    <Text style={{ color: mutedColor, fontSize: '12px', display: 'block' }}>
+                                                        {tool.description}
+                                                    </Text>
+                                                </a>
+                                            ))}
+                                        </Space>
+                                    </Card>
+                                </motion.div>
+                            </Col>
+                        )}
+                        {story.resources && (
+                            <Col xs={24} md={12}>
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.4, delay: 0.6 }}
+                                >
+                                    <Card
+                                        style={{
+                                            background: mode === 'dark' ? 'rgba(14,165,233,0.08)' : 'rgba(14,165,233,0.05)',
+                                            border: `1px solid ${mode === 'dark' ? 'rgba(14,165,233,0.2)' : 'rgba(14,165,233,0.15)'}`,
+                                            borderRadius: '12px',
+                                        }}
+                                        styles={{ body: { padding: '20px' } }}
+                                    >
+                                        <Text style={{
+                                            color: '#0ea5e9',
+                                            fontWeight: 600,
+                                            fontSize: '13px',
+                                            textTransform: 'uppercase',
+                                            letterSpacing: '1px',
+                                            display: 'block',
+                                            marginBottom: '16px',
+                                        }}>
+                                            🔗 Recursos y Links
+                                        </Text>
+                                        <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                                            {story.resources.map((resource, idx) => (
+                                                <a
+                                                    key={idx}
+                                                    href={resource.url}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '8px',
+                                                        padding: '8px 12px',
+                                                        background: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
+                                                        borderRadius: '8px',
+                                                        textDecoration: 'none',
+                                                        transition: 'background 0.2s',
+                                                    }}
+                                                >
+                                                    <Text style={{ color: mode === 'dark' ? '#7dd3fc' : '#0284c7', fontWeight: 500 }}>
+                                                        {resource.name} →
+                                                    </Text>
+                                                </a>
+                                            ))}
+                                        </Space>
+                                    </Card>
+                                </motion.div>
+                            </Col>
+                        )}
+                    </Row>
+                </section>
+            )}
+
             {/* Gallery */}
             {project.images.length > 1 && (
                 <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 60px' }}>
@@ -473,6 +604,8 @@ export function ProjectDetailClient({ project }: Props) {
                         <Button
                             size="large"
                             icon={<GithubOutlined />}
+                            href={`https://github.com/hios-open-systems/web/tree/main/projects/${project.slug}`}
+                            target="_blank"
                             style={{
                                 borderColor: mode === 'dark' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.15)',
                             }}
