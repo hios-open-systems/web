@@ -186,7 +186,7 @@ export function ProjectsGrid() {
                                                     fontStyle: 'italic',
                                                 }}
                                             >
-                                                "{project.tagline}"
+                                                {`"${project.tagline}"`}
                                             </Paragraph>
                                         )}
 

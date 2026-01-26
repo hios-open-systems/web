@@ -3,7 +3,6 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { ThemeLayout } from '@/components/ThemeLayout';
 import AntdRegistry from '@/lib/AntdRegistry';
-import { theme } from '@/styles/theme';
 import '@/styles/globals.css';
 
 const inter = Inter({ subsets: ['latin'] });

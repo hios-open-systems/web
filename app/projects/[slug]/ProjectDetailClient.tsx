@@ -53,7 +53,6 @@ export function ProjectDetailClient({ project }: Props) {
     const textColor = mode === 'dark' ? '#e6e6e6' : '#1a1a1a';
     const secondaryColor = mode === 'dark' ? '#999' : '#666';
     const mutedColor = mode === 'dark' ? '#666' : '#999';
-    const cardBg = mode === 'dark' ? '#141414' : '#ffffff';
     const cardBorder = mode === 'dark' ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(0,0,0,0.06)';
     const accentColor = '#f59e0b';
 
@@ -193,7 +192,7 @@ export function ProjectDetailClient({ project }: Props) {
                             margin: 0,
                             lineHeight: 1.8,
                         }}>
-                            "{story.moment}"
+                            {`"${story.moment}"`}
                         </Paragraph>
                     </div>
                 </motion.section>
