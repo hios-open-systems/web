@@ -123,6 +123,9 @@ export function ProjectsGrid() {
                                                         src={project.image}
                                                         alt={project.name}
                                                         fill
+                                                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
+                                                        quality={85}
+                                                        priority={index === 0}
                                                         style={{
                                                             objectFit: 'cover',
                                                             transition: 'transform 0.4s ease',

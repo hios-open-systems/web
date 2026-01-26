@@ -2,6 +2,8 @@
 
 > Hardware que entendés, armás y mejorás.
 
+🌐 **Website:** [openhios.dev](https://openhios.dev/)
+
 Web platform for [HIOS](https://github.com/hios-open-systems) — showcasing open hardware projects built while learning electronics.
 
 ## What is HIOS?
