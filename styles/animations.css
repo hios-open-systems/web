@@ -1,0 +1,184 @@
+/* ============================================
+   HIOS Animations - Subtle but Alive
+   ============================================ */
+
+/* Fade in from below - for content entrance */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.fade-in-up-delay-1 {
+  animation: fadeInUp 0.6s ease-out 0.1s forwards;
+  opacity: 0;
+}
+
+.fade-in-up-delay-2 {
+  animation: fadeInUp 0.6s ease-out 0.2s forwards;
+  opacity: 0;
+}
+
+.fade-in-up-delay-3 {
+  animation: fadeInUp 0.6s ease-out 0.3s forwards;
+  opacity: 0;
+}
+
+/* Subtle pulse for "alive" elements like prototype badges */
+@keyframes pulseSubtle {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.02);
+  }
+}
+
+.pulse-subtle {
+  animation: pulseSubtle 2.5s ease-in-out infinite;
+}
+
+/* Glow effect for accent elements */
+@keyframes glowAccent {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+  }
+  50% {
+    box-shadow: 0 0 20px 2px rgba(245, 158, 11, 0.15);
+  }
+}
+
+.glow-accent {
+  animation: glowAccent 3s ease-in-out infinite;
+}
+
+/* Card hover lift effect */
+.card-hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode card hover */
+.dark .card-hover-lift:hover {
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Smooth image zoom on hover */
+.image-zoom-hover {
+  transition: transform 0.4s ease;
+}
+
+.image-zoom-hover:hover {
+  transform: scale(1.03);
+}
+
+/* Button hover glow */
+.btn-glow:hover {
+  box-shadow: 0 4px 14px rgba(0, 102, 204, 0.25);
+  transition: box-shadow 0.3s ease;
+}
+
+/* Typing cursor blink for taglines */
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+
+.typing-cursor::after {
+  content: '|';
+  animation: blink 1s step-end infinite;
+  margin-left: 2px;
+  color: #f59e0b;
+}
+
+/* Stagger children animation */
+.stagger-children > * {
+  opacity: 0;
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.stagger-children > *:nth-child(1) { animation-delay: 0s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.2s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.3s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.4s; }
+
+/* Status badge specific animations */
+.status-prototype {
+  position: relative;
+}
+
+.status-prototype::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(45deg, #10b981, #34d399);
+  opacity: 0;
+  z-index: -1;
+  animation: pulseSubtle 2.5s ease-in-out infinite;
+}
+
+/* Link hover underline animation */
+.link-hover-underline {
+  position: relative;
+}
+
+.link-hover-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #0066cc, #f59e0b);
+  transition: width 0.3s ease;
+}
+
+.link-hover-underline:hover::after {
+  width: 100%;
+}
+
+/* Section divider fade */
+.divider-fade {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1) 50%, transparent);
+  height: 1px;
+  border: none;
+}
+
+/* Quote block styling */
+.quote-highlight {
+  position: relative;
+  padding-left: 20px;
+  border-left: 3px solid #f59e0b;
+  font-style: italic;
+}
+
+.quote-highlight::before {
+  content: '"';
+  position: absolute;
+  left: -10px;
+  top: -10px;
+  font-size: 3rem;
+  color: rgba(245, 158, 11, 0.2);
+  font-family: Georgia, serif;
+}

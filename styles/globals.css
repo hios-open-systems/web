@@ -1,0 +1,95 @@
+@import './animations.css';
+
+:root {
+  /* HIOS Color Palette */
+  --hios-primary: #0066cc;
+  --hios-primary-light: #4096ff;
+  --hios-accent: #f59e0b;
+  --hios-accent-light: #fbbf24;
+  --hios-success: #10b981;
+  --hios-success-light: #34d399;
+  --hios-warning: #f97316;
+  --hios-error: #ef4444;
+
+  /* Light mode */
+  --hios-bg: #ffffff;
+  --hios-bg-secondary: #f5f5f5;
+  --hios-text: #1a1a1a;
+  --hios-text-secondary: #666666;
+  --hios-text-muted: #999999;
+  --hios-border: rgba(0, 0, 0, 0.06);
+
+  /* Shadows */
+  --hios-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --hios-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --hios-shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.1);
+
+  /* Transitions */
+  --hios-transition-fast: 0.15s ease;
+  --hios-transition: 0.3s ease;
+  --hios-transition-slow: 0.5s ease;
+}
+
+/* Dark mode overrides */
+.dark,
+[data-theme="dark"] {
+  --hios-bg: #0d0d0d;
+  --hios-bg-secondary: #141414;
+  --hios-text: #e6e6e6;
+  --hios-text-secondary: #999999;
+  --hios-text-muted: #666666;
+  --hios-border: rgba(255, 255, 255, 0.08);
+
+  --hios-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --hios-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --hios-shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.4);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--hios-bg);
+  color: var(--hios-text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--hios-transition-fast);
+}
+
+a:hover {
+  color: var(--hios-primary);
+}
+
+/* Selection highlight with HIOS accent */
+::selection {
+  background: rgba(245, 158, 11, 0.25);
+  color: inherit;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--hios-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--hios-text-muted);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--hios-text-secondary);
+}

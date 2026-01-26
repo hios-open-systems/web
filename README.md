@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HIOS Web Platform
 
-## Getting Started
+> Hardware que entendés, armás y mejorás.
 
-First, run the development server:
+Web platform for [HIOS](https://github.com/hios-open-systems) — showcasing open hardware projects built while learning electronics.
+
+## What is HIOS?
+
+HIOS (HI Open Systems) is a collection of open hardware projects built by someone learning electronics. Everything is documented, including the mistakes.
+
+**Philosophy:**
+- 🔧 Build real things, not just prototypes
+- 📖 Document everything (failures included)
+- 🌐 Open source by default
+- 🎯 Learn by doing
+
+## Projects
+
+| Project | Status | Description |
+|---------|--------|-------------|
+| **BTDAC** | ✅ Working | Bluetooth DAC with ESP32 and PCM5102 |
+| **WiFi Speaker** | 🔜 Concept | WiFi speaker with Class D amp |
+| **Macropad** | 🔜 Concept | Custom mechanical macropad |
+
+## Tech Stack
+
+- **Framework:** Next.js 14 (App Router)
+- **UI:** Ant Design + Framer Motion
+- **Language:** TypeScript
+- **Styling:** CSS Variables + Custom animations
+
+## Development
 
 ```bash
+# Install dependencies
+npm install
+
+# Run dev server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Build for production
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view locally.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+├── app/                 # Next.js app directory
+├── components/          # React components
+│   ├── landing/         # Homepage sections
+│   ├── layout/          # Header, Footer
+│   └── ...
+├── lib/                 # Utilities and context
+├── projects/            # Hardware project files
+│   └── btdac/           # BTDAC source, docs, pics
+├── public/              # Static assets
+└── styles/              # Global CSS and animations
+```
 
-## Learn More
+## License
 
-To learn more about Next.js, take a look at the following resources:
+- **Code:** MIT License
+- **Hardware designs:** CERN-OHL-S v2
+- **Documentation:** CC BY-SA 4.0
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+*Building hardware, one project at a time.*  
+*Learning in public. Sharing everything.*
