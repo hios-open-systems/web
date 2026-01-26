@@ -61,7 +61,7 @@ export function Header() {
         <Button
           type="text"
           icon={<GithubOutlined style={{ fontSize: '20px' }} />}
-          href="https://github.com/juanparedez"
+          href="https://github.com/hios-open-systems/web"
           target="_blank"
           style={{ color: mode === 'dark' ? '#e6e6e6' : '#1a1a1a' }}
         />
