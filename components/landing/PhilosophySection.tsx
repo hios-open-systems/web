@@ -31,7 +31,7 @@ export function PhilosophySection() {
                 <div style={{ textAlign: 'center', marginBottom: '60px' }}>
                     <Title level={2}>Core Philosophy</Title>
                     <Paragraph style={{ maxWidth: 700, margin: '0 auto', fontSize: '18px', color: '#666' }}>
-                        HIOS is not just a portfolio—it's a commitment to engineering excellence and open collaboration.
+                        HIOS is not just a portfolio—it&apos;s a commitment to engineering excellence and open collaboration.
                     </Paragraph>
                 </div>
 
