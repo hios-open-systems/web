@@ -1,9 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Row, Col, Typography, Card, Tag, Button } from 'antd';
+import { Row, Col, Typography, Tag, Button } from 'antd';
 import { ArrowRightOutlined } from '@ant-design/icons';
-import Image from 'next/image';
 
 const { Title, Paragraph } = Typography;
 
