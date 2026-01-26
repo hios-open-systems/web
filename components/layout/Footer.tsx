@@ -25,7 +25,7 @@ export function Footer() {
             <Space direction="vertical" size="middle">
                 <Space size="large">
                     <Link
-                        href="https://github.com/juanparedez"
+                        href="https://github.com/hios-open-systems/web"
                         target="_blank"
                         style={{ color: mode === 'dark' ? '#999' : '#666' }}
                     >
