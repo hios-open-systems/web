@@ -53,7 +53,7 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
         if (rawStory && typeof rawStory === 'object' && 'moment' in rawStory) {
             story = rawStory as Story;
         }
-    } catch (e) {
+    } catch {
         // Fallback for missing translation keys
         story = null;
     }
