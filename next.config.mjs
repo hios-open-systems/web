@@ -1,7 +1,11 @@
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-	transpilePackages: ['antd', '@ant-design/icons'],
-	
+	transpilePackages: ['antd', '@ant-design/icons', 'next-intl'],
+
 	// Optimización de imágenes
 	images: {
 		formats: ['image/avif', 'image/webp'],
@@ -9,7 +13,7 @@ const nextConfig = {
 		imageSizes: [16, 32, 48, 64, 96, 128, 256],
 		minimumCacheTTL: 60 * 60 * 24 * 365, // 1 año
 	},
-	
+
 	// Importaciones modulares para reducir bundle
 	modularizeImports: {
 		'antd': {
@@ -19,10 +23,10 @@ const nextConfig = {
 			transform: '@ant-design/icons/{{member}}',
 		},
 	},
-	
+
 	// Producción
 	poweredByHeader: false,
 	compress: true,
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);
