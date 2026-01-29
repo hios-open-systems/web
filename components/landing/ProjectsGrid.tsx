@@ -6,6 +6,8 @@ import { motion } from 'framer-motion';
 import { useTheme } from '@/lib/ThemeContext';
 import Image from 'next/image';
 import Link from 'next/link';
+import { BookOutlined, GithubOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import { useTranslations } from 'next-intl';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -18,6 +20,11 @@ interface Project {
     image: string;
     learnings?: string[];
     breakthrough?: string;
+    stats?: {
+        tutorials?: number;
+        commits?: number;
+        files?: number;
+    };
 }
 
 const projects: Project[] = [
@@ -30,6 +37,10 @@ const projects: Project[] = [
         image: '/images/btdac/20260125_180730.jpg',
         learnings: ['I2S audio', 'Fuente partida', 'ESP32 Bluetooth A2DP'],
         breakthrough: 'El momento en que salió sonido limpio en lugar de ruido fue increíble.',
+        stats: {
+            tutorials: 3,
+            files: 12,
+        },
     },
     {
         slug: 'wspeaker',
@@ -37,29 +48,40 @@ const projects: Project[] = [
         description: 'Parlante WiFi con ESP32, amplificador clase D y control via web. Próximo proyecto.',
         status: 'concept',
         image: '',
+        stats: {
+            tutorials: 0,
+            files: 0,
+        },
     },
 ];
 
-const statusConfig: Record<string, { color: string; label: string; glow?: boolean }> = {
-    prototype: { color: 'green', label: '✓ Funciona', glow: true },
-    concept: { color: 'blue', label: 'Próximamente' },
-    wip: { color: 'orange', label: 'En progreso' },
-};
-
 export function ProjectsGrid() {
     const { mode } = useTheme();
+    const t = useTranslations('Projects');
     const accentColor = '#f59e0b';
+
+    const statusConfig: Record<string, { color: string; label: string; icon?: React.ReactNode; glow?: boolean }> = {
+        prototype: {
+            color: 'green',
+            label: t('status_prototype'),
+            icon: <CheckCircleOutlined style={{ marginRight: 4 }} />,
+            glow: true,
+        },
+        concept: { color: 'blue', label: t('status_concept') },
+        wip: { color: 'orange', label: t('status_wip') },
+    };
 
     return (
         <section style={{
-            padding: '60px 24px 120px',
+            padding: '80px 24px 120px',
             background: mode === 'dark' ? '#0d0d0d' : '#ffffff',
         }}>
             <div style={{ maxWidth: 900, margin: '0 auto' }}>
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.2 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-50px' }}
+                    transition={{ duration: 0.5 }}
                 >
                     <Title
                         level={2}
@@ -70,15 +92,15 @@ export function ProjectsGrid() {
                             textAlign: 'center',
                         }}
                     >
-                        Proyectos
+                        {t('title')}
                     </Title>
                     <Paragraph style={{
                         textAlign: 'center',
                         color: mode === 'dark' ? '#666' : '#999',
-                        marginBottom: '40px',
+                        marginBottom: '48px',
                         fontSize: '15px',
                     }}>
-                        Cosas que funcionan. Errores que cometí. Todo documentado.
+                        {t('subtitle')}
                     </Paragraph>
                 </motion.div>
 
@@ -86,20 +108,26 @@ export function ProjectsGrid() {
                     {projects.map((project, index) => (
                         <Col xs={24} sm={12} lg={12} key={project.slug}>
                             <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                                whileHover={{ y: -6 }}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true, margin: '-30px' }}
+                                transition={{ duration: 0.5, delay: index * 0.15 }}
+                                whileHover={{ y: -8 }}
                                 style={{ height: '100%' }}
                             >
                                 <Link href={`/projects/${project.slug}`} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
                                     <Card
                                         hoverable
+                                        className={mode === 'dark' ? 'glass-card' : ''}
                                         style={{
                                             height: '100%',
-                                            background: mode === 'dark' ? '#141414' : '#ffffff',
+                                            background: mode === 'dark'
+                                                ? 'rgba(20, 20, 20, 0.7)'
+                                                : '#ffffff',
+                                            backdropFilter: mode === 'dark' ? 'blur(12px)' : 'none',
+                                            WebkitBackdropFilter: mode === 'dark' ? 'blur(12px)' : 'none',
                                             border: mode === 'dark'
-                                                ? '1px solid rgba(255,255,255,0.08)'
+                                                ? '1px solid rgba(255,255,255,0.1)'
                                                 : '1px solid rgba(0,0,0,0.06)',
                                             borderRadius: '16px',
                                             overflow: 'hidden',
@@ -116,7 +144,6 @@ export function ProjectsGrid() {
                                                     position: 'relative',
                                                     width: '100%',
                                                     aspectRatio: '16/10',
-                                                    background: mode === 'dark' ? '#1a1a1a' : '#f5f5f5',
                                                     overflow: 'hidden',
                                                 }}>
                                                     <Image
@@ -128,10 +155,20 @@ export function ProjectsGrid() {
                                                         priority={index === 0}
                                                         style={{
                                                             objectFit: 'cover',
-                                                            transition: 'transform 0.4s ease',
+                                                            transition: 'transform 0.5s ease',
                                                         }}
                                                         className="image-zoom-hover"
                                                     />
+                                                    {/* Gradient overlay */}
+                                                    <div style={{
+                                                        position: 'absolute',
+                                                        bottom: 0,
+                                                        left: 0,
+                                                        right: 0,
+                                                        height: '60%',
+                                                        background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%)',
+                                                        pointerEvents: 'none',
+                                                    }} />
                                                 </div>
                                             ) : (
                                                 <div style={{
@@ -150,7 +187,7 @@ export function ProjectsGrid() {
                                                         color: mode === 'dark' ? '#444' : '#bbb',
                                                         fontSize: '14px',
                                                     }}>
-                                                        🔧 En desarrollo
+                                                        {t('in_development')}
                                                     </Text>
                                                 </div>
                                             )
@@ -173,14 +210,17 @@ export function ProjectsGrid() {
                                                 style={{
                                                     margin: 0,
                                                     fontWeight: 500,
+                                                    display: 'flex',
+                                                    alignItems: 'center',
                                                 }}
                                                 className={statusConfig[project.status].glow ? 'pulse-subtle' : ''}
                                             >
+                                                {statusConfig[project.status].icon}
                                                 {statusConfig[project.status].label}
                                             </Tag>
                                         </div>
 
-                                        {project.tagline && (
+                                        {project.slug === 'btdac' && (
                                             <Paragraph
                                                 style={{
                                                     color: accentColor,
@@ -189,20 +229,54 @@ export function ProjectsGrid() {
                                                     fontStyle: 'italic',
                                                 }}
                                             >
-                                                {`"${project.tagline}"`}
+                                                &quot;{t('tagline_btdac')}&quot;
                                             </Paragraph>
                                         )}
 
                                         <Paragraph
                                             style={{
                                                 color: mode === 'dark' ? '#999' : '#666',
-                                                marginBottom: project.learnings ? '16px' : 0,
+                                                marginBottom: project.learnings ? '16px' : '8px',
                                                 fontSize: '15px',
                                                 lineHeight: 1.6,
                                             }}
                                         >
                                             {project.description}
                                         </Paragraph>
+
+                                        {/* Quick stats */}
+                                        {project.stats && (project.stats.tutorials || project.stats.files) ? (
+                                            <div style={{
+                                                display: 'flex',
+                                                gap: '16px',
+                                                marginBottom: project.learnings ? '16px' : 0,
+                                            }}>
+                                                {project.stats.tutorials ? (
+                                                    <Text style={{
+                                                        fontSize: '12px',
+                                                        color: mode === 'dark' ? '#666' : '#999',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '4px',
+                                                    }}>
+                                                        <BookOutlined />
+                                                        {project.stats.tutorials} {t('tutorials') || 'tutoriales'}
+                                                    </Text>
+                                                ) : null}
+                                                {project.stats.files ? (
+                                                    <Text style={{
+                                                        fontSize: '12px',
+                                                        color: mode === 'dark' ? '#666' : '#999',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '4px',
+                                                    }}>
+                                                        <GithubOutlined />
+                                                        {project.stats.files} {t('files') || 'archivos'}
+                                                    </Text>
+                                                ) : null}
+                                            </div>
+                                        ) : null}
 
                                         {project.learnings && (
                                             <div>
@@ -214,22 +288,28 @@ export function ProjectsGrid() {
                                                     textTransform: 'uppercase',
                                                     letterSpacing: '0.5px',
                                                 }}>
-                                                    Lo que aprendí
+                                                    {t('learnings')}
                                                 </Text>
                                                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                                                     {project.learnings.map((learning) => (
-                                                        <Tag
+                                                        <motion.div
                                                             key={learning}
-                                                            style={{
-                                                                background: mode === 'dark' ? '#262626' : '#f0f0f0',
-                                                                border: 'none',
-                                                                color: mode === 'dark' ? '#999' : '#666',
-                                                                fontSize: '12px',
-                                                                borderRadius: '4px',
-                                                            }}
+                                                            whileHover={{ scale: 1.05 }}
+                                                            transition={{ duration: 0.15 }}
                                                         >
-                                                            {learning}
-                                                        </Tag>
+                                                            <Tag
+                                                                style={{
+                                                                    background: mode === 'dark' ? 'rgba(255,255,255,0.08)' : '#f0f0f0',
+                                                                    border: 'none',
+                                                                    color: mode === 'dark' ? '#999' : '#666',
+                                                                    fontSize: '12px',
+                                                                    borderRadius: '4px',
+                                                                    cursor: 'default',
+                                                                }}
+                                                            >
+                                                                {learning}
+                                                            </Tag>
+                                                        </motion.div>
                                                     ))}
                                                 </div>
                                             </div>
@@ -244,4 +324,3 @@ export function ProjectsGrid() {
         </section>
     );
 }
-

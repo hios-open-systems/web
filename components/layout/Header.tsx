@@ -9,6 +9,8 @@ import { useTheme } from '@/lib/ThemeContext';
 const { Header: AntHeader } = Layout;
 const { Text } = Typography;
 
+import { LocaleSwitcher } from './LocaleSwitcher';
+
 export function Header() {
   const { mode, toggleTheme } = useTheme();
 
@@ -29,7 +31,7 @@ export function Header() {
         borderBottom: mode === 'dark'
           ? '1px solid rgba(255, 255, 255, 0.08)'
           : '1px solid rgba(0, 0, 0, 0.05)',
-        padding: '0 24px',
+        padding: '0 16px', // Reduced padding
       }}
     >
       <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
@@ -48,7 +50,8 @@ export function Header() {
         </Text>
       </Link>
 
-      <Space>
+      <Space size="middle">
+        <LocaleSwitcher />
         <Button
           type="text"
           icon={mode === 'dark' ? <SunOutlined /> : <MoonOutlined />}

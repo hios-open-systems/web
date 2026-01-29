@@ -12,11 +12,23 @@ const ProjectsGrid = dynamic(
   { ssr: true }
 );
 
+const DocumentationSection = dynamic(
+  () => import('@/components/landing/DocumentationSection').then(mod => ({ default: mod.DocumentationSection })),
+  { ssr: true }
+);
+
+const ToolsSection = dynamic(
+  () => import('@/components/landing/ToolsSection').then(mod => ({ default: mod.ToolsSection })),
+  { ssr: true }
+);
+
 export default function Home() {
   return (
     <main>
       <HeroSection />
       <ProjectsGrid />
+      <DocumentationSection />
+      <ToolsSection />
     </main>
   );
 }
