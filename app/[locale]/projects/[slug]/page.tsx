@@ -3,12 +3,16 @@ import { ProjectDetailClient } from './ProjectDetailClient';
 import { notFound } from 'next/navigation';
 
 interface PageProps {
-    params: Promise<{ slug: string }>;
+    params: Promise<{ slug: string; locale: string }>;
 }
 
 export async function generateStaticParams() {
     const slugs = getProjectSlugs();
-    return slugs.map((slug) => ({ slug }));
+    const locales = ['en', 'es', 'de', 'it'];
+
+    return locales.flatMap((locale) =>
+        slugs.map((slug) => ({ slug, locale }))
+    );
 }
 
 export default async function ProjectPage({ params }: PageProps) {
@@ -19,5 +23,5 @@ export default async function ProjectPage({ params }: PageProps) {
         notFound();
     }
 
-    return <ProjectDetailClient project={project} />;
+    return <ProjectDetailClient project={project} slug={slug} />;
 }

@@ -1,0 +1,191 @@
+{
+    "Hero": {
+        "titlePrefix": "Open",
+        "hardware": "Hardware",
+        "and": " & ",
+        "software": "Software",
+        "subtitle": "Proyectos documentados, funcionales y abiertos.",
+        "tag_schematics": "Esquemáticos reales",
+        "tag_bom": "BOM con precios",
+        "tag_open_source": "Código abierto",
+        "cta": "¿Querés uno? Armalo vos. Es tuyo.",
+        "contact": "¿No sabés por dónde empezar? Consultame",
+        "project_count": "2 proyectos documentados"
+    },
+    "Projects": {
+        "title": "Proyectos",
+        "subtitle": "Cosas que funcionan. Errores que cometí. Todo documentado.",
+        "learnings": "Lo que aprendí",
+        "status_prototype": "Funciona",
+        "status_concept": "Próximamente",
+        "status_wip": "En progreso",
+        "in_development": "En desarrollo",
+        "tagline_btdac": "Cuando finalmente sonó, grité a las 2am.",
+        "tutorials": "tutoriales",
+        "files": "archivos",
+        "btdac": {
+            "moment": "El momento en que salió sonido limpio en lugar de ruido fue increíble. Después de 3 días de debugging, finalmente funcionó. Grité \"¡SÍ!\" a las 2am.",
+            "struggle": "Tardé 2 semanas en hacer que el I2S funcionara correctamente. El primer intento no tenía audio. El segundo tenía tanto ruido que era inutilizable. Al tercero, finalmente entendí cómo configurar los pines.",
+            "whatWorks": [
+                "Bluetooth A2DP — conexión estable",
+                "Audio 24-bit — calidad sorprendente",
+                "Batería 12+ horas — testeado",
+                "LED RGB de estado",
+                "Serial Monitor con metadata"
+            ],
+            "whatDoesnt": [
+                "Case — funcional pero básico",
+                "Sin control de volumen físico",
+                "A veces 2 intentos para parear"
+            ],
+            "resources": [
+                {
+                    "name": "ESP32-A2DP Library",
+                    "url": "https://github.com/pschatzmann/ESP32-A2DP"
+                },
+                {
+                    "name": "PCM5102 Datasheet",
+                    "url": "https://www.ti.com/product/PCM5102"
+                },
+                {
+                    "name": "Phil's Lab (YouTube)",
+                    "url": "https://www.youtube.com/@PhilsLab"
+                },
+                {
+                    "name": "Andreas Spiess (YouTube)",
+                    "url": "https://www.youtube.com/@AndreasSpiess"
+                },
+                {
+                    "name": "Random Nerd Tutorials",
+                    "url": "https://randomnerdtutorials.com/"
+                }
+            ],
+            "bom": [
+                {
+                    "component": "ESP32 DevKit 38-pin",
+                    "qty": 1,
+                    "priceUSD": 12,
+                    "notes": "Bluetooth + WiFi"
+                },
+                {
+                    "component": "PCM5102 DAC Module",
+                    "qty": 1,
+                    "priceUSD": 10,
+                    "notes": "24-bit, 112dB SNR"
+                },
+                {
+                    "component": "BMS 2S USB-C",
+                    "qty": 1,
+                    "priceUSD": 6,
+                    "notes": "Carga y protección"
+                },
+                {
+                    "component": "DC-DC LM2596",
+                    "qty": 1,
+                    "priceUSD": 3,
+                    "notes": "Step-down a 5V"
+                },
+                {
+                    "component": "18650 Battery 3500mAh",
+                    "qty": 2,
+                    "priceUSD": 12,
+                    "notes": "Li-Ion, buena calidad"
+                },
+                {
+                    "component": "LED RGB KY-009",
+                    "qty": 1,
+                    "priceUSD": 2,
+                    "notes": "Indicador estado"
+                },
+                {
+                    "component": "Resistor 330Ω",
+                    "qty": 3,
+                    "priceUSD": 1,
+                    "notes": "Para LED"
+                },
+                {
+                    "component": "Cables, conectores, PCB",
+                    "qty": 1,
+                    "priceUSD": 5,
+                    "notes": "Varios"
+                }
+            ],
+            "specs": [
+                {
+                    "label": "Audio",
+                    "value": "Bluetooth A2DP, 16-bit 44.1kHz"
+                },
+                {
+                    "label": "DAC",
+                    "value": "PCM5102A, 112dB SNR"
+                },
+                {
+                    "label": "Batería",
+                    "value": "7.4V 7000mAh (2x18650)"
+                },
+                {
+                    "label": "Autonomía",
+                    "value": "12+ horas"
+                },
+                {
+                    "label": "Salida",
+                    "value": "Line level, Jack 3.5mm"
+                },
+                {
+                    "label": "Consumo",
+                    "value": "~130mA BT activo"
+                }
+            ],
+            "futureFeatures": [
+                "Amp auriculares NE5532",
+                "Divisor resistivo medición batería",
+                "App Android BLE",
+                "Modo WiFi streaming",
+                "YouTube/Spotify integration",
+                "Control volumen BLE",
+                "Wear OS / Garmin integration"
+            ]
+        }
+    },
+    "Documentation": {
+        "title": "Documentación Disponible",
+        "subtitle": "Todo lo que necesitás para construir y entender los proyectos",
+        "documents_count": "documentos disponibles",
+        "guides_title": "Guías de Construcción",
+        "guides_desc": "Instrucciones paso a paso y tips de ensamblaje",
+        "schematics_title": "Esquemáticos y PCBs",
+        "schematics_desc": "Archivos KiCad, Gerbers y diagramas de conexión",
+        "firmware_title": "Firmware y Código",
+        "firmware_desc": "Repositorios, instrucciones de flasheo y configuración",
+        "troubleshooting_title": "Troubleshooting",
+        "troubleshooting_desc": "Problemas comunes, FAQs y diagnóstico"
+    },
+    "Tools": {
+        "title": "Stack Tecnológico",
+        "subtitle": "Las herramientas que usamos para diseñar, desarrollar y documentar",
+        "software_category": "Software & Code",
+        "hardware_category": "Hardware & Design",
+        "open_source_note": "Todo el software y los diseños de hardware son de <strong>código abierto</strong>.",
+        "filter_all": "Todos",
+        "filter_software": "Software",
+        "filter_hardware": "Hardware"
+    },
+    "ProjectDetail": {
+        "back": "Volver",
+        "moment": "El Momento",
+        "specifications": "Especificaciones",
+        "bom": "Lista de Materiales (BOM)",
+        "coming_soon": "Próximamente",
+        "what_works": "Lo Que Funciona",
+        "what_needs_improvement": "Lo Que Falta Mejorar",
+        "resources": "Recursos y Tutoriales",
+        "want_one": "¿Querés uno?",
+        "build_your_own": "Armalo vos. <strongWhite>Es tuyo ahora.</strongWhite><br/>Todo el código, los esquemáticos y las instrucciones están disponibles.",
+        "view_documentation": "Ver Documentación",
+        "view_on_github": "Ver en GitHub",
+        "prototype_functional": "Prototipo funcional. <highlight>Podés armar el tuyo.</highlight>",
+        "want_me_to_build": "¿Querés que te lo arme? Escribime",
+        "total_approx": "Total Aproximado",
+        "no_shipping": "Sin envío"
+    }
+}
