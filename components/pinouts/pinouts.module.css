@@ -1,0 +1,385 @@
+.moduleCard {
+	transition: all 0.3s ease;
+	border: 2px solid transparent;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.moduleCard:hover {
+	border-color: var(--ant-color-primary);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.moduleCard.selected {
+	border-color: var(--ant-color-primary);
+	background: linear-gradient(
+		135deg,
+		rgba(0, 102, 204, 0.05) 0%,
+		rgba(0, 102, 204, 0.02) 100%
+	);
+}
+
+.moduleImage {
+	width: 100%;
+	height: 200px;
+	background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+}
+
+.moduleImage img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.cardHeader {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	margin-bottom: 12px;
+	gap: 12px;
+}
+
+.moduleName {
+	margin: 0;
+	font-size: 16px;
+	font-weight: 600;
+	color: var(--ant-color-text);
+	flex: 1;
+}
+
+.moduleDescription {
+	margin: 0 0 12px 0;
+	font-size: 13px;
+	color: var(--ant-color-text-secondary);
+	line-height: 1.5;
+}
+
+/* Selector Styles */
+.selector {
+	padding: 24px;
+	background: var(--ant-color-bg-container);
+	border-radius: 8px;
+	margin-bottom: 24px;
+}
+
+.modulesGrid {
+	margin-top: 20px;
+}
+
+.selectorItem {
+	padding: 16px;
+	border: 2px solid var(--ant-color-border);
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	background: var(--ant-color-bg-container);
+}
+
+.selectorItem:hover {
+	border-color: var(--ant-color-primary);
+	background: var(--ant-color-primary-bg);
+	box-shadow: 0 2px 8px rgba(0, 102, 204, 0.15);
+}
+
+.selectorItem.active {
+	border-color: var(--ant-color-primary);
+	background: linear-gradient(
+		135deg,
+		rgba(0, 102, 204, 0.1) 0%,
+		rgba(0, 102, 204, 0.05) 100%
+	);
+}
+
+.selectorItem h4 {
+	margin: 0 0 8px 0;
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--ant-color-text);
+}
+
+.selectorItem p {
+	margin: 0;
+	font-size: 12px;
+	color: var(--ant-color-text-secondary);
+	line-height: 1.4;
+}
+
+.noResults {
+	padding: 40px 20px;
+	text-align: center;
+	color: var(--ant-color-text-secondary);
+	font-size: 14px;
+}
+
+/* Viewer Styles */
+.viewerContainer {
+	background: var(--ant-color-bg-container);
+	border-radius: 8px;
+	padding: 24px;
+	min-height: 600px;
+	display: flex;
+	flex-direction: column;
+}
+
+.viewerHeader {
+	margin-bottom: 24px;
+	padding-bottom: 20px;
+	border-bottom: 1px solid var(--ant-color-border);
+}
+
+.viewerInfo {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	margin-bottom: 12px;
+	gap: 16px;
+}
+
+.viewerTitle {
+	margin: 0;
+	font-size: 24px;
+	font-weight: 700;
+	color: var(--ant-color-text);
+}
+
+.viewerCategory {
+	margin: 0;
+	padding: 4px 12px;
+	border-left: 3px solid currentColor;
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--ant-color-text-secondary);
+	background: var(--ant-color-bg-elevated);
+	border-radius: 4px;
+}
+
+.viewerDescription {
+	margin: 0;
+	font-size: 14px;
+	color: var(--ant-color-text-secondary);
+	line-height: 1.6;
+}
+
+.viewerActions {
+	display: flex;
+	gap: 8px;
+	margin-top: 16px;
+	flex-wrap: wrap;
+}
+
+.viewerTabs {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.viewerTabs :global(.ant-tabs-content) {
+	flex: 1;
+}
+
+.iframeWrapper {
+	position: relative;
+	width: 100%;
+	height: 600px;
+	border: 1px solid var(--ant-color-border);
+	border-radius: 6px;
+	overflow: hidden;
+	background: var(--ant-color-bg-container);
+}
+
+.iframe {
+	width: 100%;
+	height: 100%;
+	border: none;
+	display: block;
+	opacity: 0;
+	transition: opacity 0.3s ease;
+}
+
+.iframeLoaded {
+	opacity: 1;
+}
+
+.loadingOverlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(255, 255, 255, 0.8);
+	z-index: 10;
+	border-radius: 6px;
+}
+
+.specsPanel {
+	padding: 20px 0;
+}
+
+.specsPanel h3 {
+	margin: 0 0 16px 0;
+	font-size: 16px;
+	font-weight: 600;
+	color: var(--ant-color-text);
+}
+
+.specsPanel dl {
+	display: grid;
+	grid-template-columns: 120px 1fr;
+	gap: 12px;
+	row-gap: 16px;
+}
+
+.specsPanel dt {
+	font-weight: 600;
+	color: var(--ant-color-text-secondary);
+	font-size: 13px;
+}
+
+.specsPanel dd {
+	margin: 0;
+	color: var(--ant-color-text);
+	font-size: 14px;
+}
+
+.specsPanel code {
+	background: var(--ant-color-bg-layout);
+	padding: 2px 6px;
+	border-radius: 3px;
+	font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+}
+
+.specsPanel a {
+	color: var(--ant-color-primary);
+	text-decoration: none;
+	transition: color 0.2s;
+}
+
+.specsPanel a:hover {
+	color: var(--ant-color-primary-hover);
+	text-decoration: underline;
+}
+
+.featuresList {
+	margin: 0;
+	padding-left: 16px;
+	list-style: disc;
+}
+
+.featuresList li {
+	margin-bottom: 4px;
+	line-height: 1.5;
+}
+
+.attribution {
+	margin-top: 24px;
+	padding-top: 16px;
+	border-top: 1px solid var(--ant-color-border);
+	font-size: 12px;
+	color: var(--ant-color-text-tertiary);
+	text-align: center;
+}
+
+.attribution a {
+	color: var(--ant-color-primary);
+	text-decoration: none;
+}
+
+.attribution a:hover {
+	text-decoration: underline;
+}
+
+/* Page Container */
+.pinoutsPage {
+	width: 100%;
+}
+
+.pinoutsHeader {
+	text-align: center;
+	margin-bottom: 48px;
+	padding: 40px 20px 0;
+}
+
+.pageTitle {
+	margin: 0 0 12px 0;
+	font-size: 40px;
+	font-weight: 800;
+	color: var(--ant-color-text);
+	background: linear-gradient(
+		135deg,
+		var(--ant-color-primary) 0%,
+		var(--ant-color-primary-light) 100%
+	);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+.pageSubtitle {
+	margin: 0;
+	font-size: 16px;
+	color: var(--ant-color-text-secondary);
+	line-height: 1.6;
+	max-width: 600px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.modulesGridContainer {
+	margin-bottom: 48px;
+}
+
+.sectionTitle {
+	margin: 0 0 24px 0;
+	font-size: 20px;
+	font-weight: 700;
+	color: var(--ant-color-text);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+	.viewerInfo {
+		flex-direction: column;
+	}
+
+	.viewerTitle {
+		font-size: 20px;
+	}
+
+	.iframeWrapper {
+		height: 400px;
+	}
+
+	.selector {
+		padding: 16px;
+	}
+
+	.specsPanel dl {
+		grid-template-columns: 1fr;
+		row-gap: 12px;
+	}
+
+	.specsPanel dt {
+		margin-bottom: -8px;
+	}
+
+	.pageTitle {
+		font-size: 28px;
+	}
+
+	.pageSubtitle {
+		font-size: 14px;
+	}
+
+	.pinoutsHeader {
+		margin-bottom: 32px;
+		padding: 24px 20px 0;
+	}
+}

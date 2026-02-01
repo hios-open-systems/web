@@ -96,15 +96,16 @@ P+ / P- --> Salida protegida (al LM2596)
 
 ---
 
-## 4. Amplificador I2S MAX98357
+## 4. Amplificadores I2S MAX98357 (x2 para Estéreo)
 
-Amplificador de audio digital con DAC integrado.
+Amplificadores de audio digital con DAC integrado. Se necesitan **dos módulos** para audio estéreo.
 
 **Por que MAX98357?**
 - Conexion I2S digital (sin ruido analogico)
 - No necesita DAC externo
 - Alta eficiencia (clase D)
 - Facil de conectar al ESP32
+- Pin SD permite seleccionar canal L/R
 
 ### Especificaciones
 
@@ -117,25 +118,35 @@ Amplificador de audio digital con DAC integrado.
 | SNR | 90dB |
 | THD+N | 0.015% |
 
-### Conexion con ESP32
+### Conexion con ESP32 (Estéreo)
 
-| MAX98357 | ESP32 | Funcion |
-|----------|-------|---------|
-| VIN | 5V | Alimentacion |
-| GND | GND | Tierra |
-| DIN | GPIO25 | Data I2S |
-| BCLK | GPIO26 | Bit Clock |
-| LRC | GPIO27 | Left/Right Clock |
-| GAIN | - | Sin conectar (9dB default) |
-| SD | - | Sin conectar (siempre ON) |
+Ambos módulos comparten las mismas lineas I2S:
+
+| MAX98357-L | MAX98357-R | ESP32 | Funcion |
+|------------|------------|-------|---------|
+| VIN | VIN | 5V | Alimentacion |
+| GND | GND | GND | Tierra |
+| DIN | DIN | GPIO25 | Data I2S |
+| BCLK | BCLK | GPIO26 | Bit Clock |
+| LRC | LRC | GPIO27 | Left/Right Clock |
+| GAIN | GAIN | - | Sin conectar (9dB default) |
+
+### Configuracion de canal (Pin SD)
+
+| Módulo | Pin SD | Conexion | Canal |
+|--------|--------|----------|-------|
+| MAX98357-L | SD | GND vía R 1MΩ | Izquierdo |
+| MAX98357-R | SD | Sin conectar | Derecho |
+
+**Como funciona:** El pin SD tiene un pull-up interno. Con una resistencia de 1MΩ a GND, el voltaje queda en rango medio (~0.4×VDD) que selecciona el canal LEFT. Sin conectar, el pull-up interno lo lleva a HIGH que selecciona el canal RIGHT.
 
 ---
 
-## 5. Parlante 63mm 4ohm 3W
+## 5. Parlantes 63mm 4ohm 3W (x2 para Estéreo)
 
-Altavoz de rango completo para audio.
+Altavoces de rango completo para audio. Se necesitan **dos parlantes** para estéreo.
 
-**Por que este parlante?**
+**Por que estos parlantes?**
 - 4 ohm compatible con MAX98357
 - 3W suficiente para uso personal
 - Tamano compacto (63mm)
@@ -145,7 +156,8 @@ Altavoz de rango completo para audio.
 
 | Parametro | Valor |
 |-----------|-------|
-| Potencia nominal | 3W |
+| Cantidad | 2 (LEFT + RIGHT) |
+| Potencia nominal | 3W cada uno |
 | Impedancia | 4 ohm |
 | Diametro | 63mm |
 | Altura | 31mm |
@@ -157,11 +169,14 @@ Altavoz de rango completo para audio.
 ### Conexion
 
 ```
-MAX98357 (+) --> Parlante (+)
-MAX98357 (-) --> Parlante (-)
+MAX98357-L (+) --> Parlante LEFT (+)
+MAX98357-L (-) --> Parlante LEFT (-)
+
+MAX98357-R (+) --> Parlante RIGHT (+)
+MAX98357-R (-) --> Parlante RIGHT (-)
 ```
 
-**No usar tierra comun con audio!** El parlante se conecta directo a la salida del amplificador.
+**No usar tierra comun con audio!** Cada parlante se conecta directo a la salida de su amplificador.
 
 ---
 
@@ -226,11 +241,17 @@ Ejemplos:
         (7.4V)           (8.4V)           (5V)            │
                                             │       ┌─────┴─────┐
                                             │       │ WiFi+BT   │
-                                            v       └─────┬─────┘
-                                      [MAX98357] <────────┘
-                                            │         I2S Audio
-                                            v
-                                      [Parlante 4ohm]
+                                            │       └─────┬─────┘
+                                            │             │ I2S Audio (GPIO25/26/27)
+                                            │       ┌─────┴─────┐
+                                            │       │           │
+                                            v       v           v
+                                      [MAX98357-L]      [MAX98357-R]
+                                       SD=GND(1MΩ)       SD=NC
+                                            │                 │
+                                            v                 v
+                                    [Parlante LEFT]   [Parlante RIGHT]
+                                       (4ohm 3W)         (4ohm 3W)
 ```
 
 ### Modos de operacion
@@ -263,11 +284,12 @@ Ejemplos:
 ## Lista de compras (Argentina - MercadoLibre)
 
 1. **ESP32 DevKit** - Buscar: "esp32 devkit v1"
-2. **MAX98357** - Buscar: "max98357 i2s amplificador"
+2. **MAX98357 (x2)** - Buscar: "max98357 i2s amplificador" (comprar 2 para estéreo)
 3. **LCD 16x2 I2C** - Buscar: "lcd 16x2 i2c arduino" (incluye modulo I2C)
 4. **LM2596S c/Display** - Buscar: "fuente lm2596 step down display"
 5. **Cargador 2S USB-C** - Buscar: "cargador litio 2s usb-c"
 6. **Porta pilas 2x18650** - Buscar: "porta pila 18650 serie" (para 2S)
 7. **2x Bateria 18650** - Buscar: "bateria 18650 litio" (comprar protegidas)
-8. **Parlante 63mm** - Buscar: "parlante 4 ohm 3w 63mm"
+8. **Parlantes 63mm (x2)** - Buscar: "parlante 4 ohm 3w 63mm" (comprar 2 para estéreo)
 9. **Resistencias 100k** (x2) - Para divisor bateria (opcional)
+10. **Resistencia 1MΩ** (x1) - Para configurar canal LEFT del MAX98357

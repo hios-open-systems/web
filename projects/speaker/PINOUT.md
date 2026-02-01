@@ -1,6 +1,6 @@
 # Pinout - HIOS WiFi Speaker
 
-Guia de conexiones del proyecto. Hub de audio WiFi + Bluetooth con display LCD.
+Guia de conexiones del proyecto. Hub de audio WiFi + Bluetooth estéreo con display LCD.
 
 ---
 
@@ -14,9 +14,9 @@ Guia de conexiones del proyecto. Hub de audio WiFi + Bluetooth con display LCD.
               3.3V ─┤ 3V3         VIN ├─ 5V (desde LM2596)
                GND ─┤ GND         GND ├─ GND
                     │                 │
-    (MAX98357 DIN) ─┤ GPIO25   GPIO26 ├─ (MAX98357 BCLK)
+ (MAX-L/R DIN) ─────┤ GPIO25   GPIO26 ├───── (MAX-L/R BCLK)
                     │                 │
-   (MAX98357 LRC) ──┤ GPIO27   GPIO23 ├─ (Libre)
+ (MAX-L/R LRC) ─────┤ GPIO27   GPIO23 ├─ (Libre)
                     │                 │
        (LCD SDA) ───┤ GPIO21   GPIO22 ├─── (LCD SCL)
                     │                 │
@@ -26,6 +26,8 @@ Guia de conexiones del proyecto. Hub de audio WiFi + Bluetooth con display LCD.
                     │                 │
                     └─────────────────┘
 ```
+
+**Nota:** Los dos MAX98357 (L y R) comparten las mismas lineas I2S.
 
 ---
 
@@ -41,16 +43,24 @@ Guia de conexiones del proyecto. Hub de audio WiFi + Bluetooth con display LCD.
 | Cargador P- | LM2596 IN- | Negro | |
 | LM2596 OUT+ | ESP32 VIN | Rojo | **Ajustar a 5V primero!** |
 | LM2596 OUT- | ESP32 GND | Negro | |
-| LM2596 OUT+ | MAX98357 VIN | Rojo | 5V |
-| LM2596 OUT- | MAX98357 GND | Negro | |
+| LM2596 OUT+ | MAX98357-L VIN | Rojo | 5V canal izquierdo |
+| LM2596 OUT- | MAX98357-L GND | Negro | |
+| LM2596 OUT+ | MAX98357-R VIN | Rojo | 5V canal derecho |
+| LM2596 OUT- | MAX98357-R GND | Negro | |
 
-### Audio I2S
+### Audio I2S (Estéreo - 2x MAX98357)
 
-| ESP32 | MAX98357 | Funcion |
-|-------|----------|---------|
-| GPIO25 | DIN | Data (audio digital) |
-| GPIO26 | BCLK | Bit Clock |
-| GPIO27 | LRC | Left/Right Clock (Word Select) |
+| ESP32 | MAX98357-L | MAX98357-R | Funcion |
+|-------|------------|------------|---------|
+| GPIO25 | DIN | DIN | Data (audio digital) |
+| GPIO26 | BCLK | BCLK | Bit Clock |
+| GPIO27 | LRC | LRC | Left/Right Clock (Word Select) |
+
+**Configuracion de canal (pin SD):**
+| Módulo | Pin SD | Canal |
+|--------|--------|-------|
+| MAX98357-L | GND vía R 1MΩ | Izquierdo |
+| MAX98357-R | Sin conectar | Derecho |
 
 ### Display LCD 16x2 I2C
 
@@ -80,10 +90,15 @@ VBAT (7.4V) ───┬─── R1 (100kΩ) ───┬─── R2 (100kΩ) 
 **Nota:** Con R1=R2=100kΩ, el voltaje en GPIO34 = VBAT / 2.
 Rango: 3.0V (baterias vacias) a 4.2V (llenas) en el ADC.
 
-### Parlante
+### Parlantes (Estéreo)
 
-| MAX98357 | Parlante | Notas |
-|----------|----------|-------|
+| MAX98357-L | Parlante LEFT | Notas |
+|------------|---------------|-------|
+| + (Speaker+) | + | Cable rojo |
+| - (Speaker-) | - | Cable negro |
+
+| MAX98357-R | Parlante RIGHT | Notas |
+|------------|----------------|-------|
 | + (Speaker+) | + | Cable rojo |
 | - (Speaker-) | - | Cable negro |
 
@@ -105,20 +120,31 @@ Rango: 3.0V (baterias vacias) a 4.2V (llenas) en el ADC.
 2. Conectar GND
 3. Verificar que ESP32 enciende (LED)
 
-### Paso 3: Conectar MAX98357
+### Paso 3: Conectar MAX98357-L (Canal Izquierdo)
 
 1. Conectar alimentacion (VIN, GND) desde LM2596
 2. Conectar lineas I2S al ESP32:
    - DIN -> GPIO25
    - BCLK -> GPIO26
    - LRC -> GPIO27
+3. **Configurar canal LEFT:** Conectar resistencia 1MΩ entre pin SD y GND
 
-### Paso 4: Conectar parlante
+### Paso 4: Conectar MAX98357-R (Canal Derecho)
 
-1. Conectar cables del parlante a salida del MAX98357
-2. **Polaridad no importa** para audio (pero mantener consistencia)
+1. Conectar alimentacion (VIN, GND) desde LM2596
+2. Conectar lineas I2S al ESP32 (mismas lineas que MAX-L):
+   - DIN -> GPIO25
+   - BCLK -> GPIO26
+   - LRC -> GPIO27
+3. **Configurar canal RIGHT:** Dejar pin SD sin conectar
 
-### Paso 5: Conectar baterias y cargador
+### Paso 5: Conectar parlantes
+
+1. Conectar parlante izquierdo a salida de MAX98357-L
+2. Conectar parlante derecho a salida de MAX98357-R
+3. **Polaridad no importa** para audio (pero mantener consistencia)
+
+### Paso 6: Conectar baterias y cargador
 
 1. Conectar baterias al cargador (B+, B-)
 2. Conectar salida protegida (P+, P-) al LM2596
@@ -134,27 +160,41 @@ Rango: 3.0V (baterias vacias) a 4.2V (llenas) en el ADC.
 │   7.4V      │ B+B- │    2S       │ P+P- │  c/Display  │
 └──────┬──────┘      └─────────────┘      └──────┬──────┘
        │                                          │
-       │ (opcional)                     5V ───────┼────────────┐
-       │                                          │            │
-       ▼                                   ┌──────┴──────┐     │
-  ┌─────────┐                              │    ESP32    │     │
-  │ DIVISOR │                              │             │     │
-  │100k/100k├─────────────────────────────►│ GPIO34      │     │
-  └─────────┘                              │             │     │
-                                           │ GPIO25 ─────┼─────┼──┐
-                                           │ GPIO26 ─────┼─────┼──┼──┐
-                                           │ GPIO22 ─────┼─────┼──┼──┼──┐
-                                           └─────────────┘     │  │  │  │
-                                                               │  │  │  │
-                                           ┌───────────────────┴──┴──┴──┴─┐
-                                           │         MAX98357             │
-                                           │   VIN GND DIN BCLK LRC       │
-                                           │            │                 │
-                                           │         Speaker +/-          │
-                                           └────────────┼─────────────────┘
+       │ (opcional)                     5V ───────┼─────────────────────┐
+       │                                          │                     │
+       ▼                                   ┌──────┴──────┐              │
+  ┌─────────┐                              │    ESP32    │              │
+  │ DIVISOR │                              │             │              │
+  │100k/100k├─────────────────────────────►│ GPIO34      │              │
+  └─────────┘                              │             │              │
+                                           │ GPIO25 ─────┼──────────────┼──┬──┐
+                                           │ GPIO26 ─────┼──────────────┼──┼──┼──┬──┐
+                                           │ GPIO27 ─────┼──────────────┼──┼──┼──┼──┼──┐
+                                           └─────────────┘              │  │  │  │  │  │
+                                                                        │  │  │  │  │  │
+                                           ┌────────────────────────────┴──┴──┴──┘  │  │
+                                           │      MAX98357-L (LEFT)                 │  │
+                                           │   VIN GND DIN BCLK LRC                 │  │
+                                           │   SD ──R(1MΩ)── GND                    │  │
+                                           │         Speaker +/-                    │  │
+                                           └────────────┼───────────────────────────┘  │
+                                                        │                              │
+                                                   ┌────┴────┐                         │
+                                                   │PARLANTE │                         │
+                                                   │  LEFT   │                         │
+                                                   │ 4Ω  3W  │                         │
+                                                   └─────────┘                         │
+                                                                                       │
+                                           ┌───────────────────────────────────────────┴──┐
+                                           │      MAX98357-R (RIGHT)                      │
+                                           │   VIN GND DIN BCLK LRC                       │
+                                           │   SD ── (sin conectar)                       │
+                                           │         Speaker +/-                          │
+                                           └────────────┼─────────────────────────────────┘
                                                         │
                                                    ┌────┴────┐
-                                                   │ PARLANTE│
+                                                   │PARLANTE │
+                                                   │  RIGHT  │
                                                    │ 4Ω  3W  │
                                                    └─────────┘
 ```

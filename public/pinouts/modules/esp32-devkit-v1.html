@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ESP32 DevKit V1 - Pinout</title>
+  <style>
+    :root {
+      --bg: #0d0d0d;
+      --card: #1a1a1a;
+      --border: #333;
+      --text: #e5e5e5;
+      --text-dim: #888;
+      --accent: #f59e0b;
+      --power-5v: #ef4444;
+      --power-3v3: #f97316;
+      --power-gnd: #525252;
+      --gpio: #22c55e;
+      --i2s: #3b82f6;
+      --i2c: #8b5cf6;
+      --adc: #ec4899;
+      --nc: #404040;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg);
+      color: var(--text);
+      padding: 20px;
+      line-height: 1.4;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 25px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h1 {
+      color: var(--accent);
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: var(--text-dim);
+      font-size: 13px;
+    }
+
+    .module {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .module h2 {
+      font-size: 18px;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+
+    .module-subtitle {
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-bottom: 15px;
+    }
+
+    .pinout {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 40px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+
+    .pin-column {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 160px;
+    }
+
+    .pin-column.left {
+      align-items: flex-end;
+    }
+
+    .pin-column.right {
+      align-items: flex-start;
+    }
+
+    .chip-body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 60px;
+      height: 300px;
+      background: linear-gradient(135deg, #333 0%, #1a1a1a 100%);
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      position: relative;
+      margin: 0 20px;
+    }
+
+    .chip-notch {
+      position: absolute;
+      top: -8px;
+      width: 20px;
+      height: 20px;
+      background: var(--border);
+      border-radius: 50%;
+    }
+
+    .chip-label {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      font-weight: 600;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .pin-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 8px;
+      border-radius: 3px;
+      transition: all 0.2s;
+    }
+
+    .pin-row:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--accent);
+    }
+
+    .pin-number {
+      min-width: 20px;
+      font-weight: 600;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .pin-label {
+      padding: 2px 6px;
+      border-radius: 2px;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .pin-row[data-cat="5V"] .pin-label {
+      background: var(--power-5v);
+      color: #fff;
+    }
+
+    .pin-row[data-cat="3V3"] .pin-label {
+      background: var(--power-3v3);
+      color: #fff;
+    }
+
+    .pin-row[data-cat="GND"] .pin-label {
+      background: var(--power-gnd);
+      color: #fff;
+    }
+
+    .pin-row[data-cat="GPIO"] .pin-label {
+      background: var(--gpio);
+      color: #000;
+    }
+
+    .pin-row[data-cat="I2S"] .pin-label {
+      background: var(--i2s);
+      color: #fff;
+    }
+
+    .pin-row[data-cat="I2C"] .pin-label {
+      background: var(--i2c);
+      color: #fff;
+    }
+
+    .pin-row[data-cat="ADC"] .pin-label {
+      background: var(--adc);
+      color: #fff;
+    }
+
+    .pin-row[data-cat="NC"] .pin-label {
+      background: var(--nc);
+      color: #999;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      padding: 15px;
+      background: var(--card);
+      border-radius: 8px;
+      margin-top: 20px;
+      font-size: 12px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-color {
+      width: 16px;
+      height: 16px;
+      border-radius: 2px;
+    }
+
+    .print-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .print-btn:hover {
+      opacity: 0.9;
+    }
+
+    .footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+      .pinout {
+        gap: 20px;
+      }
+
+      .chip-body {
+        width: 50px;
+        height: 250px;
+        margin: 0 10px;
+      }
+
+      .pin-column {
+        min-width: 140px;
+      }
+
+      .pin-label {
+        font-size: 11px;
+      }
+
+      .pin-row[data-cat="NC"] .pin-label {
+        display: none;
+      }
+    }
+
+    /* Print Styles */
+    @media print {
+      :root {
+        --bg: #fff;
+        --card: #fff;
+        --border: #ccc;
+        --text: #000;
+        --text-dim: #555;
+      }
+
+      body {
+        background: #fff;
+        color: #000;
+        padding: 10mm;
+        font-size: 10pt;
+      }
+
+      .print-btn {
+        display: none;
+      }
+
+      .container {
+        max-width: 100%;
+      }
+
+      header {
+        border-bottom: 2px solid #000;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+      }
+
+      h1 {
+        color: #000;
+        font-size: 18pt;
+      }
+
+      .module {
+        border: 1px solid #ccc;
+        page-break-inside: avoid;
+        background: #fff;
+      }
+
+      .module h2 {
+        color: #000;
+      }
+
+      .pin-row {
+        border: none !important;
+        background: none !important;
+      }
+
+      .pin-row:hover {
+        background: none;
+        border-color: transparent;
+      }
+
+      .pin-label {
+        border: 1px solid currentColor;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .chip-body {
+        background: #f5f5f5 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .legend {
+        background: #f9f9f9;
+        border: 1px solid #ccc;
+      }
+
+      .legend-color {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .footer {
+        margin-top: 10px;
+        border-top: 1px solid #ccc;
+        padding-top: 10px;
+      }
+
+      @page {
+        size: A4;
+        margin: 10mm;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <button class="print-btn" onclick="window.print()">Imprimir</button>
+
+  <div class="container">
+    <header>
+      <h1>ESP32 DevKit V1</h1>
+      <p class="subtitle">38 pines - Microcontrolador con WiFi y Bluetooth</p>
+    </header>
+
+    <div class="module">
+      <h2>ESP32 DevKit V1</h2>
+      <p class="module-subtitle">Microcontrolador con WiFi integrado</p>
+
+      <div class="pinout">
+        <div class="pin-column left">
+          <div class="pin-row" data-cat="3V3"><span class="pin-label">3V3</span><span class="pin-number">1</span></div>
+          <div class="pin-row" data-cat="GND"><span class="pin-label">GND</span><span class="pin-number">2</span></div>
+          <div class="pin-row" data-cat="5V"><span class="pin-label">5V</span><span class="pin-number">3</span></div>
+          <div class="pin-row" data-cat="GPIO"><span class="pin-label">GPIO23</span><span class="pin-number">4</span>
+          </div>
+          <div class="pin-row" data-cat="GPIO"><span class="pin-label">GPIO22</span><span class="pin-number">5</span>
+          </div>
+          <div class="pin-row" data-cat="GPIO"><span class="pin-label">GPIO1 (TX)</span><span
+              class="pin-number">6</span></div>
+          <div class="pin-row" data-cat="GPIO"><span class="pin-label">GPIO3 (RX)</span><span
+              class="pin-number">7</span></div>
+          <div class="pin-row" data-cat="GPIO"><span class="pin-label">GPIO21</span><span class="pin-number">8</span>
+          </div>
+          <div class="pin-row" data-cat="GND"><span class="pin-label">GND</span><span class="pin-number">9</span></div>
+          <div class="pin-row" data-cat="GPIO"><span class="pin-label">GPIO19</span><span class="pin-number">10</span>
+          </div>
+          <div class="pin-row" data-cat="GPIO"><span class="pin-label">GPIO18</span><span class="pin-number">11</span>
+          </div>
+          <div class="pin-row" data-cat="I2S"><span class="pin-label">GPIO5 (I2S)</span><span
+              class="pin-number">12</span></div>
+          <div class="pin-row" data-cat="I2S"><span class="pin-label">GPIO17 (I2S)</span><span
+              class="pin-number">13</span></div>
+          <div class="pin-row" data-cat="GPIO"><span class="pin-label">GPIO16</span><span class="pin-number">14</span>
+          </div>
+          <div class="pin-row" data-cat="GPIO"><span class="pin-label">GPIO4</span><span class="pin-number">15</span>
+          </div>
+          <div class="pin-row" data-cat="GPIO"><span class="pin-label">GPIO0</span><span class="pin-number">16</span>
+          </div>
+          <div class="pin-row" data-cat="GPIO"><span class="pin-label">GPIO2</span><span class="pin-number">17</span>
+          </div>
+          <div class="pin-row" data-cat="GPIO"><span class="pin-label">GPIO15</span><span class="pin-number">18</span>
+          </div>
+          <div class="pin-row" data-cat="GND"><span class="pin-label">GND</span><span class="pin-number">19</span></div>
+        </div>
+
+        <div class="chip-body">
+          <div class="chip-notch"></div>
+          <span class="chip-label">ESP32</span>
+        </div>
+
+        <div class="pin-column right">
+          <div class="pin-row" data-cat="GND"><span class="pin-number">1</span><span class="pin-label">GND</span></div>
+          <div class="pin-row" data-cat="GPIO"><span class="pin-number">2</span><span class="pin-label">GPIO27</span>
+          </div>
+          <div class="pin-row" data-cat="GPIO"><span class="pin-number">3</span><span class="pin-label">GPIO26</span>
+          </div>
+          <div class="pin-row" data-cat="GPIO"><span class="pin-number">4</span><span class="pin-label">GPIO25</span>
+          </div>
+          <div class="pin-row" data-cat="GPIO"><span class="pin-number">5</span><span class="pin-label">GPIO33</span>
+          </div>
+          <div class="pin-row" data-cat="ADC"><span class="pin-number">6</span><span class="pin-label">GPIO32
+              (ADC)</span></div>
+          <div class="pin-row" data-cat="GPIO"><span class="pin-number">7</span><span class="pin-label">GPIO35
+              (IN)</span></div>
+          <div class="pin-row" data-cat="GPIO"><span class="pin-number">8</span><span class="pin-label">GPIO34
+              (IN)</span></div>
+          <div class="pin-row" data-cat="GPIO"><span class="pin-number">9</span><span class="pin-label">GPIO39
+              (IN)</span></div>
+          <div class="pin-row" data-cat="GPIO"><span class="pin-number">10</span><span class="pin-label">GPIO36
+              (IN)</span></div>
+          <div class="pin-row" data-cat="GPIO"><span class="pin-number">11</span><span class="pin-label">GPIO13
+              (I2S)</span></div>
+          <div class="pin-row" data-cat="I2S"><span class="pin-number">12</span><span class="pin-label">GPIO12
+              (I2S)</span></div>
+          <div class="pin-row" data-cat="GPIO"><span class="pin-number">13</span><span class="pin-label">GPIO14</span>
+          </div>
+          <div class="pin-row" data-cat="GPIO"><span class="pin-number">14</span><span class="pin-label">GPIO9</span>
+          </div>
+          <div class="pin-row" data-cat="GPIO"><span class="pin-number">15</span><span class="pin-label">GPIO10</span>
+          </div>
+          <div class="pin-row" data-cat="GPIO"><span class="pin-number">16</span><span class="pin-label">GPIO11</span>
+          </div>
+          <div class="pin-row" data-cat="I2C"><span class="pin-number">17</span><span class="pin-label">GPIO6</span>
+          </div>
+          <div class="pin-row" data-cat="I2C"><span class="pin-number">18</span><span class="pin-label">GPIO7</span>
+          </div>
+          <div class="pin-row" data-cat="GPIO"><span class="pin-number">19</span><span class="pin-label">GPIO8</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-color" style="background: var(--power-5v);"></div>
+          <span>5V</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: var(--power-3v3);"></div>
+          <span>3.3V</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: var(--power-gnd);"></div>
+          <span>GND</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: var(--gpio);"></div>
+          <span>GPIO</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: var(--i2s);"></div>
+          <span>I2S</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: var(--adc);"></div>
+          <span>ADC</span>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      HIOS Pinouts - Inspirado en <a href="https://www.luisllamas.es/en/esp32-hardware-details-pinout/" target="_blank">luisllamas.es</a>
+    </footer>
+  </div>
+</body>
+
+</html>

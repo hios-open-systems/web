@@ -51,6 +51,21 @@ export function Header() {
       </Link>
 
       <Space size="middle">
+        <a
+          href="/pinouts/"
+          style={{
+            color: mode === 'dark' ? '#a3a3a3' : '#525252',
+            textDecoration: 'none',
+            fontSize: '13px',
+            fontWeight: 500,
+            padding: '4px 12px',
+            borderRadius: '6px',
+            background: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)',
+            transition: 'all 0.2s',
+          }}
+        >
+          📌 Pinouts
+        </a>
         <LocaleSwitcher />
         <Button
           type="text"

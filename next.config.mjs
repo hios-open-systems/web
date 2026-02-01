@@ -27,6 +27,17 @@ const nextConfig = {
 	// Producción
 	poweredByHeader: false,
 	compress: true,
+
+	// Redirects para rutas sin locale
+	async redirects() {
+		return [
+			{
+				source: '/pinouts',
+				destination: '/en/pinouts',
+				permanent: false,
+			},
+		];
+	},
 };
 
 export default withNextIntl(nextConfig);

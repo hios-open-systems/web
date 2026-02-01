@@ -164,12 +164,21 @@
             ],
             "resources": [
                 {
+                    "name": "Interactive Pinout",
+                    "url": "/pinouts/speaker/",
+                    "highlight": true
+                },
+                {
                     "name": "ESP32-audioI2S Library",
                     "url": "https://github.com/schreibfaul1/ESP32-audioI2S"
                 },
                 {
                     "name": "MAX98357 Datasheet",
                     "url": "https://www.analog.com/en/products/max98357a.html"
+                },
+                {
+                    "name": "Luis Llamas - ESP32 Pinout",
+                    "url": "https://www.luisllamas.es/en/esp32-hardware-details-pinout/"
                 },
                 {
                     "name": "Random Nerd Tutorials - ESP32 Web Server",
@@ -185,9 +194,9 @@
                 },
                 {
                     "component": "MAX98357 I2S Amp",
-                    "qty": 1,
-                    "priceUSD": 3,
-                    "notes": "3W Amplifier"
+                    "qty": 2,
+                    "priceUSD": 6,
+                    "notes": "3W Amplifier x2 (stereo)"
                 },
                 {
                     "component": "LM2596S w/Display",
