@@ -353,5 +353,27 @@
         "no_shipping": "Sin envío",
         "gallery": "Galería",
         "print_pinout": "Imprimir Pinout"
+    },
+    "Pinouts": {
+        "title": "Pinouts Interactivos",
+        "subtitle": "Explora los diagramas de pines de los módulos utilizados en nuestros proyectos",
+        "available_modules": "Módulos Disponibles",
+        "select_module": "Selecciona un módulo para ver sus pinouts",
+        "print": "Imprimir",
+        "print_tooltip": "Imprimir pinout",
+        "expand": "Expandir",
+        "expand_tooltip": "Abrir en nueva pestaña",
+        "interactive_view": "Vista Interactiva",
+        "specifications": "Especificaciones",
+        "technical_info": "Información Técnica",
+        "name": "Nombre",
+        "category": "Categoría",
+        "voltage": "Voltaje",
+        "resolution": "Resolución",
+        "interface": "Interfaz",
+        "package": "Encapsulado",
+        "features": "Características",
+        "datasheet": "Datasheet",
+        "view_datasheet": "Ver datasheet oficial"
     }
 }

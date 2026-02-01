@@ -3,8 +3,9 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Tabs, Empty, Button, Tag, Tooltip } from 'antd';
 import { DownloadOutlined, LinkOutlined, PrinterOutlined, ExpandOutlined } from '@ant-design/icons';
+import { useTranslations } from 'next-intl';
 import type { Module } from '@/config/modules';
-import { CATEGORIES, PINOUTS_ATTRIBUTION } from '@/config/modules';
+import { CATEGORIES } from '@/config/modules';
 import styles from './pinouts.module.css';
 
 interface ModuleViewerProps {
@@ -13,6 +14,7 @@ interface ModuleViewerProps {
 }
 
 export function ModuleViewer({ module }: ModuleViewerProps) {
+  const t = useTranslations('Pinouts');
   const [iframeLoaded, setIframeLoaded] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
@@ -39,7 +41,7 @@ export function ModuleViewer({ module }: ModuleViewerProps) {
     return (
       <div className={styles.viewerContainer}>
         <Empty
-          description="Selecciona un módulo para ver sus pinouts"
+          description={t('select_module')}
           style={{ marginTop: '60px' }}
         />
       </div>
@@ -60,22 +62,22 @@ export function ModuleViewer({ module }: ModuleViewerProps) {
         </div>
         <p className={styles.viewerDescription}>{module.description}</p>
         <div className={styles.viewerActions}>
-          <Tooltip title="Imprimir pinout">
+          <Tooltip title={t('print_tooltip')}>
             <Button
               type="default"
               icon={<PrinterOutlined />}
               onClick={handlePrint}
             >
-              Imprimir
+              {t('print')}
             </Button>
           </Tooltip>
-          <Tooltip title="Abrir en nueva pestaña">
+          <Tooltip title={t('expand_tooltip')}>
             <Button
               type="default"
               icon={<ExpandOutlined />}
               onClick={handleOpenInNewTab}
             >
-              Expandir
+              {t('expand')}
             </Button>
           </Tooltip>
           {module.datasheetUrl && (
@@ -86,7 +88,7 @@ export function ModuleViewer({ module }: ModuleViewerProps) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Datasheet
+              {t('datasheet')}
             </Button>
           )}
         </div>
@@ -97,7 +99,7 @@ export function ModuleViewer({ module }: ModuleViewerProps) {
           items={[
             {
               key: 'interactive',
-              label: 'Vista Interactiva',
+              label: t('interactive_view'),
               forceRender: true,
               children: (
                 <div className={styles.iframeWrapper}>
@@ -113,45 +115,45 @@ export function ModuleViewer({ module }: ModuleViewerProps) {
             },
             {
               key: 'specs',
-              label: 'Especificaciones',
+              label: t('specifications'),
               forceRender: true,
               children: (
                 <div className={styles.specsPanel}>
-                  <h3>Información Técnica</h3>
+                  <h3>{t('technical_info')}</h3>
                   <dl>
-                    <dt>Nombre</dt>
+                    <dt>{t('name')}</dt>
                     <dd>{module.name}</dd>
-                    <dt>Categoría</dt>
+                    <dt>{t('category')}</dt>
                     <dd>
                       <Tag color={category.color}>{category.label}</Tag>
                     </dd>
                     {specs?.voltage && (
                       <>
-                        <dt>Voltaje</dt>
+                        <dt>{t('voltage')}</dt>
                         <dd>{specs.voltage}</dd>
                       </>
                     )}
                     {specs?.resolution && (
                       <>
-                        <dt>Resolución</dt>
+                        <dt>{t('resolution')}</dt>
                         <dd>{specs.resolution}</dd>
                       </>
                     )}
                     {specs?.interface && (
                       <>
-                        <dt>Interfaz</dt>
+                        <dt>{t('interface')}</dt>
                         <dd><code>{specs.interface}</code></dd>
                       </>
                     )}
                     {specs?.package && (
                       <>
-                        <dt>Encapsulado</dt>
+                        <dt>{t('package')}</dt>
                         <dd>{specs.package}</dd>
                       </>
                     )}
                     {specs?.features && specs.features.length > 0 && (
                       <>
-                        <dt>Características</dt>
+                        <dt>{t('features')}</dt>
                         <dd>
                           <ul className={styles.featuresList}>
                             {specs.features.map((feature, index) => (
@@ -163,14 +165,14 @@ export function ModuleViewer({ module }: ModuleViewerProps) {
                     )}
                     {module.datasheetUrl && (
                       <>
-                        <dt>Datasheet</dt>
+                        <dt>{t('datasheet')}</dt>
                         <dd>
                           <a
                             href={module.datasheetUrl}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            <LinkOutlined /> Ver datasheet oficial
+                            <LinkOutlined /> {t('view_datasheet')}
                           </a>
                         </dd>
                       </>
@@ -182,19 +184,6 @@ export function ModuleViewer({ module }: ModuleViewerProps) {
           ]}
         />
       </div>
-
-      <footer className={styles.attribution}>
-        <span>
-          Pinouts inspirados en{' '}
-          <a
-            href={PINOUTS_ATTRIBUTION.url}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {PINOUTS_ATTRIBUTION.source}
-          </a>
-        </span>
-      </footer>
     </div>
   );
 }
