@@ -25,6 +25,8 @@
       --pwm: #14b8a6;
       --input-only: #6b7280;
       --strapping: #f97316;
+      --chip-height: 520px;
+      --chip-offset: 6px;
     }
 
     * {
@@ -37,9 +39,9 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: var(--bg);
       color: var(--text);
-      padding: 20px;
+      padding: clamp(16px, 2.5vw, 24px);
       line-height: 1.5;
-      min-height: 100vh;
+      overflow: hidden;
     }
 
     .container {
@@ -48,10 +50,7 @@
     }
 
     header {
-      text-align: center;
-      margin-bottom: 24px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid var(--border);
+      display: none;
     }
 
     h1 {
@@ -64,6 +63,14 @@
     .subtitle {
       color: var(--text-dim);
       font-size: 14px;
+    }
+
+    .info-section {
+      display: none;
+    }
+
+    .footer {
+      display: none;
     }
 
     .toolbar {
@@ -142,8 +149,8 @@
     .pinout-container {
       display: flex;
       justify-content: center;
-      align-items: stretch;
-      gap: 0;
+      align-items: flex-start;
+      gap: 16px;
       margin: 24px 0;
       overflow-x: auto;
       padding: 20px 0;
@@ -153,6 +160,9 @@
       display: flex;
       flex-direction: column;
       gap: 1px;
+      position: relative;
+      z-index: 2;
+      padding-top: 24px;
     }
 
     .pin-column.left {
@@ -166,26 +176,20 @@
     .chip {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: flex-start;
       align-items: center;
-      width: 100px;
-      background: linear-gradient(180deg, #1f1f1f 0%, #0f0f0f 100%);
-      border: 2px solid #333;
-      border-radius: 6px;
-      padding: 12px 8px;
+      width: 220px;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 0 8px;
       position: relative;
+      z-index: 1;
+      height: 560px;
     }
 
     .chip::before {
-      content: '';
-      position: absolute;
-      top: -6px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 24px;
-      height: 12px;
-      background: #333;
-      border-radius: 0 0 12px 12px;
+      content: none;
     }
 
     .chip-name {
@@ -203,18 +207,17 @@
     }
 
     .antenna {
-      width: 40px;
-      height: 50px;
-      border: 2px solid #444;
-      border-radius: 4px;
-      margin-bottom: 8px;
-      background: repeating-linear-gradient(
-        0deg,
-        #333 0px,
-        #333 2px,
-        transparent 2px,
-        transparent 4px
-      );
+      display: none;
+    }
+
+    .chip-image {
+      width: auto;
+      height: 560px;
+      object-fit: contain;
+      margin: 0;
+      transform: rotate(180deg);
+      filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
+      pointer-events: none;
     }
 
     .pin-row {
@@ -222,7 +225,7 @@
       align-items: center;
       gap: 4px;
       padding: 3px 8px;
-      min-height: 26px;
+      min-height: 28px;
       border-radius: 3px;
       transition: all 0.15s;
       cursor: default;
@@ -272,20 +275,76 @@
       font-weight: 700;
     }
 
-    .pin-label[data-type="power"] { background: var(--power); color: #fff; }
-    .pin-label[data-type="gnd"] { background: var(--gnd); color: #fff; }
-    .pin-label[data-type="gpio"] { background: var(--gpio); color: #000; }
-    .pin-label[data-type="adc"] { background: var(--adc); color: #fff; }
-    .pin-label[data-type="dac"] { background: var(--dac); color: #000; }
-    .pin-label[data-type="touch"] { background: var(--touch); color: #fff; }
-    .pin-label[data-type="spi"] { background: var(--spi); color: #000; }
-    .pin-label[data-type="i2c"] { background: var(--i2c); color: #fff; }
-    .pin-label[data-type="uart"] { background: var(--uart); color: #000; }
-    .pin-label[data-type="pwm"] { background: var(--pwm); color: #000; }
-    .pin-label[data-type="input-only"] { background: var(--input-only); color: #fff; }
-    .pin-label[data-type="strapping"] { background: var(--strapping); color: #000; }
-    .pin-label[data-type="nc"] { background: #333; color: #666; }
-    .pin-label[data-type="flash"] { background: #444; color: #999; font-size: 9px; }
+    .pin-label[data-type="power"] {
+      background: var(--power);
+      color: #fff;
+    }
+
+    .pin-label[data-type="gnd"] {
+      background: var(--gnd);
+      color: #fff;
+    }
+
+    .pin-label[data-type="gpio"] {
+      background: var(--gpio);
+      color: #000;
+    }
+
+    .pin-label[data-type="adc"] {
+      background: var(--adc);
+      color: #fff;
+    }
+
+    .pin-label[data-type="dac"] {
+      background: var(--dac);
+      color: #000;
+    }
+
+    .pin-label[data-type="touch"] {
+      background: var(--touch);
+      color: #fff;
+    }
+
+    .pin-label[data-type="spi"] {
+      background: var(--spi);
+      color: #000;
+    }
+
+    .pin-label[data-type="i2c"] {
+      background: var(--i2c);
+      color: #fff;
+    }
+
+    .pin-label[data-type="uart"] {
+      background: var(--uart);
+      color: #000;
+    }
+
+    .pin-label[data-type="pwm"] {
+      background: var(--pwm);
+      color: #000;
+    }
+
+    .pin-label[data-type="input-only"] {
+      background: var(--input-only);
+      color: #fff;
+    }
+
+    .pin-label[data-type="strapping"] {
+      background: var(--strapping);
+      color: #000;
+    }
+
+    .pin-label[data-type="nc"] {
+      background: #333;
+      color: #666;
+    }
+
+    .pin-label[data-type="flash"] {
+      background: #444;
+      color: #999;
+      font-size: 9px;
+    }
 
     .info-section {
       background: var(--card);
@@ -308,7 +367,7 @@
     }
 
     .info-card {
-      background: rgba(255,255,255,0.02);
+      background: rgba(255, 255, 255, 0.02);
       border-radius: 8px;
       padding: 12px;
     }
@@ -335,7 +394,7 @@
     }
 
     .info-card code {
-      background: rgba(255,255,255,0.1);
+      background: rgba(255, 255, 255, 0.1);
       padding: 1px 4px;
       border-radius: 3px;
       font-size: 10px;
@@ -359,11 +418,12 @@
     }
 
     .footer {
+      display: none;
       margin-top: 24px;
       text-align: center;
-      font-size: 11px;
+      font-size: clamp(10px, 2vw, 12px);
       color: var(--text-dim);
-      padding-top: 16px;
+      padding-top: clamp(12px, 2vw, 18px);
       border-top: 1px solid var(--border);
     }
 
@@ -380,7 +440,8 @@
         padding: 10mm;
       }
 
-      .toolbar, .print-btn {
+      .toolbar,
+      .print-btn {
         display: none !important;
       }
 
@@ -428,8 +489,8 @@
 <body>
   <button class="print-btn" onclick="window.print()">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/>
-      <rect x="6" y="14" width="12" height="8"/>
+      <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" />
+      <rect x="6" y="14" width="12" height="8" />
     </svg>
     Imprimir
   </button>
@@ -478,53 +539,115 @@
 
     <div class="pinout-container">
       <div class="pin-column left">
-        <div class="pin-row" data-types="power"><span class="pin-labels"><span class="pin-label primary" data-type="power">3V3</span></span><span class="pin-num">1</span></div>
-        <div class="pin-row" data-types="gpio"><span class="pin-labels"><span class="pin-label" data-type="nc">EN</span></span><span class="pin-num">2</span></div>
-        <div class="pin-row" data-types="gpio adc input-only"><span class="pin-labels"><span class="pin-label" data-type="input-only">IN</span><span class="pin-label" data-type="adc">ADC1_0</span><span class="pin-label primary" data-type="gpio">IO36</span></span><span class="pin-num">3</span></div>
-        <div class="pin-row" data-types="gpio adc input-only"><span class="pin-labels"><span class="pin-label" data-type="input-only">IN</span><span class="pin-label" data-type="adc">ADC1_3</span><span class="pin-label primary" data-type="gpio">IO39</span></span><span class="pin-num">4</span></div>
-        <div class="pin-row" data-types="gpio adc input-only"><span class="pin-labels"><span class="pin-label" data-type="input-only">IN</span><span class="pin-label" data-type="adc">ADC1_6</span><span class="pin-label primary" data-type="gpio">IO34</span></span><span class="pin-num">5</span></div>
-        <div class="pin-row" data-types="gpio adc input-only"><span class="pin-labels"><span class="pin-label" data-type="input-only">IN</span><span class="pin-label" data-type="adc">ADC1_7</span><span class="pin-label primary" data-type="gpio">IO35</span></span><span class="pin-num">6</span></div>
-        <div class="pin-row" data-types="gpio adc touch"><span class="pin-labels"><span class="pin-label" data-type="touch">T9</span><span class="pin-label" data-type="adc">ADC1_4</span><span class="pin-label primary" data-type="gpio">IO32</span></span><span class="pin-num">7</span></div>
-        <div class="pin-row" data-types="gpio adc touch"><span class="pin-labels"><span class="pin-label" data-type="touch">T8</span><span class="pin-label" data-type="adc">ADC1_5</span><span class="pin-label primary" data-type="gpio">IO33</span></span><span class="pin-num">8</span></div>
-        <div class="pin-row" data-types="gpio adc dac"><span class="pin-labels"><span class="pin-label" data-type="dac">DAC1</span><span class="pin-label" data-type="adc">ADC2_8</span><span class="pin-label primary" data-type="gpio">IO25</span></span><span class="pin-num">9</span></div>
-        <div class="pin-row" data-types="gpio adc dac"><span class="pin-labels"><span class="pin-label" data-type="dac">DAC2</span><span class="pin-label" data-type="adc">ADC2_9</span><span class="pin-label primary" data-type="gpio">IO26</span></span><span class="pin-num">10</span></div>
-        <div class="pin-row" data-types="gpio adc touch"><span class="pin-labels"><span class="pin-label" data-type="touch">T7</span><span class="pin-label" data-type="adc">ADC2_7</span><span class="pin-label primary" data-type="gpio">IO27</span></span><span class="pin-num">11</span></div>
-        <div class="pin-row" data-types="gpio adc touch spi"><span class="pin-labels"><span class="pin-label" data-type="spi">HSPI_CLK</span><span class="pin-label" data-type="touch">T6</span><span class="pin-label primary" data-type="gpio">IO14</span></span><span class="pin-num">12</span></div>
-        <div class="pin-row" data-types="gpio adc touch spi strapping"><span class="pin-labels"><span class="pin-label" data-type="strapping">BOOT</span><span class="pin-label" data-type="spi">HSPI_Q</span><span class="pin-label primary" data-type="gpio">IO12</span></span><span class="pin-num">13</span></div>
-        <div class="pin-row" data-types="gnd"><span class="pin-labels"><span class="pin-label primary" data-type="gnd">GND</span></span><span class="pin-num">14</span></div>
-        <div class="pin-row" data-types="gpio adc touch spi"><span class="pin-labels"><span class="pin-label" data-type="spi">HSPI_D</span><span class="pin-label" data-type="touch">T4</span><span class="pin-label primary" data-type="gpio">IO13</span></span><span class="pin-num">15</span></div>
-        <div class="pin-row" data-types="flash"><span class="pin-labels"><span class="pin-label" data-type="flash">Flash D2</span></span><span class="pin-num">16</span></div>
-        <div class="pin-row" data-types="flash"><span class="pin-labels"><span class="pin-label" data-type="flash">Flash D3</span></span><span class="pin-num">17</span></div>
-        <div class="pin-row" data-types="flash"><span class="pin-labels"><span class="pin-label" data-type="flash">Flash CMD</span></span><span class="pin-num">18</span></div>
-        <div class="pin-row" data-types="power"><span class="pin-labels"><span class="pin-label primary" data-type="power">5V</span></span><span class="pin-num">19</span></div>
+        <div class="pin-row" data-types="power"><span class="pin-labels"><span class="pin-label primary"
+              data-type="power">3V3</span></span><span class="pin-num">1</span></div>
+        <div class="pin-row" data-types="gpio"><span class="pin-labels"><span class="pin-label"
+              data-type="nc">EN</span></span><span class="pin-num">2</span></div>
+        <div class="pin-row" data-types="gpio adc input-only"><span class="pin-labels"><span class="pin-label"
+              data-type="input-only">IN</span><span class="pin-label" data-type="adc">ADC1_0</span><span
+              class="pin-label primary" data-type="gpio">IO36</span></span><span class="pin-num">3</span></div>
+        <div class="pin-row" data-types="gpio adc input-only"><span class="pin-labels"><span class="pin-label"
+              data-type="input-only">IN</span><span class="pin-label" data-type="adc">ADC1_3</span><span
+              class="pin-label primary" data-type="gpio">IO39</span></span><span class="pin-num">4</span></div>
+        <div class="pin-row" data-types="gpio adc input-only"><span class="pin-labels"><span class="pin-label"
+              data-type="input-only">IN</span><span class="pin-label" data-type="adc">ADC1_6</span><span
+              class="pin-label primary" data-type="gpio">IO34</span></span><span class="pin-num">5</span></div>
+        <div class="pin-row" data-types="gpio adc input-only"><span class="pin-labels"><span class="pin-label"
+              data-type="input-only">IN</span><span class="pin-label" data-type="adc">ADC1_7</span><span
+              class="pin-label primary" data-type="gpio">IO35</span></span><span class="pin-num">6</span></div>
+        <div class="pin-row" data-types="gpio adc touch"><span class="pin-labels"><span class="pin-label"
+              data-type="touch">T9</span><span class="pin-label" data-type="adc">ADC1_4</span><span
+              class="pin-label primary" data-type="gpio">IO32</span></span><span class="pin-num">7</span></div>
+        <div class="pin-row" data-types="gpio adc touch"><span class="pin-labels"><span class="pin-label"
+              data-type="touch">T8</span><span class="pin-label" data-type="adc">ADC1_5</span><span
+              class="pin-label primary" data-type="gpio">IO33</span></span><span class="pin-num">8</span></div>
+        <div class="pin-row" data-types="gpio adc dac"><span class="pin-labels"><span class="pin-label"
+              data-type="dac">DAC1</span><span class="pin-label" data-type="adc">ADC2_8</span><span
+              class="pin-label primary" data-type="gpio">IO25</span></span><span class="pin-num">9</span></div>
+        <div class="pin-row" data-types="gpio adc dac"><span class="pin-labels"><span class="pin-label"
+              data-type="dac">DAC2</span><span class="pin-label" data-type="adc">ADC2_9</span><span
+              class="pin-label primary" data-type="gpio">IO26</span></span><span class="pin-num">10</span></div>
+        <div class="pin-row" data-types="gpio adc touch"><span class="pin-labels"><span class="pin-label"
+              data-type="touch">T7</span><span class="pin-label" data-type="adc">ADC2_7</span><span
+              class="pin-label primary" data-type="gpio">IO27</span></span><span class="pin-num">11</span></div>
+        <div class="pin-row" data-types="gpio adc touch spi"><span class="pin-labels"><span class="pin-label"
+              data-type="spi">HSPI_CLK</span><span class="pin-label" data-type="touch">T6</span><span
+              class="pin-label primary" data-type="gpio">IO14</span></span><span class="pin-num">12</span></div>
+        <div class="pin-row" data-types="gpio adc touch spi strapping"><span class="pin-labels"><span class="pin-label"
+              data-type="strapping">BOOT</span><span class="pin-label" data-type="spi">HSPI_Q</span><span
+              class="pin-label primary" data-type="gpio">IO12</span></span><span class="pin-num">13</span></div>
+        <div class="pin-row" data-types="gnd"><span class="pin-labels"><span class="pin-label primary"
+              data-type="gnd">GND</span></span><span class="pin-num">14</span></div>
+        <div class="pin-row" data-types="gpio adc touch spi"><span class="pin-labels"><span class="pin-label"
+              data-type="spi">HSPI_D</span><span class="pin-label" data-type="touch">T4</span><span
+              class="pin-label primary" data-type="gpio">IO13</span></span><span class="pin-num">15</span></div>
+        <div class="pin-row" data-types="flash"><span class="pin-labels"><span class="pin-label" data-type="flash">Flash
+              D2</span></span><span class="pin-num">16</span></div>
+        <div class="pin-row" data-types="flash"><span class="pin-labels"><span class="pin-label" data-type="flash">Flash
+              D3</span></span><span class="pin-num">17</span></div>
+        <div class="pin-row" data-types="flash"><span class="pin-labels"><span class="pin-label" data-type="flash">Flash
+              CMD</span></span><span class="pin-num">18</span></div>
+        <div class="pin-row" data-types="power"><span class="pin-labels"><span class="pin-label primary"
+              data-type="power">5V</span></span><span class="pin-num">19</span></div>
       </div>
 
       <div class="chip">
-        <div class="antenna"></div>
-        <span class="chip-name">ESP32</span>
-        <span class="chip-module">WROOM-32</span>
+        <img class="chip-image" src="/esp32wroom.avif" alt="ESP32-WROOM-32" />
       </div>
 
       <div class="pin-column right">
-        <div class="pin-row" data-types="gnd"><span class="pin-num">1</span><span class="pin-labels"><span class="pin-label primary" data-type="gnd">GND</span></span></div>
-        <div class="pin-row" data-types="gpio spi"><span class="pin-num">2</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO23</span><span class="pin-label" data-type="spi">VSPI_D</span></span></div>
-        <div class="pin-row" data-types="gpio i2c"><span class="pin-num">3</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO22</span><span class="pin-label" data-type="i2c">SCL</span></span></div>
-        <div class="pin-row" data-types="gpio uart"><span class="pin-num">4</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO1</span><span class="pin-label" data-type="uart">TX0</span></span></div>
-        <div class="pin-row" data-types="gpio uart"><span class="pin-num">5</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO3</span><span class="pin-label" data-type="uart">RX0</span></span></div>
-        <div class="pin-row" data-types="gpio i2c"><span class="pin-num">6</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO21</span><span class="pin-label" data-type="i2c">SDA</span></span></div>
-        <div class="pin-row" data-types="gnd"><span class="pin-num">7</span><span class="pin-labels"><span class="pin-label primary" data-type="gnd">GND</span></span></div>
-        <div class="pin-row" data-types="gpio spi"><span class="pin-num">8</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO19</span><span class="pin-label" data-type="spi">VSPI_Q</span></span></div>
-        <div class="pin-row" data-types="gpio spi"><span class="pin-num">9</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO18</span><span class="pin-label" data-type="spi">VSPI_CLK</span></span></div>
-        <div class="pin-row" data-types="gpio spi strapping"><span class="pin-num">10</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO5</span><span class="pin-label" data-type="spi">VSPI_CS</span><span class="pin-label" data-type="strapping">BOOT</span></span></div>
-        <div class="pin-row" data-types="gpio uart"><span class="pin-num">11</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO17</span><span class="pin-label" data-type="uart">TX2</span></span></div>
-        <div class="pin-row" data-types="gpio uart"><span class="pin-num">12</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO16</span><span class="pin-label" data-type="uart">RX2</span></span></div>
-        <div class="pin-row" data-types="gpio adc touch"><span class="pin-num">13</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO4</span><span class="pin-label" data-type="adc">ADC2_0</span><span class="pin-label" data-type="touch">T0</span></span></div>
-        <div class="pin-row" data-types="gpio adc touch strapping"><span class="pin-num">14</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO0</span><span class="pin-label" data-type="touch">T1</span><span class="pin-label" data-type="strapping">BOOT</span></span></div>
-        <div class="pin-row" data-types="gpio adc touch"><span class="pin-num">15</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO2</span><span class="pin-label" data-type="adc">ADC2_2</span><span class="pin-label" data-type="touch">T2</span></span></div>
-        <div class="pin-row" data-types="gpio adc touch spi strapping"><span class="pin-num">16</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO15</span><span class="pin-label" data-type="spi">HSPI_CS</span><span class="pin-label" data-type="touch">T3</span></span></div>
-        <div class="pin-row" data-types="flash"><span class="pin-num">17</span><span class="pin-labels"><span class="pin-label" data-type="flash">Flash D1</span></span></div>
-        <div class="pin-row" data-types="flash"><span class="pin-num">18</span><span class="pin-labels"><span class="pin-label" data-type="flash">Flash D0</span></span></div>
-        <div class="pin-row" data-types="flash"><span class="pin-num">19</span><span class="pin-labels"><span class="pin-label" data-type="flash">Flash CLK</span></span></div>
+        <div class="pin-row" data-types="gnd"><span class="pin-num">1</span><span class="pin-labels"><span
+              class="pin-label primary" data-type="gnd">GND</span></span></div>
+        <div class="pin-row" data-types="gpio spi"><span class="pin-num">2</span><span class="pin-labels"><span
+              class="pin-label primary" data-type="gpio">IO23</span><span class="pin-label"
+              data-type="spi">VSPI_D</span></span></div>
+        <div class="pin-row" data-types="gpio i2c"><span class="pin-num">3</span><span class="pin-labels"><span
+              class="pin-label primary" data-type="gpio">IO22</span><span class="pin-label"
+              data-type="i2c">SCL</span></span></div>
+        <div class="pin-row" data-types="gpio uart"><span class="pin-num">4</span><span class="pin-labels"><span
+              class="pin-label primary" data-type="gpio">IO1</span><span class="pin-label"
+              data-type="uart">TX0</span></span></div>
+        <div class="pin-row" data-types="gpio uart"><span class="pin-num">5</span><span class="pin-labels"><span
+              class="pin-label primary" data-type="gpio">IO3</span><span class="pin-label"
+              data-type="uart">RX0</span></span></div>
+        <div class="pin-row" data-types="gpio i2c"><span class="pin-num">6</span><span class="pin-labels"><span
+              class="pin-label primary" data-type="gpio">IO21</span><span class="pin-label"
+              data-type="i2c">SDA</span></span></div>
+        <div class="pin-row" data-types="gnd"><span class="pin-num">7</span><span class="pin-labels"><span
+              class="pin-label primary" data-type="gnd">GND</span></span></div>
+        <div class="pin-row" data-types="gpio spi"><span class="pin-num">8</span><span class="pin-labels"><span
+              class="pin-label primary" data-type="gpio">IO19</span><span class="pin-label"
+              data-type="spi">VSPI_Q</span></span></div>
+        <div class="pin-row" data-types="gpio spi"><span class="pin-num">9</span><span class="pin-labels"><span
+              class="pin-label primary" data-type="gpio">IO18</span><span class="pin-label"
+              data-type="spi">VSPI_CLK</span></span></div>
+        <div class="pin-row" data-types="gpio spi strapping"><span class="pin-num">10</span><span
+            class="pin-labels"><span class="pin-label primary" data-type="gpio">IO5</span><span class="pin-label"
+              data-type="spi">VSPI_CS</span><span class="pin-label" data-type="strapping">BOOT</span></span></div>
+        <div class="pin-row" data-types="gpio uart"><span class="pin-num">11</span><span class="pin-labels"><span
+              class="pin-label primary" data-type="gpio">IO17</span><span class="pin-label"
+              data-type="uart">TX2</span></span></div>
+        <div class="pin-row" data-types="gpio uart"><span class="pin-num">12</span><span class="pin-labels"><span
+              class="pin-label primary" data-type="gpio">IO16</span><span class="pin-label"
+              data-type="uart">RX2</span></span></div>
+        <div class="pin-row" data-types="gpio adc touch"><span class="pin-num">13</span><span class="pin-labels"><span
+              class="pin-label primary" data-type="gpio">IO4</span><span class="pin-label"
+              data-type="adc">ADC2_0</span><span class="pin-label" data-type="touch">T0</span></span></div>
+        <div class="pin-row" data-types="gpio adc touch strapping"><span class="pin-num">14</span><span
+            class="pin-labels"><span class="pin-label primary" data-type="gpio">IO0</span><span class="pin-label"
+              data-type="touch">T1</span><span class="pin-label" data-type="strapping">BOOT</span></span></div>
+        <div class="pin-row" data-types="gpio adc touch"><span class="pin-num">15</span><span class="pin-labels"><span
+              class="pin-label primary" data-type="gpio">IO2</span><span class="pin-label"
+              data-type="adc">ADC2_2</span><span class="pin-label" data-type="touch">T2</span></span></div>
+        <div class="pin-row" data-types="gpio adc touch spi strapping"><span class="pin-num">16</span><span
+            class="pin-labels"><span class="pin-label primary" data-type="gpio">IO15</span><span class="pin-label"
+              data-type="spi">HSPI_CS</span><span class="pin-label" data-type="touch">T3</span></span></div>
+        <div class="pin-row" data-types="flash"><span class="pin-num">17</span><span class="pin-labels"><span
+              class="pin-label" data-type="flash">Flash D1</span></span></div>
+        <div class="pin-row" data-types="flash"><span class="pin-num">18</span><span class="pin-labels"><span
+              class="pin-label" data-type="flash">Flash D0</span></span></div>
+        <div class="pin-row" data-types="flash"><span class="pin-num">19</span><span class="pin-labels"><span
+              class="pin-label" data-type="flash">Flash CLK</span></span></div>
       </div>
     </div>
 
@@ -533,25 +656,30 @@
       <div class="info-grid">
         <div class="info-card">
           <h4><span class="dot" style="background: var(--input-only)"></span>Input Only (IO34-39)</h4>
-          <p>Los pines <code>IO34</code>, <code>IO35</code>, <code>IO36</code>, <code>IO39</code> son solo entrada. No tienen resistencias pull-up/down internas. Ideal para sensores analógicos.</p>
+          <p>Los pines <code>IO34</code>, <code>IO35</code>, <code>IO36</code>, <code>IO39</code> son solo entrada. No
+            tienen resistencias pull-up/down internas. Ideal para sensores analógicos.</p>
         </div>
         <div class="info-card">
           <h4><span class="dot" style="background: var(--strapping)"></span>Strapping Pins</h4>
-          <p><code>IO0</code>, <code>IO2</code>, <code>IO5</code>, <code>IO12</code>, <code>IO15</code> afectan el boot. Evitar conectar cargas durante el arranque. IO0 bajo = modo flash.</p>
+          <p><code>IO0</code>, <code>IO2</code>, <code>IO5</code>, <code>IO12</code>, <code>IO15</code> afectan el boot.
+            Evitar conectar cargas durante el arranque. IO0 bajo = modo flash.</p>
         </div>
         <div class="info-card">
           <h4><span class="dot" style="background: var(--adc)"></span>ADC durante WiFi</h4>
-          <p><code>ADC2</code> (IO0,2,4,12-15,25-27) no funciona cuando WiFi está activo. Usar <code>ADC1</code> (IO32-36,39) para lecturas confiables.</p>
+          <p><code>ADC2</code> (IO0,2,4,12-15,25-27) no funciona cuando WiFi está activo. Usar <code>ADC1</code>
+            (IO32-36,39) para lecturas confiables.</p>
         </div>
         <div class="info-card">
           <h4><span class="dot" style="background: var(--i2c)"></span>I2C Default</h4>
-          <p>I2C por defecto: <code>IO21</code> (SDA) y <code>IO22</code> (SCL). Cualquier GPIO puede ser I2C vía software.</p>
+          <p>I2C por defecto: <code>IO21</code> (SDA) y <code>IO22</code> (SCL). Cualquier GPIO puede ser I2C vía
+            software.</p>
         </div>
       </div>
     </div>
 
     <footer class="footer">
-      HIOS Pinouts • Inspirado en <a href="https://www.luisllamas.es/en/esp32-hardware-details-pinout/" target="_blank">luisllamas.es</a>
+      HIOS Pinouts • Inspirado en <a href="https://www.luisllamas.es/en/esp32-hardware-details-pinout/"
+        target="_blank">luisllamas.es</a>
     </footer>
   </div>
 
