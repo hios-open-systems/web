@@ -6,11 +6,11 @@ import { ArrowLeftOutlined, DownloadOutlined, GithubOutlined, DoubleRightOutline
 import { motion } from 'framer-motion';
 import { useTheme } from '@/lib/ThemeContext';
 import { ProjectMeta } from '@/lib/projects';
-import Image from 'next/image';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useTranslations } from 'next-intl';
+import { ImageCarousel } from '@/components/common/ImageCarousel';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -526,24 +526,21 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
             </motion.section>
 
             {project.gallery && project.gallery.length > 0 && (
-                <section style={{ maxWidth: 1200, margin: '80px auto 0', padding: '0 24px' }}>
-                    <Row gutter={[16, 16]}>
-                        {project.gallery.map((img, idx) => (
-                            <Col xs={24} sm={12} md={8} key={idx}>
-                                <div style={{
-                                    position: 'relative',
-                                    width: '100%',
-                                    aspectRatio: '4/3',
-                                    borderRadius: '12px',
-                                    overflow: 'hidden',
-                                    border: cardBorder
-                                }}>
-                                    <Image src={img} alt={`${project.name} gallery ${idx}`} fill style={{ objectFit: 'cover' }} />
-                                </div>
-                            </Col>
-                        ))}
-                    </Row>
-                </section>
+                <motion.section
+                    style={{ maxWidth: 900, margin: '80px auto 0', padding: '0 24px' }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.8 }}
+                >
+                    <Title level={3} style={{
+                        color: textColor,
+                        marginBottom: '24px',
+                        textAlign: 'center',
+                    }}>
+                        {t('gallery')}
+                    </Title>
+                    <ImageCarousel images={project.gallery} alt={project.name} />
+                </motion.section>
             )}
 
             {/* Footer note */}

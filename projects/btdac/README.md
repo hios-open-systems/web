@@ -2,89 +2,112 @@
 
 Receptor de audio Bluetooth A2DP con ESP32 y DAC PCM5102.
 
-## Pinout
+## Quick Start
 
-### PCM5102 (DAC)
+```bash
+# Clonar el repositorio
+git clone https://github.com/hios-open-systems/web.git
+cd web/projects/btdac
 
-| PCM5102 | ESP32 GPIO |
-| ------- | ---------- |
-| BCK     | 27         |
-| LCK     | 14         |
-| DIN     | 13         |
-| SCK     | GND        |
-| GND     | GND        |
-| VIN     | 5V         |
+# Subir firmware (PlatformIO)
+pio run -t upload
 
-### LED RGB (KY-009)
+# Monitor serial
+pio device monitor
+```
 
-| LED | ESP32 GPIO | Resistencia |
-| --- | ---------- | ----------- |
-| R   | 4          | 330Ω        |
-| G   | 16         | 330Ω        |
-| B   | 17         | 330Ω        |
-| -   | GND        | -           |
+## Que es?
+
+Receptor Bluetooth portatil que convierte cualquier equipo de audio en inalambrico:
+- Audio Bluetooth A2DP de alta calidad
+- DAC PCM5102 con 112dB SNR
+- Bateria recargable USB-C (12+ horas)
+- LED RGB de estado
+- Salida line level (Jack 3.5mm)
+
+## Hardware
+
+| Componente | Funcion | ~USD |
+|------------|---------|------|
+| ESP32 DevKit 38-pin | Micro + BT | $12 |
+| PCM5102 DAC | Conversor audio | $10 |
+| LM2596 DC-DC | Fuente 5V | $3 |
+| 2x 18650 | Bateria | $12 |
+| BMS 2S USB-C | Carga + proteccion | $6 |
+| LED RGB KY-009 | Indicador | $2 |
+| Resistor 330Ω | x3 para LED | $1 |
+| Varios | Cables, PCB | $5 |
+| **Total** | | **~$51** |
+
+Ver detalles en [COMPONENTS.md](COMPONENTS.md)
+
+## Conexiones rapidas
+
+```
+ESP32 GPIO26 → PCM5102 BCK
+ESP32 GPIO25 → PCM5102 LRCK
+ESP32 GPIO22 → PCM5102 DIN
+PCM5102 SCK  → GND (importante!)
+```
+
+Ver diagrama completo en [PINOUT.md](PINOUT.md)
 
 ## Estados del LED
 
-| Color     | Comportamiento     | Estado             |
-| --------- | ------------------ | ------------------ |
-| 🔵 Azul   | Parpadeante lento  | Esperando conexión |
-| 🔵🟢 Cyan | Parpadeante rápido | Conectando         |
-| 🟢 Verde  | Fijo               | Conectado          |
-| 🟢 Verde  | Parpadeante        | Reproduciendo      |
-| 🔴 Rojo   | Parpadeante        | Error              |
+| Color | Comportamiento | Estado |
+|-------|----------------|--------|
+| Azul | Parpadeante lento | Esperando conexion |
+| Cyan | Parpadeante rapido | Conectando |
+| Verde | Fijo | Conectado |
+| Verde | Parpadeante | Reproduciendo |
+| Rojo | Parpadeante | Error |
 
 ## Uso
 
 1. Encender el dispositivo
-2. En el teléfono, buscar **"HIOS BTDAC"** en Bluetooth
-3. Conectar y reproducir música
-4. El Serial Monitor muestra título/artista/álbum
+2. Buscar **"HIOS BTDAC"** en Bluetooth
+3. Conectar y reproducir musica
+4. El Serial Monitor muestra titulo/artista/album
 
-## Serial Monitor (115200 baud)
+## Estructura del proyecto
 
 ```
-═══════════════════════════════════════════════════════════
-              HIOS BTDAC - Bluetooth Audio
-═══════════════════════════════════════════════════════════
-Dispositivo: HIOS BTDAC
-Pines I2S: BCK=27, LCK=14, DIN=13
-═══════════════════════════════════════════════════════════
-[LED] Test de colores...
-[I2S] Configurando...
-[BT] Iniciando Bluetooth...
-[OK] Sistema listo
-═══════════════════════════════════════════════════════════
-[BT] ¡Conectado!
-[Audio] ▶ Reproduciendo
-[Track] 🎵 Song Title
-[Track] 👤 Artist Name
-[Track] 💿 Album Name
+btdac/
+├── README.md           # Este archivo
+├── COMPONENTS.md       # Especificaciones de cada modulo
+├── PINOUT.md          # Diagrama de conexiones completo
+├── ASSEMBLY.md        # Guia de armado paso a paso
+├── TROUBLESHOOTING.md # Problemas comunes
+├── platformio.ini     # Configuracion PlatformIO
+├── src/
+│   └── HIOS_BTDAC.ino # Firmware principal
+├── tests/
+│   └── HIOS_BTDAC_minimal_test.ino
+├── android/           # App Android (roadmap)
+└── pics/
+    ├── modules/       # Fotos de componentes
+    └── build/         # Fotos del proyecto armado
 ```
 
-## Instalación
+## Estado
 
-### PlatformIO (recomendado)
+**Prototipo funcional** - Testeado y funcionando.
 
-```bash
-pio run -t upload
-pio device monitor
-```
+- [x] Hardware completo
+- [x] Firmware funcional
+- [x] Documentacion completa
+- [x] 12+ horas de bateria
+- [ ] App Android
+- [ ] PCB custom
 
-### Arduino IDE
+## Links
 
-1. Instalar librería **ESP32-A2DP** (Phil Schatzmann)
-2. Seleccionar placa **ESP32 Dev Module**
-3. Subir
+- [GitHub](https://github.com/hios-open-systems/web/tree/main/projects/btdac)
+- [Web](https://openhios.dev/projects/btdac)
 
-## Configuración
+## Licencia
 
-Podés modificar en el código:
-
-```cpp
-const char* BT_DEVICE_NAME = "HIOS BTDAC";  // Nombre Bluetooth
-const int INITIAL_VOLUME = 100;              // Volumen 0-127
-```
+Open Hardware - Usa, modifica y comparte libremente.
 
 ---
 

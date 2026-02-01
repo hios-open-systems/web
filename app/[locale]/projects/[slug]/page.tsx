@@ -26,5 +26,11 @@ export default async function ProjectPage({ params }: PageProps) {
         notFound();
     }
 
-    return <ProjectDetailClient project={project} slug={slug} />;
+    // Map images to gallery for the client component
+    const projectWithGallery = {
+        ...project,
+        gallery: project.images,
+    };
+
+    return <ProjectDetailClient project={projectWithGallery} slug={slug} />;
 }
