@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LM2596 Buck Converter - Pinout</title>
+  <style>
+    :root {
+      --bg: #0d0d0d;
+      --card: #1a1a1a;
+      --border: #333;
+      --text: #e5e5e5;
+      --text-dim: #888;
+      --accent: #f59e0b;
+      --power-vin: #ef4444;
+      --power-vout: #22c55e;
+      --power-gnd: #525252;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg);
+      color: var(--text);
+      padding: 20px;
+      line-height: 1.4;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 25px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h1 {
+      color: var(--accent);
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: var(--text-dim);
+      font-size: 13px;
+    }
+
+    .print-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .print-btn:hover {
+      opacity: 0.9;
+    }
+
+    .module {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .module h2 {
+      font-size: 18px;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+
+    .module-subtitle {
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-bottom: 15px;
+    }
+
+    .pinout {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      margin: 25px 0;
+      flex-wrap: wrap;
+    }
+
+    .pin-column {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-width: 120px;
+    }
+
+    .pin-column.left {
+      align-items: flex-end;
+    }
+
+    .pin-column.right {
+      align-items: flex-start;
+    }
+
+    .chip-body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-width: 140px;
+      padding: 20px;
+      background: linear-gradient(135deg, #333 0%, #1a1a1a 100%);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .display-label {
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+
+    .display-screen {
+      background: #111;
+      padding: 10px 16px;
+      border-radius: 4px;
+      font-size: 20px;
+      color: #0f0;
+      font-family: 'SF Mono', monospace;
+      border: 1px solid #222;
+    }
+
+    .chip-label {
+      margin-top: 12px;
+      font-weight: 600;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .pin-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 4px;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+
+    .pin-row:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--accent);
+    }
+
+    .pin-number {
+      min-width: 20px;
+      font-weight: 600;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .pin-label {
+      padding: 4px 10px;
+      border-radius: 3px;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .pin-row[data-cat="VIN"] .pin-label { background: var(--power-vin); color: #fff; }
+    .pin-row[data-cat="VOUT"] .pin-label { background: var(--power-vout); color: #000; }
+    .pin-row[data-cat="GND"] .pin-label { background: var(--power-gnd); color: #fff; }
+
+    .pinout-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 13px;
+    }
+
+    .pinout-table th {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+    }
+
+    .pinout-table td {
+      padding: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pin-cat {
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .cat-vin { background: var(--power-vin); color: #fff; }
+    .cat-vout { background: var(--power-vout); color: #000; }
+    .cat-gnd { background: var(--power-gnd); color: #fff; }
+
+    .warning {
+      margin-top: 15px;
+      padding: 12px;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
+    .warning strong {
+      color: var(--accent);
+    }
+
+    .specs {
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 8px;
+    }
+
+    .specs h3 {
+      font-size: 14px;
+      margin-bottom: 12px;
+      color: var(--accent);
+    }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .spec-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .spec-label {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .spec-value {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      padding: 15px;
+      background: var(--card);
+      border-radius: 8px;
+      margin-top: 20px;
+      font-size: 12px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-color {
+      width: 16px;
+      height: 16px;
+      border-radius: 2px;
+    }
+
+    .footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* Print Styles */
+    @media print {
+      :root {
+        --bg: #fff;
+        --card: #fff;
+        --border: #ccc;
+        --text: #000;
+        --text-dim: #555;
+      }
+
+      body {
+        background: #fff;
+        color: #000;
+        padding: 10mm;
+        font-size: 10pt;
+      }
+
+      .print-btn {
+        display: none;
+      }
+
+      .container {
+        max-width: 100%;
+      }
+
+      header {
+        border-bottom: 2px solid #000;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+      }
+
+      h1 {
+        color: #000;
+        font-size: 18pt;
+      }
+
+      .module {
+        border: 1px solid #ccc;
+        page-break-inside: avoid;
+        background: #fff;
+      }
+
+      .module h2 {
+        color: #000;
+      }
+
+      .pin-row {
+        border: none !important;
+        background: none !important;
+      }
+
+      .pin-label, .pin-cat {
+        border: 1px solid currentColor;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .chip-body {
+        background: #f5f5f5 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .display-screen {
+        background: #eee !important;
+        color: #000 !important;
+        border: 1px solid #999;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .legend {
+        background: #f9f9f9;
+        border: 1px solid #ccc;
+      }
+
+      .legend-color {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .warning {
+        background: #fff9e6;
+        border: 1px solid #e6a700;
+      }
+
+      .specs {
+        background: #f9f9f9;
+        border: 1px solid #ccc;
+      }
+
+      .footer {
+        margin-top: 10px;
+        border-top: 1px solid #ccc;
+        padding-top: 10px;
+      }
+
+      @page {
+        size: A4;
+        margin: 10mm;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <button class="print-btn" onclick="window.print()">Imprimir</button>
+
+  <div class="container">
+    <header>
+      <h1>LM2596 Buck Converter</h1>
+      <p class="subtitle">Regulador Step-Down DC-DC Ajustable - 3A / 150kHz</p>
+    </header>
+
+    <div class="module">
+      <h2>LM2596 Step-Down con Display</h2>
+      <p class="module-subtitle">Fuente DC-DC ajustable con indicador de voltaje</p>
+
+      <div class="pinout">
+        <div class="pin-column left">
+          <div class="pin-row" data-cat="VIN"><span class="pin-label">IN+</span><span class="pin-number">1</span></div>
+          <div class="pin-row" data-cat="GND"><span class="pin-label">IN-</span><span class="pin-number">2</span></div>
+        </div>
+
+        <div class="chip-body">
+          <div class="display-label">DISPLAY</div>
+          <div class="display-screen">5.0V</div>
+          <span class="chip-label">LM2596</span>
+        </div>
+
+        <div class="pin-column right">
+          <div class="pin-row" data-cat="VOUT"><span class="pin-number">1</span><span class="pin-label">OUT+</span></div>
+          <div class="pin-row" data-cat="GND"><span class="pin-number">2</span><span class="pin-label">OUT-</span></div>
+        </div>
+      </div>
+
+      <table class="pinout-table">
+        <thead>
+          <tr>
+            <th>Terminal</th>
+            <th>Nombre</th>
+            <th>Tipo</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>IN+</td>
+            <td>Entrada positiva</td>
+            <td><span class="pin-cat cat-vin">VIN</span></td>
+            <td>Voltaje de entrada (4.5V - 40V DC)</td>
+          </tr>
+          <tr>
+            <td>IN-</td>
+            <td>Entrada negativa</td>
+            <td><span class="pin-cat cat-gnd">GND</span></td>
+            <td>Tierra de entrada</td>
+          </tr>
+          <tr>
+            <td>OUT+</td>
+            <td>Salida positiva</td>
+            <td><span class="pin-cat cat-vout">VOUT</span></td>
+            <td>Voltaje de salida ajustable (1.2V - 37V)</td>
+          </tr>
+          <tr>
+            <td>OUT-</td>
+            <td>Salida negativa</td>
+            <td><span class="pin-cat cat-gnd">GND</span></td>
+            <td>Tierra de salida (común con IN-)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="warning">
+        <strong>IMPORTANTE:</strong> Ajustar el voltaje de salida a 5.0V con el potenciómetro ANTES de conectar cualquier carga.
+        Verificar siempre con multímetro antes de conectar el ESP32 u otros dispositivos sensibles.
+      </div>
+
+      <div class="specs">
+        <h3>Especificaciones Técnicas</h3>
+        <div class="specs-grid">
+          <div class="spec-item">
+            <span class="spec-label">Voltaje entrada</span>
+            <span class="spec-value">4.5V - 40V DC</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Voltaje salida</span>
+            <span class="spec-value">1.2V - 37V (ajustable)</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Corriente máx.</span>
+            <span class="spec-value">3A continuo</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Eficiencia</span>
+            <span class="spec-value">Hasta 92%</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Frecuencia</span>
+            <span class="spec-value">150 kHz</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Protección</span>
+            <span class="spec-value">Térmica + Sobrecorriente</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-color" style="background: var(--power-vin);"></div>
+          <span>Entrada (VIN)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: var(--power-vout);"></div>
+          <span>Salida (VOUT)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: var(--power-gnd);"></div>
+          <span>GND</span>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      HIOS Pinouts - Inspirado en <a href="https://www.luisllamas.es/" target="_blank">luisllamas.es</a>
+    </footer>
+  </div>
+</body>
+
+</html>

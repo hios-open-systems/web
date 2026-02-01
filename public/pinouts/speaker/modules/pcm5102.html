@@ -1,0 +1,46 @@
+<!-- PCM5102 DAC Module - Template para agregar a pinouts -->
+<!-- Copiar este bloque dentro de <div class="modules"> en index.html -->
+
+<div class="module" id="pcm5102">
+    <h2>PCM5102 DAC</h2>
+    <p class="module-subtitle">DAC I2S de alta calidad (alternativa a MAX98357)</p>
+
+    <div class="pinout">
+        <div class="pin-column left">
+            <div class="pin-row" data-cat="I2S"><span class="pin-label">SCK</span><span class="pin-number">1</span></div>
+            <div class="pin-row" data-cat="I2S"><span class="pin-label">BCK</span><span class="pin-number">2</span></div>
+            <div class="pin-row" data-cat="I2S"><span class="pin-label">DIN</span><span class="pin-number">3</span></div>
+            <div class="pin-row" data-cat="I2S"><span class="pin-label">LCK</span><span class="pin-number">4</span></div>
+            <div class="pin-row" data-cat="GPIO"><span class="pin-label">FMT</span><span class="pin-number">5</span></div>
+            <div class="pin-row" data-cat="GPIO"><span class="pin-label">XMT</span><span class="pin-number">6</span></div>
+        </div>
+
+        <div class="chip-body">
+            <span class="chip-label">PCM5102</span>
+        </div>
+
+        <div class="pin-column right">
+            <div class="pin-row" data-cat="5V"><span class="pin-number">1</span><span class="pin-label">VIN</span></div>
+            <div class="pin-row" data-cat="3V3"><span class="pin-number">2</span><span class="pin-label">3V3</span></div>
+            <div class="pin-row" data-cat="GND"><span class="pin-number">3</span><span class="pin-label">GND</span></div>
+            <div class="pin-row" data-cat="GPIO"><span class="pin-label">FLT</span><span class="pin-number">4</span></div>
+            <div class="pin-row" data-cat="GPIO"><span class="pin-label">DMP</span><span class="pin-number">5</span></div>
+            <div class="pin-row" data-cat="I2S"><span class="pin-number">6</span><span class="pin-label">L OUT</span></div>
+            <div class="pin-row" data-cat="I2S"><span class="pin-number">7</span><span class="pin-label">R OUT</span></div>
+        </div>
+    </div>
+
+    <div class="connections">
+        <h3>Conexiones tipicas</h3>
+        <div class="connection-list">
+            <div class="connection-item" data-cat="5V"><span class="dot"></span>VIN &rarr; 5V</div>
+            <div class="connection-item" data-cat="GND"><span class="dot"></span>GND &rarr; GND</div>
+            <div class="connection-item" data-cat="I2S"><span class="dot"></span>BCK &rarr; ESP32 GPIO26</div>
+            <div class="connection-item" data-cat="I2S"><span class="dot"></span>DIN &rarr; ESP32 GPIO25</div>
+            <div class="connection-item" data-cat="I2S"><span class="dot"></span>LCK &rarr; ESP32 GPIO27</div>
+            <div class="connection-item" data-cat="GND"><span class="dot"></span>SCK &rarr; GND (auto-clock)</div>
+            <div class="connection-item" data-cat="GND"><span class="dot"></span>FMT &rarr; GND (I2S format)</div>
+            <div class="connection-item" data-cat="3V3"><span class="dot"></span>XMT &rarr; 3V3 (unmute)</div>
+        </div>
+    </div>
+</div>

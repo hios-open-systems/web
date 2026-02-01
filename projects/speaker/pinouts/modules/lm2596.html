@@ -1,0 +1,39 @@
+<!-- LM2596 Step-Down con Display - Template -->
+<!-- Copiar este bloque dentro de <div class="modules"> en index.html -->
+
+<div class="module" id="lm2596">
+    <h2>LM2596 Step-Down</h2>
+    <p class="module-subtitle">Fuente DC-DC ajustable con display</p>
+
+    <div class="pinout">
+        <div class="pin-column left" style="gap: 15px;">
+            <div class="pin-row" data-cat="5V"><span class="pin-label">IN+</span><span class="pin-number">1</span></div>
+            <div class="pin-row" data-cat="GND"><span class="pin-label">IN-</span><span class="pin-number">2</span></div>
+        </div>
+
+        <div class="chip-body" style="min-width: 100px; padding: 15px;">
+            <div style="font-size: 10px; color: var(--text-dim); margin-bottom: 5px;">DISPLAY</div>
+            <div style="background: #111; padding: 8px 12px; border-radius: 4px; font-size: 16px; color: #0f0; font-family: monospace;">5.0V</div>
+            <span class="chip-label" style="writing-mode: horizontal-tb; transform: none; margin-top: 10px;">LM2596</span>
+        </div>
+
+        <div class="pin-column right" style="gap: 15px;">
+            <div class="pin-row" data-cat="5V" data-used><span class="pin-number">1</span><span class="pin-label">OUT+</span></div>
+            <div class="pin-row" data-cat="GND" data-used><span class="pin-number">2</span><span class="pin-label">OUT-</span></div>
+        </div>
+    </div>
+
+    <div class="connections">
+        <h3>Conexiones</h3>
+        <div class="connection-list">
+            <div class="connection-item" data-cat="5V"><span class="dot"></span>IN+ &larr; Cargador P+ (7-8V)</div>
+            <div class="connection-item" data-cat="GND"><span class="dot"></span>IN- &larr; Cargador P-</div>
+            <div class="connection-item" data-cat="5V"><span class="dot"></span>OUT+ &rarr; BUS 5V</div>
+            <div class="connection-item" data-cat="GND"><span class="dot"></span>OUT- &rarr; BUS GND</div>
+        </div>
+    </div>
+
+    <div style="margin-top: 15px; padding: 10px; background: rgba(245, 158, 11, 0.1); border-radius: 6px; font-size: 11px;">
+        <strong style="color: var(--accent);">⚠️ IMPORTANTE:</strong> Ajustar a 5.0V con el preset ANTES de conectar el ESP32
+    </div>
+</div>
