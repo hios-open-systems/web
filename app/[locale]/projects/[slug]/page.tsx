@@ -1,6 +1,8 @@
 import { getProjectBySlug, getProjectSlugs } from '@/lib/projects';
+
 import { ProjectDetailClient } from './ProjectDetailClient';
 import { notFound } from 'next/navigation';
+import { setRequestLocale } from 'next-intl/server';
 
 interface PageProps {
     params: Promise<{ slug: string; locale: string }>;
@@ -16,7 +18,8 @@ export async function generateStaticParams() {
 }
 
 export default async function ProjectPage({ params }: PageProps) {
-    const { slug } = await params;
+    const { slug, locale } = await params;
+    setRequestLocale(locale);
     const project = getProjectBySlug(slug);
 
     if (!project) {
