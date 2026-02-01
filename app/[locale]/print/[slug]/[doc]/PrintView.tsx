@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { Button, Select, Space, Typography } from 'antd';
 import { PrinterOutlined, ArrowLeftOutlined, DownloadOutlined } from '@ant-design/icons';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -26,14 +27,14 @@ export default function PrintView({
     currentDoc,
     availableDocs,
 }: PrintViewProps) {
-    const contentRef = useRef<HTMLDivElement>(null);
+    const router = useRouter();
 
     const handlePrint = () => {
         window.print();
     };
 
     const handleDocChange = (value: string) => {
-        window.location.href = `?doc=${value}`;
+        router.push(`/print/${slug}/${value}`);
     };
 
     useEffect(() => {
@@ -124,30 +125,32 @@ export default function PrintView({
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
+                    flexWrap: 'wrap',
+                    gap: '12px',
                 }}
             >
-                <Space>
+                <Space wrap>
                     <Link href={`/projects/${slug}`}>
                         <Button icon={<ArrowLeftOutlined />}>
-                            Volver al proyecto
+                            Volver
                         </Button>
                     </Link>
                     <Select
                         value={currentDoc}
                         onChange={handleDocChange}
-                        style={{ width: 200 }}
+                        style={{ width: 180 }}
                         options={availableDocs.map(doc => ({
                             value: doc,
                             label: doc.replace(/_/g, ' '),
                         }))}
                     />
                 </Space>
-                <Space>
-                    <Link href={`/downloads/${slug}/${currentDoc}.md`} download>
+                <Space wrap>
+                    <a href={`/downloads/${slug}/${currentDoc}.md`} download>
                         <Button icon={<DownloadOutlined />}>
-                            Descargar MD
+                            Descargar
                         </Button>
-                    </Link>
+                    </a>
                     <Button
                         type="primary"
                         icon={<PrinterOutlined />}
@@ -160,7 +163,6 @@ export default function PrintView({
 
             {/* Print content */}
             <div
-                ref={contentRef}
                 className="print-content"
                 style={{
                     maxWidth: 900,
