@@ -344,5 +344,27 @@
         "no_shipping": "Ohne Versand",
         "gallery": "Galerie",
         "print_pinout": "Pinout drucken"
+    },
+    "Pinouts": {
+        "title": "Interaktive Pinouts",
+        "subtitle": "Erkunde die Pin-Diagramme der Module, die in unseren Projekten verwendet werden",
+        "available_modules": "Verfügbare Module",
+        "select_module": "Wähle ein Modul, um seine Pinouts zu sehen",
+        "print": "Drucken",
+        "print_tooltip": "Pinout drucken",
+        "expand": "Erweitern",
+        "expand_tooltip": "In neuem Tab öffnen",
+        "interactive_view": "Interaktive Ansicht",
+        "specifications": "Spezifikationen",
+        "technical_info": "Technische Informationen",
+        "name": "Name",
+        "category": "Kategorie",
+        "voltage": "Spannung",
+        "resolution": "Auflösung",
+        "interface": "Schnittstelle",
+        "package": "Gehäuse",
+        "features": "Eigenschaften",
+        "datasheet": "Datenblatt",
+        "view_datasheet": "Offizielles Datenblatt anzeigen"
     }
 }

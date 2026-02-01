@@ -6,12 +6,12 @@
  * FEATURES:
  * - WiFi Radio Streams (presets + custom URL)
  * - YouTube Audio via Invidious API
- * - Bluetooth A2DP Sink (como btdac)
+ * - Bluetooth A2DP Sink
+ * - Bluetooth Serial config (WiFi setup via BT terminal app)
  * - LCD 16x2 I2C display
- * - Control de volumen web
- * - Medicion de bateria
+ * - Web control interface
+ * - Battery monitoring
  * - OTA Updates
- * - ESPConnect (portal WiFi)
  *
  * HARDWARE:
  * - ESP32 DevKit V1
@@ -42,6 +42,9 @@
 // Audio libraries
 #include "Audio.h"  // ESP32-audioI2S library
 #include "BluetoothA2DPSink.h"
+#include "BluetoothSerial.h"
+
+BluetoothSerial SerialBT;
 
 // ============================================
 // CONFIGURACION
@@ -211,7 +214,7 @@ void readBattery() {
     }
     float adcVoltage = (sum / 10.0 / 4095.0) * 3.3;
     batteryVoltage = adcVoltage * VBAT_MULT;
-    batteryPercent = constrain(map(batteryVoltage * 100, VBAT_MIN * 100, VBAT_MAX * 100, 0, 100), 0, 100);
+    batteryPercent = constrain(::map(batteryVoltage * 100, VBAT_MIN * 100, VBAT_MAX * 100, 0, 100), 0, 100);
 }
 
 // ============================================
@@ -220,7 +223,7 @@ void readBattery() {
 
 void setupWiFiAudio() {
     audio.setPinout(I2S_BCLK, I2S_LRC, I2S_DOUT);
-    audio.setVolume(map(volume, 0, 100, 0, 21));
+    audio.setVolume(::map(volume, 0, 100, 0, 21));
 }
 
 void playRadioStation(int index) {
@@ -363,13 +366,179 @@ void setVolume(int vol) {
     volume = constrain(vol, 0, 100);
 
     if (currentMode == MODE_WIFI_RADIO || currentMode == MODE_WIFI_STREAM) {
-        audio.setVolume(map(volume, 0, 100, 0, 21));
+        audio.setVolume(::map(volume, 0, 100, 0, 21));
     } else if (currentMode == MODE_BLUETOOTH) {
-        a2dp_sink.set_volume(map(volume, 0, 100, 0, 127));
+        a2dp_sink.set_volume(::map(volume, 0, 100, 0, 127));
     }
 
     prefs.putInt("volume", volume);
     Serial.printf("[Volume] %d%%\n", volume);
+}
+
+// ============================================
+// BLUETOOTH SERIAL CONFIG
+// ============================================
+
+String btBuffer = "";
+
+void btSendLine(const char* msg) {
+    SerialBT.println(msg);
+    Serial.println(msg);
+}
+
+void btScanNetworks() {
+    btSendLine("[SCAN] Scanning WiFi networks...");
+    int n = WiFi.scanNetworks();
+    if (n == 0) {
+        btSendLine("[SCAN] No networks found");
+    } else {
+        for (int i = 0; i < n; i++) {
+            String line = String(i + 1) + ": " + WiFi.SSID(i) + " (" + WiFi.RSSI(i) + "dBm)";
+            if (WiFi.encryptionType(i) != WIFI_AUTH_OPEN) line += " *";
+            btSendLine(line.c_str());
+        }
+    }
+    btSendLine("[SCAN] Done");
+}
+
+void btShowStatus() {
+    btSendLine("═══ HIOS Speaker Status ═══");
+
+    String wifiStatus = "[WiFi] ";
+    if (WiFi.status() == WL_CONNECTED) {
+        wifiStatus += "Connected: " + WiFi.localIP().toString();
+        wifiStatus += " (RSSI: " + String(WiFi.RSSI()) + "dBm)";
+    } else {
+        wifiStatus += "Not connected";
+    }
+    btSendLine(wifiStatus.c_str());
+
+    String savedSSID = prefs.getString("wifi_ssid", "");
+    if (savedSSID.length() > 0) {
+        btSendLine(("[Saved] SSID: " + savedSSID).c_str());
+    }
+
+    btSendLine(("[Volume] " + String(volume) + "%").c_str());
+    btSendLine(("[Battery] " + String(batteryVoltage, 2) + "V (" + String(batteryPercent) + "%)").c_str());
+    btSendLine(("[Mode] " + String(currentMode == MODE_WIFI_RADIO ? "Radio" :
+                                    currentMode == MODE_WIFI_STREAM ? "Stream" :
+                                    currentMode == MODE_BLUETOOTH ? "BT Audio" : "Idle")).c_str());
+    btSendLine("════════════════════════════");
+}
+
+void btSetWiFi(String ssid, String password) {
+    btSendLine(("[WiFi] Setting: " + ssid).c_str());
+
+    // Guardar credenciales
+    prefs.putString("wifi_ssid", ssid);
+    prefs.putString("wifi_pass", password);
+
+    // Intentar conectar
+    WiFi.disconnect();
+    WiFi.begin(ssid.c_str(), password.c_str());
+
+    lcdShowMessage("Connecting", ssid.c_str());
+
+    int attempts = 0;
+    while (WiFi.status() != WL_CONNECTED && attempts < 20) {
+        delay(500);
+        SerialBT.print(".");
+        attempts++;
+    }
+    SerialBT.println();
+
+    if (WiFi.status() == WL_CONNECTED) {
+        String msg = "[WiFi] OK! IP: " + WiFi.localIP().toString();
+        btSendLine(msg.c_str());
+        lcdShowMessage("WiFi OK", WiFi.localIP().toString().c_str());
+
+        if (MDNS.begin(DEVICE_NAME)) {
+            MDNS.addService("http", "tcp", 80);
+        }
+    } else {
+        btSendLine("[WiFi] Failed to connect");
+        lcdShowMessage("WiFi Error", "Check credentials");
+    }
+}
+
+void btResetWiFi() {
+    btSendLine("[WiFi] Clearing saved credentials...");
+    prefs.remove("wifi_ssid");
+    prefs.remove("wifi_pass");
+    WiFi.disconnect(true, true);
+    btSendLine("[WiFi] Done. Restart to apply.");
+}
+
+void btShowHelp() {
+    btSendLine("═══ HIOS Commands ═══");
+    btSendLine("WIFI:ssid:password  - Set WiFi credentials");
+    btSendLine("SCAN                - Scan WiFi networks");
+    btSendLine("STATUS              - Show device status");
+    btSendLine("RESET               - Clear WiFi credentials");
+    btSendLine("RESTART             - Restart device");
+    btSendLine("VOL:0-100           - Set volume");
+    btSendLine("HELP                - Show this help");
+    btSendLine("═════════════════════");
+}
+
+void processBluetoothCommand(String originalCmd) {
+    originalCmd.trim();
+    String cmd = originalCmd;
+    cmd.toUpperCase();
+
+    Serial.printf("[BT Cmd] %s\n", originalCmd.c_str());
+
+    if (cmd.startsWith("WIFI:")) {
+        // Parse WIFI:ssid:password (mantener case original)
+        String params = originalCmd.substring(5);
+        int sepIndex = params.indexOf(':');
+        if (sepIndex > 0) {
+            String ssid = params.substring(0, sepIndex);
+            String pass = params.substring(sepIndex + 1);
+            btSetWiFi(ssid, pass);
+        } else {
+            btSendLine("[Error] Format: WIFI:ssid:password");
+        }
+    }
+    else if (cmd == "SCAN") {
+        btScanNetworks();
+    }
+    else if (cmd == "STATUS") {
+        btShowStatus();
+    }
+    else if (cmd == "RESET") {
+        btResetWiFi();
+    }
+    else if (cmd == "RESTART") {
+        btSendLine("[System] Restarting...");
+        delay(500);
+        ESP.restart();
+    }
+    else if (cmd.startsWith("VOL:")) {
+        int vol = originalCmd.substring(4).toInt();
+        setVolume(vol);
+        btSendLine(("[Volume] Set to " + String(volume) + "%").c_str());
+    }
+    else if (cmd == "HELP" || cmd == "?") {
+        btShowHelp();
+    }
+    else if (cmd.length() > 0) {
+        btSendLine("[Error] Unknown command. Type HELP for commands.");
+    }
+}
+
+void handleBluetoothSerial() {
+    while (SerialBT.available()) {
+        char c = SerialBT.read();
+        if (c == '\n' || c == '\r') {
+            if (btBuffer.length() > 0) {
+                processBluetoothCommand(btBuffer);
+            }
+            btBuffer = "";
+        } else if (btBuffer.length() < 128) {  // Limit buffer size
+            btBuffer += c;
+        }
+    }
 }
 
 // ============================================
@@ -690,31 +859,45 @@ void setup() {
         readBattery();
     }
 
-    // WiFi
-    lcdShowMessage("Connecting", "WiFi...");
-    WiFi.mode(WIFI_STA);
-    WiFi.begin();  // Usa credenciales guardadas
+    // Bluetooth Serial (siempre activo para configuración)
+    SerialBT.begin(DEVICE_NAME);
+    Serial.println("[BT] Serial started - connect to configure");
 
-    int attempts = 0;
-    while (WiFi.status() != WL_CONNECTED && attempts < 20) {
-        delay(500);
-        Serial.print(".");
-        attempts++;
-    }
+    // WiFi - usar credenciales guardadas
+    String savedSSID = prefs.getString("wifi_ssid", "");
+    String savedPass = prefs.getString("wifi_pass", "");
 
-    if (WiFi.status() == WL_CONNECTED) {
-        Serial.printf("\n[WiFi] Connected: %s\n", WiFi.localIP().toString().c_str());
+    if (savedSSID.length() > 0) {
+        lcdShowMessage("Connecting", savedSSID.c_str());
+        Serial.printf("[WiFi] Connecting to: %s\n", savedSSID.c_str());
 
-        if (MDNS.begin(DEVICE_NAME)) {
-            MDNS.addService("http", "tcp", 80);
-            Serial.printf("[mDNS] http://%s.local\n", DEVICE_NAME);
+        WiFi.mode(WIFI_STA);
+        WiFi.begin(savedSSID.c_str(), savedPass.c_str());
+
+        int attempts = 0;
+        while (WiFi.status() != WL_CONNECTED && attempts < 20) {
+            delay(500);
+            Serial.print(".");
+            attempts++;
         }
 
-        lcdShowMessage("WiFi OK", WiFi.localIP().toString().c_str());
+        if (WiFi.status() == WL_CONNECTED) {
+            Serial.printf("\n[WiFi] Connected: %s\n", WiFi.localIP().toString().c_str());
+
+            if (MDNS.begin(DEVICE_NAME)) {
+                MDNS.addService("http", "tcp", 80);
+                Serial.printf("[mDNS] http://%s.local\n", DEVICE_NAME);
+            }
+
+            lcdShowMessage("WiFi OK", WiFi.localIP().toString().c_str());
+        } else {
+            Serial.println("\n[WiFi] Connection failed");
+            lcdShowMessage("WiFi Error", "Use BT to config");
+        }
     } else {
-        Serial.println("\n[WiFi] Starting AP mode");
-        WiFi.softAP(DEVICE_NAME, AP_PASSWORD);
-        lcdShowMessage("AP Mode", DEVICE_NAME);
+        Serial.println("[WiFi] No credentials saved");
+        Serial.println("[WiFi] Connect via Bluetooth to configure");
+        lcdShowMessage("No WiFi", "Config via BT");
     }
 
     // Web Server
@@ -743,6 +926,7 @@ void setup() {
 void loop() {
     server.handleClient();
     ArduinoOTA.handle();
+    handleBluetoothSerial();
 
     // Audio loop (solo en modo WiFi)
     if (currentMode == MODE_WIFI_RADIO || currentMode == MODE_WIFI_STREAM) {

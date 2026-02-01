@@ -21,13 +21,6 @@ export function ModuleCard({ module, isSelected, onSelect }: ModuleCardProps) {
       className={`${styles.moduleCard} ${isSelected ? styles.selected : ''}`}
       hoverable
       onClick={() => onSelect?.(module.id)}
-      cover={
-        module.image && (
-          <div className={styles.moduleImage}>
-            <img alt={module.name} src={module.image} />
-          </div>
-        )
-      }
     >
       <div className={styles.cardHeader}>
         <h3 className={styles.moduleName}>{module.name}</h3>

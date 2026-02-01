@@ -32,6 +32,7 @@ export const MODULES: Module[] = [
     name: 'ESP32-WROOM-32',
     description: 'Microcontrolador 38 pines con WiFi, Bluetooth, ADC, DAC y Touch',
     category: 'microcontroller',
+    image: '/esp32wroom.avif',
     htmlPath: '/pinouts/modules/esp32-wroom-32.html',
     datasheetUrl: 'https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf',
     specs: {

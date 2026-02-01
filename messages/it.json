@@ -344,5 +344,27 @@
         "no_shipping": "Spedizione esclusa",
         "gallery": "Galleria",
         "print_pinout": "Stampa Pinout"
+    },
+    "Pinouts": {
+        "title": "Pinout Interattivi",
+        "subtitle": "Esplora i diagrammi dei pin dei moduli utilizzati nei nostri progetti",
+        "available_modules": "Moduli Disponibili",
+        "select_module": "Seleziona un modulo per vedere i suoi pinout",
+        "print": "Stampa",
+        "print_tooltip": "Stampa pinout",
+        "expand": "Espandi",
+        "expand_tooltip": "Apri in nuova scheda",
+        "interactive_view": "Vista Interattiva",
+        "specifications": "Specifiche",
+        "technical_info": "Informazioni Tecniche",
+        "name": "Nome",
+        "category": "Categoria",
+        "voltage": "Voltaggio",
+        "resolution": "Risoluzione",
+        "interface": "Interfaccia",
+        "package": "Package",
+        "features": "Caratteristiche",
+        "datasheet": "Datasheet",
+        "view_datasheet": "Visualizza datasheet ufficiale"
     }
 }
