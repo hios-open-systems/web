@@ -110,7 +110,7 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                                 {file.name}
                             </Button>
                         ))}
-                        <Link href={`/print/${slug}?doc=PINOUT`}>
+                        <Link href={`/print/${slug}/PINOUT`}>
                             <Button icon={<PrinterOutlined />} style={{ borderColor: accentColor, color: accentColor }}>
                                 {t('print_pinout')}
                             </Button>
