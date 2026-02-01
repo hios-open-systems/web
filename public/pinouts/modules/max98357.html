@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MAX98357 I2S Amplifier - Pinout</title>
+  <style>
+    :root {
+      --bg: #0d0d0d;
+      --card: #1a1a1a;
+      --border: #333;
+      --text: #e5e5e5;
+      --text-dim: #888;
+      --accent: #f59e0b;
+      --power-5v: #ef4444;
+      --power-3v3: #f97316;
+      --power-gnd: #525252;
+      --i2s: #3b82f6;
+      --adc: #ec4899;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+      background: var(--bg);
+      color: var(--text);
+      padding: 20px;
+      line-height: 1.4;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 25px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h1 {
+      color: var(--accent);
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: var(--text-dim);
+      font-size: 13px;
+    }
+
+    .module {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .module h2 {
+      font-size: 18px;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+
+    .module-subtitle {
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-bottom: 15px;
+    }
+
+    .pinout-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+      font-size: 13px;
+    }
+
+    .pinout-table th {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+    }
+
+    .pinout-table td {
+      padding: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pin-number {
+      color: var(--accent);
+      font-weight: 600;
+      min-width: 40px;
+    }
+
+    .pin-name {
+      font-weight: 500;
+    }
+
+    .pin-cat {
+      padding: 2px 6px;
+      border-radius: 2px;
+      font-size: 11px;
+      text-align: center;
+      min-width: 60px;
+    }
+
+    .cat-power {
+      background: var(--power-5v);
+      color: #fff;
+    }
+
+    .cat-gnd {
+      background: var(--power-gnd);
+      color: #fff;
+    }
+
+    .cat-i2s {
+      background: var(--i2s);
+      color: #fff;
+    }
+
+    .cat-adc {
+      background: var(--adc);
+      color: #fff;
+    }
+
+    .cat-nc {
+      background: #333;
+      color: #999;
+    }
+
+    .description {
+      background: rgba(255, 255, 255, 0.02);
+      border-left: 3px solid var(--i2s);
+      padding: 12px;
+      margin-top: 15px;
+      border-radius: 4px;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 8px;
+      margin-top: 20px;
+      font-size: 12px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-color {
+      width: 16px;
+      height: 16px;
+      border-radius: 2px;
+    }
+
+    .print-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .print-btn:hover {
+      opacity: 0.9;
+    }
+
+    .footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* Print Styles */
+    @media print {
+      :root {
+        --bg: #fff;
+        --card: #fff;
+        --border: #ccc;
+        --text: #000;
+        --text-dim: #555;
+      }
+
+      body {
+        background: #fff;
+        color: #000;
+        padding: 10mm;
+        font-size: 10pt;
+      }
+
+      .print-btn {
+        display: none;
+      }
+
+      .container {
+        max-width: 100%;
+      }
+
+      header {
+        border-bottom: 2px solid #000;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+      }
+
+      h1 {
+        color: #000;
+        font-size: 18pt;
+      }
+
+      .module {
+        border: 1px solid #ccc;
+        page-break-inside: avoid;
+        background: #fff;
+      }
+
+      .module h2 {
+        color: #000;
+      }
+
+      .pinout-table th {
+        background: #f0f0f0 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .pin-cat {
+        border: 1px solid currentColor;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .description {
+        background: #f9f9f9;
+        border-left: 3px solid #3b82f6;
+      }
+
+      .legend {
+        background: #f9f9f9;
+        border: 1px solid #ccc;
+      }
+
+      .legend-color {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .footer {
+        margin-top: 10px;
+        border-top: 1px solid #ccc;
+        padding-top: 10px;
+      }
+
+      @page {
+        size: A4;
+        margin: 10mm;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <button class="print-btn" onclick="window.print()">Imprimir</button>
+
+  <div class="container">
+    <header>
+      <h1>MAX98357 I2S Amplifier</h1>
+      <p class="subtitle">Amplificador de potencia digital 3.2W @ 4Ω - 16 pines</p>
+    </header>
+
+    <div class="module">
+      <h2>MAX98357A - I2S Audio Amplifier</h2>
+      <p class="module-subtitle">Amplificador monofónico con interfaz I2S integrada</p>
+
+      <table class="pinout-table">
+        <thead>
+          <tr>
+            <th>Pin</th>
+            <th>Nombre</th>
+            <th>Tipo</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="pin-number">1</td>
+            <td class="pin-name">GAIN</td>
+            <td><span class="pin-cat cat-adc">ADC</span></td>
+            <td>Entrada de ganancia (selección de volumen)</td>
+          </tr>
+          <tr>
+            <td class="pin-number">2</td>
+            <td class="pin-name">DIN</td>
+            <td><span class="pin-cat cat-i2s">I2S</span></td>
+            <td>Entrada de datos I2S</td>
+          </tr>
+          <tr>
+            <td class="pin-number">3</td>
+            <td class="pin-name">BCLK</td>
+            <td><span class="pin-cat cat-i2s">I2S</span></td>
+            <td>Reloj de bits (bit clock)</td>
+          </tr>
+          <tr>
+            <td class="pin-number">4</td>
+            <td class="pin-name">LRCLK</td>
+            <td><span class="pin-cat cat-i2s">I2S</span></td>
+            <td>Reloj de marco (word select)</td>
+          </tr>
+          <tr>
+            <td class="pin-number">5</td>
+            <td class="pin-name">SDMODE</td>
+            <td><span class="pin-cat cat-adc">GPIO</span></td>
+            <td>Modo shutdown (bajo = apagado)</td>
+          </tr>
+          <tr>
+            <td class="pin-number">6</td>
+            <td class="pin-name">GND</td>
+            <td><span class="pin-cat cat-gnd">GND</span></td>
+            <td>Tierra</td>
+          </tr>
+          <tr>
+            <td class="pin-number">7</td>
+            <td class="pin-name">OUT-</td>
+            <td><span class="pin-cat cat-power">SPKR</span></td>
+            <td>Salida de parlante (negativa)</td>
+          </tr>
+          <tr>
+            <td class="pin-number">8</td>
+            <td class="pin-name">OUT+</td>
+            <td><span class="pin-cat cat-power">SPKR</span></td>
+            <td>Salida de parlante (positiva)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="description">
+        <strong>Notas importantes:</strong><br>
+        • Requiere condensador de desacoplamiento en VDD (10µF).<br>
+        • Incluye Bootstrap (auto-generación de voltaje para etapa de salida).<br>
+        • Eficiencia: >90% @ 1kHz, 4Ω, 1W.<br>
+        • Rango de voltaje: 2.7V - 5.5V (típicamente 3.3V o 5V).<br>
+        • Selección de ganancia: GND=6dB, NC=9dB, VDD=12dB, 3V3=15dB
+      </div>
+
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-color" style="background: var(--i2s);"></div>
+          <span>I2S</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: var(--power-5v);"></div>
+          <span>Parlante</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: var(--adc);"></div>
+          <span>Control</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: var(--power-gnd);"></div>
+          <span>GND</span>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      HIOS Pinouts - Inspirado en <a href="https://www.luisllamas.es/" target="_blank">luisllamas.es</a>
+    </footer>
+  </div>
+</body>
+
+</html>
