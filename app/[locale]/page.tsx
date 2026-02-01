@@ -1,7 +1,14 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 
-// Importación dinámica de componentes client-side
+import { setRequestLocale } from 'next-intl/server';
+
+const locales = ['en', 'es', 'de', 'it'];
+
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
+
 const HeroSection = dynamic(
   () => import('@/components/landing/HeroSection').then(mod => ({ default: mod.HeroSection })),
   { ssr: true }
@@ -22,7 +29,8 @@ const ToolsSection = dynamic(
   { ssr: true }
 );
 
-export default function Home() {
+export default function Home({ params: { locale } }: { params: { locale: string } }) {
+  setRequestLocale(locale);
   return (
     <main>
       <HeroSection />
