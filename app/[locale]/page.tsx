@@ -29,6 +29,11 @@ const ToolsSection = dynamic(
   { ssr: true }
 );
 
+const TutorialsSection = dynamic(
+  () => import('@/components/landing/TutorialsSection').then(mod => ({ default: mod.TutorialsSection })),
+  { ssr: true }
+);
+
 export default function Home({ params: { locale } }: { params: { locale: string } }) {
   setRequestLocale(locale);
   return (
@@ -36,6 +41,7 @@ export default function Home({ params: { locale } }: { params: { locale: string 
       <HeroSection />
       <ProjectsGrid />
       <DocumentationSection />
+      <TutorialsSection />
       <ToolsSection />
     </main>
   );

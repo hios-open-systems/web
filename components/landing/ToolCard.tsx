@@ -6,19 +6,13 @@ import { motion } from 'framer-motion';
 import { useTheme } from '@/lib/ThemeContext';
 import { LinkOutlined } from '@ant-design/icons';
 import Image from 'next/image';
+import { Tool } from '@/config/tools';
+import { colors } from '@/config/theme';
+
+// Re-export Tool for backwards compatibility
+export type { Tool };
 
 const { Text } = Typography;
-
-export interface Tool {
-    name: string;
-    logo?: string;
-    icon?: React.ReactNode;
-    description: string;
-    category: 'software' | 'hardware';
-    usedFor: string;
-    projectsUsing: number;
-    url: string;
-}
 
 interface ToolCardProps {
     tool: Tool;
@@ -133,7 +127,7 @@ export function ToolCard({ tool }: ToolCardProps) {
                         style={{
                             background: mode === 'dark' ? 'rgba(245,158,11,0.15)' : 'rgba(245,158,11,0.1)',
                             border: 'none',
-                            color: '#f59e0b',
+                            color: colors.accent,
                             fontSize: '11px',
                             borderRadius: '4px',
                         }}

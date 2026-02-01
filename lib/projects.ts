@@ -36,14 +36,35 @@ export function getProjectBySlug(slug: string): ProjectMeta | null {
         ? fs.readFileSync(readmePath, 'utf-8')
         : '';
 
-    // Get images from pics folder
+    // Get images from pics folder (including subfolders build/ and modules/)
     const picsPath = path.join(projectPath, 'pics');
     const images: string[] = [];
     if (fs.existsSync(picsPath)) {
-        const pics = fs.readdirSync(picsPath).filter(f =>
+        // Check for build subfolder first (assembled project photos)
+        const buildPath = path.join(picsPath, 'build');
+        if (fs.existsSync(buildPath)) {
+            const buildPics = fs.readdirSync(buildPath).filter(f =>
+                /\.(jpg|jpeg|png|webp)$/i.test(f)
+            );
+            buildPics.forEach(pic => {
+                images.push(`/images/${slug}/build/${pic}`);
+            });
+        }
+        // Then check modules subfolder (component photos)
+        const modulesPath = path.join(picsPath, 'modules');
+        if (fs.existsSync(modulesPath)) {
+            const modulePics = fs.readdirSync(modulesPath).filter(f =>
+                /\.(jpg|jpeg|png|webp)$/i.test(f)
+            );
+            modulePics.forEach(pic => {
+                images.push(`/images/${slug}/modules/${pic}`);
+            });
+        }
+        // Also check root pics folder for backwards compatibility
+        const rootPics = fs.readdirSync(picsPath).filter(f =>
             /\.(jpg|jpeg|png|webp)$/i.test(f)
         );
-        pics.forEach(pic => {
+        rootPics.forEach(pic => {
             images.push(`/images/${slug}/${pic}`);
         });
     }

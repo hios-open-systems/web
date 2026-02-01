@@ -21,6 +21,7 @@
         "status_wip": "WIP",
         "in_development": "In sviluppo",
         "tagline_btdac": "Quando finalmente ha suonato, ho gridato alle 2 del mattino.",
+        "tagline_speaker": "WiFi + I2S = audio senza fili, zero rumore.",
         "tutorials": "tutorial",
         "files": "file",
         "btdac": {
@@ -145,6 +146,109 @@
                 "Controllo volume BLE",
                 "Integrazione Wear OS / Garmin"
             ]
+        },
+        "speaker": {
+            "moment": "Il primo tono di test che suona via WiFi. Niente cavi, niente rumore, solo musica.",
+            "struggle": "Configurare I2S con il MAX98357 è stato più facile del PCM5102, ma lo streaming WiFi ha le sue sfide. Buffer underrun, latenza, riconnessione automatica...",
+            "whatWorks": [
+                "Audio I2S — qualità digitale, nessun rumore",
+                "Controllo web — da qualsiasi dispositivo",
+                "Batteria USB-C — ricarica rapida",
+                "Display voltaggio — sempre visibile",
+                "mDNS — accesso per nome, non IP"
+            ],
+            "whatDoesnt": [
+                "Streaming reale — solo tono di test per ora",
+                "Nessun case — elettronica esposta",
+                "Portata WiFi — dipende dal router"
+            ],
+            "resources": [
+                {
+                    "name": "Libreria ESP32-audioI2S",
+                    "url": "https://github.com/schreibfaul1/ESP32-audioI2S"
+                },
+                {
+                    "name": "Datasheet MAX98357",
+                    "url": "https://www.analog.com/en/products/max98357a.html"
+                },
+                {
+                    "name": "Random Nerd Tutorials - ESP32 Web Server",
+                    "url": "https://randomnerdtutorials.com/esp32-web-server-arduino-ide/"
+                }
+            ],
+            "bom": [
+                {
+                    "component": "ESP32 DevKit V1",
+                    "qty": 1,
+                    "priceUSD": 8,
+                    "notes": "WiFi + Bluetooth"
+                },
+                {
+                    "component": "MAX98357 I2S Amp",
+                    "qty": 1,
+                    "priceUSD": 3,
+                    "notes": "Amplificatore 3W"
+                },
+                {
+                    "component": "LM2596S con Display",
+                    "qty": 1,
+                    "priceUSD": 4,
+                    "notes": "Alimentatore 5V regolabile"
+                },
+                {
+                    "component": "Batteria 18650",
+                    "qty": 2,
+                    "priceUSD": 12,
+                    "notes": "Li-Ion 3500mAh"
+                },
+                {
+                    "component": "Caricatore USB-C 2S",
+                    "qty": 1,
+                    "priceUSD": 5,
+                    "notes": "BMS con protezione"
+                },
+                {
+                    "component": "Altoparlante 63mm 4Ω 3W",
+                    "qty": 1,
+                    "priceUSD": 3,
+                    "notes": "Altoparlante full range"
+                }
+            ],
+            "specs": [
+                {
+                    "label": "Audio",
+                    "value": "I2S digitale, 44.1kHz 16-bit"
+                },
+                {
+                    "label": "Amplificatore",
+                    "value": "MAX98357A, 3.2W @ 4Ω"
+                },
+                {
+                    "label": "Connettività",
+                    "value": "WiFi 802.11 b/g/n"
+                },
+                {
+                    "label": "Batteria",
+                    "value": "7.4V 5000mAh (2x18650)"
+                },
+                {
+                    "label": "Autonomia",
+                    "value": "8-16 ore stimate"
+                },
+                {
+                    "label": "Controllo",
+                    "value": "Interfaccia web, mDNS"
+                }
+            ],
+            "futureFeatures": [
+                "Streaming audio reale (HTTP/WebSocket)",
+                "Spotify Connect",
+                "Compatibile AirPlay",
+                "Sync multi-room",
+                "App Android di controllo",
+                "Equalizzatore web",
+                "Aggiornamenti OTA"
+            ]
         }
     },
     "Documentation": {
@@ -161,7 +265,7 @@
         "troubleshooting_desc": "Problemi comuni, FAQ e diagnostica"
     },
     "Tools": {
-        "title": "Tech Stack",
+        "title": "Strumenti",
         "subtitle": "Gli strumenti che utilizziamo per progettare, sviluppare e documentare",
         "software_category": "Software & Code",
         "hardware_category": "Hardware & Design",
@@ -169,6 +273,57 @@
         "filter_all": "Tutti",
         "filter_software": "Software",
         "filter_hardware": "Hardware"
+    },
+    "Tutorials": {
+        "badge": "Inizio Rapido",
+        "title": "Tutorial",
+        "subtitle": "Guide passo-passo per iniziare a costruire",
+        "steps": "passaggi",
+        "copied": "Copiato!",
+        "vscode_platformio_title": "Setup VSCode + PlatformIO",
+        "vscode_platformio_desc": "Configura il tuo ambiente di sviluppo",
+        "step_install_vscode": "Scarica e installa VSCode",
+        "step_install_pio": "Installa l'estensione PlatformIO",
+        "step_install_pio_desc": "Cerca 'PlatformIO IDE' nelle Estensioni (Ctrl+Shift+X)",
+        "step_clone_repo": "Clona il repository del progetto",
+        "step_open_folder": "Apri la cartella del progetto in VSCode",
+        "step_open_folder_desc": "File → Apri Cartella → seleziona la directory",
+        "step_wait_init": "Attendi l'inizializzazione di PlatformIO",
+        "step_wait_init_desc": "La prima volta potrebbe richiedere alcuni minuti per scaricare le toolchain",
+        "pio_commands_title": "Comandi Essenziali di PlatformIO",
+        "pio_commands_desc": "Comandi che userai ogni giorno",
+        "cmd_build": "Compila il progetto",
+        "cmd_build_desc": "Compila senza caricare",
+        "cmd_upload": "Carica sul dispositivo",
+        "cmd_upload_desc": "Compila e flasha sull'ESP32",
+        "cmd_monitor": "Apri monitor seriale",
+        "cmd_monitor_desc": "Visualizza output di debug (Ctrl+C per uscire)",
+        "cmd_clean": "Pulisci file di build",
+        "cmd_clean_desc": "Rimuove la cartella .pio, forza rebuild completo",
+        "cmd_all": "Carica e monitora",
+        "cmd_all_desc": "Flasha e apri immediatamente il monitor seriale",
+        "wsl_usb_title": "USB Passthrough per WSL",
+        "wsl_usb_desc": "Collega l'ESP32 a WSL da Windows",
+        "wsl_install_usbipd": "Installa usbipd-win",
+        "wsl_install_usbipd_desc": "Esegui in PowerShell come Amministratore",
+        "wsl_list_devices": "Elenca i dispositivi USB collegati",
+        "wsl_list_devices_desc": "Trova il BUSID del tuo ESP32 (es: 1-4)",
+        "wsl_bind": "Associa il dispositivo",
+        "wsl_bind_desc": "Sostituisci <BUSID> con il tuo ID (solo una volta)",
+        "wsl_attach": "Collega a WSL",
+        "wsl_attach_desc": "Esegui questo ogni volta che colleghi il dispositivo",
+        "wsl_verify": "Verifica in WSL",
+        "wsl_verify_desc": "Dovrebbe mostrare /dev/ttyUSB0 o simile",
+        "troubleshoot_title": "Problemi Comuni",
+        "troubleshoot_desc": "Soluzioni rapide per problemi tipici",
+        "ts_port_busy": "Permesso negato sulla porta",
+        "ts_port_busy_desc": "Aggiungi utente al gruppo dialout: sudo usermod -a -G dialout $USER",
+        "ts_no_port": "Dispositivo non rilevato",
+        "ts_no_port_desc": "Prova un cavo USB diverso (cavo dati, non solo ricarica)",
+        "ts_upload_fail": "Caricamento fallito",
+        "ts_upload_fail_desc": "Specifica la porta manualmente se l'auto-rilevamento fallisce",
+        "ts_libs": "Librerie mancanti",
+        "ts_libs_desc": "Le librerie vengono installate automaticamente da platformio.ini"
     },
     "ProjectDetail": {
         "back": "Indietro",
@@ -186,6 +341,7 @@
         "prototype_functional": "Prototipo funzionale. <highlight>Costruisci il tuo.</highlight>",
         "want_me_to_build": "Vuoi che lo costruisca per te? Scrivimi",
         "total_approx": "Totale Approssimativo",
-        "no_shipping": "Spedizione esclusa"
+        "no_shipping": "Spedizione esclusa",
+        "gallery": "Galleria"
     }
 }

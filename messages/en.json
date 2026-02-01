@@ -21,6 +21,7 @@
         "status_wip": "WIP",
         "in_development": "In development",
         "tagline_btdac": "When it finally sounded, I screamed at 2am.",
+        "tagline_speaker": "WiFi + I2S = wireless audio, zero noise.",
         "tutorials": "tutorials",
         "files": "files",
         "btdac": {
@@ -145,6 +146,109 @@
                 "BLE Volume control",
                 "Wear OS / Garmin integration"
             ]
+        },
+        "speaker": {
+            "moment": "The first test tone playing through WiFi. No cables, no noise, just music.",
+            "struggle": "Setting up I2S with the MAX98357 was easier than the PCM5102, but WiFi streaming has its own challenges. Buffer underrun, latency, automatic reconnection...",
+            "whatWorks": [
+                "I2S Audio — digital quality, no noise",
+                "Web control — from any device",
+                "USB-C battery — fast charging",
+                "Voltage display — always visible",
+                "mDNS — access by name, not IP"
+            ],
+            "whatDoesnt": [
+                "Real streaming — only test tone for now",
+                "No case — exposed electronics",
+                "WiFi range — depends on router"
+            ],
+            "resources": [
+                {
+                    "name": "ESP32-audioI2S Library",
+                    "url": "https://github.com/schreibfaul1/ESP32-audioI2S"
+                },
+                {
+                    "name": "MAX98357 Datasheet",
+                    "url": "https://www.analog.com/en/products/max98357a.html"
+                },
+                {
+                    "name": "Random Nerd Tutorials - ESP32 Web Server",
+                    "url": "https://randomnerdtutorials.com/esp32-web-server-arduino-ide/"
+                }
+            ],
+            "bom": [
+                {
+                    "component": "ESP32 DevKit V1",
+                    "qty": 1,
+                    "priceUSD": 8,
+                    "notes": "WiFi + Bluetooth"
+                },
+                {
+                    "component": "MAX98357 I2S Amp",
+                    "qty": 1,
+                    "priceUSD": 3,
+                    "notes": "3W Amplifier"
+                },
+                {
+                    "component": "LM2596S w/Display",
+                    "qty": 1,
+                    "priceUSD": 4,
+                    "notes": "Adjustable 5V supply"
+                },
+                {
+                    "component": "18650 Battery",
+                    "qty": 2,
+                    "priceUSD": 12,
+                    "notes": "Li-Ion 3500mAh"
+                },
+                {
+                    "component": "USB-C Charger 2S",
+                    "qty": 1,
+                    "priceUSD": 5,
+                    "notes": "BMS with protection"
+                },
+                {
+                    "component": "Speaker 63mm 4Ω 3W",
+                    "qty": 1,
+                    "priceUSD": 3,
+                    "notes": "Full range speaker"
+                }
+            ],
+            "specs": [
+                {
+                    "label": "Audio",
+                    "value": "I2S digital, 44.1kHz 16-bit"
+                },
+                {
+                    "label": "Amplifier",
+                    "value": "MAX98357A, 3.2W @ 4Ω"
+                },
+                {
+                    "label": "Connectivity",
+                    "value": "WiFi 802.11 b/g/n"
+                },
+                {
+                    "label": "Battery",
+                    "value": "7.4V 5000mAh (2x18650)"
+                },
+                {
+                    "label": "Battery Life",
+                    "value": "8-16 hours estimated"
+                },
+                {
+                    "label": "Control",
+                    "value": "Web interface, mDNS"
+                }
+            ],
+            "futureFeatures": [
+                "Real audio streaming (HTTP/WebSocket)",
+                "Spotify Connect",
+                "AirPlay compatible",
+                "Multi-room sync",
+                "Android control app",
+                "Web equalizer",
+                "OTA updates"
+            ]
         }
     },
     "Documentation": {
@@ -170,6 +274,57 @@
         "filter_software": "Software",
         "filter_hardware": "Hardware"
     },
+    "Tutorials": {
+        "badge": "Quick Start",
+        "title": "Tutorials",
+        "subtitle": "Step-by-step guides to get you building",
+        "steps": "steps",
+        "copied": "Copied!",
+        "vscode_platformio_title": "VSCode + PlatformIO Setup",
+        "vscode_platformio_desc": "Set up your development environment",
+        "step_install_vscode": "Download and install VSCode",
+        "step_install_pio": "Install PlatformIO extension",
+        "step_install_pio_desc": "Search 'PlatformIO IDE' in Extensions (Ctrl+Shift+X)",
+        "step_clone_repo": "Clone the project repository",
+        "step_open_folder": "Open the project folder in VSCode",
+        "step_open_folder_desc": "File → Open Folder → select project directory",
+        "step_wait_init": "Wait for PlatformIO to initialize",
+        "step_wait_init_desc": "First time may take a few minutes to download toolchains",
+        "pio_commands_title": "Essential PlatformIO Commands",
+        "pio_commands_desc": "Commands you'll use every day",
+        "cmd_build": "Build the project",
+        "cmd_build_desc": "Compiles without uploading",
+        "cmd_upload": "Upload to device",
+        "cmd_upload_desc": "Compiles and flashes to ESP32",
+        "cmd_monitor": "Open serial monitor",
+        "cmd_monitor_desc": "View debug output (Ctrl+C to exit)",
+        "cmd_clean": "Clean build files",
+        "cmd_clean_desc": "Removes .pio folder, forces full rebuild",
+        "cmd_all": "Upload and monitor",
+        "cmd_all_desc": "Flash and immediately open serial monitor",
+        "wsl_usb_title": "USB Passthrough for WSL",
+        "wsl_usb_desc": "Connect ESP32 to WSL from Windows",
+        "wsl_install_usbipd": "Install usbipd-win",
+        "wsl_install_usbipd_desc": "Run in PowerShell as Administrator",
+        "wsl_list_devices": "List connected USB devices",
+        "wsl_list_devices_desc": "Find your ESP32's BUSID (e.g., 1-4)",
+        "wsl_bind": "Bind the device",
+        "wsl_bind_desc": "Replace <BUSID> with your device ID (one time only)",
+        "wsl_attach": "Attach to WSL",
+        "wsl_attach_desc": "Run this each time you connect the device",
+        "wsl_verify": "Verify in WSL",
+        "wsl_verify_desc": "Should show /dev/ttyUSB0 or similar",
+        "troubleshoot_title": "Common Issues",
+        "troubleshoot_desc": "Quick fixes for typical problems",
+        "ts_port_busy": "Permission denied on port",
+        "ts_port_busy_desc": "Add user to dialout group: sudo usermod -a -G dialout $USER",
+        "ts_no_port": "Device not detected",
+        "ts_no_port_desc": "Try a different USB cable (data cable, not charge-only)",
+        "ts_upload_fail": "Upload fails",
+        "ts_upload_fail_desc": "Specify port manually if auto-detect fails",
+        "ts_libs": "Missing libraries",
+        "ts_libs_desc": "Libraries are auto-installed from platformio.ini"
+    },
     "ProjectDetail": {
         "back": "Back",
         "moment": "The Moment",
@@ -186,6 +341,7 @@
         "prototype_functional": "Functional prototype. <highlight>Build your own.</highlight>",
         "want_me_to_build": "Want me to build it for you? Email me",
         "total_approx": "Approximate Total",
-        "no_shipping": "Shipping not included"
+        "no_shipping": "Shipping not included",
+        "gallery": "Gallery"
     }
 }
