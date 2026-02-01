@@ -342,6 +342,7 @@
         "want_me_to_build": "Soll ich es für dich bauen? Schreib mir",
         "total_approx": "Ungefährer Gesamtbetrag",
         "no_shipping": "Ohne Versand",
-        "gallery": "Galerie"
+        "gallery": "Galerie",
+        "print_pinout": "Pinout drucken"
     }
 }

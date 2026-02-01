@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Typography, Tag, Row, Col, Card, Button, Space } from 'antd';
-import { ArrowLeftOutlined, DownloadOutlined, GithubOutlined, DoubleRightOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, DownloadOutlined, GithubOutlined, DoubleRightOutlined, PrinterOutlined } from '@ant-design/icons';
 import { motion } from 'framer-motion';
 import { useTheme } from '@/lib/ThemeContext';
 import { ProjectMeta } from '@/lib/projects';
@@ -104,12 +104,17 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                         {project.description}
                     </Paragraph>
 
-                    <Space size="middle" style={{ marginTop: '24px' }}>
+                    <Space size="middle" style={{ marginTop: '24px' }} wrap>
                         {project.files.map((file) => (
                             <Button key={file.name} type="primary" icon={<DownloadOutlined />} href={file.path} target="_blank">
                                 {file.name}
                             </Button>
                         ))}
+                        <Link href={`/print/${slug}?doc=PINOUT`}>
+                            <Button icon={<PrinterOutlined />} style={{ borderColor: accentColor, color: accentColor }}>
+                                {t('print_pinout')}
+                            </Button>
+                        </Link>
                     </Space>
                 </motion.div>
             </section>

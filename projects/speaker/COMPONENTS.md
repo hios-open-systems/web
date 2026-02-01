@@ -125,7 +125,7 @@ Amplificador de audio digital con DAC integrado.
 | GND | GND | Tierra |
 | DIN | GPIO25 | Data I2S |
 | BCLK | GPIO26 | Bit Clock |
-| LRC | GPIO22 | Left/Right Clock |
+| LRC | GPIO27 | Left/Right Clock |
 | GAIN | - | Sin conectar (9dB default) |
 | SD | - | Sin conectar (siempre ON) |
 
@@ -165,27 +165,109 @@ MAX98357 (-) --> Parlante (-)
 
 ---
 
+## 6. Display LCD 16x2 con Modulo I2C
+
+Display de caracteres para mostrar estado del sistema.
+
+**Por que LCD 16x2 I2C?**
+- Suficiente para mostrar titulo/artista
+- Bajo consumo
+- Solo 2 pines (I2C) en lugar de 6+
+- Backlight azul visible
+
+### Especificaciones
+
+| Parametro | Valor |
+|-----------|-------|
+| Caracteres | 16 columnas x 2 filas |
+| Tamaño caracter | 5x8 puntos (5.23 x 3mm) |
+| Controlador | HD44780 |
+| Interface | I2C (SDA, SCL) |
+| Direccion I2C | 0x27 o 0x3F (tipico) |
+| Backlight | LED azul |
+| Color caracteres | Blanco |
+| Alimentacion | 5V |
+| Dimensiones modulo | 80mm x 35mm x 11mm |
+| Area visible | 64.5mm x 16mm |
+
+### Conexion con ESP32
+
+| LCD I2C | ESP32 | Funcion |
+|---------|-------|---------|
+| VCC | 5V | Alimentacion |
+| GND | GND | Tierra |
+| SDA | GPIO21 | I2C Data |
+| SCL | GPIO22 | I2C Clock |
+
+### Uso en el proyecto
+
+```
+Linea 1: Estado + Modo (WiFi/BT)
+Linea 2: Titulo cancion o URL
+
+Ejemplos:
+┌────────────────┐    ┌────────────────┐    ┌────────────────┐
+│WiFi   Vol:80%  │    │BT     Vol:65%  │    │Radio  Vol:90%  │
+│Rock FM 95.9   │    │Bohemian Rhaps..│    │Connecting...   │
+└────────────────┘    └────────────────┘    └────────────────┘
+```
+
+---
+
 ## Diagrama de bloques
 
 ```
+                                    ┌──────────────┐
+                                    │  LCD 16x2   │
+                                    │   (I2C)     │
+                                    └──────┬──────┘
+                                           │
 [Bateria 2x18650] --> [Cargador 2S] --> [LM2596 5V] --> [ESP32]
-        (7.4V)           (8.4V)           (5V)            |
-                                            |             |
-                                            v             v
-                                      [MAX98357] <-- [I2S Audio]
-                                            |
+        (7.4V)           (8.4V)           (5V)            │
+                                            │       ┌─────┴─────┐
+                                            │       │ WiFi+BT   │
+                                            v       └─────┬─────┘
+                                      [MAX98357] <────────┘
+                                            │         I2S Audio
                                             v
                                       [Parlante 4ohm]
+```
+
+### Modos de operacion
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    HIOS WiFi Speaker                        │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐     │
+│  │ WiFi Radio  │    │   YouTube   │    │  Bluetooth  │     │
+│  │  Streams    │    │ (Invidious) │    │  A2DP Sink  │     │
+│  └──────┬──────┘    └──────┬──────┘    └──────┬──────┘     │
+│         │                  │                  │             │
+│         └──────────────────┼──────────────────┘             │
+│                            v                                │
+│                    ┌──────────────┐                         │
+│                    │ Audio Buffer │                         │
+│                    └──────┬───────┘                         │
+│                           v                                 │
+│                    ┌──────────────┐                         │
+│                    │  I2S Output  │                         │
+│                    └──────────────┘                         │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
 ## Lista de compras (Argentina - MercadoLibre)
 
-1. **LM2596S c/Display** - Buscar: "fuente lm2596 step down display"
-2. **Porta pilas 2x18650** - Buscar: "porta pila 18650 paralelo" o "porta pila 18650 serie" segun configuracion
-3. **Cargador 2S USB-C** - Buscar: "cargador litio 2s usb-c"
-4. **MAX98357** - Buscar: "max98357 i2s amplificador"
-5. **Parlante 63mm** - Buscar: "parlante 4 ohm 3w 63mm"
-6. **ESP32 DevKit** - Buscar: "esp32 devkit v1"
+1. **ESP32 DevKit** - Buscar: "esp32 devkit v1"
+2. **MAX98357** - Buscar: "max98357 i2s amplificador"
+3. **LCD 16x2 I2C** - Buscar: "lcd 16x2 i2c arduino" (incluye modulo I2C)
+4. **LM2596S c/Display** - Buscar: "fuente lm2596 step down display"
+5. **Cargador 2S USB-C** - Buscar: "cargador litio 2s usb-c"
+6. **Porta pilas 2x18650** - Buscar: "porta pila 18650 serie" (para 2S)
 7. **2x Bateria 18650** - Buscar: "bateria 18650 litio" (comprar protegidas)
+8. **Parlante 63mm** - Buscar: "parlante 4 ohm 3w 63mm"
+9. **Resistencias 100k** (x2) - Para divisor bateria (opcional)

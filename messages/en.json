@@ -342,6 +342,7 @@
         "want_me_to_build": "Want me to build it for you? Email me",
         "total_approx": "Approximate Total",
         "no_shipping": "Shipping not included",
-        "gallery": "Gallery"
+        "gallery": "Gallery",
+        "print_pinout": "Print Pinout"
     }
 }

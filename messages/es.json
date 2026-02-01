@@ -342,6 +342,7 @@
         "want_me_to_build": "¿Querés que te lo arme? Escribime",
         "total_approx": "Total Aproximado",
         "no_shipping": "Sin envío",
-        "gallery": "Galería"
+        "gallery": "Galería",
+        "print_pinout": "Imprimir Pinout"
     }
 }

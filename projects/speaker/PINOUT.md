@@ -1,6 +1,6 @@
 # Pinout - HIOS WiFi Speaker
 
-Guia de conexiones del proyecto.
+Guia de conexiones del proyecto. Hub de audio WiFi + Bluetooth con display LCD.
 
 ---
 
@@ -16,11 +16,13 @@ Guia de conexiones del proyecto.
                     │                 │
     (MAX98357 DIN) ─┤ GPIO25   GPIO26 ├─ (MAX98357 BCLK)
                     │                 │
-   (MAX98357 LRC) ──┤ GPIO22   GPIO23 ├─ (Libre)
+   (MAX98357 LRC) ──┤ GPIO27   GPIO23 ├─ (Libre)
                     │                 │
-           (Libre) ─┤ GPIO21   GPIO19 ├─ (Libre)
+       (LCD SDA) ───┤ GPIO21   GPIO22 ├─── (LCD SCL)
                     │                 │
-           (Libre) ─┤ GPIO18   GPIO05 ├─ (Libre)
+           (Libre) ─┤ GPIO18   GPIO19 ├─ (Libre)
+                    │                 │
+      (VBAT ADC) ───┤ GPIO34   GPIO05 ├─ (Libre)
                     │                 │
                     └─────────────────┘
 ```
@@ -48,7 +50,35 @@ Guia de conexiones del proyecto.
 |-------|----------|---------|
 | GPIO25 | DIN | Data (audio digital) |
 | GPIO26 | BCLK | Bit Clock |
-| GPIO22 | LRC | Left/Right Clock (Word Select) |
+| GPIO27 | LRC | Left/Right Clock (Word Select) |
+
+### Display LCD 16x2 I2C
+
+| ESP32 | LCD I2C | Funcion |
+|-------|---------|---------|
+| GPIO21 | SDA | I2C Data |
+| GPIO22 | SCL | I2C Clock |
+| 5V | VCC | Alimentacion |
+| GND | GND | Tierra |
+
+**Nota:** Direccion I2C tipica del modulo: `0x27` o `0x3F`
+
+### Medicion Bateria (opcional)
+
+| ESP32 | Componente | Funcion |
+|-------|------------|---------|
+| GPIO34 | Divisor resistivo | Voltaje bateria (ADC) |
+
+**Circuito divisor resistivo:**
+```
+VBAT (7.4V) ───┬─── R1 (100kΩ) ───┬─── R2 (100kΩ) ───┬─── GND
+               │                   │                   │
+               │                   └─── GPIO34         │
+               │                        (max 3.3V)     │
+               └───────────────────────────────────────┘
+```
+**Nota:** Con R1=R2=100kΩ, el voltaje en GPIO34 = VBAT / 2.
+Rango: 3.0V (baterias vacias) a 4.2V (llenas) en el ADC.
 
 ### Parlante
 
@@ -81,7 +111,7 @@ Guia de conexiones del proyecto.
 2. Conectar lineas I2S al ESP32:
    - DIN -> GPIO25
    - BCLK -> GPIO26
-   - LRC -> GPIO22
+   - LRC -> GPIO27
 
 ### Paso 4: Conectar parlante
 
@@ -102,13 +132,15 @@ Guia de conexiones del proyecto.
 │  BATERIAS   │      │  CARGADOR   │      │   LM2596    │
 │  2x 18650   │──────│   USB-C     │──────│   5V OUT    │
 │   7.4V      │ B+B- │    2S       │ P+P- │  c/Display  │
-└─────────────┘      └─────────────┘      └──────┬──────┘
-                                                  │
-                           5V ────────────────────┼────────────┐
-                                                  │            │
-                                           ┌──────┴──────┐     │
-                                           │    ESP32    │     │
-                                           │             │     │
+└──────┬──────┘      └─────────────┘      └──────┬──────┘
+       │                                          │
+       │ (opcional)                     5V ───────┼────────────┐
+       │                                          │            │
+       ▼                                   ┌──────┴──────┐     │
+  ┌─────────┐                              │    ESP32    │     │
+  │ DIVISOR │                              │             │     │
+  │100k/100k├─────────────────────────────►│ GPIO34      │     │
+  └─────────┘                              │             │     │
                                            │ GPIO25 ─────┼─────┼──┐
                                            │ GPIO26 ─────┼─────┼──┼──┐
                                            │ GPIO22 ─────┼─────┼──┼──┼──┐

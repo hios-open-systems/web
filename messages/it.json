@@ -342,6 +342,7 @@
         "want_me_to_build": "Vuoi che lo costruisca per te? Scrivimi",
         "total_approx": "Totale Approssimativo",
         "no_shipping": "Spedizione esclusa",
-        "gallery": "Galleria"
+        "gallery": "Galleria",
+        "print_pinout": "Stampa Pinout"
     }
 }
