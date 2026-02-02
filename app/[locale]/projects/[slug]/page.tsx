@@ -4,6 +4,8 @@ import { ProjectDetailClient } from './ProjectDetailClient';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 
+export const dynamic = 'force-static';
+
 interface PageProps {
     params: Promise<{ slug: string; locale: string }>;
 }
