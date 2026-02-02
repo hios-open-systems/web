@@ -5,6 +5,8 @@ import { getProjectSlugs } from '@/lib/projects';
 import { setRequestLocale } from 'next-intl/server';
 import PrintView from './PrintView';
 
+export const dynamic = 'force-static';
+
 interface Props {
     params: Promise<{
         locale: string;
