@@ -49,7 +49,20 @@ export function ModuleViewer({ module }: ModuleViewerProps) {
   }
 
   const category = CATEGORIES[module.category];
+  const categoryLabel = t(`Categories.${module.category}`);
+  const description = t(`Modules.${module.id}.description`);
+
   const specs = module.specs;
+  let features = specs?.features;
+
+  try {
+    const translatedFeatures = t.raw(`Modules.${module.id}.features`);
+    if (Array.isArray(translatedFeatures)) {
+      features = translatedFeatures;
+    }
+  } catch (error) {
+    // Fallback to default features
+  }
 
   return (
     <div className={styles.viewerContainer}>
@@ -57,10 +70,10 @@ export function ModuleViewer({ module }: ModuleViewerProps) {
         <div className={styles.viewerInfo}>
           <h2 className={styles.viewerTitle}>{module.name}</h2>
           <p className={styles.viewerCategory} style={{ borderColor: category.color }}>
-            {category.label}
+            {categoryLabel}
           </p>
         </div>
-        <p className={styles.viewerDescription}>{module.description}</p>
+        <p className={styles.viewerDescription}>{description}</p>
         <div className={styles.viewerActions}>
           <Tooltip title={t('print_tooltip')}>
             <Button
@@ -125,7 +138,7 @@ export function ModuleViewer({ module }: ModuleViewerProps) {
                     <dd>{module.name}</dd>
                     <dt>{t('category')}</dt>
                     <dd>
-                      <Tag color={category.color}>{category.label}</Tag>
+                      <Tag color={category.color}>{categoryLabel}</Tag>
                     </dd>
                     {specs?.voltage && (
                       <>
@@ -151,12 +164,12 @@ export function ModuleViewer({ module }: ModuleViewerProps) {
                         <dd>{specs.package}</dd>
                       </>
                     )}
-                    {specs?.features && specs.features.length > 0 && (
+                    {features && features.length > 0 && (
                       <>
                         <dt>{t('features')}</dt>
                         <dd>
                           <ul className={styles.featuresList}>
-                            {specs.features.map((feature, index) => (
+                            {features.map((feature, index) => (
                               <li key={index}>{feature}</li>
                             ))}
                           </ul>

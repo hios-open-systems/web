@@ -365,6 +365,69 @@
         "package": "Gehäuse",
         "features": "Eigenschaften",
         "datasheet": "Datenblatt",
-        "view_datasheet": "Offizielles Datenblatt anzeigen"
+        "view_datasheet": "Offizielles Datenblatt anzeigen",
+        "Categories": {
+            "microcontroller": "Mikrocontroller",
+            "audio": "Audio-DAC",
+            "amplifier": "Verstärker",
+            "power": "Stromversorgung"
+        },
+        "Modules": {
+            "esp32-wroom-32": {
+                "description": "38-Pin Mikrocontroller mit WiFi, Bluetooth, ADC, DAC und Touch",
+                "features": [
+                    "WiFi 802.11 b/g/n",
+                    "Bluetooth 4.2 BLE",
+                    "Dual-Core 240MHz",
+                    "520KB SRAM",
+                    "10 Touch",
+                    "18 ADC",
+                    "2 DAC"
+                ]
+            },
+            "esp32s3": {
+                "description": "Mikrocontroller mit nativem USB-OTG, WiFi 6, BLE 5 und KI-Beschleunigung",
+                "features": [
+                    "WiFi 6",
+                    "Bluetooth 5 BLE",
+                    "Natives USB-OTG",
+                    "Dual-Core 240MHz",
+                    "KI-Vektor",
+                    "14 Touch"
+                ]
+            },
+            "pcm5102": {
+                "description": "32-Bit/192kHz Digital-Analog-Wandler für hochwertige Audioqualität",
+                "features": [
+                    "SNR 112dB",
+                    "THD -93dB",
+                    "Integrierter Digitalfilter",
+                    "Geringer Stromverbrauch"
+                ]
+            },
+            "max98357": {
+                "description": "3,2W Mono I2S Verstärker mit >90% Effizienz",
+                "features": [
+                    "3,2W @ 4Ω",
+                    "Effizienz >90%",
+                    "Keine externen Komponenten",
+                    "Überhitzungsschutz"
+                ]
+            },
+            "lm2596": {
+                "description": "Einstellbarer 3A Step-Down Spannungsregler",
+                "features": [
+                    "3A dauerhaft",
+                    "Effizienz 73%",
+                    "Frequenz 150kHz",
+                    "Überhitzungsschutz"
+                ]
+            }
+        },
+        "Buttons": {
+            "view": "Ansehen",
+            "selected": "Ausgewählt",
+            "html": "HTML"
+        }
     }
 }

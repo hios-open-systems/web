@@ -365,6 +365,69 @@
         "package": "Package",
         "features": "Caratteristiche",
         "datasheet": "Datasheet",
-        "view_datasheet": "Visualizza datasheet ufficiale"
+        "view_datasheet": "Visualizza datasheet ufficiale",
+        "Categories": {
+            "microcontroller": "Microcontrollore",
+            "audio": "DAC Audio",
+            "amplifier": "Amplificatore",
+            "power": "Alimentazione"
+        },
+        "Modules": {
+            "esp32-wroom-32": {
+                "description": "Microcontrollore a 38 pin con WiFi, Bluetooth, ADC, DAC e Touch",
+                "features": [
+                    "WiFi 802.11 b/g/n",
+                    "Bluetooth 4.2 BLE",
+                    "Dual-core 240MHz",
+                    "520KB SRAM",
+                    "10 Touch",
+                    "18 ADC",
+                    "2 DAC"
+                ]
+            },
+            "esp32s3": {
+                "description": "Microcontrollore con USB OTG nativo, WiFi 6, BLE 5 e accelerazione AI",
+                "features": [
+                    "WiFi 6",
+                    "Bluetooth 5 BLE",
+                    "USB OTG nativo",
+                    "Dual-core 240MHz",
+                    "Vector AI",
+                    "14 Touch"
+                ]
+            },
+            "pcm5102": {
+                "description": "Convertitore Digitale-Analogico a 32-bit/192kHz per audio di alta qualità",
+                "features": [
+                    "SNR 112dB",
+                    "THD -93dB",
+                    "Filtro digitale integrato",
+                    "Basso consumo"
+                ]
+            },
+            "max98357": {
+                "description": "Amplificatore I2S monofonico da 3.2W con efficienza >90%",
+                "features": [
+                    "3.2W @ 4Ω",
+                    "Efficienza >90%",
+                    "Senza componenti esterni",
+                    "Protezione termica"
+                ]
+            },
+            "lm2596": {
+                "description": "Regolatore di tensione step-down regolabile da 3A",
+                "features": [
+                    "3A continuo",
+                    "Efficienza 73%",
+                    "Frequenza 150kHz",
+                    "Protezione termica"
+                ]
+            }
+        },
+        "Buttons": {
+            "view": "Vedi",
+            "selected": "Selezionato",
+            "html": "HTML"
+        }
     }
 }

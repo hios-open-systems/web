@@ -374,6 +374,69 @@
         "package": "Package",
         "features": "Features",
         "datasheet": "Datasheet",
-        "view_datasheet": "View official datasheet"
+        "view_datasheet": "View official datasheet",
+        "Categories": {
+            "microcontroller": "Microcontroller",
+            "audio": "Audio DAC",
+            "amplifier": "Amplifier",
+            "power": "Power Supply"
+        },
+        "Modules": {
+            "esp32-wroom-32": {
+                "description": "38-pin microcontroller with WiFi, Bluetooth, ADC, DAC, and Touch",
+                "features": [
+                    "WiFi 802.11 b/g/n",
+                    "Bluetooth 4.2 BLE",
+                    "Dual-core 240MHz",
+                    "520KB SRAM",
+                    "10 Touch",
+                    "18 ADC",
+                    "2 DAC"
+                ]
+            },
+            "esp32s3": {
+                "description": "Microcontroller with native USB OTG, WiFi 6, BLE 5, and AI acceleration",
+                "features": [
+                    "WiFi 6",
+                    "Bluetooth 5 BLE",
+                    "Native USB OTG",
+                    "Dual-core 240MHz",
+                    "AI Vector",
+                    "14 Touch"
+                ]
+            },
+            "pcm5102": {
+                "description": "32-bit/192kHz Digital-to-Analog Converter for high-quality audio",
+                "features": [
+                    "SNR 112dB",
+                    "THD -93dB",
+                    "Integrated digital filter",
+                    "Low power consumption"
+                ]
+            },
+            "max98357": {
+                "description": "3.2W mono I2S amplifier with >90% efficiency",
+                "features": [
+                    "3.2W @ 4Ω",
+                    "Efficiency >90%",
+                    "No external components",
+                    "Thermal protection"
+                ]
+            },
+            "lm2596": {
+                "description": "3A adjustable step-down voltage regulator",
+                "features": [
+                    "3A continuous",
+                    "Efficiency 73%",
+                    "Frequency 150kHz",
+                    "Thermal protection"
+                ]
+            }
+        },
+        "Buttons": {
+            "view": "View",
+            "selected": "Selected",
+            "html": "HTML"
+        }
     }
 }

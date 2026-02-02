@@ -3,6 +3,7 @@
 import React from 'react';
 import { Card, Badge, Button, Space } from 'antd';
 import { FileTextOutlined } from '@ant-design/icons';
+import { useTranslations } from 'next-intl';
 import type { Module } from '@/config/modules';
 import { CATEGORIES } from '@/config/modules';
 import styles from './pinouts.module.css';
@@ -14,7 +15,12 @@ interface ModuleCardProps {
 }
 
 export function ModuleCard({ module, isSelected, onSelect }: ModuleCardProps) {
+  const t = useTranslations('Pinouts');
   const category = CATEGORIES[module.category];
+  const categoryLabel = t(`Categories.${module.category}`);
+  const description = t(`Modules.${module.id}.description`);
+  const viewText = t('Buttons.view');
+  const selectedText = t('Buttons.selected');
 
   return (
     <Card
@@ -26,11 +32,11 @@ export function ModuleCard({ module, isSelected, onSelect }: ModuleCardProps) {
         <h3 className={styles.moduleName}>{module.name}</h3>
         <Badge
           color={category.color}
-          text={category.label}
+          text={categoryLabel}
         />
       </div>
 
-      <p className={styles.moduleDescription}>{module.description}</p>
+      <p className={styles.moduleDescription}>{description}</p>
 
       <Space size="small" style={{ width: '100%' }}>
         <Button
@@ -41,7 +47,7 @@ export function ModuleCard({ module, isSelected, onSelect }: ModuleCardProps) {
             onSelect?.(module.id);
           }}
         >
-          {isSelected ? 'Seleccionado' : 'Ver'}
+          {isSelected ? selectedText : viewText}
         </Button>
         <Button
           type="text"
@@ -50,7 +56,7 @@ export function ModuleCard({ module, isSelected, onSelect }: ModuleCardProps) {
           href={module.htmlPath}
           target="_blank"
         >
-          HTML
+          {t('Buttons.html')}
         </Button>
       </Space>
     </Card>
