@@ -60,7 +60,7 @@ export function ModuleViewer({ module }: ModuleViewerProps) {
     if (Array.isArray(translatedFeatures)) {
       features = translatedFeatures;
     }
-  } catch (error) {
+  } catch {
     // Fallback to default features
   }
 
