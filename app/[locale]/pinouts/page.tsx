@@ -1,6 +1,8 @@
 import { PinoutsContent } from '@/components/pinouts/PinoutsContent';
 import { setRequestLocale } from 'next-intl/server';
 
+export const runtime = 'edge';
+
 export const metadata = {
   title: 'Pinouts Interactivos | HIOS Platform',
   description: 'Explora los diagramas de pines de los módulos utilizados en nuestros proyectos de electrónica',
