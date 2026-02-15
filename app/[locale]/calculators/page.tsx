@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   description: 'Calculadoras de resistencias, capacitores, potencia térmica y consumo para proyectos embebidos.',
 };
 
+export const runtime = 'edge';
+
 interface PageProps {
   params: Promise<{ locale: string }>;
 }
