@@ -1,6 +1,7 @@
 import { EmbeddedCalculators } from '@/components/tools/EmbeddedCalculators';
 import { setRequestLocale } from 'next-intl/server';
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Embedded Calculators | HIOS',
@@ -17,7 +18,9 @@ export default async function CalculatorsPage({ params }: PageProps) {
 
   return (
     <main style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 24px 56px' }}>
-      <EmbeddedCalculators />
+      <Suspense fallback={null}>
+        <EmbeddedCalculators />
+      </Suspense>
     </main>
   );
 }
