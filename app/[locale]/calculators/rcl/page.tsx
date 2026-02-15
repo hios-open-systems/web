@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   description: 'Calculadora simple de circuitos RCL en serie para proyectos embebidos.',
 };
 
+export const runtime = 'edge';
+
 interface PageProps {
   params: Promise<{ locale: string }>;
 }
