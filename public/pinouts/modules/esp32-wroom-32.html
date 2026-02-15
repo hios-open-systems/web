@@ -25,8 +25,9 @@
       --pwm: #14b8a6;
       --input-only: #6b7280;
       --strapping: #f97316;
-      --chip-height: 520px;
-      --chip-offset: 6px;
+      --chip-height: 560px;
+      --pin-top-offset: 48px;
+      --pin-bottom-offset: 12px;
     }
 
     * {
@@ -41,7 +42,8 @@
       color: var(--text);
       padding: clamp(16px, 2.5vw, 24px);
       line-height: 1.5;
-      overflow: hidden;
+      overflow-x: auto;
+      overflow-y: auto;
     }
 
     .container {
@@ -90,6 +92,36 @@
       gap: 6px;
       flex-wrap: wrap;
       justify-content: center;
+    }
+
+    .search-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: 12px;
+      padding-left: 12px;
+      border-left: 1px solid var(--border);
+    }
+
+    .search-input {
+      width: min(260px, 55vw);
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #0f0f0f;
+      color: var(--text);
+      font-size: 12px;
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent);
+    }
+
+    .preset-btn.active {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
     }
 
     .filter-btn {
@@ -146,6 +178,10 @@
       border-color: var(--accent);
     }
 
+    .compact-toggle {
+      display: none;
+    }
+
     .pinout-container {
       display: flex;
       justify-content: center;
@@ -159,10 +195,14 @@
     .pin-column {
       display: flex;
       flex-direction: column;
-      gap: 1px;
+      gap: 0;
       position: relative;
       z-index: 2;
-      padding-top: 24px;
+      height: var(--chip-height);
+      padding-top: var(--pin-top-offset);
+      padding-bottom: var(--pin-bottom-offset);
+      justify-content: space-between;
+      transform: translateY(4px);
     }
 
     .pin-column.left {
@@ -185,7 +225,7 @@
       padding: 0 8px;
       position: relative;
       z-index: 1;
-      height: 560px;
+      height: var(--chip-height);
     }
 
     .chip::before {
@@ -212,7 +252,7 @@
 
     .chip-image {
       width: auto;
-      height: 560px;
+      height: var(--chip-height);
       object-fit: contain;
       margin: 0;
       transform: rotate(180deg);
@@ -224,8 +264,9 @@
       display: flex;
       align-items: center;
       gap: 4px;
-      padding: 3px 8px;
-      min-height: 28px;
+      height: calc((var(--chip-height) - var(--pin-top-offset) - var(--pin-bottom-offset)) / 19);
+      min-height: 0;
+      padding: 0 8px;
       border-radius: 3px;
       transition: all 0.15s;
       cursor: default;
@@ -241,6 +282,15 @@
 
     .pin-row.highlight {
       background: rgba(245, 158, 11, 0.15);
+    }
+
+    .pin-row.search-dim {
+      opacity: 0.16;
+    }
+
+    .pin-row.search-hit {
+      background: rgba(245, 158, 11, 0.2);
+      box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.45);
     }
 
     .pin-num {
@@ -415,6 +465,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      z-index: 20;
     }
 
     .footer {
@@ -469,18 +520,145 @@
     }
 
     @media (max-width: 768px) {
+      :root {
+        --chip-height: 460px;
+        --pin-top-offset: 39px;
+        --pin-bottom-offset: 10px;
+      }
+
+      body {
+        padding: 12px;
+      }
+
+      .print-btn {
+        position: static;
+        margin: 0 0 12px auto;
+      }
+
+      .container {
+        max-width: 100%;
+      }
+
       .pinout-container {
-        transform: scale(0.85);
-        transform-origin: top center;
+        justify-content: flex-start;
+        overflow-x: auto;
+        gap: 10px;
+        margin: 12px 0;
+        padding: 10px 0 16px;
       }
 
       .toolbar {
         padding: 12px;
+        justify-content: flex-start;
       }
 
       .filter-btn {
         padding: 5px 8px;
         font-size: 11px;
+      }
+
+      .search-group {
+        margin-left: 0;
+        padding-left: 0;
+        border-left: none;
+        width: 100%;
+      }
+
+      .search-input {
+        width: 100%;
+      }
+
+      .btn-group {
+        margin-left: 0;
+        padding-left: 0;
+        border-left: none;
+      }
+
+      .compact-toggle {
+        display: inline-flex;
+      }
+
+      .compact-toggle.active {
+        background: var(--accent);
+        color: #000;
+        border-color: var(--accent);
+      }
+
+      .chip {
+        width: 190px;
+      }
+
+      .pin-label {
+        font-size: 9px;
+        padding: 2px 5px;
+      }
+
+      .pin-num {
+        font-size: 9px;
+      }
+
+      body.compact-mode {
+        --chip-height: 390px;
+        --pin-top-offset: 33px;
+        --pin-bottom-offset: 8px;
+      }
+
+      body.compact-mode .chip {
+        width: 158px;
+      }
+
+      body.compact-mode .pin-label {
+        font-size: 8px;
+        padding: 1px 4px;
+      }
+
+      body.compact-mode .pin-num {
+        font-size: 8px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      :root {
+        --chip-height: 420px;
+        --pin-top-offset: 36px;
+        --pin-bottom-offset: 9px;
+      }
+
+      .chip {
+        width: 170px;
+      }
+
+      .toolbar {
+        gap: 6px;
+      }
+
+      .toolbar-group {
+        gap: 4px;
+      }
+
+      .search-input {
+        font-size: 11px;
+        padding: 5px 8px;
+      }
+
+      .filter-btn {
+        padding: 4px 7px;
+        font-size: 10px;
+      }
+
+      .btn-small {
+        font-size: 10px;
+        padding: 4px 8px;
+      }
+
+      body.compact-mode {
+        --chip-height: 360px;
+        --pin-top-offset: 30px;
+        --pin-bottom-offset: 7px;
+      }
+
+      body.compact-mode .chip {
+        width: 145px;
       }
     }
   </style>
@@ -531,9 +709,17 @@
           <span class="dot" style="background: var(--uart)"></span>UART
         </button>
       </div>
+      <div class="toolbar-group search-group">
+        <input id="pinSearch" class="search-input" type="search" placeholder="Buscar pin (IO23, ADC1_0, SDA...)" />
+      </div>
       <div class="btn-group">
+        <button class="btn-small preset-btn" data-preset="spi">SPI</button>
+        <button class="btn-small preset-btn" data-preset="i2c">I2C</button>
+        <button class="btn-small preset-btn" data-preset="uart">UART</button>
+        <button class="btn-small preset-btn" data-preset="power">Power</button>
         <button class="btn-small" onclick="selectAll()">Todos</button>
         <button class="btn-small" onclick="selectNone()">Ninguno</button>
+        <button class="btn-small compact-toggle" id="compactToggle" onclick="toggleCompactMode()">Compacto</button>
       </div>
     </div>
 
@@ -685,46 +871,105 @@
 
   <script>
     const filterBtns = document.querySelectorAll('.filter-btn');
+    const presetBtns = document.querySelectorAll('.preset-btn');
+    const pinSearch = document.getElementById('pinSearch');
     const pinRows = document.querySelectorAll('.pin-row');
     const activeFilters = new Set(['power', 'gnd', 'gpio', 'adc', 'dac', 'touch', 'spi', 'i2c', 'uart']);
+    const presetMap = {
+      spi: ['spi', 'gpio'],
+      i2c: ['i2c', 'gpio'],
+      uart: ['uart', 'gpio'],
+      power: ['power', 'gnd']
+    };
+    let activePreset = '';
+
+    function syncFilterButtons() {
+      filterBtns.forEach(btn => {
+        btn.classList.toggle('active', activeFilters.has(btn.dataset.filter));
+      });
+    }
+
+    function syncPresetButtons() {
+      presetBtns.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.preset === activePreset);
+      });
+    }
 
     function updateFilters() {
+      const query = (pinSearch?.value || '').trim().toUpperCase();
       pinRows.forEach(row => {
         const types = (row.dataset.types || '').split(' ');
         const hasMatch = types.some(t => activeFilters.has(t));
+        const textMatch = !query || row.textContent.toUpperCase().includes(query);
         row.classList.toggle('dimmed', !hasMatch && activeFilters.size > 0);
-        row.classList.toggle('highlight', hasMatch && activeFilters.size < 9);
+        row.classList.toggle('highlight', hasMatch && activeFilters.size < 9 && !query);
+        row.classList.toggle('search-dim', !!query && !textMatch);
+        row.classList.toggle('search-hit', !!query && textMatch);
       });
     }
 
     filterBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const filter = btn.dataset.filter;
-        btn.classList.toggle('active');
         if (activeFilters.has(filter)) {
           activeFilters.delete(filter);
         } else {
           activeFilters.add(filter);
         }
+        activePreset = '';
+        syncFilterButtons();
+        syncPresetButtons();
         updateFilters();
       });
     });
 
+    presetBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const preset = btn.dataset.preset;
+        activePreset = preset;
+        activeFilters.clear();
+        (presetMap[preset] || []).forEach(f => activeFilters.add(f));
+        syncFilterButtons();
+        syncPresetButtons();
+        updateFilters();
+      });
+    });
+
+    if (pinSearch) {
+      pinSearch.addEventListener('input', updateFilters);
+    }
+
     function selectAll() {
       filterBtns.forEach(btn => {
-        btn.classList.add('active');
         activeFilters.add(btn.dataset.filter);
       });
+      activePreset = '';
+      syncFilterButtons();
+      syncPresetButtons();
       updateFilters();
     }
 
     function selectNone() {
       filterBtns.forEach(btn => {
-        btn.classList.remove('active');
         activeFilters.delete(btn.dataset.filter);
       });
+      activePreset = '';
+      syncFilterButtons();
+      syncPresetButtons();
       updateFilters();
     }
+
+    function toggleCompactMode() {
+      const body = document.body;
+      const button = document.getElementById('compactToggle');
+      if (!button) return;
+      body.classList.toggle('compact-mode');
+      const isCompact = body.classList.contains('compact-mode');
+      button.classList.toggle('active', isCompact);
+      button.setAttribute('aria-pressed', String(isCompact));
+    }
+
+    updateFilters();
   </script>
 </body>
 

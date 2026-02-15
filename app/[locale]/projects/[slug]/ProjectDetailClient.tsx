@@ -1,8 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Typography, Tag, Row, Col, Card, Button, Space } from 'antd';
-import { ArrowLeftOutlined, DownloadOutlined, GithubOutlined, DoubleRightOutlined, PrinterOutlined } from '@ant-design/icons';
+import { Typography, Tag, Row, Col, Card, Button, Space, Empty } from 'antd';
+import { ArrowLeftOutlined, DownloadOutlined, GithubOutlined, DoubleRightOutlined, PrinterOutlined, EyeOutlined, LinkOutlined, FileOutlined } from '@ant-design/icons';
 import { motion } from 'framer-motion';
 import { useTheme } from '@/lib/ThemeContext';
 import { ProjectMeta } from '@/lib/projects';
@@ -30,6 +30,26 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
     const secondaryColor = mode === 'dark' ? '#999' : '#666';
     const mutedColor = mode === 'dark' ? '#666' : '#999';
     const cardBorder = mode === 'dark' ? '1px solid #1f1f1f' : '1px solid #f0f0f0';
+
+    const viewerByKind: Record<string, (assetPath: string) => string> = {
+        '3d': (assetPath) => `https://3dviewer.net/#model=${encodeURIComponent(`${window.location.origin}${assetPath}`)}`,
+        'pcb': (assetPath) => `https://kicanvas.org/?url=${encodeURIComponent(`${window.location.origin}${assetPath}`)}`,
+    };
+
+    const groupedAssets = project.technicalAssets?.reduce<Record<string, typeof project.technicalAssets>>((acc, asset) => {
+        if (!acc[asset.kind]) acc[asset.kind] = [];
+        acc[asset.kind].push(asset);
+        return acc;
+    }, {}) || {};
+
+    const kindLabel: Record<string, string> = {
+        '3d': '3D / STL',
+        cad: 'CAD',
+        pcb: 'PCB / KiCad',
+        doc: 'Documentación',
+        firmware: 'Firmware / Config',
+        data: 'Datos',
+    };
 
     const tProjects = useTranslations('Projects');
 
@@ -117,6 +137,100 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                         </Link>
                     </Space>
                 </motion.div>
+            </section>
+
+            {/* Project Toolbox */}
+            <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 48px' }}>
+                <Card
+                    style={{
+                        background: mode === 'dark' ? '#141414' : '#fafafa',
+                        border: cardBorder,
+                        borderRadius: '14px',
+                    }}
+                    styles={{ body: { padding: '20px' } }}
+                >
+                    <Space direction="vertical" size={16} style={{ width: '100%' }}>
+                        <div>
+                            <Title level={4} style={{ color: textColor, marginBottom: 6 }}>
+                                Project Toolbox
+                            </Title>
+                            <Text style={{ color: secondaryColor }}>
+                                Archivos técnicos listos para flujo embebido diario: abrir, descargar o visualizar por tipo.
+                            </Text>
+                        </div>
+
+                        {Object.keys(groupedAssets).length === 0 ? (
+                            <Empty
+                                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                                description={<span style={{ color: secondaryColor }}>No hay assets técnicos detectados</span>}
+                            />
+                        ) : (
+                            <Space direction="vertical" size={12} style={{ width: '100%' }}>
+                                {Object.entries(groupedAssets).map(([kind, assets]) => (
+                                    <Card
+                                        key={kind}
+                                        size="small"
+                                        title={<span style={{ color: textColor }}>{kindLabel[kind] || kind.toUpperCase()}</span>}
+                                        style={{
+                                            background: mode === 'dark' ? '#101010' : '#fff',
+                                            border: cardBorder,
+                                            borderRadius: '10px',
+                                        }}
+                                        styles={{ body: { padding: '10px 12px' } }}
+                                    >
+                                        <Space direction="vertical" size={8} style={{ width: '100%' }}>
+                                            {assets.map((asset) => (
+                                                <div
+                                                    key={`${asset.source}-${asset.name}`}
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'space-between',
+                                                        gap: '10px',
+                                                        padding: '8px 6px',
+                                                        borderBottom: mode === 'dark' ? '1px solid #1f1f1f' : '1px solid #f0f0f0',
+                                                    }}
+                                                >
+                                                    <Space size={8} style={{ minWidth: 0 }}>
+                                                        <FileOutlined style={{ color: accentColor }} />
+                                                        <Text style={{ color: textColor }} ellipsis={{ tooltip: asset.name }}>
+                                                            {asset.name}
+                                                        </Text>
+                                                        <Tag style={{ border: 'none', fontSize: 10 }}>
+                                                            {asset.source === 'download' ? 'public' : 'source'}
+                                                        </Tag>
+                                                    </Space>
+
+                                                    <Space size={6} wrap>
+                                                        {asset.path && (
+                                                            <Button size="small" icon={<LinkOutlined />} href={asset.path} target="_blank">
+                                                                Abrir
+                                                            </Button>
+                                                        )}
+                                                        {asset.path && viewerByKind[asset.kind] && (
+                                                            <Button
+                                                                size="small"
+                                                                icon={<EyeOutlined />}
+                                                                onClick={() => window.open(viewerByKind[asset.kind](asset.path as string), '_blank', 'noopener,noreferrer')}
+                                                            >
+                                                                Viewer
+                                                            </Button>
+                                                        )}
+                                                        {asset.path && (
+                                                            <Button size="small" icon={<DownloadOutlined />} href={asset.path} target="_blank">
+                                                                Descargar
+                                                            </Button>
+                                                        )}
+                                                    </Space>
+                                                </div>
+                                            ))}
+                                        </Space>
+                                    </Card>
+                                ))}
+                            </Space>
+                        )}
+                    </Space>
+                </Card>
             </section>
 
             {/* Story / Breakthrough - THE MAGIC */}
