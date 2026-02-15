@@ -5,6 +5,8 @@ import { Layout, Button, Space, Typography } from 'antd';
 import { GithubOutlined, SunOutlined, MoonOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useTheme } from '@/lib/ThemeContext';
+import { useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
 
 const { Header: AntHeader } = Layout;
 const { Text } = Typography;
@@ -13,6 +15,8 @@ import { LocaleSwitcher } from './LocaleSwitcher';
 
 export function Header() {
   const { mode, toggleTheme } = useTheme();
+  const locale = useLocale();
+  const t = useTranslations('Header');
 
   return (
     <AntHeader
@@ -51,8 +55,8 @@ export function Header() {
       </Link>
 
       <Space size="middle">
-        <a
-          href="/pinouts/"
+        <Link
+          href={`/${locale}/pinouts`}
           style={{
             color: mode === 'dark' ? '#a3a3a3' : '#525252',
             textDecoration: 'none',
@@ -64,8 +68,38 @@ export function Header() {
             transition: 'all 0.2s',
           }}
         >
-          📌 Pinouts
-        </a>
+          📌 {t('pinouts')}
+        </Link>
+        <Link
+          href={`/${locale}/calculators`}
+          style={{
+            color: mode === 'dark' ? '#a3a3a3' : '#525252',
+            textDecoration: 'none',
+            fontSize: '13px',
+            fontWeight: 500,
+            padding: '4px 12px',
+            borderRadius: '6px',
+            background: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)',
+            transition: 'all 0.2s',
+          }}
+        >
+          🧮 {t('calculators')}
+        </Link>
+        <Link
+          href={`/${locale}/calculators/rcl`}
+          style={{
+            color: mode === 'dark' ? '#a3a3a3' : '#525252',
+            textDecoration: 'none',
+            fontSize: '13px',
+            fontWeight: 500,
+            padding: '4px 12px',
+            borderRadius: '6px',
+            background: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)',
+            transition: 'all 0.2s',
+          }}
+        >
+          ⚡ {t('rcl')}
+        </Link>
         <LocaleSwitcher />
         <Button
           type="text"
