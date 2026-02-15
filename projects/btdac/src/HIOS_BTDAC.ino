@@ -28,12 +28,20 @@
 
 #include <Arduino.h>
 #include "BluetoothA2DPSink.h"
+#include <BLEDevice.h>
+#include <BLEServer.h>
+#include <BLEUtils.h>
+#include <BLE2902.h>
 
 // ═══════════════════════════════════════════════════════════════════════════
 // CONFIGURACIÓN
 // ═══════════════════════════════════════════════════════════════════════════
 
 const char* BT_DEVICE_NAME = "HIOS BTDAC";
+
+// UUIDs para BLE
+#define SERVICE_UUID        "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
+#define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
 
 // Pines I2S (PCM5102) - PINOUT VERIFICADO
 const int I2S_BCK  = 27;
@@ -59,19 +67,130 @@ enum SystemState {
     STATE_CONNECTING,   // Conectando
     STATE_CONNECTED,    // Conectado, sin reproducir
     STATE_PLAYING,      // Reproduciendo audio
+    STATE_TONE,         // Reproduciendo tono
     STATE_ERROR         // Error
 };
 
 volatile SystemState currentState = STATE_WAITING;
+volatile SystemState previousState = STATE_WAITING;
 
 // Variables para LED parpadeante (non-blocking)
 unsigned long previousMillis = 0;
 bool ledBlinkState = false;
 
+// Variables Generador de Tonos
+unsigned long toneStartTime = 0;
+int toneFrequency = 1000;
+const int TONE_AMPLITUDE = 10000; // Max 32767
+const int SAMPLE_RATE = 44100;
+const int TONE_DURATION_MS = 2000; // Duración por defecto
+
 // Info del track actual
 String currentTitle = "";
 String currentArtist = "";
 String currentAlbum = "";
+
+// BLE Globals
+BLEServer* pServer = NULL;
+BLECharacteristic* pCharacteristic = NULL;
+bool deviceConnected = false;
+bool oldDeviceConnected = false;
+
+// ═══════════════════════════════════════════════════════════════════════════
+// GENERADOR DE TONOS
+// ═══════════════════════════════════════════════════════════════════════════
+
+void playTone(int freq) {
+    if (currentState == STATE_PLAYING) {
+        // Bloquear si hay música sonando para evitar glitches feos
+        // Opcional: Pausar música
+        Serial.println("[Tone] Ignorado: Musica sonando");
+        return;
+    }
+
+    Serial.printf("[Tone] Iniciando %d Hz...\n", freq);
+    
+    // Guardar estado
+    previousState = currentState;
+    currentState = STATE_TONE;
+    toneStartTime = millis();
+    toneFrequency = freq;
+    
+    led_yellow();
+}
+
+void handleToneLoop() {
+    // Si pasaron mas de 2 segundos, volver
+    if (millis() - toneStartTime > TONE_DURATION_MS) {
+        currentState = previousState;
+        Serial.println("[Tone] Finalizado");
+        
+        // Restaurar LED
+        if (currentState == STATE_CONNECTED) led_green();
+        else if (currentState == STATE_WAITING) led_off(); // Blink lo arregla
+        return;
+    }
+
+    // Generar buffer de audio (Stereo 16-bit)
+    // 512 muestras = ~11ms @ 44.1kHz
+    size_t bytes_written;
+    int16_t sample_buffer[512 * 2]; 
+    
+    // Calcular fase basada en el tiempo para continuidad simple
+    // (Para una continuidad perfecta se necesita tracking de fase global)
+    double timeBase = (double)(millis() - toneStartTime) / 1000.0;
+    
+    for (int i = 0; i < 512; i++) {
+        double t = timeBase + ((double)i / SAMPLE_RATE);
+        int16_t sample = (int16_t)(TONE_AMPLITUDE * sin(2 * PI * toneFrequency * t));
+        
+        sample_buffer[2*i] = sample;     // Left
+        sample_buffer[2*i + 1] = sample; // Right
+    }
+
+    // Escribir directo a I2S (Hackeando un poco la librería)
+    // Usamos el puerto I2S 0 que configura la librería
+    i2s_write(I2S_NUM_0, sample_buffer, sizeof(sample_buffer), &bytes_written, 100);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// CALLBACKS BLE
+// ═══════════════════════════════════════════════════════════════════════════
+
+class MyServerCallbacks: public BLEServerCallbacks {
+    void onConnect(BLEServer* pServer) {
+      deviceConnected = true;
+      Serial.println("[BLE] App Conectada");
+      // Importante: No reiniciar advertising aquí
+    };
+
+    void onDisconnect(BLEServer* pServer) {
+      deviceConnected = false;
+      Serial.println("[BLE] App Desconectada");
+      // Reiniciar advertising para que otro pueda conectar
+      BLEDevice::startAdvertising();
+    }
+};
+
+class MyCallbacks: public BLECharacteristicCallbacks {
+    void onWrite(BLECharacteristic *pCharacteristic) {
+      std::string value = pCharacteristic->getValue();
+
+      if (value.length() > 0) {
+        String cmd = String(value.c_str());
+        Serial.print("[BLE] CMD: ");
+        Serial.println(cmd);
+        
+        // Parsear comando "tone:1000"
+        if (cmd.startsWith("tone:")) {
+            int freq = cmd.substring(5).toInt();
+            if (freq > 0) {
+                playTone(freq);
+            }
+        }
+      }
+    }
+};
 
 // ═══════════════════════════════════════════════════════════════════════════
 // FUNCIONES LED
@@ -242,11 +361,46 @@ void setup() {
     // ─────────────────────────────────────────────────────────────────────────
     
     a2dp_sink.set_volume(INITIAL_VOLUME);
+
+    // CRITICO: Habilitar Dual Mode (Classic + BLE)
+    a2dp_sink.set_default_bt_mode(ESP_BT_MODE_BTDM);
     
     Serial.println("[BT] Iniciando Bluetooth...");
     a2dp_sink.start(BT_DEVICE_NAME);
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Configuración BLE (Después de iniciar A2DP)
+    // ─────────────────────────────────────────────────────────────────────────
+    Serial.println("[BLE] Iniciando servicio de control...");
     
-    Serial.println("[OK] Sistema listo");
+    // Hook en el controlador ya iniciado
+    BLEDevice::init(BT_DEVICE_NAME);
+    
+    pServer = BLEDevice::createServer();
+    pServer->setCallbacks(new MyServerCallbacks());
+
+    BLEService *pService = pServer->createService(SERVICE_UUID);
+
+    pCharacteristic = pService->createCharacteristic(
+                        CHARACTERISTIC_UUID,
+                        BLECharacteristic::PROPERTY_READ   |
+                        BLECharacteristic::PROPERTY_WRITE  |
+                        BLECharacteristic::PROPERTY_NOTIFY |
+                        BLECharacteristic::PROPERTY_INDICATE
+                      );
+
+    pCharacteristic->setCallbacks(new MyCallbacks());
+    pCharacteristic->addDescriptor(new BLE2902());
+
+    pService->start();
+
+    BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
+    pAdvertising->addServiceUUID(SERVICE_UUID);
+    pAdvertising->setScanResponse(false);
+    pAdvertising->setMinPreferred(0x0);  // set value to 0x00 to not advertise this parameter
+    BLEDevice::startAdvertising();
+    
+    Serial.println("[OK] Sistema listo (Dual Mode)");
     Serial.println("═══════════════════════════════════════════════════════════");
     Serial.println("Buscá '" + String(BT_DEVICE_NAME) + "' en tu teléfono");
     Serial.println("═══════════════════════════════════════════════════════════");
@@ -305,6 +459,10 @@ void loop() {
     }
     
     delay(10);
+    
+    if (currentState == STATE_TONE) {
+        handleToneLoop();
+    }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

@@ -29,15 +29,15 @@
             "struggle": "Tardé 2 semanas en hacer que el I2S funcionara correctamente. El primer intento no tenía audio. El segundo tenía tanto ruido que era inutilizable. Al tercero, finalmente entendí cómo configurar los pines.",
             "whatWorks": [
                 "Bluetooth A2DP — conexión estable",
+                "App Android de Control (BLE)",
+                "Generador de Tonos DSP",
                 "Audio 24-bit — calidad sorprendente",
-                "Batería 12+ horas — testeado",
-                "LED RGB de estado",
-                "Serial Monitor con metadata"
+                "Batería 12+ horas — testeado"
             ],
             "whatDoesnt": [
                 "Case — funcional pero básico",
-                "Sin control de volumen físico",
-                "A veces 2 intentos para parear"
+                "Sin control de volumen físico (Solo App)",
+                "WiFi Streaming (Próximamente)"
             ],
             "resources": [
                 {
@@ -114,7 +114,7 @@
             "specs": [
                 {
                     "label": "Audio",
-                    "value": "Bluetooth A2DP, 16-bit 44.1kHz"
+                    "value": "BT A2DP + BLE Control"
                 },
                 {
                     "label": "DAC",
@@ -134,17 +134,16 @@
                 },
                 {
                     "label": "Consumo",
-                    "value": "~130mA BT activo"
+                    "value": "~150mA (Dual Mode)"
                 }
             ],
             "futureFeatures": [
-                "Amp auriculares NE5532",
-                "Divisor resistivo medición batería",
-                "App Android BLE",
-                "Modo WiFi streaming",
-                "YouTube/Spotify integration",
-                "Control volumen BLE",
-                "Wear OS / Garmin integration"
+                "WiFi Streaming (Hi-Res)",
+                "Ecualizador DSP",
+                "Monitor de Batería (Divisor)",
+                "OTA Updates desde App",
+                "Integración Spotify",
+                "Carcasa impresión 3D v2"
             ]
         },
         "speaker": {
