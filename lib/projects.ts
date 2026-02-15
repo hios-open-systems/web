@@ -13,9 +13,47 @@ export interface ProjectMeta {
         path: string;
         type: 'pdf' | 'md' | 'code' | 'other';
     }[];
+    technicalAssets: {
+        name: string;
+        path: string | null;
+        ext: string;
+        kind: '3d' | 'cad' | 'pcb' | 'doc' | 'firmware' | 'data' | 'other';
+        source: 'project' | 'download';
+    }[];
 }
 
 const projectsDir = path.join(process.cwd(), 'projects');
+const publicDir = path.join(process.cwd(), 'public');
+
+function walkFiles(dir: string): string[] {
+    if (!fs.existsSync(dir)) return [];
+
+    const entries = fs.readdirSync(dir, { withFileTypes: true });
+    const files: string[] = [];
+
+    for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+        if (entry.isDirectory()) {
+            files.push(...walkFiles(fullPath));
+            continue;
+        }
+        files.push(fullPath);
+    }
+
+    return files;
+}
+
+function classifyAsset(ext: string): ProjectMeta['technicalAssets'][number]['kind'] {
+    const normalized = ext.toLowerCase();
+
+    if (['stl', 'obj', 'step', 'stp', '3mf', 'gltf', 'glb'].includes(normalized)) return '3d';
+    if (['fcstd', 'iges', 'igs', 'dwg', 'dxf'].includes(normalized)) return 'cad';
+    if (['kicad_pcb', 'kicad_sch', 'kicad_pro', 'sch', 'brd'].includes(normalized)) return 'pcb';
+    if (['md', 'pdf', 'txt', 'doc', 'docx'].includes(normalized)) return 'doc';
+    if (['ino', 'c', 'cpp', 'h', 'hpp', 'py', 'json', 'yaml', 'yml', 'ini'].includes(normalized)) return 'firmware';
+    if (['csv', 'log'].includes(normalized)) return 'data';
+    return 'other';
+}
 
 export function getProjectSlugs(): string[] {
     if (!fs.existsSync(projectsDir)) return [];
@@ -93,6 +131,43 @@ export function getProjectBySlug(slug: string): ProjectMeta | null {
         }
     });
 
+    // Technical assets for embedded workflows (recursive)
+    const technicalAssetsMap = new Map<string, ProjectMeta['technicalAssets'][number]>();
+    const projectFiles = walkFiles(projectPath);
+    const downloadPath = path.join(publicDir, 'downloads', slug);
+    const downloadFiles = walkFiles(downloadPath);
+
+    const pushAsset = (absolutePath: string, source: 'project' | 'download') => {
+        const ext = path.extname(absolutePath).replace('.', '').toLowerCase();
+        if (!ext) return;
+
+        const relativeName = source === 'project'
+            ? path.relative(projectPath, absolutePath)
+            : path.relative(downloadPath, absolutePath);
+
+        const publicPath = source === 'project'
+            ? null
+            : `/downloads/${slug}/${relativeName.replace(/\\/g, '/')}`;
+
+        const asset = {
+            name: relativeName.replace(/\\/g, '/'),
+            path: publicPath,
+            ext,
+            kind: classifyAsset(ext),
+            source,
+        } as const;
+
+        const key = `${asset.source}:${asset.name}`;
+        technicalAssetsMap.set(key, asset);
+    };
+
+    projectFiles.forEach(file => pushAsset(file, 'project'));
+    downloadFiles.forEach(file => pushAsset(file, 'download'));
+
+    const technicalAssets = Array.from(technicalAssetsMap.values())
+        .filter(asset => asset.kind !== 'other')
+        .sort((a, b) => a.name.localeCompare(b.name));
+
     // Extract name and description from README first line
     const lines = readme.split('\n');
     const titleLine = lines.find(l => l.startsWith('# '));
@@ -109,6 +184,7 @@ export function getProjectBySlug(slug: string): ProjectMeta | null {
         images,
         readme,
         files,
+        technicalAssets,
     };
 }
 

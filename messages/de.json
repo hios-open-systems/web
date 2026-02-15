@@ -429,5 +429,155 @@
             "selected": "Ausgewählt",
             "html": "HTML"
         }
+    },
+    "Header": {
+        "pinouts": "Pinouts",
+        "calculators": "Rechner",
+        "rcl": "RCL"
+    },
+    "Calculators": {
+        "title": "Embedded-Rechner",
+        "subtitle": "Praktische Tools für Elektronikdesign, Validierung und schnelle Entscheidungen.",
+        "presets_label": "Globale Presets",
+        "go_rcl": "RCL-Seite öffnen",
+        "copy_summary": "Zusammenfassung kopieren",
+        "copy_link": "Link kopieren",
+        "copy_ok": "Zusammenfassung in Zwischenablage kopiert",
+        "copy_error": "Automatisches Kopieren fehlgeschlagen",
+        "share_ok": "Link kopiert",
+        "share_error": "Link konnte nicht kopiert werden",
+        "tags": {
+            "embedded": "Embedded",
+            "audio": "Audio",
+            "power": "Leistung",
+            "design": "Design"
+        },
+        "presets": {
+            "custom": "Custom",
+            "esp32adc": "ESP32 ADC",
+            "audio44": "Audio 44.1k",
+            "audio48": "Audio 48k",
+            "lowPower": "Low Power"
+        },
+        "cards": {
+            "led": {
+                "title": "LED-Vorwiderstand",
+                "vs": "Versorgungsspannung (V)",
+                "vf": "LED-Flussspannung (V)",
+                "current": "LED-Strom (mA)",
+                "r": "Widerstand",
+                "p": "Widerstandsleistung"
+            },
+            "cap": {
+                "title": "Kondensator nach Ripple",
+                "current": "Laststrom (mA)",
+                "ripple": "Erlaubte Ripple-Spannung ΔV (V)",
+                "freq": "Schaltfrequenz (Hz)",
+                "result": "Mindestkondensator",
+                "formula": "Formel: C = I / (ΔV · f)"
+            },
+            "thermal": {
+                "title": "Leistung & Thermik",
+                "v": "Spannung (V)",
+                "i": "Strom (A)",
+                "theta": "θJA (°C/W)",
+                "ta": "Umgebungstemp. (°C)",
+                "p": "Leistung",
+                "temp": "Thermische Abschätzung"
+            },
+            "runtime": {
+                "title": "Verbrauch & Laufzeit",
+                "battery": "Akku (mAh)",
+                "current": "Mittlerer Strom (mA)",
+                "eff": "Gesamteffizienz (%)",
+                "hours": "Laufzeit",
+                "days": "Tage"
+            },
+            "resistorLab": {
+                "title": "Widerstands-Farblabor",
+                "band1": "Band 1",
+                "band2": "Band 2",
+                "multiplier": "Multiplikator",
+                "tolerance": "Toleranz",
+                "package": "Gehäusetyp",
+                "wattage": "Leistung",
+                "smdCode": "SMD-Code",
+                "value": "Nennwert",
+                "range": "Toleranzbereich",
+                "packages": {
+                    "axialCarbon": "Through-Hole · Axial 1/4W (Carbon Film)",
+                    "axialMetal": "Through-Hole · Präzision (Metal Film)",
+                    "axialCeramic": "Through-Hole · Leistung (Keramik)",
+                    "smd0603": "SMD 0603",
+                    "smd0805": "SMD 0805",
+                    "smd1206": "SMD 1206"
+                }
+            },
+            "adc": {
+                "title": "ADC-Teiler (ESP32)",
+                "vin": "Max Vin (V)",
+                "vadc": "Sicheres Vadc max (V)",
+                "rbottom": "Rbottom (kΩ)",
+                "rtop": "Empfohlener Rtop",
+                "ratio": "Gesamtverhältnis"
+            },
+            "rc": {
+                "title": "RC-Filter",
+                "r": "R (Ω)",
+                "c": "C (nF)",
+                "fc": "Aktuelle fc",
+                "target": "Ziel-fc (Hz)",
+                "required": "Erforderlicher R"
+            },
+            "gain": {
+                "title": "Verstärkungsfaktor (nicht invertierend)",
+                "rf": "Rf (Ω)",
+                "rg": "Rg (Ω)",
+                "value": "Verstärkung",
+                "db": "Verstärkung (dB)",
+                "formula": "Formel: Av = 1 + Rf/Rg"
+            },
+            "i2s": {
+                "title": "I2S-Takte (ESP32 / DAC)",
+                "fs": "Sample-Rate (Hz)",
+                "bits": "Bits pro Sample",
+                "channels": "Kanäle",
+                "mclk": "MCLK-Multiplikator",
+                "rate": "Datenrate"
+            }
+        },
+        "colors": {
+            "black": "Schwarz",
+            "brown": "Braun",
+            "red": "Rot",
+            "orange": "Orange",
+            "yellow": "Gelb",
+            "green": "Grün",
+            "blue": "Blau",
+            "violet": "Violett",
+            "gray": "Grau",
+            "white": "Weiß",
+            "gold": "Gold",
+            "silver": "Silber"
+        }
+    },
+    "CalculatorsRCL": {
+        "title": "RCL-Rechner (Serie)",
+        "subtitle": "Einfache Analyse von RCL-Serienschaltungen: Reaktanz, Impedanz, Resonanz und Gütefaktor.",
+        "inputs": "Eingaben",
+        "results": "Ergebnisse",
+        "r_ohm": "Widerstand R (Ω)",
+        "l_mh": "Induktivität L (mH)",
+        "c_uf": "Kapazität C (µF)",
+        "freq_hz": "Frequenz f (Hz)",
+        "xl": "Induktive Reaktanz XL",
+        "xc": "Kapazitive Reaktanz XC",
+        "z": "Gesamtimpedanz |Z|",
+        "f0": "Resonanzfrequenz f0",
+        "q": "Gütefaktor Q",
+        "notes": "Modell: RCL in Serie. Gleichungen: XL=2πfL, XC=1/(2πfC), |Z|=√(R²+(XL−XC)²), f0=1/(2π√LC).",
+        "copy_link": "Link kopieren",
+        "share_ok": "Link kopiert",
+        "share_error": "Link konnte nicht kopiert werden"
     }
 }

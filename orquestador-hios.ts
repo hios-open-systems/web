@@ -11,7 +11,7 @@ async function generarPantallaConfig() {
   const existingCode = fs.readFileSync('./projects/btdac/android/app/src/main/java/dev/hios/btdac/MainActivity.kt', 'utf8');
 
   // 2. Definir la tarea
-  const prompt = `Basado en el pinout: ${pinout}, genera el ViewModel en Kotlin para manejar la config del BTDAC via BLE.`;
+  const prompt = `Contexto del código existente:\n${existingCode}\n\nBasado en el pinout: ${pinout}, genera el ViewModel en Kotlin para manejar la config del BTDAC via BLE.`;
 
   // 3. Inferencia Local (Nemotron)
   const model = await client.llm.model("nemotron-3-nano");
