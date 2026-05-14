@@ -137,6 +137,10 @@
     line-height: 1.7;
 }
 
+.sectionCount {
+  color: var(--wb-text-muted);
+  font-size: 13px;
+}
 .packLink {
     display: block;
     height: 100%;
@@ -189,6 +193,20 @@
     line-height: 1.7;
 }
 
+.catalogSection {
+  border-radius: 20px;
+  border: 1px solid var(--wb-surface-border);
+  background: var(--wb-surface-bg);
+}
+
+.catalogHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
 .sectionCard {
     border-radius: 20px;
     border: 1px solid var(--wb-surface-border);
@@ -300,6 +318,47 @@
     word-break: break-word;
 }
 
+.optionGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.generatedList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.generatedRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  border: 1px solid var(--wb-surface-soft-border, var(--wb-surface-border));
+  background: var(--wb-surface-soft-bg, var(--wb-surface-bg));
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.generatedValue {
+  font-family: ui-monospace, SFMono-Regular, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
+  word-break: break-all;
+}
+
+.emptyPanel {
+  border: 1px dashed var(--wb-surface-soft-border, var(--wb-surface-border));
+  border-radius: 14px;
+  padding: 16px;
+  color: var(--wb-text-muted);
+  background: var(--wb-surface-soft-bg, var(--wb-surface-bg));
+}
+
+.diffPreviewGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
 @media (max-width: 768px) {
     .heroGrid {
         grid-template-columns: 1fr;
@@ -325,6 +384,10 @@
     .principlesGrid {
         grid-template-columns: 1fr;
     }
+.optionGrid,
+.diffPreviewGrid {
+  grid-template-columns: 1fr;
+}
 }
 
 @media (max-width: 520px) {

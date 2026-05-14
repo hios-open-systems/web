@@ -432,14 +432,16 @@
         },
         "landing": {
             "badge": "Nuova linea di prodotto",
-            "title": "Uno workspace pratico per payload, snippet e flussi reali di sviluppo.",
-            "subtitle": "Non è una directory generica di tool. È una superficie veloce, chiara e riutilizzabile per i compiti che tornano ogni giorno.",
-            "primaryCta": "Apri Payload Lab",
-            "secondaryCta": "Apri Snippets",
+            "title": "Uno workspace pratico per payload, JWT, snippet e flussi reali di sviluppo.",
+            "subtitle": "Gli strumenti piccoli ma frequenti meritano una struttura vera. Validazione, generazione e test mantengono utile il catalogo mentre cresce.",
+            "primaryCta": "Apri validazione",
+            "secondaryCta": "Apri generazione",
             "panelTitle": "Entra da una sezione dedicata",
-            "panelSubtitle": "La landing deve orientare e ordinare. Il lavoro reale vive dentro ogni strumento o sezione dedicata.",
-            "sectionsTitle": "Sezioni disponibili",
-            "sectionsSubtitle": "Ogni area del workbench ha la propria route, proprio come calcolatori o pinout. L'obiettivo è navigare superfici chiare, non buttare tutto in una sola pagina.",
+            "panelSubtitle": "Parti dall'intenzione, non da un muro di card. Ogni sezione raggruppa tool correlati così il workbench può scalare bene.",
+            "sectionsTitle": "Sezioni principali",
+            "sectionsSubtitle": "Validazione, generazione e test separano il catalogo per caso d'uso, così aggiungere altri tool dopo non lo trasforma in una lista statica senza forma.",
+            "catalogTitle": "Catalogo tool",
+            "catalogSubtitle": "Ogni sezione ha la propria route e può crescere senza rompere l'architettura delle informazioni.",
             "cardCta": "Apri sezione",
             "principlesTitle": "Cosa ottimizza questa superficie",
             "principlesSubtitle": "Prima chiarezza, velocità e ottima esperienza mobile. Poi complessità.",
@@ -449,10 +451,43 @@
                 "dailyUse": "L'obiettivo non è una demo bella. È un workbench a cui vuoi davvero tornare durante la giornata di lavoro."
             }
         },
+        "sections": {
+            "validation": {
+                "title": "Validazione",
+                "description": "Decodifica, ispeziona e valida payload o artefatti auth prima che arrivino in produzione."
+            },
+            "generation": {
+                "title": "Generazione",
+                "description": "Crea stringhe utili, snippet e altri artefatti rapidi senza uscire dal browser."
+            },
+            "testing": {
+                "title": "Test",
+                "description": "Confronta oggetti, ispeziona differenze e collega il flusso alle validazioni embedded."
+            }
+        },
+        "sectionToolCount": "tool",
+        "viewAll": "Vedi tutto",
+        "viewWorkbench": "Torna al Workbench",
+        "sectionBrowseTitle": "Esplora altre sezioni",
+        "sectionBrowseSubtitle": "Passa tra validazione, generazione e test senza perdere il contesto del workbench.",
+        "externalLabel": "Esterno",
+        "toolCta": "Apri tool",
         "packs": {
             "payload": {
                 "title": "Payload Lab",
                 "description": "Formatta, valida e condividi payload JSON senza uscire dal browser."
+            },
+            "jwt-decode": {
+                "title": "JWT Decode",
+                "description": "Ispeziona header, payload ed exp dei JWT in locale senza inviare il token altrove."
+            },
+            "random-string": {
+                "title": "Random String Generator",
+                "description": "Genera stringhe rapide per secret, ID, demo o fixture da una sola superficie."
+            },
+            "object-compare": {
+                "title": "Object Comparator",
+                "description": "Confronta due oggetti JSON e trova differenze strutturali in pochi secondi."
             },
             "snippets": {
                 "title": "Snippets Shelf",
@@ -496,6 +531,72 @@
             "copied": "Contenuto copiato",
             "linkCopied": "Link copiato",
             "copyError": "Impossibile copiare",
+            "unknownError": "Errore sconosciuto"
+        },
+        "jwtDecode": {
+            "badge": "Tool di validazione",
+            "title": "JWT Decode",
+            "subtitle": "Ispeziona header e payload in locale. Utile per fare debug dei flussi auth senza inviare il token da nessuna parte.",
+            "input": "Token JWT",
+            "placeholder": "Incolla un JWT qui...",
+            "loadExample": "Carica esempio",
+            "clear": "Pulisci",
+            "header": "Header",
+            "payload": "Payload",
+            "signature": "Lunghezza firma",
+            "decoded": "Decodificato solo in locale",
+            "copyHeader": "Copia header",
+            "copyPayload": "Copia payload",
+            "copied": "Copiato",
+            "copyError": "Impossibile copiare",
+            "algorithm": "Algoritmo",
+            "type": "Tipo",
+            "expires": "Scade",
+            "expired": "Scaduto",
+            "active": "Attivo",
+            "noExpiration": "Senza scadenza",
+            "invalid": "Token non valido",
+            "errorTitle": "Errore di decode",
+            "unknownError": "Errore sconosciuto"
+        },
+        "randomString": {
+            "badge": "Tool di generazione",
+            "title": "Random String Generator",
+            "subtitle": "Genera stringhe utili per ID, segreti, demo o fixture senza uscire dal browser.",
+            "length": "Lunghezza",
+            "uppercase": "Maiuscole",
+            "lowercase": "Minuscole",
+            "numbers": "Numeri",
+            "symbols": "Simboli",
+            "excludeAmbiguous": "Escludi caratteri ambigui",
+            "generate": "Genera",
+            "copy": "Copia",
+            "copyAll": "Copia tutti",
+            "copied": "Stringa copiata",
+            "allCopied": "Valori generati copiati",
+            "copyError": "Impossibile copiare",
+            "entropy": "Entropia stimata",
+            "results": "Valori generati",
+            "emptyCharset": "Seleziona almeno un gruppo di caratteri"
+        },
+        "objectCompare": {
+            "badge": "Tool di test",
+            "title": "Object Comparator",
+            "subtitle": "Confronta due oggetti JSON e individua rapidamente aggiunte, rimozioni e cambi di valore.",
+            "loadExample": "Carica esempio",
+            "clear": "Pulisci",
+            "swap": "Inverti lati",
+            "left": "Oggetto sinistro",
+            "right": "Oggetto destro",
+            "placeholder": "Incolla JSON qui...",
+            "added": "Aggiunti",
+            "removed": "Rimossi",
+            "changed": "Modificati",
+            "equal": "Gli oggetti coincidono",
+            "differences": "Differenze",
+            "noDifferences": "Nessuna differenza strutturale rilevata.",
+            "leftInvalid": "Il JSON sinistro non è valido",
+            "rightInvalid": "Il JSON destro non è valido",
             "unknownError": "Errore sconosciuto"
         },
         "snippets": {

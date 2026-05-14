@@ -453,14 +453,16 @@
         },
         "landing": {
             "badge": "New product line",
-            "title": "A practical workspace for payloads, snippets, and real developer workflows.",
-            "subtitle": "This is not a generic tools directory. It is a fast, clear, reusable surface for the tasks that keep showing up during the workday.",
-            "primaryCta": "Open Payload Lab",
-            "secondaryCta": "Open Snippets",
+            "title": "A practical workspace for payloads, JWTs, snippets, and real developer workflows.",
+            "subtitle": "Cheap, high-frequency utilities deserve real structure. Validation, generation, and testing keep the catalog useful as it grows.",
+            "primaryCta": "Browse validation",
+            "secondaryCta": "Browse generation",
             "panelTitle": "Enter through a dedicated section",
-            "panelSubtitle": "The landing page should orient and organize. The real work belongs inside each dedicated tool or section.",
-            "sectionsTitle": "Available sections",
-            "sectionsSubtitle": "Each workbench area has its own route, just like calculators or pinouts. The goal is to move through clear surfaces, not pile everything into one page.",
+            "panelSubtitle": "Start from intent, not from a wall of cards. Each section groups related tools so the workbench can scale cleanly.",
+            "sectionsTitle": "Core sections",
+            "sectionsSubtitle": "Validation, generation, and testing split the catalog by use case, so adding more tools later does not turn the page into a static paper list.",
+            "catalogTitle": "Tool catalog",
+            "catalogSubtitle": "Each section owns its own route and can keep growing without breaking the information architecture.",
             "cardCta": "Open section",
             "principlesTitle": "What this surface optimizes",
             "principlesSubtitle": "Clarity, speed, and strong mobile usability first. Complexity second.",
@@ -470,10 +472,43 @@
                 "dailyUse": "The target is not a pretty demo. It is a workbench you actually want to come back to during the workday."
             }
         },
+        "sections": {
+            "validation": {
+                "title": "Validation",
+                "description": "Decode, inspect, and verify payloads or auth artifacts before they reach production."
+            },
+            "generation": {
+                "title": "Generation",
+                "description": "Produce useful strings, snippets, and other quick artifacts without leaving the browser."
+            },
+            "testing": {
+                "title": "Testing",
+                "description": "Compare objects, inspect differences, and jump into embedded validation flows."
+            }
+        },
+        "sectionToolCount": "tools",
+        "viewAll": "View all",
+        "viewWorkbench": "Back to Workbench",
+        "sectionBrowseTitle": "Browse other sections",
+        "sectionBrowseSubtitle": "Switch between validation, generation, and testing without losing the workbench context.",
+        "externalLabel": "External",
+        "toolCta": "Open tool",
         "packs": {
             "payload": {
                 "title": "Payload Lab",
                 "description": "Format, validate, and share JSON payloads without leaving the browser."
+            },
+            "jwt-decode": {
+                "title": "JWT Decode",
+                "description": "Inspect JWT headers, payloads, and expiration locally without sending the token anywhere."
+            },
+            "random-string": {
+                "title": "Random String Generator",
+                "description": "Generate quick strings for secrets, IDs, demos, or fixtures in one place."
+            },
+            "object-compare": {
+                "title": "Object Comparator",
+                "description": "Compare two JSON objects and surface structural differences in seconds."
             },
             "snippets": {
                 "title": "Snippets Shelf",
@@ -517,6 +552,72 @@
             "copied": "Content copied",
             "linkCopied": "Link copied",
             "copyError": "Could not copy",
+            "unknownError": "Unknown error"
+        },
+        "jwtDecode": {
+            "badge": "Validation tool",
+            "title": "JWT Decode",
+            "subtitle": "Inspect header and payload locally. Useful for debugging auth flows without sending the token anywhere.",
+            "input": "JWT token",
+            "placeholder": "Paste a JWT here...",
+            "loadExample": "Load example",
+            "clear": "Clear",
+            "header": "Header",
+            "payload": "Payload",
+            "signature": "Signature length",
+            "decoded": "Decoded locally only",
+            "copyHeader": "Copy header",
+            "copyPayload": "Copy payload",
+            "copied": "Copied",
+            "copyError": "Could not copy",
+            "algorithm": "Algorithm",
+            "type": "Type",
+            "expires": "Expires",
+            "expired": "Expired",
+            "active": "Active",
+            "noExpiration": "No expiration",
+            "invalid": "Invalid token",
+            "errorTitle": "Decode error",
+            "unknownError": "Unknown error"
+        },
+        "randomString": {
+            "badge": "Generation tool",
+            "title": "Random String Generator",
+            "subtitle": "Generate useful strings for IDs, secrets, demos, or fixtures without leaving the browser.",
+            "length": "Length",
+            "uppercase": "Uppercase",
+            "lowercase": "Lowercase",
+            "numbers": "Numbers",
+            "symbols": "Symbols",
+            "excludeAmbiguous": "Exclude ambiguous chars",
+            "generate": "Generate",
+            "copy": "Copy",
+            "copyAll": "Copy all",
+            "copied": "String copied",
+            "allCopied": "Generated values copied",
+            "copyError": "Could not copy",
+            "entropy": "Estimated entropy",
+            "results": "Generated values",
+            "emptyCharset": "Select at least one character group"
+        },
+        "objectCompare": {
+            "badge": "Testing tool",
+            "title": "Object Comparator",
+            "subtitle": "Compare two JSON objects and surface additions, removals, and changed values quickly.",
+            "loadExample": "Load example",
+            "clear": "Clear",
+            "swap": "Swap sides",
+            "left": "Left object",
+            "right": "Right object",
+            "placeholder": "Paste JSON here...",
+            "added": "Added",
+            "removed": "Removed",
+            "changed": "Changed",
+            "equal": "Objects match",
+            "differences": "Differences",
+            "noDifferences": "No structural differences found.",
+            "leftInvalid": "Left JSON is invalid",
+            "rightInvalid": "Right JSON is invalid",
             "unknownError": "Unknown error"
         },
         "snippets": {
