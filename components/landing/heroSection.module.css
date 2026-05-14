@@ -1,7 +1,7 @@
 .hero {
     position: relative;
     overflow: hidden;
-    padding: 112px 24px 72px;
+    padding: 76px 24px 52px;
     background:
         radial-gradient(circle at 14% 18%, var(--hero-glow-start) 0%, transparent 34%),
         radial-gradient(circle at 88% 80%, var(--hero-glow-end) 0%, transparent 30%),
@@ -19,7 +19,7 @@
     display: grid;
     grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
     gap: 28px;
-    align-items: stretch;
+    align-items: center;
 }
 
 .content {
@@ -93,6 +93,10 @@
     display: inline-flex;
 }
 
+.actionLink :global(.ant-btn) {
+    min-width: 176px;
+}
+
 .contactLink {
     display: inline-flex;
     align-items: center;
@@ -103,55 +107,62 @@
     font-weight: 500;
 }
 
-.supportCard {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
+.factRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
 }
 
-.metricCard,
-.panel {
-    border-radius: 24px;
-    border: 1px solid var(--hero-surface-border);
-    background: var(--hero-surface-bg);
-    box-shadow: var(--hero-shadow);
-    backdrop-filter: blur(14px);
-}
-
-.metricCard {
-    padding: 18px 20px;
-}
-
-.metricValue {
-    display: block;
-    margin-bottom: 6px;
-    color: var(--hero-title);
-    font-size: 1.8rem;
-    font-weight: 700;
-    line-height: 1;
-}
-
-.metricLabel {
+.factItem {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
     color: var(--hero-text-secondary);
     font-size: 14px;
+    font-weight: 500;
 }
 
-.panel {
+.factItem :global(.anticon) {
+    color: var(--hero-accent);
+}
+
+.spotlight {
     display: flex;
     flex-direction: column;
     gap: 18px;
     padding: 24px;
+    border-radius: 28px;
+    border: 1px solid var(--hero-surface-border);
+    background:
+        linear-gradient(180deg, var(--hero-surface-soft-glow) 0%, transparent 42%),
+        var(--hero-surface-bg);
+    box-shadow: var(--hero-shadow);
+    backdrop-filter: blur(14px);
 }
 
-.panelHeader {
+.spotlightHeader {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.panelTitle {
+.spotlightEyebrow {
+    width: fit-content;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: var(--hero-tag-bg);
+    border: 1px solid var(--hero-tag-border);
+    color: var(--hero-text-secondary);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.spotlightTitle {
     color: var(--hero-title);
-    font-size: 1rem;
+    font-size: clamp(1.4rem, 2vw, 2rem);
+    line-height: 1.12;
 }
 
 .panelSubtitle {
@@ -160,18 +171,17 @@
     line-height: 1.7;
 }
 
-.packList {
-    display: flex;
-    flex-direction: column;
+.quickGrid {
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 12px;
 }
 
-.packLink {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    gap: 12px;
-    align-items: center;
-    padding: 14px;
+.quickLink {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 15px 16px;
     border-radius: 18px;
     border: 1px solid var(--hero-surface-soft-border);
     background: var(--hero-surface-soft-bg);
@@ -179,35 +189,14 @@
     color: inherit;
 }
 
-.packIcon {
-    width: 42px;
-    height: 42px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 14px;
-    font-size: 18px;
-}
-
-.packBody {
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.packDescription {
+.quickMeta {
     color: var(--hero-text-muted);
-    line-height: 1.55;
-}
-
-.packArrow {
-    color: var(--hero-text-muted);
+    line-height: 1.6;
 }
 
 @media (max-width: 900px) {
     .hero {
-        padding: 96px 20px 56px;
+        padding: 64px 20px 44px;
     }
 
     .grid {
@@ -216,10 +205,6 @@
 }
 
 @media (max-width: 640px) {
-    .supportCard {
-        grid-template-columns: 1fr;
-    }
-
     .actions {
         flex-direction: column;
         align-items: stretch;
@@ -230,11 +215,9 @@
         width: 100%;
     }
 
-    .packLink {
-        grid-template-columns: auto minmax(0, 1fr);
-    }
-
-    .packArrow {
-        display: none;
+    .factRow {
+        gap: 12px;
+        flex-direction: column;
+        align-items: flex-start;
     }
 }
