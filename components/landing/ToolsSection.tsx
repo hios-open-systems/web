@@ -9,21 +9,11 @@ import { useLocale, useTranslations } from 'next-intl';
 import { workbenchPacks, workbenchSignals } from '@/config/workbench';
 import { motionVariants } from '@/config/theme';
 import { Section, SectionHeader } from '@/components/common';
-import {
-    ArrowRightOutlined,
-    DatabaseOutlined,
-    FileTextOutlined,
-    ToolOutlined,
-} from '@ant-design/icons';
+import { ArrowRightOutlined } from '@ant-design/icons';
+import { getWorkbenchIcon } from '@/components/workbench/workbenchIcons';
 import styles from './workbenchPreview.module.css';
 
 const { Paragraph, Text } = Typography;
-
-const iconMap = {
-    data: <DatabaseOutlined />,
-    notes: <FileTextOutlined />,
-    circuits: <ToolOutlined />,
-};
 
 export function ToolsSection() {
     const { mode } = useTheme();
@@ -78,8 +68,8 @@ export function ToolsSection() {
                                         {headerT('workbench')}
                                     </Button>
                                 </Link>
-                                <Link href={`/${locale}/workbench/payload`}>
-                                    <Button size="large">{t('packs.payload.title')}</Button>
+                                <Link href={`/${locale}/workbench/sections/validation`}>
+                                    <Button size="large">{t('sections.validation.title')}</Button>
                                 </Link>
                             </div>
                         </Space>
@@ -104,7 +94,7 @@ export function ToolsSection() {
                                         >
                                             <Space direction="vertical" size={12} className={styles.stackFull}>
                                                 <div className={styles.packIcon} style={{ color: pack.accent, background: `${pack.accent}20` }}>
-                                                    {iconMap[pack.icon]}
+                                                    {getWorkbenchIcon(pack.icon)}
                                                 </div>
                                                 <div>
                                                     <Text strong style={{ display: 'block', marginBottom: 6 }}>
