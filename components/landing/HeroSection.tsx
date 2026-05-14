@@ -5,33 +5,25 @@ import Link from 'next/link';
 import { Typography, Button, Tag } from 'antd';
 import {
     ArrowRightOutlined,
-    DatabaseOutlined,
-    FileTextOutlined,
+    BookOutlined,
+    CheckCircleOutlined,
     MailOutlined,
-    ToolOutlined,
 } from '@ant-design/icons';
 import { motion } from 'framer-motion';
 import { useTheme } from '@/lib/ThemeContext';
 import { useLocale, useTranslations } from 'next-intl';
 import { projects } from '@/config/projects';
-import { workbenchPacks } from '@/config/workbench';
 import styles from './heroSection.module.css';
 
 const { Title, Paragraph, Text } = Typography;
-
-const iconMap = {
-    data: <DatabaseOutlined />,
-    notes: <FileTextOutlined />,
-    circuits: <ToolOutlined />,
-};
 
 export function HeroSection() {
     const { mode } = useTheme();
     const locale = useLocale();
     const t = useTranslations('Hero');
     const projectsT = useTranslations('Projects');
+    const docsT = useTranslations('Documentation');
     const headerT = useTranslations('Header');
-    const workbenchT = useTranslations('Workbench');
     const accentColor = '#f59e0b';
     const themeVars = {
         '--hero-bg': mode === 'dark' ? '#050816' : '#f8fafc',
@@ -46,6 +38,7 @@ export function HeroSection() {
         '--hero-surface-soft-bg': mode === 'dark' ? '#111827' : '#f8fafc',
         '--hero-surface-border': mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.08)',
         '--hero-surface-soft-border': mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.08)',
+        '--hero-surface-soft-glow': mode === 'dark' ? 'rgba(59, 130, 246, 0.10)' : 'rgba(59, 130, 246, 0.08)',
         '--hero-title': mode === 'dark' ? '#f8fafc' : '#0f172a',
         '--hero-title-muted': mode === 'dark' ? '#cbd5e1' : '#1e293b',
         '--hero-text-secondary': mode === 'dark' ? '#cbd5e1' : '#334155',
@@ -104,15 +97,15 @@ export function HeroSection() {
                             </Link>
                         </div>
 
-                        <div className={styles.supportCard}>
-                            <div className={styles.metricCard}>
-                                <Text className={styles.metricValue}>{projects.length}</Text>
-                                <Text className={styles.metricLabel}>{projectsT('title')}</Text>
-                            </div>
-                            <div className={styles.metricCard}>
-                                <Text className={styles.metricValue}>{workbenchPacks.length}</Text>
-                                <Text className={styles.metricLabel}>{headerT('workbench')}</Text>
-                            </div>
+                        <div className={styles.factRow}>
+                            <span className={styles.factItem}>
+                                <CheckCircleOutlined />
+                                <span>{t('project_count')}</span>
+                            </span>
+                            <span className={styles.factItem}>
+                                <BookOutlined />
+                                <span>{docsT('title')}</span>
+                            </span>
                         </div>
                     </motion.div>
 
@@ -120,28 +113,29 @@ export function HeroSection() {
                         initial={{ opacity: 0, y: 28 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.55, delay: 0.1 }}
-                        className={styles.panel}
+                        className={styles.spotlight}
                     >
-                        <div className={styles.panelHeader}>
-                            <Text strong className={styles.panelTitle}>{workbenchT('landing.panelTitle')}</Text>
-                            <Paragraph className={styles.panelSubtitle}>{workbenchT('landing.panelSubtitle')}</Paragraph>
-                            <Paragraph className={styles.panelSubtitle}>{t('cta')}</Paragraph>
-                            <Text className={styles.metricLabel}>{t('project_count')}</Text>
+                        <div className={styles.spotlightHeader}>
+                            <Text className={styles.spotlightEyebrow}>{headerT('workbench')}</Text>
+                            <Text strong className={styles.spotlightTitle}>{t('cta')}</Text>
+                            <Paragraph className={styles.panelSubtitle}>
+                                {projectsT('subtitle')}
+                            </Paragraph>
                         </div>
 
-                        <div className={styles.packList}>
-                            {workbenchPacks.map((pack) => (
-                                <Link key={pack.id} href={`/${locale}${pack.href}`} className={styles.packLink}>
-                                    <div className={styles.packIcon} style={{ color: pack.accent, background: `${pack.accent}20` }}>
-                                        {iconMap[pack.icon]}
-                                    </div>
-                                    <div className={styles.packBody}>
-                                        <Text strong>{workbenchT(`packs.${pack.id}.title`)}</Text>
-                                        <Text className={styles.packDescription}>{workbenchT(`packs.${pack.id}.description`)}</Text>
-                                    </div>
-                                    <ArrowRightOutlined className={styles.packArrow} />
-                                </Link>
-                            ))}
+                        <div className={styles.quickGrid}>
+                            <Link href={`/${locale}/workbench`} className={styles.quickLink}>
+                                <Text strong>{headerT('workbench')}</Text>
+                                <Text className={styles.quickMeta}>Payloads, snippets and daily workflows</Text>
+                            </Link>
+                            <Link href={`/${locale}#projects`} className={styles.quickLink}>
+                                <Text strong>{projectsT('title')}</Text>
+                                <Text className={styles.quickMeta}>{projects.length} live hardware stories</Text>
+                            </Link>
+                            <Link href={`/${locale}#documentation`} className={styles.quickLink}>
+                                <Text strong>{docsT('title')}</Text>
+                                <Text className={styles.quickMeta}>Assembly, schematics and troubleshooting</Text>
+                            </Link>
                         </div>
                     </motion.aside>
                 </div>
