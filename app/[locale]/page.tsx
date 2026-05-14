@@ -42,9 +42,9 @@ export default function Home({ params: { locale } }: { params: { locale: string 
     <main>
       <HeroSection />
       <ProjectsGrid />
+      <ToolsSection />
       <DocumentationSection />
       <TutorialsSection />
-      <ToolsSection />
     </main>
   );
 }

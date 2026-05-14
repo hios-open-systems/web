@@ -1,26 +1,14 @@
 {
     "Hero": {
         "titlePrefix": "Offen",
-        "hardware": "Hardware",
-        "and": " & ",
-        "software": "Software",
-        "subtitle": "Dokumentierte, funktionale und offene Projekte.",
-        "tag_schematics": "Echte Schaltpläne",
-        "tag_bom": "Stückliste mit Preisen",
-        "tag_open_source": "Open Source",
-        "cta": "Willst du eines? Bau es. Es gehört dir.",
-        "contact": "Du weißt nicht, wo du anfangen sollst? Frag mich",
-        "project_count": "2 dokumentierte Projekte"
-    },
-    "Projects": {
-        "title": "Projekte",
-        "subtitle": "Dinge, die funktionieren. Fehler, die ich gemacht habe. Alles dokumentiert.",
-        "learnings": "Was ich gelernt habe",
-        "status_prototype": "Funktioniert",
-        "status_concept": "Demnächst",
-        "status_wip": "WIP",
-        "in_development": "In Entwicklung",
-        "tagline_btdac": "Als es endlich klang, schrie ich um 2 Uhr morgens.",
+            "black": "Schwarz",
+            "brown": "Braun",
+            "red": "Rot",
+            "orange": "Orange",
+            "yellow": "Gelb",
+            "green": "Grün",
+            "blue": "Blau",
+            "violet": "Violett",
         "tagline_speaker": "WiFi + I2S = kabelloses Audio, null Rauschen.",
         "tutorials": "Tutorials",
         "files": "Dateien",
@@ -431,9 +419,73 @@
         }
     },
     "Header": {
+        "workbench": "Workbench",
         "pinouts": "Pinouts",
         "calculators": "Rechner",
         "rcl": "RCL"
+    },
+    "Workbench": {
+        "signals": {
+            "localFirst": "Local-first und privat",
+            "shareable": "Teilbare Sessions",
+            "dailyUse": "Für den täglichen Einsatz gebaut"
+        },
+        "landing": {
+            "badge": "Neue Produktlinie",
+            "title": "Ein praktischer Workspace für Payloads, Snippets und echte Entwickler-Workflows.",
+            "subtitle": "Kein generisches Verzeichnis von Tools, sondern eine schnelle, klare und wiederverwendbare Oberfläche für wiederkehrende Aufgaben im Alltag.",
+            "primaryCta": "Payload Lab öffnen",
+            "secondaryCta": "Weiter zu den Rechnern"
+        },
+        "packs": {
+            "payload": {
+                "title": "Payload Lab",
+                "description": "JSON formatieren, validieren und teilen, ohne den Browser zu verlassen."
+            },
+            "snippets": {
+                "title": "Snippets Shelf",
+                "description": "Kurze Notizen, Rezepte und häufige Fragmente lokal speichern."
+            },
+            "embedded": {
+                "title": "Embedded Bridge",
+                "description": "Diese neue Workbench mit den bereits vorhandenen Embedded-Tools verbinden."
+            }
+        },
+        "payload": {
+            "badge": "Flagship tool",
+            "title": "Payload Lab",
+            "subtitle": "Payload validieren, zwischen lesbarer und minifizierter Ansicht wechseln und die Session per URL teilen.",
+            "loadExample": "Beispiel laden",
+            "minify": "Minifizieren",
+            "prettify": "Formatieren",
+            "copyOutput": "Ausgabe kopieren",
+            "copyLink": "Link kopieren",
+            "clear": "Leeren",
+            "input": "Eingabe",
+            "output": "Ausgabe",
+            "valid": "Gültiges JSON",
+            "invalid": "Ungültiges JSON",
+            "paths": "Erkannte Pfade",
+            "errorTitle": "Parse-Fehler",
+            "copied": "Inhalt kopiert",
+            "linkCopied": "Link kopiert",
+            "copyError": "Kopieren fehlgeschlagen",
+            "unknownError": "Unbekannter Fehler"
+        },
+        "snippets": {
+            "title": "Schnelle Snippets und Rezepte",
+            "subtitle": "Eine kleine persönliche Ebene, damit die Workbench ab dem ersten Tag nützlich ist.",
+            "titlePlaceholder": "Titel des Snippets",
+            "tagsPlaceholder": "Kommagetrennte Tags",
+            "bodyPlaceholder": "Befehl, Rezept, Payload oder nützliche Notiz einfügen...",
+            "save": "Snippet speichern",
+            "empty": "In diesem Browser wurden noch keine Snippets gespeichert.",
+            "copy": "Kopieren",
+            "delete": "Löschen",
+            "saved": "Snippet gespeichert",
+            "copied": "Snippet kopiert",
+            "copyError": "Kopieren fehlgeschlagen"
+        }
     },
     "Calculators": {
         "title": "Embedded-Rechner",

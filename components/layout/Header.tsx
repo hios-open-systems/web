@@ -56,6 +56,21 @@ export function Header() {
 
       <Space size="middle">
         <Link
+          href={`/${locale}/workbench`}
+          style={{
+            color: mode === 'dark' ? '#dbeafe' : '#1d4ed8',
+            textDecoration: 'none',
+            fontSize: '13px',
+            fontWeight: 600,
+            padding: '4px 12px',
+            borderRadius: '6px',
+            background: mode === 'dark' ? 'rgba(14,165,233,0.18)' : 'rgba(14,165,233,0.10)',
+            transition: 'all 0.2s',
+          }}
+        >
+          ✦ {t('workbench')}
+        </Link>
+        <Link
           href={`/${locale}/pinouts`}
           style={{
             color: mode === 'dark' ? '#a3a3a3' : '#525252',
@@ -84,21 +99,6 @@ export function Header() {
           }}
         >
           🧮 {t('calculators')}
-        </Link>
-        <Link
-          href={`/${locale}/calculators/rcl`}
-          style={{
-            color: mode === 'dark' ? '#a3a3a3' : '#525252',
-            textDecoration: 'none',
-            fontSize: '13px',
-            fontWeight: 500,
-            padding: '4px 12px',
-            borderRadius: '6px',
-            background: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)',
-            transition: 'all 0.2s',
-          }}
-        >
-          ⚡ {t('rcl')}
         </Link>
         <LocaleSwitcher />
         <Button
