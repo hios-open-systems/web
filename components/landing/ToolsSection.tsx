@@ -22,7 +22,7 @@ import styles from './workbenchPreview.module.css';
 
 const { Paragraph, Text } = Typography;
 
-const quickToolIds: WorkbenchToolId[] = ['dns-lookup', 'certificate-check', 'jwt-decode', 'random-string'];
+const quickToolIds: WorkbenchToolId[] = ['site-checker', 'dns-lookup', 'type-checker', 'object-to-types'];
 
 export function ToolsSection() {
     const { mode } = useTheme();

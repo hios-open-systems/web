@@ -2,11 +2,14 @@ export type WorkbenchSectionId = 'validation' | 'generation' | 'testing';
 
 export type WorkbenchToolId =
   | 'payload'
+  | 'type-checker'
   | 'jwt-decode'
   | 'dns-lookup'
   | 'certificate-check'
+  | 'object-to-types'
   | 'random-string'
   | 'object-compare'
+  | 'site-checker'
   | 'snippets'
   | 'embedded';
 
@@ -63,6 +66,14 @@ export const workbenchTools: WorkbenchTool[] = [
     featured: true,
   },
   {
+    id: 'type-checker',
+    sectionId: 'validation',
+    href: '/workbench/type-checker',
+    accent: '#14b8a6',
+    icon: 'shield',
+    featured: true,
+  },
+  {
     id: 'jwt-decode',
     sectionId: 'validation',
     href: '/workbench/jwt-decode',
@@ -87,6 +98,14 @@ export const workbenchTools: WorkbenchTool[] = [
     featured: true,
   },
   {
+    id: 'object-to-types',
+    sectionId: 'generation',
+    href: '/workbench/object-to-types',
+    accent: '#f97316',
+    icon: 'data',
+    featured: true,
+  },
+  {
     id: 'random-string',
     sectionId: 'generation',
     href: '/workbench/random-string',
@@ -100,6 +119,14 @@ export const workbenchTools: WorkbenchTool[] = [
     href: '/workbench/object-compare',
     accent: '#22c55e',
     icon: 'compare',
+  },
+  {
+    id: 'site-checker',
+    sectionId: 'testing',
+    href: '/workbench/site-checker',
+    accent: '#10b981',
+    icon: 'network',
+    featured: true,
   },
   {
     id: 'snippets',

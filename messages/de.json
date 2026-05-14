@@ -477,6 +477,10 @@
                 "title": "Payload Lab",
                 "description": "JSON formatieren, validieren und teilen, ohne den Browser zu verlassen."
             },
+            "type-checker": {
+                "title": "Type Checker",
+                "description": "Im Browser prüfen, ob ein JSON-Payload einem TypeScript-Wurzeltyp zugewiesen werden kann."
+            },
             "jwt-decode": {
                 "title": "JWT Decode",
                 "description": "JWT-Header, Payload und Ablauf lokal prüfen, ohne das Token irgendwohin zu senden."
@@ -489,6 +493,10 @@
                 "title": "Certificate Expiry",
                 "description": "Live-TLS-Zertifikate, Issuer und Restlaufzeit prüfen, bevor sie zum Ausfall werden."
             },
+            "object-to-types": {
+                "title": "Object to Types",
+                "description": "TypeScript-Interfaces und Aliase direkt aus einem echten JSON-Objekt erzeugen."
+            },
             "random-string": {
                 "title": "Random String Generator",
                 "description": "Schnelle Strings für Secrets, IDs, Demos oder Fixtures an einem Ort erzeugen."
@@ -496,6 +504,10 @@
             "object-compare": {
                 "title": "Object Comparator",
                 "description": "Zwei JSON-Objekte vergleichen und strukturelle Unterschiede in Sekunden sehen."
+            },
+            "site-checker": {
+                "title": "Site Checker",
+                "description": "URLs nur im Browser überwachen, mit lokalen Checks und Desktop-Benachrichtigungen."
             },
             "snippets": {
                 "title": "Snippets Shelf",
@@ -628,6 +640,47 @@
             "expired": "Abgelaufen",
             "lookupError": "Zertifikatsprüfung fehlgeschlagen"
         },
+        "typeChecker": {
+            "badge": "Validierungs-Tool",
+            "title": "Type Checker",
+            "subtitle": "Direkt im Browser prüfen, ob ein JSON-Payload einem TypeScript-Wurzeltyp entspricht.",
+            "check": "Typen prüfen",
+            "loadExample": "Beispiel laden",
+            "clear": "Leeren",
+            "rootType": "Wurzeltyp",
+            "typeDefinition": "Typdefinitionen",
+            "value": "JSON-Wert",
+            "rootPlaceholder": "ApiResponse",
+            "typePlaceholder": "Interfaces oder Type-Aliases hier einfügen...",
+            "valuePlaceholder": "JSON hier einfügen...",
+            "results": "Typdiagnosen",
+            "valid": "Zuweisbar",
+            "invalid": "Typfehler",
+            "diagnosticCount": "Diagnosen",
+            "segmentType": "Typen",
+            "segmentValue": "Wert",
+            "line": "Zeile",
+            "noIssues": "Der JSON-Wert passt zum ausgewählten Wurzeltyp.",
+            "checkError": "Prüffehler"
+        },
+        "objectToTypes": {
+            "badge": "Generierungs-Tool",
+            "title": "Object to Types",
+            "subtitle": "TypeScript-Interfaces und Aliase aus echtem JSON erzeugen, ohne den Browser zu verlassen.",
+            "loadExample": "Beispiel laden",
+            "copy": "Typen kopieren",
+            "clear": "Leeren",
+            "copied": "Typen kopiert",
+            "copyError": "Kopieren fehlgeschlagen",
+            "rootName": "Wurzelname",
+            "rootPlaceholder": "SiteSnapshot",
+            "input": "JSON-Objekt",
+            "placeholder": "JSON hier einfügen...",
+            "generated": "Generierte Typen",
+            "interfaces": "Interfaces",
+            "lines": "Zeilen",
+            "invalidJson": "Gültiges JSON einfügen, um Typen zu erzeugen."
+        },
         "randomString": {
             "badge": "Generierungs-Tool",
             "title": "Random String Generator",
@@ -667,6 +720,44 @@
             "leftInvalid": "Linkes JSON ist ungültig",
             "rightInvalid": "Rechtes JSON ist ungültig",
             "unknownError": "Unbekannter Fehler"
+        },
+        "siteChecker": {
+            "badge": "Nur im Client",
+            "title": "Site Checker",
+            "subtitle": "URLs nur in diesem Browser überwachen. Kein Backend-Polling und keine zusätzliche Serverlast.",
+            "loadExample": "Lokales Beispiel laden",
+            "clientOnly": "Läuft nur in diesem Browser-Tab. Das Monitoring pausiert, sobald Tab oder App geschlossen werden.",
+            "corsNote": "Cross-Origin-Seiten können erreichbar wirken, aber undurchsichtig bleiben, wenn CORS tiefere Prüfung blockiert.",
+            "url": "URL",
+            "interval": "Intervall",
+            "timeout": "Timeout",
+            "notifications": "Desktop-Benachrichtigungen",
+            "addMonitor": "Monitor hinzufügen",
+            "monitors": "Aktive Monitore",
+            "empty": "Noch keine Monitore. Füge einen hinzu, um von diesem Browser aus zu prüfen.",
+            "healthy": "Gesund",
+            "reachable": "Erreichbar",
+            "down": "Nicht erreichbar",
+            "checking": "Prüft",
+            "runNow": "Jetzt prüfen",
+            "remove": "Entfernen",
+            "latency": "Latenz",
+            "lastChecked": "Zuletzt geprüft",
+            "httpStatus": "HTTP-Status",
+            "detail": "Detail",
+            "contentType": "Content-Type",
+            "history": "Letzte Checks",
+            "permissionUnsupported": "Benachrichtigungen sind in diesem Browser nicht verfügbar.",
+            "permissionGranted": "Benachrichtigungen aktiviert",
+            "permissionDenied": "Benachrichtigungen blockiert",
+            "requestNotifications": "Benachrichtigungen aktivieren",
+            "monitorAdded": "Monitor hinzugefügt",
+            "urlInvalid": "Eine gültige URL eingeben",
+            "stopped": "Wartet auf den ersten Client-Check.",
+            "recovered": "Seite wiederhergestellt",
+            "failed": "Site-Check fehlgeschlagen",
+            "recoveredBody": "ist von diesem Browser aus wieder erreichbar.",
+            "failedBody": "ist aus diesem Browser nicht erreichbar."
         },
         "snippets": {
             "badge": "Eigene Sektion",

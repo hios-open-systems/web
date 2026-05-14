@@ -530,6 +530,72 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
+.helperTextBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--wb-text-muted);
+}
+
+.monitorList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.monitorCard {
+  border: 1px solid var(--wb-surface-soft-border, var(--wb-surface-border));
+  background: var(--wb-surface-soft-bg, var(--wb-surface-bg));
+  border-radius: 18px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.monitorHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.monitorTitleBlock {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.monitorBody {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.historyItem {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 1px solid var(--wb-surface-soft-border, var(--wb-surface-border));
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.historyTime {
+  color: var(--wb-text-muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
 @media (max-width: 768px) {
     .heroGrid {
         grid-template-columns: 1fr;

@@ -504,6 +504,10 @@
                 "title": "Payload Lab",
                 "description": "Format, validate, and share JSON payloads without leaving the browser."
             },
+            "type-checker": {
+                "title": "Type Checker",
+                "description": "Validate in the browser whether a JSON payload is assignable to a root TypeScript type."
+            },
             "jwt-decode": {
                 "title": "JWT Decode",
                 "description": "Inspect JWT headers, payloads, and expiration locally without sending the token anywhere."
@@ -516,6 +520,10 @@
                 "title": "Certificate Expiry",
                 "description": "Inspect live TLS certificates, issuer details, and remaining validity before they become an outage."
             },
+            "object-to-types": {
+                "title": "Object to Types",
+                "description": "Generate TypeScript interfaces and aliases directly from a real JSON object."
+            },
             "random-string": {
                 "title": "Random String Generator",
                 "description": "Generate quick strings for secrets, IDs, demos, or fixtures in one place."
@@ -523,6 +531,10 @@
             "object-compare": {
                 "title": "Object Comparator",
                 "description": "Compare two JSON objects and surface structural differences in seconds."
+            },
+            "site-checker": {
+                "title": "Site Checker",
+                "description": "Monitor URLs from the browser only, with local checks and desktop notifications."
             },
             "snippets": {
                 "title": "Snippets Shelf",
@@ -655,6 +667,47 @@
             "expired": "Expired",
             "lookupError": "Certificate inspection failed"
         },
+        "typeChecker": {
+            "badge": "Validation tool",
+            "title": "Type Checker",
+            "subtitle": "Check whether a JSON payload is assignable to a root TypeScript type directly in the browser.",
+            "check": "Check types",
+            "loadExample": "Load example",
+            "clear": "Clear",
+            "rootType": "Root type",
+            "typeDefinition": "Type definitions",
+            "value": "JSON value",
+            "rootPlaceholder": "ApiResponse",
+            "typePlaceholder": "Paste interfaces or type aliases here...",
+            "valuePlaceholder": "Paste JSON here...",
+            "results": "Type diagnostics",
+            "valid": "Assignable",
+            "invalid": "Type mismatch",
+            "diagnosticCount": "Diagnostics",
+            "segmentType": "Types",
+            "segmentValue": "Value",
+            "line": "Line",
+            "noIssues": "The JSON value matches the selected root type.",
+            "checkError": "Check error"
+        },
+        "objectToTypes": {
+            "badge": "Generation tool",
+            "title": "Object to Types",
+            "subtitle": "Generate TypeScript interfaces and aliases from a real JSON payload without leaving the browser.",
+            "loadExample": "Load example",
+            "copy": "Copy types",
+            "clear": "Clear",
+            "copied": "Types copied",
+            "copyError": "Could not copy",
+            "rootName": "Root name",
+            "rootPlaceholder": "SiteSnapshot",
+            "input": "JSON object",
+            "placeholder": "Paste JSON here...",
+            "generated": "Generated types",
+            "interfaces": "Interfaces",
+            "lines": "Lines",
+            "invalidJson": "Paste valid JSON to generate types."
+        },
         "randomString": {
             "badge": "Generation tool",
             "title": "Random String Generator",
@@ -694,6 +747,44 @@
             "leftInvalid": "Left JSON is invalid",
             "rightInvalid": "Right JSON is invalid",
             "unknownError": "Unknown error"
+        },
+        "siteChecker": {
+            "badge": "Client-only monitor",
+            "title": "Site Checker",
+            "subtitle": "Monitor URLs from this browser only. No backend polling, no extra server load.",
+            "loadExample": "Load local example",
+            "clientOnly": "Runs only in this browser tab. Monitoring pauses when the tab or app is closed.",
+            "corsNote": "Cross-origin sites can look healthy but stay opaque when CORS blocks deeper inspection.",
+            "url": "URL",
+            "interval": "Interval",
+            "timeout": "Timeout",
+            "notifications": "Desktop notifications",
+            "addMonitor": "Add monitor",
+            "monitors": "Active monitors",
+            "empty": "No monitors yet. Add one to start checking from this browser.",
+            "healthy": "Healthy",
+            "reachable": "Reachable",
+            "down": "Down",
+            "checking": "Checking",
+            "runNow": "Run now",
+            "remove": "Remove",
+            "latency": "Latency",
+            "lastChecked": "Last checked",
+            "httpStatus": "HTTP status",
+            "detail": "Detail",
+            "contentType": "Content type",
+            "history": "Recent checks",
+            "permissionUnsupported": "Notifications are unavailable in this browser.",
+            "permissionGranted": "Notifications enabled",
+            "permissionDenied": "Notifications blocked",
+            "requestNotifications": "Enable notifications",
+            "monitorAdded": "Monitor added",
+            "urlInvalid": "Enter a valid URL",
+            "stopped": "Waiting for the first client-side check.",
+            "recovered": "Site recovered",
+            "failed": "Site check failed",
+            "recoveredBody": "is reachable again from this browser.",
+            "failedBody": "is failing from this browser."
         },
         "snippets": {
             "badge": "Dedicated section",

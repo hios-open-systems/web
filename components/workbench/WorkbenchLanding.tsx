@@ -17,7 +17,7 @@ export function WorkbenchLanding() {
     const t = useTranslations('Workbench');
     const { mode } = useTheme();
   const visibleTools = workbenchTools.filter((tool) => !tool.external);
-  const featuredTools = visibleTools.filter((tool) => tool.featured).slice(0, 4);
+  const featuredTools = visibleTools.filter((tool) => tool.featured).slice(0, 6);
     const themeVars = {
         '--wb-hero-border': mode === 'dark' ? 'rgba(14,165,233,0.25)' : 'rgba(14,165,233,0.18)',
         '--wb-hero-bg': mode === 'dark'
