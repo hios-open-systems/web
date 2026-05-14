@@ -440,9 +440,73 @@
         }
     },
     "Header": {
+        "workbench": "Workbench",
         "pinouts": "Pinouts",
         "calculators": "Calculators",
         "rcl": "RCL"
+    },
+    "Workbench": {
+        "signals": {
+            "localFirst": "Local-first and private",
+            "shareable": "Shareable sessions",
+            "dailyUse": "Built for daily work"
+        },
+        "landing": {
+            "badge": "New product line",
+            "title": "A practical workspace for payloads, snippets, and real developer workflows.",
+            "subtitle": "This is not a generic tools directory. It is a fast, clear, reusable surface for the tasks that keep showing up during the workday.",
+            "primaryCta": "Open Payload Lab",
+            "secondaryCta": "Keep using calculators"
+        },
+        "packs": {
+            "payload": {
+                "title": "Payload Lab",
+                "description": "Format, validate, and share JSON payloads without leaving the browser."
+            },
+            "snippets": {
+                "title": "Snippets Shelf",
+                "description": "Store quick notes, recipes, and frequent fragments locally."
+            },
+            "embedded": {
+                "title": "Embedded Bridge",
+                "description": "Connect this new workbench layer to the embedded tools that already exist."
+            }
+        },
+        "payload": {
+            "badge": "Flagship tool",
+            "title": "Payload Lab",
+            "subtitle": "Take a payload, validate it, switch between readable and minified views, and share the session by URL.",
+            "loadExample": "Load example",
+            "minify": "Minify",
+            "prettify": "Prettify",
+            "copyOutput": "Copy output",
+            "copyLink": "Copy link",
+            "clear": "Clear",
+            "input": "Input",
+            "output": "Output",
+            "valid": "Valid JSON",
+            "invalid": "Invalid JSON",
+            "paths": "Detected paths",
+            "errorTitle": "Parse error",
+            "copied": "Content copied",
+            "linkCopied": "Link copied",
+            "copyError": "Could not copy",
+            "unknownError": "Unknown error"
+        },
+        "snippets": {
+            "title": "Quick snippets and recipes",
+            "subtitle": "A small personal layer so the workbench is useful from day one.",
+            "titlePlaceholder": "Snippet title",
+            "tagsPlaceholder": "Comma-separated tags",
+            "bodyPlaceholder": "Paste a command, recipe, payload, or useful note...",
+            "save": "Save snippet",
+            "empty": "You have not saved any snippets in this browser yet.",
+            "copy": "Copy",
+            "delete": "Delete",
+            "saved": "Snippet saved",
+            "copied": "Snippet copied",
+            "copyError": "Could not copy"
+        }
     },
     "Calculators": {
         "title": "Embedded Calculators",

@@ -1,26 +1,14 @@
 {
     "Hero": {
         "titlePrefix": "Open",
-        "hardware": "Hardware",
-        "and": " & ",
-        "software": "Software",
-        "subtitle": "Progetti documentati, funzionali e aperti.",
-        "tag_schematics": "Schemi reali",
-        "tag_bom": "BOM con prezzi",
-        "tag_open_source": "Open source",
-        "cta": "Ne vuoi uno? Costruiscilo. È tuo.",
-        "contact": "Non sai da dove iniziare? Chiedimi",
-        "project_count": "2 progetti documentati"
-    },
-    "Projects": {
-        "title": "Progetti",
-        "subtitle": "Cose che funzionano. Errori che ho fatto. Tutto documentato.",
-        "learnings": "Cosa ho imparato",
-        "status_prototype": "Funziona",
-        "status_concept": "Prossimamente",
-        "status_wip": "WIP",
-        "in_development": "In sviluppo",
-        "tagline_btdac": "Quando finalmente ha suonato, ho gridato alle 2 del mattino.",
+            "black": "Nero",
+            "brown": "Marrone",
+            "red": "Rosso",
+            "orange": "Arancione",
+            "yellow": "Giallo",
+            "green": "Verde",
+            "blue": "Blu",
+            "violet": "Viola",
         "tagline_speaker": "WiFi + I2S = audio senza fili, zero rumore.",
         "tutorials": "tutorial",
         "files": "file",
@@ -431,9 +419,73 @@
         }
     },
     "Header": {
+        "workbench": "Workbench",
         "pinouts": "Pinouts",
         "calculators": "Calcolatori",
         "rcl": "RCL"
+    },
+    "Workbench": {
+        "signals": {
+            "localFirst": "Local-first e privato",
+            "shareable": "Sessioni condivisibili",
+            "dailyUse": "Pensato per l'uso quotidiano"
+        },
+        "landing": {
+            "badge": "Nuova linea di prodotto",
+            "title": "Uno workspace pratico per payload, snippet e flussi reali di sviluppo.",
+            "subtitle": "Non è una directory generica di tool. È una superficie veloce, chiara e riutilizzabile per i compiti che tornano ogni giorno.",
+            "primaryCta": "Apri Payload Lab",
+            "secondaryCta": "Continua con i calcolatori"
+        },
+        "packs": {
+            "payload": {
+                "title": "Payload Lab",
+                "description": "Formatta, valida e condividi payload JSON senza uscire dal browser."
+            },
+            "snippets": {
+                "title": "Snippets Shelf",
+                "description": "Salva note rapide, ricette e frammenti frequenti in locale."
+            },
+            "embedded": {
+                "title": "Embedded Bridge",
+                "description": "Collega questo nuovo livello di workbench agli strumenti embedded già presenti."
+            }
+        },
+        "payload": {
+            "badge": "Flagship tool",
+            "title": "Payload Lab",
+            "subtitle": "Prendi un payload, validalo, passa tra vista leggibile e minificata e condividi la sessione via URL.",
+            "loadExample": "Carica esempio",
+            "minify": "Minifica",
+            "prettify": "Formatta",
+            "copyOutput": "Copia output",
+            "copyLink": "Copia link",
+            "clear": "Pulisci",
+            "input": "Input",
+            "output": "Output",
+            "valid": "JSON valido",
+            "invalid": "JSON non valido",
+            "paths": "Percorsi rilevati",
+            "errorTitle": "Errore di parsing",
+            "copied": "Contenuto copiato",
+            "linkCopied": "Link copiato",
+            "copyError": "Impossibile copiare",
+            "unknownError": "Errore sconosciuto"
+        },
+        "snippets": {
+            "title": "Snippet e ricette rapide",
+            "subtitle": "Un piccolo livello personale per rendere il workbench utile dal primo giorno.",
+            "titlePlaceholder": "Titolo dello snippet",
+            "tagsPlaceholder": "Tag separati da virgole",
+            "bodyPlaceholder": "Incolla un comando, una ricetta, un payload o una nota utile...",
+            "save": "Salva snippet",
+            "empty": "Non hai ancora salvato snippet in questo browser.",
+            "copy": "Copia",
+            "delete": "Elimina",
+            "saved": "Snippet salvato",
+            "copied": "Snippet copiato",
+            "copyError": "Impossibile copiare"
+        }
     },
     "Calculators": {
         "title": "Calcolatori Embedded",
