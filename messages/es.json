@@ -455,7 +455,19 @@
             "title": "Un workspace práctico para payloads, snippets y flujos de trabajo reales.",
             "subtitle": "No es una lista genérica de utilidades. Es una superficie rápida, clara y reusable para tareas de desarrollo que aparecen todos los días.",
             "primaryCta": "Abrir Payload Lab",
-            "secondaryCta": "Seguir con calculadoras"
+            "secondaryCta": "Abrir Snippets",
+            "panelTitle": "Entrá por una sección concreta",
+            "panelSubtitle": "La landing orienta y ordena. El trabajo real vive dentro de cada herramienta o sección dedicada.",
+            "sectionsTitle": "Secciones disponibles",
+            "sectionsSubtitle": "Cada área del workbench tiene su propia ruta, igual que calculadoras o pinouts. La idea es navegar por superficies claras, no meter todo en una sola página.",
+            "cardCta": "Abrir sección",
+            "principlesTitle": "Qué optimiza esta superficie",
+            "principlesSubtitle": "Primero claridad, velocidad y buena experiencia móvil. Después complejidad.",
+            "principles": {
+                "localFirst": "Tus payloads, notas y estados se procesan localmente siempre que tenga sentido. Menos fricción y más privacidad real.",
+                "shareable": "Cuando un flujo vale la pena, lo podés compartir por URL sin tener que explicar diez pasos manuales.",
+                "dailyUse": "La meta no es tener una demo linda, sino un workbench al que quieras volver durante el día de trabajo."
+            }
         },
         "packs": {
             "payload": {
@@ -507,6 +519,7 @@
             "unknownError": "Error desconocido"
         },
         "snippets": {
+            "badge": "Sección dedicada",
             "title": "Snippets y recipes rápidos",
             "subtitle": "Pequeña capa personal para empezar a usar el workbench desde hoy.",
             "titlePlaceholder": "Título del snippet",
