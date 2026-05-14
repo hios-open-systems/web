@@ -6,7 +6,11 @@ import { useLocale } from 'next-intl';
 import { useRouter, usePathname } from 'next/navigation';
 import { GlobalOutlined } from '@ant-design/icons';
 
-export function LocaleSwitcher() {
+interface LocaleSwitcherProps {
+    className?: string;
+}
+
+export function LocaleSwitcher({ className }: LocaleSwitcherProps) {
     const locale = useLocale();
     const router = useRouter();
     const pathname = usePathname();
@@ -19,11 +23,12 @@ export function LocaleSwitcher() {
 
     return (
         <Select
+            className={className}
             value={locale}
             onChange={handleLocaleChange}
             variant="borderless"
             suffixIcon={<GlobalOutlined style={{ fontSize: '14px', color: '#f59e0b' }} />}
-            style={{ width: 100, color: '#f59e0b' }}
+            style={{ width: 110, color: '#f59e0b' }}
             popupMatchSelectWidth={false}
             options={[
                 { value: 'en', label: 'English' },
