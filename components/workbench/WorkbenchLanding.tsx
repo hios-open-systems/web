@@ -6,7 +6,7 @@ import { ArrowRightOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Row, Space, Tag, Typography } from 'antd';
 import { useLocale, useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
-import { getWorkbenchToolsBySection, workbenchSections, workbenchSignals } from '@/config/workbench';
+import { getWorkbenchToolsBySection, workbenchSections, workbenchSignals, workbenchTools } from '@/config/workbench';
 import { getWorkbenchIcon } from './workbenchIcons';
 import styles from './workbench.module.css';
 
@@ -16,6 +16,8 @@ export function WorkbenchLanding() {
     const locale = useLocale();
     const t = useTranslations('Workbench');
     const { mode } = useTheme();
+  const visibleTools = workbenchTools.filter((tool) => !tool.external);
+  const featuredTools = visibleTools.filter((tool) => tool.featured).slice(0, 4);
     const themeVars = {
         '--wb-hero-border': mode === 'dark' ? 'rgba(14,165,233,0.25)' : 'rgba(14,165,233,0.18)',
         '--wb-hero-bg': mode === 'dark'
@@ -38,7 +40,23 @@ export function WorkbenchLanding() {
                 <div className={styles.heroGrid}>
                     <Space direction="vertical" size={14} className={`${styles.stackFull} ${styles.heroBody}`}>
                         <Tag color="blue">{t('landing.badge')}</Tag>
-                        <Title level={1} className={styles.heroTitle}>{t('landing.title')}</Title>
+                    <div className={styles.heroLead}>
+                      <Title level={1} className={styles.heroTitle}>{t('landing.title')}</Title>
+                      <div className={styles.heroMetrics}>
+                        <div className={styles.heroMetric}>
+                          <Text className={styles.metricTone}>{t('landing.metrics.sections')}</Text>
+                          <Text strong className={styles.heroMetricValue}>{workbenchSections.length}</Text>
+                        </div>
+                        <div className={styles.heroMetric}>
+                          <Text className={styles.metricTone}>{t('landing.metrics.tools')}</Text>
+                          <Text strong className={styles.heroMetricValue}>{visibleTools.length}</Text>
+                        </div>
+                        <div className={styles.heroMetric}>
+                          <Text className={styles.metricTone}>{t('landing.metrics.network')}</Text>
+                          <Text strong className={styles.heroMetricValue}>{t('landing.metrics.networkValue')}</Text>
+                        </div>
+                      </div>
+                    </div>
                         <Paragraph className={styles.heroSubtitle}>
                             {t('landing.subtitle')}
                         </Paragraph>
@@ -50,14 +68,27 @@ export function WorkbenchLanding() {
                             ))}
                         </Space>
                         <div className={styles.heroActions}>
-                <Link href={`/${locale}/workbench/sections/validation`}>
-                                <Button type="primary" size="large" icon={<ArrowRightOutlined />} block>
+                          <Link href={`/${locale}/workbench/sections/validation`}>
+                            <Button type="primary" size="large" icon={<ArrowRightOutlined />} block className={styles.primaryAction}>
                                     {t('landing.primaryCta')}
                                 </Button>
                             </Link>
-                <Link href={`/${locale}/workbench/sections/generation`}>
-                                <Button size="large" block>{t('landing.secondaryCta')}</Button>
+                          <Link href={`/${locale}/workbench/sections/generation`}>
+                            <Button size="large" block className={styles.secondaryAction}>{t('landing.secondaryCta')}</Button>
                             </Link>
+                        </div>
+                        <div className={styles.quickLaunchStrip}>
+                          {featuredTools.map((tool) => (
+                            <Link key={tool.id} href={`/${locale}${tool.href}`} className={styles.quickLaunchChip}>
+                              <span className={styles.quickLaunchIcon} style={{ color: tool.accent, background: `${tool.accent}20` }}>
+                                {getWorkbenchIcon(tool.icon)}
+                              </span>
+                              <span className={styles.quickLaunchCopy}>
+                                <Text strong>{t(`packs.${tool.id}.title`)}</Text>
+                                <Text className={styles.packDescription}>{t('toolCta')}</Text>
+                              </span>
+                            </Link>
+                          ))}
                         </div>
                     </Space>
 

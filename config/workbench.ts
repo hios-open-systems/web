@@ -3,12 +3,14 @@ export type WorkbenchSectionId = 'validation' | 'generation' | 'testing';
 export type WorkbenchToolId =
   | 'payload'
   | 'jwt-decode'
+  | 'dns-lookup'
+  | 'certificate-check'
   | 'random-string'
   | 'object-compare'
   | 'snippets'
   | 'embedded';
 
-export type WorkbenchIcon = 'data' | 'notes' | 'circuits' | 'shield' | 'spark' | 'compare';
+export type WorkbenchIcon = 'data' | 'notes' | 'circuits' | 'shield' | 'spark' | 'compare' | 'network';
 
 export interface WorkbenchSection {
   id: WorkbenchSectionId;
@@ -52,12 +54,12 @@ export const workbenchSections: WorkbenchSection[] = [
 ];
 
 export const workbenchTools: WorkbenchTool[] = [
-    {
-        id: 'payload',
+  {
+    id: 'payload',
     sectionId: 'validation',
-        href: '/workbench/payload',
-        accent: '#0ea5e9',
-        icon: 'data',
+    href: '/workbench/payload',
+    accent: '#0ea5e9',
+    icon: 'data',
     featured: true,
   },
   {
@@ -65,6 +67,22 @@ export const workbenchTools: WorkbenchTool[] = [
     sectionId: 'validation',
     href: '/workbench/jwt-decode',
     accent: '#38bdf8',
+    icon: 'shield',
+    featured: true,
+  },
+  {
+    id: 'dns-lookup',
+    sectionId: 'validation',
+    href: '/workbench/dns-lookup',
+    accent: '#06b6d4',
+    icon: 'network',
+    featured: true,
+  },
+  {
+    id: 'certificate-check',
+    sectionId: 'validation',
+    href: '/workbench/certificate-check',
+    accent: '#3b82f6',
     icon: 'shield',
     featured: true,
   },
@@ -82,22 +100,22 @@ export const workbenchTools: WorkbenchTool[] = [
     href: '/workbench/object-compare',
     accent: '#22c55e',
     icon: 'compare',
-    },
-    {
-        id: 'snippets',
-      sectionId: 'generation',
-        href: '/workbench/snippets',
-      accent: '#fbbf24',
-        icon: 'notes',
-    },
-    {
-        id: 'embedded',
-      sectionId: 'testing',
-        href: '/calculators',
-        accent: '#22c55e',
-        icon: 'circuits',
-      external: true,
-    },
+  },
+  {
+    id: 'snippets',
+    sectionId: 'generation',
+    href: '/workbench/snippets',
+    accent: '#fbbf24',
+    icon: 'notes',
+  },
+  {
+    id: 'embedded',
+    sectionId: 'testing',
+    href: '/calculators',
+    accent: '#22c55e',
+    icon: 'circuits',
+    external: true,
+  },
 ];
 
 export const workbenchPacks: WorkbenchPack[] = workbenchTools.filter((tool) => tool.featured);
@@ -115,7 +133,7 @@ export function getWorkbenchToolsBySection(sectionId: WorkbenchSectionId) {
 }
 
 export const workbenchSignals = [
-    { key: 'localFirst', accent: '#0ea5e9' },
-    { key: 'shareable', accent: '#f59e0b' },
-    { key: 'dailyUse', accent: '#22c55e' },
+  { key: 'localFirst', accent: '#0ea5e9' },
+  { key: 'shareable', accent: '#f59e0b' },
+  { key: 'dailyUse', accent: '#22c55e' },
 ];
