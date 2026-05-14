@@ -503,6 +503,10 @@
                 "title": "Payload Lab",
                 "description": "Formateá, validá y compartí payloads JSON sin salir del navegador."
             },
+            "type-checker": {
+                "title": "Type Checker",
+                "description": "Validá en el navegador si un payload JSON es asignable a un tipo raíz de TypeScript."
+            },
             "jwt-decode": {
                 "title": "JWT Decode",
                 "description": "Inspeccioná headers, payloads y expiración de JWT en local sin mandar el token a otro servicio."
@@ -515,6 +519,10 @@
                 "title": "Certificate Expiry",
                 "description": "Inspeccioná certificados TLS en vivo, issuer y validez restante antes de que se conviertan en una caída."
             },
+            "object-to-types": {
+                "title": "Object to Types",
+                "description": "Generá interfaces y aliases TypeScript directamente desde un objeto JSON real."
+            },
             "random-string": {
                 "title": "Random String Generator",
                 "description": "Generá strings rápidos para secrets, IDs, demos o fixtures desde una sola superficie."
@@ -522,6 +530,10 @@
             "object-compare": {
                 "title": "Object Comparator",
                 "description": "Compará dos objetos JSON y detectá diferencias estructurales en segundos."
+            },
+            "site-checker": {
+                "title": "Site Checker",
+                "description": "Monitorizá URLs desde el navegador, con checks locales y notificaciones de escritorio."
             },
             "snippets": {
                 "title": "Snippets Shelf",
@@ -654,6 +666,47 @@
             "expired": "Vencido",
             "lookupError": "La inspección del certificado falló"
         },
+        "typeChecker": {
+            "badge": "Tool de validación",
+            "title": "Type Checker",
+            "subtitle": "Comprobá en el navegador si un payload JSON es asignable a un tipo raíz de TypeScript.",
+            "check": "Comprobar tipos",
+            "loadExample": "Cargar ejemplo",
+            "clear": "Limpiar",
+            "rootType": "Tipo raíz",
+            "typeDefinition": "Definiciones de tipos",
+            "value": "Valor JSON",
+            "rootPlaceholder": "ApiResponse",
+            "typePlaceholder": "Pegá interfaces o type aliases acá...",
+            "valuePlaceholder": "Pegá JSON acá...",
+            "results": "Diagnóstico de tipos",
+            "valid": "Asignable",
+            "invalid": "No coincide",
+            "diagnosticCount": "Diagnósticos",
+            "segmentType": "Tipos",
+            "segmentValue": "Valor",
+            "line": "Línea",
+            "noIssues": "El valor JSON coincide con el tipo raíz seleccionado.",
+            "checkError": "Error de comprobación"
+        },
+        "objectToTypes": {
+            "badge": "Tool de generación",
+            "title": "Object to Types",
+            "subtitle": "Generá interfaces y aliases TypeScript desde un JSON real sin salir del navegador.",
+            "loadExample": "Cargar ejemplo",
+            "copy": "Copiar tipos",
+            "clear": "Limpiar",
+            "copied": "Tipos copiados",
+            "copyError": "No se pudo copiar",
+            "rootName": "Nombre raíz",
+            "rootPlaceholder": "SiteSnapshot",
+            "input": "Objeto JSON",
+            "placeholder": "Pegá JSON acá...",
+            "generated": "Tipos generados",
+            "interfaces": "Interfaces",
+            "lines": "Líneas",
+            "invalidJson": "Pegá JSON válido para generar tipos."
+        },
         "randomString": {
             "badge": "Tool de generación",
             "title": "Random String Generator",
@@ -693,6 +746,44 @@
             "leftInvalid": "El JSON izquierdo es inválido",
             "rightInvalid": "El JSON derecho es inválido",
             "unknownError": "Error desconocido"
+        },
+        "siteChecker": {
+            "badge": "Monitor cliente",
+            "title": "Site Checker",
+            "subtitle": "Monitorizá URLs solo desde este navegador. Sin polling en backend y sin carga extra en el servidor.",
+            "loadExample": "Cargar ejemplo local",
+            "clientOnly": "Corre solo en esta pestaña del navegador. El monitoreo se pausa cuando cerrás la pestaña o la app.",
+            "corsNote": "Los sitios cross-origin pueden verse sanos pero quedar opacos cuando CORS bloquea una inspección más profunda.",
+            "url": "URL",
+            "interval": "Intervalo",
+            "timeout": "Timeout",
+            "notifications": "Notificaciones de escritorio",
+            "addMonitor": "Agregar monitor",
+            "monitors": "Monitores activos",
+            "empty": "Todavía no hay monitores. Agregá uno para empezar a comprobar desde este navegador.",
+            "healthy": "Sano",
+            "reachable": "Accesible",
+            "down": "Caído",
+            "checking": "Comprobando",
+            "runNow": "Ejecutar ahora",
+            "remove": "Quitar",
+            "latency": "Latencia",
+            "lastChecked": "Última comprobación",
+            "httpStatus": "Estado HTTP",
+            "detail": "Detalle",
+            "contentType": "Tipo de contenido",
+            "history": "Checks recientes",
+            "permissionUnsupported": "Las notificaciones no están disponibles en este navegador.",
+            "permissionGranted": "Notificaciones activadas",
+            "permissionDenied": "Notificaciones bloqueadas",
+            "requestNotifications": "Activar notificaciones",
+            "monitorAdded": "Monitor agregado",
+            "urlInvalid": "Ingresá una URL válida",
+            "stopped": "Esperando el primer check desde el cliente.",
+            "recovered": "El sitio se recuperó",
+            "failed": "Falló el check del sitio",
+            "recoveredBody": "volvió a ser accesible desde este navegador.",
+            "failedBody": "está fallando desde este navegador."
         },
         "snippets": {
             "badge": "Sección dedicada",

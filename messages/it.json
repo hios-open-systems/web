@@ -477,6 +477,10 @@
                 "title": "Payload Lab",
                 "description": "Formatta, valida e condividi payload JSON senza uscire dal browser."
             },
+            "type-checker": {
+                "title": "Type Checker",
+                "description": "Verifica nel browser se un payload JSON è assegnabile a un tipo radice TypeScript."
+            },
             "jwt-decode": {
                 "title": "JWT Decode",
                 "description": "Ispeziona header, payload ed exp dei JWT in locale senza inviare il token altrove."
@@ -489,6 +493,10 @@
                 "title": "Certificate Expiry",
                 "description": "Ispeziona certificati TLS live, issuer e validità residua prima che diventino un incidente."
             },
+            "object-to-types": {
+                "title": "Object to Types",
+                "description": "Genera interfacce e alias TypeScript direttamente da un oggetto JSON reale."
+            },
             "random-string": {
                 "title": "Random String Generator",
                 "description": "Genera stringhe rapide per secret, ID, demo o fixture da una sola superficie."
@@ -496,6 +504,10 @@
             "object-compare": {
                 "title": "Object Comparator",
                 "description": "Confronta due oggetti JSON e trova differenze strutturali in pochi secondi."
+            },
+            "site-checker": {
+                "title": "Site Checker",
+                "description": "Monitora URL solo dal browser, con controlli locali e notifiche desktop."
             },
             "snippets": {
                 "title": "Snippets Shelf",
@@ -628,6 +640,47 @@
             "expired": "Scaduto",
             "lookupError": "Il controllo del certificato è fallito"
         },
+        "typeChecker": {
+            "badge": "Tool di validazione",
+            "title": "Type Checker",
+            "subtitle": "Controlla nel browser se un payload JSON è assegnabile a un tipo radice TypeScript.",
+            "check": "Controlla tipi",
+            "loadExample": "Carica esempio",
+            "clear": "Pulisci",
+            "rootType": "Tipo radice",
+            "typeDefinition": "Definizioni di tipo",
+            "value": "Valore JSON",
+            "rootPlaceholder": "ApiResponse",
+            "typePlaceholder": "Incolla qui interfacce o type alias...",
+            "valuePlaceholder": "Incolla JSON qui...",
+            "results": "Diagnostica tipi",
+            "valid": "Assegnabile",
+            "invalid": "Errore di tipo",
+            "diagnosticCount": "Diagnostiche",
+            "segmentType": "Tipi",
+            "segmentValue": "Valore",
+            "line": "Riga",
+            "noIssues": "Il valore JSON corrisponde al tipo radice selezionato.",
+            "checkError": "Errore di controllo"
+        },
+        "objectToTypes": {
+            "badge": "Tool di generazione",
+            "title": "Object to Types",
+            "subtitle": "Genera interfacce e alias TypeScript da JSON reale senza uscire dal browser.",
+            "loadExample": "Carica esempio",
+            "copy": "Copia tipi",
+            "clear": "Pulisci",
+            "copied": "Tipi copiati",
+            "copyError": "Impossibile copiare",
+            "rootName": "Nome radice",
+            "rootPlaceholder": "SiteSnapshot",
+            "input": "Oggetto JSON",
+            "placeholder": "Incolla JSON qui...",
+            "generated": "Tipi generati",
+            "interfaces": "Interfacce",
+            "lines": "Righe",
+            "invalidJson": "Incolla JSON valido per generare i tipi."
+        },
         "randomString": {
             "badge": "Tool di generazione",
             "title": "Random String Generator",
@@ -667,6 +720,44 @@
             "leftInvalid": "Il JSON sinistro non è valido",
             "rightInvalid": "Il JSON destro non è valido",
             "unknownError": "Errore sconosciuto"
+        },
+        "siteChecker": {
+            "badge": "Monitor client-only",
+            "title": "Site Checker",
+            "subtitle": "Monitora URL solo da questo browser. Nessun polling backend e nessun carico extra sul server.",
+            "loadExample": "Carica esempio locale",
+            "clientOnly": "Funziona solo in questa scheda del browser. Il monitoraggio si ferma quando chiudi scheda o app.",
+            "corsNote": "I siti cross-origin possono sembrare raggiungibili ma restare opachi quando CORS blocca un'ispezione più profonda.",
+            "url": "URL",
+            "interval": "Intervallo",
+            "timeout": "Timeout",
+            "notifications": "Notifiche desktop",
+            "addMonitor": "Aggiungi monitor",
+            "monitors": "Monitor attivi",
+            "empty": "Non ci sono ancora monitor. Aggiungine uno per iniziare i controlli da questo browser.",
+            "healthy": "Sano",
+            "reachable": "Raggiungibile",
+            "down": "Giù",
+            "checking": "Controllo in corso",
+            "runNow": "Esegui ora",
+            "remove": "Rimuovi",
+            "latency": "Latenza",
+            "lastChecked": "Ultimo controllo",
+            "httpStatus": "Stato HTTP",
+            "detail": "Dettaglio",
+            "contentType": "Tipo contenuto",
+            "history": "Controlli recenti",
+            "permissionUnsupported": "Le notifiche non sono disponibili in questo browser.",
+            "permissionGranted": "Notifiche abilitate",
+            "permissionDenied": "Notifiche bloccate",
+            "requestNotifications": "Abilita notifiche",
+            "monitorAdded": "Monitor aggiunto",
+            "urlInvalid": "Inserisci un URL valido",
+            "stopped": "In attesa del primo controllo client-side.",
+            "recovered": "Sito recuperato",
+            "failed": "Controllo sito fallito",
+            "recoveredBody": "è di nuovo raggiungibile da questo browser.",
+            "failedBody": "sta fallendo da questo browser."
         },
         "snippets": {
             "badge": "Sezione dedicata",
