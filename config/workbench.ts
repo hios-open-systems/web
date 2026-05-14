@@ -16,7 +16,7 @@ export const workbenchPacks: WorkbenchPack[] = [
     },
     {
         id: 'snippets',
-        href: '/workbench',
+        href: '/workbench/snippets',
         accent: '#f59e0b',
         icon: 'notes',
     },

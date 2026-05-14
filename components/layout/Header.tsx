@@ -1,12 +1,13 @@
 'use client';
 
 import React from 'react';
-import { Layout, Button, Space, Typography } from 'antd';
+import { Layout, Button, Typography } from 'antd';
 import { GithubOutlined, SunOutlined, MoonOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useTheme } from '@/lib/ThemeContext';
 import { useLocale } from 'next-intl';
 import { useTranslations } from 'next-intl';
+import styles from './header.module.css';
 
 const { Header: AntHeader } = Layout;
 const { Text } = Typography;
@@ -17,9 +18,16 @@ export function Header() {
   const { mode, toggleTheme } = useTheme();
   const locale = useLocale();
   const t = useTranslations('Header');
+  const themeVars = {
+    '--header-link-color': mode === 'dark' ? '#a3a3a3' : '#525252',
+    '--header-link-bg': mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)',
+    '--header-workbench-color': mode === 'dark' ? '#dbeafe' : '#1d4ed8',
+    '--header-workbench-bg': mode === 'dark' ? 'rgba(14,165,233,0.18)' : 'rgba(14,165,233,0.10)',
+  } as React.CSSProperties;
 
   return (
     <AntHeader
+      className={styles.header}
       style={{
         position: 'sticky',
         top: 0,
@@ -35,89 +43,59 @@ export function Header() {
         borderBottom: mode === 'dark'
           ? '1px solid rgba(255, 255, 255, 0.08)'
           : '1px solid rgba(0, 0, 0, 0.05)',
-        padding: '0 16px', // Reduced padding
+        padding: '0 16px',
       }}
     >
-      <Link href="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-        <Text strong style={{
-          fontSize: '20px',
-          fontWeight: 700,
-          letterSpacing: '1px',
-          background: mode === 'dark'
-            ? 'linear-gradient(135deg, #ffffff 0%, #a3a3a3 100%)'
-            : 'linear-gradient(135deg, #0d0d0d 0%, #404040 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text',
-        }}>
-          HIOS
-        </Text>
-      </Link>
+      <div className={styles.shell} style={themeVars}>
+        <Link href="/" className={styles.brandLink}>
+          <Text strong style={{
+            fontSize: '20px',
+            fontWeight: 700,
+            letterSpacing: '1px',
+            background: mode === 'dark'
+              ? 'linear-gradient(135deg, #ffffff 0%, #a3a3a3 100%)'
+              : 'linear-gradient(135deg, #0d0d0d 0%, #404040 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+          }}>
+            HIOS
+          </Text>
+        </Link>
 
-      <Space size="middle">
-        <Link
-          href={`/${locale}/workbench`}
-          style={{
-            color: mode === 'dark' ? '#dbeafe' : '#1d4ed8',
-            textDecoration: 'none',
-            fontSize: '13px',
-            fontWeight: 600,
-            padding: '4px 12px',
-            borderRadius: '6px',
-            background: mode === 'dark' ? 'rgba(14,165,233,0.18)' : 'rgba(14,165,233,0.10)',
-            transition: 'all 0.2s',
-          }}
-        >
-          ✦ {t('workbench')}
-        </Link>
-        <Link
-          href={`/${locale}/pinouts`}
-          style={{
-            color: mode === 'dark' ? '#a3a3a3' : '#525252',
-            textDecoration: 'none',
-            fontSize: '13px',
-            fontWeight: 500,
-            padding: '4px 12px',
-            borderRadius: '6px',
-            background: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)',
-            transition: 'all 0.2s',
-          }}
-        >
-          📌 {t('pinouts')}
-        </Link>
-        <Link
-          href={`/${locale}/calculators`}
-          style={{
-            color: mode === 'dark' ? '#a3a3a3' : '#525252',
-            textDecoration: 'none',
-            fontSize: '13px',
-            fontWeight: 500,
-            padding: '4px 12px',
-            borderRadius: '6px',
-            background: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)',
-            transition: 'all 0.2s',
-          }}
-        >
-          🧮 {t('calculators')}
-        </Link>
-        <LocaleSwitcher />
-        <Button
-          type="text"
-          icon={mode === 'dark' ? <SunOutlined /> : <MoonOutlined />}
-          onClick={toggleTheme}
-          style={{
-            fontSize: '18px',
-            color: mode === 'dark' ? '#e6e6e6' : '#1a1a1a'
-          }}
-        />
-        <Button
-          type="text"
-          icon={<GithubOutlined style={{ fontSize: '20px' }} />}
-          href="https://github.com/hios-open-systems/web"
-          target="_blank"
-          style={{ color: mode === 'dark' ? '#e6e6e6' : '#1a1a1a' }}
-        />
-      </Space>
+        <div className={styles.navArea}>
+          <div className={styles.primaryNav}>
+            <Link href={`/${locale}/workbench`} className={`${styles.navLink} ${styles.workbenchLink}`}>
+              ✦ {t('workbench')}
+            </Link>
+            <Link href={`/${locale}/pinouts`} className={styles.navLink}>
+              📌 {t('pinouts')}
+            </Link>
+            <Link href={`/${locale}/calculators`} className={styles.navLink}>
+              🧮 {t('calculators')}
+            </Link>
+          </div>
+          <div className={styles.controls}>
+            <LocaleSwitcher />
+            <Button
+              type="text"
+              icon={mode === 'dark' ? <SunOutlined /> : <MoonOutlined />}
+              onClick={toggleTheme}
+              style={{
+                fontSize: '18px',
+                color: mode === 'dark' ? '#e6e6e6' : '#1a1a1a'
+              }}
+            />
+            <Button
+              type="text"
+              icon={<GithubOutlined style={{ fontSize: '20px' }} />}
+              href="https://github.com/hios-open-systems/web"
+              target="_blank"
+              style={{ color: mode === 'dark' ? '#e6e6e6' : '#1a1a1a' }}
+            />
+          </div>
+        </div>
+      </div>
     </AntHeader>
   );
 }

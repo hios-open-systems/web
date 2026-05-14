@@ -435,7 +435,19 @@
             "title": "Uno workspace pratico per payload, snippet e flussi reali di sviluppo.",
             "subtitle": "Non è una directory generica di tool. È una superficie veloce, chiara e riutilizzabile per i compiti che tornano ogni giorno.",
             "primaryCta": "Apri Payload Lab",
-            "secondaryCta": "Continua con i calcolatori"
+            "secondaryCta": "Apri Snippets",
+            "panelTitle": "Entra da una sezione dedicata",
+            "panelSubtitle": "La landing deve orientare e ordinare. Il lavoro reale vive dentro ogni strumento o sezione dedicata.",
+            "sectionsTitle": "Sezioni disponibili",
+            "sectionsSubtitle": "Ogni area del workbench ha la propria route, proprio come calcolatori o pinout. L'obiettivo è navigare superfici chiare, non buttare tutto in una sola pagina.",
+            "cardCta": "Apri sezione",
+            "principlesTitle": "Cosa ottimizza questa superficie",
+            "principlesSubtitle": "Prima chiarezza, velocità e ottima esperienza mobile. Poi complessità.",
+            "principles": {
+                "localFirst": "Payload, note e stati restano locali ogni volta che ha senso. Meno attrito e più privacy reale.",
+                "shareable": "Quando un flusso vale davvero, puoi condividerlo via URL invece di spiegare dieci passaggi manuali.",
+                "dailyUse": "L'obiettivo non è una demo bella. È un workbench a cui vuoi davvero tornare durante la giornata di lavoro."
+            }
         },
         "packs": {
             "payload": {
@@ -487,6 +499,7 @@
             "unknownError": "Errore sconosciuto"
         },
         "snippets": {
+            "badge": "Sezione dedicata",
             "title": "Snippet e ricette rapide",
             "subtitle": "Un piccolo livello personale per rendere il workbench utile dal primo giorno.",
             "titlePlaceholder": "Titolo dello snippet",

@@ -7,7 +7,6 @@ import { Button, Card, Col, Row, Space, Tag, Typography } from 'antd';
 import { useLocale, useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { workbenchPacks, workbenchSignals } from '@/config/workbench';
-import { SnippetsShelf } from './SnippetsShelf';
 import styles from './workbench.module.css';
 
 const { Paragraph, Text, Title } = Typography;
@@ -29,41 +28,69 @@ export function WorkbenchLanding() {
             : 'linear-gradient(140deg, #ffffff 0%, #eff6ff 55%, #dbeafe 100%)',
         '--wb-surface-border': mode === 'dark' ? 'rgba(255,255,255,0.07)' : 'rgba(15,23,42,0.08)',
         '--wb-surface-bg': mode === 'dark' ? '#111827' : '#ffffff',
+        '--wb-surface-soft-border': mode === 'dark' ? 'rgba(255,255,255,0.07)' : 'rgba(15,23,42,0.08)',
+        '--wb-surface-soft-bg': mode === 'dark' ? '#0f172a' : '#f8fafc',
         '--wb-text-secondary': mode === 'dark' ? '#cbd5e1' : '#334155',
         '--wb-text-muted': mode === 'dark' ? '#94a3b8' : '#64748b',
     } as React.CSSProperties;
 
     return (
-        <Space direction="vertical" size={24} style={themeVars} className={styles.stackFull}>
+        <Space direction="vertical" size={28} style={themeVars} className={styles.stackFull}>
             <Card
                 className={styles.heroCard}
                 styles={{ body: { padding: 0 } }}
             >
-                <Space direction="vertical" size={14} className={`${styles.stackFull} ${styles.heroBody}`}>
-                    <Tag color="blue">{t('landing.badge')}</Tag>
-                    <Title level={1} className={styles.heroTitle}>{t('landing.title')}</Title>
-                    <Paragraph className={styles.heroSubtitle}>
-                        {t('landing.subtitle')}
-                    </Paragraph>
-                    <Space wrap>
-                        {workbenchSignals.map((signal) => (
-                            <Tag key={signal.key} color="default" className={styles.signalTag}>
-                                {t(`signals.${signal.key}`)}
-                            </Tag>
-                        ))}
+                <div className={styles.heroGrid}>
+                    <Space direction="vertical" size={14} className={`${styles.stackFull} ${styles.heroBody}`}>
+                        <Tag color="blue">{t('landing.badge')}</Tag>
+                        <Title level={1} className={styles.heroTitle}>{t('landing.title')}</Title>
+                        <Paragraph className={styles.heroSubtitle}>
+                            {t('landing.subtitle')}
+                        </Paragraph>
+                        <Space wrap>
+                            {workbenchSignals.map((signal) => (
+                                <Tag key={signal.key} color="default" className={styles.signalTag}>
+                                    {t(`signals.${signal.key}`)}
+                                </Tag>
+                            ))}
+                        </Space>
+                        <div className={styles.heroActions}>
+                            <Link href={`/${locale}/workbench/payload`}>
+                                <Button type="primary" size="large" icon={<ArrowRightOutlined />} block>
+                                    {t('landing.primaryCta')}
+                                </Button>
+                            </Link>
+                            <Link href={`/${locale}/workbench/snippets`}>
+                                <Button size="large" block>{t('landing.secondaryCta')}</Button>
+                            </Link>
+                        </div>
                     </Space>
-                    <Space wrap>
-                        <Link href={`/${locale}/workbench/payload`}>
-                            <Button type="primary" size="large" icon={<ArrowRightOutlined />}>
-                                {t('landing.primaryCta')}
-                            </Button>
-                        </Link>
-                        <Link href={`/${locale}/calculators`}>
-                            <Button size="large">{t('landing.secondaryCta')}</Button>
-                        </Link>
-                    </Space>
-                </Space>
+
+                    <div className={styles.heroPanel}>
+                        <Text strong className={styles.heroPanelTitle}>{t('landing.panelTitle')}</Text>
+                        <Paragraph className={styles.heroPanelSubtitle}>{t('landing.panelSubtitle')}</Paragraph>
+                        <div className={styles.routeList}>
+                            {workbenchPacks.map((pack) => (
+                                <Link key={pack.id} href={`/${locale}${pack.href}`} className={styles.routeRow}>
+                                    <div className={styles.routeRowIcon} style={{ color: pack.accent, background: `${pack.accent}20` }}>
+                                        {iconMap[pack.icon]}
+                                    </div>
+                                    <div className={styles.routeRowContent}>
+                                        <Text strong>{t(`packs.${pack.id}.title`)}</Text>
+                                        <Text className={styles.packDescription}>{t(`packs.${pack.id}.description`)}</Text>
+                                    </div>
+                                    <ArrowRightOutlined className={styles.routeRowArrow} />
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                </div>
             </Card>
+
+            <div className={styles.sectionHeading}>
+                <Title level={3} className={styles.sectionTitle}>{t('landing.sectionsTitle')}</Title>
+                <Paragraph className={styles.sectionSubtitle}>{t('landing.sectionsSubtitle')}</Paragraph>
+            </div>
 
             <Row gutter={[20, 20]}>
                 {workbenchPacks.map((pack) => (
@@ -82,6 +109,7 @@ export function WorkbenchLanding() {
                                         <Text strong style={{ display: 'block', marginBottom: 6 }}>{t(`packs.${pack.id}.title`)}</Text>
                                         <Text className={styles.packDescription}>{t(`packs.${pack.id}.description`)}</Text>
                                     </div>
+                                    <Text className={styles.cardCta}>{t('landing.cardCta')}</Text>
                                 </Space>
                             </Card>
                         </Link>
@@ -89,7 +117,21 @@ export function WorkbenchLanding() {
                 ))}
             </Row>
 
-            <SnippetsShelf />
+            <div className={styles.sectionHeading}>
+                <Title level={3} className={styles.sectionTitle}>{t('landing.principlesTitle')}</Title>
+                <Paragraph className={styles.sectionSubtitle}>{t('landing.principlesSubtitle')}</Paragraph>
+            </div>
+
+            <div className={styles.principlesGrid}>
+                {workbenchSignals.map((signal) => (
+                    <Card key={signal.key} className={styles.principleCard} styles={{ body: { padding: 20 } }}>
+                        <Space direction="vertical" size={8} className={styles.stackFull}>
+                            <Tag className={styles.signalTag}>{t(`signals.${signal.key}`)}</Tag>
+                            <Text className={styles.principleText}>{t(`landing.principles.${signal.key}`)}</Text>
+                        </Space>
+                    </Card>
+                ))}
+            </div>
         </Space>
     );
 }

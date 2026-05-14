@@ -435,7 +435,19 @@
             "title": "Ein praktischer Workspace für Payloads, Snippets und echte Entwickler-Workflows.",
             "subtitle": "Kein generisches Verzeichnis von Tools, sondern eine schnelle, klare und wiederverwendbare Oberfläche für wiederkehrende Aufgaben im Alltag.",
             "primaryCta": "Payload Lab öffnen",
-            "secondaryCta": "Weiter zu den Rechnern"
+            "secondaryCta": "Snippets öffnen",
+            "panelTitle": "Über einen klaren Bereich einsteigen",
+            "panelSubtitle": "Die Landing Page soll Orientierung geben. Die eigentliche Arbeit gehört in jedes eigene Tool oder jede eigene Sektion.",
+            "sectionsTitle": "Verfügbare Bereiche",
+            "sectionsSubtitle": "Jeder Bereich der Workbench hat seine eigene Route, genau wie Rechner oder Pinouts. Ziel sind klare Oberflächen statt alles auf eine Seite zu kippen.",
+            "cardCta": "Bereich öffnen",
+            "principlesTitle": "Worauf diese Oberfläche optimiert ist",
+            "principlesSubtitle": "Zuerst Klarheit, Geschwindigkeit und gute mobile Nutzbarkeit. Danach Komplexität.",
+            "principles": {
+                "localFirst": "Payloads, Notizen und Zustände bleiben lokal, wann immer das sinnvoll ist. Weniger Reibung und echte Privatsphäre.",
+                "shareable": "Wenn ein Workflow wichtig ist, kannst du ihn per URL teilen, statt zehn manuelle Schritte zu erklären.",
+                "dailyUse": "Das Ziel ist keine hübsche Demo, sondern eine Workbench, zu der du im Arbeitsalltag wirklich zurückkehrst."
+            }
         },
         "packs": {
             "payload": {
@@ -487,6 +499,7 @@
             "unknownError": "Unbekannter Fehler"
         },
         "snippets": {
+            "badge": "Eigene Sektion",
             "title": "Schnelle Snippets und Rezepte",
             "subtitle": "Eine kleine persönliche Ebene, damit die Workbench ab dem ersten Tag nützlich ist.",
             "titlePlaceholder": "Titel des Snippets",

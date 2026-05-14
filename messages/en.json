@@ -456,7 +456,19 @@
             "title": "A practical workspace for payloads, snippets, and real developer workflows.",
             "subtitle": "This is not a generic tools directory. It is a fast, clear, reusable surface for the tasks that keep showing up during the workday.",
             "primaryCta": "Open Payload Lab",
-            "secondaryCta": "Keep using calculators"
+            "secondaryCta": "Open Snippets",
+            "panelTitle": "Enter through a dedicated section",
+            "panelSubtitle": "The landing page should orient and organize. The real work belongs inside each dedicated tool or section.",
+            "sectionsTitle": "Available sections",
+            "sectionsSubtitle": "Each workbench area has its own route, just like calculators or pinouts. The goal is to move through clear surfaces, not pile everything into one page.",
+            "cardCta": "Open section",
+            "principlesTitle": "What this surface optimizes",
+            "principlesSubtitle": "Clarity, speed, and strong mobile usability first. Complexity second.",
+            "principles": {
+                "localFirst": "Your payloads, notes, and states stay local whenever that makes sense. Less friction and real privacy.",
+                "shareable": "When a workflow matters, you can share it by URL instead of explaining ten manual steps.",
+                "dailyUse": "The target is not a pretty demo. It is a workbench you actually want to come back to during the workday."
+            }
         },
         "packs": {
             "payload": {
@@ -508,6 +520,7 @@
             "unknownError": "Unknown error"
         },
         "snippets": {
+            "badge": "Dedicated section",
             "title": "Quick snippets and recipes",
             "subtitle": "A small personal layer so the workbench is useful from day one.",
             "titlePlaceholder": "Snippet title",
