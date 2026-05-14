@@ -432,14 +432,16 @@
         },
         "landing": {
             "badge": "Neue Produktlinie",
-            "title": "Ein praktischer Workspace für Payloads, Snippets und echte Entwickler-Workflows.",
-            "subtitle": "Kein generisches Verzeichnis von Tools, sondern eine schnelle, klare und wiederverwendbare Oberfläche für wiederkehrende Aufgaben im Alltag.",
-            "primaryCta": "Payload Lab öffnen",
-            "secondaryCta": "Snippets öffnen",
+            "title": "Ein praktischer Workspace für Payloads, JWTs, Snippets und echte Entwickler-Workflows.",
+            "subtitle": "Günstige, häufige Tools brauchen eine saubere Struktur. Validierung, Generierung und Tests halten den Katalog nutzbar, während er wächst.",
+            "primaryCta": "Validierung öffnen",
+            "secondaryCta": "Generierung öffnen",
             "panelTitle": "Über einen klaren Bereich einsteigen",
-            "panelSubtitle": "Die Landing Page soll Orientierung geben. Die eigentliche Arbeit gehört in jedes eigene Tool oder jede eigene Sektion.",
-            "sectionsTitle": "Verfügbare Bereiche",
-            "sectionsSubtitle": "Jeder Bereich der Workbench hat seine eigene Route, genau wie Rechner oder Pinouts. Ziel sind klare Oberflächen statt alles auf eine Seite zu kippen.",
+            "panelSubtitle": "Starte über die Absicht, nicht über eine Wand aus Karten. Jede Sektion gruppiert verwandte Tools, damit die Workbench sauber skaliert.",
+            "sectionsTitle": "Kernbereiche",
+            "sectionsSubtitle": "Validierung, Generierung und Tests trennen den Katalog nach Anwendungsfall, damit weitere Tools später nicht alles unübersichtlich machen.",
+            "catalogTitle": "Tool-Katalog",
+            "catalogSubtitle": "Jede Sektion hat ihre eigene Route und kann wachsen, ohne die Informationsarchitektur zu brechen.",
             "cardCta": "Bereich öffnen",
             "principlesTitle": "Worauf diese Oberfläche optimiert ist",
             "principlesSubtitle": "Zuerst Klarheit, Geschwindigkeit und gute mobile Nutzbarkeit. Danach Komplexität.",
@@ -449,10 +451,43 @@
                 "dailyUse": "Das Ziel ist keine hübsche Demo, sondern eine Workbench, zu der du im Arbeitsalltag wirklich zurückkehrst."
             }
         },
+        "sections": {
+            "validation": {
+                "title": "Validierung",
+                "description": "Payloads oder Auth-Artefakte dekodieren, inspizieren und prüfen, bevor sie Produktion erreichen."
+            },
+            "generation": {
+                "title": "Generierung",
+                "description": "Nützliche Strings, Snippets und andere schnelle Artefakte direkt im Browser erzeugen."
+            },
+            "testing": {
+                "title": "Tests",
+                "description": "Objekte vergleichen, Unterschiede prüfen und in Embedded-Validierungsflüsse springen."
+            }
+        },
+        "sectionToolCount": "Tools",
+        "viewAll": "Alle anzeigen",
+        "viewWorkbench": "Zurück zur Workbench",
+        "sectionBrowseTitle": "Andere Bereiche durchsuchen",
+        "sectionBrowseSubtitle": "Zwischen Validierung, Generierung und Tests wechseln, ohne den Kontext zu verlieren.",
+        "externalLabel": "Extern",
+        "toolCta": "Tool öffnen",
         "packs": {
             "payload": {
                 "title": "Payload Lab",
                 "description": "JSON formatieren, validieren und teilen, ohne den Browser zu verlassen."
+            },
+            "jwt-decode": {
+                "title": "JWT Decode",
+                "description": "JWT-Header, Payload und Ablauf lokal prüfen, ohne das Token irgendwohin zu senden."
+            },
+            "random-string": {
+                "title": "Random String Generator",
+                "description": "Schnelle Strings für Secrets, IDs, Demos oder Fixtures an einem Ort erzeugen."
+            },
+            "object-compare": {
+                "title": "Object Comparator",
+                "description": "Zwei JSON-Objekte vergleichen und strukturelle Unterschiede in Sekunden sehen."
             },
             "snippets": {
                 "title": "Snippets Shelf",
@@ -496,6 +531,72 @@
             "copied": "Inhalt kopiert",
             "linkCopied": "Link kopiert",
             "copyError": "Kopieren fehlgeschlagen",
+            "unknownError": "Unbekannter Fehler"
+        },
+        "jwtDecode": {
+            "badge": "Validierungs-Tool",
+            "title": "JWT Decode",
+            "subtitle": "Header und Payload lokal prüfen. Nützlich zum Debuggen von Auth-Flows ohne das Token weiterzugeben.",
+            "input": "JWT-Token",
+            "placeholder": "JWT hier einfügen...",
+            "loadExample": "Beispiel laden",
+            "clear": "Leeren",
+            "header": "Header",
+            "payload": "Payload",
+            "signature": "Signaturlänge",
+            "decoded": "Nur lokal dekodiert",
+            "copyHeader": "Header kopieren",
+            "copyPayload": "Payload kopieren",
+            "copied": "Kopiert",
+            "copyError": "Kopieren fehlgeschlagen",
+            "algorithm": "Algorithmus",
+            "type": "Typ",
+            "expires": "Läuft ab",
+            "expired": "Abgelaufen",
+            "active": "Aktiv",
+            "noExpiration": "Kein Ablauf",
+            "invalid": "Ungültiges Token",
+            "errorTitle": "Decode-Fehler",
+            "unknownError": "Unbekannter Fehler"
+        },
+        "randomString": {
+            "badge": "Generierungs-Tool",
+            "title": "Random String Generator",
+            "subtitle": "Nützliche Strings für IDs, Geheimnisse, Demos oder Fixtures direkt im Browser erzeugen.",
+            "length": "Länge",
+            "uppercase": "Großbuchstaben",
+            "lowercase": "Kleinbuchstaben",
+            "numbers": "Zahlen",
+            "symbols": "Symbole",
+            "excludeAmbiguous": "Mehrdeutige Zeichen ausschließen",
+            "generate": "Generieren",
+            "copy": "Kopieren",
+            "copyAll": "Alle kopieren",
+            "copied": "String kopiert",
+            "allCopied": "Generierte Werte kopiert",
+            "copyError": "Kopieren fehlgeschlagen",
+            "entropy": "Geschätzte Entropie",
+            "results": "Generierte Werte",
+            "emptyCharset": "Mindestens eine Zeichengruppe auswählen"
+        },
+        "objectCompare": {
+            "badge": "Test-Tool",
+            "title": "Object Comparator",
+            "subtitle": "Zwei JSON-Objekte vergleichen und Ergänzungen, Entfernungen sowie Wertänderungen schnell erkennen.",
+            "loadExample": "Beispiel laden",
+            "clear": "Leeren",
+            "swap": "Seiten tauschen",
+            "left": "Linkes Objekt",
+            "right": "Rechtes Objekt",
+            "placeholder": "JSON hier einfügen...",
+            "added": "Hinzugefügt",
+            "removed": "Entfernt",
+            "changed": "Geändert",
+            "equal": "Objekte stimmen überein",
+            "differences": "Unterschiede",
+            "noDifferences": "Keine strukturellen Unterschiede gefunden.",
+            "leftInvalid": "Linkes JSON ist ungültig",
+            "rightInvalid": "Rechtes JSON ist ungültig",
             "unknownError": "Unbekannter Fehler"
         },
         "snippets": {

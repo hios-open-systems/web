@@ -2,20 +2,15 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRightOutlined, DatabaseOutlined, FileTextOutlined, ToolOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Row, Space, Tag, Typography } from 'antd';
 import { useLocale, useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
-import { workbenchPacks, workbenchSignals } from '@/config/workbench';
+import { getWorkbenchToolsBySection, workbenchSections, workbenchSignals } from '@/config/workbench';
+import { getWorkbenchIcon } from './workbenchIcons';
 import styles from './workbench.module.css';
 
 const { Paragraph, Text, Title } = Typography;
-
-const iconMap = {
-    data: <DatabaseOutlined />,
-    notes: <FileTextOutlined />,
-    circuits: <ToolOutlined />,
-};
 
 export function WorkbenchLanding() {
     const locale = useLocale();
@@ -55,12 +50,12 @@ export function WorkbenchLanding() {
                             ))}
                         </Space>
                         <div className={styles.heroActions}>
-                            <Link href={`/${locale}/workbench/payload`}>
+                <Link href={`/${locale}/workbench/sections/validation`}>
                                 <Button type="primary" size="large" icon={<ArrowRightOutlined />} block>
                                     {t('landing.primaryCta')}
                                 </Button>
                             </Link>
-                            <Link href={`/${locale}/workbench/snippets`}>
+                <Link href={`/${locale}/workbench/sections/generation`}>
                                 <Button size="large" block>{t('landing.secondaryCta')}</Button>
                             </Link>
                         </div>
@@ -70,16 +65,16 @@ export function WorkbenchLanding() {
                         <Text strong className={styles.heroPanelTitle}>{t('landing.panelTitle')}</Text>
                         <Paragraph className={styles.heroPanelSubtitle}>{t('landing.panelSubtitle')}</Paragraph>
                         <div className={styles.routeList}>
-                            {workbenchPacks.map((pack) => (
-                                <Link key={pack.id} href={`/${locale}${pack.href}`} className={styles.routeRow}>
-                                    <div className={styles.routeRowIcon} style={{ color: pack.accent, background: `${pack.accent}20` }}>
-                                        {iconMap[pack.icon]}
+                {workbenchSections.map((section) => (
+                  <Link key={section.id} href={`/${locale}${section.href}`} className={styles.routeRow}>
+                    <div className={styles.routeRowIcon} style={{ color: section.accent, background: `${section.accent}20` }}>
+                      {getWorkbenchIcon(section.icon)}
                                     </div>
                                     <div className={styles.routeRowContent}>
-                                        <Text strong>{t(`packs.${pack.id}.title`)}</Text>
-                                        <Text className={styles.packDescription}>{t(`packs.${pack.id}.description`)}</Text>
+                                  <Text strong>{t(`sections.${section.id}.title`)}</Text>
+                                  <Text className={styles.packDescription}>{t(`sections.${section.id}.description`)}</Text>
                                     </div>
-                                    <ArrowRightOutlined className={styles.routeRowArrow} />
+                                <Text className={styles.sectionCount}>{getWorkbenchToolsBySection(section.id).length} {t('sectionToolCount')}</Text>
                                 </Link>
                             ))}
                         </div>
@@ -93,22 +88,23 @@ export function WorkbenchLanding() {
             </div>
 
             <Row gutter={[20, 20]}>
-                {workbenchPacks.map((pack) => (
-                    <Col xs={24} md={8} key={pack.id}>
-                        <Link href={`/${locale}${pack.href}`} className={styles.packLink}>
+          {workbenchSections.map((section) => (
+                <Col xs={24} md={8} key={section.id}>
+                    <Link href={`/${locale}${section.href}`} className={styles.packLink}>
                             <Card
                                 hoverable
                                 className={styles.packCard}
                                 styles={{ body: { padding: 22 } }}
                             >
                                 <Space direction="vertical" size={14} className={styles.stackFull}>
-                                    <div className={styles.packIcon} style={{ color: pack.accent, background: `${pack.accent}20` }}>
-                                        {iconMap[pack.icon]}
+                          <div className={styles.packIcon} style={{ color: section.accent, background: `${section.accent}20` }}>
+                            {getWorkbenchIcon(section.icon)}
                                     </div>
                                     <div>
-                                        <Text strong style={{ display: 'block', marginBottom: 6 }}>{t(`packs.${pack.id}.title`)}</Text>
-                                        <Text className={styles.packDescription}>{t(`packs.${pack.id}.description`)}</Text>
+                            <Text strong style={{ display: 'block', marginBottom: 6 }}>{t(`sections.${section.id}.title`)}</Text>
+                            <Text className={styles.packDescription}>{t(`sections.${section.id}.description`)}</Text>
                                     </div>
+                          <Text className={styles.sectionCount}>{getWorkbenchToolsBySection(section.id).length} {t('sectionToolCount')}</Text>
                                     <Text className={styles.cardCta}>{t('landing.cardCta')}</Text>
                                 </Space>
                             </Card>
@@ -116,6 +112,53 @@ export function WorkbenchLanding() {
                     </Col>
                 ))}
             </Row>
+
+        <div className={styles.sectionHeading}>
+          <Title level={3} className={styles.sectionTitle}>{t('landing.catalogTitle')}</Title>
+          <Paragraph className={styles.sectionSubtitle}>{t('landing.catalogSubtitle')}</Paragraph>
+        </div>
+
+        <Space direction="vertical" size={20} className={styles.stackFull}>
+          {workbenchSections.map((section) => {
+            const tools = getWorkbenchToolsBySection(section.id);
+
+            return (
+              <Card key={section.id} className={styles.catalogSection} styles={{ body: { padding: 22 } }}>
+                <div className={styles.catalogHeader}>
+                  <div>
+                    <Tag className={styles.signalTag}>{t(`sections.${section.id}.title`)}</Tag>
+                    <Title level={4} style={{ margin: '12px 0 8px' }}>{t(`sections.${section.id}.title`)}</Title>
+                    <Paragraph className={styles.sectionSubtitle}>{t(`sections.${section.id}.description`)}</Paragraph>
+                  </div>
+                  <Link href={`/${locale}${section.href}`}>
+                    <Button>{t('viewAll')}</Button>
+                  </Link>
+                </div>
+
+                <Row gutter={[16, 16]}>
+                  {tools.map((tool) => (
+                    <Col xs={24} md={12} xl={8} key={tool.id}>
+                      <Link href={`/${locale}${tool.href}`} className={styles.packLink}>
+                        <Card hoverable className={styles.packCard} styles={{ body: { padding: 20 } }}>
+                          <Space direction="vertical" size={12} className={styles.stackFull}>
+                            <div className={styles.packIcon} style={{ color: tool.accent, background: `${tool.accent}20` }}>
+                              {getWorkbenchIcon(tool.icon)}
+                            </div>
+                            <div>
+                              <Text strong style={{ display: 'block', marginBottom: 6 }}>{t(`packs.${tool.id}.title`)}</Text>
+                              <Text className={styles.packDescription}>{t(`packs.${tool.id}.description`)}</Text>
+                            </div>
+                            <Text className={styles.cardCta}>{t('toolCta')}</Text>
+                          </Space>
+                        </Card>
+                      </Link>
+                    </Col>
+                  ))}
+                </Row>
+              </Card>
+            );
+          })}
+        </Space>
 
             <div className={styles.sectionHeading}>
                 <Title level={3} className={styles.sectionTitle}>{t('landing.principlesTitle')}</Title>
