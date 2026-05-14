@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
+import { CertificateCheckTool } from '@/components/workbench/CertificateCheckTool';
+import { DnsLookupTool } from '@/components/workbench/DnsLookupTool';
 import { JwtDecodeTool } from '@/components/workbench/JwtDecodeTool';
 import { ObjectComparatorTool } from '@/components/workbench/ObjectComparatorTool';
 import { RandomStringTool } from '@/components/workbench/RandomStringTool';
@@ -14,6 +16,14 @@ const metadataMap: Record<string, Metadata> = {
   'jwt-decode': {
     title: 'JWT Decode | HIOS Workbench',
     description: 'Decodifica JWT en local para revisar header, payload y expiración sin salir del navegador.',
+  },
+  'dns-lookup': {
+    title: 'DNS Inspector | HIOS Workbench',
+    description: 'Consulta registros DNS en vivo, incluidos MX, TXT, NS, A y AAAA, desde una sola superficie.',
+  },
+  'certificate-check': {
+    title: 'Certificate Expiry | HIOS Workbench',
+    description: 'Inspecciona fechas de validez, issuer y riesgo de expiración de certificados TLS en vivo.',
   },
   'random-string': {
     title: 'Random String Generator | HIOS Workbench',
@@ -42,6 +52,10 @@ function renderTool(toolId: WorkbenchToolId) {
   switch (toolId) {
     case 'jwt-decode':
       return <JwtDecodeTool />;
+    case 'dns-lookup':
+      return <DnsLookupTool />;
+    case 'certificate-check':
+      return <CertificateCheckTool />;
     case 'random-string':
       return <RandomStringTool />;
     case 'object-compare':

@@ -454,7 +454,7 @@
         "sections": {
             "validation": {
                 "title": "Validazione",
-                "description": "Decodifica, ispeziona e valida payload o artefatti auth prima che arrivino in produzione."
+                "description": "Decodifica, ispeziona e valida payload, artefatti auth, record DNS o stato TLS prima che arrivino in produzione."
             },
             "generation": {
                 "title": "Generazione",
@@ -480,6 +480,14 @@
             "jwt-decode": {
                 "title": "JWT Decode",
                 "description": "Ispeziona header, payload ed exp dei JWT in locale senza inviare il token altrove."
+            },
+            "dns-lookup": {
+                "title": "DNS Inspector",
+                "description": "Interroga record DNS live, inclusi MX, TXT, NS, A e AAAA, senza uscire dal workbench."
+            },
+            "certificate-check": {
+                "title": "Certificate Expiry",
+                "description": "Ispeziona certificati TLS live, issuer e validità residua prima che diventino un incidente."
             },
             "random-string": {
                 "title": "Random String Generator",
@@ -558,6 +566,67 @@
             "invalid": "Token non valido",
             "errorTitle": "Errore di decode",
             "unknownError": "Errore sconosciuto"
+        },
+        "dnsLookup": {
+            "badge": "Tool di validazione",
+            "title": "DNS Inspector",
+            "subtitle": "Interroga record DNS live, inclusi MX, TXT, NS, A, AAAA e CNAME, senza uscire dal prodotto.",
+            "lookup": "Interroga",
+            "loadExample": "Carica esempio",
+            "copyResult": "Copia risultato",
+            "copied": "Risultato copiato",
+            "copyError": "Impossibile copiare",
+            "queryTitle": "Query DNS",
+            "domain": "Dominio",
+            "recordType": "Tipo di record",
+            "helper": "Usalo per verificare propagazione, target MX, record TXT o nameserver da un solo posto.",
+            "results": "Record live",
+            "empty": "Esegui una query per ispezionare i record live.",
+            "lookupFailed": "Query fallita",
+            "answers": "Risposte",
+            "duration": "Tempo di risposta",
+            "fetchedAt": "Recuperato alle",
+            "noRecords": "Nessun record restituito per questa query.",
+            "recordCopied": "Record copiato",
+            "priority": "Priorità",
+            "lookupError": "La query DNS è fallita",
+            "types": {
+                "A": "A",
+                "AAAA": "AAAA",
+                "CNAME": "CNAME",
+                "MX": "MX",
+                "TXT": "TXT",
+                "NS": "NS"
+            }
+        },
+        "certificateCheck": {
+            "badge": "Tool di validazione",
+            "title": "Certificate Expiry",
+            "subtitle": "Ispeziona validità TLS e issuer prima che un certificato diventi un problema in produzione.",
+            "inspect": "Ispeziona",
+            "loadExample": "Carica esempio",
+            "copyResult": "Copia risultato",
+            "copied": "Risultato copiato",
+            "copyError": "Impossibile copiare",
+            "queryTitle": "Target TLS",
+            "hostname": "Hostname",
+            "port": "Porta",
+            "helper": "Controlla il certificato realmente presentato dal server e segnala presto il rischio di scadenza.",
+            "results": "Stato del certificato",
+            "empty": "Esegui un controllo per recuperare dati live del certificato.",
+            "inspectFailed": "Controllo fallito",
+            "daysRemaining": "Giorni rimanenti",
+            "validFrom": "Valido da",
+            "validTo": "Valido fino a",
+            "issuer": "Issuer",
+            "subject": "Subject",
+            "fingerprint": "Fingerprint",
+            "serialNumber": "Numero seriale",
+            "subjectAltName": "Nomi alternativi",
+            "active": "Attivo",
+            "expiringSoon": "In scadenza",
+            "expired": "Scaduto",
+            "lookupError": "Il controllo del certificato è fallito"
         },
         "randomString": {
             "badge": "Tool di generazione",

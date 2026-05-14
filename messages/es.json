@@ -452,8 +452,8 @@
         },
         "landing": {
             "badge": "Nueva línea de producto",
-            "title": "Un workspace práctico para payloads, JWTs, snippets y flujos reales de desarrollo.",
-            "subtitle": "Las tools baratas y de alta frecuencia merecen estructura real. Validación, generación y tests mantienen útil el catálogo mientras crece.",
+            "title": "Una superficie precisa para payloads, DNS, certificados, snippets y comprobaciones de desarrollo que sí vuelven cada día.",
+            "subtitle": "Minimalismo con mejor acabado. Validación, generación y tests mantienen el catálogo claro mientras las comprobaciones de red y auth quedan a un clic.",
             "primaryCta": "Ver validación",
             "secondaryCta": "Ver generación",
             "panelTitle": "Entrá por una sección concreta",
@@ -469,12 +469,18 @@
                 "localFirst": "Tus payloads, notas y estados se procesan localmente siempre que tenga sentido. Menos fricción y más privacidad real.",
                 "shareable": "Cuando un flujo vale la pena, lo podés compartir por URL sin tener que explicar diez pasos manuales.",
                 "dailyUse": "La meta no es tener una demo linda, sino un workbench al que quieras volver durante el día de trabajo."
+            },
+            "metrics": {
+                "sections": "Secciones",
+                "tools": "Tools",
+                "network": "Red",
+                "networkValue": "DNS + TLS"
             }
         },
         "sections": {
             "validation": {
                 "title": "Validación",
-                "description": "Decodificá, inspeccioná y validá payloads o artefactos de auth antes de que lleguen a producción."
+                "description": "Decodificá, inspeccioná y validá payloads, artefactos de auth, registros DNS o estado TLS antes de llegar a producción."
             },
             "generation": {
                 "title": "Generación",
@@ -500,6 +506,14 @@
             "jwt-decode": {
                 "title": "JWT Decode",
                 "description": "Inspeccioná headers, payloads y expiración de JWT en local sin mandar el token a otro servicio."
+            },
+            "dns-lookup": {
+                "title": "DNS Inspector",
+                "description": "Consultá registros DNS en vivo, incluidos MX, TXT, NS, A y AAAA, sin salir del workbench."
+            },
+            "certificate-check": {
+                "title": "Certificate Expiry",
+                "description": "Inspeccioná certificados TLS en vivo, issuer y validez restante antes de que se conviertan en una caída."
             },
             "random-string": {
                 "title": "Random String Generator",
@@ -578,6 +592,67 @@
             "invalid": "Token inválido",
             "errorTitle": "Error de decode",
             "unknownError": "Error desconocido"
+        },
+        "dnsLookup": {
+            "badge": "Tool de validación",
+            "title": "DNS Inspector",
+            "subtitle": "Consultá registros DNS en vivo, incluidos MX, TXT, NS, A, AAAA y CNAME, sin salir del producto.",
+            "lookup": "Consultar",
+            "loadExample": "Cargar ejemplo",
+            "copyResult": "Copiar resultado",
+            "copied": "Resultado copiado",
+            "copyError": "No se pudo copiar",
+            "queryTitle": "Consulta DNS",
+            "domain": "Dominio",
+            "recordType": "Tipo de registro",
+            "helper": "Úsalo para revisar propagación, targets MX, entradas TXT o servidores de nombres desde una sola superficie.",
+            "results": "Registros en vivo",
+            "empty": "Ejecutá una consulta para inspeccionar registros en vivo.",
+            "lookupFailed": "La consulta falló",
+            "answers": "Respuestas",
+            "duration": "Tiempo de respuesta",
+            "fetchedAt": "Consultado a las",
+            "noRecords": "No se devolvieron registros para esta consulta.",
+            "recordCopied": "Registro copiado",
+            "priority": "Prioridad",
+            "lookupError": "La consulta DNS falló",
+            "types": {
+                "A": "A",
+                "AAAA": "AAAA",
+                "CNAME": "CNAME",
+                "MX": "MX",
+                "TXT": "TXT",
+                "NS": "NS"
+            }
+        },
+        "certificateCheck": {
+            "badge": "Tool de validación",
+            "title": "Certificate Expiry",
+            "subtitle": "Inspeccioná fechas de validez TLS e issuer antes de que un certificado se convierta en un problema de producción.",
+            "inspect": "Inspeccionar",
+            "loadExample": "Cargar ejemplo",
+            "copyResult": "Copiar resultado",
+            "copied": "Resultado copiado",
+            "copyError": "No se pudo copiar",
+            "queryTitle": "Objetivo TLS",
+            "hostname": "Hostname",
+            "port": "Puerto",
+            "helper": "Comprueba el certificado real que presenta el servidor y adelanta el riesgo de vencimiento.",
+            "results": "Estado del certificado",
+            "empty": "Ejecutá una inspección para traer datos reales del certificado.",
+            "inspectFailed": "La inspección falló",
+            "daysRemaining": "Días restantes",
+            "validFrom": "Válido desde",
+            "validTo": "Válido hasta",
+            "issuer": "Issuer",
+            "subject": "Subject",
+            "fingerprint": "Fingerprint",
+            "serialNumber": "Número de serie",
+            "subjectAltName": "Nombres alternativos",
+            "active": "Activo",
+            "expiringSoon": "Por vencer",
+            "expired": "Vencido",
+            "lookupError": "La inspección del certificado falló"
         },
         "randomString": {
             "badge": "Tool de generación",

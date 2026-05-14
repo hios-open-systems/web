@@ -453,8 +453,8 @@
         },
         "landing": {
             "badge": "New product line",
-            "title": "A practical workspace for payloads, JWTs, snippets, and real developer workflows.",
-            "subtitle": "Cheap, high-frequency utilities deserve real structure. Validation, generation, and testing keep the catalog useful as it grows.",
+            "title": "A precise workspace for payloads, DNS, certificates, snippets, and the developer checks that actually keep showing up.",
+            "subtitle": "Minimal surface, higher finish. Validation, generation, and testing keep the catalog sharp while network and auth checks stay one click away.",
             "primaryCta": "Browse validation",
             "secondaryCta": "Browse generation",
             "panelTitle": "Enter through a dedicated section",
@@ -470,12 +470,18 @@
                 "localFirst": "Your payloads, notes, and states stay local whenever that makes sense. Less friction and real privacy.",
                 "shareable": "When a workflow matters, you can share it by URL instead of explaining ten manual steps.",
                 "dailyUse": "The target is not a pretty demo. It is a workbench you actually want to come back to during the workday."
+            },
+            "metrics": {
+                "sections": "Sections",
+                "tools": "Tools",
+                "network": "Network",
+                "networkValue": "DNS + TLS"
             }
         },
         "sections": {
             "validation": {
                 "title": "Validation",
-                "description": "Decode, inspect, and verify payloads or auth artifacts before they reach production."
+                "description": "Decode, inspect, and verify payloads, auth artifacts, DNS records, or TLS state before they reach production."
             },
             "generation": {
                 "title": "Generation",
@@ -501,6 +507,14 @@
             "jwt-decode": {
                 "title": "JWT Decode",
                 "description": "Inspect JWT headers, payloads, and expiration locally without sending the token anywhere."
+            },
+            "dns-lookup": {
+                "title": "DNS Inspector",
+                "description": "Query live DNS records, including MX, TXT, NS, A, and AAAA, without leaving the workbench."
+            },
+            "certificate-check": {
+                "title": "Certificate Expiry",
+                "description": "Inspect live TLS certificates, issuer details, and remaining validity before they become an outage."
             },
             "random-string": {
                 "title": "Random String Generator",
@@ -579,6 +593,67 @@
             "invalid": "Invalid token",
             "errorTitle": "Decode error",
             "unknownError": "Unknown error"
+        },
+        "dnsLookup": {
+            "badge": "Validation tool",
+            "title": "DNS Inspector",
+            "subtitle": "Query live DNS records, including MX, TXT, NS, A, AAAA, and CNAME, without leaving the product.",
+            "lookup": "Lookup",
+            "loadExample": "Load example",
+            "copyResult": "Copy result",
+            "copied": "Result copied",
+            "copyError": "Could not copy",
+            "queryTitle": "DNS query",
+            "domain": "Domain",
+            "recordType": "Record type",
+            "helper": "Use this to verify propagation, MX targets, TXT entries, or name servers from one place.",
+            "results": "Live records",
+            "empty": "Run a lookup to inspect live records.",
+            "lookupFailed": "Lookup failed",
+            "answers": "Answers",
+            "duration": "Response time",
+            "fetchedAt": "Fetched at",
+            "noRecords": "No records returned for this query.",
+            "recordCopied": "Record copied",
+            "priority": "Priority",
+            "lookupError": "DNS lookup failed",
+            "types": {
+                "A": "A",
+                "AAAA": "AAAA",
+                "CNAME": "CNAME",
+                "MX": "MX",
+                "TXT": "TXT",
+                "NS": "NS"
+            }
+        },
+        "certificateCheck": {
+            "badge": "Validation tool",
+            "title": "Certificate Expiry",
+            "subtitle": "Inspect live TLS validity dates and issuer details before a certificate becomes a production problem.",
+            "inspect": "Inspect",
+            "loadExample": "Load example",
+            "copyResult": "Copy result",
+            "copied": "Result copied",
+            "copyError": "Could not copy",
+            "queryTitle": "TLS target",
+            "hostname": "Hostname",
+            "port": "Port",
+            "helper": "Checks the live certificate presented by the server and highlights expiry risk early.",
+            "results": "Certificate status",
+            "empty": "Run an inspection to fetch live certificate data.",
+            "inspectFailed": "Inspection failed",
+            "daysRemaining": "Days remaining",
+            "validFrom": "Valid from",
+            "validTo": "Valid to",
+            "issuer": "Issuer",
+            "subject": "Subject",
+            "fingerprint": "Fingerprint",
+            "serialNumber": "Serial number",
+            "subjectAltName": "Subject alt names",
+            "active": "Active",
+            "expiringSoon": "Expiring soon",
+            "expired": "Expired",
+            "lookupError": "Certificate inspection failed"
         },
         "randomString": {
             "badge": "Generation tool",

@@ -454,7 +454,7 @@
         "sections": {
             "validation": {
                 "title": "Validierung",
-                "description": "Payloads oder Auth-Artefakte dekodieren, inspizieren und prüfen, bevor sie Produktion erreichen."
+                "description": "Payloads, Auth-Artefakte, DNS-Einträge oder TLS-Zustand prüfen, bevor sie Produktion erreichen."
             },
             "generation": {
                 "title": "Generierung",
@@ -480,6 +480,14 @@
             "jwt-decode": {
                 "title": "JWT Decode",
                 "description": "JWT-Header, Payload und Ablauf lokal prüfen, ohne das Token irgendwohin zu senden."
+            },
+            "dns-lookup": {
+                "title": "DNS Inspector",
+                "description": "Live-DNS-Records wie MX, TXT, NS, A und AAAA direkt in der Workbench abfragen."
+            },
+            "certificate-check": {
+                "title": "Certificate Expiry",
+                "description": "Live-TLS-Zertifikate, Issuer und Restlaufzeit prüfen, bevor sie zum Ausfall werden."
             },
             "random-string": {
                 "title": "Random String Generator",
@@ -558,6 +566,67 @@
             "invalid": "Ungültiges Token",
             "errorTitle": "Decode-Fehler",
             "unknownError": "Unbekannter Fehler"
+        },
+        "dnsLookup": {
+            "badge": "Validierungs-Tool",
+            "title": "DNS Inspector",
+            "subtitle": "Live-DNS-Records wie MX, TXT, NS, A, AAAA und CNAME abfragen, ohne das Produkt zu verlassen.",
+            "lookup": "Abfragen",
+            "loadExample": "Beispiel laden",
+            "copyResult": "Ergebnis kopieren",
+            "copied": "Ergebnis kopiert",
+            "copyError": "Kopieren fehlgeschlagen",
+            "queryTitle": "DNS-Abfrage",
+            "domain": "Domain",
+            "recordType": "Record-Typ",
+            "helper": "Damit prüfst du Propagation, MX-Ziele, TXT-Einträge oder Nameserver an einer Stelle.",
+            "results": "Live-Records",
+            "empty": "Starte eine Abfrage, um Live-Records zu prüfen.",
+            "lookupFailed": "Abfrage fehlgeschlagen",
+            "answers": "Antworten",
+            "duration": "Antwortzeit",
+            "fetchedAt": "Abgerufen um",
+            "noRecords": "Für diese Abfrage wurden keine Records gefunden.",
+            "recordCopied": "Record kopiert",
+            "priority": "Priorität",
+            "lookupError": "DNS-Abfrage fehlgeschlagen",
+            "types": {
+                "A": "A",
+                "AAAA": "AAAA",
+                "CNAME": "CNAME",
+                "MX": "MX",
+                "TXT": "TXT",
+                "NS": "NS"
+            }
+        },
+        "certificateCheck": {
+            "badge": "Validierungs-Tool",
+            "title": "Certificate Expiry",
+            "subtitle": "TLS-Gültigkeit und Issuer live prüfen, bevor ein Zertifikat zum Produktionsproblem wird.",
+            "inspect": "Prüfen",
+            "loadExample": "Beispiel laden",
+            "copyResult": "Ergebnis kopieren",
+            "copied": "Ergebnis kopiert",
+            "copyError": "Kopieren fehlgeschlagen",
+            "queryTitle": "TLS-Ziel",
+            "hostname": "Hostname",
+            "port": "Port",
+            "helper": "Prüft das Zertifikat, das der Server wirklich ausliefert, und markiert Ablauf-Risiken früh.",
+            "results": "Zertifikatsstatus",
+            "empty": "Starte eine Prüfung, um Live-Zertifikatsdaten zu laden.",
+            "inspectFailed": "Prüfung fehlgeschlagen",
+            "daysRemaining": "Verbleibende Tage",
+            "validFrom": "Gültig ab",
+            "validTo": "Gültig bis",
+            "issuer": "Issuer",
+            "subject": "Subject",
+            "fingerprint": "Fingerprint",
+            "serialNumber": "Seriennummer",
+            "subjectAltName": "Alternative Namen",
+            "active": "Aktiv",
+            "expiringSoon": "Läuft bald ab",
+            "expired": "Abgelaufen",
+            "lookupError": "Zertifikatsprüfung fehlgeschlagen"
         },
         "randomString": {
             "badge": "Generierungs-Tool",
