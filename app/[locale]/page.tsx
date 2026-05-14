@@ -41,8 +41,8 @@ export default function Home({ params: { locale } }: { params: { locale: string 
   return (
     <main>
       <HeroSection />
-      <ProjectsGrid />
       <ToolsSection />
+      <ProjectsGrid />
       <DocumentationSection />
       <TutorialsSection />
     </main>
