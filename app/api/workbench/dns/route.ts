@@ -1,4 +1,3 @@
-import { resolve4, resolve6, resolveCname, resolveMx, resolveNs, resolveTxt } from 'node:dns/promises';
 import {
   dnsRecordTypes,
   formatNetworkError,
@@ -9,16 +8,51 @@ import {
   type DnsLookupResponse,
 } from '@/lib/workbench/network';
 
-const dnsResolvers: Record<DnsRecordType, (domain: string) => Promise<DnsAnswer[]>> = {
-  A: async (domain) => (await resolve4(domain)).map((value) => ({ value })),
-  AAAA: async (domain) => (await resolve6(domain)).map((value) => ({ value })),
-  CNAME: async (domain) => (await resolveCname(domain)).map((value) => ({ value })),
-  MX: async (domain) => (await resolveMx(domain)).map((entry) => ({ value: entry.exchange, priority: entry.priority })),
-  TXT: async (domain) => (await resolveTxt(domain)).map((entry) => ({ value: entry.join(' ') })),
-  NS: async (domain) => (await resolveNs(domain)).map((value) => ({ value })),
-};
+interface GoogleDnsAnswer {
+  data?: string;
+  name?: string;
+  TTL?: number;
+  type?: number;
+}
 
-export const runtime = 'nodejs';
+interface GoogleDnsQuestion {
+  name?: string;
+  type?: number;
+}
+
+interface GoogleDnsResponse {
+  Status?: number;
+  Answer?: GoogleDnsAnswer[];
+  Question?: GoogleDnsQuestion[];
+  Comment?: string;
+}
+
+function parseDnsAnswer(type: DnsRecordType, answer: GoogleDnsAnswer): DnsAnswer | null {
+  const value = answer.data?.trim();
+
+  if (!value) {
+    return null;
+  }
+
+  if (type === 'MX') {
+    const [priorityToken, ...exchangeParts] = value.split(/\s+/);
+    const priority = Number(priorityToken);
+    return {
+      value: exchangeParts.join(' ') || value,
+      priority: Number.isFinite(priority) ? priority : undefined,
+    };
+  }
+
+  if (type === 'TXT') {
+    return {
+      value: value.replace(/^"|"$/g, ''),
+    };
+  }
+
+  return { value };
+}
+
+export const runtime = 'edge';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -36,7 +70,26 @@ export async function GET(request: Request) {
   const startedAt = Date.now();
 
   try {
-    const answers = await dnsResolvers[type](domain);
+    const response = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(domain)}&type=${type}`, {
+      headers: {
+        accept: 'application/json',
+      },
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      throw new Error(`DNS provider returned ${response.status}`);
+    }
+
+    const data = (await response.json()) as GoogleDnsResponse;
+    if (typeof data.Status === 'number' && data.Status !== 0 && data.Status !== 3) {
+      throw new Error(data.Comment || 'DNS lookup failed');
+    }
+
+    const answers = (data.Answer ?? [])
+      .map((answer) => parseDnsAnswer(type, answer))
+      .filter((answer): answer is DnsAnswer => Boolean(answer));
+
     const payload: DnsLookupResponse = {
       domain,
       type,

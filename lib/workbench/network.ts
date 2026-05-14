@@ -51,8 +51,11 @@ export function isValidHostname(hostname: string) {
 
 export function formatNetworkError(error: unknown) {
   if (error instanceof Error) {
-    const code = 'code' in error ? String((error as NodeJS.ErrnoException).code ?? '') : '';
-    switch (code) {
+    const maybeCode = typeof error === 'object' && error && 'code' in error
+      ? String((error as { code?: string }).code ?? '')
+      : '';
+
+    switch (maybeCode) {
       case 'ENOTFOUND':
         return 'Host not found';
       case 'ENODATA':
