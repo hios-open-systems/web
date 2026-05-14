@@ -1,18 +1,60 @@
 'use client';
 
 import React from 'react';
-import { Typography, Button, Space } from 'antd';
-import { MailOutlined, DownOutlined } from '@ant-design/icons';
+import Link from 'next/link';
+import { Typography, Button, Tag } from 'antd';
+import {
+    ArrowRightOutlined,
+    DatabaseOutlined,
+    FileTextOutlined,
+    MailOutlined,
+    ToolOutlined,
+} from '@ant-design/icons';
 import { motion } from 'framer-motion';
 import { useTheme } from '@/lib/ThemeContext';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
+import { projects } from '@/config/projects';
+import { workbenchPacks } from '@/config/workbench';
+import styles from './heroSection.module.css';
 
 const { Title, Paragraph, Text } = Typography;
 
+const iconMap = {
+    data: <DatabaseOutlined />,
+    notes: <FileTextOutlined />,
+    circuits: <ToolOutlined />,
+};
+
 export function HeroSection() {
     const { mode } = useTheme();
+    const locale = useLocale();
     const t = useTranslations('Hero');
+    const projectsT = useTranslations('Projects');
+    const headerT = useTranslations('Header');
+    const workbenchT = useTranslations('Workbench');
     const accentColor = '#f59e0b';
+    const themeVars = {
+        '--hero-bg': mode === 'dark' ? '#050816' : '#f8fafc',
+        '--hero-bg-soft': mode === 'dark' ? '#0f172a' : '#ffffff',
+        '--hero-glow-start': mode === 'dark' ? 'rgba(14, 165, 233, 0.18)' : 'rgba(14, 165, 233, 0.14)',
+        '--hero-glow-end': mode === 'dark' ? 'rgba(245, 158, 11, 0.14)' : 'rgba(245, 158, 11, 0.12)',
+        '--hero-pill-border': mode === 'dark' ? 'rgba(245, 158, 11, 0.22)' : 'rgba(245, 158, 11, 0.2)',
+        '--hero-pill-bg': mode === 'dark' ? 'rgba(245, 158, 11, 0.12)' : 'rgba(255, 247, 237, 0.92)',
+        '--hero-tag-border': mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.08)',
+        '--hero-tag-bg': mode === 'dark' ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.86)',
+        '--hero-surface-bg': mode === 'dark' ? 'rgba(15, 23, 42, 0.78)' : 'rgba(255,255,255,0.92)',
+        '--hero-surface-soft-bg': mode === 'dark' ? '#111827' : '#f8fafc',
+        '--hero-surface-border': mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.08)',
+        '--hero-surface-soft-border': mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.08)',
+        '--hero-title': mode === 'dark' ? '#f8fafc' : '#0f172a',
+        '--hero-title-muted': mode === 'dark' ? '#cbd5e1' : '#1e293b',
+        '--hero-text-secondary': mode === 'dark' ? '#cbd5e1' : '#334155',
+        '--hero-text-muted': mode === 'dark' ? '#94a3b8' : '#64748b',
+        '--hero-accent': accentColor,
+        '--hero-shadow': mode === 'dark'
+            ? '0 24px 80px rgba(2, 6, 23, 0.35)'
+            : '0 24px 80px rgba(15, 23, 42, 0.08)',
+    } as React.CSSProperties;
 
     const tags = [
         { key: 'schematics', text: t('tag_schematics') },
@@ -20,249 +62,90 @@ export function HeroSection() {
         { key: 'open_source', text: t('tag_open_source') },
     ];
 
-    const scrollToContent = () => {
-        window.scrollTo({ top: window.innerHeight * 0.7, behavior: 'smooth' });
-    };
-
     return (
-        <section style={{
-            minHeight: '85vh',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '120px 24px 60px',
-            position: 'relative',
-            overflow: 'hidden',
-        }}>
-            {/* Animated gradient background */}
-            <div
-                className="animate-gradient"
-                style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: mode === 'dark'
-                        ? 'radial-gradient(ellipse at 30% 20%, rgba(64, 150, 255, 0.08) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(245, 158, 11, 0.06) 0%, transparent 50%), #0d0d0d'
-                        : 'radial-gradient(ellipse at 30% 20%, rgba(64, 150, 255, 0.08) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(245, 158, 11, 0.06) 0%, transparent 50%), #ffffff',
-                    zIndex: 0,
-                }}
-            />
-
-            <div style={{ maxWidth: 800, margin: '0 auto', width: '100%', textAlign: 'center', position: 'relative', zIndex: 1 }}>
-                {/* Brand Tag with typewriter effect */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                >
-                    <Text
-                        className="typewriter-cursor"
-                        style={{
-                            fontSize: '13px',
-                            color: accentColor,
-                            fontWeight: 600,
-                            letterSpacing: '2px',
-                            textTransform: 'uppercase',
-                        }}
+        <section className={styles.hero} style={themeVars}>
+            <div className={styles.container}>
+                <div className={styles.grid}>
+                    <motion.div
+                        initial={{ opacity: 0, y: 24 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.55 }}
+                        className={styles.content}
                     >
-                        HIOS — HI Open Systems
-                    </Text>
-                </motion.div>
+                        <Text className={styles.eyebrow}>HIOS - HI Open Systems</Text>
 
-                {/* Main Headline */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, delay: 0.1 }}
-                >
-                    <Title
-                        level={1}
-                        style={{
-                            fontSize: 'clamp(2.2rem, 5vw, 3.5rem)',
-                            marginTop: '24px',
-                            marginBottom: '24px',
-                            lineHeight: 1.15,
-                            color: mode === 'dark' ? '#ffffff' : '#0d0d0d',
-                            fontWeight: 700,
-                        }}
+                        <Title level={1} className={styles.title}>
+                            {t('titlePrefix')} <span className={styles.titleMuted}>{t('hardware')}</span>
+                            {t('and')}<span className={styles.titleAccent}>{t('software')}</span>
+                        </Title>
+
+                        <Paragraph className={styles.subtitle}>{t('subtitle')}</Paragraph>
+
+                        <div className={styles.proofRow}>
+                            {tags.map((tag) => (
+                                <Tag key={tag.key} className={styles.proofTag} bordered={false}>
+                                    {tag.text}
+                                </Tag>
+                            ))}
+                        </div>
+
+                        <div className={styles.actions}>
+                            <Link href={`/${locale}/workbench`} className={styles.actionLink}>
+                                <Button type="primary" size="large" icon={<ArrowRightOutlined />}>
+                                    {headerT('workbench')}
+                                </Button>
+                            </Link>
+                            <Link href={`/${locale}#projects`} className={styles.actionLink}>
+                                <Button size="large">{projectsT('title')}</Button>
+                            </Link>
+                            <Link href="mailto:devsolutionsar@gmail.com" className={styles.contactLink}>
+                                <MailOutlined />
+                                <span>{t('contact')}</span>
+                            </Link>
+                        </div>
+
+                        <div className={styles.supportCard}>
+                            <div className={styles.metricCard}>
+                                <Text className={styles.metricValue}>{projects.length}</Text>
+                                <Text className={styles.metricLabel}>{projectsT('title')}</Text>
+                            </div>
+                            <div className={styles.metricCard}>
+                                <Text className={styles.metricValue}>{workbenchPacks.length}</Text>
+                                <Text className={styles.metricLabel}>{headerT('workbench')}</Text>
+                            </div>
+                        </div>
+                    </motion.div>
+
+                    <motion.aside
+                        initial={{ opacity: 0, y: 28 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.55, delay: 0.1 }}
+                        className={styles.panel}
                     >
-                        {t('titlePrefix')}{' '}
-                        <span style={{
-                            color: mode === 'dark' ? '#4096ff' : '#0066cc',
-                            position: 'relative',
-                        }}>
-                            {t('hardware')}
-                        </span>
-                        {t('and')}
-                        <span style={{
-                            color: accentColor,
-                            position: 'relative',
-                        }}>
-                            {t('software')}
-                        </span>
-                    </Title>
-                </motion.div>
+                        <div className={styles.panelHeader}>
+                            <Text strong className={styles.panelTitle}>{workbenchT('landing.panelTitle')}</Text>
+                            <Paragraph className={styles.panelSubtitle}>{workbenchT('landing.panelSubtitle')}</Paragraph>
+                            <Paragraph className={styles.panelSubtitle}>{t('cta')}</Paragraph>
+                            <Text className={styles.metricLabel}>{t('project_count')}</Text>
+                        </div>
 
-                {/* Subtitle */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.7, delay: 0.25 }}
-                >
-                    <Paragraph style={{
-                        fontSize: '1.25rem',
-                        color: mode === 'dark' ? '#b3b3b3' : '#444',
-                        maxWidth: '550px',
-                        margin: '0 auto 24px',
-                        lineHeight: 1.7,
-                    }}>
-                        {t('subtitle')}
-                    </Paragraph>
-                </motion.div>
-
-                {/* Tags with stagger animation */}
-                <Space
-                    wrap
-                    size="middle"
-                    style={{
-                        justifyContent: 'center',
-                        marginBottom: '32px',
-                    }}
-                >
-                    {tags.map((tag, index) => (
-                        <motion.div
-                            key={tag.key}
-                            initial={{ opacity: 0, scale: 0.8, y: 10 }}
-                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                            transition={{
-                                duration: 0.4,
-                                delay: 0.4 + index * 0.1,
-                                ease: 'easeOut',
-                            }}
-                        >
-                            <Tag mode={mode} emoji="✓">{tag.text}</Tag>
-                        </motion.div>
-                    ))}
-                </Space>
-
-                {/* Project counter */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5, delay: 0.7 }}
-                >
-                    <Text style={{
-                        display: 'block',
-                        fontSize: '14px',
-                        color: mode === 'dark' ? '#666' : '#999',
-                        marginBottom: '28px',
-                    }}>
-                        {t('project_count') || '2 proyectos documentados'}
-                    </Text>
-                </motion.div>
-
-                {/* CTA Section */}
-                <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.5 }}
-                >
-                    <div style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        gap: '12px',
-                    }}>
-                        <motion.div
-                            whileHover={{
-                                scale: 1.02,
-                                boxShadow: `0 8px 30px rgba(245, 158, 11, 0.2)`,
-                            }}
-                            transition={{ duration: 0.2 }}
-                            style={{
-                                display: 'inline-block',
-                                padding: '14px 28px',
-                                background: mode === 'dark'
-                                    ? 'linear-gradient(135deg, rgba(245,158,11,0.18), rgba(245,158,11,0.08))'
-                                    : 'linear-gradient(135deg, #fffbe6, #fff8e0)',
-                                borderRadius: '10px',
-                                border: `1px solid ${mode === 'dark' ? 'rgba(245,158,11,0.3)' : 'rgba(245,158,11,0.25)'}`,
-                                cursor: 'default',
-                            }}
-                        >
-                            <Text style={{
-                                fontSize: '1.05rem',
-                                color: accentColor,
-                                fontWeight: 500,
-                            }}>
-                                {t('cta')}
-                            </Text>
-                        </motion.div>
-
-                        <Button
-                            type="link"
-                            icon={<MailOutlined />}
-                            href="mailto:devsolutionsar@gmail.com"
-                            style={{
-                                color: mode === 'dark' ? '#808080' : '#666',
-                                fontSize: '14px',
-                            }}
-                        >
-                            {t('contact')}
-                        </Button>
-                    </div>
-                </motion.div>
+                        <div className={styles.packList}>
+                            {workbenchPacks.map((pack) => (
+                                <Link key={pack.id} href={`/${locale}${pack.href}`} className={styles.packLink}>
+                                    <div className={styles.packIcon} style={{ color: pack.accent, background: `${pack.accent}20` }}>
+                                        {iconMap[pack.icon]}
+                                    </div>
+                                    <div className={styles.packBody}>
+                                        <Text strong>{workbenchT(`packs.${pack.id}.title`)}</Text>
+                                        <Text className={styles.packDescription}>{workbenchT(`packs.${pack.id}.description`)}</Text>
+                                    </div>
+                                    <ArrowRightOutlined className={styles.packArrow} />
+                                </Link>
+                            ))}
+                        </div>
+                    </motion.aside>
+                </div>
             </div>
-
-            {/* Scroll indicator */}
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 1 }}
-                onClick={scrollToContent}
-                style={{
-                    position: 'absolute',
-                    bottom: '40px',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    cursor: 'pointer',
-                    zIndex: 1,
-                }}
-            >
-                <motion.div
-                    animate={{ y: [0, 8, 0] }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-                >
-                    <DownOutlined style={{
-                        fontSize: '20px',
-                        color: mode === 'dark' ? '#444' : '#ccc',
-                    }} />
-                </motion.div>
-            </motion.div>
         </section>
-    );
-}
-
-function Tag({ mode, emoji, children }: { mode: string; emoji: string; children: React.ReactNode }) {
-    return (
-        <motion.span
-            whileHover={{ scale: 1.05, y: -2 }}
-            transition={{ duration: 0.2 }}
-            style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '8px 14px',
-                background: mode === 'dark' ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)',
-                borderRadius: '8px',
-                fontSize: '14px',
-                color: mode === 'dark' ? '#a3a3a3' : '#555',
-                cursor: 'default',
-                border: mode === 'dark' ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(0,0,0,0.06)',
-            }}
-        >
-            <span style={{ color: '#10b981' }}>{emoji}</span>
-            {children}
-        </motion.span>
     );
 }

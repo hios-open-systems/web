@@ -24,7 +24,7 @@ export function ProjectsGrid() {
     });
 
     return (
-        <section style={{
+        <section id="projects" style={{
             padding: '80px 24px 120px',
             background: getSectionBackground(mode),
         }}>
