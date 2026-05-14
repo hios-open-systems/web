@@ -3,6 +3,7 @@ import {
     ApartmentOutlined,
     DatabaseOutlined,
     FileTextOutlined,
+    GlobalOutlined,
     SafetyCertificateOutlined,
     ThunderboltOutlined,
     ToolOutlined,
@@ -16,6 +17,7 @@ const iconMap: Record<WorkbenchIcon, React.ReactNode> = {
     shield: <SafetyCertificateOutlined />,
     spark: <ThunderboltOutlined />,
     compare: <ApartmentOutlined />,
+    network: <GlobalOutlined />,
 };
 
 export function getWorkbenchIcon(icon: WorkbenchIcon) {
