@@ -6,6 +6,8 @@ import { CopyOutlined, LinkOutlined, ReloadOutlined, ShrinkOutlined, ExpandOutli
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
+import { parsePayloadInput } from '@/lib/workbench/payload';
+import { PayloadInspector } from './PayloadInspector';
 import styles from './workbench.module.css';
 
 const { Paragraph, Text, Title } = Typography;
@@ -25,22 +27,6 @@ const EXAMPLE_PAYLOAD = {
     },
 };
 
-function collectPaths(value: unknown, prefix: string = 'root'): string[] {
-    if (value === null || typeof value !== 'object') return [];
-
-    if (Array.isArray(value)) {
-        return value.slice(0, 4).flatMap((item, index) => {
-            const nextPrefix = `${prefix}[${index}]`;
-            return [nextPrefix, ...collectPaths(item, nextPrefix)];
-        });
-    }
-
-    return Object.entries(value).slice(0, 10).flatMap(([key, nestedValue]) => {
-        const nextPrefix = `${prefix}.${key}`;
-        return [nextPrefix, ...collectPaths(nestedValue, nextPrefix)];
-    });
-}
-
 export function PayloadLab() {
     const t = useTranslations('Workbench.payload');
     const { mode } = useTheme();
@@ -51,6 +37,7 @@ export function PayloadLab() {
     const [messageApi, contextHolder] = message.useMessage();
     const [input, setInput] = useState(JSON.stringify(EXAMPLE_PAYLOAD, null, 2));
     const [viewMode, setViewMode] = useState<'pretty' | 'minified'>('pretty');
+    const [pathSearch, setPathSearch] = useState('');
 
     useEffect(() => {
         if (hydratedFromUrl.current) return;
@@ -83,25 +70,23 @@ export function PayloadLab() {
     }, [input, pathname, router, searchParams, viewMode]);
 
     const parsedState = useMemo(() => {
-        try {
-            const parsed = JSON.parse(input);
-            return {
-                status: 'valid' as const,
-                parsed,
-                formatted: JSON.stringify(parsed, null, viewMode === 'pretty' ? 2 : 0),
-                paths: collectPaths(parsed).slice(0, 8),
-            };
-        } catch (error) {
-            const messageText = error instanceof Error ? error.message : t('unknownError');
-            return {
-                status: 'invalid' as const,
-                parsed: null,
-                formatted: '',
-                paths: [],
-                error: messageText,
-            };
-        }
+        return parsePayloadInput(input, viewMode, t('unknownError'));
     }, [input, t, viewMode]);
+
+    const filteredPaths = useMemo(() => {
+        if (parsedState.status !== 'valid') return [];
+
+        const query = pathSearch.trim().toLowerCase();
+        if (!query) return parsedState.paths.slice(0, 18);
+
+        return parsedState.paths
+            .filter((entry) => {
+                return entry.path.toLowerCase().includes(query)
+                    || entry.type.toLowerCase().includes(query)
+                    || entry.preview.toLowerCase().includes(query);
+            })
+            .slice(0, 18);
+    }, [parsedState, pathSearch]);
 
     const handleCopy = async (value: string, successMessage: string) => {
         try {
@@ -119,6 +104,10 @@ export function PayloadLab() {
     const handleShare = async () => {
         const shareUrl = `${window.location.origin}${pathname}?${searchParams.toString()}`;
         await handleCopy(shareUrl, t('linkCopied'));
+    };
+
+    const handleCopyPath = async (path: string) => {
+        await handleCopy(path, t('pathCopied'));
     };
 
     const themeVars = {
@@ -180,12 +169,7 @@ export function PayloadLab() {
                                 <pre className={styles.codeBlock}>
                                     {parsedState.formatted}
                                 </pre>
-                                <div>
-                                    <Text strong className={styles.pathsTitle}>{t('paths')}</Text>
-                                    <Space wrap>
-                                        {parsedState.paths.map((path) => <Tag key={path}>{path}</Tag>)}
-                                    </Space>
-                                </div>
+                                <Text className={styles.subtleText}>{t('outputHint')}</Text>
                             </Space>
                         ) : (
                             <Space direction="vertical" size={12}>
@@ -196,6 +180,14 @@ export function PayloadLab() {
                     </Card>
                 </Col>
             </Row>
+
+            <PayloadInspector
+                metrics={parsedState.metrics}
+                paths={filteredPaths}
+                searchTerm={pathSearch}
+                onSearchTermChange={setPathSearch}
+                onCopyPath={handleCopyPath}
+            />
         </Space>
     );
 }
