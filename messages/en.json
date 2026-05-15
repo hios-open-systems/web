@@ -443,6 +443,10 @@
         "calculators": "Calculators",
         "rcl": "RCL"
     },
+    "Auth": {
+        "signIn": "Sign in",
+        "signOut": "Sign out"
+    },
     "Workbench": {
         "landing": {
             "title": "Workbench",

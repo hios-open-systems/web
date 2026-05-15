@@ -1,0 +1,14 @@
+# wrangler config — used for local D1 work (wrangler pages dev / wrangler d1 execute).
+# Bindings in production come from the Cloudflare Pages dashboard, this file just
+# mirrors the names so local dev and migrations target the same shape.
+
+name = "hios-platform"
+compatibility_date = "2024-12-01"
+pages_build_output_dir = ".vercel/output/static"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "hios-playground"
+# Reemplazá database_id por el ID real cuando crees la D1 en el dashboard.
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+migrations_dir = "migrations"

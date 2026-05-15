@@ -442,6 +442,10 @@
         "calculators": "Calculadoras",
         "rcl": "RCL"
     },
+    "Auth": {
+        "signIn": "Iniciar sesión",
+        "signOut": "Cerrar sesión"
+    },
     "Workbench": {
         "landing": {
             "title": "Workbench",
