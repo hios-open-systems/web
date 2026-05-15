@@ -446,6 +446,23 @@
         "signIn": "Iniciar sesión",
         "signOut": "Cerrar sesión"
     },
+    "Settings": {
+        "title": "Configuración",
+        "subtitle": "Personalizá el tema del workbench. Se guarda local en este navegador.",
+        "presets": "Presets",
+        "presetsHint": "Elegí una paleta lista para usar.",
+        "custom": "Color personalizado",
+        "customHint": "Pegá un hex (#rrggbb) y se aplica al instante.",
+        "hex": "Hex",
+        "reset": "Volver al default",
+        "invalidHex": "Formato inválido. Usá #rrggbb o #rgb.",
+        "preview": "Preview en vivo",
+        "previewHint": "Así se ve el accent en componentes reales.",
+        "previewTagline": "Workbench",
+        "previewButton": "Acción primaria",
+        "previewLink": "Link de muestra",
+        "localFootnote": "Por ahora se guarda solo en este navegador. Cuando arme la auth, vas a poder sincronizar entre dispositivos."
+    },
     "Workbench": {
         "landing": {
             "title": "Workbench",

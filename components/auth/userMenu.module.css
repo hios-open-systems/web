@@ -61,7 +61,7 @@
 }
 
 .trigger:hover {
-  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.6);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 60%, transparent);
 }
 
 .avatar {
@@ -78,7 +78,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #f59e0b;
+  background: var(--accent);
   color: #0f172a;
   font-size: 12px;
   font-weight: 700;

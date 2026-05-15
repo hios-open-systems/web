@@ -113,6 +113,55 @@ test.describe('API /api/auth/me', () => {
     });
 });
 
+test.describe('Theme settings', () => {
+    test('cambiar preset aplica accent y persiste tras reload', async ({ page }) => {
+        await page.goto('/es/workbench/settings');
+        await expect(page.getByRole('heading', { name: 'Configuración', level: 1 })).toBeVisible();
+
+        await page.locator('[data-preset-id="cyan"]').click();
+
+        // Esperamos a que la CSS variable se haya actualizado a cyan.
+        await page.waitForFunction(() =>
+            getComputedStyle(document.documentElement).getPropertyValue('--accent').trim().toLowerCase() ===
+            '#0ea5e9',
+        );
+
+        await page.reload();
+        // Tras reload el useEffect del ThemeProvider la reaplica desde localStorage. Esperamos.
+        await page.waitForFunction(() =>
+            getComputedStyle(document.documentElement).getPropertyValue('--accent').trim().toLowerCase() ===
+            '#0ea5e9',
+        );
+
+        await page.evaluate(() => window.localStorage.removeItem('hios-theme-config'));
+    });
+
+    test('hex custom valida y aplica', async ({ page }) => {
+        await page.goto('/es/workbench/settings');
+        await expect(page.getByRole('heading', { name: 'Configuración', level: 1 })).toBeVisible();
+
+        const hexInput = page.getByTestId('accent-hex-input');
+        await hexInput.fill('#22c55e');
+        await hexInput.press('Enter');
+
+        await page.waitForFunction(() =>
+            getComputedStyle(document.documentElement).getPropertyValue('--accent').trim().toLowerCase() ===
+            '#22c55e',
+        );
+
+        // Hex inválido NO aplica y muestra error
+        await hexInput.fill('not-a-hex');
+        await hexInput.press('Enter');
+        await expect(page.getByText(/Formato inválido/i)).toBeVisible();
+        const accentAfterInvalid = await page.evaluate(() =>
+            getComputedStyle(document.documentElement).getPropertyValue('--accent').trim(),
+        );
+        expect(accentAfterInvalid.toLowerCase()).toBe('#22c55e');
+
+        await page.evaluate(() => window.localStorage.removeItem('hios-theme-config'));
+    });
+});
+
 test.describe('Páginas secundarias', () => {
     test('Pinouts carga', async ({ page }) => {
         await page.goto('/es/pinouts');
