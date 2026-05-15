@@ -89,6 +89,15 @@ Una fila por herramienta. Sirve como **spec previo** (antes de codear) y como **
 
 ## Sistema (no-tool pero igual cuenta)
 
+### Theme settings `/workbench/settings`
+- **Propósito**: customizar el accent del workbench (color de marca). El modo light/dark sigue en el toggle del header.
+- **Input**: pick de un preset (Amber, Cyan, Violet, Lime, Rose) o hex custom (#rrggbb / #rgb).
+- **Output**: CSS variable `--accent` aplicada en runtime a todos los componentes (header underline, hero kicker, badges, links de marca, avatar fallback). Persistido en `localStorage` bajo `hios-theme-config` (versionado).
+- **Casos borde**: hex inválido → se marca el input, no se aplica. Cuando el accent matchea un preset, ese preset queda marcado como seleccionado. `Reset` vuelve al amber default.
+- **Status**: works. Pendiente sync a DB cuando arme la capa de auth (Fase 2 de la auth).
+
+
+
 ### Auth (GitHub OAuth + sessions)
 - **Propósito**: opcional. Login con GitHub para habilitar features con backup en la nube (snippets privados, themes per-user, etc).
 - **Flujo**: `/api/auth/github/start` → GitHub authorize → `/api/auth/github/callback` → cookie de sesión opaca → DB lookup en cada request.

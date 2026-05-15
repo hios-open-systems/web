@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Button, Layout } from 'antd';
-import { GithubOutlined, MoonOutlined, SunOutlined } from '@ant-design/icons';
+import { GithubOutlined, MoonOutlined, SettingOutlined, SunOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
@@ -68,6 +68,13 @@ export function Header() {
             className={styles.iconButton}
             aria-label="Toggle theme"
           />
+          <Link
+            href={`/${locale}/workbench/settings`}
+            className={styles.iconLink}
+            aria-label="Settings"
+          >
+            <SettingOutlined />
+          </Link>
           <Button
             type="text"
             size="small"
