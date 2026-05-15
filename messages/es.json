@@ -446,6 +446,33 @@
         "signIn": "Iniciar sesión",
         "signOut": "Cerrar sesión"
     },
+    "Feedback": {
+        "title": "Feedback inbox",
+        "subtitle": "Errores auto-capturados y entradas que vos crees: bugs, ideas y notas. Todo local, en este navegador.",
+        "newEntry": "Nueva entrada",
+        "kind": "Tipo",
+        "kinds": {
+            "error": "Error",
+            "bug": "Bug",
+            "idea": "Idea",
+            "note": "Nota"
+        },
+        "titleField": "Título",
+        "titlePlaceholder": "Resumen corto (ej. 'el JWT decoder rompe con tokens sin firma')",
+        "bodyField": "Detalle",
+        "bodyPlaceholder": "Contexto, pasos para reproducir, lo que se te ocurra...",
+        "save": "Guardar",
+        "entries": "Entradas",
+        "clearAll": "Borrar todo",
+        "empty": "No hay entradas todavía. Cuando algo rompa, va a aparecer acá automáticamente.",
+        "copy": "Copiar",
+        "copied": "Copiado al portapapeles",
+        "copyError": "No se pudo copiar",
+        "delete": "Borrar",
+        "stack": "Ver stack",
+        "toastErrorCaptured": "Error capturado: {title}",
+        "localFootnote": "Hoy se guarda local. Cuando llegue la auth se sincroniza a tu cuenta automáticamente."
+    },
     "Settings": {
         "title": "Configuración",
         "subtitle": "Personalizá el tema del workbench. Se guarda local en este navegador.",

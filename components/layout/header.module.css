@@ -148,6 +148,7 @@
 }
 
 .iconLink {
+  position: relative;
   width: 32px;
   height: 32px;
   display: inline-flex;
@@ -158,6 +159,22 @@
   text-decoration: none;
   font-size: 16px;
   transition: color 0.18s ease, background-color 0.18s ease;
+}
+
+.iconLinkDot::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ef4444;
+  border: 2px solid var(--header-bg, #ffffff);
+}
+
+:global([data-theme="dark"]) .iconLinkDot::after {
+  border-color: rgba(2, 6, 23, 0.7);
 }
 
 :global([data-theme="dark"]) .iconLink {
