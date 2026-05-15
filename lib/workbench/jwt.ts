@@ -80,7 +80,11 @@ export function decodeJwtToken(input: string, unknownError: string): JwtState {
         const header = parseJsonSegment(headerSegment);
         const payload = parseJsonSegment(payloadSegment);
         const expValue = typeof payload.exp === 'number' ? payload.exp : null;
-        const expiresAt = expValue ? new Date(expValue * 1000).toLocaleString() : null;
+        // ISO en vez de toLocaleString() para evitar mismatches de hidratación
+        // (locale del servidor vs del browser difieren).
+        const expiresAt = expValue
+            ? new Date(expValue * 1000).toISOString().replace('T', ' ').slice(0, 19) + ' UTC'
+            : null;
         const isExpired = expValue ? expValue * 1000 < Date.now() : false;
 
         return {
