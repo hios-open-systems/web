@@ -26,23 +26,47 @@ Una sección por idea. Llenala al menos hasta `Sketch` antes de empezarla — si
 - **Why**: hoy los snippets viven solo en localStorage; si cambiás de máquina los perdés. Los usuarios logueados pueden tener backup en la nube, opcionalmente públicos para compartir por URL.
 - **Sketch**:
   1. Esquema ya en `migrations/0001_init.sql` (`snippets` con `user_id`, `is_public`).
-  2. Rutas `/api/snippets` GET/POST/DELETE (autenticadas).
-  3. Cliente: si hay sesión, lecturas/escrituras van a la API en paralelo con localStorage. Sin sesión, sigue local solo.
-  4. Al loguearse primera vez, ofrecer subir los snippets locales a la cuenta.
-  5. Ruta pública `/s/[id]` para snippets con `is_public = 1` — compartible por URL.
-- **Dependencies**: auth funcionando en plataforma (D1 binding + OAuth env vars en Cloudflare Pages). Código de auth ya está.
-- **Status**: blocked en setup de plataforma.
+  2. Cerrar contrato primero: `GET/POST/PATCH/DELETE /api/snippets` + `POST /api/snippets/import` + lectura pública para `is_public = 1`.
+  3. Sin sesión sigue local-only. Con sesión, D1 pasa a ser canónico y local queda como cache.
+  4. Al loguearse primera vez, ofrecer import explícito de snippets locales a la cuenta. Nada de merge silencioso.
+  5. Ruta pública `/s/[id]` para snippets con `is_public = 1`.
+- **Dependencies**: auth ya está andando. Ver reglas de ownership y contrato en `PLATFORM_PLAYBOOK.md`.
+- **Status**: next.
 
 ---
 
-## Themes per-user (sync a DB)
-- **Why**: hoy el theme vive en localStorage; si cambiás de dispositivo no te sigue.
+## Theme sync hardening
+- **Why**: el sync base ya existe, pero todavía falta blindarlo con cobertura autenticada y una pasada de cleanup para no dejar patrones medio distintos respecto a snippets.
 - **Sketch**:
-  1. Tabla `user_settings` (user_id, key, value) o columnas en `users` (theme_accent).
-  2. `GET /api/user/settings` y `PATCH /api/user/settings`.
-  3. ThemeContext: al loguearse, sync up del local; en cambios siguientes, escribe en ambos lados.
-- **Dependencies**: auth + un cambio chiquito de schema.
-- **Status**: blocked.
+  1. Agregar validación automatizada del flujo logueado con entorno controlado o fixture real de D1.
+  2. Revisar si el primer import explícito del accent necesita copy o affordance más clara.
+  3. Consolidar helpers compartidos de sync entre snippets y theme si se vuelven repetitivos.
+- **Dependencies**: resolver la estrategia de runtime de tests autenticados con D1.
+- **Status**: parked.
+
+---
+
+## Feedback inbox hardening (severidad + contexto + dedupe)
+- **Why**: hoy captura errores reales, pero cada ocurrencia entra cruda. Falta clasificar mejor la señal y consolidar duplicados para que prod no se vuelva ruido.
+- **Sketch**:
+  1. Extender entry local con `source`, `severity`, `fingerprint`, `occurrences`, `lastSeenAt`, `buildId`, `locale`, `toolSlug`, `authState`.
+  2. Dedupe local por fingerprint (`kind + title normalizado + first stack frame + pathname`).
+  3. En UI mostrar contador de repeticiones y último momento visto.
+  4. Mantenerlo local-first; evaluar uplink a servidor después, no antes.
+- **Dependencies**: ninguna fuerte. Conviene hacerlo después de snippets para no abrir dos frentes de modelo local/sync a la vez.
+- **Status**: next.
+
+---
+
+## Cleanup técnico post-snippets
+- **Why**: auth, feedback, temas y el volantazo de UX entraron rápido. Después de snippets conviene consolidar nombres, contratos y bordes antes de seguir apilando features.
+- **Sketch**:
+  1. Revisar helpers duplicados de storage/sync y normalizar patrones.
+  2. Limpiar TODOs, comentarios de contexto ya resuelto y ramas viejas.
+  3. Verificar que `TOOLS.md`, smoke tests y docs de ownership queden alineados con el código final.
+  4. Hacer una pasada corta de copy y estados vacíos/error/loading en las superficies tocadas.
+- **Dependencies**: terminar snippets y el endurecimiento mínimo del feedback inbox.
+- **Status**: parked.
 
 ---
 

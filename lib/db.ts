@@ -12,7 +12,7 @@ export function getDb(): D1Database {
     const db = (process.env as { DB?: D1Database }).DB;
     if (!db) {
         throw new Error(
-            'D1 binding "DB" no disponible. Corré `npm run dev:cf` o configurá el binding en Cloudflare Pages.',
+            'D1 binding "DB" no disponible. Corré la app con `wrangler pages dev` o configurá el binding en Cloudflare Pages.',
         );
     }
     return db;

@@ -42,9 +42,17 @@ npm run dev
 
 # Build for production
 npm run build
+
+# Run browser smoke on next start
+npm run test:e2e
+
+# Run authenticated smoke on Cloudflare Pages + local D1
+npm run test:e2e:auth
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to view locally.
+
+Authenticated smoke uses a separate Playwright config that builds the app, seeds a deterministic local D1 user/session/snippet/theme dataset, and starts the site with `wrangler pages dev`. It needs a local Wrangler runtime that can launch `workerd`; on Linux that means the host `glibc` must be new enough for the bundled Cloudflare binary.
 
 ## Project Structure
 
