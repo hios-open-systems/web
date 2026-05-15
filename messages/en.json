@@ -447,6 +447,33 @@
         "signIn": "Sign in",
         "signOut": "Sign out"
     },
+    "Feedback": {
+        "title": "Feedback inbox",
+        "subtitle": "Auto-captured errors and entries you create yourself: bugs, ideas and notes. Stored locally in this browser.",
+        "newEntry": "New entry",
+        "kind": "Kind",
+        "kinds": {
+            "error": "Error",
+            "bug": "Bug",
+            "idea": "Idea",
+            "note": "Note"
+        },
+        "titleField": "Title",
+        "titlePlaceholder": "Short summary (e.g. 'JWT decoder breaks on signature-less tokens')",
+        "bodyField": "Detail",
+        "bodyPlaceholder": "Context, repro steps, anything useful...",
+        "save": "Save",
+        "entries": "Entries",
+        "clearAll": "Clear all",
+        "empty": "No entries yet. When something breaks it will show up here automatically.",
+        "copy": "Copy",
+        "copied": "Copied to clipboard",
+        "copyError": "Could not copy",
+        "delete": "Delete",
+        "stack": "View stack",
+        "toastErrorCaptured": "Error captured: {title}",
+        "localFootnote": "Stored locally for now. Once auth lands it will sync to your account automatically."
+    },
     "Settings": {
         "title": "Settings",
         "subtitle": "Customize the workbench theme. Saved locally in this browser.",

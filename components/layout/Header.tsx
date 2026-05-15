@@ -2,13 +2,20 @@
 
 import React from 'react';
 import { Button, Layout } from 'antd';
-import { GithubOutlined, MoonOutlined, SettingOutlined, SunOutlined } from '@ant-design/icons';
+import {
+  BellOutlined,
+  GithubOutlined,
+  MoonOutlined,
+  SettingOutlined,
+  SunOutlined,
+} from '@ant-design/icons';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { LocaleSwitcher } from './LocaleSwitcher';
 import { UserMenu } from '@/components/auth/UserMenu';
+import { useFeedback } from '@/components/feedback/FeedbackProvider';
 import styles from './header.module.css';
 
 const { Header: AntHeader } = Layout;
@@ -21,6 +28,7 @@ export function Header() {
   const locale = useLocale();
   const pathname = usePathname();
   const t = useTranslations('Header');
+  const { unreadCount } = useFeedback();
 
   const resolveLabel = (key: 'workbench' | 'pinouts' | 'calculators', fallback: string) => {
     const value = t(key);
@@ -68,6 +76,14 @@ export function Header() {
             className={styles.iconButton}
             aria-label="Toggle theme"
           />
+          <Link
+            href={`/${locale}/workbench/feedback`}
+            className={`${styles.iconLink} ${unreadCount > 0 ? styles.iconLinkDot : ''}`}
+            aria-label={`Feedback${unreadCount > 0 ? ` (${unreadCount})` : ''}`}
+            data-unread={unreadCount}
+          >
+            <BellOutlined />
+          </Link>
           <Link
             href={`/${locale}/workbench/settings`}
             className={styles.iconLink}

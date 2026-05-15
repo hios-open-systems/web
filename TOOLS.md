@@ -89,6 +89,15 @@ Una fila por herramienta. Sirve como **spec previo** (antes de codear) y como **
 
 ## Sistema (no-tool pero igual cuenta)
 
+### Feedback inbox `/workbench/feedback`
+- **Propósito**: capturar automáticamente errores runtime de la app y permitir al usuario sumar entradas manuales (bug, idea, nota). Inbox personal para no perder cosas mientras usás el playground.
+- **Input automático**: `window.error` + `unhandledrejection` → entry tipo `error` con mensaje, stack, url y user-agent.
+- **Input manual**: form con kind (bug/idea/note) + título + body.
+- **Output**: lista en `/workbench/feedback`, con copy-to-clipboard (formato texto plano), borrar individual y borrar todo. Toast antd cuando se captura un error nuevo. Dot rojo en el icono de campana del header si hay entradas no leídas.
+- **Storage**: `localStorage` bajo `hios-feedback-entries`, versionado, circular buffer de 50 entradas. Cross-tab via `storage` event.
+- **Casos borde**: localStorage lleno → fail silencioso. JSON corrupto al leer → se devuelve lista vacía sin reventar. Stack ausente (rejection con string) → entry sin stack, igual visible.
+- **Status**: works. Sync a DB pendiente para Fase 2 de auth.
+
 ### Theme settings `/workbench/settings`
 - **Propósito**: customizar el accent del workbench (color de marca). El modo light/dark sigue en el toggle del header.
 - **Input**: pick de un preset (Amber, Cyan, Violet, Lime, Rose) o hex custom (#rrggbb / #rgb).
