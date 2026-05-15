@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { LocaleSwitcher } from './LocaleSwitcher';
+import { UserMenu } from '@/components/auth/UserMenu';
 import styles from './header.module.css';
 
 const { Header: AntHeader } = Layout;
@@ -76,6 +77,7 @@ export function Header() {
             className={styles.iconButton}
             aria-label="GitHub"
           />
+          <UserMenu />
         </div>
       </div>
     </AntHeader>
