@@ -1,16 +1,14 @@
 {
     "Hero": {
-        "titlePrefix": "Open",
-        "hardware": "Hardware",
-        "and": " & ",
-        "software": "Software",
-        "subtitle": "Documented, functional, and open projects.",
-        "tag_schematics": "Real schematics",
-        "tag_bom": "BOM with prices",
-        "tag_open_source": "Open source",
-        "cta": "Want one? Build it. It's yours.",
-        "contact": "Don't know where to start? Ask me",
-        "project_count": "2 documented projects"
+        "title": "My playground. Small tools that show up every day.",
+        "subtitle": "Decode, validate, compare. Everything runs locally, everything is open, nothing leaves your browser.",
+        "cta": "Open Workbench",
+        "secondary": "View hardware projects",
+        "fact_local": "Local-first",
+        "fact_open": "Open source",
+        "fact_daily": "Built for daily use",
+        "previewKicker": "Live JWT",
+        "previewOpenTool": "Open tool"
     },
     "Projects": {
         "title": "Projects",
@@ -446,37 +444,9 @@
         "rcl": "RCL"
     },
     "Workbench": {
-        "signals": {
-            "localFirst": "Local-first and private",
-            "shareable": "Shareable sessions",
-            "dailyUse": "Built for daily work"
-        },
         "landing": {
-            "badge": "New product line",
-            "title": "A precise workspace for payloads, DNS, certificates, snippets, and the developer checks that actually keep showing up.",
-            "subtitle": "Minimal surface, higher finish. Validation, generation, and testing keep the catalog sharp while network and auth checks stay one click away.",
-            "primaryCta": "Browse validation",
-            "secondaryCta": "Browse generation",
-            "panelTitle": "Enter through a dedicated section",
-            "panelSubtitle": "Start from intent, not from a wall of cards. Each section groups related tools so the workbench can scale cleanly.",
-            "sectionsTitle": "Core sections",
-            "sectionsSubtitle": "Validation, generation, and testing split the catalog by use case, so adding more tools later does not turn the page into a static paper list.",
-            "catalogTitle": "Tool catalog",
-            "catalogSubtitle": "Each section owns its own route and can keep growing without breaking the information architecture.",
-            "cardCta": "Open section",
-            "principlesTitle": "What this surface optimizes",
-            "principlesSubtitle": "Clarity, speed, and strong mobile usability first. Complexity second.",
-            "principles": {
-                "localFirst": "Your payloads, notes, and states stay local whenever that makes sense. Less friction and real privacy.",
-                "shareable": "When a workflow matters, you can share it by URL instead of explaining ten manual steps.",
-                "dailyUse": "The target is not a pretty demo. It is a workbench you actually want to come back to during the workday."
-            },
-            "metrics": {
-                "sections": "Sections",
-                "tools": "Tools",
-                "network": "Network",
-                "networkValue": "DNS + TLS"
-            }
+            "title": "Workbench",
+            "subtitle": "The small tools I actually use every day, in one place."
         },
         "sections": {
             "validation": {
@@ -493,11 +463,7 @@
             }
         },
         "sectionToolCount": "tools",
-        "viewAll": "View all",
-        "viewWorkbench": "Back to Workbench",
-        "sectionBrowseTitle": "Browse other sections",
-        "sectionBrowseSubtitle": "Switch between validation, generation, and testing without losing the workbench context.",
-        "externalLabel": "External",
+        "viewWorkbench": "Workbench",
         "toolCta": "Open tool",
         "packs": {
             "payload": {
