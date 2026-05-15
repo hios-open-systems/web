@@ -458,6 +458,15 @@
             "idea": "Idea",
             "note": "Note"
         },
+        "sources": {
+            "runtime": "Runtime",
+            "manual": "Manual"
+        },
+        "severity": {
+            "info": "Info",
+            "warn": "Warn",
+            "error": "Error"
+        },
         "titleField": "Title",
         "titlePlaceholder": "Short summary (e.g. 'JWT decoder breaks on signature-less tokens')",
         "bodyField": "Detail",
@@ -471,12 +480,26 @@
         "copyError": "Could not copy",
         "delete": "Delete",
         "stack": "View stack",
+        "occurrences": "{count}x",
+        "firstSeen": "first seen",
+        "lastSeen": "last seen",
+        "context": "context",
         "toastErrorCaptured": "Error captured: {title}",
         "localFootnote": "Stored locally for now. Once auth lands it will sync to your account automatically."
     },
     "Settings": {
         "title": "Settings",
         "subtitle": "Customize the workbench theme. Saved locally in this browser.",
+        "syncTitle": "Sync",
+        "localMode": "Local-only",
+        "accountMode": "Account-backed",
+        "syncing": "Syncing with your account...",
+        "needsImport": "Ready to import local accent",
+        "syncErrorState": "Sync needs attention",
+        "syncHintLocal": "Without sign-in the accent stays only in this browser.",
+        "syncHintAccount": "With sign-in the current accent can follow your account across devices.",
+        "syncNow": "Save current accent to account",
+        "syncWarningTitle": "Could not sync account theme",
         "presets": "Presets",
         "presetsHint": "Pick a ready-made palette.",
         "custom": "Custom color",
@@ -489,7 +512,8 @@
         "previewTagline": "Workbench",
         "previewButton": "Primary action",
         "previewLink": "Sample link",
-        "localFootnote": "For now this is stored only in this browser. Once auth lands you'll be able to sync across devices."
+        "localFootnote": "For now this is stored only in this browser. Sign in if you want it to follow your account later.",
+        "accountFootnote": "Changes still apply locally first, but your account copy becomes the source for future devices."
     },
     "Workbench": {
         "landing": {
@@ -803,7 +827,7 @@
         "snippets": {
             "badge": "Dedicated section",
             "title": "Quick snippets and recipes",
-            "subtitle": "A small personal layer so the workbench is useful from day one.",
+            "subtitle": "A small personal layer so the workbench is useful from day one, now with optional account backup.",
             "titlePlaceholder": "Snippet title",
             "tagsPlaceholder": "Comma-separated tags",
             "bodyPlaceholder": "Paste a command, recipe, payload, or useful note...",
@@ -813,7 +837,32 @@
             "delete": "Delete",
             "saved": "Snippet saved",
             "copied": "Snippet copied",
-            "copyError": "Could not copy"
+            "copyError": "Could not copy",
+            "saveError": "Could not save snippet",
+            "deleteError": "Could not delete snippet",
+            "localBadge": "Local-only",
+            "cloudBadge": "Account-backed",
+            "localStatus": "Stored in this browser only until you sign in.",
+            "accountStatus": "Synced with @{login}",
+            "authChecking": "Checking account...",
+            "syncing": "Refreshing from your account...",
+            "syncWarningTitle": "Could not refresh the account copy",
+            "syncLoadError": "Could not load snippets from your account",
+            "importTitle": "You have {count} local snippets ready to import",
+            "importBody": "Your browser copy stays local until you explicitly move it into your account.",
+            "importAction": "Import local snippets",
+            "imported": "Imported {imported} snippets, skipped {skipped}",
+            "importError": "Could not import local snippets",
+            "privateLabel": "Private",
+            "publicLabel": "Public",
+            "makePublic": "Make public",
+            "makePrivate": "Make private",
+            "madePublic": "Snippet is now public",
+            "madePrivate": "Snippet is now private",
+            "visibilityError": "Could not update snippet visibility",
+            "share": "Copy share link",
+            "shareCopied": "Share link copied",
+            "shareError": "Could not copy share link"
         }
     },
     "Calculators": {

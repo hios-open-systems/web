@@ -5,6 +5,8 @@ Una fila por herramienta. Sirve como **spec previo** (antes de codear) y como **
 **Reglas:**
 - Una tool no se mergea sin su fila acá.
 - Si cambiás comportamiento, actualizás la fila junto con el código.
+- Si una tool o sistema nuevo toca auth, sync o API, deja contrato de ownership y API cerrado antes de UI profunda (ver `PLATFORM_PLAYBOOK.md`).
+- Toda tool nueva o cambio material entra con smoke test del golden path, o con skip documentado si de verdad no se puede automatizar todavía.
 - `Status` honesto: `works` / `wip` / `broken` / `archived`. Nada de "casi listo".
 
 ---
@@ -77,8 +79,8 @@ Una fila por herramienta. Sirve como **spec previo** (antes de codear) y como **
 ### Snippets Shelf `/workbench/snippets`
 - **Propósito**: guardar notas cortas, recetas y fragmentos de uso frecuente.
 - **Input**: título + tags + body.
-- **Output**: lista de snippets guardados, copia al portapapeles, eliminar.
-- **Casos borde**: localStorage en este navegador, máximo 8 snippets (FIFO, los nuevos pushean afuera los viejos). **No hay backup a la nube todavía** — pendiente Fase 2 (snippets a DB con privados).
+- **Output**: lista de snippets guardados, copia al portapapeles, eliminar. Sin login vive en este navegador; con sesión usa D1 como fuente canónica, permite importar explícitamente los snippets locales y marcar snippets públicos para compartir por URL.
+- **Casos borde**: anónimo sigue local-only. Si hay snippets locales y el usuario inicia sesión, no se mergean solos: aparece acción explícita de import. Si refrescar la copia remota falla, el UI avisa y usa la última caché remota conocida si existe.
 - **Status**: works
 
 ### Embedded Bridge `/calculators` (externa)
@@ -93,17 +95,17 @@ Una fila por herramienta. Sirve como **spec previo** (antes de codear) y como **
 - **Propósito**: capturar automáticamente errores runtime de la app y permitir al usuario sumar entradas manuales (bug, idea, nota). Inbox personal para no perder cosas mientras usás el playground.
 - **Input automático**: `window.error` + `unhandledrejection` → entry tipo `error` con mensaje, stack, url y user-agent.
 - **Input manual**: form con kind (bug/idea/note) + título + body.
-- **Output**: lista en `/workbench/feedback`, con copy-to-clipboard (formato texto plano), borrar individual y borrar todo. Toast antd cuando se captura un error nuevo. Dot rojo en el icono de campana del header si hay entradas no leídas.
-- **Storage**: `localStorage` bajo `hios-feedback-entries`, versionado, circular buffer de 50 entradas. Cross-tab via `storage` event.
-- **Casos borde**: localStorage lleno → fail silencioso. JSON corrupto al leer → se devuelve lista vacía sin reventar. Stack ausente (rejection con string) → entry sin stack, igual visible.
-- **Status**: works. Sync a DB pendiente para Fase 2 de auth.
+- **Output**: lista en `/workbench/feedback`, con copy-to-clipboard (formato texto plano), borrar individual y borrar todo. Toast antd cuando se captura un error nuevo. Dot rojo en el icono de campana del header si hay entradas no leídas. Repeticiones del mismo error o entry se consolidan localmente por fingerprint y muestran ocurrencias + último avistamiento.
+- **Storage**: `localStorage` bajo `hios-feedback-entries`, versionado, circular buffer de 50 entradas. Cada entry guarda `source`, `severity`, `fingerprint`, `occurrences`, `lastSeenAt`, `locale`, `toolSlug` y `authState`. Cross-tab via `storage` event.
+- **Casos borde**: localStorage lleno → fail silencioso. JSON corrupto o payload viejo → se migra o devuelve lista vacía sin reventar. Stack ausente (rejection con string) → entry sin stack, igual visible. Duplicados se consolidan en una sola tarjeta en vez de spammear la lista.
+- **Status**: works. Uplink a servidor/admin logs sigue pendiente.
 
 ### Theme settings `/workbench/settings`
 - **Propósito**: customizar el accent del workbench (color de marca). El modo light/dark sigue en el toggle del header.
 - **Input**: pick de un preset (Amber, Cyan, Violet, Lime, Rose) o hex custom (#rrggbb / #rgb).
-- **Output**: CSS variable `--accent` aplicada en runtime a todos los componentes (header underline, hero kicker, badges, links de marca, avatar fallback). Persistido en `localStorage` bajo `hios-theme-config` (versionado).
-- **Casos borde**: hex inválido → se marca el input, no se aplica. Cuando el accent matchea un preset, ese preset queda marcado como seleccionado. `Reset` vuelve al amber default.
-- **Status**: works. Pendiente sync a DB cuando arme la capa de auth (Fase 2 de la auth).
+- **Output**: CSS variable `--accent` aplicada en runtime a todos los componentes (header underline, hero kicker, badges, links de marca, avatar fallback). Persistido en `localStorage` bajo `hios-theme-config` (versionado). Si hay sesión, puede sincronizarse a `/api/user/settings` para seguir a la cuenta entre dispositivos.
+- **Casos borde**: hex inválido → se marca el input, no se aplica. Cuando el accent matchea un preset, ese preset queda marcado como seleccionado. `Reset` vuelve al amber default. Si no hay theme remoto todavía, el accent local se mantiene y se ofrece import explícito a la cuenta.
+- **Status**: works
 
 
 

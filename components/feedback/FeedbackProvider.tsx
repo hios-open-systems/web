@@ -11,6 +11,7 @@ import React, {
 } from 'react';
 import { useTranslations } from 'next-intl';
 import { message } from 'antd';
+import { useCurrentUser } from '@/lib/hooks/useCurrentUser';
 import { installCapture } from '@/lib/feedback/capture';
 import {
     appendEntry,
@@ -47,6 +48,7 @@ function dispatchSync() {
 
 export function FeedbackProvider({ children }: { children: ReactNode }) {
     const t = useTranslations('Feedback');
+    const { user } = useCurrentUser();
     const [entries, setEntries] = useState<FeedbackEntry[]>([]);
     const [messageApi, contextHolder] = message.useMessage();
 
@@ -70,6 +72,10 @@ export function FeedbackProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         refresh();
         const cleanup = installCapture({
+            getContext: () => ({
+                authState: user ? 'authenticated' : 'anonymous',
+                userId: user?.id,
+            }),
             onCapture: (entry) => {
                 refresh();
                 dispatchSync();
@@ -92,23 +98,26 @@ export function FeedbackProvider({ children }: { children: ReactNode }) {
             window.removeEventListener(SYNC_EVENT, onSync);
             window.removeEventListener('storage', onStorage);
         };
-    }, [refresh]);
+    }, [refresh, user]);
 
     const addManual = useCallback<FeedbackContextValue['addManual']>(
         (kind, title, body) => {
             const draft: AppendDraft = {
                 kind,
+                source: 'manual',
                 title,
                 body,
                 url: typeof window !== 'undefined' ? window.location.href : undefined,
                 userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
+                authState: user ? 'authenticated' : 'anonymous',
+                userId: user?.id,
             };
             const entry = appendEntry(draft);
             refresh();
             dispatchSync();
             return entry;
         },
-        [refresh],
+        [refresh, user],
     );
 
     const remove = useCallback(

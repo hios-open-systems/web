@@ -4,38 +4,15 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { GithubOutlined } from '@ant-design/icons';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useCurrentUser } from '@/lib/hooks/useCurrentUser';
 import styles from './userMenu.module.css';
-
-interface MeResponse {
-    user: {
-        id: string;
-        login: string;
-        name: string | null;
-        avatar_url: string | null;
-    } | null;
-}
 
 export function UserMenu() {
     const t = useTranslations('Auth');
     const pathname = usePathname() ?? '/';
-    const [me, setMe] = useState<MeResponse['user'] | undefined>(undefined);
+    const { user: me, isLoading } = useCurrentUser();
     const [open, setOpen] = useState(false);
     const rootRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        let cancelled = false;
-        fetch('/api/auth/me', { credentials: 'same-origin' })
-            .then((res) => (res.ok ? res.json() : { user: null }))
-            .then((data: MeResponse) => {
-                if (!cancelled) setMe(data.user);
-            })
-            .catch(() => {
-                if (!cancelled) setMe(null);
-            });
-        return () => {
-            cancelled = true;
-        };
-    }, []);
 
     useEffect(() => {
         if (!open) return;
@@ -59,7 +36,7 @@ export function UserMenu() {
         }
     }, []);
 
-    if (me === undefined) {
+    if (isLoading) {
         return <div className={styles.skeleton} aria-hidden />;
     }
 

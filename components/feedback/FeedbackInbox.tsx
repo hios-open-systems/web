@@ -34,6 +34,16 @@ function formatDate(ts: number): string {
     return d.toLocaleString();
 }
 
+function formatMeta(entry: FeedbackEntry): string[] {
+    const values = [
+        `${entry.source} / ${entry.severity}`,
+        entry.locale,
+        entry.toolSlug,
+        entry.authState,
+    ];
+    return values.filter((value): value is string => Boolean(value));
+}
+
 export function FeedbackInbox() {
     const t = useTranslations('Feedback');
     const { entries, unreadCount, addManual, remove, clear, markRead, serialize } = useFeedback();
@@ -151,21 +161,44 @@ export function FeedbackInbox() {
                                 data-entry-id={entry.id}
                             >
                                 <div className={styles.entryHeader}>
-                                    <span className={`${styles.entryKind} ${styles[`kind_${entry.kind}`]}`}>
-                                        {kindIcon(entry.kind)} {t(`kinds.${entry.kind}`)}
-                                    </span>
+                                    <div className={styles.entryHeaderMeta}>
+                                        <span className={`${styles.entryKind} ${styles[`kind_${entry.kind}`]}`}>
+                                            {kindIcon(entry.kind)} {t(`kinds.${entry.kind}`)}
+                                        </span>
+                                        <span className={styles.entryMetaPill}>{t(`sources.${entry.source}`)}</span>
+                                        <span className={styles.entryMetaPill}>{t(`severity.${entry.severity}`)}</span>
+                                        {entry.occurrences > 1 ? (
+                                            <span className={styles.entryMetaPill}>{t('occurrences', { count: entry.occurrences })}</span>
+                                        ) : null}
+                                    </div>
                                     <time className={styles.entryDate} dateTime={new Date(entry.createdAt).toISOString()}>
-                                        {formatDate(entry.createdAt)}
+                                        {formatDate(entry.lastSeenAt)}
                                     </time>
                                 </div>
                                 <div className={styles.entryTitle}>{entry.title}</div>
                                 <p className={styles.entryBody}>{entry.body}</p>
+                                <div className={styles.entryContextRow}>
+                                    <span className={styles.entryMetaLabel}>{t('firstSeen')}</span>
+                                    <span className={styles.entryMetaValue}>{formatDate(entry.createdAt)}</span>
+                                    <span className={styles.entryMetaLabel}>{t('lastSeen')}</span>
+                                    <span className={styles.entryMetaValue}>{formatDate(entry.lastSeenAt)}</span>
+                                </div>
+                                {formatMeta(entry).length > 0 ? (
+                                    <div className={styles.entryContextRow}>
+                                        <span className={styles.entryMetaLabel}>{t('context')}</span>
+                                        <span className={styles.entryMetaValue}>{formatMeta(entry).join(' · ')}</span>
+                                    </div>
+                                ) : null}
                                 {entry.url ? (
                                     <div className={styles.entryMeta}>
                                         <span className={styles.entryMetaLabel}>url</span>{' '}
                                         <span className={styles.entryMetaValue}>{entry.url}</span>
                                     </div>
                                 ) : null}
+                                <div className={styles.entryMeta}>
+                                    <span className={styles.entryMetaLabel}>fingerprint</span>{' '}
+                                    <span className={styles.entryMetaValue}>{entry.fingerprint}</span>
+                                </div>
                                 {entry.stack ? (
                                     <details className={styles.entryStack}>
                                         <summary>{t('stack')}</summary>

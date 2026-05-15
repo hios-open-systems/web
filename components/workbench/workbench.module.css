@@ -482,6 +482,18 @@
   width: 100%;
 }
 
+.snippetStatusRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.snippetBanner {
+  border-radius: 12px;
+}
+
 .snippetCard {
   border-radius: 12px;
   border: 1px solid rgba(15, 23, 42, 0.08);
@@ -525,6 +537,13 @@
 @media (max-width: 720px) {
   .page {
     padding: 36px 18px 64px;
+  }
+  .snippetStatusRow,
+  .snippetHeader {
+    align-items: stretch;
+  }
+  .snippetHeader {
+    flex-direction: column;
   }
   .optionGrid,
   .diffPreviewGrid {
