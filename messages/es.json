@@ -1,16 +1,14 @@
 {
     "Hero": {
-        "titlePrefix": "Open",
-        "hardware": "Hardware",
-        "and": " & ",
-        "software": "Software",
-        "subtitle": "Proyectos documentados, funcionales y abiertos.",
-        "tag_schematics": "Esquemáticos reales",
-        "tag_bom": "BOM con precios",
-        "tag_open_source": "Código abierto",
-        "cta": "¿Querés uno? Armalo vos. Es tuyo.",
-        "contact": "¿No sabés por dónde empezar? Consultame",
-        "project_count": "2 proyectos documentados"
+        "title": "Mi patio de juegos. Herramientas que uso a diario.",
+        "subtitle": "Decodificá, validá, compará. Todo corre local, todo es abierto, nada se manda afuera.",
+        "cta": "Abrir Workbench",
+        "secondary": "Ver proyectos de hardware",
+        "fact_local": "Local-first",
+        "fact_open": "Código abierto",
+        "fact_daily": "Pensado para uso diario",
+        "previewKicker": "JWT en vivo",
+        "previewOpenTool": "Abrir tool"
     },
     "Projects": {
         "title": "Proyectos",
@@ -445,37 +443,9 @@
         "rcl": "RCL"
     },
     "Workbench": {
-        "signals": {
-            "localFirst": "Local-first y privado",
-            "shareable": "Estados compartibles",
-            "dailyUse": "Hecho para uso diario"
-        },
         "landing": {
-            "badge": "Nueva línea de producto",
-            "title": "Una superficie precisa para payloads, DNS, certificados, snippets y comprobaciones de desarrollo que sí vuelven cada día.",
-            "subtitle": "Minimalismo con mejor acabado. Validación, generación y tests mantienen el catálogo claro mientras las comprobaciones de red y auth quedan a un clic.",
-            "primaryCta": "Ver validación",
-            "secondaryCta": "Ver generación",
-            "panelTitle": "Entrá por una sección concreta",
-            "panelSubtitle": "Arrancá desde la intención, no desde una pared de cards. Cada sección agrupa tools relacionadas para que el workbench escale limpio.",
-            "sectionsTitle": "Secciones principales",
-            "sectionsSubtitle": "Validación, generación y tests separan el catálogo por caso de uso, así sumar más tools después no lo convierte en una lista estática sin forma.",
-            "catalogTitle": "Catálogo de tools",
-            "catalogSubtitle": "Cada sección tiene su propia ruta y puede seguir creciendo sin romper la arquitectura de navegación.",
-            "cardCta": "Abrir sección",
-            "principlesTitle": "Qué optimiza esta superficie",
-            "principlesSubtitle": "Primero claridad, velocidad y buena experiencia móvil. Después complejidad.",
-            "principles": {
-                "localFirst": "Tus payloads, notas y estados se procesan localmente siempre que tenga sentido. Menos fricción y más privacidad real.",
-                "shareable": "Cuando un flujo vale la pena, lo podés compartir por URL sin tener que explicar diez pasos manuales.",
-                "dailyUse": "La meta no es tener una demo linda, sino un workbench al que quieras volver durante el día de trabajo."
-            },
-            "metrics": {
-                "sections": "Secciones",
-                "tools": "Tools",
-                "network": "Red",
-                "networkValue": "DNS + TLS"
-            }
+            "title": "Workbench",
+            "subtitle": "Las herramientas chicas que uso a diario, en un solo lugar."
         },
         "sections": {
             "validation": {
@@ -492,11 +462,7 @@
             }
         },
         "sectionToolCount": "herramientas",
-        "viewAll": "Ver todo",
-        "viewWorkbench": "Volver al Workbench",
-        "sectionBrowseTitle": "Explorar otras secciones",
-        "sectionBrowseSubtitle": "Saltá entre validación, generación y tests sin perder el contexto del workbench.",
-        "externalLabel": "Externa",
+        "viewWorkbench": "Workbench",
         "toolCta": "Abrir herramienta",
         "packs": {
             "payload": {
