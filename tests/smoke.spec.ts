@@ -111,6 +111,20 @@ test.describe('API /api/auth/me', () => {
         const data = (await res.json()) as { user: unknown };
         expect(data.user).toBeNull();
     });
+
+    test('api de snippets pide autenticación cuando no hay sesión', async ({ request }) => {
+        const res = await request.get('/api/snippets');
+        expect(res.status()).toBe(401);
+        const data = (await res.json()) as { error: string };
+        expect(data.error).toBe('Authentication required');
+    });
+
+    test('api de user settings pide autenticación cuando no hay sesión', async ({ request }) => {
+        const res = await request.get('/api/user/settings');
+        expect(res.status()).toBe(401);
+        const data = (await res.json()) as { error: string };
+        expect(data.error).toBe('Authentication required');
+    });
 });
 
 test.describe('Feedback inbox', () => {
@@ -124,11 +138,32 @@ test.describe('Feedback inbox', () => {
         await page.getByPlaceholder(/Contexto, pasos para reproducir/).fill('Test body');
         await page.getByRole('button', { name: 'Guardar', exact: true }).click();
 
-        await expect(page.getByText('Smoke entry')).toBeVisible();
+        await expect(page.getByText('Smoke entry', { exact: true })).toBeVisible();
         await expect(page.getByText('Test body')).toBeVisible();
 
         await page.reload();
-        await expect(page.getByText('Smoke entry')).toBeVisible();
+        await expect(page.getByText('Smoke entry', { exact: true })).toBeVisible();
+
+        await page.evaluate(() => window.localStorage.removeItem('hios-feedback-entries'));
+    });
+
+    test('entradas manuales duplicadas se consolidan y cuentan ocurrencias', async ({ page }) => {
+        await page.goto('/es/workbench/feedback');
+
+        const titleInput = page.getByPlaceholder(/Resumen corto/);
+        const bodyInput = page.getByPlaceholder(/Contexto, pasos para reproducir/);
+
+        await page.locator('[data-kind="bug"]').click();
+        await titleInput.fill('Entrada dedupe');
+        await bodyInput.fill('Mismo cuerpo');
+        await page.getByRole('button', { name: 'Guardar', exact: true }).click();
+
+        await titleInput.fill('Entrada dedupe');
+        await bodyInput.fill('Mismo cuerpo');
+        await page.getByRole('button', { name: 'Guardar', exact: true }).click();
+
+        await expect(page.locator('[data-entry-id]').filter({ hasText: 'Entrada dedupe' })).toHaveCount(1);
+        await expect(page.getByText('2x')).toBeVisible();
 
         await page.evaluate(() => window.localStorage.removeItem('hios-feedback-entries'));
     });

@@ -457,6 +457,15 @@
             "idea": "Idea",
             "note": "Nota"
         },
+        "sources": {
+            "runtime": "Runtime",
+            "manual": "Manual"
+        },
+        "severity": {
+            "info": "Info",
+            "warn": "Warn",
+            "error": "Error"
+        },
         "titleField": "Título",
         "titlePlaceholder": "Resumen corto (ej. 'el JWT decoder rompe con tokens sin firma')",
         "bodyField": "Detalle",
@@ -470,12 +479,26 @@
         "copyError": "No se pudo copiar",
         "delete": "Borrar",
         "stack": "Ver stack",
+        "occurrences": "{count}x",
+        "firstSeen": "primera vez",
+        "lastSeen": "última vez",
+        "context": "contexto",
         "toastErrorCaptured": "Error capturado: {title}",
         "localFootnote": "Hoy se guarda local. Cuando llegue la auth se sincroniza a tu cuenta automáticamente."
     },
     "Settings": {
         "title": "Configuración",
         "subtitle": "Personalizá el tema del workbench. Se guarda local en este navegador.",
+        "syncTitle": "Sync",
+        "localMode": "Solo local",
+        "accountMode": "Con backup en cuenta",
+        "syncing": "Sincronizando con tu cuenta...",
+        "needsImport": "Listo para importar el accent local",
+        "syncErrorState": "El sync necesita atención",
+        "syncHintLocal": "Sin login el accent queda solo en este navegador.",
+        "syncHintAccount": "Con login el accent actual puede seguirte entre dispositivos.",
+        "syncNow": "Guardar accent actual en la cuenta",
+        "syncWarningTitle": "No se pudo sincronizar el tema de la cuenta",
         "presets": "Presets",
         "presetsHint": "Elegí una paleta lista para usar.",
         "custom": "Color personalizado",
@@ -488,7 +511,8 @@
         "previewTagline": "Workbench",
         "previewButton": "Acción primaria",
         "previewLink": "Link de muestra",
-        "localFootnote": "Por ahora se guarda solo en este navegador. Cuando arme la auth, vas a poder sincronizar entre dispositivos."
+        "localFootnote": "Por ahora se guarda solo en este navegador. Iniciá sesión si querés que después siga a tu cuenta.",
+        "accountFootnote": "Los cambios siguen aplicando local primero, pero la copia de cuenta pasa a ser la referencia para futuros dispositivos."
     },
     "Workbench": {
         "landing": {
@@ -802,7 +826,7 @@
         "snippets": {
             "badge": "Sección dedicada",
             "title": "Snippets y recipes rápidos",
-            "subtitle": "Pequeña capa personal para empezar a usar el workbench desde hoy.",
+            "subtitle": "Pequeña capa personal para empezar a usar el workbench desde hoy, ahora con backup opcional en cuenta.",
             "titlePlaceholder": "Título del snippet",
             "tagsPlaceholder": "Tags separados por comas",
             "bodyPlaceholder": "Pegá un comando, una receta, un payload o una nota útil...",
@@ -812,7 +836,32 @@
             "delete": "Borrar",
             "saved": "Snippet guardado",
             "copied": "Snippet copiado",
-            "copyError": "No se pudo copiar"
+            "copyError": "No se pudo copiar",
+            "saveError": "No se pudo guardar el snippet",
+            "deleteError": "No se pudo borrar el snippet",
+            "localBadge": "Solo local",
+            "cloudBadge": "Con backup en cuenta",
+            "localStatus": "Guardado solo en este navegador hasta que inicies sesión.",
+            "accountStatus": "Sincronizado con @{login}",
+            "authChecking": "Chequeando cuenta...",
+            "syncing": "Actualizando desde tu cuenta...",
+            "syncWarningTitle": "No se pudo refrescar la copia de tu cuenta",
+            "syncLoadError": "No se pudieron cargar los snippets de tu cuenta",
+            "importTitle": "Tenés {count} snippets locales listos para importar",
+            "importBody": "La copia del navegador sigue local hasta que la muevas explícitamente a tu cuenta.",
+            "importAction": "Importar snippets locales",
+            "imported": "Se importaron {imported} snippets y se saltearon {skipped}",
+            "importError": "No se pudieron importar los snippets locales",
+            "privateLabel": "Privado",
+            "publicLabel": "Público",
+            "makePublic": "Hacer público",
+            "makePrivate": "Hacer privado",
+            "madePublic": "El snippet ahora es público",
+            "madePrivate": "El snippet ahora es privado",
+            "visibilityError": "No se pudo actualizar la visibilidad del snippet",
+            "share": "Copiar link público",
+            "shareCopied": "Link público copiado",
+            "shareError": "No se pudo copiar el link público"
         }
     },
     "Calculators": {
