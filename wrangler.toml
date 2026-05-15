@@ -10,5 +10,5 @@ pages_build_output_dir = ".vercel/output/static"
 binding = "DB"
 database_name = "hios-playground"
 # Reemplazá database_id por el ID real cuando crees la D1 en el dashboard.
-database_id = "REPLACE_WITH_D1_DATABASE_ID"
+database_id = "a3b55142-933d-451e-aa95-21eb1231516a"
 migrations_dir = "migrations"
