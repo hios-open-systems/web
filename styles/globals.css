@@ -4,7 +4,9 @@
   /* HIOS Color Palette */
   --hios-primary: #0066cc;
   --hios-primary-light: #4096ff;
-  --hios-accent: #f59e0b;
+  /* --accent es el color de marca configurable por el usuario. Default amber. */
+  --accent: #f59e0b;
+  --hios-accent: var(--accent);
   --hios-accent-light: #fbbf24;
   --hios-success: #10b981;
   --hios-success-light: #34d399;
