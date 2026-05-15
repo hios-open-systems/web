@@ -1,6 +1,5 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
-
 import { setRequestLocale } from 'next-intl/server';
 
 export const runtime = 'edge';
@@ -12,28 +11,13 @@ export function generateStaticParams() {
 }
 
 const HeroSection = dynamic(
-  () => import('@/components/landing/HeroSection').then(mod => ({ default: mod.HeroSection })),
-  { ssr: true }
+  () => import('@/components/landing/HeroSection').then((mod) => ({ default: mod.HeroSection })),
+  { ssr: true },
 );
 
 const ProjectsGrid = dynamic(
-  () => import('@/components/landing/ProjectsGrid').then(mod => ({ default: mod.ProjectsGrid })),
-  { ssr: true }
-);
-
-const DocumentationSection = dynamic(
-  () => import('@/components/landing/DocumentationSection').then(mod => ({ default: mod.DocumentationSection })),
-  { ssr: true }
-);
-
-const ToolsSection = dynamic(
-  () => import('@/components/landing/ToolsSection').then(mod => ({ default: mod.ToolsSection })),
-  { ssr: true }
-);
-
-const TutorialsSection = dynamic(
-  () => import('@/components/landing/TutorialsSection').then(mod => ({ default: mod.TutorialsSection })),
-  { ssr: true }
+  () => import('@/components/landing/ProjectsGrid').then((mod) => ({ default: mod.ProjectsGrid })),
+  { ssr: true },
 );
 
 export default function Home({ params: { locale } }: { params: { locale: string } }) {
@@ -41,10 +25,7 @@ export default function Home({ params: { locale } }: { params: { locale: string 
   return (
     <main>
       <HeroSection />
-      <ToolsSection />
       <ProjectsGrid />
-      <DocumentationSection />
-      <TutorialsSection />
     </main>
   );
 }

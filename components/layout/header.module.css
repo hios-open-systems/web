@@ -1,155 +1,180 @@
 .header {
-    height: auto;
-    min-height: 64px;
-    line-height: normal;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  height: 56px;
+  padding: 0 20px;
+  line-height: normal;
+  background: rgba(255, 255, 255, 0.78);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+  backdrop-filter: blur(10px);
+}
+
+:global([data-theme="dark"]) .header {
+  background: rgba(2, 6, 23, 0.7);
+  border-bottom-color: rgba(255, 255, 255, 0.06);
 }
 
 .shell {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    width: 100%;
-    padding: 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  height: 100%;
 }
 
 .brandLink {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    flex-shrink: 0;
-    min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  flex-shrink: 0;
 }
 
-.navArea {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-  gap: 10px;
-    flex-wrap: wrap;
-    min-width: 0;
+.brand {
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.12em;
+  color: #0f172a;
 }
 
-.primaryNav {
-    display: flex;
-    align-items: center;
-  gap: 6px;
-    flex-wrap: wrap;
-  padding: 0;
+:global([data-theme="dark"]) .brand {
+  color: #f8fafc;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.navLink {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  color: #475569;
+  transition: color 0.18s ease, background-color 0.18s ease;
+}
+
+:global([data-theme="dark"]) .navLink {
+  color: #94a3b8;
+}
+
+.navLink:hover {
+  color: #0f172a;
+  background: rgba(15, 23, 42, 0.04);
+}
+
+:global([data-theme="dark"]) .navLink:hover {
+  color: #f1f5f9;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.navLinkPrimary {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+:global([data-theme="dark"]) .navLinkPrimary {
+  color: #f1f5f9;
+}
+
+.navLinkSecondary {
+  font-size: 13px;
+}
+
+.navLinkActive {
+  color: #0f172a;
+  background: rgba(15, 23, 42, 0.06);
+}
+
+:global([data-theme="dark"]) .navLinkActive {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.navLinkActive::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: -2px;
+  height: 2px;
+  border-radius: 2px;
+  background: #f59e0b;
 }
 
 .controls {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
 }
 
-.buttonLink {
-  display: inline-flex;
+.localeSelect {
+  min-width: 80px;
+  height: 32px;
 }
 
-.navButton {
-  height: 36px;
-  padding-inline: 14px;
-  border-radius: 8px;
+.localeSelect :global(.ant-select-selector) {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding-inline: 8px !important;
+}
+
+.localeSelect :global(.ant-select-selection-item) {
   font-size: 13px;
-  font-weight: 600;
-  box-shadow: none;
+  font-weight: 500;
 }
 
-.navButton:hover {
-  transform: translateY(-1px);
-}
-    
-.navButtonActive {
-  box-shadow: 0 10px 22px rgba(37, 99, 235, 0.18);
-    }
-    
-    .localeWrap {
-      display: flex;
-      align-items: center;
-  min-height: 40px;
-  padding: 0 8px 0 10px;
-  border-radius: 8px;
-      border: 1px solid var(--header-control-border);
-      background: var(--header-control-bg);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
-    }
-    
-    .localeSelect {
-  min-width: 100px;
-    }
-    
-    .localeSelect :global(.ant-select-selector) {
-      padding-inline: 0 !important;
-      background: transparent !important;
-      box-shadow: none !important;
-    }
-    
-    .localeSelect :global(.ant-select-selection-item) {
-      color: var(--header-control-color) !important;
-      font-size: 13px;
-      font-weight: 600;
-    }
-    
-    .localeSelect :global(.ant-select-arrow) {
-      color: #f59e0b;
-    }
-    
-    .iconButton {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px !important;
-      border: 1px solid var(--header-control-border) !important;
-      background: var(--header-control-bg) !important;
-      color: var(--header-control-color) !important;
-      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease !important;
-    }
-    
-    .iconButton:hover {
-      transform: translateY(-1px);
-      border-color: rgba(14, 165, 233, 0.22) !important;
-      box-shadow: 0 10px 24px rgba(2, 6, 23, 0.14);
+.iconButton {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #475569 !important;
 }
 
-@media (max-width: 900px) {
-    .shell {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 10px;
-    }
-
-    .navArea {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .primaryNav {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-      padding-bottom: 4px;
-        scrollbar-width: none;
-    }
-
-    .primaryNav::-webkit-scrollbar {
-        display: none;
-    }
-
-    .controls {
-        justify-content: flex-end;
-        width: 100%;
-    }
+:global([data-theme="dark"]) .iconButton {
+  color: #94a3b8 !important;
 }
 
-@media (max-width: 520px) {
-  .navButton {
-    padding-inline: 12px;
-    height: 34px;
-        }
-        
-        .localeWrap {
-          min-width: 0;
-          flex: 1;
-    }
+.iconButton:hover {
+  color: #0f172a !important;
+  background: rgba(15, 23, 42, 0.04) !important;
+}
+
+:global([data-theme="dark"]) .iconButton:hover {
+  color: #f1f5f9 !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+@media (max-width: 640px) {
+  .header {
+    padding: 0 12px;
+  }
+  .shell {
+    gap: 12px;
+  }
+  .nav {
+    gap: 0;
+  }
+  .navLink {
+    padding: 0 8px;
+  }
+  .navLinkSecondary {
+    display: none;
+  }
 }
