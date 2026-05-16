@@ -1048,7 +1048,8 @@
                     "smd0603": "SMD 0603",
                     "smd0805": "SMD 0805",
                     "smd1206": "SMD 1206"
-                }
+                },
+                "target": "Target value (Ω)"
             },
             "adc": {
                 "title": "ADC Divider (ESP32)",
