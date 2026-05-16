@@ -1,0 +1,86 @@
+/* Shared layout for every calculator tab: compact result bar + a responsive
+ * field grid so inputs use the horizontal space instead of one tall column. */
+
+.resultBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 18px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--accent) 38%, transparent);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--accent) 16%, transparent) 0%, color-mix(in srgb, var(--accent) 5%, transparent) 100%);
+}
+
+.resultLabel {
+  flex-basis: 100%;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.resultValue {
+  font-size: clamp(1.7rem, 3.4vw, 2.1rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--accent);
+}
+
+.resultHint {
+  font-size: 13px;
+  color: #64748b;
+}
+
+:global([data-theme='dark']) .resultHint {
+  color: #94a3b8;
+}
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px 18px;
+  width: 100%;
+  margin-top: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.field :global(.ant-input-number),
+.field :global(.ant-select),
+.field :global(.ant-picker) {
+  width: 100%;
+}
+
+.fieldLabel {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+:global([data-theme='dark']) .fieldLabel {
+  color: #94a3b8;
+}
+
+/* Elements that must break out of the grid (visualizer, color strip, notes). */
+.fullRow {
+  grid-column: 1 / -1;
+}
+
+.note {
+  font-size: 13px;
+  color: #64748b;
+}
+
+:global([data-theme='dark']) .note {
+  color: #94a3b8;
+}

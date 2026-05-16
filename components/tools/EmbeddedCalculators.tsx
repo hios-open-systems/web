@@ -8,8 +8,28 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { ToolHeader } from '@/components/workbench/ToolHeader';
 import { ResistorPackageType, ResistorVisualizer } from './ResistorVisualizer';
+import styles from './embeddedCalculators.module.css';
 
 const { Text } = Typography;
+
+function ResultBar({ label, value, hint }: { label: string; value: string; hint?: string }) {
+    return (
+        <div className={styles.resultBar}>
+            <span className={styles.resultLabel}>{label}</span>
+            <span className={styles.resultValue}>{value}</span>
+            {hint ? <span className={styles.resultHint}>{hint}</span> : null}
+        </div>
+    );
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+    return (
+        <div className={styles.field}>
+            <span className={styles.fieldLabel}>{label}</span>
+            {children}
+        </div>
+    );
+}
 
 type PresetId =
   | 'custom'
@@ -598,16 +618,16 @@ export function EmbeddedCalculators() {
             label: <span style={{ whiteSpace: 'nowrap' }}>{t('cards.led.title')}</span>,
             children: (
               <Card title={t('cards.led.title')} style={calcCardStyle} styles={{ body: calcCardBodyStyle }}>
-                <Space direction="vertical" size={14} style={{ width: '100%' }}>
-                  <Card style={metricCardStyle} styles={{ body: { padding: 14 } }}>
-                    <Text style={fieldLabelStyle}>{t('cards.led.r')}</Text>
-                    <div style={{ fontSize: 34, fontWeight: 700, lineHeight: 1.1, color: palette.accent }}>{led.resistance.toFixed(0)} Ω</div>
-                    <Text style={{ color: palette.textSecondary }}>{t('cards.led.p')}: {(led.power * 1000).toFixed(1)} mW</Text>
-                  </Card>
-                  <Text style={fieldLabelStyle}>{t('cards.led.vs')}</Text><InputNumber value={supply} onChange={(v) => setSupply(Number(v || 0))} min={0} style={inputStyle} />
-                  <Text style={fieldLabelStyle}>{t('cards.led.vf')}</Text><InputNumber value={ledVf} onChange={(v) => setLedVf(Number(v || 0))} min={0} style={inputStyle} />
-                  <Text style={fieldLabelStyle}>{t('cards.led.current')}</Text><InputNumber value={ledCurrent} onChange={(v) => setLedCurrent(Number(v || 0))} min={1} style={inputStyle} />
-                </Space>
+                <ResultBar
+                  label={t('cards.led.r')}
+                  value={`${led.resistance.toFixed(0)} Ω`}
+                  hint={`${t('cards.led.p')}: ${(led.power * 1000).toFixed(1)} mW`}
+                />
+                <div className={styles.fieldGrid}>
+                  <Field label={t('cards.led.vs')}><InputNumber value={supply} onChange={(v) => setSupply(Number(v || 0))} min={0} style={inputStyle} /></Field>
+                  <Field label={t('cards.led.vf')}><InputNumber value={ledVf} onChange={(v) => setLedVf(Number(v || 0))} min={0} style={inputStyle} /></Field>
+                  <Field label={t('cards.led.current')}><InputNumber value={ledCurrent} onChange={(v) => setLedCurrent(Number(v || 0))} min={1} style={inputStyle} /></Field>
+                </div>
               </Card>
             ),
           },
