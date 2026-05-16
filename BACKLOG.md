@@ -10,15 +10,14 @@ Una sección por idea. Llenala al menos hasta `Sketch` antes de empezarla — si
 
 ---
 
-## Auto-reload al detectar nueva versión deployada
-- **Why**: hoy los visitantes que dejan la pestaña abierta siguen con un bundle viejo después de un deploy. Si entre tanto cambiamos un API contract o arreglamos un bug visible, no se enteran hasta que recargan a mano.
+## Version watcher hardening
+- **Why**: el aviso base de deploy nuevo ya existe. Lo que queda pendiente es endurecer bordes y decidir si más adelante conviene pasar de aviso simple a changelog/reload más inteligente.
 - **Sketch**:
-  1. En build, Cloudflare Pages expone `CF_PAGES_COMMIT_SHA`. Lo embebimos en un archivo estático `/version.json` (escrito por el build script) o como `NEXT_PUBLIC_BUILD_ID` en el bundle.
-  2. Cliente arranca un polling cada ~5 min a `/version.json`. Compara contra el id con el que cargó.
-  3. Si difiere → toast persistente "Hay una nueva versión disponible" con botón "Recargar" → `window.location.reload()`. Cierre opcional con "Más tarde".
-  4. Reutilizamos el FeedbackProvider / antd `message` que ya está montado, o agregamos un pequeño VersionWatcher en el ThemeLayout.
-- **Dependencies**: ninguna real. Self-contained.
-- **Status**: parked. Sumamos cuando notemos el problema en práctica.
+  1. Agregar cobertura más directa del watcher cliente si aparece una forma estable de testear el polling sin flakes.
+  2. Revisar si conviene reducir polling o apoyarse más en foco/visibilidad para tabs muy largas.
+  3. Evaluar si un deploy que cambia contratos críticos debería forzar reload en vez de sólo sugerirlo.
+- **Dependencies**: observar comportamiento real en deploy por un tiempo.
+- **Status**: parked.
 
 ---
 

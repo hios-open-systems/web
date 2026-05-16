@@ -125,6 +125,14 @@ test.describe('API /api/auth/me', () => {
         const data = (await res.json()) as { error: string };
         expect(data.error).toBe('Authentication required');
     });
+
+    test('api de version expone la versión actual sin autenticación', async ({ request }) => {
+        const res = await request.get('/api/version');
+        expect(res.status()).toBe(200);
+        const data = (await res.json()) as { version?: string };
+        expect(typeof data.version).toBe('string');
+        expect(data.version && data.version.length > 0).toBeTruthy();
+    });
 });
 
 test.describe('Feedback inbox', () => {

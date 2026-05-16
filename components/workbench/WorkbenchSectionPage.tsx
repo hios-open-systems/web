@@ -35,10 +35,12 @@ export function WorkbenchSectionPage({ sectionId }: Props) {
       <header className={styles.pageHeader}>
         <div className={styles.sectionTitleRow}>
           <span
-            className={styles.sectionDot}
-            style={{ background: section.accent }}
+            className={styles.sectionIcon}
+            style={{ color: section.accent, background: `${section.accent}1a` }}
             aria-hidden
-          />
+          >
+            {getWorkbenchIcon(section.icon)}
+          </span>
           <h1 className={styles.pageTitle}>{t(`sections.${sectionId}.title`)}</h1>
         </div>
         <p className={styles.pageSubtitle}>{t(`sections.${sectionId}.description`)}</p>
@@ -46,6 +48,17 @@ export function WorkbenchSectionPage({ sectionId }: Props) {
           {tools.length} {t('sectionToolCount')}
         </span>
       </header>
+
+      <section className={styles.sectionHeroCard}>
+        <div className={styles.sectionHeroHeader}>
+          <div>
+            <span className={styles.sectionHeroEyebrow}>{t('landing.panelTitle')}</span>
+            <h2 className={styles.sectionHeroTitle}>{t(`sections.${sectionId}.title`)}</h2>
+          </div>
+          <span className={styles.sectionHeroCount}>{tools.length} {t('sectionToolCount')}</span>
+        </div>
+        <p className={styles.sectionHeroDescription}>{t(`sections.${sectionId}.description`)}</p>
+      </section>
 
       <div className={styles.toolGrid}>
         {tools.map((tool) => (
@@ -65,6 +78,7 @@ export function WorkbenchSectionPage({ sectionId }: Props) {
               <span className={styles.toolDescription}>
                 {t(`packs.${tool.id}.description`)}
               </span>
+              <span className={styles.toolCardCta}>{t('toolCta')}</span>
             </span>
           </Link>
         ))}
