@@ -6,9 +6,10 @@ import { CopyOutlined, ReloadOutlined, SafetyCertificateOutlined } from '@ant-de
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { type CertificateLookupResponse } from '@/lib/workbench/network';
+import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
 
-const { Paragraph, Text, Title } = Typography;
+const { Paragraph, Text } = Typography;
 
 const defaultHostname = 'openhios.dev';
 const defaultPort = 443;
@@ -104,11 +105,12 @@ export function CertificateCheckTool() {
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
       {contextHolder}
-      <Card className={styles.sectionCard} styles={{ body: { padding: 24 } }}>
-        <Space direction="vertical" size={10} className={styles.stackFull}>
-          <Tag color="blue">{t('badge')}</Tag>
-          <Title level={2} style={{ margin: 0 }}>{t('title')}</Title>
-          <Paragraph className={styles.subtleText} style={{ margin: 0 }}>{t('subtitle')}</Paragraph>
+      <ToolHeader
+        eyebrow={t('badge')}
+        title={t('title')}
+        description={t('subtitle')}
+        locality="network"
+        actions={
           <Space wrap>
             <Button icon={<SafetyCertificateOutlined />} loading={loading} onClick={() => void inspectCertificate()}>{t('inspect')}</Button>
             <Button icon={<ReloadOutlined />} onClick={() => {
@@ -118,8 +120,8 @@ export function CertificateCheckTool() {
             }}>{t('loadExample')}</Button>
             {result ? <Button icon={<CopyOutlined />} onClick={() => handleCopy(resultText)}>{t('copyResult')}</Button> : null}
           </Space>
-        </Space>
-      </Card>
+        }
+      />
 
       <Row gutter={[20, 20]}>
         <Col xs={24} lg={10}>
