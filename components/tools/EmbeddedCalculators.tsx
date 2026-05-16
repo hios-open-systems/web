@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import { Button, Card, Col, Divider, InputNumber, Row, Segmented, Select, Space, Tabs, Typography, message } from 'antd';
+import { Button, Card, InputNumber, Segmented, Select, Space, Tabs, Typography, message } from 'antd';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
@@ -180,21 +180,6 @@ export function EmbeddedCalculators() {
   const calcCardBodyStyle = {
     padding: 20,
   } as const;
-
-  const metricCardStyle = {
-    borderRadius: 12,
-    border: '1px solid color-mix(in srgb, var(--accent) 40%, transparent)',
-    background:
-      'linear-gradient(135deg, color-mix(in srgb, var(--accent) 18%, transparent) 0%, color-mix(in srgb, var(--accent) 6%, transparent) 100%)',
-  };
-
-  const fieldLabelStyle = {
-    fontSize: 12,
-    fontWeight: 600,
-    letterSpacing: 0.3,
-    color: palette.textSecondary,
-    textTransform: 'uppercase' as const,
-  };
 
   const inputStyle = {
     width: '100%',
@@ -636,16 +621,16 @@ export function EmbeddedCalculators() {
             label: <span style={{ whiteSpace: 'nowrap' }}>{t('cards.cap.title')}</span>,
             children: (
               <Card title={t('cards.cap.title')} style={calcCardStyle} styles={{ body: calcCardBodyStyle }}>
-                <Space direction="vertical" size={14} style={{ width: '100%' }}>
-                  <Card style={metricCardStyle} styles={{ body: { padding: 14 } }}>
-                    <Text style={fieldLabelStyle}>{t('cards.cap.result')}</Text>
-                    <div style={{ fontSize: 34, fontWeight: 700, lineHeight: 1.1, color: palette.accent }}>{(capacitor * 1e6).toFixed(1)} µF</div>
-                    <Text style={{ color: palette.textSecondary }}>{t('cards.cap.formula')}</Text>
-                  </Card>
-                  <Text style={fieldLabelStyle}>{t('cards.cap.current')}</Text><InputNumber value={rippleCurrent} onChange={(v) => setRippleCurrent(Number(v || 0))} min={0} style={inputStyle} />
-                  <Text style={fieldLabelStyle}>{t('cards.cap.ripple')}</Text><InputNumber value={rippleDeltaV} onChange={(v) => setRippleDeltaV(Number(v || 0))} min={0.001} step={0.01} style={inputStyle} />
-                  <Text style={fieldLabelStyle}>{t('cards.cap.freq')}</Text><InputNumber value={rippleFreq} onChange={(v) => setRippleFreq(Number(v || 0))} min={1} style={inputStyle} />
-                </Space>
+                <ResultBar
+                  label={t('cards.cap.result')}
+                  value={`${(capacitor * 1e6).toFixed(1)} µF`}
+                  hint={t('cards.cap.formula')}
+                />
+                <div className={styles.fieldGrid}>
+                  <Field label={t('cards.cap.current')}><InputNumber value={rippleCurrent} onChange={(v) => setRippleCurrent(Number(v || 0))} min={0} style={inputStyle} /></Field>
+                  <Field label={t('cards.cap.ripple')}><InputNumber value={rippleDeltaV} onChange={(v) => setRippleDeltaV(Number(v || 0))} min={0.001} step={0.01} style={inputStyle} /></Field>
+                  <Field label={t('cards.cap.freq')}><InputNumber value={rippleFreq} onChange={(v) => setRippleFreq(Number(v || 0))} min={1} style={inputStyle} /></Field>
+                </div>
               </Card>
             ),
           },
@@ -654,17 +639,17 @@ export function EmbeddedCalculators() {
             label: <span style={{ whiteSpace: 'nowrap' }}>{t('cards.thermal.title')}</span>,
             children: (
               <Card title={t('cards.thermal.title')} style={calcCardStyle} styles={{ body: calcCardBodyStyle }}>
-                <Space direction="vertical" size={14} style={{ width: '100%' }}>
-                  <Card style={metricCardStyle} styles={{ body: { padding: 14 } }}>
-                    <Text style={fieldLabelStyle}>{t('cards.thermal.p')}</Text>
-                    <div style={{ fontSize: 34, fontWeight: 700, lineHeight: 1.1, color: palette.accent }}>{thermal.power.toFixed(2)} W</div>
-                    <Text style={{ color: palette.textSecondary }}>{t('cards.thermal.temp')}: ΔT {thermal.rise.toFixed(1)} °C | Tj {thermal.junction.toFixed(1)} °C</Text>
-                  </Card>
-                  <Text style={fieldLabelStyle}>{t('cards.thermal.v')}</Text><InputNumber value={powerV} onChange={(v) => setPowerV(Number(v || 0))} min={0} step={0.1} style={inputStyle} />
-                  <Text style={fieldLabelStyle}>{t('cards.thermal.i')}</Text><InputNumber value={powerI} onChange={(v) => setPowerI(Number(v || 0))} min={0} step={0.01} style={inputStyle} />
-                  <Text style={fieldLabelStyle}>{t('cards.thermal.theta')}</Text><InputNumber value={thetaJa} onChange={(v) => setThetaJa(Number(v || 0))} min={0} style={inputStyle} />
-                  <Text style={fieldLabelStyle}>{t('cards.thermal.ta')}</Text><InputNumber value={ambient} onChange={(v) => setAmbient(Number(v || 0))} style={inputStyle} />
-                </Space>
+                <ResultBar
+                  label={t('cards.thermal.p')}
+                  value={`${thermal.power.toFixed(2)} W`}
+                  hint={`${t('cards.thermal.temp')}: ΔT ${thermal.rise.toFixed(1)} °C | Tj ${thermal.junction.toFixed(1)} °C`}
+                />
+                <div className={styles.fieldGrid}>
+                  <Field label={t('cards.thermal.v')}><InputNumber value={powerV} onChange={(v) => setPowerV(Number(v || 0))} min={0} step={0.1} style={inputStyle} /></Field>
+                  <Field label={t('cards.thermal.i')}><InputNumber value={powerI} onChange={(v) => setPowerI(Number(v || 0))} min={0} step={0.01} style={inputStyle} /></Field>
+                  <Field label={t('cards.thermal.theta')}><InputNumber value={thetaJa} onChange={(v) => setThetaJa(Number(v || 0))} min={0} style={inputStyle} /></Field>
+                  <Field label={t('cards.thermal.ta')}><InputNumber value={ambient} onChange={(v) => setAmbient(Number(v || 0))} style={inputStyle} /></Field>
+                </div>
               </Card>
             ),
           },
@@ -673,16 +658,16 @@ export function EmbeddedCalculators() {
             label: <span style={{ whiteSpace: 'nowrap' }}>{t('cards.runtime.title')}</span>,
             children: (
               <Card title={t('cards.runtime.title')} style={calcCardStyle} styles={{ body: calcCardBodyStyle }}>
-                <Space direction="vertical" size={14} style={{ width: '100%' }}>
-                  <Card style={metricCardStyle} styles={{ body: { padding: 14 } }}>
-                    <Text style={fieldLabelStyle}>{t('cards.runtime.hours')}</Text>
-                    <div style={{ fontSize: 34, fontWeight: 700, lineHeight: 1.1, color: palette.accent }}>{runtime.toFixed(1)} h</div>
-                    <Text style={{ color: palette.textSecondary }}>{t('cards.runtime.days')}: {(runtime / 24).toFixed(2)}</Text>
-                  </Card>
-                  <Text style={fieldLabelStyle}>{t('cards.runtime.battery')}</Text><InputNumber value={batteryMah} onChange={(v) => setBatteryMah(Number(v || 0))} min={0} style={inputStyle} />
-                  <Text style={fieldLabelStyle}>{t('cards.runtime.current')}</Text><InputNumber value={avgCurrent} onChange={(v) => setAvgCurrent(Number(v || 0))} min={1} style={inputStyle} />
-                  <Text style={fieldLabelStyle}>{t('cards.runtime.eff')}</Text><InputNumber value={efficiency} onChange={(v) => setEfficiency(Number(v || 0))} min={1} max={100} style={inputStyle} />
-                </Space>
+                <ResultBar
+                  label={t('cards.runtime.hours')}
+                  value={`${runtime.toFixed(1)} h`}
+                  hint={`${t('cards.runtime.days')}: ${(runtime / 24).toFixed(2)}`}
+                />
+                <div className={styles.fieldGrid}>
+                  <Field label={t('cards.runtime.battery')}><InputNumber value={batteryMah} onChange={(v) => setBatteryMah(Number(v || 0))} min={0} style={inputStyle} /></Field>
+                  <Field label={t('cards.runtime.current')}><InputNumber value={avgCurrent} onChange={(v) => setAvgCurrent(Number(v || 0))} min={1} style={inputStyle} /></Field>
+                  <Field label={t('cards.runtime.eff')}><InputNumber value={efficiency} onChange={(v) => setEfficiency(Number(v || 0))} min={1} max={100} style={inputStyle} /></Field>
+                </div>
               </Card>
             ),
           },
@@ -691,123 +676,107 @@ export function EmbeddedCalculators() {
             label: <span style={{ whiteSpace: 'nowrap' }}>{t('cards.resistorLab.title')}</span>,
             children: (
               <Card title={t('cards.resistorLab.title')} style={calcCardStyle} styles={{ body: calcCardBodyStyle }}>
-                <Space direction="vertical" size={14} style={{ width: '100%' }}>
-                  <Card
-                    style={{
-                      ...metricCardStyle,
-                      background: mode === 'dark'
-                        ? 'linear-gradient(135deg, rgba(245,158,11,0.14) 0%, rgba(245,158,11,0.04) 60%)'
-                        : 'linear-gradient(135deg, rgba(245,158,11,0.18) 0%, rgba(245,158,11,0.08) 60%)',
-                      border: `1px solid ${mode === 'dark' ? 'rgba(245,158,11,0.22)' : 'rgba(245,158,11,0.26)'}`,
-                    }}
-                    styles={{ body: { padding: 16 } }}
-                  >
-                    <Row gutter={[16, 12]} align="middle">
-                      <Col xs={24} md={10}>
-                        <Space direction="vertical" size={8} style={{ width: '100%' }}>
-                          <Text style={fieldLabelStyle}>{t('cards.resistorLab.value')}</Text>
-                          <div style={{ fontSize: 36, fontWeight: 700, lineHeight: 1.05, color: palette.accent }}>{formatOhm(resistorValue)}</div>
-                          <Text style={{ color: palette.textSecondary }}>±{resistorTolerance}%</Text>
-                          <Text style={{ color: palette.textSecondary }}>{t('cards.resistorLab.range')}: {formatOhm(resistorMin)} - {formatOhm(resistorMax)}</Text>
-                        </Space>
-                      </Col>
-                      <Col xs={24} md={14}>
-                        <ResistorVisualizer
-                          packageType={packageType}
-                          wattage={wattage}
-                          resistorValue={resistorValue}
-                          tolerance={resistorTolerance}
-                          bandColors={selectedBandColors}
-                          smdCode={smdCode}
-                        />
-                      </Col>
-                    </Row>
-                  </Card>
-                  <Text style={fieldLabelStyle}>{t('cards.resistorLab.band1')}</Text>
-                  <Select
-                    labelInValue
-                    onChange={(item) => setBand1(String(item.value))}
-                    value={findOptionMeta(digitOptions, band1, `(${band1})`)}
-                    size="large"
-                    options={digitOptions.map(o => ({
-                      value: o.value,
-                      label: renderColorOption(t(`colors.${o.key}`), `(${o.value})`, o.color),
-                    }))}
+                <ResultBar
+                  label={t('cards.resistorLab.value')}
+                  value={formatOhm(resistorValue)}
+                  hint={`±${resistorTolerance}% · ${t('cards.resistorLab.range')}: ${formatOhm(resistorMin)} - ${formatOhm(resistorMax)}`}
+                />
+                <div className={styles.fullRow} style={{ marginTop: 16 }}>
+                  <ResistorVisualizer
+                    packageType={packageType}
+                    wattage={wattage}
+                    resistorValue={resistorValue}
+                    tolerance={resistorTolerance}
+                    bandColors={selectedBandColors}
+                    smdCode={smdCode}
                   />
-                  <Text style={fieldLabelStyle}>{t('cards.resistorLab.band2')}</Text>
-                  <Select
-                    labelInValue
-                    onChange={(item) => setBand2(String(item.value))}
-                    value={findOptionMeta(digitOptions, band2, `(${band2})`)}
-                    size="large"
-                    options={digitOptions.map(o => ({
-                      value: o.value,
-                      label: renderColorOption(t(`colors.${o.key}`), `(${o.value})`, o.color),
-                    }))}
-                  />
-                  <Text style={fieldLabelStyle}>{t('cards.resistorLab.multiplier')}</Text>
-                  <Select
-                    labelInValue
-                    onChange={(item) => setMultiplierBand(String(item.value))}
-                    value={findOptionMeta(multiplierOptions, multiplierBand, `(x${multiplierBand})`)}
-                    size="large"
-                    options={multiplierOptions.map(o => ({
-                      value: o.value,
-                      label: renderColorOption(t(`colors.${o.key}`), `(x${o.value})`, o.color),
-                    }))}
-                  />
-                  <Text style={fieldLabelStyle}>{t('cards.resistorLab.tolerance')}</Text>
-                  <Select
-                    labelInValue
-                    onChange={(item) => setToleranceBand(String(item.value))}
-                    value={findOptionMeta(toleranceOptions, toleranceBand, `(±${toleranceBand}%)`)}
-                    size="large"
-                    options={toleranceOptions.map(o => ({
-                      value: o.value,
-                      label: renderColorOption(t(`colors.${o.key}`), `(±${o.value}%)`, o.color),
-                    }))}
-                  />
-
-                  <Text style={fieldLabelStyle}>{t('cards.resistorLab.package')}</Text>
-                  <Select
-                    size="large"
-                    value={packageType}
-                    onChange={(value) => setPackageType(value as ResistorPackageType)}
-                    options={[
-                      { value: 'axial-carbon', label: t('cards.resistorLab.packages.axialCarbon') },
-                      { value: 'axial-metal', label: t('cards.resistorLab.packages.axialMetal') },
-                      { value: 'axial-ceramic', label: t('cards.resistorLab.packages.axialCeramic') },
-                      { value: 'smd-0603', label: t('cards.resistorLab.packages.smd0603') },
-                      { value: 'smd-0805', label: t('cards.resistorLab.packages.smd0805') },
-                      { value: 'smd-1206', label: t('cards.resistorLab.packages.smd1206') },
-                    ]}
-                  />
-
-                  <Text style={fieldLabelStyle}>{t('cards.resistorLab.wattage')}</Text>
-                  <InputNumber
-                    value={wattage}
-                    onChange={(v) => setWattage(Number(v || 0.25))}
-                    min={0.031}
-                    step={0.125}
-                    style={inputStyle}
-                    addonAfter="W"
-                    disabled={packageType.startsWith('smd')}
-                  />
-
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 10px', borderRadius: 8, background: 'rgba(255,255,255,0.04)' }}>
+                </div>
+                <div className={styles.fieldGrid}>
+                  <Field label={t('cards.resistorLab.band1')}>
+                    <Select
+                      labelInValue
+                      onChange={(item) => setBand1(String(item.value))}
+                      value={findOptionMeta(digitOptions, band1, `(${band1})`)}
+                      size="large"
+                      options={digitOptions.map(o => ({
+                        value: o.value,
+                        label: renderColorOption(t(`colors.${o.key}`), `(${o.value})`, o.color),
+                      }))}
+                    />
+                  </Field>
+                  <Field label={t('cards.resistorLab.band2')}>
+                    <Select
+                      labelInValue
+                      onChange={(item) => setBand2(String(item.value))}
+                      value={findOptionMeta(digitOptions, band2, `(${band2})`)}
+                      size="large"
+                      options={digitOptions.map(o => ({
+                        value: o.value,
+                        label: renderColorOption(t(`colors.${o.key}`), `(${o.value})`, o.color),
+                      }))}
+                    />
+                  </Field>
+                  <Field label={t('cards.resistorLab.multiplier')}>
+                    <Select
+                      labelInValue
+                      onChange={(item) => setMultiplierBand(String(item.value))}
+                      value={findOptionMeta(multiplierOptions, multiplierBand, `(x${multiplierBand})`)}
+                      size="large"
+                      options={multiplierOptions.map(o => ({
+                        value: o.value,
+                        label: renderColorOption(t(`colors.${o.key}`), `(x${o.value})`, o.color),
+                      }))}
+                    />
+                  </Field>
+                  <Field label={t('cards.resistorLab.tolerance')}>
+                    <Select
+                      labelInValue
+                      onChange={(item) => setToleranceBand(String(item.value))}
+                      value={findOptionMeta(toleranceOptions, toleranceBand, `(±${toleranceBand}%)`)}
+                      size="large"
+                      options={toleranceOptions.map(o => ({
+                        value: o.value,
+                        label: renderColorOption(t(`colors.${o.key}`), `(±${o.value}%)`, o.color),
+                      }))}
+                    />
+                  </Field>
+                  <Field label={t('cards.resistorLab.package')}>
+                    <Select
+                      size="large"
+                      value={packageType}
+                      onChange={(value) => setPackageType(value as ResistorPackageType)}
+                      options={[
+                        { value: 'axial-carbon', label: t('cards.resistorLab.packages.axialCarbon') },
+                        { value: 'axial-metal', label: t('cards.resistorLab.packages.axialMetal') },
+                        { value: 'axial-ceramic', label: t('cards.resistorLab.packages.axialCeramic') },
+                        { value: 'smd-0603', label: t('cards.resistorLab.packages.smd0603') },
+                        { value: 'smd-0805', label: t('cards.resistorLab.packages.smd0805') },
+                        { value: 'smd-1206', label: t('cards.resistorLab.packages.smd1206') },
+                      ]}
+                    />
+                  </Field>
+                  <Field label={t('cards.resistorLab.wattage')}>
+                    <InputNumber
+                      value={wattage}
+                      onChange={(v) => setWattage(Number(v || 0.25))}
+                      min={0.031}
+                      step={0.125}
+                      style={inputStyle}
+                      addonAfter="W"
+                      disabled={packageType.startsWith('smd')}
+                    />
+                  </Field>
+                  <div className={styles.fullRow} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 10px', borderRadius: 8, background: 'rgba(255,255,255,0.04)' }}>
                     {[digitOptions.find(o => o.value === band1), digitOptions.find(o => o.value === band2), multiplierOptions.find(o => o.value === multiplierBand), toleranceOptions.find(o => o.value === toleranceBand)].map((band, idx) => (
                       <span key={idx} style={{ width: 20, height: 28, borderRadius: 4, border: '1px solid rgba(255,255,255,0.2)', background: band?.color || '#555' }} />
                     ))}
                   </div>
-
                   {packageType.startsWith('smd') && (
-                    <Text style={{ color: palette.textSecondary }}>
-                      {t('cards.resistorLab.smdCode')}: <strong style={{ color: palette.textPrimary }}>{smdCode}</strong>
-                    </Text>
+                    <span className={`${styles.note} ${styles.fullRow}`}>
+                      {t('cards.resistorLab.smdCode')}: <strong>{smdCode}</strong>
+                    </span>
                   )}
-
-                  <Divider style={{ margin: '4px 0', borderColor: palette.borderSoft }} />
-                </Space>
+                </div>
               </Card>
             ),
           },
@@ -816,16 +785,16 @@ export function EmbeddedCalculators() {
             label: <span style={{ whiteSpace: 'nowrap' }}>{t('cards.adc.title')}</span>,
             children: (
               <Card title={t('cards.adc.title')} style={calcCardStyle} styles={{ body: calcCardBodyStyle }}>
-                <Space direction="vertical" size={14} style={{ width: '100%' }}>
-                  <Card style={metricCardStyle} styles={{ body: { padding: 14 } }}>
-                    <Text style={fieldLabelStyle}>{t('cards.adc.rtop')}</Text>
-                    <div style={{ fontSize: 34, fontWeight: 700, lineHeight: 1.1, color: palette.accent }}>{divider.rTopK.toFixed(1)} kΩ</div>
-                    <Text style={{ color: palette.textSecondary }}>{t('cards.adc.ratio')}: {divider.ratio.toFixed(2)} : 1</Text>
-                  </Card>
-                  <Text style={fieldLabelStyle}>{t('cards.adc.vin')}</Text><InputNumber value={vinMax} onChange={(v) => setVinMax(Number(v || 0))} min={0} step={0.1} style={inputStyle} />
-                  <Text style={fieldLabelStyle}>{t('cards.adc.vadc')}</Text><InputNumber value={vadcMax} onChange={(v) => setVadcMax(Number(v || 0))} min={0} step={0.1} style={inputStyle} />
-                  <Text style={fieldLabelStyle}>{t('cards.adc.rbottom')}</Text><InputNumber value={rBottomK} onChange={(v) => setRBottomK(Number(v || 0))} min={0.1} step={0.1} style={inputStyle} />
-                </Space>
+                <ResultBar
+                  label={t('cards.adc.rtop')}
+                  value={`${divider.rTopK.toFixed(1)} kΩ`}
+                  hint={`${t('cards.adc.ratio')}: ${divider.ratio.toFixed(2)} : 1`}
+                />
+                <div className={styles.fieldGrid}>
+                  <Field label={t('cards.adc.vin')}><InputNumber value={vinMax} onChange={(v) => setVinMax(Number(v || 0))} min={0} step={0.1} style={inputStyle} /></Field>
+                  <Field label={t('cards.adc.vadc')}><InputNumber value={vadcMax} onChange={(v) => setVadcMax(Number(v || 0))} min={0} step={0.1} style={inputStyle} /></Field>
+                  <Field label={t('cards.adc.rbottom')}><InputNumber value={rBottomK} onChange={(v) => setRBottomK(Number(v || 0))} min={0.1} step={0.1} style={inputStyle} /></Field>
+                </div>
               </Card>
             ),
           },
@@ -834,16 +803,16 @@ export function EmbeddedCalculators() {
             label: <span style={{ whiteSpace: 'nowrap' }}>{t('cards.rc.title')}</span>,
             children: (
               <Card title={t('cards.rc.title')} style={calcCardStyle} styles={{ body: calcCardBodyStyle }}>
-                <Space direction="vertical" size={14} style={{ width: '100%' }}>
-                  <Card style={metricCardStyle} styles={{ body: { padding: 14 } }}>
-                    <Text style={fieldLabelStyle}>{t('cards.rc.fc')}</Text>
-                    <div style={{ fontSize: 34, fontWeight: 700, lineHeight: 1.1, color: palette.accent }}>{cutoff.toFixed(1)} Hz</div>
-                    <Text style={{ color: palette.textSecondary }}>{t('cards.rc.required')}: {requiredR.toFixed(0)} Ω</Text>
-                  </Card>
-                  <Text style={fieldLabelStyle}>{t('cards.rc.r')}</Text><InputNumber value={rcR} onChange={(v) => setRcR(Number(v || 0))} min={1} style={inputStyle} />
-                  <Text style={fieldLabelStyle}>{t('cards.rc.c')}</Text><InputNumber value={rcC} onChange={(v) => setRcC(Number(v || 0))} min={0.1} step={0.1} style={inputStyle} />
-                  <Text style={fieldLabelStyle}>{t('cards.rc.target')}</Text><InputNumber value={targetFc} onChange={(v) => setTargetFc(Number(v || 0))} min={1} style={inputStyle} />
-                </Space>
+                <ResultBar
+                  label={t('cards.rc.fc')}
+                  value={`${cutoff.toFixed(1)} Hz`}
+                  hint={`${t('cards.rc.required')}: ${requiredR.toFixed(0)} Ω`}
+                />
+                <div className={styles.fieldGrid}>
+                  <Field label={t('cards.rc.r')}><InputNumber value={rcR} onChange={(v) => setRcR(Number(v || 0))} min={1} style={inputStyle} /></Field>
+                  <Field label={t('cards.rc.c')}><InputNumber value={rcC} onChange={(v) => setRcC(Number(v || 0))} min={0.1} step={0.1} style={inputStyle} /></Field>
+                  <Field label={t('cards.rc.target')}><InputNumber value={targetFc} onChange={(v) => setTargetFc(Number(v || 0))} min={1} style={inputStyle} /></Field>
+                </div>
               </Card>
             ),
           },
@@ -852,16 +821,16 @@ export function EmbeddedCalculators() {
             label: <span style={{ whiteSpace: 'nowrap' }}>{t('cards.gain.title')}</span>,
             children: (
               <Card title={t('cards.gain.title')} style={calcCardStyle} styles={{ body: calcCardBodyStyle }}>
-                <Space direction="vertical" size={14} style={{ width: '100%' }}>
-                  <Card style={metricCardStyle} styles={{ body: { padding: 14 } }}>
-                    <Text style={fieldLabelStyle}>{t('cards.gain.value')}</Text>
-                    <div style={{ fontSize: 34, fontWeight: 700, lineHeight: 1.1, color: palette.accent }}>{gain.gain.toFixed(2)} x</div>
-                    <Text style={{ color: palette.textSecondary }}>{t('cards.gain.db')}: {gain.gainDb.toFixed(2)} dB</Text>
-                  </Card>
-                  <Text style={fieldLabelStyle}>{t('cards.gain.rf')}</Text><InputNumber value={rf} onChange={(v) => setRf(Number(v || 0))} min={0} style={inputStyle} />
-                  <Text style={fieldLabelStyle}>{t('cards.gain.rg')}</Text><InputNumber value={rg} onChange={(v) => setRg(Number(v || 0))} min={1} style={inputStyle} />
-                  <Text style={{ color: palette.textSecondary }}>{t('cards.gain.formula')}</Text>
-                </Space>
+                <ResultBar
+                  label={t('cards.gain.value')}
+                  value={`${gain.gain.toFixed(2)} x`}
+                  hint={`${t('cards.gain.db')}: ${gain.gainDb.toFixed(2)} dB`}
+                />
+                <div className={styles.fieldGrid}>
+                  <Field label={t('cards.gain.rf')}><InputNumber value={rf} onChange={(v) => setRf(Number(v || 0))} min={0} style={inputStyle} /></Field>
+                  <Field label={t('cards.gain.rg')}><InputNumber value={rg} onChange={(v) => setRg(Number(v || 0))} min={1} style={inputStyle} /></Field>
+                  <span className={`${styles.note} ${styles.fullRow}`}>{t('cards.gain.formula')}</span>
+                </div>
               </Card>
             ),
           },
@@ -870,17 +839,17 @@ export function EmbeddedCalculators() {
             label: <span style={{ whiteSpace: 'nowrap' }}>{t('cards.i2s.title')}</span>,
             children: (
               <Card title={t('cards.i2s.title')} style={calcCardStyle} styles={{ body: calcCardBodyStyle }}>
-                <Space direction="vertical" size={14} style={{ width: '100%' }}>
-                  <Card style={metricCardStyle} styles={{ body: { padding: 14 } }}>
-                    <Text style={fieldLabelStyle}>BCLK</Text>
-                    <div style={{ fontSize: 34, fontWeight: 700, lineHeight: 1.1, color: palette.accent }}>{Math.round(i2s.bclk).toLocaleString()} Hz</div>
-                    <Text style={{ color: palette.textSecondary }}>MCLK: {Math.round(i2s.mclk).toLocaleString()} Hz · {t('cards.i2s.rate')}: {i2s.bitRateMbps.toFixed(3)} Mbps</Text>
-                  </Card>
-                  <Text style={fieldLabelStyle}>{t('cards.i2s.fs')}</Text><InputNumber value={sampleRate} onChange={(v) => setSampleRate(Number(v || 0))} min={8000} style={inputStyle} />
-                  <Text style={fieldLabelStyle}>{t('cards.i2s.bits')}</Text><InputNumber value={bitDepth} onChange={(v) => setBitDepth(Number(v || 0))} min={8} step={8} style={inputStyle} />
-                  <Text style={fieldLabelStyle}>{t('cards.i2s.channels')}</Text><InputNumber value={channels} onChange={(v) => setChannels(Number(v || 0))} min={1} max={2} style={inputStyle} />
-                  <Text style={fieldLabelStyle}>{t('cards.i2s.mclk')}</Text><InputNumber value={mclkMult} onChange={(v) => setMclkMult(Number(v || 0))} min={64} step={64} style={inputStyle} />
-                </Space>
+                <ResultBar
+                  label="BCLK"
+                  value={`${Math.round(i2s.bclk).toLocaleString()} Hz`}
+                  hint={`MCLK: ${Math.round(i2s.mclk).toLocaleString()} Hz · ${t('cards.i2s.rate')}: ${i2s.bitRateMbps.toFixed(3)} Mbps`}
+                />
+                <div className={styles.fieldGrid}>
+                  <Field label={t('cards.i2s.fs')}><InputNumber value={sampleRate} onChange={(v) => setSampleRate(Number(v || 0))} min={8000} style={inputStyle} /></Field>
+                  <Field label={t('cards.i2s.bits')}><InputNumber value={bitDepth} onChange={(v) => setBitDepth(Number(v || 0))} min={8} step={8} style={inputStyle} /></Field>
+                  <Field label={t('cards.i2s.channels')}><InputNumber value={channels} onChange={(v) => setChannels(Number(v || 0))} min={1} max={2} style={inputStyle} /></Field>
+                  <Field label={t('cards.i2s.mclk')}><InputNumber value={mclkMult} onChange={(v) => setMclkMult(Number(v || 0))} min={64} step={64} style={inputStyle} /></Field>
+                </div>
               </Card>
             ),
           },
