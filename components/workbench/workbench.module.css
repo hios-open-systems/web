@@ -542,6 +542,113 @@
   font-size: 13px;
 }
 
+/* ============================================================
+ * Shared tool header
+ * ============================================================ */
+.toolHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px;
+  border-radius: 18px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 16%, transparent), transparent 44%),
+    #ffffff;
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.05);
+}
+
+:global([data-theme="dark"]) .toolHeader {
+  border-color: rgba(255, 255, 255, 0.06);
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 20%, transparent), transparent 44%),
+    rgba(15, 23, 42, 0.7);
+  box-shadow: 0 18px 36px rgba(2, 6, 23, 0.26);
+}
+
+.toolHeaderTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.toolHeaderEyebrow {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: #0f172a;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+:global([data-theme="dark"]) .toolHeaderEyebrow {
+  color: #f8fafc;
+}
+
+.toolHeaderTitle {
+  margin: 0 !important;
+  font-size: clamp(1.6rem, 3vw, 2.2rem) !important;
+}
+
+.toolHeaderDescription {
+  margin: 0 !important;
+  max-width: 720px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #64748b;
+}
+
+:global([data-theme="dark"]) .toolHeaderDescription {
+  color: #94a3b8;
+}
+
+.toolHeaderActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.localityBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+
+.localityLocal {
+  color: #047857;
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.localityNetwork {
+  color: #b45309;
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+:global([data-theme="dark"]) .localityLocal {
+  color: #6ee7b7;
+}
+
+:global([data-theme="dark"]) .localityNetwork {
+  color: #fcd34d;
+}
+
 .codeBlock {
   margin: 0;
   padding: 16px;

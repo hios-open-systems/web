@@ -31,6 +31,20 @@ function safeBuildId(): string | undefined {
     return nextData.__NEXT_DATA__?.buildId;
 }
 
+/**
+ * Browser noise that is not actionable: the ResizeObserver "loop" warnings are
+ * emitted by the engine (and by libraries like Ant Design's rc-resize-observer)
+ * during normal layout settling. They are not real errors, so we keep them out
+ * of the feedback inbox instead of letting them drown real reports.
+ */
+const IGNORED_ERROR_PATTERNS = [
+    /ResizeObserver loop (limit exceeded|completed with undelivered notifications)/i,
+];
+
+function isIgnoredError(message: string): boolean {
+    return IGNORED_ERROR_PATTERNS.some((pattern) => pattern.test(message));
+}
+
 function extractTitle(message: string): string {
     const firstLine = message.split('\n', 1)[0] ?? message;
     return firstLine.length > 120 ? firstLine.slice(0, 117) + '...' : firstLine;
@@ -45,6 +59,7 @@ export function installCapture(options: CaptureOptions = {}): () => void {
 
     const handleError = (event: ErrorEvent) => {
         const message = event.message || event.error?.message || 'Error desconocido';
+        if (isIgnoredError(message)) return;
         const stack = event.error instanceof Error ? event.error.stack : undefined;
         const context = options.getContext?.();
         const entry = appendEntry({
