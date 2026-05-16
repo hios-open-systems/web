@@ -28,11 +28,23 @@ export function ModuleViewer({ module }: ModuleViewerProps) {
     const doc = iframeRef.current?.contentDocument;
     if (!doc?.body) return;
 
+    let rafId = 0;
+    let lastHeight = 0;
+    // Defer to the next frame and skip no-op updates. Measuring synchronously
+    // inside the ResizeObserver callback re-triggers it on the same tick,
+    // which the browser reports as the (benign but noisy) "ResizeObserver loop
+    // completed with undelivered notifications" error.
     const measure = () => {
-      const next = Math.ceil(
-        Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight)
-      );
-      if (next > 0) setIframeHeight(next);
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const next = Math.ceil(
+          Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight)
+        );
+        if (next > 0 && next !== lastHeight) {
+          lastHeight = next;
+          setIframeHeight(next);
+        }
+      });
     };
 
     measure();
