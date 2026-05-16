@@ -212,6 +212,46 @@ export function SnippetsShelf() {
     const statusText = user
         ? t('accountStatus', { login: user.login })
         : t('localStatus');
+    const publicCount = user ? snippets.filter((snippet) => snippet.isPublic).length : 0;
+    const snippetSummary = user
+        ? [
+            {
+                label: t('summarySavedLabel'),
+                value: String(snippets.length),
+                hint: t('summarySavedHintAccount'),
+            },
+            {
+                label: t('summaryVisibilityLabel'),
+                value: `${publicCount}/${snippets.length}`,
+                hint: t('summaryVisibilityHint'),
+            },
+            {
+                label: t('summarySourceLabel'),
+                value: t('cloudBadge'),
+                hint: statusText,
+            },
+        ]
+        : [
+            {
+                label: t('summarySavedLabel'),
+                value: String(snippets.length),
+                hint: t('summarySavedHintLocal'),
+            },
+            {
+                label: t('summaryImportLabel'),
+                value: String(localSnippets.length),
+                hint: t('summaryImportHint'),
+            },
+            {
+                label: t('summarySourceLabel'),
+                value: t('localBadge'),
+                hint: statusText,
+            },
+        ];
+
+    const formatSnippetDate = (value: number) => new Date(value).toLocaleString();
+    const getSnippetLineCount = (value: string) => value.split(/\r?\n/).length;
+    const getSnippetCharCount = (value: string) => value.length;
 
     const themeVars = useMemo(() => ({
         '--wb-surface-border': mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.08)',
@@ -240,6 +280,16 @@ export function SnippetsShelf() {
                     {user && isRemoteLoading ? <Text className={styles.subtleText}>{t('syncing')}</Text> : null}
                 </div>
 
+                <div className={styles.snippetSummaryGrid}>
+                    {snippetSummary.map((item) => (
+                        <div key={item.label} className={styles.snippetSummaryCard}>
+                            <Text className={styles.snippetSummaryLabel}>{item.label}</Text>
+                            <Text className={styles.snippetSummaryValue}>{item.value}</Text>
+                            <Text className={styles.subtleText}>{item.hint}</Text>
+                        </div>
+                    ))}
+                </div>
+
                 {syncError ? (
                     <Alert
                         type="warning"
@@ -265,29 +315,31 @@ export function SnippetsShelf() {
                     />
                 ) : null}
 
-                <Space direction="vertical" size={10} className={styles.snippetInputGroup}>
-                    <Input
-                        value={title}
-                        onChange={(event) => setTitle(event.target.value)}
-                        placeholder={t('titlePlaceholder')}
-                        size="large"
-                    />
-                    <Input
-                        value={tags}
-                        onChange={(event) => setTags(event.target.value)}
-                        placeholder={t('tagsPlaceholder')}
-                        size="large"
-                    />
-                    <TextArea
-                        value={body}
-                        onChange={(event) => setBody(event.target.value)}
-                        placeholder={t('bodyPlaceholder')}
-                        autoSize={{ minRows: 4, maxRows: 8 }}
-                    />
-                    <Button type="primary" icon={<SaveOutlined />} onClick={() => void handleSave()} disabled={!canSave} loading={isSaving}>
-                        {t('save')}
-                    </Button>
-                </Space>
+                <div className={styles.snippetComposer}>
+                    <Space direction="vertical" size={10} className={styles.snippetInputGroup}>
+                        <Input
+                            value={title}
+                            onChange={(event) => setTitle(event.target.value)}
+                            placeholder={t('titlePlaceholder')}
+                            size="large"
+                        />
+                        <Input
+                            value={tags}
+                            onChange={(event) => setTags(event.target.value)}
+                            placeholder={t('tagsPlaceholder')}
+                            size="large"
+                        />
+                        <TextArea
+                            value={body}
+                            onChange={(event) => setBody(event.target.value)}
+                            placeholder={t('bodyPlaceholder')}
+                            autoSize={{ minRows: 4, maxRows: 8 }}
+                        />
+                        <Button type="primary" icon={<SaveOutlined />} onClick={() => void handleSave()} disabled={!canSave} loading={isSaving}>
+                            {t('save')}
+                        </Button>
+                    </Space>
+                </div>
 
                 {snippets.length === 0 ? (
                     <Empty description={t('empty')} image={Empty.PRESENTED_IMAGE_SIMPLE} />
@@ -302,9 +354,17 @@ export function SnippetsShelf() {
                             >
                                 <Space direction="vertical" size={12} className={styles.stackFull}>
                                     <div className={styles.snippetHeader}>
-                                        <div>
-                                            <Text strong className={styles.snippetTitle}>{snippet.title}</Text>
-                                            <Space size={[6, 6]} wrap>
+                                        <div className={styles.snippetTitleBlock}>
+                                            <div className={styles.snippetTitleRow}>
+                                                <Text strong className={styles.snippetTitle}>{snippet.title}</Text>
+                                                <span className={styles.snippetUpdatedPill}>{formatSnippetDate(snippet.updatedAt)}</span>
+                                            </div>
+                                            <div className={styles.snippetMetaRow}>
+                                                <span className={styles.snippetMetaStat}>{getSnippetLineCount(snippet.body)}L</span>
+                                                <span className={styles.snippetMetaDivider} />
+                                                <span className={styles.snippetMetaStat}>{getSnippetCharCount(snippet.body)}c</span>
+                                            </div>
+                                            <Space size={[6, 6]} wrap className={styles.snippetTagRow}>
                                                 {snippet.tags.map((tag) => <Tag key={tag}>{tag}</Tag>)}
                                                 {user ? (
                                                     <Tag color={snippet.isPublic ? 'green' : 'default'}>
@@ -312,9 +372,8 @@ export function SnippetsShelf() {
                                                     </Tag>
                                                 ) : null}
                                             </Space>
-                                            <Text className={styles.subtleText}>{new Date(snippet.updatedAt).toLocaleString()}</Text>
                                         </div>
-                                        <Space>
+                                        <Space wrap className={styles.snippetActions}>
                                             <Button size="small" icon={<CopyOutlined />} onClick={() => handleCopy(snippet.body)}>
                                                 {t('copy')}
                                             </Button>

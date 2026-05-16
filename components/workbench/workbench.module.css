@@ -8,6 +8,270 @@
   padding: 48px 24px 80px;
 }
 
+.landingHero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.heroCopy,
+.heroPanel,
+.sectionHeroCard,
+.principleCard,
+.sectionGroup {
+  border-radius: 18px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: #ffffff;
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.05);
+}
+
+:global([data-theme="dark"]) .heroCopy,
+:global([data-theme="dark"]) .heroPanel,
+:global([data-theme="dark"]) .sectionHeroCard,
+:global([data-theme="dark"]) .principleCard,
+:global([data-theme="dark"]) .sectionGroup {
+  border-color: rgba(255, 255, 255, 0.06);
+  background: rgba(15, 23, 42, 0.68);
+  box-shadow: 0 18px 36px rgba(2, 6, 23, 0.26);
+}
+
+.heroCopy {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px;
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 16%, transparent), transparent 42%),
+    #ffffff;
+}
+
+:global([data-theme="dark"]) .heroCopy {
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 22%, transparent), transparent 42%),
+    rgba(15, 23, 42, 0.74);
+}
+
+.heroBadge,
+.sectionHeroEyebrow,
+.principleBadge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: #0f172a;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+:global([data-theme="dark"]) .heroBadge,
+:global([data-theme="dark"]) .sectionHeroEyebrow,
+:global([data-theme="dark"]) .principleBadge {
+  color: #f8fafc;
+}
+
+.heroActions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.heroPrimaryCta,
+.heroSecondaryCta,
+.entryPanelCard,
+.toolCardCta {
+  text-decoration: none;
+}
+
+.heroPrimaryCta,
+.heroSecondaryCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease;
+}
+
+.heroPrimaryCta {
+  background: var(--accent);
+  color: #0f172a;
+}
+
+.heroPrimaryCta:hover,
+.heroSecondaryCta:hover {
+  transform: translateY(-1px);
+}
+
+.heroSecondaryCta {
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  color: #0f172a;
+}
+
+:global([data-theme="dark"]) .heroSecondaryCta {
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+}
+
+.heroPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 22px;
+}
+
+.heroPanelHeader,
+.sectionIntro {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.heroPanelTitle,
+.sectionIntroTitle,
+.sectionHeroTitle {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+:global([data-theme="dark"]) .heroPanelTitle,
+:global([data-theme="dark"]) .sectionIntroTitle,
+:global([data-theme="dark"]) .sectionHeroTitle {
+  color: #f8fafc;
+}
+
+.heroPanelSubtitle,
+.sectionIntroSubtitle,
+.sectionDescription,
+.sectionHeroDescription,
+.principleText {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #64748b;
+}
+
+:global([data-theme="dark"]) .heroPanelSubtitle,
+:global([data-theme="dark"]) .sectionIntroSubtitle,
+:global([data-theme="dark"]) .sectionDescription,
+:global([data-theme="dark"]) .sectionHeroDescription,
+:global([data-theme="dark"]) .principleText {
+  color: #94a3b8;
+}
+
+.entryPanelGrid,
+.principlesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.entryPanelGrid {
+  grid-template-columns: 1fr;
+}
+
+.entryPanelCard {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: #f8fafc;
+  color: inherit;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+:global([data-theme="dark"]) .entryPanelCard {
+  border-color: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.entryPanelCard:hover {
+  transform: translateY(-1px);
+  border-color: rgba(245, 158, 11, 0.35);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+}
+
+.entryPanelIcon,
+.sectionIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  font-size: 16px;
+}
+
+.entryPanelBody,
+.sectionHeadingBlock {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.entryPanelMeta {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.entryPanelTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+:global([data-theme="dark"]) .entryPanelTitle {
+  color: #f8fafc;
+}
+
+.entryPanelCount,
+.sectionHeroCount,
+.toolCardCta {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.entryPanelCount,
+.sectionHeroCount {
+  color: #94a3b8;
+}
+
+.entryPanelDescription {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #64748b;
+}
+
+:global([data-theme="dark"]) .entryPanelDescription {
+  color: #94a3b8;
+}
+
+.entryPanelCta,
+.toolCardCta {
+  color: var(--accent);
+  font-weight: 700;
+}
+
 .pageHeader {
   display: flex;
   flex-direction: column;
@@ -79,18 +343,21 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
+  padding: 18px;
 }
 
 .sectionGroupHeader {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  align-items: flex-start;
+  gap: 12px;
 }
 
 .sectionTitleRow {
   display: flex;
   align-items: center;
   gap: 12px;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .sectionDot {
@@ -98,6 +365,11 @@
   height: 8px;
   border-radius: 50%;
   flex-shrink: 0;
+}
+
+.sectionIcon {
+  width: 42px;
+  height: 42px;
 }
 
 .sectionTitleLink {
@@ -118,7 +390,6 @@
 }
 
 .sectionCount {
-  margin-left: auto;
   font-size: 11px;
   letter-spacing: 0.06em;
   color: #94a3b8;
@@ -174,6 +445,7 @@
   flex-direction: column;
   gap: 4px;
   min-width: 0;
+  width: 100%;
 }
 
 .toolName {
@@ -194,6 +466,33 @@
 
 :global([data-theme="dark"]) .toolDescription {
   color: #94a3b8;
+}
+
+.sectionHeroCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+  padding: 20px;
+}
+
+.sectionHeroHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.sectionHeroTitle {
+  margin-top: 8px;
+}
+
+.principlesSection {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 24px;
 }
 
 /* ============================================================
@@ -482,12 +781,68 @@
   width: 100%;
 }
 
+.snippetComposer {
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 14%, transparent), transparent 42%),
+    #f8fafc;
+}
+
+:global([data-theme="dark"]) .snippetComposer {
+  border-color: rgba(255, 255, 255, 0.06);
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 18%, transparent), transparent 42%),
+    rgba(15, 23, 42, 0.82);
+}
+
 .snippetStatusRow {
   display: flex;
   justify-content: space-between;
   gap: 12px;
   align-items: center;
   flex-wrap: wrap;
+}
+
+.snippetSummaryGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.snippetSummaryCard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: #f8fafc;
+}
+
+:global([data-theme="dark"]) .snippetSummaryCard {
+  border-color: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.snippetSummaryLabel {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.snippetSummaryValue {
+  font-size: 22px;
+  line-height: 1.1;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+:global([data-theme="dark"]) .snippetSummaryValue {
+  color: #f8fafc;
 }
 
 .snippetBanner {
@@ -497,12 +852,16 @@
 .snippetCard {
   border-radius: 12px;
   border: 1px solid rgba(15, 23, 42, 0.08);
-  background: #ffffff;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.98));
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.05);
 }
 
 :global([data-theme="dark"]) .snippetCard {
   border-color: rgba(255, 255, 255, 0.06);
-  background: rgba(15, 23, 42, 0.6);
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.84), rgba(2, 6, 23, 0.82));
+  box-shadow: 0 18px 36px rgba(2, 6, 23, 0.28);
 }
 
 .snippetHeader {
@@ -512,15 +871,81 @@
   align-items: flex-start;
 }
 
+.snippetTitleBlock {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.snippetTitleRow {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 .snippetTitle {
   display: block;
-  margin-bottom: 6px;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.snippetUpdatedPill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: #0f172a;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+:global([data-theme="dark"]) .snippetUpdatedPill {
+  color: #f8fafc;
+  background: color-mix(in srgb, var(--accent) 18%, rgba(255, 255, 255, 0.06));
+}
+
+.snippetMetaRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  color: #64748b;
+  font-size: 12px;
+}
+
+:global([data-theme="dark"]) .snippetMetaRow {
+  color: #94a3b8;
+}
+
+.snippetMetaStat {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.snippetMetaDivider {
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.5;
+}
+
+.snippetTagRow {
+  width: 100%;
+}
+
+.snippetActions {
+  justify-content: flex-end;
 }
 
 .snippetPre {
   margin: 0;
-  padding: 12px;
-  border-radius: 10px;
+  padding: 14px;
+  border-radius: 14px;
   overflow-x: auto;
   background: #0f172a;
   color: #e2e8f0;
@@ -538,10 +963,35 @@
   .page {
     padding: 36px 18px 64px;
   }
+
+  .landingHero,
+  .entryPanelGrid,
+  .principlesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .heroActions,
+  .sectionHeroHeader,
+  .entryPanelMeta,
+  .sectionTitleRow {
+    align-items: flex-start;
+  }
+
   .snippetStatusRow,
   .snippetHeader {
     align-items: stretch;
   }
+
+  .snippetTitleRow,
+  .snippetMetaRow,
+  .snippetActions {
+    justify-content: flex-start;
+  }
+
+  .snippetSummaryGrid {
+    grid-template-columns: 1fr;
+  }
+
   .snippetHeader {
     flex-direction: column;
   }

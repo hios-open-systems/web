@@ -499,6 +499,16 @@
         "syncHintAccount": "Con login el accent actual puede seguirte entre dispositivos.",
         "syncNow": "Guardar accent actual en la cuenta",
         "syncWarningTitle": "No se pudo sincronizar el tema de la cuenta",
+        "summaryRegion": "Resumen del tema",
+        "summarySyncLabel": "Sync",
+        "summarySyncHintLocal": "Todavía no hay copia remota para este accent.",
+        "summarySyncHintAccount": "Tu cuenta ya puede llevar este accent a otros dispositivos.",
+        "summaryPresetLabel": "Preset activo",
+        "summaryPresetCustom": "Custom",
+        "summaryPresetHintPreset": "Estás usando una paleta base lista para ajustar.",
+        "summaryPresetHintCustom": "El accent actual salió de un hex manual.",
+        "summaryAccentLabel": "Accent activo",
+        "summaryAccentHint": "Este valor alimenta badges, acciones y highlights del workbench.",
         "presets": "Presets",
         "presetsHint": "Elegí una paleta lista para usar.",
         "custom": "Color personalizado",
@@ -515,9 +525,29 @@
         "accountFootnote": "Los cambios siguen aplicando local primero, pero la copia de cuenta pasa a ser la referencia para futuros dispositivos."
     },
     "Workbench": {
+        "signals": {
+            "localFirst": "Local-first y privado",
+            "shareable": "Sesiones compartibles",
+            "dailyUse": "Hecho para volver todos los días"
+        },
         "landing": {
+            "badge": "Capa de producto",
             "title": "Workbench",
-            "subtitle": "Las herramientas chicas que uso a diario, en un solo lugar."
+            "subtitle": "Las herramientas chicas pero frecuentes necesitan una estructura real. Validación, generación y tests mantienen útil el catálogo mientras crece.",
+            "primaryCta": "Abrir validación",
+            "secondaryCta": "Abrir generación",
+            "panelTitle": "Entrá por una sección clara",
+            "panelSubtitle": "Empezá por intención, no por una pared de cards. Cada sección agrupa tools relacionadas para que el workbench pueda escalar sin perder legibilidad.",
+            "sectionsTitle": "Catálogo por intención",
+            "sectionsSubtitle": "Cada sección puede crecer sin romper la arquitectura de información ni convertir el workbench en una lista plana.",
+            "cardCta": "Abrir sección",
+            "principlesTitle": "Qué optimiza esta superficie",
+            "principlesSubtitle": "Primero claridad, velocidad y una buena experiencia móvil. Después complejidad.",
+            "principles": {
+                "localFirst": "Payloads, notas y estados quedan locales siempre que tenga sentido. Menos fricción y privacidad real.",
+                "shareable": "Cuando un flujo importa de verdad, lo podés compartir por URL en vez de explicar diez pasos manuales.",
+                "dailyUse": "La meta no es una demo linda. Es un workbench al que querés volver durante el día de trabajo."
+            }
         },
         "sections": {
             "validation": {
@@ -852,6 +882,14 @@
             "importAction": "Importar snippets locales",
             "imported": "Se importaron {imported} snippets y se saltearon {skipped}",
             "importError": "No se pudieron importar los snippets locales",
+            "summarySavedLabel": "Guardados",
+            "summarySavedHintLocal": "Disponibles ahora mismo en este navegador.",
+            "summarySavedHintAccount": "La copia canónica ahora vive en tu cuenta.",
+            "summaryVisibilityLabel": "Públicos",
+            "summaryVisibilityHint": "Snippets compartibles sobre el total de la cuenta.",
+            "summaryImportLabel": "Listos después",
+            "summaryImportHint": "Estos snippets locales pueden pasar a tu cuenta cuando inicies sesión.",
+            "summarySourceLabel": "Fuente de verdad",
             "privateLabel": "Privado",
             "publicLabel": "Público",
             "makePublic": "Hacer público",
@@ -863,6 +901,12 @@
             "shareCopied": "Link público copiado",
             "shareError": "No se pudo copiar el link público"
         }
+    },
+    "VersionWatcher": {
+        "title": "Hay una versión nueva disponible",
+        "description": "Esta pestaña quedó con un deploy viejo. Recargá para tomar los últimos fixes y cambios visuales.",
+        "reload": "Recargar ahora",
+        "later": "Más tarde"
     },
     "Calculators": {
         "title": "Calculadoras Embebidas",

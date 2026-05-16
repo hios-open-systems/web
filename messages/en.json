@@ -500,6 +500,16 @@
         "syncHintAccount": "With sign-in the current accent can follow your account across devices.",
         "syncNow": "Save current accent to account",
         "syncWarningTitle": "Could not sync account theme",
+        "summaryRegion": "Theme summary",
+        "summarySyncLabel": "Sync",
+        "summarySyncHintLocal": "There is no remote copy for this accent yet.",
+        "summarySyncHintAccount": "Your account can already carry this accent to other devices.",
+        "summaryPresetLabel": "Active preset",
+        "summaryPresetCustom": "Custom",
+        "summaryPresetHintPreset": "You are using a base palette that is ready to keep tuning.",
+        "summaryPresetHintCustom": "The current accent came from a manual hex value.",
+        "summaryAccentLabel": "Active accent",
+        "summaryAccentHint": "This value drives badges, actions, and highlighted UI across the workbench.",
         "presets": "Presets",
         "presetsHint": "Pick a ready-made palette.",
         "custom": "Custom color",
@@ -516,9 +526,29 @@
         "accountFootnote": "Changes still apply locally first, but your account copy becomes the source for future devices."
     },
     "Workbench": {
+        "signals": {
+            "localFirst": "Local-first and private",
+            "shareable": "Shareable sessions",
+            "dailyUse": "Built for daily return"
+        },
         "landing": {
+            "badge": "Product layer",
             "title": "Workbench",
-            "subtitle": "The small tools I actually use every day, in one place."
+            "subtitle": "Small but frequent tools deserve real structure. Validation, generation, and testing keep the catalog useful as it grows.",
+            "primaryCta": "Open validation",
+            "secondaryCta": "Open generation",
+            "panelTitle": "Enter through a clear section",
+            "panelSubtitle": "Start from intent, not from a wall of cards. Each section groups related tools so the workbench can scale without losing readability.",
+            "sectionsTitle": "Catalog by intent",
+            "sectionsSubtitle": "Each section can grow without breaking the information architecture or turning the workbench into a flat list.",
+            "cardCta": "Open section",
+            "principlesTitle": "What this surface is optimizing for",
+            "principlesSubtitle": "Clarity, speed, and good mobile use first. Complexity second.",
+            "principles": {
+                "localFirst": "Payloads, notes, and state stay local whenever that makes sense. Less friction and real privacy.",
+                "shareable": "When a workflow really matters, you can share it by URL instead of explaining ten manual steps.",
+                "dailyUse": "The goal is not a pretty demo. It is a workbench you actually want to return to during the workday."
+            }
         },
         "sections": {
             "validation": {
@@ -853,6 +883,14 @@
             "importAction": "Import local snippets",
             "imported": "Imported {imported} snippets, skipped {skipped}",
             "importError": "Could not import local snippets",
+            "summarySavedLabel": "Saved",
+            "summarySavedHintLocal": "Available in this browser right now.",
+            "summarySavedHintAccount": "Canonical copy currently lives in your account.",
+            "summaryVisibilityLabel": "Public",
+            "summaryVisibilityHint": "Share-ready snippets over total account snippets.",
+            "summaryImportLabel": "Ready later",
+            "summaryImportHint": "These local snippets can move into your account when you sign in.",
+            "summarySourceLabel": "Source of truth",
             "privateLabel": "Private",
             "publicLabel": "Public",
             "makePublic": "Make public",
@@ -864,6 +902,12 @@
             "shareCopied": "Share link copied",
             "shareError": "Could not copy share link"
         }
+    },
+    "VersionWatcher": {
+        "title": "A new version is available",
+        "description": "This tab is running an older deploy. Reload to pick up the latest fixes and UI changes.",
+        "reload": "Reload now",
+        "later": "Later"
     },
     "Calculators": {
         "title": "Embedded Calculators",

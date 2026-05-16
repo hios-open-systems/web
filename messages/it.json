@@ -1,14 +1,14 @@
 {
     "Hero": {
         "titlePrefix": "Open",
-            "black": "Nero",
-            "brown": "Marrone",
-            "red": "Rosso",
-            "orange": "Arancione",
-            "yellow": "Giallo",
-            "green": "Verde",
-            "blue": "Blu",
-            "violet": "Viola",
+        "black": "Nero",
+        "brown": "Marrone",
+        "red": "Rosso",
+        "orange": "Arancione",
+        "yellow": "Giallo",
+        "green": "Verde",
+        "blue": "Blu",
+        "violet": "Viola",
         "tagline_speaker": "WiFi + I2S = audio senza fili, zero rumore.",
         "tutorials": "tutorial",
         "files": "file",
@@ -772,7 +772,17 @@
             "delete": "Elimina",
             "saved": "Snippet salvato",
             "copied": "Snippet copiato",
-            "copyError": "Impossibile copiare"
+            "copyError": "Impossibile copiare",
+            "summarySavedLabel": "Salvati",
+            "summarySavedHintLocal": "Disponibili adesso in questo browser.",
+            "summarySavedHintAccount": "La copia canonica vive attualmente nel tuo account.",
+            "summaryVisibilityLabel": "Pubblici",
+            "summaryVisibilityHint": "Snippet condivisibili sul totale dell’account.",
+            "summaryImportLabel": "Pronti dopo",
+            "summaryImportHint": "Questi snippet locali possono passare al tuo account quando accedi.",
+            "summarySourceLabel": "Fonte di verità",
+            "cloudBadge": "Su account",
+            "localBadge": "Solo locale"
         }
     },
     "Calculators": {
@@ -919,5 +929,23 @@
         "copy_link": "Copia link",
         "share_ok": "Link copiato",
         "share_error": "Impossibile copiare il link"
+    },
+    "Settings": {
+        "summaryRegion": "Riepilogo tema",
+        "summarySyncLabel": "Sync",
+        "summarySyncHintLocal": "Non c’è ancora una copia remota per questo accent.",
+        "summarySyncHintAccount": "Il tuo account può già portare questo accent su altri dispositivi.",
+        "summaryPresetLabel": "Preset attivo",
+        "summaryPresetCustom": "Custom",
+        "summaryPresetHintPreset": "Stai usando una palette di base pronta da continuare a regolare.",
+        "summaryPresetHintCustom": "L’accent attuale proviene da un valore hex manuale.",
+        "summaryAccentLabel": "Accent attivo",
+        "summaryAccentHint": "Questo valore alimenta badge, azioni e UI in evidenza nel workbench."
+    },
+    "VersionWatcher": {
+        "title": "È disponibile una nuova versione",
+        "description": "Questa scheda sta usando un deploy più vecchio. Ricarica per prendere gli ultimi fix e le modifiche alla UI.",
+        "reload": "Ricarica ora",
+        "later": "Più tardi"
     }
 }
