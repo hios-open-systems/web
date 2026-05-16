@@ -4,532 +4,429 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LM2596 Buck Converter - Pinout</title>
+  <title>LM2596 Buck - Pinout Interactivo</title>
   <style>
     :root {
-      --bg: #0d0d0d;
-      --card: #1a1a1a;
-      --border: #333;
+      --bg: #0a0a0a;
+      --card: #141414;
+      --border: #2a2a2a;
       --text: #e5e5e5;
       --text-dim: #888;
-      --accent: #f59e0b;
-      --power-vin: #ef4444;
-      --power-vout: #22c55e;
-      --power-gnd: #525252;
+      --accent: #10b981;
+      --cat-vin: #ef4444;
+      --cat-vout: #22c55e;
+      --cat-gnd: #525252;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: var(--bg);
       color: var(--text);
       padding: 20px;
-      line-height: 1.4;
+      line-height: 1.5;
+      min-height: 100vh;
     }
 
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-    }
+    .container { max-width: 1100px; margin: 0 auto; }
 
     header {
       text-align: center;
-      margin-bottom: 25px;
+      margin-bottom: 24px;
       padding-bottom: 20px;
       border-bottom: 1px solid var(--border);
     }
 
-    h1 {
-      color: var(--accent);
-      font-size: 24px;
-      margin-bottom: 8px;
-    }
+    h1 { color: var(--accent); font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+    .subtitle { color: var(--text-dim); font-size: 14px; }
 
-    .subtitle {
-      color: var(--text-dim);
-      font-size: 13px;
-    }
-
-    .print-btn {
-      position: fixed;
-      top: 20px;
-      right: 20px;
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
       background: var(--accent);
       color: #000;
-      border: none;
-      padding: 8px 16px;
       border-radius: 4px;
-      cursor: pointer;
-      font-family: inherit;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
+      margin-left: 8px;
     }
 
-    .print-btn:hover {
-      opacity: 0.9;
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 24px;
+      padding: 16px;
+      background: var(--card);
+      border-radius: 12px;
+      border: 1px solid var(--border);
     }
 
-    .module {
+    .toolbar-group { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+
+    .filter-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover { border-color: var(--accent); }
+    .filter-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+    .filter-btn .dot { width: 10px; height: 10px; border-radius: 2px; }
+
+    .btn-group {
+      display: flex;
+      gap: 4px;
+      margin-left: 12px;
+      padding-left: 12px;
+      border-left: 1px solid var(--border);
+    }
+
+    .btn-small {
+      padding: 4px 10px;
+      font-size: 11px;
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-
-    .module h2 {
-      font-size: 18px;
-      margin-bottom: 4px;
-      color: var(--text);
-    }
-
-    .module-subtitle {
-      font-size: 13px;
-      color: var(--text-dim);
-      margin-bottom: 15px;
-    }
-
-    .pinout {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 30px;
-      margin: 25px 0;
-      flex-wrap: wrap;
-    }
-
-    .pin-column {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      min-width: 120px;
-    }
-
-    .pin-column.left {
-      align-items: flex-end;
-    }
-
-    .pin-column.right {
-      align-items: flex-start;
-    }
-
-    .chip-body {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      min-width: 140px;
-      padding: 20px;
-      background: linear-gradient(135deg, #333 0%, #1a1a1a 100%);
-      border: 2px solid var(--border);
-      border-radius: 8px;
-    }
-
-    .display-label {
-      font-size: 10px;
-      color: var(--text-dim);
-      margin-bottom: 8px;
-    }
-
-    .display-screen {
-      background: #111;
-      padding: 10px 16px;
       border-radius: 4px;
-      font-size: 20px;
-      color: #0f0;
-      font-family: 'SF Mono', monospace;
-      border: 1px solid #222;
+      color: var(--text-dim);
+      cursor: pointer;
     }
 
-    .chip-label {
-      margin-top: 12px;
-      font-weight: 600;
-      font-size: 12px;
-      color: var(--text-dim);
+    .btn-small:hover { color: var(--text); border-color: var(--accent); }
+
+    .pinout-container {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      gap: 0;
+      margin: 24px 0;
+      overflow-x: auto;
+      padding: 20px 0;
+    }
+
+    .pin-column { display: flex; flex-direction: column; gap: 1px; }
+    .pin-column.left { align-items: flex-end; }
+    .pin-column.right { align-items: flex-start; }
+
+    .chip {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      width: 120px;
+      background: linear-gradient(180deg, #1f1f1f 0%, #0f0f0f 100%);
+      border: 2px solid #333;
+      border-radius: 6px;
+      padding: 12px 8px;
+      position: relative;
+    }
+
+    .chip::before {
+      content: '';
+      position: absolute;
+      top: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 12px;
+      background: #333;
+      border-radius: 0 0 12px 12px;
+    }
+
+    .chip.ic::before, .chip.module::before { display: none; }
+
+    .chip-name { font-size: 12px; font-weight: 700; color: #888; text-align: center; margin-top: 8px; }
+    .chip-module { font-size: 9px; color: #555; margin-top: 2px; }
+
+    .antenna {
+      width: 45px;
+      height: 55px;
+      border: 2px solid #444;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      background: repeating-linear-gradient(0deg, #333 0px, #333 2px, transparent 2px, transparent 4px);
+    }
+
+    .usb-port {
+      width: 30px;
+      height: 14px;
+      background: #444;
+      border-radius: 2px;
+      margin-top: 8px;
+      position: relative;
+    }
+
+    .usb-port::after {
+      content: 'USB';
+      font-size: 6px;
+      color: #666;
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .ic-notch {
+      width: 26px;
+      height: 13px;
+      border: 2px solid #444;
+      border-top: none;
+      border-radius: 0 0 26px 26px;
+      margin-bottom: 10px;
+    }
+
+    .display {
+      width: 84px;
+      height: 38px;
+      background: #050505;
+      border: 1px solid #333;
+      border-radius: 4px;
+      color: #22c55e;
+      font-family: 'SF Mono', 'Consolas', monospace;
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      box-shadow: inset 0 0 8px rgba(34, 197, 94, 0.25);
     }
 
     .pin-row {
       display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 6px 10px;
-      border-radius: 4px;
-      transition: all 0.2s;
-      border: 1px solid transparent;
+      gap: 4px;
+      padding: 2px 8px;
+      min-height: 24px;
+      border-radius: 3px;
+      transition: all 0.15s;
+      cursor: default;
     }
 
-    .pin-row:hover {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: var(--accent);
-    }
+    .pin-row:hover { background: rgba(255, 255, 255, 0.05); }
+    .pin-row.dimmed { opacity: 0.15; }
+    .pin-row.highlight { background: rgba(16, 185, 129, 0.15); }
 
-    .pin-number {
-      min-width: 20px;
-      font-weight: 600;
-      font-size: 11px;
-      color: var(--text-dim);
-    }
+    .pin-num { min-width: 18px; font-size: 10px; font-weight: 600; color: var(--text-dim); text-align: center; }
+    .pin-labels { display: flex; gap: 3px; flex-wrap: wrap; }
+    .left .pin-labels { justify-content: flex-end; }
 
     .pin-label {
-      padding: 4px 10px;
+      padding: 2px 5px;
       border-radius: 3px;
-      font-size: 13px;
+      font-size: 9px;
       font-weight: 600;
+      font-family: 'SF Mono', 'Consolas', monospace;
       white-space: nowrap;
+      transition: all 0.15s;
     }
 
-    .pin-row[data-cat="VIN"] .pin-label { background: var(--power-vin); color: #fff; }
-    .pin-row[data-cat="VOUT"] .pin-label { background: var(--power-vout); color: #000; }
-    .pin-row[data-cat="GND"] .pin-label { background: var(--power-gnd); color: #fff; }
+    .pin-label.primary { font-weight: 700; font-size: 10px; }
 
-    .pinout-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 20px 0;
-      font-size: 13px;
-    }
+    .pin-label[data-type="vin"] { background: var(--cat-vin); color: #fff; }
+    .pin-label[data-type="vout"] { background: var(--cat-vout); color: #fff; }
+    .pin-label[data-type="gnd"] { background: var(--cat-gnd); color: #fff; }
+    .pin-label[data-type="nc"] { background: #333; color: #666; }
 
-    .pinout-table th {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid var(--border);
-      font-weight: 600;
-    }
-
-    .pinout-table td {
-      padding: 10px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .pin-cat {
-      padding: 2px 8px;
-      border-radius: 3px;
-      font-size: 11px;
-      font-weight: 600;
-    }
-
-    .cat-vin { background: var(--power-vin); color: #fff; }
-    .cat-vout { background: var(--power-vout); color: #000; }
-    .cat-gnd { background: var(--power-gnd); color: #fff; }
-
-    .warning {
-      margin-top: 15px;
-      padding: 12px;
-      background: rgba(245, 158, 11, 0.15);
-      border: 1px solid rgba(245, 158, 11, 0.3);
-      border-radius: 6px;
-      font-size: 12px;
-    }
-
-    .warning strong {
-      color: var(--accent);
-    }
-
-    .specs {
-      margin-top: 20px;
-      padding: 15px;
-      background: rgba(255, 255, 255, 0.02);
-      border-radius: 8px;
-    }
-
-    .specs h3 {
-      font-size: 14px;
-      margin-bottom: 12px;
-      color: var(--accent);
-    }
-
-    .specs-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-    }
-
-    .spec-item {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .spec-label {
-      font-size: 11px;
-      color: var(--text-dim);
-    }
-
-    .spec-value {
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-      justify-content: center;
-      padding: 15px;
+    .info-section {
       background: var(--card);
-      border-radius: 8px;
-      margin-top: 20px;
-      font-size: 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 24px;
     }
 
-    .legend-item {
+    .info-section h3 { font-size: 14px; color: var(--accent); margin-bottom: 12px; }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .info-card { background: rgba(255,255,255,0.02); border-radius: 8px; padding: 12px; }
+
+    .info-card h4 {
+      font-size: 12px;
+      color: var(--text);
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
-    .legend-color {
-      width: 16px;
-      height: 16px;
-      border-radius: 2px;
+    .info-card h4 .dot { width: 8px; height: 8px; border-radius: 2px; }
+    .info-card p { font-size: 11px; color: var(--text-dim); line-height: 1.6; }
+    .info-card code { background: rgba(255,255,255,0.1); padding: 1px 4px; border-radius: 3px; font-size: 10px; }
+
+    .print-btn {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .footer {
-      margin-top: 20px;
+      margin-top: 24px;
       text-align: center;
       font-size: 11px;
       color: var(--text-dim);
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
     }
 
-    .footer a {
-      color: var(--accent);
-      text-decoration: none;
-    }
+    .footer a { color: var(--accent); text-decoration: none; }
 
-    /* Print Styles */
     @media print {
-      :root {
-        --bg: #fff;
-        --card: #fff;
-        --border: #ccc;
-        --text: #000;
-        --text-dim: #555;
-      }
+      body { background: #fff; color: #000; padding: 10mm; }
+      .toolbar, .print-btn { display: none !important; }
+      .pin-label { border: 1px solid currentColor; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .chip { background: #f0f0f0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .info-section { background: #f9f9f9; border: 1px solid #ccc; }
+      @page { size: A4 landscape; margin: 8mm; }
+    }
 
-      body {
-        background: #fff;
-        color: #000;
-        padding: 10mm;
-        font-size: 10pt;
-      }
-
-      .print-btn {
-        display: none;
-      }
-
-      .container {
-        max-width: 100%;
-      }
-
-      header {
-        border-bottom: 2px solid #000;
-        margin-bottom: 15px;
-        padding-bottom: 10px;
-      }
-
-      h1 {
-        color: #000;
-        font-size: 18pt;
-      }
-
-      .module {
-        border: 1px solid #ccc;
-        page-break-inside: avoid;
-        background: #fff;
-      }
-
-      .module h2 {
-        color: #000;
-      }
-
-      .pin-row {
-        border: none !important;
-        background: none !important;
-      }
-
-      .pin-label, .pin-cat {
-        border: 1px solid currentColor;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-
-      .chip-body {
-        background: #f5f5f5 !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-
-      .display-screen {
-        background: #eee !important;
-        color: #000 !important;
-        border: 1px solid #999;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-
-      .legend {
-        background: #f9f9f9;
-        border: 1px solid #ccc;
-      }
-
-      .legend-color {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-
-      .warning {
-        background: #fff9e6;
-        border: 1px solid #e6a700;
-      }
-
-      .specs {
-        background: #f9f9f9;
-        border: 1px solid #ccc;
-      }
-
-      .footer {
-        margin-top: 10px;
-        border-top: 1px solid #ccc;
-        padding-top: 10px;
-      }
-
-      @page {
-        size: A4;
-        margin: 10mm;
-      }
+    @media (max-width: 768px) {
+      .pinout-container { transform: scale(0.8); transform-origin: top center; }
+      .filter-btn { padding: 5px 8px; font-size: 11px; }
     }
   </style>
 </head>
 
 <body>
-  <button class="print-btn" onclick="window.print()">Imprimir</button>
+  <button class="print-btn" onclick="window.print()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/>
+      <rect x="6" y="14" width="12" height="8"/>
+    </svg>
+    Imprimir
+  </button>
 
   <div class="container">
     <header>
-      <h1>LM2596 Buck Converter</h1>
-      <p class="subtitle">Regulador Step-Down DC-DC Ajustable - 3A / 150kHz</p>
+      <h1>LM2596 Buck <span class="badge">Step-Down 3A</span></h1>
+      <p class="subtitle">Regulador DC-DC reductor ajustable • 4.5–40V in • 1.2–37V out • 3A</p>
     </header>
 
-    <div class="module">
-      <h2>LM2596 Step-Down con Display</h2>
-      <p class="module-subtitle">Fuente DC-DC ajustable con indicador de voltaje</p>
+    <div class="toolbar">
+      <div class="toolbar-group">
+        <button class="filter-btn active" data-filter="vin">
+          <span class="dot" style="background: var(--cat-vin)"></span>V-In
+        </button>
+        <button class="filter-btn active" data-filter="vout">
+          <span class="dot" style="background: var(--cat-vout)"></span>V-Out
+        </button>
+        <button class="filter-btn active" data-filter="gnd">
+          <span class="dot" style="background: var(--cat-gnd)"></span>GND
+        </button>
+      </div>
+      <div class="btn-group">
+        <button class="btn-small" onclick="selectAll()">Todos</button>
+        <button class="btn-small" onclick="selectNone()">Ninguno</button>
+      </div>
+    </div>
 
-      <div class="pinout">
-        <div class="pin-column left">
-          <div class="pin-row" data-cat="VIN"><span class="pin-label">IN+</span><span class="pin-number">1</span></div>
-          <div class="pin-row" data-cat="GND"><span class="pin-label">IN-</span><span class="pin-number">2</span></div>
-        </div>
-
-        <div class="chip-body">
-          <div class="display-label">DISPLAY</div>
-          <div class="display-screen">5.0V</div>
-          <span class="chip-label">LM2596</span>
-        </div>
-
-        <div class="pin-column right">
-          <div class="pin-row" data-cat="VOUT"><span class="pin-number">1</span><span class="pin-label">OUT+</span></div>
-          <div class="pin-row" data-cat="GND"><span class="pin-number">2</span><span class="pin-label">OUT-</span></div>
-        </div>
+    <div class="pinout-container">
+      <div class="pin-column left">
+        <div class="pin-row" data-types="vin"><span class="pin-labels"><span class="pin-label primary" data-type="vin">IN+</span></span><span class="pin-num">1</span></div>
+        <div class="pin-row" data-types="gnd"><span class="pin-labels"><span class="pin-label primary" data-type="gnd">IN-</span></span><span class="pin-num">2</span></div>
       </div>
 
-      <table class="pinout-table">
-        <thead>
-          <tr>
-            <th>Terminal</th>
-            <th>Nombre</th>
-            <th>Tipo</th>
-            <th>Descripción</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>IN+</td>
-            <td>Entrada positiva</td>
-            <td><span class="pin-cat cat-vin">VIN</span></td>
-            <td>Voltaje de entrada (4.5V - 40V DC)</td>
-          </tr>
-          <tr>
-            <td>IN-</td>
-            <td>Entrada negativa</td>
-            <td><span class="pin-cat cat-gnd">GND</span></td>
-            <td>Tierra de entrada</td>
-          </tr>
-          <tr>
-            <td>OUT+</td>
-            <td>Salida positiva</td>
-            <td><span class="pin-cat cat-vout">VOUT</span></td>
-            <td>Voltaje de salida ajustable (1.2V - 37V)</td>
-          </tr>
-          <tr>
-            <td>OUT-</td>
-            <td>Salida negativa</td>
-            <td><span class="pin-cat cat-gnd">GND</span></td>
-            <td>Tierra de salida (común con IN-)</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="warning">
-        <strong>IMPORTANTE:</strong> Ajustar el voltaje de salida a 5.0V con el potenciómetro ANTES de conectar cualquier carga.
-        Verificar siempre con multímetro antes de conectar el ESP32 u otros dispositivos sensibles.
+      <div class="chip module">
+        <div class="display">ADJ</div>
+        <span class="chip-name">LM2596</span>
+        <span class="chip-module">Step-Down</span>
       </div>
 
-      <div class="specs">
-        <h3>Especificaciones Técnicas</h3>
-        <div class="specs-grid">
-          <div class="spec-item">
-            <span class="spec-label">Voltaje entrada</span>
-            <span class="spec-value">4.5V - 40V DC</span>
-          </div>
-          <div class="spec-item">
-            <span class="spec-label">Voltaje salida</span>
-            <span class="spec-value">1.2V - 37V (ajustable)</span>
-          </div>
-          <div class="spec-item">
-            <span class="spec-label">Corriente máx.</span>
-            <span class="spec-value">3A continuo</span>
-          </div>
-          <div class="spec-item">
-            <span class="spec-label">Eficiencia</span>
-            <span class="spec-value">Hasta 92%</span>
-          </div>
-          <div class="spec-item">
-            <span class="spec-label">Frecuencia</span>
-            <span class="spec-value">150 kHz</span>
-          </div>
-          <div class="spec-item">
-            <span class="spec-label">Protección</span>
-            <span class="spec-value">Térmica + Sobrecorriente</span>
-          </div>
-        </div>
+      <div class="pin-column right">
+        <div class="pin-row" data-types="vout"><span class="pin-num">1</span><span class="pin-labels"><span class="pin-label primary" data-type="vout">OUT+</span></span></div>
+        <div class="pin-row" data-types="gnd"><span class="pin-num">2</span><span class="pin-labels"><span class="pin-label primary" data-type="gnd">OUT-</span></span></div>
       </div>
+    </div>
 
-      <div class="legend">
-        <div class="legend-item">
-          <div class="legend-color" style="background: var(--power-vin);"></div>
-          <span>Entrada (VIN)</span>
+    <div class="info-section">
+      <h3>Información de Pines · LM2596 Buck</h3>
+      <div class="info-grid">
+        <div class="info-card">
+          <h4><span class="dot" style="background: #ef4444"></span>Entrada</h4>
+          <p><code>IN+</code> 4.5V–40V DC. La entrada debe superar la salida deseada en ~1.5V.</p>
         </div>
-        <div class="legend-item">
-          <div class="legend-color" style="background: var(--power-vout);"></div>
-          <span>Salida (VOUT)</span>
+        <div class="info-card">
+          <h4><span class="dot" style="background: #22c55e"></span>Salida ajustable</h4>
+          <p><code>OUT+</code> 1.2V–37V vía potenciómetro. <strong>Ajustar y medir con multímetro ANTES de conectar carga.</strong></p>
         </div>
-        <div class="legend-item">
-          <div class="legend-color" style="background: var(--power-gnd);"></div>
-          <span>GND</span>
+        <div class="info-card">
+          <h4><span class="dot" style="background: #525252"></span>Masa común</h4>
+          <p><code>IN-</code> y <code>OUT-</code> son la misma masa. No aísla entrada de salida.</p>
+        </div>
+        <div class="info-card">
+          <h4><span class="dot" style="background: #10b981"></span>Eficiencia</h4>
+          <p>Hasta ~92% a 150kHz. Térmica + sobrecorriente protegidas; añadir disipador a alta corriente.</p>
         </div>
       </div>
     </div>
 
     <footer class="footer">
-      HIOS Pinouts - Inspirado en <a href="https://www.luisllamas.es/" target="_blank">luisllamas.es</a>
+      HIOS Pinouts • Inspirado en <a href="https://www.luisllamas.es/en/esp32-hardware-details-pinout/" target="_blank">luisllamas.es</a>
     </footer>
   </div>
+
+  <script>
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const pinRows = document.querySelectorAll('.pin-row');
+    const allKeys = ["vin","vout","gnd"];
+    const activeFilters = new Set(allKeys);
+
+    function updateFilters() {
+      pinRows.forEach(row => {
+        const types = (row.dataset.types || '').split(' ').filter(Boolean);
+        const hasMatch = types.some(t => activeFilters.has(t));
+        row.classList.toggle('dimmed', !hasMatch && activeFilters.size > 0);
+        row.classList.toggle('highlight', hasMatch && activeFilters.size < allKeys.length);
+      });
+    }
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = btn.dataset.filter;
+        btn.classList.toggle('active');
+        if (activeFilters.has(filter)) activeFilters.delete(filter);
+        else activeFilters.add(filter);
+        updateFilters();
+      });
+    });
+
+    function selectAll() {
+      filterBtns.forEach(btn => { btn.classList.add('active'); activeFilters.add(btn.dataset.filter); });
+      updateFilters();
+    }
+
+    function selectNone() {
+      filterBtns.forEach(btn => { btn.classList.remove('active'); activeFilters.delete(btn.dataset.filter); });
+      updateFilters();
+    }
+  </script>
 </body>
 
 </html>

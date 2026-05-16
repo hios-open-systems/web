@@ -1,10 +1,96 @@
-<!DOCTYPE html>
+/**
+ * Shared pinout page generator. Every module HTML is produced from this one
+ * template so they are structurally identical and aligned by construction
+ * (board + pin columns share the same fixed-height flex rows — a raster photo
+ * can never track the DOM, which is why the old WROOM photo drifted).
+ */
+
+function contrast(hex) {
+  const c = hex.replace('#', '');
+  const r = parseInt(c.slice(0, 2), 16);
+  const g = parseInt(c.slice(2, 4), 16);
+  const b = parseInt(c.slice(4, 6), 16);
+  // Perceived luminance — dark text on light chips, light text on dark ones.
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.6 ? '#000' : '#fff';
+}
+
+function esc(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function rootVars(categories) {
+  return categories.map((c) => `      --cat-${c.key}: ${c.color};`).join('\n');
+}
+
+function labelRules(categories) {
+  return categories
+    .map((c) => `    .pin-label[data-type="${c.key}"] { background: var(--cat-${c.key}); color: ${contrast(c.color)}; }`)
+    .join('\n');
+}
+
+function chipHtml(chip) {
+  if (chip.type === 'mcu') {
+    return `<div class="chip">
+        <div class="antenna"></div>
+        <span class="chip-name">${esc(chip.name)}</span>
+        ${chip.sub ? `<span class="chip-module">${esc(chip.sub)}</span>` : ''}
+        <div class="usb-port"></div>
+      </div>`;
+  }
+  if (chip.type === 'module') {
+    return `<div class="chip module">
+        <div class="display">${esc(chip.display ?? '')}</div>
+        <span class="chip-name">${esc(chip.name)}</span>
+        ${chip.sub ? `<span class="chip-module">${esc(chip.sub)}</span>` : ''}
+      </div>`;
+  }
+  return `<div class="chip ic">
+        <div class="ic-notch"></div>
+        <span class="chip-name">${esc(chip.name)}</span>
+        ${chip.sub ? `<span class="chip-module">${esc(chip.sub)}</span>` : ''}
+      </div>`;
+}
+
+function pinRow(pin, side) {
+  const ordered = side === 'left'
+    ? [...pin.labels.filter((l) => !l.primary), ...pin.labels.filter((l) => l.primary)]
+    : [...pin.labels.filter((l) => l.primary), ...pin.labels.filter((l) => !l.primary)];
+  const types = [...new Set(pin.labels.map((l) => l.type))].join(' ');
+  const labels = ordered
+    .map((l) => `<span class="pin-label${l.primary ? ' primary' : ''}" data-type="${l.type}">${esc(l.text)}</span>`)
+    .join('');
+  const num = `<span class="pin-num">${esc(pin.num)}</span>`;
+  const labelsSpan = `<span class="pin-labels">${labels}</span>`;
+  return `        <div class="pin-row" data-types="${types}">${side === 'left' ? labelsSpan + num : num + labelsSpan}</div>`;
+}
+
+export function renderPinout(m) {
+  const filters = m.categories
+    .map(
+      (c) => `        <button class="filter-btn active" data-filter="${c.key}">
+          <span class="dot" style="background: var(--cat-${c.key})"></span>${esc(c.label)}
+        </button>`,
+    )
+    .join('\n');
+
+  const allKeys = JSON.stringify(m.categories.map((c) => c.key));
+
+  const info = (m.info ?? [])
+    .map(
+      (card) => `        <div class="info-card">
+          <h4><span class="dot" style="background: ${card.color}"></span>${esc(card.title)}</h4>
+          <p>${card.html}</p>
+        </div>`,
+    )
+    .join('\n');
+
+  return `<!DOCTYPE html>
 <html lang="es">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MAX98357 I2S Amp - Pinout Interactivo</title>
+  <title>${esc(m.title)} - Pinout Interactivo</title>
   <style>
     :root {
       --bg: #0a0a0a;
@@ -13,12 +99,7 @@
       --text: #e5e5e5;
       --text-dim: #888;
       --accent: #10b981;
-      --cat-i2s: #3b82f6;
-      --cat-adc: #ec4899;
-      --cat-gpio: #22c55e;
-      --cat-gnd: #525252;
-      --cat-power: #ef4444;
-      --cat-spkr: #f59e0b;
+${rootVars(m.categories)}
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -237,12 +318,7 @@
 
     .pin-label.primary { font-weight: 700; font-size: 10px; }
 
-    .pin-label[data-type="i2s"] { background: var(--cat-i2s); color: #fff; }
-    .pin-label[data-type="adc"] { background: var(--cat-adc); color: #fff; }
-    .pin-label[data-type="gpio"] { background: var(--cat-gpio); color: #fff; }
-    .pin-label[data-type="gnd"] { background: var(--cat-gnd); color: #fff; }
-    .pin-label[data-type="power"] { background: var(--cat-power); color: #fff; }
-    .pin-label[data-type="spkr"] { background: var(--cat-spkr); color: #000; }
+${labelRules(m.categories)}
     .pin-label[data-type="nc"] { background: #333; color: #666; }
 
     .info-section {
@@ -331,30 +407,13 @@
 
   <div class="container">
     <header>
-      <h1>MAX98357 I2S Amp <span class="badge">3.2W Class-D</span></h1>
-      <p class="subtitle">Amplificador Class-D I2S monofónico • 3.2W @ 4Ω • Eficiencia &gt;90%</p>
+      <h1>${esc(m.title)}${m.badge ? ` <span class="badge">${esc(m.badge)}</span>` : ''}</h1>
+      <p class="subtitle">${esc(m.subtitle)}</p>
     </header>
 
     <div class="toolbar">
       <div class="toolbar-group">
-        <button class="filter-btn active" data-filter="i2s">
-          <span class="dot" style="background: var(--cat-i2s)"></span>I2S
-        </button>
-        <button class="filter-btn active" data-filter="adc">
-          <span class="dot" style="background: var(--cat-adc)"></span>ADC
-        </button>
-        <button class="filter-btn active" data-filter="gpio">
-          <span class="dot" style="background: var(--cat-gpio)"></span>GPIO
-        </button>
-        <button class="filter-btn active" data-filter="gnd">
-          <span class="dot" style="background: var(--cat-gnd)"></span>GND
-        </button>
-        <button class="filter-btn active" data-filter="power">
-          <span class="dot" style="background: var(--cat-power)"></span>Power
-        </button>
-        <button class="filter-btn active" data-filter="spkr">
-          <span class="dot" style="background: var(--cat-spkr)"></span>Speaker
-        </button>
+${filters}
       </div>
       <div class="btn-group">
         <button class="btn-small" onclick="selectAll()">Todos</button>
@@ -364,46 +423,20 @@
 
     <div class="pinout-container">
       <div class="pin-column left">
-        <div class="pin-row" data-types="adc"><span class="pin-labels"><span class="pin-label primary" data-type="adc">GAIN</span></span><span class="pin-num">1</span></div>
-        <div class="pin-row" data-types="i2s"><span class="pin-labels"><span class="pin-label primary" data-type="i2s">DIN</span></span><span class="pin-num">2</span></div>
-        <div class="pin-row" data-types="i2s"><span class="pin-labels"><span class="pin-label primary" data-type="i2s">BCLK</span></span><span class="pin-num">3</span></div>
-        <div class="pin-row" data-types="i2s"><span class="pin-labels"><span class="pin-label primary" data-type="i2s">LRCLK</span></span><span class="pin-num">4</span></div>
-        <div class="pin-row" data-types="gpio"><span class="pin-labels"><span class="pin-label primary" data-type="gpio">SD</span></span><span class="pin-num">5</span></div>
+${m.left.map((p) => pinRow(p, 'left')).join('\n')}
       </div>
 
-      <div class="chip ic">
-        <div class="ic-notch"></div>
-        <span class="chip-name">MAX98357A</span>
-        <span class="chip-module">QFN-16</span>
-      </div>
+      ${chipHtml(m.chip)}
 
       <div class="pin-column right">
-        <div class="pin-row" data-types="gnd"><span class="pin-num">6</span><span class="pin-labels"><span class="pin-label primary" data-type="gnd">GND</span></span></div>
-        <div class="pin-row" data-types="power"><span class="pin-num">7</span><span class="pin-labels"><span class="pin-label primary" data-type="power">Vin</span></span></div>
-        <div class="pin-row" data-types="spkr"><span class="pin-num">8</span><span class="pin-labels"><span class="pin-label primary" data-type="spkr">OUT-</span></span></div>
-        <div class="pin-row" data-types="spkr"><span class="pin-num">9</span><span class="pin-labels"><span class="pin-label primary" data-type="spkr">OUT+</span></span></div>
+${m.right.map((p) => pinRow(p, 'right')).join('\n')}
       </div>
     </div>
 
     <div class="info-section">
-      <h3>Información de Pines · MAX98357 I2S Amp</h3>
+      <h3>Información de Pines · ${esc(m.title)}</h3>
       <div class="info-grid">
-        <div class="info-card">
-          <h4><span class="dot" style="background: #ef4444"></span>Alimentación</h4>
-          <p><code>Vin</code> de 2.5V a 5.5V. A 5V entrega los 3.2W nominales.</p>
-        </div>
-        <div class="info-card">
-          <h4><span class="dot" style="background: #ec4899"></span>GAIN</h4>
-          <p>Sin conectar = 9dB. A GND = 12dB, a Vin = 15dB, vía resistor = 3/6dB.</p>
-        </div>
-        <div class="info-card">
-          <h4><span class="dot" style="background: #22c55e"></span>SD (modo)</h4>
-          <p><code>SD</code> también selecciona canal: izquierdo, derecho o (L+R)/2. Bajo = shutdown.</p>
-        </div>
-        <div class="info-card">
-          <h4><span class="dot" style="background: #f59e0b"></span>Salida de parlante</h4>
-          <p><code>OUT+</code>/<code>OUT-</code> directo al parlante (4–8Ω). Salida en puente, no llevar a GND.</p>
-        </div>
+${info}
       </div>
     </div>
 
@@ -415,7 +448,7 @@
   <script>
     const filterBtns = document.querySelectorAll('.filter-btn');
     const pinRows = document.querySelectorAll('.pin-row');
-    const allKeys = ["i2s","adc","gpio","gnd","power","spkr"];
+    const allKeys = ${allKeys};
     const activeFilters = new Set(allKeys);
 
     function updateFilters() {
@@ -450,3 +483,5 @@
 </body>
 
 </html>
+`;
+}

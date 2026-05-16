@@ -2,451 +2,448 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PCM5102 DAC - Pinout</title>
-    <style>
-        :root {
-            --bg: #0d0d0d;
-            --card: #1a1a1a;
-            --border: #333;
-            --text: #e5e5e5;
-            --text-dim: #888;
-            --accent: #f59e0b;
-            --power-5v: #ef4444;
-            --power-3v3: #f97316;
-            --power-gnd: #525252;
-            --i2s: #3b82f6;
-            --audio: #10b981;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PCM5102 I2S DAC - Pinout Interactivo</title>
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --card: #141414;
+      --border: #2a2a2a;
+      --text: #e5e5e5;
+      --text-dim: #888;
+      --accent: #10b981;
+      --cat-i2s: #3b82f6;
+      --cat-gnd: #525252;
+      --cat-power: #ef4444;
+      --cat-audio: #10b981;
+    }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
-            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace;
-            background: var(--bg);
-            color: var(--text);
-            padding: 20px;
-            line-height: 1.4;
-        }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 20px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
+    .container { max-width: 1100px; margin: 0 auto; }
 
-        header {
-            text-align: center;
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--border);
-        }
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
 
-        h1 {
-            color: var(--accent);
-            font-size: 24px;
-            margin-bottom: 8px;
-        }
+    h1 { color: var(--accent); font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+    .subtitle { color: var(--text-dim); font-size: 14px; }
 
-        .subtitle {
-            color: var(--text-dim);
-            font-size: 13px;
-        }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      background: var(--accent);
+      color: #000;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-left: 8px;
+    }
 
-        .module {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 24px;
+      padding: 16px;
+      background: var(--card);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
 
-        .module h2 {
-            font-size: 18px;
-            margin-bottom: 4px;
-            color: var(--text);
-        }
+    .toolbar-group { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
 
-        .module-subtitle {
-            font-size: 13px;
-            color: var(--text-dim);
-            margin-bottom: 15px;
-        }
+    .filter-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
 
-        .pinout-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 15px 0;
-            font-size: 13px;
-        }
+    .filter-btn:hover { border-color: var(--accent); }
+    .filter-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+    .filter-btn .dot { width: 10px; height: 10px; border-radius: 2px; }
 
-        .pinout-table th {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-            font-weight: 600;
-        }
+    .btn-group {
+      display: flex;
+      gap: 4px;
+      margin-left: 12px;
+      padding-left: 12px;
+      border-left: 1px solid var(--border);
+    }
 
-        .pinout-table td {
-            padding: 10px;
-            border-bottom: 1px solid var(--border);
-        }
+    .btn-small {
+      padding: 4px 10px;
+      font-size: 11px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-dim);
+      cursor: pointer;
+    }
 
-        .pin-number {
-            color: var(--accent);
-            font-weight: 600;
-            min-width: 40px;
-        }
+    .btn-small:hover { color: var(--text); border-color: var(--accent); }
 
-        .pin-name {
-            font-weight: 500;
-        }
+    .pinout-container {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      gap: 0;
+      margin: 24px 0;
+      overflow-x: auto;
+      padding: 20px 0;
+    }
 
-        .pin-cat {
-            padding: 2px 6px;
-            border-radius: 2px;
-            font-size: 11px;
-            text-align: center;
-            min-width: 60px;
-        }
+    .pin-column { display: flex; flex-direction: column; gap: 1px; }
+    .pin-column.left { align-items: flex-end; }
+    .pin-column.right { align-items: flex-start; }
 
-        .cat-power {
-            background: var(--power-3v3);
-            color: #fff;
-        }
+    .chip {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      width: 120px;
+      background: linear-gradient(180deg, #1f1f1f 0%, #0f0f0f 100%);
+      border: 2px solid #333;
+      border-radius: 6px;
+      padding: 12px 8px;
+      position: relative;
+    }
 
-        .cat-gnd {
-            background: var(--power-gnd);
-            color: #fff;
-        }
+    .chip::before {
+      content: '';
+      position: absolute;
+      top: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 12px;
+      background: #333;
+      border-radius: 0 0 12px 12px;
+    }
 
-        .cat-i2s {
-            background: var(--i2s);
-            color: #fff;
-        }
+    .chip.ic::before, .chip.module::before { display: none; }
 
-        .cat-audio {
-            background: var(--audio);
-            color: #fff;
-        }
+    .chip-name { font-size: 12px; font-weight: 700; color: #888; text-align: center; margin-top: 8px; }
+    .chip-module { font-size: 9px; color: #555; margin-top: 2px; }
 
-        .cat-nc {
-            background: #333;
-            color: #999;
-        }
+    .antenna {
+      width: 45px;
+      height: 55px;
+      border: 2px solid #444;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      background: repeating-linear-gradient(0deg, #333 0px, #333 2px, transparent 2px, transparent 4px);
+    }
 
-        .description {
-            background: rgba(255, 255, 255, 0.02);
-            border-left: 3px solid var(--audio);
-            padding: 12px;
-            margin-top: 15px;
-            border-radius: 4px;
-            font-size: 12px;
-            line-height: 1.6;
-        }
+    .usb-port {
+      width: 30px;
+      height: 14px;
+      background: #444;
+      border-radius: 2px;
+      margin-top: 8px;
+      position: relative;
+    }
 
-        .legend {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 8px;
-            margin-top: 20px;
-            font-size: 12px;
-        }
+    .usb-port::after {
+      content: 'USB';
+      font-size: 6px;
+      color: #666;
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
 
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+    .ic-notch {
+      width: 26px;
+      height: 13px;
+      border: 2px solid #444;
+      border-top: none;
+      border-radius: 0 0 26px 26px;
+      margin-bottom: 10px;
+    }
 
-        .legend-color {
-            width: 16px;
-            height: 16px;
-            border-radius: 2px;
-        }
+    .display {
+      width: 84px;
+      height: 38px;
+      background: #050505;
+      border: 1px solid #333;
+      border-radius: 4px;
+      color: #22c55e;
+      font-family: 'SF Mono', 'Consolas', monospace;
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      box-shadow: inset 0 0 8px rgba(34, 197, 94, 0.25);
+    }
 
-        .print-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--accent);
-            color: #000;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 12px;
-            font-weight: 600;
-        }
+    .pin-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      min-height: 24px;
+      border-radius: 3px;
+      transition: all 0.15s;
+      cursor: default;
+    }
 
-        .print-btn:hover {
-            opacity: 0.9;
-        }
+    .pin-row:hover { background: rgba(255, 255, 255, 0.05); }
+    .pin-row.dimmed { opacity: 0.15; }
+    .pin-row.highlight { background: rgba(16, 185, 129, 0.15); }
 
-        .footer {
-            margin-top: 20px;
-            text-align: center;
-            font-size: 11px;
-            color: var(--text-dim);
-        }
+    .pin-num { min-width: 18px; font-size: 10px; font-weight: 600; color: var(--text-dim); text-align: center; }
+    .pin-labels { display: flex; gap: 3px; flex-wrap: wrap; }
+    .left .pin-labels { justify-content: flex-end; }
 
-        .footer a {
-            color: var(--accent);
-            text-decoration: none;
-        }
+    .pin-label {
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-size: 9px;
+      font-weight: 600;
+      font-family: 'SF Mono', 'Consolas', monospace;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
 
-        /* Print Styles */
-        @media print {
-            :root {
-                --bg: #fff;
-                --card: #fff;
-                --border: #ccc;
-                --text: #000;
-                --text-dim: #555;
-            }
+    .pin-label.primary { font-weight: 700; font-size: 10px; }
 
-            body {
-                background: #fff;
-                color: #000;
-                padding: 10mm;
-                font-size: 10pt;
-            }
+    .pin-label[data-type="i2s"] { background: var(--cat-i2s); color: #fff; }
+    .pin-label[data-type="gnd"] { background: var(--cat-gnd); color: #fff; }
+    .pin-label[data-type="power"] { background: var(--cat-power); color: #fff; }
+    .pin-label[data-type="audio"] { background: var(--cat-audio); color: #fff; }
+    .pin-label[data-type="nc"] { background: #333; color: #666; }
 
-            .print-btn {
-                display: none;
-            }
+    .info-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 24px;
+    }
 
-            .container {
-                max-width: 100%;
-            }
+    .info-section h3 { font-size: 14px; color: var(--accent); margin-bottom: 12px; }
 
-            header {
-                border-bottom: 2px solid #000;
-                margin-bottom: 15px;
-                padding-bottom: 10px;
-            }
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
 
-            h1 {
-                color: #000;
-                font-size: 18pt;
-            }
+    .info-card { background: rgba(255,255,255,0.02); border-radius: 8px; padding: 12px; }
 
-            .module {
-                border: 1px solid #ccc;
-                page-break-inside: avoid;
-                background: #fff;
-            }
+    .info-card h4 {
+      font-size: 12px;
+      color: var(--text);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
 
-            .module h2 {
-                color: #000;
-            }
+    .info-card h4 .dot { width: 8px; height: 8px; border-radius: 2px; }
+    .info-card p { font-size: 11px; color: var(--text-dim); line-height: 1.6; }
+    .info-card code { background: rgba(255,255,255,0.1); padding: 1px 4px; border-radius: 3px; font-size: 10px; }
 
-            .pinout-table th {
-                background: #f0f0f0 !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
+    .print-btn {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
 
-            .pin-cat {
-                border: 1px solid currentColor;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
+    .footer {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-dim);
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
 
-            .description {
-                background: #f9f9f9;
-                border-left: 3px solid #10b981;
-            }
+    .footer a { color: var(--accent); text-decoration: none; }
 
-            .legend {
-                background: #f9f9f9;
-                border: 1px solid #ccc;
-            }
+    @media print {
+      body { background: #fff; color: #000; padding: 10mm; }
+      .toolbar, .print-btn { display: none !important; }
+      .pin-label { border: 1px solid currentColor; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .chip { background: #f0f0f0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .info-section { background: #f9f9f9; border: 1px solid #ccc; }
+      @page { size: A4 landscape; margin: 8mm; }
+    }
 
-            .legend-color {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-
-            .footer {
-                margin-top: 10px;
-                border-top: 1px solid #ccc;
-                padding-top: 10px;
-            }
-
-            @page {
-                size: A4;
-                margin: 10mm;
-            }
-        }
-    </style>
+    @media (max-width: 768px) {
+      .pinout-container { transform: scale(0.8); transform-origin: top center; }
+      .filter-btn { padding: 5px 8px; font-size: 11px; }
+    }
+  </style>
 </head>
 
 <body>
-    <button class="print-btn" onclick="window.print()">Imprimir</button>
+  <button class="print-btn" onclick="window.print()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/>
+      <rect x="6" y="14" width="12" height="8"/>
+    </svg>
+    Imprimir
+  </button>
 
-    <div class="container">
-        <header>
-            <h1>PCM5102 I2S DAC</h1>
-            <p class="subtitle">Convertidor Digital a Analógico de 32-bit/192kHz - TSSOP24</p>
-        </header>
+  <div class="container">
+    <header>
+      <h1>PCM5102 I2S DAC <span class="badge">DAC 32-bit</span></h1>
+      <p class="subtitle">Conversor D/A 32-bit/384kHz • SNR 112dB • Filtro digital integrado</p>
+    </header>
 
-        <div class="module">
-            <h2>PCM5102A - I2S Digital-to-Analog Converter</h2>
-            <p class="module-subtitle">DAC de audio de baja jitter con filtro integrado</p>
-
-            <table class="pinout-table">
-                <thead>
-                    <tr>
-                        <th>Pin</th>
-                        <th>Nombre</th>
-                        <th>Tipo</th>
-                        <th>Descripción</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="pin-number">1</td>
-                        <td class="pin-name">DIN</td>
-                        <td><span class="pin-cat cat-i2s">I2S</span></td>
-                        <td>Entrada de datos I2S (Data In)</td>
-                    </tr>
-                    <tr>
-                        <td class="pin-number">2</td>
-                        <td class="pin-name">BCK</td>
-                        <td><span class="pin-cat cat-i2s">I2S</span></td>
-                        <td>Reloj de bits (Bit Clock)</td>
-                    </tr>
-                    <tr>
-                        <td class="pin-number">3</td>
-                        <td class="pin-name">LRCK</td>
-                        <td><span class="pin-cat cat-i2s">I2S</span></td>
-                        <td>Reloj de marco (Word Clock/LRCK)</td>
-                    </tr>
-                    <tr>
-                        <td class="pin-number">4</td>
-                        <td class="pin-name">GND</td>
-                        <td><span class="pin-cat cat-gnd">GND</span></td>
-                        <td>Tierra</td>
-                    </tr>
-                    <tr>
-                        <td class="pin-number">5</td>
-                        <td class="pin-name">FLT</td>
-                        <td><span class="pin-cat cat-nc">NC</span></td>
-                        <td>Selección de filtro (típicamente a GND)</td>
-                    </tr>
-                    <tr>
-                        <td class="pin-number">6</td>
-                        <td class="pin-name">DEMP</td>
-                        <td><span class="pin-cat cat-nc">NC</span></td>
-                        <td>Selección de deénfasis (típicamente a GND)</td>
-                    </tr>
-                    <tr>
-                        <td class="pin-number">7</td>
-                        <td class="pin-name">XO</td>
-                        <td><span class="pin-cat cat-nc">NC</span></td>
-                        <td>Salida de reloj (dejar sin conectar)</td>
-                    </tr>
-                    <tr>
-                        <td class="pin-number">8</td>
-                        <td class="pin-name">XI</td>
-                        <td><span class="pin-cat cat-nc">NC</span></td>
-                        <td>Entrada de reloj (dejar sin conectar)</td>
-                    </tr>
-                    <tr>
-                        <td class="pin-number">9</td>
-                        <td class="pin-name">GND</td>
-                        <td><span class="pin-cat cat-gnd">GND</span></td>
-                        <td>Tierra</td>
-                    </tr>
-                    <tr>
-                        <td class="pin-number">10</td>
-                        <td class="pin-name">VREF</td>
-                        <td><span class="pin-cat cat-power">3V3</span></td>
-                        <td>Voltage Reference (con capacitor)</td>
-                    </tr>
-                    <tr>
-                        <td class="pin-number">11</td>
-                        <td class="pin-name">OUTR</td>
-                        <td><span class="pin-cat cat-audio">AUDIO</span></td>
-                        <td>Salida de audio canal derecho</td>
-                    </tr>
-                    <tr>
-                        <td class="pin-number">12</td>
-                        <td class="pin-name">OUTL</td>
-                        <td><span class="pin-cat cat-audio">AUDIO</span></td>
-                        <td>Salida de audio canal izquierdo</td>
-                    </tr>
-                    <tr>
-                        <td class="pin-number">13</td>
-                        <td class="pin-name">GND</td>
-                        <td><span class="pin-cat cat-gnd">GND</span></td>
-                        <td>Tierra</td>
-                    </tr>
-                    <tr>
-                        <td class="pin-number">14</td>
-                        <td class="pin-name">AVDD</td>
-                        <td><span class="pin-cat cat-power">3V3</span></td>
-                        <td>Alimentación analógica (3.3V - 5V)</td>
-                    </tr>
-                    <tr>
-                        <td class="pin-number">15</td>
-                        <td class="pin-name">DVDD</td>
-                        <td><span class="pin-cat cat-power">3V3</span></td>
-                        <td>Alimentación digital (3.3V - 5V)</td>
-                    </tr>
-                    <tr>
-                        <td class="pin-number">16</td>
-                        <td class="pin-name">GND</td>
-                        <td><span class="pin-cat cat-gnd">GND</span></td>
-                        <td>Tierra</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <div class="description">
-                <strong>Notas importantes:</strong><br>
-                • Resolución: 24-bit @ 192kHz, 16-bit @ 8-192kHz.<br>
-                • SNR: 112dB típico a 1kHz.<br>
-                • Requiere capacitores de desacoplamiento (10µF + 100nF) en AVDD y DVDD.<br>
-                • Requiere capacitor en VREF (10µF).<br>
-                • Salidas OUTR/OUTL son AC-coupled (require capacitor).<br>
-                • Compatible con cualquier amplificador líneal (max 2V pico).
-            </div>
-
-            <div class="legend">
-                <div class="legend-item">
-                    <div class="legend-color" style="background: var(--i2s);"></div>
-                    <span>I2S</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: var(--audio);"></div>
-                    <span>Audio</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: var(--power-3v3);"></div>
-                    <span>3.3V</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: var(--power-gnd);"></div>
-                    <span>GND</span>
-                </div>
-            </div>
-        </div>
-
-        <footer class="footer">
-            HIOS Pinouts - Inspirado en <a href="https://www.luisllamas.es/" target="_blank">luisllamas.es</a>
-        </footer>
+    <div class="toolbar">
+      <div class="toolbar-group">
+        <button class="filter-btn active" data-filter="i2s">
+          <span class="dot" style="background: var(--cat-i2s)"></span>I2S
+        </button>
+        <button class="filter-btn active" data-filter="gnd">
+          <span class="dot" style="background: var(--cat-gnd)"></span>GND
+        </button>
+        <button class="filter-btn active" data-filter="power">
+          <span class="dot" style="background: var(--cat-power)"></span>Power
+        </button>
+        <button class="filter-btn active" data-filter="audio">
+          <span class="dot" style="background: var(--cat-audio)"></span>Audio
+        </button>
+      </div>
+      <div class="btn-group">
+        <button class="btn-small" onclick="selectAll()">Todos</button>
+        <button class="btn-small" onclick="selectNone()">Ninguno</button>
+      </div>
     </div>
+
+    <div class="pinout-container">
+      <div class="pin-column left">
+        <div class="pin-row" data-types="i2s"><span class="pin-labels"><span class="pin-label primary" data-type="i2s">DIN</span></span><span class="pin-num">1</span></div>
+        <div class="pin-row" data-types="i2s"><span class="pin-labels"><span class="pin-label primary" data-type="i2s">BCK</span></span><span class="pin-num">2</span></div>
+        <div class="pin-row" data-types="i2s"><span class="pin-labels"><span class="pin-label primary" data-type="i2s">LRCK</span></span><span class="pin-num">3</span></div>
+        <div class="pin-row" data-types="gnd"><span class="pin-labels"><span class="pin-label primary" data-type="gnd">GND</span></span><span class="pin-num">4</span></div>
+        <div class="pin-row" data-types="nc"><span class="pin-labels"><span class="pin-label primary" data-type="nc">FLT</span></span><span class="pin-num">5</span></div>
+        <div class="pin-row" data-types="nc"><span class="pin-labels"><span class="pin-label primary" data-type="nc">DEMP</span></span><span class="pin-num">6</span></div>
+        <div class="pin-row" data-types="nc"><span class="pin-labels"><span class="pin-label primary" data-type="nc">XO</span></span><span class="pin-num">7</span></div>
+        <div class="pin-row" data-types="nc"><span class="pin-labels"><span class="pin-label primary" data-type="nc">XI</span></span><span class="pin-num">8</span></div>
+      </div>
+
+      <div class="chip ic">
+        <div class="ic-notch"></div>
+        <span class="chip-name">PCM5102A</span>
+        <span class="chip-module">TSSOP-20</span>
+      </div>
+
+      <div class="pin-column right">
+        <div class="pin-row" data-types="gnd"><span class="pin-num">9</span><span class="pin-labels"><span class="pin-label primary" data-type="gnd">GND</span></span></div>
+        <div class="pin-row" data-types="power"><span class="pin-num">10</span><span class="pin-labels"><span class="pin-label primary" data-type="power">VREF</span></span></div>
+        <div class="pin-row" data-types="audio"><span class="pin-num">11</span><span class="pin-labels"><span class="pin-label primary" data-type="audio">OUTR</span></span></div>
+        <div class="pin-row" data-types="audio"><span class="pin-num">12</span><span class="pin-labels"><span class="pin-label primary" data-type="audio">OUTL</span></span></div>
+        <div class="pin-row" data-types="gnd"><span class="pin-num">13</span><span class="pin-labels"><span class="pin-label primary" data-type="gnd">GND</span></span></div>
+        <div class="pin-row" data-types="power"><span class="pin-num">14</span><span class="pin-labels"><span class="pin-label primary" data-type="power">AVDD</span></span></div>
+        <div class="pin-row" data-types="power"><span class="pin-num">15</span><span class="pin-labels"><span class="pin-label primary" data-type="power">DVDD</span></span></div>
+        <div class="pin-row" data-types="gnd"><span class="pin-num">16</span><span class="pin-labels"><span class="pin-label primary" data-type="gnd">GND</span></span></div>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h3>Información de Pines · PCM5102 I2S DAC</h3>
+      <div class="info-grid">
+        <div class="info-card">
+          <h4><span class="dot" style="background: #3b82f6"></span>Conexión I2S</h4>
+          <p><code>DIN</code>=datos, <code>BCK</code>=bit clock, <code>LRCK</code>=word clock desde el MCU.</p>
+        </div>
+        <div class="info-card">
+          <h4><span class="dot" style="background: #ef4444"></span>Alimentación</h4>
+          <p><code>AVDD</code> y <code>DVDD</code> a 3.3V–5V. <code>VREF</code> con su capacitor de desacople.</p>
+        </div>
+        <div class="info-card">
+          <h4><span class="dot" style="background: #333"></span>Pines de config (FLT/DEMP/XO/XI)</h4>
+          <p>Típicamente a GND. En breakouts suelen venir ya puenteados.</p>
+        </div>
+        <div class="info-card">
+          <h4><span class="dot" style="background: #10b981"></span>Salida analógica</h4>
+          <p><code>OUTL</code> / <code>OUTR</code>: línea analógica al amplificador o jack.</p>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      HIOS Pinouts • Inspirado en <a href="https://www.luisllamas.es/en/esp32-hardware-details-pinout/" target="_blank">luisllamas.es</a>
+    </footer>
+  </div>
+
+  <script>
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const pinRows = document.querySelectorAll('.pin-row');
+    const allKeys = ["i2s","gnd","power","audio"];
+    const activeFilters = new Set(allKeys);
+
+    function updateFilters() {
+      pinRows.forEach(row => {
+        const types = (row.dataset.types || '').split(' ').filter(Boolean);
+        const hasMatch = types.some(t => activeFilters.has(t));
+        row.classList.toggle('dimmed', !hasMatch && activeFilters.size > 0);
+        row.classList.toggle('highlight', hasMatch && activeFilters.size < allKeys.length);
+      });
+    }
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = btn.dataset.filter;
+        btn.classList.toggle('active');
+        if (activeFilters.has(filter)) activeFilters.delete(filter);
+        else activeFilters.add(filter);
+        updateFilters();
+      });
+    });
+
+    function selectAll() {
+      filterBtns.forEach(btn => { btn.classList.add('active'); activeFilters.add(btn.dataset.filter); });
+      updateFilters();
+    }
+
+    function selectNone() {
+      filterBtns.forEach(btn => { btn.classList.remove('active'); activeFilters.delete(btn.dataset.filter); });
+      updateFilters();
+    }
+  </script>
 </body>
 
 </html>
