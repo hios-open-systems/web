@@ -1046,7 +1046,9 @@
                     "axialCeramic": "Through-Hole · Potencia (Cerámico)",
                     "smd0603": "SMD 0603",
                     "smd0805": "SMD 0805",
-                    "smd1206": "SMD 1206"
+                    "smd1206": "SMD 1206",
+                    "wirewound": "Through-Hole · Bobinado de potencia",
+                    "melf": "SMD · MELF (cilíndrico)"
                 },
                 "target": "Valor objetivo (Ω)"
             },
