@@ -6,9 +6,10 @@ import { CopyOutlined, ReloadOutlined, SearchOutlined } from '@ant-design/icons'
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { dnsRecordTypes, type DnsLookupResponse, type DnsRecordType } from '@/lib/workbench/network';
+import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
 
-const { Paragraph, Text, Title } = Typography;
+const { Paragraph, Text } = Typography;
 
 const defaultDomain = 'openhios.dev';
 const defaultType: DnsRecordType = 'A';
@@ -116,18 +117,19 @@ export function DnsLookupTool() {
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
       {contextHolder}
-      <Card className={styles.sectionCard} styles={{ body: { padding: 24 } }}>
-        <Space direction="vertical" size={10} className={styles.stackFull}>
-          <Tag color="cyan">{t('badge')}</Tag>
-          <Title level={2} style={{ margin: 0 }}>{t('title')}</Title>
-          <Paragraph className={styles.subtleText} style={{ margin: 0 }}>{t('subtitle')}</Paragraph>
+      <ToolHeader
+        eyebrow={t('badge')}
+        title={t('title')}
+        description={t('subtitle')}
+        locality="network"
+        actions={
           <Space wrap>
             <Button icon={<SearchOutlined />} loading={loading} onClick={() => void runLookup()}>{t('lookup')}</Button>
             <Button icon={<ReloadOutlined />} onClick={loadExample}>{t('loadExample')}</Button>
             {result ? <Button icon={<CopyOutlined />} onClick={() => handleCopy(resultText, t('copied'))}>{t('copyResult')}</Button> : null}
           </Space>
-        </Space>
-      </Card>
+        }
+      />
 
       <Row gutter={[20, 20]}>
         <Col xs={24} lg={10}>

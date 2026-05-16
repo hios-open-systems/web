@@ -1,14 +1,15 @@
 'use client';
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { Button, Card, Checkbox, Col, InputNumber, Row, Space, Tag, Typography, message } from 'antd';
+import { Button, Card, Checkbox, Col, InputNumber, Row, Space, Typography, message } from 'antd';
 import { CopyOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { estimateEntropy, generateRandomStrings, type RandomStringOptions } from '@/lib/workbench/random';
+import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
 
-const { Paragraph, Text, Title } = Typography;
+const { Text } = Typography;
 
 const defaultOptions: RandomStringOptions = {
     length: 32,
@@ -75,18 +76,19 @@ export function RandomStringTool() {
     return (
         <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
             {contextHolder}
-            <Card className={styles.sectionCard} styles={{ body: { padding: 24 } }}>
-                <Space direction="vertical" size={10} className={styles.stackFull}>
-                    <Tag color="gold">{t('badge')}</Tag>
-                    <Title level={2} style={{ margin: 0 }}>{t('title')}</Title>
-                    <Paragraph className={styles.subtleText} style={{ margin: 0 }}>{t('subtitle')}</Paragraph>
+            <ToolHeader
+                eyebrow={t('badge')}
+                title={t('title')}
+                description={t('subtitle')}
+                locality="local"
+                actions={
                     <Space wrap>
                         <Button icon={<ReloadOutlined />} onClick={regenerate}>{t('generate')}</Button>
                         {values[0] ? <Button icon={<CopyOutlined />} onClick={() => handleCopy(values[0], t('copied'))}>{t('copy')}</Button> : null}
                         {values.length > 0 ? <Button icon={<CopyOutlined />} onClick={() => handleCopy(values.join('\n'), t('allCopied'))}>{t('copyAll')}</Button> : null}
                     </Space>
-                </Space>
-            </Card>
+                }
+            />
 
             <Row gutter={[20, 20]}>
                 <Col xs={24} lg={10}>
