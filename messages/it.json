@@ -838,7 +838,12 @@
             "verifyValid": "Firma valida",
             "verifyInvalid": "La firma non corrisponde",
             "verifyErrorTitle": "Errore di verifica",
-            "jsonError": "Header e payload devono essere oggetti JSON validi"
+            "jsonError": "Header e payload devono essere oggetti JSON validi",
+            "generateKeys": "Genera coppia di chiavi demo",
+            "generatingKeys": "Generazione…",
+            "publicKeyLabel": "Chiave pubblica (per verificare)",
+            "copyPublic": "Copia chiave pubblica",
+            "demoKeyNote": "Chiave demo generata nel browser. Solo per test — non usarla per nulla di sensibile."
         }
     },
     "Calculators": {

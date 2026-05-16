@@ -838,7 +838,12 @@
             "verifyValid": "Signatur gültig",
             "verifyInvalid": "Signatur stimmt nicht überein",
             "verifyErrorTitle": "Verifizierungsfehler",
-            "jsonError": "Header und Payload müssen gültige JSON-Objekte sein"
+            "jsonError": "Header und Payload müssen gültige JSON-Objekte sein",
+            "generateKeys": "Demo-Schlüsselpaar erzeugen",
+            "generatingKeys": "Erzeuge…",
+            "publicKeyLabel": "Public Key (zum Verifizieren)",
+            "copyPublic": "Public Key kopieren",
+            "demoKeyNote": "Demo-Schlüssel im Browser erzeugt. Nur zum Testen — nicht für Sensibles verwenden."
         }
     },
     "Calculators": {
