@@ -2,13 +2,33 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import { Button, Card, Col, Divider, InputNumber, Row, Segmented, Select, Space, Tabs, Tag, Typography, message } from 'antd';
+import { Button, Card, Col, Divider, InputNumber, Row, Segmented, Select, Space, Tabs, Typography, message } from 'antd';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
+import { ToolHeader } from '@/components/workbench/ToolHeader';
 import { ResistorPackageType, ResistorVisualizer } from './ResistorVisualizer';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
+
+type PresetId =
+  | 'custom'
+  | 'esp32-adc'
+  | 'audio-44k'
+  | 'audio-48k'
+  | 'low-power'
+  | 'rgb-led'
+  | 'buck-3v3';
+
+const PRESET_IDS: PresetId[] = [
+  'custom',
+  'esp32-adc',
+  'audio-44k',
+  'audio-48k',
+  'low-power',
+  'rgb-led',
+  'buck-3v3',
+];
 
 const calc = {
   ledResistor: (supply: number, ledVf: number, ledCurrentMa: number) => {
@@ -108,7 +128,7 @@ export function EmbeddedCalculators() {
   const [bitDepth, setBitDepth] = useState(16);
   const [channels, setChannels] = useState(2);
   const [mclkMult, setMclkMult] = useState(256);
-  const [preset, setPreset] = useState<'custom' | 'esp32-adc' | 'audio-44k' | 'audio-48k' | 'low-power'>('custom');
+  const [preset, setPreset] = useState<PresetId>('custom');
   const [activeTab, setActiveTab] = useState<'led' | 'cap' | 'thermal' | 'runtime' | 'resistorLab' | 'adc' | 'rc' | 'gain' | 'i2s'>('led');
 
   const [band1, setBand1] = useState('2');
@@ -126,8 +146,9 @@ export function EmbeddedCalculators() {
     borderSoft: mode === 'dark' ? '#3a3a3a' : '#d1d5db',
     textPrimary: mode === 'dark' ? '#f5f5f5' : '#111827',
     textSecondary: mode === 'dark' ? '#b3b3b3' : '#4b5563',
-    accent: '#f59e0b',
-    accentSoft: 'rgba(245, 158, 11, 0.16)',
+    // Follow the app-wide configurable accent instead of a hardcoded amber.
+    accent: 'var(--accent)',
+    accentSoft: 'color-mix(in srgb, var(--accent) 16%, transparent)',
   };
 
   const calcCardStyle = {
@@ -142,10 +163,9 @@ export function EmbeddedCalculators() {
 
   const metricCardStyle = {
     borderRadius: 12,
-    border: `1px solid ${mode === 'dark' ? 'rgba(245,158,11,0.35)' : 'rgba(245,158,11,0.45)'}`,
-    background: mode === 'dark'
-      ? 'linear-gradient(135deg, rgba(245,158,11,0.20) 0%, rgba(245,158,11,0.06) 100%)'
-      : 'linear-gradient(135deg, rgba(245,158,11,0.18) 0%, rgba(245,158,11,0.08) 100%)',
+    border: '1px solid color-mix(in srgb, var(--accent) 40%, transparent)',
+    background:
+      'linear-gradient(135deg, color-mix(in srgb, var(--accent) 18%, transparent) 0%, color-mix(in srgb, var(--accent) 6%, transparent) 100%)',
   };
 
   const fieldLabelStyle = {
@@ -289,12 +309,12 @@ export function EmbeddedCalculators() {
 
     const parseString = (key: string, fallback: string) => searchParams.get(key) ?? fallback;
     const presetParam = parseString('preset', 'custom');
-    const allowedPresets = ['custom', 'esp32-adc', 'audio-44k', 'audio-48k', 'low-power'];
+    const allowedPresets: string[] = PRESET_IDS;
     const tabParam = parseString('tab', 'led');
     const allowedTabs = ['led', 'cap', 'thermal', 'runtime', 'resistorLab', 'adc', 'rc', 'gain', 'i2s'];
 
     if (allowedPresets.includes(presetParam)) {
-      setPreset(presetParam as 'custom' | 'esp32-adc' | 'audio-44k' | 'audio-48k' | 'low-power');
+      setPreset(presetParam as PresetId);
     }
     if (allowedTabs.includes(tabParam)) {
       setActiveTab(tabParam as 'led' | 'cap' | 'thermal' | 'runtime' | 'resistorLab' | 'adc' | 'rc' | 'gain' | 'i2s');
@@ -426,8 +446,26 @@ export function EmbeddedCalculators() {
     wattage,
   ]);
 
-  const applyPreset = (value: 'custom' | 'esp32-adc' | 'audio-44k' | 'audio-48k' | 'low-power') => {
+  const applyPreset = (value: PresetId) => {
     setPreset(value);
+
+    if (value === 'rgb-led') {
+      setSupply(5);
+      setLedVf(3.2);
+      setLedCurrent(20);
+      return;
+    }
+
+    if (value === 'buck-3v3') {
+      setPowerV(3.3);
+      setPowerI(0.5);
+      setThetaJa(40);
+      setAmbient(30);
+      setVinMax(5);
+      setVadcMax(3);
+      setRBottomK(10);
+      return;
+    }
 
     if (value === 'esp32-adc') {
       setVinMax(12);
@@ -506,30 +544,17 @@ export function EmbeddedCalculators() {
   return (
     <Space direction="vertical" size={20} style={{ width: '100%', background: palette.page, padding: '4px 2px' }}>
       {contextHolder}
-      <Card
-        style={{
-          background: mode === 'dark'
-            ? 'linear-gradient(135deg, rgba(245,158,11,0.18) 0%, rgba(59,130,246,0.14) 100%)'
-            : 'linear-gradient(135deg, rgba(245,158,11,0.18) 0%, rgba(59,130,246,0.10) 100%)',
-          border: `1px solid ${mode === 'dark' ? 'rgba(245,158,11,0.35)' : 'rgba(245,158,11,0.45)'}`,
-          borderRadius: 14,
-        }}
-        styles={{ body: { padding: 24 } }}
-      >
-        <Space direction="vertical" size={10} style={{ width: '100%' }}>
-          <Title level={2} style={{ margin: 0, color: palette.textPrimary }}>{t('title')}</Title>
-          <Text style={{ color: palette.textSecondary }}>{t('subtitle')}</Text>
-          <Space wrap>
-            <Tag color="gold">{t('tags.embedded')}</Tag>
-            <Tag color="blue">{t('tags.audio')}</Tag>
-            <Tag color="purple">{t('tags.power')}</Tag>
-            <Tag color="green">{t('tags.design')}</Tag>
-            <Link href={`/${locale}/calculators/rcl`}>
-              <Button size="small">{t('go_rcl')}</Button>
-            </Link>
-          </Space>
-        </Space>
-      </Card>
+      <ToolHeader
+        eyebrow={t('tags.embedded')}
+        title={t('title')}
+        description={t('subtitle')}
+        locality="local"
+        actions={
+          <Link href={`/${locale}/calculators/rcl`}>
+            <Button>{t('go_rcl')}</Button>
+          </Link>
+        }
+      />
 
       <Space wrap style={{ width: '100%', justifyContent: 'space-between' }}>
         <Space direction="vertical" size={6} style={{ minWidth: 320 }}>
@@ -539,13 +564,15 @@ export function EmbeddedCalculators() {
           <Segmented
             size="small"
             value={preset}
-            onChange={(value) => applyPreset(value as 'custom' | 'esp32-adc' | 'audio-44k' | 'audio-48k' | 'low-power')}
+            onChange={(value) => applyPreset(value as PresetId)}
             options={[
               { label: t('presets.custom'), value: 'custom' },
               { label: t('presets.esp32adc'), value: 'esp32-adc' },
               { label: t('presets.audio44'), value: 'audio-44k' },
               { label: t('presets.audio48'), value: 'audio-48k' },
               { label: t('presets.lowPower'), value: 'low-power' },
+              { label: t('presets.rgbLed'), value: 'rgb-led' },
+              { label: t('presets.buck3v3'), value: 'buck-3v3' },
             ]}
           />
         </Space>
