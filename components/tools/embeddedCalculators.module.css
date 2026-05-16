@@ -84,3 +84,59 @@
 :global([data-theme='dark']) .note {
   color: #94a3b8;
 }
+
+/* Hybrid layout: left calculator rail (always visible, nothing behind a
+ * "..." overflow) + active panel on the right. */
+.calcTabs :global(.ant-tabs-nav) {
+  min-width: 220px;
+  padding: 10px;
+  border-radius: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: #ffffff;
+}
+
+:global([data-theme='dark']) .calcTabs :global(.ant-tabs-nav) {
+  border-color: rgba(255, 255, 255, 0.06);
+  background: rgba(15, 23, 42, 0.55);
+}
+
+.calcTabs :global(.ant-tabs-tab) {
+  margin: 2px 0 !important;
+  padding: 9px 12px !important;
+  border-radius: 10px;
+  transition: background 0.15s ease;
+}
+
+.calcTabs :global(.ant-tabs-tab:hover) {
+  background: rgba(15, 23, 42, 0.04);
+}
+
+:global([data-theme='dark']) .calcTabs :global(.ant-tabs-tab:hover) {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.calcTabs :global(.ant-tabs-tab-active) {
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.calcTabs :global(.ant-tabs-tab-active .ant-tabs-tab-btn) {
+  color: var(--accent) !important;
+  font-weight: 600;
+}
+
+.calcTabs :global(.ant-tabs-ink-bar) {
+  display: none;
+}
+
+.calcTabs :global(.ant-tabs-content-holder) {
+  padding-left: 20px;
+}
+
+@media (max-width: 760px) {
+  .calcTabs :global(.ant-tabs-nav) {
+    min-width: 0;
+  }
+  .calcTabs :global(.ant-tabs-content-holder) {
+    padding-left: 12px;
+  }
+}

@@ -588,15 +588,11 @@ export function EmbeddedCalculators() {
       </Space>
 
       <Tabs
-        type="card"
+        tabPosition="left"
         activeKey={activeTab}
         onChange={(key) => setActiveTab(key as 'led' | 'cap' | 'thermal' | 'runtime' | 'resistorLab' | 'adc' | 'rc' | 'gain' | 'i2s')}
-        tabBarGutter={8}
+        className={styles.calcTabs}
         style={{ width: '100%' }}
-        more={{ icon: <span style={{ color: palette.textSecondary }}>•••</span>, trigger: 'click' }}
-        tabBarStyle={{
-          marginBottom: 14,
-        }}
         items={[
           {
             key: 'led',
