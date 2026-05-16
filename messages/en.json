@@ -987,7 +987,9 @@
             "esp32adc": "ESP32 ADC",
             "audio44": "Audio 44.1k",
             "audio48": "Audio 48k",
-            "lowPower": "Low Power"
+            "lowPower": "Low Power",
+            "rgbLed": "RGB / WS2812 LED",
+            "buck3v3": "Buck 5V→3V3"
         },
         "cards": {
             "led": {
