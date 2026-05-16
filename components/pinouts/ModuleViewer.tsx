@@ -16,10 +16,30 @@ interface ModuleViewerProps {
 export function ModuleViewer({ module }: ModuleViewerProps) {
   const t = useTranslations('Pinouts');
   const [iframeLoaded, setIframeLoaded] = useState(false);
+  const [iframeHeight, setIframeHeight] = useState<number | null>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const observerRef = useRef<ResizeObserver | null>(null);
 
+  // The pinout HTML files each have their own intrinsic height. Measuring the
+  // same-origin document and following its resizes keeps the iframe flush with
+  // the diagram instead of leaving a fixed-height black gap.
   const handleIframeLoad = useCallback(() => {
     setIframeLoaded(true);
+    const doc = iframeRef.current?.contentDocument;
+    if (!doc?.body) return;
+
+    const measure = () => {
+      const next = Math.ceil(
+        Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight)
+      );
+      if (next > 0) setIframeHeight(next);
+    };
+
+    measure();
+    observerRef.current?.disconnect();
+    const observer = new ResizeObserver(measure);
+    observer.observe(doc.body);
+    observerRef.current = observer;
   }, []);
 
   const handlePrint = useCallback(() => {
@@ -35,7 +55,11 @@ export function ModuleViewer({ module }: ModuleViewerProps) {
   // Reset loaded state when module changes
   useEffect(() => {
     setIframeLoaded(false);
+    setIframeHeight(null);
   }, [module?.id]);
+
+  // Tear down the observer on unmount.
+  useEffect(() => () => observerRef.current?.disconnect(), []);
 
   if (!module) {
     return (
@@ -115,12 +139,16 @@ export function ModuleViewer({ module }: ModuleViewerProps) {
               label: t('interactive_view'),
               forceRender: true,
               children: (
-                <div className={styles.iframeWrapper}>
+                <div
+                  className={styles.iframeWrapper}
+                  style={iframeHeight ? { height: iframeHeight } : undefined}
+                >
                   <iframe
                     ref={iframeRef}
                     src={module.htmlPath}
                     title={`${module.name} Pinout`}
                     className={`${styles.iframe} ${iframeLoaded ? styles.iframeLoaded : ''}`}
+                    style={iframeHeight ? { height: iframeHeight } : undefined}
                     onLoad={handleIframeLoad}
                   />
                 </div>
