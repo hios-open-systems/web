@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 // import { Inter } from 'next/font/google';
 import { ThemeLayout } from '@/components/ThemeLayout';
 import AntdRegistry from '@/lib/AntdRegistry';
+import { getCurrentDeployVersion } from '@/lib/appVersion';
 import '@/styles/globals.css';
 
 import { NextIntlClientProvider } from 'next-intl';
@@ -39,7 +40,7 @@ export default async function RootLayout({ children, params }: Props) {
       <body style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
         <NextIntlClientProvider messages={messages}>
           <AntdRegistry>
-            <ThemeLayout>
+            <ThemeLayout currentVersion={getCurrentDeployVersion()}>
               {children}
             </ThemeLayout>
           </AntdRegistry>

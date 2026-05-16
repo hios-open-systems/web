@@ -19,21 +19,35 @@ export function ThemeSettings() {
 
     const activePreset = findPresetByAccent(accent);
     const draftValid = isValidHex(hexDraft);
+    const syncStatusLabel = !isAuthenticated
+        ? t('localMode')
+        : syncState === 'checking' || isSyncing
+            ? t('syncing')
+            : syncState === 'needs-import'
+                ? t('needsImport')
+                : syncState === 'error'
+                    ? t('syncErrorState')
+                    : t('accountMode');
+    const summaryCards = [
+        {
+            label: t('summarySyncLabel'),
+            value: syncStatusLabel,
+            hint: isAuthenticated ? t('summarySyncHintAccount') : t('summarySyncHintLocal'),
+        },
+        {
+            label: t('summaryPresetLabel'),
+            value: activePreset?.label ?? t('summaryPresetCustom'),
+            hint: activePreset ? t('summaryPresetHintPreset') : t('summaryPresetHintCustom'),
+        },
+        {
+            label: t('summaryAccentLabel'),
+            value: accent.toUpperCase(),
+            hint: t('summaryAccentHint'),
+        },
+    ];
 
     const renderStatus = () => {
-        if (!isAuthenticated) {
-            return <span className={styles.syncMeta}>{t('localMode')}</span>;
-        }
-        if (syncState === 'checking' || isSyncing) {
-            return <span className={styles.syncMeta}>{t('syncing')}</span>;
-        }
-        if (syncState === 'needs-import') {
-            return <span className={styles.syncMeta}>{t('needsImport')}</span>;
-        }
-        if (syncState === 'error') {
-            return <span className={styles.syncMeta}>{t('syncErrorState')}</span>;
-        }
-        return <span className={styles.syncMeta}>{t('accountMode')}</span>;
+        return <span className={styles.syncMeta}>{syncStatusLabel}</span>;
     };
 
     const commitHex = () => {
@@ -46,6 +60,16 @@ export function ThemeSettings() {
                 <h1 className={styles.title}>{t('title')}</h1>
                 <p className={styles.subtitle}>{t('subtitle')}</p>
             </header>
+
+            <section className={styles.summaryGrid} aria-label={t('summaryRegion')}>
+                {summaryCards.map((card) => (
+                    <article key={card.label} className={styles.summaryCard}>
+                        <span className={styles.summaryLabel}>{card.label}</span>
+                        <strong className={styles.summaryValue}>{card.value}</strong>
+                        <span className={styles.summaryHint}>{card.hint}</span>
+                    </article>
+                ))}
+            </section>
 
             <section className={styles.section} aria-label={t('syncTitle')}>
                 <div className={styles.sectionHeader}>

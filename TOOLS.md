@@ -116,6 +116,12 @@ Una fila por herramienta. Sirve como **spec previo** (antes de codear) y como **
 - **Casos borde**: sin env vars `GITHUB_CLIENT_*` configuradas el flujo falla con `auth_error=callback_failed`. `/api/auth/me` siempre devuelve `{user:null}` aunque la DB no esté disponible (no rompe la home).
 - **Status**: works (depende de configurar D1 + OAuth app + env vars en Cloudflare Pages)
 
+### Version watcher
+- **Propósito**: avisar cuando la pestaña quedó en un deploy viejo después de publicar una versión nueva.
+- **Flujo**: el layout inyecta la versión actual del deploy; un watcher cliente consulta `/api/version` con `no-store` cada ~5 min y al volver al foco. Si detecta una versión distinta, muestra aviso persistente con acción de recargar.
+- **Casos borde**: en local sin commit SHA de plataforma cae a `dev-local`, así que no molesta durante desarrollo normal. Si el fetch falla o la pestaña está oculta, no rompe nada y reintenta luego.
+- **Status**: works
+
 ### i18n
 - **Propósito**: locales `en` y `es` mantenidos, `de` y `it` con fallback profundo a `en`.
 - **Casos borde**: keys faltantes en de/it caen a en automáticamente (ver `i18n/request.ts`).
