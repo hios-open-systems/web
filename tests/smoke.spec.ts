@@ -12,7 +12,7 @@ import { expect, test } from '@playwright/test';
 const ALL_TOOL_NAMES = [
     'Payload Lab',
     'Type Checker',
-    'JWT Decode',
+    'JWT Playground',
     'DNS Inspector',
     'Certificate Expiry',
     'Object to Types',
@@ -66,7 +66,7 @@ test.describe('Workbench', () => {
         await page.goto('/es/workbench/sections/validation');
         await expect(page.getByRole('heading', { name: 'Validación', level: 1 })).toBeVisible();
         await expect(page.getByText('Payload Lab').first()).toBeVisible();
-        await expect(page.getByText('JWT Decode').first()).toBeVisible();
+        await expect(page.getByText('JWT Playground').first()).toBeVisible();
         await expect(page.getByText('DNS Inspector').first()).toBeVisible();
     });
 

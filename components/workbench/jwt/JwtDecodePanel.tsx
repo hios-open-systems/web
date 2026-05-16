@@ -4,22 +4,19 @@ import React, { useMemo, useState } from 'react';
 import { Button, Card, Col, Input, Row, Space, Tag, Typography, message } from 'antd';
 import { ClearOutlined, CopyOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
-import { useTheme } from '@/lib/ThemeContext';
 import { buildExampleJwt, decodeJwtToken } from '@/lib/workbench/jwt';
-import styles from './workbench.module.css';
+import styles from '../workbench.module.css';
 
-const { Paragraph, Text, Title } = Typography;
+const { Text } = Typography;
 const { TextArea } = Input;
 
-export function JwtDecodeTool() {
-    const t = useTranslations('Workbench.jwtDecode');
-    const { mode } = useTheme();
+export function JwtDecodePanel() {
+    const t = useTranslations('Workbench.jwtPlayground');
     const [messageApi, contextHolder] = message.useMessage();
     const [input, setInput] = useState(buildExampleJwt());
-
     const decoded = useMemo(() => decodeJwtToken(input, t('unknownError')), [input, t]);
 
-    const handleCopy = async (value: string) => {
+    const copy = async (value: string) => {
         try {
             await navigator.clipboard.writeText(value);
             messageApi.success(t('copied'));
@@ -28,37 +25,19 @@ export function JwtDecodeTool() {
         }
     };
 
-    const themeVars = {
-        '--wb-surface-border': mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.08)',
-        '--wb-surface-bg': mode === 'dark' ? '#111827' : '#ffffff',
-        '--wb-surface-soft-border': mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.08)',
-        '--wb-surface-soft-bg': mode === 'dark' ? '#0f172a' : '#f8fafc',
-        '--wb-text-muted': mode === 'dark' ? '#9ca3af' : '#475569',
-        '--wb-code-bg': mode === 'dark' ? '#020617' : '#e2e8f0',
-        '--wb-code-text': mode === 'dark' ? '#e2e8f0' : '#0f172a',
-    } as React.CSSProperties;
-
     return (
-        <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
+        <Space direction="vertical" size={16} className={styles.stackFull}>
             {contextHolder}
-            <Card className={styles.sectionCard} styles={{ body: { padding: 24 } }}>
-                <Space direction="vertical" size={10} className={styles.stackFull}>
-                    <Tag color="blue">{t('badge')}</Tag>
-                    <Title level={2} style={{ margin: 0 }}>{t('title')}</Title>
-                    <Paragraph className={styles.subtleText} style={{ margin: 0 }}>{t('subtitle')}</Paragraph>
-                    <Space wrap>
-                        <Button icon={<ReloadOutlined />} onClick={() => setInput(buildExampleJwt())}>{t('loadExample')}</Button>
-                        <Button icon={<ClearOutlined />} onClick={() => setInput('')}>{t('clear')}</Button>
-                        {decoded.status === 'valid' ? (
-                            <>
-                                <Button icon={<CopyOutlined />} onClick={() => handleCopy(decoded.headerFormatted)}>{t('copyHeader')}</Button>
-                                <Button icon={<CopyOutlined />} onClick={() => handleCopy(decoded.payloadFormatted)}>{t('copyPayload')}</Button>
-                            </>
-                        ) : null}
-                    </Space>
-                </Space>
-            </Card>
-
+            <Space wrap>
+                <Button icon={<ReloadOutlined />} onClick={() => setInput(buildExampleJwt())}>{t('loadExample')}</Button>
+                <Button icon={<ClearOutlined />} onClick={() => setInput('')}>{t('clear')}</Button>
+                {decoded.status === 'valid' ? (
+                    <>
+                        <Button icon={<CopyOutlined />} onClick={() => copy(decoded.headerFormatted)}>{t('copyHeader')}</Button>
+                        <Button icon={<CopyOutlined />} onClick={() => copy(decoded.payloadFormatted)}>{t('copyPayload')}</Button>
+                    </>
+                ) : null}
+            </Space>
             <Row gutter={[20, 20]}>
                 <Col xs={24} lg={10}>
                     <Card title={t('input')} className={styles.sectionCard} styles={{ body: { padding: 0 } }}>
@@ -74,7 +53,9 @@ export function JwtDecodeTool() {
                 <Col xs={24} lg={14}>
                     <Card
                         title={t('decoded')}
-                        extra={decoded.status === 'valid' ? <Tag color="green">{decoded.isExpired ? t('expired') : t('active')}</Tag> : <Tag color="red">{t('invalid')}</Tag>}
+                        extra={decoded.status === 'valid'
+                            ? <Tag color="green">{decoded.isExpired ? t('expired') : t('active')}</Tag>
+                            : <Tag color="red">{t('invalid')}</Tag>}
                         className={styles.sectionCard}
                         styles={{ body: { padding: 20 } }}
                     >

@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 import { CertificateCheckTool } from '@/components/workbench/CertificateCheckTool';
 import { DnsLookupTool } from '@/components/workbench/DnsLookupTool';
-import { JwtDecodeTool } from '@/components/workbench/JwtDecodeTool';
+import { JwtPlaygroundTool } from '@/components/workbench/JwtPlaygroundTool';
 import { ObjectToTypesTool } from '@/components/workbench/ObjectToTypesTool';
 import { ObjectComparatorTool } from '@/components/workbench/ObjectComparatorTool';
 import { RandomStringTool } from '@/components/workbench/RandomStringTool';
@@ -17,8 +17,8 @@ const dynamicToolIds = workbenchTools
 
 const metadataMap: Record<string, Metadata> = {
   'jwt-decode': {
-    title: 'JWT Decode | HIOS Workbench',
-    description: 'Decodifica JWT en local para revisar header, payload y expiración sin salir del navegador.',
+    title: 'JWT Playground | HIOS Workbench',
+    description: 'Decodifica, firma y verifica JWT (HS, RS, ES) enteramente en el navegador. El token y las claves nunca salen de tu equipo.',
   },
   'type-checker': {
     title: 'Type Checker | HIOS Workbench',
@@ -68,7 +68,7 @@ function renderTool(toolId: WorkbenchToolId) {
     case 'type-checker':
       return <TypeCheckerTool />;
     case 'jwt-decode':
-      return <JwtDecodeTool />;
+      return <JwtPlaygroundTool />;
     case 'dns-lookup':
       return <DnsLookupTool />;
     case 'certificate-check':
