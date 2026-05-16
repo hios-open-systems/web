@@ -2,13 +2,14 @@
 
 import React, { useState } from 'react';
 import { Alert, Button, Card, Col, Input, Row, Select, Space, Typography, message } from 'antd';
-import { CopyOutlined, KeyOutlined } from '@ant-design/icons';
+import { CopyOutlined, KeyOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import {
     algorithmFamily,
     buildExampleHeader,
     buildExamplePayload,
     EXAMPLE_HS_SECRET,
+    generateKeyPair,
     JWT_ALGORITHMS,
     signJwt,
     type JwtAlgorithm,
@@ -28,16 +29,41 @@ export function JwtEncodePanel() {
     const [token, setToken] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [busy, setBusy] = useState(false);
+    const [publicPem, setPublicPem] = useState('');
+    const [keyBusy, setKeyBusy] = useState(false);
 
     const isHmac = algorithmFamily(algorithm) === 'HMAC';
+
+    const generateKeys = async (alg: JwtAlgorithm) => {
+        setKeyBusy(true);
+        setError(null);
+        try {
+            const pair = await generateKeyPair(alg);
+            if (pair) {
+                setKeyMaterial(pair.privatePem);
+                setPublicPem(pair.publicPem);
+            }
+        } catch (err) {
+            setError(err instanceof Error ? err.message : t('jsonError'));
+        } finally {
+            setKeyBusy(false);
+        }
+    };
 
     const onAlgorithmChange = (next: JwtAlgorithm) => {
         setAlgorithm(next);
         setHeaderText(buildExampleHeader(next));
-        if (algorithmFamily(next) === 'HMAC') setKeyMaterial(EXAMPLE_HS_SECRET);
-        else setKeyMaterial('');
         setToken('');
         setError(null);
+        setPublicPem('');
+        if (algorithmFamily(next) === 'HMAC') {
+            setKeyMaterial(EXAMPLE_HS_SECRET);
+        } else {
+            // Asymmetric: seed a throwaway pair so the operator can sign and
+            // verify out of the box without bringing their own keys.
+            setKeyMaterial('');
+            void generateKeys(next);
+        }
     };
 
     const handleSign = async () => {
@@ -62,9 +88,9 @@ export function JwtEncodePanel() {
         }
     };
 
-    const copyToken = async () => {
+    const copyValue = async (value: string) => {
         try {
-            await navigator.clipboard.writeText(token);
+            await navigator.clipboard.writeText(value);
             messageApi.success(t('copied'));
         } catch {
             messageApi.error(t('copyError'));
@@ -113,6 +139,16 @@ export function JwtEncodePanel() {
                 title={`${t('signKeyLabel')} · ${isHmac ? t('signKeyHmac') : t('signKeyPrivate')}`}
                 className={styles.sectionCard}
                 styles={{ body: { padding: isHmac ? 16 : 0 } }}
+                extra={isHmac ? undefined : (
+                    <Button
+                        size="small"
+                        icon={<ReloadOutlined />}
+                        loading={keyBusy}
+                        onClick={() => void generateKeys(algorithm)}
+                    >
+                        {keyBusy ? t('generatingKeys') : t('generateKeys')}
+                    </Button>
+                )}
             >
                 {isHmac ? (
                     <Input.Password
@@ -132,6 +168,24 @@ export function JwtEncodePanel() {
                 )}
             </Card>
 
+            {!isHmac && publicPem ? (
+                <Card
+                    title={t('publicKeyLabel')}
+                    className={styles.sectionCard}
+                    styles={{ body: { padding: 0 } }}
+                    extra={<Button size="small" icon={<CopyOutlined />} onClick={() => void copyValue(publicPem)}>{t('copyPublic')}</Button>}
+                >
+                    <TextArea
+                        value={publicPem}
+                        readOnly
+                        autoSize={{ minRows: 4, maxRows: 8 }}
+                        className={styles.textArea}
+                    />
+                </Card>
+            ) : null}
+
+            {!isHmac ? <Text className={styles.subtleText}>{t('demoKeyNote')}</Text> : null}
+
             <Button type="primary" loading={busy} onClick={() => void handleSign()}>
                 {busy ? t('signing') : t('sign')}
             </Button>
@@ -141,7 +195,7 @@ export function JwtEncodePanel() {
             {token ? (
                 <Card
                     title={t('signedToken')}
-                    extra={<Button size="small" icon={<CopyOutlined />} onClick={() => void copyToken()}>{t('copyToken')}</Button>}
+                    extra={<Button size="small" icon={<CopyOutlined />} onClick={() => void copyValue(token)}>{t('copyToken')}</Button>}
                     className={styles.sectionCard}
                     styles={{ body: { padding: 18 } }}
                 >
