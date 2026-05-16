@@ -956,7 +956,12 @@
             "verifyValid": "Signature valid",
             "verifyInvalid": "Signature does not match",
             "verifyErrorTitle": "Verification error",
-            "jsonError": "Header and payload must be valid JSON objects"
+            "jsonError": "Header and payload must be valid JSON objects",
+            "generateKeys": "Generate demo key pair",
+            "generatingKeys": "Generating…",
+            "publicKeyLabel": "Public key (for verifying)",
+            "copyPublic": "Copy public key",
+            "demoKeyNote": "Demo key generated in your browser. For testing only — do not use for anything sensitive."
         }
     },
     "VersionWatcher": {

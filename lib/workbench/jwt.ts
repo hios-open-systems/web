@@ -169,6 +169,53 @@ export async function signJwt(args: {
 }
 
 /* ------------------------------------------------------------------ *
+ * Demo key-pair generation (RS / ES)
+ * ------------------------------------------------------------------ */
+
+function derToPem(der: ArrayBuffer, label: 'PRIVATE KEY' | 'PUBLIC KEY'): string {
+    const bytes = new Uint8Array(der);
+    let binary = '';
+    bytes.forEach((b) => {
+        binary += String.fromCharCode(b);
+    });
+    const body = (btoa(binary).match(/.{1,64}/g) ?? []).join('\n');
+    return `-----BEGIN ${label}-----\n${body}\n-----END ${label}-----`;
+}
+
+export interface GeneratedKeyPair {
+    privatePem: string;
+    publicPem: string;
+}
+
+/**
+ * Generates a throwaway key pair in the browser so the operator can sign and
+ * verify without bringing their own keys. Demo only — not for production use.
+ * Returns null for HMAC (symmetric: just type a secret).
+ */
+export async function generateKeyPair(alg: JwtAlgorithm): Promise<GeneratedKeyPair | null> {
+    const family = algorithmFamily(alg);
+    if (family === 'HMAC') return null;
+
+    const params: RsaHashedKeyGenParams | EcKeyGenParams =
+        family === 'RSA'
+            ? {
+                name: 'RSASSA-PKCS1-v1_5',
+                modulusLength: 2048,
+                publicExponent: new Uint8Array([1, 0, 1]),
+                hash: hashName(alg),
+            }
+            : { name: 'ECDSA', namedCurve: alg === 'ES256' ? 'P-256' : 'P-384' };
+
+    const pair = (await crypto.subtle.generateKey(params, true, ['sign', 'verify'])) as CryptoKeyPair;
+    const priv = await crypto.subtle.exportKey('pkcs8', pair.privateKey);
+    const pub = await crypto.subtle.exportKey('spki', pair.publicKey);
+    return {
+        privatePem: derToPem(priv, 'PRIVATE KEY'),
+        publicPem: derToPem(pub, 'PUBLIC KEY'),
+    };
+}
+
+/* ------------------------------------------------------------------ *
  * Decode
  * ------------------------------------------------------------------ */
 
