@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ESP32-WROOM-32 DevKit - Pinout Interactivo</title>
+  <title>ESP32-WROOM-32 - Pinout Interactivo</title>
   <style>
     :root {
       --bg: #0a0a0a;
@@ -12,67 +12,52 @@
       --border: #2a2a2a;
       --text: #e5e5e5;
       --text-dim: #888;
-      --accent: #f59e0b;
-      --power: #ef4444;
-      --gnd: #525252;
-      --gpio: #22c55e;
-      --adc: #ec4899;
-      --dac: #f472b6;
-      --touch: #a855f7;
-      --spi: #06b6d4;
-      --i2c: #8b5cf6;
-      --uart: #eab308;
-      --pwm: #14b8a6;
-      --input-only: #6b7280;
-      --strapping: #f97316;
-      --chip-height: 560px;
-      --pin-top-offset: 48px;
-      --pin-bottom-offset: 12px;
+      --accent: #10b981;
+      --cat-power: #ef4444;
+      --cat-gnd: #525252;
+      --cat-gpio: #22c55e;
+      --cat-adc: #ec4899;
+      --cat-touch: #a855f7;
+      --cat-spi: #06b6d4;
+      --cat-i2c: #8b5cf6;
+      --cat-uart: #eab308;
+      --cat-dac: #f59e0b;
+      --cat-boot: #f97316;
+      --cat-in: #6b7280;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: var(--bg);
       color: var(--text);
-      padding: clamp(16px, 2.5vw, 24px);
+      padding: 20px;
       line-height: 1.5;
-      overflow-x: auto;
-      overflow-y: auto;
+      min-height: 100vh;
     }
 
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
+    .container { max-width: 1100px; margin: 0 auto; }
 
     header {
-      display: none;
+      text-align: center;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
     }
 
-    h1 {
-      color: var(--accent);
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
+    h1 { color: var(--accent); font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+    .subtitle { color: var(--text-dim); font-size: 14px; }
 
-    .subtitle {
-      color: var(--text-dim);
-      font-size: 14px;
-    }
-
-    .info-section {
-      display: none;
-    }
-
-    .footer {
-      display: none;
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      background: var(--accent);
+      color: #000;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-left: 8px;
     }
 
     .toolbar {
@@ -87,42 +72,7 @@
       border: 1px solid var(--border);
     }
 
-    .toolbar-group {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .search-group {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-left: 12px;
-      padding-left: 12px;
-      border-left: 1px solid var(--border);
-    }
-
-    .search-input {
-      width: min(260px, 55vw);
-      padding: 6px 10px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      background: #0f0f0f;
-      color: var(--text);
-      font-size: 12px;
-      outline: none;
-    }
-
-    .search-input:focus {
-      border-color: var(--accent);
-    }
-
-    .preset-btn.active {
-      background: var(--accent);
-      color: #000;
-      border-color: var(--accent);
-    }
+    .toolbar-group { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
 
     .filter-btn {
       display: flex;
@@ -139,21 +89,9 @@
       transition: all 0.2s;
     }
 
-    .filter-btn:hover {
-      border-color: var(--accent);
-    }
-
-    .filter-btn.active {
-      background: var(--accent);
-      color: #000;
-      border-color: var(--accent);
-    }
-
-    .filter-btn .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 2px;
-    }
+    .filter-btn:hover { border-color: var(--accent); }
+    .filter-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+    .filter-btn .dot { width: 10px; height: 10px; border-radius: 2px; }
 
     .btn-group {
       display: flex;
@@ -173,228 +111,149 @@
       cursor: pointer;
     }
 
-    .btn-small:hover {
-      color: var(--text);
-      border-color: var(--accent);
-    }
-
-    .compact-toggle {
-      display: none;
-    }
+    .btn-small:hover { color: var(--text); border-color: var(--accent); }
 
     .pinout-container {
       display: flex;
       justify-content: center;
-      align-items: flex-start;
-      gap: 16px;
+      align-items: stretch;
+      gap: 0;
       margin: 24px 0;
       overflow-x: auto;
       padding: 20px 0;
     }
 
-    .pin-column {
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-      position: relative;
-      z-index: 2;
-      height: var(--chip-height);
-      padding-top: var(--pin-top-offset);
-      padding-bottom: var(--pin-bottom-offset);
-      justify-content: space-between;
-      transform: translateY(4px);
-    }
-
-    .pin-column.left {
-      align-items: flex-end;
-    }
-
-    .pin-column.right {
-      align-items: flex-start;
-    }
+    .pin-column { display: flex; flex-direction: column; gap: 1px; }
+    .pin-column.left { align-items: flex-end; }
+    .pin-column.right { align-items: flex-start; }
 
     .chip {
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
+      justify-content: space-between;
       align-items: center;
-      width: 220px;
-      background: transparent;
-      border: none;
-      border-radius: 0;
-      padding: 0 8px;
+      width: 120px;
+      background: linear-gradient(180deg, #1f1f1f 0%, #0f0f0f 100%);
+      border: 2px solid #333;
+      border-radius: 6px;
+      padding: 12px 8px;
       position: relative;
-      z-index: 1;
-      height: var(--chip-height);
     }
 
     .chip::before {
-      content: none;
+      content: '';
+      position: absolute;
+      top: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 12px;
+      background: #333;
+      border-radius: 0 0 12px 12px;
     }
 
-    .chip-name {
-      font-size: 11px;
-      font-weight: 700;
-      color: #666;
-      text-align: center;
-      margin-top: 8px;
-    }
+    .chip.ic::before, .chip.module::before { display: none; }
 
-    .chip-module {
-      font-size: 9px;
-      color: #555;
-      margin-top: 2px;
-    }
+    .chip-name { font-size: 12px; font-weight: 700; color: #888; text-align: center; margin-top: 8px; }
+    .chip-module { font-size: 9px; color: #555; margin-top: 2px; }
 
     .antenna {
-      display: none;
+      width: 45px;
+      height: 55px;
+      border: 2px solid #444;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      background: repeating-linear-gradient(0deg, #333 0px, #333 2px, transparent 2px, transparent 4px);
     }
 
-    .chip-image {
-      width: auto;
-      height: var(--chip-height);
-      object-fit: contain;
-      margin: 0;
-      transform: rotate(180deg);
-      filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
-      pointer-events: none;
+    .usb-port {
+      width: 30px;
+      height: 14px;
+      background: #444;
+      border-radius: 2px;
+      margin-top: 8px;
+      position: relative;
+    }
+
+    .usb-port::after {
+      content: 'USB';
+      font-size: 6px;
+      color: #666;
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .ic-notch {
+      width: 26px;
+      height: 13px;
+      border: 2px solid #444;
+      border-top: none;
+      border-radius: 0 0 26px 26px;
+      margin-bottom: 10px;
+    }
+
+    .display {
+      width: 84px;
+      height: 38px;
+      background: #050505;
+      border: 1px solid #333;
+      border-radius: 4px;
+      color: #22c55e;
+      font-family: 'SF Mono', 'Consolas', monospace;
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      box-shadow: inset 0 0 8px rgba(34, 197, 94, 0.25);
     }
 
     .pin-row {
       display: flex;
       align-items: center;
       gap: 4px;
-      height: calc((var(--chip-height) - var(--pin-top-offset) - var(--pin-bottom-offset)) / 19);
-      min-height: 0;
-      padding: 0 8px;
+      padding: 2px 8px;
+      min-height: 24px;
       border-radius: 3px;
       transition: all 0.15s;
       cursor: default;
     }
 
-    .pin-row:hover {
-      background: rgba(255, 255, 255, 0.05);
-    }
+    .pin-row:hover { background: rgba(255, 255, 255, 0.05); }
+    .pin-row.dimmed { opacity: 0.15; }
+    .pin-row.highlight { background: rgba(16, 185, 129, 0.15); }
 
-    .pin-row.dimmed {
-      opacity: 0.15;
-    }
-
-    .pin-row.highlight {
-      background: rgba(245, 158, 11, 0.15);
-    }
-
-    .pin-row.search-dim {
-      opacity: 0.16;
-    }
-
-    .pin-row.search-hit {
-      background: rgba(245, 158, 11, 0.2);
-      box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.45);
-    }
-
-    .pin-num {
-      min-width: 18px;
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--text-dim);
-      text-align: center;
-    }
-
-    .pin-labels {
-      display: flex;
-      gap: 3px;
-      flex-wrap: wrap;
-    }
-
-    .left .pin-labels {
-      justify-content: flex-end;
-    }
+    .pin-num { min-width: 18px; font-size: 10px; font-weight: 600; color: var(--text-dim); text-align: center; }
+    .pin-labels { display: flex; gap: 3px; flex-wrap: wrap; }
+    .left .pin-labels { justify-content: flex-end; }
 
     .pin-label {
-      padding: 2px 6px;
+      padding: 2px 5px;
       border-radius: 3px;
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 600;
       font-family: 'SF Mono', 'Consolas', monospace;
       white-space: nowrap;
       transition: all 0.15s;
     }
 
-    .pin-label.primary {
-      font-weight: 700;
-    }
+    .pin-label.primary { font-weight: 700; font-size: 10px; }
 
-    .pin-label[data-type="power"] {
-      background: var(--power);
-      color: #fff;
-    }
-
-    .pin-label[data-type="gnd"] {
-      background: var(--gnd);
-      color: #fff;
-    }
-
-    .pin-label[data-type="gpio"] {
-      background: var(--gpio);
-      color: #000;
-    }
-
-    .pin-label[data-type="adc"] {
-      background: var(--adc);
-      color: #fff;
-    }
-
-    .pin-label[data-type="dac"] {
-      background: var(--dac);
-      color: #000;
-    }
-
-    .pin-label[data-type="touch"] {
-      background: var(--touch);
-      color: #fff;
-    }
-
-    .pin-label[data-type="spi"] {
-      background: var(--spi);
-      color: #000;
-    }
-
-    .pin-label[data-type="i2c"] {
-      background: var(--i2c);
-      color: #fff;
-    }
-
-    .pin-label[data-type="uart"] {
-      background: var(--uart);
-      color: #000;
-    }
-
-    .pin-label[data-type="pwm"] {
-      background: var(--pwm);
-      color: #000;
-    }
-
-    .pin-label[data-type="input-only"] {
-      background: var(--input-only);
-      color: #fff;
-    }
-
-    .pin-label[data-type="strapping"] {
-      background: var(--strapping);
-      color: #000;
-    }
-
-    .pin-label[data-type="nc"] {
-      background: #333;
-      color: #666;
-    }
-
-    .pin-label[data-type="flash"] {
-      background: #444;
-      color: #999;
-      font-size: 9px;
-    }
+    .pin-label[data-type="power"] { background: var(--cat-power); color: #fff; }
+    .pin-label[data-type="gnd"] { background: var(--cat-gnd); color: #fff; }
+    .pin-label[data-type="gpio"] { background: var(--cat-gpio); color: #fff; }
+    .pin-label[data-type="adc"] { background: var(--cat-adc); color: #fff; }
+    .pin-label[data-type="touch"] { background: var(--cat-touch); color: #fff; }
+    .pin-label[data-type="spi"] { background: var(--cat-spi); color: #fff; }
+    .pin-label[data-type="i2c"] { background: var(--cat-i2c); color: #fff; }
+    .pin-label[data-type="uart"] { background: var(--cat-uart); color: #000; }
+    .pin-label[data-type="dac"] { background: var(--cat-dac); color: #000; }
+    .pin-label[data-type="boot"] { background: var(--cat-boot); color: #fff; }
+    .pin-label[data-type="in"] { background: var(--cat-in); color: #fff; }
+    .pin-label[data-type="nc"] { background: #333; color: #666; }
 
     .info-section {
       background: var(--card);
@@ -404,11 +263,7 @@
       margin-top: 24px;
     }
 
-    .info-section h3 {
-      font-size: 14px;
-      color: var(--accent);
-      margin-bottom: 12px;
-    }
+    .info-section h3 { font-size: 14px; color: var(--accent); margin-bottom: 12px; }
 
     .info-grid {
       display: grid;
@@ -416,11 +271,7 @@
       gap: 16px;
     }
 
-    .info-card {
-      background: rgba(255, 255, 255, 0.02);
-      border-radius: 8px;
-      padding: 12px;
-    }
+    .info-card { background: rgba(255,255,255,0.02); border-radius: 8px; padding: 12px; }
 
     .info-card h4 {
       font-size: 12px;
@@ -431,24 +282,9 @@
       gap: 6px;
     }
 
-    .info-card h4 .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 2px;
-    }
-
-    .info-card p {
-      font-size: 11px;
-      color: var(--text-dim);
-      line-height: 1.6;
-    }
-
-    .info-card code {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 1px 4px;
-      border-radius: 3px;
-      font-size: 10px;
-    }
+    .info-card h4 .dot { width: 8px; height: 8px; border-radius: 2px; }
+    .info-card p { font-size: 11px; color: var(--text-dim); line-height: 1.6; }
+    .info-card code { background: rgba(255,255,255,0.1); padding: 1px 4px; border-radius: 3px; font-size: 10px; }
 
     .print-btn {
       position: fixed;
@@ -465,201 +301,31 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      z-index: 20;
     }
 
     .footer {
-      display: none;
       margin-top: 24px;
       text-align: center;
-      font-size: clamp(10px, 2vw, 12px);
+      font-size: 11px;
       color: var(--text-dim);
-      padding-top: clamp(12px, 2vw, 18px);
+      padding-top: 16px;
       border-top: 1px solid var(--border);
     }
 
-    .footer a {
-      color: var(--accent);
-      text-decoration: none;
-    }
+    .footer a { color: var(--accent); text-decoration: none; }
 
-    /* Print Styles */
     @media print {
-      body {
-        background: #fff;
-        color: #000;
-        padding: 10mm;
-      }
-
-      .toolbar,
-      .print-btn {
-        display: none !important;
-      }
-
-      .pin-label {
-        border: 1px solid currentColor;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-
-      .chip {
-        background: #f0f0f0 !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-
-      .info-section {
-        background: #f9f9f9;
-        border: 1px solid #ccc;
-      }
-
-      @page {
-        size: A4 landscape;
-        margin: 8mm;
-      }
+      body { background: #fff; color: #000; padding: 10mm; }
+      .toolbar, .print-btn { display: none !important; }
+      .pin-label { border: 1px solid currentColor; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .chip { background: #f0f0f0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .info-section { background: #f9f9f9; border: 1px solid #ccc; }
+      @page { size: A4 landscape; margin: 8mm; }
     }
 
     @media (max-width: 768px) {
-      :root {
-        --chip-height: 460px;
-        --pin-top-offset: 39px;
-        --pin-bottom-offset: 10px;
-      }
-
-      body {
-        padding: 12px;
-      }
-
-      .print-btn {
-        position: static;
-        margin: 0 0 12px auto;
-      }
-
-      .container {
-        max-width: 100%;
-      }
-
-      .pinout-container {
-        justify-content: flex-start;
-        overflow-x: auto;
-        gap: 10px;
-        margin: 12px 0;
-        padding: 10px 0 16px;
-      }
-
-      .toolbar {
-        padding: 12px;
-        justify-content: flex-start;
-      }
-
-      .filter-btn {
-        padding: 5px 8px;
-        font-size: 11px;
-      }
-
-      .search-group {
-        margin-left: 0;
-        padding-left: 0;
-        border-left: none;
-        width: 100%;
-      }
-
-      .search-input {
-        width: 100%;
-      }
-
-      .btn-group {
-        margin-left: 0;
-        padding-left: 0;
-        border-left: none;
-      }
-
-      .compact-toggle {
-        display: inline-flex;
-      }
-
-      .compact-toggle.active {
-        background: var(--accent);
-        color: #000;
-        border-color: var(--accent);
-      }
-
-      .chip {
-        width: 190px;
-      }
-
-      .pin-label {
-        font-size: 9px;
-        padding: 2px 5px;
-      }
-
-      .pin-num {
-        font-size: 9px;
-      }
-
-      body.compact-mode {
-        --chip-height: 390px;
-        --pin-top-offset: 33px;
-        --pin-bottom-offset: 8px;
-      }
-
-      body.compact-mode .chip {
-        width: 158px;
-      }
-
-      body.compact-mode .pin-label {
-        font-size: 8px;
-        padding: 1px 4px;
-      }
-
-      body.compact-mode .pin-num {
-        font-size: 8px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      :root {
-        --chip-height: 420px;
-        --pin-top-offset: 36px;
-        --pin-bottom-offset: 9px;
-      }
-
-      .chip {
-        width: 170px;
-      }
-
-      .toolbar {
-        gap: 6px;
-      }
-
-      .toolbar-group {
-        gap: 4px;
-      }
-
-      .search-input {
-        font-size: 11px;
-        padding: 5px 8px;
-      }
-
-      .filter-btn {
-        padding: 4px 7px;
-        font-size: 10px;
-      }
-
-      .btn-small {
-        font-size: 10px;
-        padding: 4px 8px;
-      }
-
-      body.compact-mode {
-        --chip-height: 360px;
-        --pin-top-offset: 30px;
-        --pin-bottom-offset: 7px;
-      }
-
-      body.compact-mode .chip {
-        width: 145px;
-      }
+      .pinout-container { transform: scale(0.8); transform-origin: top center; }
+      .filter-btn { padding: 5px 8px; font-size: 11px; }
     }
   </style>
 </head>
@@ -667,309 +333,174 @@
 <body>
   <button class="print-btn" onclick="window.print()">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" />
-      <rect x="6" y="14" width="12" height="8" />
+      <path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/>
+      <rect x="6" y="14" width="12" height="8"/>
     </svg>
     Imprimir
   </button>
 
   <div class="container">
     <header>
-      <h1>ESP32-WROOM-32 DevKit</h1>
-      <p class="subtitle">38 pines • Dual-core 240MHz • WiFi + Bluetooth • 520KB SRAM</p>
+      <h1>ESP32-WROOM-32 <span class="badge">DevKit 38p</span></h1>
+      <p class="subtitle">38 pines • Dual-core 240MHz • WiFi + BT 4.2 • 520KB SRAM • 18 ADC · 2 DAC · 10 Touch</p>
     </header>
 
     <div class="toolbar">
       <div class="toolbar-group">
         <button class="filter-btn active" data-filter="power">
-          <span class="dot" style="background: var(--power)"></span>Power
+          <span class="dot" style="background: var(--cat-power)"></span>Power
         </button>
         <button class="filter-btn active" data-filter="gnd">
-          <span class="dot" style="background: var(--gnd)"></span>GND
+          <span class="dot" style="background: var(--cat-gnd)"></span>GND
         </button>
         <button class="filter-btn active" data-filter="gpio">
-          <span class="dot" style="background: var(--gpio)"></span>GPIO
+          <span class="dot" style="background: var(--cat-gpio)"></span>GPIO
         </button>
         <button class="filter-btn active" data-filter="adc">
-          <span class="dot" style="background: var(--adc)"></span>ADC
-        </button>
-        <button class="filter-btn active" data-filter="dac">
-          <span class="dot" style="background: var(--dac)"></span>DAC
+          <span class="dot" style="background: var(--cat-adc)"></span>ADC
         </button>
         <button class="filter-btn active" data-filter="touch">
-          <span class="dot" style="background: var(--touch)"></span>Touch
+          <span class="dot" style="background: var(--cat-touch)"></span>Touch
         </button>
         <button class="filter-btn active" data-filter="spi">
-          <span class="dot" style="background: var(--spi)"></span>SPI
+          <span class="dot" style="background: var(--cat-spi)"></span>SPI
         </button>
         <button class="filter-btn active" data-filter="i2c">
-          <span class="dot" style="background: var(--i2c)"></span>I2C
+          <span class="dot" style="background: var(--cat-i2c)"></span>I2C
         </button>
         <button class="filter-btn active" data-filter="uart">
-          <span class="dot" style="background: var(--uart)"></span>UART
+          <span class="dot" style="background: var(--cat-uart)"></span>UART
+        </button>
+        <button class="filter-btn active" data-filter="dac">
+          <span class="dot" style="background: var(--cat-dac)"></span>DAC
+        </button>
+        <button class="filter-btn active" data-filter="boot">
+          <span class="dot" style="background: var(--cat-boot)"></span>Boot/Strap
+        </button>
+        <button class="filter-btn active" data-filter="in">
+          <span class="dot" style="background: var(--cat-in)"></span>Input-only
         </button>
       </div>
-      <div class="toolbar-group search-group">
-        <input id="pinSearch" class="search-input" type="search" placeholder="Buscar pin (IO23, ADC1_0, SDA...)" />
-      </div>
       <div class="btn-group">
-        <button class="btn-small preset-btn" data-preset="spi">SPI</button>
-        <button class="btn-small preset-btn" data-preset="i2c">I2C</button>
-        <button class="btn-small preset-btn" data-preset="uart">UART</button>
-        <button class="btn-small preset-btn" data-preset="power">Power</button>
         <button class="btn-small" onclick="selectAll()">Todos</button>
         <button class="btn-small" onclick="selectNone()">Ninguno</button>
-        <button class="btn-small compact-toggle" id="compactToggle" onclick="toggleCompactMode()">Compacto</button>
       </div>
     </div>
 
     <div class="pinout-container">
       <div class="pin-column left">
-        <div class="pin-row" data-types="power"><span class="pin-labels"><span class="pin-label primary"
-              data-type="power">3V3</span></span><span class="pin-num">1</span></div>
-        <div class="pin-row" data-types="gpio"><span class="pin-labels"><span class="pin-label"
-              data-type="nc">EN</span></span><span class="pin-num">2</span></div>
-        <div class="pin-row" data-types="gpio adc input-only"><span class="pin-labels"><span class="pin-label"
-              data-type="input-only">IN</span><span class="pin-label" data-type="adc">ADC1_0</span><span
-              class="pin-label primary" data-type="gpio">IO36</span></span><span class="pin-num">3</span></div>
-        <div class="pin-row" data-types="gpio adc input-only"><span class="pin-labels"><span class="pin-label"
-              data-type="input-only">IN</span><span class="pin-label" data-type="adc">ADC1_3</span><span
-              class="pin-label primary" data-type="gpio">IO39</span></span><span class="pin-num">4</span></div>
-        <div class="pin-row" data-types="gpio adc input-only"><span class="pin-labels"><span class="pin-label"
-              data-type="input-only">IN</span><span class="pin-label" data-type="adc">ADC1_6</span><span
-              class="pin-label primary" data-type="gpio">IO34</span></span><span class="pin-num">5</span></div>
-        <div class="pin-row" data-types="gpio adc input-only"><span class="pin-labels"><span class="pin-label"
-              data-type="input-only">IN</span><span class="pin-label" data-type="adc">ADC1_7</span><span
-              class="pin-label primary" data-type="gpio">IO35</span></span><span class="pin-num">6</span></div>
-        <div class="pin-row" data-types="gpio adc touch"><span class="pin-labels"><span class="pin-label"
-              data-type="touch">T9</span><span class="pin-label" data-type="adc">ADC1_4</span><span
-              class="pin-label primary" data-type="gpio">IO32</span></span><span class="pin-num">7</span></div>
-        <div class="pin-row" data-types="gpio adc touch"><span class="pin-labels"><span class="pin-label"
-              data-type="touch">T8</span><span class="pin-label" data-type="adc">ADC1_5</span><span
-              class="pin-label primary" data-type="gpio">IO33</span></span><span class="pin-num">8</span></div>
-        <div class="pin-row" data-types="gpio adc dac"><span class="pin-labels"><span class="pin-label"
-              data-type="dac">DAC1</span><span class="pin-label" data-type="adc">ADC2_8</span><span
-              class="pin-label primary" data-type="gpio">IO25</span></span><span class="pin-num">9</span></div>
-        <div class="pin-row" data-types="gpio adc dac"><span class="pin-labels"><span class="pin-label"
-              data-type="dac">DAC2</span><span class="pin-label" data-type="adc">ADC2_9</span><span
-              class="pin-label primary" data-type="gpio">IO26</span></span><span class="pin-num">10</span></div>
-        <div class="pin-row" data-types="gpio adc touch"><span class="pin-labels"><span class="pin-label"
-              data-type="touch">T7</span><span class="pin-label" data-type="adc">ADC2_7</span><span
-              class="pin-label primary" data-type="gpio">IO27</span></span><span class="pin-num">11</span></div>
-        <div class="pin-row" data-types="gpio adc touch spi"><span class="pin-labels"><span class="pin-label"
-              data-type="spi">HSPI_CLK</span><span class="pin-label" data-type="touch">T6</span><span
-              class="pin-label primary" data-type="gpio">IO14</span></span><span class="pin-num">12</span></div>
-        <div class="pin-row" data-types="gpio adc touch spi strapping"><span class="pin-labels"><span class="pin-label"
-              data-type="strapping">BOOT</span><span class="pin-label" data-type="spi">HSPI_Q</span><span
-              class="pin-label primary" data-type="gpio">IO12</span></span><span class="pin-num">13</span></div>
-        <div class="pin-row" data-types="gnd"><span class="pin-labels"><span class="pin-label primary"
-              data-type="gnd">GND</span></span><span class="pin-num">14</span></div>
-        <div class="pin-row" data-types="gpio adc touch spi"><span class="pin-labels"><span class="pin-label"
-              data-type="spi">HSPI_D</span><span class="pin-label" data-type="touch">T4</span><span
-              class="pin-label primary" data-type="gpio">IO13</span></span><span class="pin-num">15</span></div>
-        <div class="pin-row" data-types="flash"><span class="pin-labels"><span class="pin-label" data-type="flash">Flash
-              D2</span></span><span class="pin-num">16</span></div>
-        <div class="pin-row" data-types="flash"><span class="pin-labels"><span class="pin-label" data-type="flash">Flash
-              D3</span></span><span class="pin-num">17</span></div>
-        <div class="pin-row" data-types="flash"><span class="pin-labels"><span class="pin-label" data-type="flash">Flash
-              CMD</span></span><span class="pin-num">18</span></div>
-        <div class="pin-row" data-types="power"><span class="pin-labels"><span class="pin-label primary"
-              data-type="power">5V</span></span><span class="pin-num">19</span></div>
+        <div class="pin-row" data-types="power"><span class="pin-labels"><span class="pin-label primary" data-type="power">3V3</span></span><span class="pin-num">1</span></div>
+        <div class="pin-row" data-types="boot"><span class="pin-labels"><span class="pin-label primary" data-type="boot">EN</span></span><span class="pin-num">2</span></div>
+        <div class="pin-row" data-types="in adc gpio"><span class="pin-labels"><span class="pin-label" data-type="in">IN</span><span class="pin-label" data-type="adc">ADC1_0</span><span class="pin-label primary" data-type="gpio">IO36</span></span><span class="pin-num">3</span></div>
+        <div class="pin-row" data-types="in adc gpio"><span class="pin-labels"><span class="pin-label" data-type="in">IN</span><span class="pin-label" data-type="adc">ADC1_3</span><span class="pin-label primary" data-type="gpio">IO39</span></span><span class="pin-num">4</span></div>
+        <div class="pin-row" data-types="in adc gpio"><span class="pin-labels"><span class="pin-label" data-type="in">IN</span><span class="pin-label" data-type="adc">ADC1_6</span><span class="pin-label primary" data-type="gpio">IO34</span></span><span class="pin-num">5</span></div>
+        <div class="pin-row" data-types="in adc gpio"><span class="pin-labels"><span class="pin-label" data-type="in">IN</span><span class="pin-label" data-type="adc">ADC1_7</span><span class="pin-label primary" data-type="gpio">IO35</span></span><span class="pin-num">6</span></div>
+        <div class="pin-row" data-types="touch adc gpio"><span class="pin-labels"><span class="pin-label" data-type="touch">T9</span><span class="pin-label" data-type="adc">ADC1_4</span><span class="pin-label primary" data-type="gpio">IO32</span></span><span class="pin-num">7</span></div>
+        <div class="pin-row" data-types="touch adc gpio"><span class="pin-labels"><span class="pin-label" data-type="touch">T8</span><span class="pin-label" data-type="adc">ADC1_5</span><span class="pin-label primary" data-type="gpio">IO33</span></span><span class="pin-num">8</span></div>
+        <div class="pin-row" data-types="dac adc gpio"><span class="pin-labels"><span class="pin-label" data-type="dac">DAC1</span><span class="pin-label" data-type="adc">ADC2_8</span><span class="pin-label primary" data-type="gpio">IO25</span></span><span class="pin-num">9</span></div>
+        <div class="pin-row" data-types="dac adc gpio"><span class="pin-labels"><span class="pin-label" data-type="dac">DAC2</span><span class="pin-label" data-type="adc">ADC2_9</span><span class="pin-label primary" data-type="gpio">IO26</span></span><span class="pin-num">10</span></div>
+        <div class="pin-row" data-types="touch adc gpio"><span class="pin-labels"><span class="pin-label" data-type="touch">T7</span><span class="pin-label" data-type="adc">ADC2_7</span><span class="pin-label primary" data-type="gpio">IO27</span></span><span class="pin-num">11</span></div>
+        <div class="pin-row" data-types="spi touch gpio"><span class="pin-labels"><span class="pin-label" data-type="spi">HSPI_CLK</span><span class="pin-label" data-type="touch">T6</span><span class="pin-label primary" data-type="gpio">IO14</span></span><span class="pin-num">12</span></div>
+        <div class="pin-row" data-types="boot spi gpio"><span class="pin-labels"><span class="pin-label" data-type="boot">BOOT</span><span class="pin-label" data-type="spi">HSPI_Q</span><span class="pin-label primary" data-type="gpio">IO12</span></span><span class="pin-num">13</span></div>
+        <div class="pin-row" data-types="gnd"><span class="pin-labels"><span class="pin-label primary" data-type="gnd">GND</span></span><span class="pin-num">14</span></div>
+        <div class="pin-row" data-types="spi touch gpio"><span class="pin-labels"><span class="pin-label" data-type="spi">HSPI_D</span><span class="pin-label" data-type="touch">T4</span><span class="pin-label primary" data-type="gpio">IO13</span></span><span class="pin-num">15</span></div>
+        <div class="pin-row" data-types="nc"><span class="pin-labels"><span class="pin-label primary" data-type="nc">Flash D2</span></span><span class="pin-num">16</span></div>
+        <div class="pin-row" data-types="nc"><span class="pin-labels"><span class="pin-label primary" data-type="nc">Flash D3</span></span><span class="pin-num">17</span></div>
+        <div class="pin-row" data-types="nc"><span class="pin-labels"><span class="pin-label primary" data-type="nc">Flash CMD</span></span><span class="pin-num">18</span></div>
+        <div class="pin-row" data-types="power"><span class="pin-labels"><span class="pin-label primary" data-type="power">5V</span></span><span class="pin-num">19</span></div>
       </div>
 
       <div class="chip">
-        <img class="chip-image" src="/esp32wroom.avif" alt="ESP32-WROOM-32" />
+        <div class="antenna"></div>
+        <span class="chip-name">ESP32</span>
+        <span class="chip-module">WROOM-32</span>
+        <div class="usb-port"></div>
       </div>
 
       <div class="pin-column right">
-        <div class="pin-row" data-types="gnd"><span class="pin-num">1</span><span class="pin-labels"><span
-              class="pin-label primary" data-type="gnd">GND</span></span></div>
-        <div class="pin-row" data-types="gpio spi"><span class="pin-num">2</span><span class="pin-labels"><span
-              class="pin-label primary" data-type="gpio">IO23</span><span class="pin-label"
-              data-type="spi">VSPI_D</span></span></div>
-        <div class="pin-row" data-types="gpio i2c"><span class="pin-num">3</span><span class="pin-labels"><span
-              class="pin-label primary" data-type="gpio">IO22</span><span class="pin-label"
-              data-type="i2c">SCL</span></span></div>
-        <div class="pin-row" data-types="gpio uart"><span class="pin-num">4</span><span class="pin-labels"><span
-              class="pin-label primary" data-type="gpio">IO1</span><span class="pin-label"
-              data-type="uart">TX0</span></span></div>
-        <div class="pin-row" data-types="gpio uart"><span class="pin-num">5</span><span class="pin-labels"><span
-              class="pin-label primary" data-type="gpio">IO3</span><span class="pin-label"
-              data-type="uart">RX0</span></span></div>
-        <div class="pin-row" data-types="gpio i2c"><span class="pin-num">6</span><span class="pin-labels"><span
-              class="pin-label primary" data-type="gpio">IO21</span><span class="pin-label"
-              data-type="i2c">SDA</span></span></div>
-        <div class="pin-row" data-types="gnd"><span class="pin-num">7</span><span class="pin-labels"><span
-              class="pin-label primary" data-type="gnd">GND</span></span></div>
-        <div class="pin-row" data-types="gpio spi"><span class="pin-num">8</span><span class="pin-labels"><span
-              class="pin-label primary" data-type="gpio">IO19</span><span class="pin-label"
-              data-type="spi">VSPI_Q</span></span></div>
-        <div class="pin-row" data-types="gpio spi"><span class="pin-num">9</span><span class="pin-labels"><span
-              class="pin-label primary" data-type="gpio">IO18</span><span class="pin-label"
-              data-type="spi">VSPI_CLK</span></span></div>
-        <div class="pin-row" data-types="gpio spi strapping"><span class="pin-num">10</span><span
-            class="pin-labels"><span class="pin-label primary" data-type="gpio">IO5</span><span class="pin-label"
-              data-type="spi">VSPI_CS</span><span class="pin-label" data-type="strapping">BOOT</span></span></div>
-        <div class="pin-row" data-types="gpio uart"><span class="pin-num">11</span><span class="pin-labels"><span
-              class="pin-label primary" data-type="gpio">IO17</span><span class="pin-label"
-              data-type="uart">TX2</span></span></div>
-        <div class="pin-row" data-types="gpio uart"><span class="pin-num">12</span><span class="pin-labels"><span
-              class="pin-label primary" data-type="gpio">IO16</span><span class="pin-label"
-              data-type="uart">RX2</span></span></div>
-        <div class="pin-row" data-types="gpio adc touch"><span class="pin-num">13</span><span class="pin-labels"><span
-              class="pin-label primary" data-type="gpio">IO4</span><span class="pin-label"
-              data-type="adc">ADC2_0</span><span class="pin-label" data-type="touch">T0</span></span></div>
-        <div class="pin-row" data-types="gpio adc touch strapping"><span class="pin-num">14</span><span
-            class="pin-labels"><span class="pin-label primary" data-type="gpio">IO0</span><span class="pin-label"
-              data-type="touch">T1</span><span class="pin-label" data-type="strapping">BOOT</span></span></div>
-        <div class="pin-row" data-types="gpio adc touch"><span class="pin-num">15</span><span class="pin-labels"><span
-              class="pin-label primary" data-type="gpio">IO2</span><span class="pin-label"
-              data-type="adc">ADC2_2</span><span class="pin-label" data-type="touch">T2</span></span></div>
-        <div class="pin-row" data-types="gpio adc touch spi strapping"><span class="pin-num">16</span><span
-            class="pin-labels"><span class="pin-label primary" data-type="gpio">IO15</span><span class="pin-label"
-              data-type="spi">HSPI_CS</span><span class="pin-label" data-type="touch">T3</span></span></div>
-        <div class="pin-row" data-types="flash"><span class="pin-num">17</span><span class="pin-labels"><span
-              class="pin-label" data-type="flash">Flash D1</span></span></div>
-        <div class="pin-row" data-types="flash"><span class="pin-num">18</span><span class="pin-labels"><span
-              class="pin-label" data-type="flash">Flash D0</span></span></div>
-        <div class="pin-row" data-types="flash"><span class="pin-num">19</span><span class="pin-labels"><span
-              class="pin-label" data-type="flash">Flash CLK</span></span></div>
+        <div class="pin-row" data-types="gnd"><span class="pin-num">1</span><span class="pin-labels"><span class="pin-label primary" data-type="gnd">GND</span></span></div>
+        <div class="pin-row" data-types="gpio spi"><span class="pin-num">2</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO23</span><span class="pin-label" data-type="spi">VSPI_D</span></span></div>
+        <div class="pin-row" data-types="gpio i2c"><span class="pin-num">3</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO22</span><span class="pin-label" data-type="i2c">SCL</span></span></div>
+        <div class="pin-row" data-types="gpio uart"><span class="pin-num">4</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO1</span><span class="pin-label" data-type="uart">TX0</span></span></div>
+        <div class="pin-row" data-types="gpio uart"><span class="pin-num">5</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO3</span><span class="pin-label" data-type="uart">RX0</span></span></div>
+        <div class="pin-row" data-types="gpio i2c"><span class="pin-num">6</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO21</span><span class="pin-label" data-type="i2c">SDA</span></span></div>
+        <div class="pin-row" data-types="gnd"><span class="pin-num">7</span><span class="pin-labels"><span class="pin-label primary" data-type="gnd">GND</span></span></div>
+        <div class="pin-row" data-types="gpio spi"><span class="pin-num">8</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO19</span><span class="pin-label" data-type="spi">VSPI_Q</span></span></div>
+        <div class="pin-row" data-types="gpio spi"><span class="pin-num">9</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO18</span><span class="pin-label" data-type="spi">VSPI_CLK</span></span></div>
+        <div class="pin-row" data-types="gpio spi boot"><span class="pin-num">10</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO5</span><span class="pin-label" data-type="spi">VSPI_CS</span><span class="pin-label" data-type="boot">BOOT</span></span></div>
+        <div class="pin-row" data-types="gpio uart"><span class="pin-num">11</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO17</span><span class="pin-label" data-type="uart">TX2</span></span></div>
+        <div class="pin-row" data-types="gpio uart"><span class="pin-num">12</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO16</span><span class="pin-label" data-type="uart">RX2</span></span></div>
+        <div class="pin-row" data-types="gpio adc touch"><span class="pin-num">13</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO4</span><span class="pin-label" data-type="adc">ADC2_0</span><span class="pin-label" data-type="touch">T0</span></span></div>
+        <div class="pin-row" data-types="gpio touch boot"><span class="pin-num">14</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO0</span><span class="pin-label" data-type="touch">T1</span><span class="pin-label" data-type="boot">BOOT</span></span></div>
+        <div class="pin-row" data-types="gpio adc touch"><span class="pin-num">15</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO2</span><span class="pin-label" data-type="adc">ADC2_2</span><span class="pin-label" data-type="touch">T2</span></span></div>
+        <div class="pin-row" data-types="gpio spi touch"><span class="pin-num">16</span><span class="pin-labels"><span class="pin-label primary" data-type="gpio">IO15</span><span class="pin-label" data-type="spi">HSPI_CS</span><span class="pin-label" data-type="touch">T3</span></span></div>
+        <div class="pin-row" data-types="nc"><span class="pin-num">17</span><span class="pin-labels"><span class="pin-label primary" data-type="nc">Flash D1</span></span></div>
+        <div class="pin-row" data-types="nc"><span class="pin-num">18</span><span class="pin-labels"><span class="pin-label primary" data-type="nc">Flash D0</span></span></div>
+        <div class="pin-row" data-types="nc"><span class="pin-num">19</span><span class="pin-labels"><span class="pin-label primary" data-type="nc">Flash CLK</span></span></div>
       </div>
     </div>
 
     <div class="info-section">
-      <h3>Información de Pines</h3>
+      <h3>Información de Pines · ESP32-WROOM-32</h3>
       <div class="info-grid">
         <div class="info-card">
-          <h4><span class="dot" style="background: var(--input-only)"></span>Input Only (IO34-39)</h4>
-          <p>Los pines <code>IO34</code>, <code>IO35</code>, <code>IO36</code>, <code>IO39</code> son solo entrada. No
-            tienen resistencias pull-up/down internas. Ideal para sensores analógicos.</p>
+          <h4><span class="dot" style="background: #6b7280"></span>Pines solo-entrada</h4>
+          <p><code>IO34</code> <code>IO35</code> <code>IO36</code> <code>IO39</code> no tienen pull-up/down internos ni pueden ser salida.</p>
         </div>
         <div class="info-card">
-          <h4><span class="dot" style="background: var(--strapping)"></span>Strapping Pins</h4>
-          <p><code>IO0</code>, <code>IO2</code>, <code>IO5</code>, <code>IO12</code>, <code>IO15</code> afectan el boot.
-            Evitar conectar cargas durante el arranque. IO0 bajo = modo flash.</p>
+          <h4><span class="dot" style="background: #f97316"></span>Strapping / Boot</h4>
+          <p><code>IO0</code>, <code>IO2</code>, <code>IO12</code>, <code>IO15</code> definen el arranque. <code>IO0</code> a GND = modo flasheo.</p>
         </div>
         <div class="info-card">
-          <h4><span class="dot" style="background: var(--adc)"></span>ADC durante WiFi</h4>
-          <p><code>ADC2</code> (IO0,2,4,12-15,25-27) no funciona cuando WiFi está activo. Usar <code>ADC1</code>
-            (IO32-36,39) para lecturas confiables.</p>
+          <h4><span class="dot" style="background: #f59e0b"></span>DAC</h4>
+          <p><code>IO25</code> (DAC1) y <code>IO26</code> (DAC2): salida analógica real de 8-bit.</p>
         </div>
         <div class="info-card">
-          <h4><span class="dot" style="background: var(--i2c)"></span>I2C Default</h4>
-          <p>I2C por defecto: <code>IO21</code> (SDA) y <code>IO22</code> (SCL). Cualquier GPIO puede ser I2C vía
-            software.</p>
+          <h4><span class="dot" style="background: #ec4899"></span>ADC2 y WiFi</h4>
+          <p>Los pines <code>ADC2</code> no se pueden leer mientras el WiFi está activo. Usá <code>ADC1</code> si necesitás ADC con WiFi.</p>
         </div>
       </div>
     </div>
 
     <footer class="footer">
-      HIOS Pinouts • Inspirado en <a href="https://www.luisllamas.es/en/esp32-hardware-details-pinout/"
-        target="_blank">luisllamas.es</a>
+      HIOS Pinouts • Inspirado en <a href="https://www.luisllamas.es/en/esp32-hardware-details-pinout/" target="_blank">luisllamas.es</a>
     </footer>
   </div>
 
   <script>
     const filterBtns = document.querySelectorAll('.filter-btn');
-    const presetBtns = document.querySelectorAll('.preset-btn');
-    const pinSearch = document.getElementById('pinSearch');
     const pinRows = document.querySelectorAll('.pin-row');
-    const activeFilters = new Set(['power', 'gnd', 'gpio', 'adc', 'dac', 'touch', 'spi', 'i2c', 'uart']);
-    const presetMap = {
-      spi: ['spi', 'gpio'],
-      i2c: ['i2c', 'gpio'],
-      uart: ['uart', 'gpio'],
-      power: ['power', 'gnd']
-    };
-    let activePreset = '';
-
-    function syncFilterButtons() {
-      filterBtns.forEach(btn => {
-        btn.classList.toggle('active', activeFilters.has(btn.dataset.filter));
-      });
-    }
-
-    function syncPresetButtons() {
-      presetBtns.forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.preset === activePreset);
-      });
-    }
+    const allKeys = ["power","gnd","gpio","adc","touch","spi","i2c","uart","dac","boot","in"];
+    const activeFilters = new Set(allKeys);
 
     function updateFilters() {
-      const query = (pinSearch?.value || '').trim().toUpperCase();
       pinRows.forEach(row => {
-        const types = (row.dataset.types || '').split(' ');
+        const types = (row.dataset.types || '').split(' ').filter(Boolean);
         const hasMatch = types.some(t => activeFilters.has(t));
-        const textMatch = !query || row.textContent.toUpperCase().includes(query);
         row.classList.toggle('dimmed', !hasMatch && activeFilters.size > 0);
-        row.classList.toggle('highlight', hasMatch && activeFilters.size < 9 && !query);
-        row.classList.toggle('search-dim', !!query && !textMatch);
-        row.classList.toggle('search-hit', !!query && textMatch);
+        row.classList.toggle('highlight', hasMatch && activeFilters.size < allKeys.length);
       });
     }
 
     filterBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const filter = btn.dataset.filter;
-        if (activeFilters.has(filter)) {
-          activeFilters.delete(filter);
-        } else {
-          activeFilters.add(filter);
-        }
-        activePreset = '';
-        syncFilterButtons();
-        syncPresetButtons();
+        btn.classList.toggle('active');
+        if (activeFilters.has(filter)) activeFilters.delete(filter);
+        else activeFilters.add(filter);
         updateFilters();
       });
     });
-
-    presetBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const preset = btn.dataset.preset;
-        activePreset = preset;
-        activeFilters.clear();
-        (presetMap[preset] || []).forEach(f => activeFilters.add(f));
-        syncFilterButtons();
-        syncPresetButtons();
-        updateFilters();
-      });
-    });
-
-    if (pinSearch) {
-      pinSearch.addEventListener('input', updateFilters);
-    }
 
     function selectAll() {
-      filterBtns.forEach(btn => {
-        activeFilters.add(btn.dataset.filter);
-      });
-      activePreset = '';
-      syncFilterButtons();
-      syncPresetButtons();
+      filterBtns.forEach(btn => { btn.classList.add('active'); activeFilters.add(btn.dataset.filter); });
       updateFilters();
     }
 
     function selectNone() {
-      filterBtns.forEach(btn => {
-        activeFilters.delete(btn.dataset.filter);
-      });
-      activePreset = '';
-      syncFilterButtons();
-      syncPresetButtons();
+      filterBtns.forEach(btn => { btn.classList.remove('active'); activeFilters.delete(btn.dataset.filter); });
       updateFilters();
     }
-
-    function toggleCompactMode() {
-      const body = document.body;
-      const button = document.getElementById('compactToggle');
-      if (!button) return;
-      body.classList.toggle('compact-mode');
-      const isCompact = body.classList.contains('compact-mode');
-      button.classList.toggle('active', isCompact);
-      button.setAttribute('aria-pressed', String(isCompact));
-    }
-
-    updateFilters();
   </script>
 </body>
 
