@@ -1,4 +1,3 @@
-export { ModuleCard } from './ModuleCard';
-export { ModuleSelector } from './ModuleSelector';
+export { ModuleList } from './ModuleList';
 export { ModuleViewer } from './ModuleViewer';
 export { PinoutsContent } from './PinoutsContent';
