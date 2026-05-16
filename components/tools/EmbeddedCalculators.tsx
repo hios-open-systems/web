@@ -12,6 +12,8 @@ import styles from './embeddedCalculators.module.css';
 
 const { Text } = Typography;
 
+const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
+
 function ResultBar({ label, value, hint }: { label: string; value: string; hint?: string }) {
     return (
         <div className={styles.resultBar}>
@@ -202,6 +204,20 @@ export function EmbeddedCalculators() {
   const gain = useMemo(() => calc.ampGain(rf, rg), [rf, rg]);
   const i2s = useMemo(() => calc.i2sClocks(sampleRate, bitDepth, channels, mclkMult), [sampleRate, bitDepth, channels, mclkMult]);
   const resistorValue = useMemo(() => (Number(band1) * 10 + Number(band2)) * Number(multiplierBand), [band1, band2, multiplierBand]);
+
+  // Inverse mode: type a resistance and back-solve the two significant
+  // digits + decade multiplier so the band colors update automatically.
+  const applyTargetValue = (raw: number) => {
+    const value = Number(raw);
+    if (!Number.isFinite(value) || value <= 0) return;
+    const exponent = clamp(Math.floor(Math.log10(value)) - 1, -2, 7);
+    const decade = Math.pow(10, exponent);
+    const sig = clamp(Math.round(value / decade), 10, 99);
+    setBand1(String(Math.floor(sig / 10)));
+    setBand2(String(sig % 10));
+    setMultiplierBand(String(decade));
+  };
+
   const resistorTolerance = Number(toleranceBand);
   const resistorMin = resistorValue * (1 - resistorTolerance / 100);
   const resistorMax = resistorValue * (1 + resistorTolerance / 100);
@@ -688,6 +704,16 @@ export function EmbeddedCalculators() {
                   />
                 </div>
                 <div className={styles.fieldGrid}>
+                  <Field label={t('cards.resistorLab.target')}>
+                    <InputNumber
+                      value={resistorValue}
+                      onChange={(v) => applyTargetValue(Number(v || 0))}
+                      min={0.01}
+                      step={1}
+                      style={inputStyle}
+                      addonAfter="Ω"
+                    />
+                  </Field>
                   <Field label={t('cards.resistorLab.band1')}>
                     <Select
                       labelInValue
