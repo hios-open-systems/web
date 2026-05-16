@@ -771,6 +771,8 @@ export function EmbeddedCalculators() {
                         { value: 'axial-carbon', label: t('cards.resistorLab.packages.axialCarbon') },
                         { value: 'axial-metal', label: t('cards.resistorLab.packages.axialMetal') },
                         { value: 'axial-ceramic', label: t('cards.resistorLab.packages.axialCeramic') },
+                        { value: 'axial-wirewound', label: t('cards.resistorLab.packages.wirewound') },
+                        { value: 'melf', label: t('cards.resistorLab.packages.melf') },
                         { value: 'smd-0603', label: t('cards.resistorLab.packages.smd0603') },
                         { value: 'smd-0805', label: t('cards.resistorLab.packages.smd0805') },
                         { value: 'smd-1206', label: t('cards.resistorLab.packages.smd1206') },
