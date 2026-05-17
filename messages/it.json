@@ -424,6 +424,22 @@
         "calculators": "Calcolatori",
         "rcl": "RCL"
     },
+    "CommandPalette": {
+        "placeholder": "Cerca tool e pagine…",
+        "empty": "Nessun risultato",
+        "hint": "↑↓ naviga · Enter apri · Esc chiudi",
+        "toolsGroup": "Tool",
+        "pagesGroup": "Pagine",
+        "pages": {
+            "home": "Home",
+            "workbench": "Workbench",
+            "calculators": "Calcolatrici",
+            "pinouts": "Pinouts",
+            "snippets": "Snippet",
+            "settings": "Impostazioni",
+            "feedback": "Feedback"
+        }
+    },
     "Workbench": {
         "guides": {
             "_label": "Come si usa",
