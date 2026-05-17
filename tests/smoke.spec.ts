@@ -306,6 +306,14 @@ test.describe('Calculators', () => {
         }
     });
 
+    test('selector E12/E24 cambia la normalización', async ({ page }) => {
+        await page.goto('/es/calculators?tab=led');
+        await expect(page.getByText(/E24:/)).toBeVisible();
+        await page.locator('.ant-segmented-item-label', { hasText: /^E12$/ }).click();
+        await expect(page).toHaveURL(/eseries=E12/);
+        await expect(page.getByText(/E12:/)).toBeVisible();
+    });
+
     test('preset base (Plantillas) aplica valores', async ({ page }) => {
         await page.goto('/es/calculators?tab=runtime');
         await page.getByRole('button', { name: /Presets/i }).click();

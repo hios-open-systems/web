@@ -964,6 +964,7 @@
         "title": "Calcolatori Embedded",
         "subtitle": "Strumenti pratici per progettazione elettronica, validazione e decisioni rapide.",
         "presets_label": "Preset Globali",
+        "eseries_label": "Norma",
         "go_rcl": "Apri pagina RCL",
         "copy_summary": "Copia riepilogo",
         "copy_link": "Copia link",
@@ -999,7 +1000,7 @@
                 "title": "RCL Serie"
             },
             "invalid": "Controlla i valori — nessun risultato valido",
-            "eseries": "E24 più vicino",
+            "eseries": "Più vicino",
             "led": {
                 "title": "Resistenza LED",
                 "vs": "Tensione di alimentazione (V)",

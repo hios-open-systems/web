@@ -1087,6 +1087,7 @@
         "title": "Calculadoras Embebidas",
         "subtitle": "Herramientas prácticas para diseño electrónico, validación y decisiones rápidas.",
         "presets_label": "Perfiles del Sistema",
+        "eseries_label": "Norma",
         "go_rcl": "Abrir página RCL",
         "copy_summary": "Copiar resumen",
         "copy_link": "Copiar enlace",
@@ -1122,7 +1123,7 @@
                 "title": "RCL Serie"
             },
             "invalid": "Revisá las entradas — sin resultado válido",
-            "eseries": "E24 más cercano",
+            "eseries": "Más cercano",
             "led": {
                 "title": "Resistencia para LED",
                 "vs": "Voltaje de fuente (V)",

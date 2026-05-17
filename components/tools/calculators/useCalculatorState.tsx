@@ -7,6 +7,7 @@ import { message } from 'antd';
 import { useTheme } from '@/lib/ThemeContext';
 import type { ResistorPackageType } from '../ResistorVisualizer';
 import { calc, clamp, formatOhm } from './calc';
+import { type ESeries, isESeries } from './eseries';
 
 export type PresetId =
   | 'custom'
@@ -93,6 +94,7 @@ export function useCalculatorState() {
   const [channels, setChannels] = useState(2);
   const [mclkMult, setMclkMult] = useState(256);
   const [activeTab, setActiveTab] = useState<TabKey>('led');
+  const [eSeries, setESeries] = useState<ESeries>('E24');
 
   const [band1, setBand1] = useState('2');
   const [band2, setBand2] = useState('2');
@@ -194,6 +196,9 @@ export function useCalculatorState() {
     const parseString = (key: string, fallback: string) => searchParams.get(key) ?? fallback;
     const tabParam = parseString('tab', 'led');
 
+    const seriesParam = parseString('eseries', 'E24');
+    if (isESeries(seriesParam)) setESeries(seriesParam);
+
     if ((ALLOWED_TABS as string[]).includes(tabParam)) {
       setActiveTab(tabParam as TabKey);
     }
@@ -249,6 +254,7 @@ export function useCalculatorState() {
 
     const params = new URLSearchParams(searchParams.toString());
     params.set('tab', activeTab);
+    params.set('eseries', eSeries);
     params.set('supply', String(supply));
     params.set('ledVf', String(ledVf));
     params.set('ledCurrent', String(ledCurrent));
@@ -293,7 +299,7 @@ export function useCalculatorState() {
       router.replace(`${pathname}?${nextQuery}`, { scroll: false });
     }
   }, [
-    searchParams, router, pathname, activeTab, supply, ledVf, ledCurrent,
+    searchParams, router, pathname, activeTab, eSeries, supply, ledVf, ledCurrent,
     rippleCurrent, rippleDeltaV, rippleFreq, powerV, powerI, thetaJa, ambient,
     batteryMah, avgCurrent, efficiency, vinMax, vadcMax, rBottomK, rcR, rcC,
     targetFc, rlR, rlL, rlTargetFc, rclR, rclL, rclC, rclF, rf, rg, sampleRate, bitDepth, channels, mclkMult, band1, band2,
@@ -371,7 +377,7 @@ export function useCalculatorState() {
   return {
     t, palette, contextHolder,
     calcCardStyle, calcCardBodyStyle, inputStyle,
-    applyPreset, activeTab, setActiveTab,
+    applyPreset, activeTab, setActiveTab, eSeries, setESeries,
     copySummary, copyShareLink,
     // led
     supply, setSupply, ledVf, setLedVf, ledCurrent, setLedCurrent, led,

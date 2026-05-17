@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Space, Tabs } from 'antd';
+import { Button, Segmented, Space, Tabs } from 'antd';
 import { ToolHeader } from '@/components/workbench/ToolHeader';
 import { UrlPresets } from '@/components/common/UrlPresets';
 import styles from './embeddedCalculators.module.css';
@@ -58,6 +58,17 @@ export function EmbeddedCalculators() {
       />
 
       <Space wrap style={{ width: '100%', justifyContent: 'flex-end' }}>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ fontSize: 12, color: c.palette.textSecondary, textTransform: 'uppercase', letterSpacing: 0.35 }}>
+            {t('eseries_label')}
+          </span>
+          <Segmented
+            size="small"
+            value={c.eSeries}
+            onChange={(v) => c.setESeries(v as typeof c.eSeries)}
+            options={['E12', 'E24']}
+          />
+        </span>
         <UrlPresets
           storageKey="calculators"
           basePresets={BASE_PRESET_IDS.map((id) => ({ id, name: t(PRESET_I18N[id]) }))}

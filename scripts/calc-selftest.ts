@@ -5,13 +5,14 @@
  *
  * Run: node --experimental-strip-types scripts/calc-selftest.ts
  */
-import { calc, formatOhm, nearestE24 } from '../components/tools/calculators/calc.ts';
+import { calc, formatOhm } from '../components/tools/calculators/calc.ts';
 import {
   rcLowpass,
   rlLowpass,
   rclImpedance,
   ampFlat,
 } from '../components/tools/calculators/viz/responses.ts';
+import { nearestStandard } from '../components/tools/calculators/eseries.ts';
 
 let failures = 0;
 
@@ -76,9 +77,11 @@ approx('rcl |Z|', rcl.z, 96.84);
 approx('rcl f0', rcl.f0, 1591.549);
 approx('rcl Q', rcl.q, 10);
 
-approx('nearestE24 4700', nearestE24(4700) ?? -1, 4700);
-approx('nearestE24 123 -> 120', nearestE24(123) ?? -1, 120);
-assert('nearestE24 0 -> null', nearestE24(0) === null);
+approx('nearestStandard 4700 E24', nearestStandard(4700, 'E24') ?? -1, 4700);
+approx('nearestStandard 123 E24 -> 120', nearestStandard(123, 'E24') ?? -1, 120);
+approx('nearestStandard 300 E24', nearestStandard(300, 'E24') ?? -1, 300);
+approx('nearestStandard 300 E12 -> 270', nearestStandard(300, 'E12') ?? -1, 270);
+assert('nearestStandard 0 -> null', nearestStandard(0, 'E24') === null);
 assert('formatOhm kΩ', formatOhm(4700) === '4.70 kΩ');
 assert('formatOhm MΩ', formatOhm(2_200_000) === '2.20 MΩ');
 
