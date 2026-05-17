@@ -558,6 +558,15 @@
     "Workbench": {
         "guides": {
             "_label": "How to use",
+            "snippets": {
+                "intro": "Stash and reuse code snippets — saved locally, no account needed.",
+                "steps": [
+                    "Write a title, optional tags and the snippet body.",
+                    "Save it; it persists in this browser via localStorage.",
+                    "Sign in (optional) to sync snippets across devices."
+                ],
+                "tip": "Use “Copy link” to share a snippet; the first sign-in imports your local ones."
+            },
             "payload": {
                 "intro": "Format, inspect and share JSON — everything stays in your browser.",
                 "steps": [
