@@ -62,12 +62,17 @@ test.describe('Workbench', () => {
         }
     });
 
-    test('section page de validación muestra sus tools', async ({ page }) => {
+    test('rutas de sección viejas redirigen al workbench plano', async ({ page }) => {
         await page.goto('/es/workbench/sections/validation');
-        await expect(page.getByRole('heading', { name: 'Validación', level: 1 })).toBeVisible();
-        await expect(page.getByText('Payload Lab').first()).toBeVisible();
-        await expect(page.getByText('JWT Playground').first()).toBeVisible();
-        await expect(page.getByText('DNS Inspector').first()).toBeVisible();
+        await expect(page).toHaveURL(/\/es\/workbench$/);
+        await expect(page.getByRole('heading', { name: 'Workbench', level: 1 })).toBeVisible();
+    });
+
+    test('?tool= abre la tool directo (deep-link y random)', async ({ page }) => {
+        await page.goto('/es/workbench?tool=jwt-decode');
+        await expect(page).toHaveURL(/\/es\/workbench\/jwt-decode/);
+        await page.goto('/es/workbench?tool=random');
+        await expect(page).toHaveURL(/\/es\/workbench\/[a-z-]+$/);
     });
 
     test('JWT decode decodifica un token de ejemplo', async ({ page }) => {

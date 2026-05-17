@@ -556,7 +556,10 @@
         "landing": {
             "badge": "Neue Produktlinie",
             "title": "Ein praktischer Workspace für Payloads, JWTs, Snippets und echte Entwickler-Workflows.",
-            "subtitle": "Günstige, häufige Tools brauchen eine saubere Struktur. Validierung, Generierung und Tests halten den Katalog nutzbar, während er wächst.",
+            "subtitle": "Kleine, aber häufige Werkzeuge, sofort bereit. Keine Kategorien, kein Gate — du kommst rein und das Tool ist da.",
+            "randomCta": "Zufälliges öffnen",
+            "allToolsTitle": "Alle Werkzeuge",
+            "allToolsSubtitle": "Ein Raster, keine Ebenen. Klick und los.",
             "primaryCta": "Validierung öffnen",
             "secondaryCta": "Generierung öffnen",
             "panelTitle": "Über einen klaren Bereich einsteigen",
