@@ -598,6 +598,8 @@
         "sectionBrowseSubtitle": "Zwischen Validierung, Generierung und Tests wechseln, ohne den Kontext zu verlieren.",
         "externalLabel": "Extern",
         "toolCta": "Tool öffnen",
+        "pagerPrev": "Zurück",
+        "pagerNext": "Weiter",
         "packs": {
             "payload": {
                 "title": "Payload Lab",

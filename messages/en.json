@@ -695,6 +695,8 @@
         "sectionToolCount": "tools",
         "viewWorkbench": "Workbench",
         "toolCta": "Open tool",
+        "pagerPrev": "Previous",
+        "pagerNext": "Next",
         "packs": {
             "payload": {
                 "title": "Payload Lab",
