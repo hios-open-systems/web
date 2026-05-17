@@ -249,3 +249,46 @@ test.describe('Páginas secundarias', () => {
         await expect(page.getByRole('heading').first()).toBeVisible();
     });
 });
+
+const CALC_TABS = [
+    'Resistencia para LED',
+    'Capacitor por Ripple',
+    'Potencia y Térmica',
+    'Consumo y Autonomía',
+    'Laboratorio de Resistencias',
+    'Divisor para ADC (ESP32)',
+    'Filtro RC',
+    'Filtro RL',
+    'RCL Serie',
+    'Ganancia Amplificador (No inversor)',
+    'Clocks I2S (ESP32 / DAC)',
+];
+
+test.describe('Calculators', () => {
+    test('las 11 tabs se seleccionan y renderizan su panel', async ({ page }) => {
+        await page.goto('/es/calculators');
+        for (const name of CALC_TABS) {
+            const tab = page.getByRole('tab', { name });
+            await tab.click();
+            await expect(tab).toHaveAttribute('aria-selected', 'true');
+        }
+    });
+
+    test('/calculators/rcl redirige a la tab RCL', async ({ page }) => {
+        await page.goto('/es/calculators/rcl');
+        await expect(page).toHaveURL(/\/es\/calculators\?tab=rcl/);
+        await expect(page.getByRole('tab', { name: 'RCL Serie' })).toHaveAttribute('aria-selected', 'true');
+    });
+
+    test('input inválido muestra aviso en vez de un 0 engañoso', async ({ page }) => {
+        // Vs (1) <= Vf (2): la resistencia LED no tiene solución válida.
+        await page.goto('/es/calculators?tab=led&supply=1&ledVf=2&ledCurrent=10');
+        await expect(page.getByText(/Revisá las entradas/i)).toBeVisible();
+    });
+
+    test('el estado de cálculo se hidrata desde la URL', async ({ page }) => {
+        // fc = 1/(2π·4700·10nF) ≈ 3386 Hz — verifica que el query param se aplica.
+        await page.goto('/es/calculators?tab=rc&rcR=4700&rcC=10');
+        await expect(page.getByText(/338\d(\.\d)?\s*Hz/).first()).toBeVisible();
+    });
+});
