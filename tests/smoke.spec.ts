@@ -78,6 +78,15 @@ test.describe('Workbench', () => {
         await expect(page).toHaveURL(/\/es\/workbench\/[a-z-]+$/);
     });
 
+    test('pager prev/next cicla entre tools', async ({ page }) => {
+        await page.goto('/es/workbench/jwt-decode');
+        const nav = page.getByRole('navigation', { name: 'tool pager' });
+        await expect(nav).toBeVisible();
+        await nav.getByRole('link').last().click();
+        await expect(page).toHaveURL(/\/es\/workbench\/[a-z-]+/);
+        await expect(page).not.toHaveURL(/jwt-decode/);
+    });
+
     test('JWT decode decodifica un token de ejemplo', async ({ page }) => {
         await page.goto('/es/workbench/jwt-decode');
         await expect(page.getByText('maintainer-42')).toBeVisible();

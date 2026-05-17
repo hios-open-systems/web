@@ -598,6 +598,8 @@
         "sectionBrowseSubtitle": "Passa tra validazione, generazione e test senza perdere il contesto del workbench.",
         "externalLabel": "Esterno",
         "toolCta": "Apri tool",
+        "pagerPrev": "Precedente",
+        "pagerNext": "Successivo",
         "packs": {
             "payload": {
                 "title": "Payload Lab",

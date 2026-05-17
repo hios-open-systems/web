@@ -694,6 +694,8 @@
         "sectionToolCount": "herramientas",
         "viewWorkbench": "Workbench",
         "toolCta": "Abrir herramienta",
+        "pagerPrev": "Anterior",
+        "pagerNext": "Siguiente",
         "packs": {
             "payload": {
                 "title": "Payload Lab",

@@ -9,6 +9,7 @@ import { ObjectComparatorTool } from '@/components/workbench/ObjectComparatorToo
 import { RandomStringTool } from '@/components/workbench/RandomStringTool';
 import { SiteCheckerTool } from '@/components/workbench/SiteCheckerTool';
 import { TypeCheckerTool } from '@/components/workbench/TypeCheckerTool';
+import { ToolPager } from '@/components/workbench/ToolPager';
 import { getWorkbenchTool, workbenchTools, type WorkbenchToolId } from '@/config/workbench';
 
 const dynamicToolIds = workbenchTools
@@ -105,6 +106,7 @@ export default async function DynamicWorkbenchToolPage({ params }: PageProps) {
   return (
     <main style={{ maxWidth: 1180, margin: '0 auto', padding: '32px 24px 56px' }}>
       {content}
+      <ToolPager currentId={workbenchTool.id} />
     </main>
   );
 }

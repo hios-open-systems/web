@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 import { SnippetsWorkspace } from '@/components/workbench/SnippetsWorkspace';
+import { ToolPager } from '@/components/workbench/ToolPager';
 
 export const metadata: Metadata = {
   title: 'Snippets | HIOS Workbench',
@@ -20,6 +21,7 @@ export default async function WorkbenchSnippetsPage({ params }: PageProps) {
   return (
     <main style={{ maxWidth: 1180, margin: '0 auto', padding: '32px 24px 56px' }}>
       <SnippetsWorkspace />
+      <ToolPager currentId="snippets" />
     </main>
   );
 }
