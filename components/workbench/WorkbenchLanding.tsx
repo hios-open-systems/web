@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { ThunderboltOutlined } from '@ant-design/icons';
 import { useLocale, useTranslations } from 'next-intl';
 import { workbenchSignals, workbenchTools } from '@/config/workbench';
-import { getWorkbenchIcon } from './workbenchIcons';
+import { ToolGrid } from './ToolGrid';
 import styles from './workbench.module.css';
 
 export function WorkbenchLanding() {
@@ -53,23 +53,7 @@ export function WorkbenchLanding() {
         <p className={styles.sectionIntroSubtitle}>{t('landing.allToolsSubtitle')}</p>
       </div>
 
-      <div className={styles.toolGrid}>
-        {visibleTools.map((tool) => (
-          <Link key={tool.id} href={`/${locale}${tool.href}`} className={styles.toolCard}>
-            <span
-              className={styles.toolIcon}
-              style={{ color: tool.accent, background: `${tool.accent}1a` }}
-            >
-              {getWorkbenchIcon(tool.icon)}
-            </span>
-            <span className={styles.toolBody}>
-              <span className={styles.toolName}>{t(`packs.${tool.id}.title`)}</span>
-              <span className={styles.toolDescription}>{t(`packs.${tool.id}.description`)}</span>
-              <span className={styles.toolCardCta}>{t('toolCta')}</span>
-            </span>
-          </Link>
-        ))}
-      </div>
+      <ToolGrid tools={visibleTools} />
 
       <section className={styles.principlesSection}>
         <div className={styles.sectionIntro}>
