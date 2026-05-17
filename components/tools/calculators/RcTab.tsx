@@ -1,6 +1,7 @@
-import { Card, InputNumber } from 'antd';
+import { Card } from 'antd';
 import styles from '../embeddedCalculators.module.css';
-import { ResultBar, Field } from './Primitives';
+import { ResultBar } from './Primitives';
+import { NumberField } from './NumberField';
 import { formatOhm } from './calc';
 import { nearestStandard } from './eseries';
 import { RcSchematic } from './viz/circuits';
@@ -39,15 +40,9 @@ export function RcTab({ c }: { c: CalculatorState }) {
         />
       </div>
       <div className={styles.fieldGrid}>
-        <Field label={t('cards.rc.r')}>
-          <InputNumber value={c.rcR} onChange={(v) => c.setRcR(Number(v || 0))} min={1} style={c.inputStyle} />
-        </Field>
-        <Field label={t('cards.rc.c')}>
-          <InputNumber value={c.rcC} onChange={(v) => c.setRcC(Number(v || 0))} min={0.1} step={0.1} style={c.inputStyle} />
-        </Field>
-        <Field label={t('cards.rc.target')}>
-          <InputNumber value={c.targetFc} onChange={(v) => c.setTargetFc(Number(v || 0))} min={1} style={c.inputStyle} />
-        </Field>
+        <NumberField label={t('cards.rc.r')} value={c.rcR} onChange={c.setRcR} min={1} inputStyle={c.inputStyle} />
+        <NumberField label={t('cards.rc.c')} value={c.rcC} onChange={c.setRcC} min={0.1} step={0.1} sliderMin={0.1} sliderMax={1000} sliderStep={0.1} />
+        <NumberField label={t('cards.rc.target')} value={c.targetFc} onChange={c.setTargetFc} min={1} inputStyle={c.inputStyle} />
       </div>
     </Card>
   );
