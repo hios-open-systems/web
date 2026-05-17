@@ -2,10 +2,14 @@ import { Card, InputNumber } from 'antd';
 import styles from '../embeddedCalculators.module.css';
 import { ResultBar, Field } from './Primitives';
 import { formatOhm, nearestE24 } from './calc';
+import { RcSchematic } from './viz/circuits';
+import { Plot } from './viz/Plot';
+import { rcLowpass } from './viz/responses';
 import type { CalculatorState } from './useCalculatorState';
 
 export function RcTab({ c }: { c: CalculatorState }) {
   const { t } = c;
+  const bode = rcLowpass(c.rcR, c.rcC);
   const e24 = c.requiredRValid ? nearestE24(c.requiredR) : null;
   const requiredHint = c.requiredRValid
     ? `${t('cards.rc.required')}: ${formatOhm(c.requiredR)}${e24 ? ` · ${t('cards.eseries')}: ${formatOhm(e24)}` : ''}`
@@ -19,6 +23,20 @@ export function RcTab({ c }: { c: CalculatorState }) {
         invalid={!c.cutoffValid}
         invalidText={t('cards.invalid')}
       />
+      <div
+        className={styles.fullRow}
+        style={{ marginTop: 16, display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1.4fr)', gap: 20, alignItems: 'center' }}
+      >
+        <RcSchematic rText={formatOhm(c.rcR)} cText={`${c.rcC} nF`} />
+        <Plot
+          series={[{ points: bode.mag, color: 'var(--accent)' }]}
+          xLog
+          xLabel="f"
+          yLabel="|H|"
+          yUnit="dB"
+          mark={c.cutoffValid ? { x: bode.mark, label: `fc ${c.cutoff.toFixed(0)} Hz` } : undefined}
+        />
+      </div>
       <div className={styles.fieldGrid}>
         <Field label={t('cards.rc.r')}>
           <InputNumber value={c.rcR} onChange={(v) => c.setRcR(Number(v || 0))} min={1} style={c.inputStyle} />

@@ -35,10 +35,11 @@ export type TabKey =
   | 'resistorLab'
   | 'adc'
   | 'rc'
+  | 'rcl'
   | 'gain'
   | 'i2s';
 
-const ALLOWED_TABS: TabKey[] = ['led', 'cap', 'thermal', 'runtime', 'resistorLab', 'adc', 'rc', 'gain', 'i2s'];
+const ALLOWED_TABS: TabKey[] = ['led', 'cap', 'thermal', 'runtime', 'resistorLab', 'adc', 'rc', 'rcl', 'gain', 'i2s'];
 const ALLOWED_PACKAGES: ResistorPackageType[] = [
   'axial-carbon',
   'axial-metal',
@@ -83,6 +84,11 @@ export function useCalculatorState() {
   const [rcR, setRcR] = useState(10000);
   const [rcC, setRcC] = useState(100);
   const [targetFc, setTargetFc] = useState(160);
+
+  const [rclR, setRclR] = useState(10);
+  const [rclL, setRclL] = useState(10);
+  const [rclC, setRclC] = useState(1);
+  const [rclF, setRclF] = useState(1000);
 
   const [rf, setRf] = useState(10000);
   const [rg, setRg] = useState(1000);
@@ -135,6 +141,7 @@ export function useCalculatorState() {
   const requiredR = useMemo(() => calc.rcRequiredR(targetFc, rcC), [targetFc, rcC]);
   const cutoffValid = rcR > 0 && rcC > 0;
   const requiredRValid = targetFc > 0 && rcC > 0;
+  const rcl = useMemo(() => calc.rclSeries(rclR, rclL, rclC, rclF), [rclR, rclL, rclC, rclF]);
   const gain = useMemo(() => calc.ampGain(rf, rg), [rf, rg]);
   const i2s = useMemo(() => calc.i2sClocks(sampleRate, bitDepth, channels, mclkMult), [sampleRate, bitDepth, channels, mclkMult]);
 
@@ -218,6 +225,10 @@ export function useCalculatorState() {
     setRcR(parseNumber('rcR', 10000));
     setRcC(parseNumber('rcC', 100));
     setTargetFc(parseNumber('targetFc', 160));
+    setRclR(parseNumber('rclR', 10));
+    setRclL(parseNumber('rclL', 10));
+    setRclC(parseNumber('rclC', 1));
+    setRclF(parseNumber('rclF', 1000));
     setRf(parseNumber('rf', 10000));
     setRg(parseNumber('rg', 1000));
     setSampleRate(parseNumber('sampleRate', 44100));
@@ -263,6 +274,10 @@ export function useCalculatorState() {
     params.set('rcR', String(rcR));
     params.set('rcC', String(rcC));
     params.set('targetFc', String(targetFc));
+    params.set('rclR', String(rclR));
+    params.set('rclL', String(rclL));
+    params.set('rclC', String(rclC));
+    params.set('rclF', String(rclF));
     params.set('rf', String(rf));
     params.set('rg', String(rg));
     params.set('sampleRate', String(sampleRate));
@@ -284,7 +299,7 @@ export function useCalculatorState() {
     searchParams, router, pathname, preset, activeTab, supply, ledVf, ledCurrent,
     rippleCurrent, rippleDeltaV, rippleFreq, powerV, powerI, thetaJa, ambient,
     batteryMah, avgCurrent, efficiency, vinMax, vadcMax, rBottomK, rcR, rcC,
-    targetFc, rf, rg, sampleRate, bitDepth, channels, mclkMult, band1, band2,
+    targetFc, rclR, rclL, rclC, rclF, rf, rg, sampleRate, bitDepth, channels, mclkMult, band1, band2,
     multiplierBand, toleranceBand, packageType, wattage,
   ]);
 
@@ -378,6 +393,8 @@ export function useCalculatorState() {
     // rc
     rcR, setRcR, rcC, setRcC, targetFc, setTargetFc,
     cutoff, requiredR, cutoffValid, requiredRValid,
+    // rcl
+    rclR, setRclR, rclL, setRclL, rclC, setRclC, rclF, setRclF, rcl,
     // gain
     rf, setRf, rg, setRg, gain,
     // i2s
