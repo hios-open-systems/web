@@ -1,6 +1,7 @@
-import { Card, InputNumber } from 'antd';
+import { Card } from 'antd';
 import styles from '../embeddedCalculators.module.css';
-import { ResultBar, Field } from './Primitives';
+import { ResultBar } from './Primitives';
+import { NumberField } from './NumberField';
 import { formatOhm } from './calc';
 import { nearestStandard } from './eseries';
 import { AdcSchematic } from './viz/circuits';
@@ -27,15 +28,9 @@ export function AdcTab({ c }: { c: CalculatorState }) {
         />
       </div>
       <div className={styles.fieldGrid}>
-        <Field label={t('cards.adc.vin')}>
-          <InputNumber value={c.vinMax} onChange={(v) => c.setVinMax(Number(v || 0))} min={0} step={0.1} style={c.inputStyle} />
-        </Field>
-        <Field label={t('cards.adc.vadc')}>
-          <InputNumber value={c.vadcMax} onChange={(v) => c.setVadcMax(Number(v || 0))} min={0} step={0.1} style={c.inputStyle} />
-        </Field>
-        <Field label={t('cards.adc.rbottom')}>
-          <InputNumber value={c.rBottomK} onChange={(v) => c.setRBottomK(Number(v || 0))} min={0.1} step={0.1} style={c.inputStyle} />
-        </Field>
+        <NumberField label={t('cards.adc.vin')} value={c.vinMax} onChange={c.setVinMax} min={0} step={0.1} sliderMin={0} sliderMax={60} sliderStep={0.1} />
+        <NumberField label={t('cards.adc.vadc')} value={c.vadcMax} onChange={c.setVadcMax} min={0} step={0.1} sliderMin={0} sliderMax={5} sliderStep={0.05} />
+        <NumberField label={t('cards.adc.rbottom')} value={c.rBottomK} onChange={c.setRBottomK} min={0.1} step={0.1} sliderMin={0.1} sliderMax={100} sliderStep={0.1} />
       </div>
     </Card>
   );

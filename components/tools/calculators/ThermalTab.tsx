@@ -1,6 +1,7 @@
-import { Card, InputNumber } from 'antd';
+import { Card } from 'antd';
 import styles from '../embeddedCalculators.module.css';
-import { ResultBar, Field } from './Primitives';
+import { ResultBar } from './Primitives';
+import { NumberField } from './NumberField';
 import type { CalculatorState } from './useCalculatorState';
 
 export function ThermalTab({ c }: { c: CalculatorState }) {
@@ -13,18 +14,10 @@ export function ThermalTab({ c }: { c: CalculatorState }) {
         hint={`${t('cards.thermal.temp')}: ΔT ${c.thermal.rise.toFixed(1)} °C | Tj ${c.thermal.junction.toFixed(1)} °C`}
       />
       <div className={styles.fieldGrid}>
-        <Field label={t('cards.thermal.v')}>
-          <InputNumber value={c.powerV} onChange={(v) => c.setPowerV(Number(v || 0))} min={0} step={0.1} style={c.inputStyle} />
-        </Field>
-        <Field label={t('cards.thermal.i')}>
-          <InputNumber value={c.powerI} onChange={(v) => c.setPowerI(Number(v || 0))} min={0} step={0.01} style={c.inputStyle} />
-        </Field>
-        <Field label={t('cards.thermal.theta')}>
-          <InputNumber value={c.thetaJa} onChange={(v) => c.setThetaJa(Number(v || 0))} min={0} style={c.inputStyle} />
-        </Field>
-        <Field label={t('cards.thermal.ta')}>
-          <InputNumber value={c.ambient} onChange={(v) => c.setAmbient(Number(v || 0))} style={c.inputStyle} />
-        </Field>
+        <NumberField label={t('cards.thermal.v')} value={c.powerV} onChange={c.setPowerV} min={0} step={0.1} sliderMin={0} sliderMax={24} sliderStep={0.1} />
+        <NumberField label={t('cards.thermal.i')} value={c.powerI} onChange={c.setPowerI} min={0} step={0.01} sliderMin={0} sliderMax={5} sliderStep={0.01} />
+        <NumberField label={t('cards.thermal.theta')} value={c.thetaJa} onChange={c.setThetaJa} min={0} sliderMin={0} sliderMax={150} sliderStep={1} />
+        <NumberField label={t('cards.thermal.ta')} value={c.ambient} onChange={c.setAmbient} sliderMin={-20} sliderMax={85} sliderStep={1} />
       </div>
     </Card>
   );
