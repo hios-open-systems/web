@@ -7,8 +7,10 @@
         "fact_local": "Local-first",
         "fact_open": "Código abierto",
         "fact_daily": "Pensado para uso diario",
-        "previewKicker": "JWT en vivo",
-        "previewOpenTool": "Abrir tool"
+        "previewKicker": "Tool destacada",
+        "previewOpenTool": "Abrir tool",
+        "previewNext": "Siguiente",
+        "previewRandom": "Al azar"
     },
     "Projects": {
         "title": "Proyectos",

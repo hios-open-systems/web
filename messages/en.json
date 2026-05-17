@@ -7,8 +7,10 @@
         "fact_local": "Local-first",
         "fact_open": "Open source",
         "fact_daily": "Built for daily use",
-        "previewKicker": "Live JWT",
-        "previewOpenTool": "Open tool"
+        "previewKicker": "Tool spotlight",
+        "previewOpenTool": "Open tool",
+        "previewNext": "Next",
+        "previewRandom": "Random"
     },
     "Projects": {
         "title": "Projects",

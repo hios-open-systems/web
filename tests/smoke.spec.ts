@@ -34,11 +34,14 @@ test.describe('Home', () => {
         await expect(page).toHaveURL(/\/es\/workbench\/?$/);
     });
 
-    test('preview JWT del hero muestra payload decodificado', async ({ page }) => {
+    test('hero spotlight rota tools (no clavado en JWT)', async ({ page }) => {
         await page.goto('/es');
-        // El example token incluye "maintainer-42" como sub.
-        await expect(page.getByText('"sub":')).toBeVisible();
-        await expect(page.getByText('maintainer-42')).toBeVisible();
+        await expect(page.getByText('Tool destacada')).toBeVisible();
+        await expect(page.getByRole('link', { name: /Abrir tool/i })).toBeVisible();
+        // Rotar no debe romper el card.
+        await page.getByRole('button', { name: /Siguiente/i }).click();
+        await page.getByRole('button', { name: /Al azar/i }).click();
+        await expect(page.getByText('Tool destacada')).toBeVisible();
     });
 });
 
