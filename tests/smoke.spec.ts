@@ -306,6 +306,14 @@ test.describe('Calculators', () => {
         }
     });
 
+    test('slider y número están enlazados (NumberField)', async ({ page }) => {
+        await page.goto('/es/calculators?tab=led');
+        const slider = page.getByRole('slider').first();
+        await slider.focus();
+        await slider.press('ArrowRight');
+        await expect(page).toHaveURL(/supply=5\.1/);
+    });
+
     test('selector E12/E24 cambia la normalización', async ({ page }) => {
         await page.goto('/es/calculators?tab=led');
         await expect(page.getByText(/E24:/)).toBeVisible();

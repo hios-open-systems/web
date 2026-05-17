@@ -1,6 +1,7 @@
-import { Card, InputNumber } from 'antd';
+import { Card } from 'antd';
 import styles from '../embeddedCalculators.module.css';
-import { ResultBar, Field } from './Primitives';
+import { ResultBar } from './Primitives';
+import { NumberField } from './NumberField';
 import type { CalculatorState } from './useCalculatorState';
 
 export function RuntimeTab({ c }: { c: CalculatorState }) {
@@ -13,15 +14,9 @@ export function RuntimeTab({ c }: { c: CalculatorState }) {
         hint={`${t('cards.runtime.days')}: ${(c.runtime / 24).toFixed(2)}`}
       />
       <div className={styles.fieldGrid}>
-        <Field label={t('cards.runtime.battery')}>
-          <InputNumber value={c.batteryMah} onChange={(v) => c.setBatteryMah(Number(v || 0))} min={0} style={c.inputStyle} />
-        </Field>
-        <Field label={t('cards.runtime.current')}>
-          <InputNumber value={c.avgCurrent} onChange={(v) => c.setAvgCurrent(Number(v || 0))} min={1} style={c.inputStyle} />
-        </Field>
-        <Field label={t('cards.runtime.eff')}>
-          <InputNumber value={c.efficiency} onChange={(v) => c.setEfficiency(Number(v || 0))} min={1} max={100} style={c.inputStyle} />
-        </Field>
+        <NumberField label={t('cards.runtime.battery')} value={c.batteryMah} onChange={c.setBatteryMah} min={0} inputStyle={c.inputStyle} />
+        <NumberField label={t('cards.runtime.current')} value={c.avgCurrent} onChange={c.setAvgCurrent} min={1} inputStyle={c.inputStyle} />
+        <NumberField label={t('cards.runtime.eff')} value={c.efficiency} onChange={c.setEfficiency} min={1} max={100} sliderMin={1} sliderMax={100} sliderStep={1} />
       </div>
     </Card>
   );
