@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import { useLocale, useTranslations } from 'next-intl';
-import { HeroJwtPreview } from './HeroJwtPreview';
+import { HeroToolSpotlight } from './HeroToolSpotlight';
 import styles from './heroSection.module.css';
 
 export function HeroSection() {
@@ -40,7 +40,7 @@ export function HeroSection() {
           </div>
 
           <div className={styles.preview}>
-            <HeroJwtPreview />
+            <HeroToolSpotlight />
           </div>
         </div>
       </div>
