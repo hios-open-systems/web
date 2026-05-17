@@ -82,6 +82,13 @@ export const calc = {
     const gainDb = 20 * Math.log10(gain);
     return { gain, gainDb };
   },
+  rlFilter: (rOhm: number, lMilliH: number) => {
+    const l = lMilliH / 1000;
+    const valid = rOhm > 0 && l > 0;
+    return { fc: valid ? rOhm / (2 * Math.PI * l) : 0, valid };
+  },
+  rlRequiredL: (fcHz: number, rOhm: number) =>
+    fcHz > 0 && rOhm > 0 ? (rOhm / (2 * Math.PI * fcHz)) * 1000 : 0,
   rclSeries: (rOhm: number, lMilliH: number, cMicroF: number, freqHz: number) => {
     const l = lMilliH / 1000;
     const c = cMicroF / 1_000_000;

@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test:jwt": "node --experimental-strip-types scripts/jwt-selftest.ts",
+    "test:calc": "node --experimental-strip-types scripts/calc-selftest.ts",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:auth": "playwright test -c playwright.cloudflare.config.ts"
