@@ -873,6 +873,8 @@
             "buck3v3": "Buck 5V→3V3"
         },
         "cards": {
+            "invalid": "Eingaben prüfen — kein gültiges Ergebnis",
+            "eseries": "Nächster E24",
             "led": {
                 "title": "LED-Vorwiderstand",
                 "vs": "Versorgungsspannung (V)",

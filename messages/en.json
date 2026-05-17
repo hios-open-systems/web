@@ -997,6 +997,8 @@
             "buck3v3": "Buck 5V→3V3"
         },
         "cards": {
+            "invalid": "Check inputs — no valid result",
+            "eseries": "Nearest E24",
             "led": {
                 "title": "LED Resistor",
                 "vs": "Supply voltage (V)",

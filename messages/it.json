@@ -873,6 +873,8 @@
             "buck3v3": "Buck 5V→3V3"
         },
         "cards": {
+            "invalid": "Controlla i valori — nessun risultato valido",
+            "eseries": "E24 più vicino",
             "led": {
                 "title": "Resistenza LED",
                 "vs": "Tensione di alimentazione (V)",
