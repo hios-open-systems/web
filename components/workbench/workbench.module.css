@@ -523,6 +523,66 @@
   margin-bottom: 24px;
 }
 
+/* Compact-conservative landing header: title is a header, not a hero slab. */
+.landingHeaderCompact {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.landingHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.landingHeaderLeft {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.pageTitleCompact {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #0f172a;
+}
+:global([data-theme="dark"]) .pageTitleCompact {
+  color: #f8fafc;
+}
+.pageMetaInline {
+  font-size: 12px;
+  font-weight: 500;
+  color: #94a3b8;
+}
+
+/* Principles kept but visually de-emphasized (below the grid). */
+.principlesMuted {
+  margin-top: 8px;
+  margin-bottom: 16px;
+}
+.principlesMuted .sectionIntroTitle {
+  font-size: 13px;
+  opacity: 0.75;
+}
+.principlesMuted .sectionIntroSubtitle {
+  font-size: 12px;
+}
+.principlesMuted .principleCard {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  padding: 8px 0;
+}
+:global([data-theme="dark"]) .principlesMuted .principleCard {
+  background: transparent;
+  border-color: transparent;
+}
+
 /* ============================================================
  * Shared utilities (used by tool pages)
  * ============================================================ */
@@ -1109,6 +1169,11 @@
   .sectionHeroHeader,
   .entryPanelMeta,
   .sectionTitleRow {
+    align-items: flex-start;
+  }
+
+  .landingHeaderRow {
+    flex-direction: column;
     align-items: flex-start;
   }
 

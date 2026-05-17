@@ -65,6 +65,11 @@ test.describe('Workbench', () => {
         }
     });
 
+    test('header compacto: el grid de tools se ve sin scroll', async ({ page }) => {
+        await page.goto('/es/workbench');
+        await expect(page.getByText('Payload Lab', { exact: true }).first()).toBeInViewport();
+    });
+
     test('rutas de sección viejas redirigen al workbench plano', async ({ page }) => {
         await page.goto('/es/workbench/sections/validation');
         await expect(page).toHaveURL(/\/es\/workbench$/);
