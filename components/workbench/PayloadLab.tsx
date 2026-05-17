@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { parsePayloadInput } from '@/lib/workbench/payload';
 import { PayloadInspector } from './PayloadInspector';
+import { UrlPresets } from '@/components/common/UrlPresets';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
 
@@ -139,6 +140,7 @@ export function PayloadLab() {
                         </Button>
                         <Button icon={<LinkOutlined />} onClick={handleShare}>{t('copyLink')}</Button>
                         <Button icon={<ClearOutlined />} onClick={() => setInput('')}>{t('clear')}</Button>
+                        <UrlPresets storageKey="payload" />
                     </Space>
                 }
             />
