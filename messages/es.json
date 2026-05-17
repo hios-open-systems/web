@@ -996,6 +996,9 @@
             "buck3v3": "Buck 5V→3V3"
         },
         "cards": {
+            "rcl": {
+                "title": "RCL Serie"
+            },
             "invalid": "Revisá las entradas — sin resultado válido",
             "eseries": "E24 más cercano",
             "led": {

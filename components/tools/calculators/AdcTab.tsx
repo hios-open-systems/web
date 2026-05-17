@@ -1,6 +1,7 @@
 import { Card, InputNumber } from 'antd';
 import styles from '../embeddedCalculators.module.css';
 import { ResultBar, Field } from './Primitives';
+import { AdcSchematic } from './viz/circuits';
 import type { CalculatorState } from './useCalculatorState';
 
 export function AdcTab({ c }: { c: CalculatorState }) {
@@ -14,6 +15,12 @@ export function AdcTab({ c }: { c: CalculatorState }) {
         invalid={!c.divider.valid}
         invalidText={t('cards.invalid')}
       />
+      <div className={styles.fullRow} style={{ marginTop: 16, maxWidth: 360, marginInline: 'auto' }}>
+        <AdcSchematic
+          rTopText={`${c.divider.rTopK.toFixed(1)} kΩ`}
+          rBotText={`${c.rBottomK} kΩ`}
+        />
+      </div>
       <div className={styles.fieldGrid}>
         <Field label={t('cards.adc.vin')}>
           <InputNumber value={c.vinMax} onChange={(v) => c.setVinMax(Number(v || 0))} min={0} step={0.1} style={c.inputStyle} />

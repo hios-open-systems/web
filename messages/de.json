@@ -873,6 +873,9 @@
             "buck3v3": "Buck 5V→3V3"
         },
         "cards": {
+            "rcl": {
+                "title": "RCL (Serie)"
+            },
             "invalid": "Eingaben prüfen — kein gültiges Ergebnis",
             "eseries": "Nächster E24",
             "led": {
