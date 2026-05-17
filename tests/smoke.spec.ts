@@ -292,6 +292,17 @@ test.describe('Calculators', () => {
         }
     });
 
+    test('presets local-first: guardar y recargar restablece el estado', async ({ page }) => {
+        await page.goto('/es/calculators?tab=rc&rcR=4700');
+        await page.getByRole('button', { name: /Guardar preset/i }).click();
+        await page.getByRole('dialog').getByRole('button', { name: /Guardar preset/i }).click();
+        // Cambiamos el estado y luego recargamos el preset guardado.
+        await page.goto('/es/calculators?tab=rc&rcR=10');
+        await page.getByRole('button', { name: /Presets/i }).click();
+        await page.getByRole('menuitem', { name: /Preset 1/i }).click();
+        await expect(page).toHaveURL(/rcR=4700/);
+    });
+
     test('/calculators/rcl redirige a la tab RCL', async ({ page }) => {
         await page.goto('/es/calculators/rcl');
         await expect(page).toHaveURL(/\/es\/calculators\?tab=rcl/);

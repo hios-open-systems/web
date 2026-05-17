@@ -440,6 +440,14 @@
             "feedback": "Feedback"
         }
     },
+    "Presets": {
+        "save": "Salva preset",
+        "presets": "Preset",
+        "namePrompt": "Dai un nome al preset",
+        "empty": "Nessun preset salvato",
+        "delete": "Elimina",
+        "defaultName": "Preset {n}"
+    },
     "Workbench": {
         "guides": {
             "_label": "Come si usa",
