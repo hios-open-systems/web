@@ -549,6 +549,11 @@
         "delete": "Delete",
         "defaultName": "Preset {n}"
     },
+    "Chain": {
+        "sendTo": "Send to",
+        "asValue": "as value",
+        "asTypes": "as types"
+    },
     "Workbench": {
         "guides": {
             "_label": "How to use",

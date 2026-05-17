@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Card, Col, Input, Row, Space, Tag, Typography, message } from 'antd';
 import { ClearOutlined, CopyOutlined, ReloadOutlined } from '@ant-design/icons';
+import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { generateTypesFromObject } from '@/lib/workbench/objectToTypes';
+import { SendToMenu } from '@/components/common/SendToMenu';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
 
@@ -31,6 +33,16 @@ export function ObjectToTypesTool() {
   const [messageApi, contextHolder] = message.useMessage();
   const [input, setInput] = useState(EXAMPLE_OBJECT);
   const [rootName, setRootName] = useState('SiteSnapshot');
+  const searchParams = useSearchParams();
+  const hydratedFromUrl = useRef(false);
+
+  useEffect(() => {
+    if (hydratedFromUrl.current) return;
+    hydratedFromUrl.current = true;
+    // Tool chaining: accept a JSON object handed over from another tool.
+    const injected = searchParams.get('object');
+    if (injected !== null) setInput(injected);
+  }, [searchParams]);
 
   const generated = useMemo(() => {
     try {
@@ -90,6 +102,7 @@ export function ObjectToTypesTool() {
               setInput('');
               setRootName('RootPayload');
             }}>{t('clear')}</Button>
+            <SendToMenu kind="tsTypes" getValue={() => generated.code ?? ''} />
           </Space>
         }
       />

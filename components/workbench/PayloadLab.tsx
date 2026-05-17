@@ -9,6 +9,7 @@ import { useTheme } from '@/lib/ThemeContext';
 import { parsePayloadInput } from '@/lib/workbench/payload';
 import { PayloadInspector } from './PayloadInspector';
 import { UrlPresets } from '@/components/common/UrlPresets';
+import { SendToMenu } from '@/components/common/SendToMenu';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
 
@@ -140,6 +141,7 @@ export function PayloadLab() {
                         </Button>
                         <Button icon={<LinkOutlined />} onClick={handleShare}>{t('copyLink')}</Button>
                         <Button icon={<ClearOutlined />} onClick={() => setInput('')}>{t('clear')}</Button>
+                        <SendToMenu kind="json" getValue={() => input} />
                         <UrlPresets storageKey="payload" />
                     </Space>
                 }
