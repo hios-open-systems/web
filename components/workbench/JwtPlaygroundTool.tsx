@@ -31,6 +31,7 @@ export function JwtPlaygroundTool() {
                 title={t('title')}
                 description={t('subtitle')}
                 locality="local"
+                guideId="jwtPlayground"
             />
             <Tabs
                 defaultActiveKey="decode"

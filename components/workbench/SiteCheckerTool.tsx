@@ -237,6 +237,7 @@ export function SiteCheckerTool() {
         title={t('title')}
         description={t('subtitle')}
         locality="network"
+        guideId="siteChecker"
         actions={
           <Space wrap>
             <Button icon={<BellOutlined />} onClick={requestNotifications}>{permissionLabel}</Button>

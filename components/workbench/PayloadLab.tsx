@@ -127,6 +127,7 @@ export function PayloadLab() {
                 title={t('title')}
                 description={t('subtitle')}
                 locality="local"
+                guideId="payload"
                 actions={
                     <Space wrap>
                         <Button icon={<ReloadOutlined />} onClick={handleLoadExample}>{t('loadExample')}</Button>
