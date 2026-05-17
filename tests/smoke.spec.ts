@@ -76,6 +76,16 @@ test.describe('Workbench', () => {
         await expect(page.getByText('HS256').first()).toBeVisible();
     });
 
+    test('command palette (Ctrl+K) abre, filtra y navega', async ({ page }) => {
+        await page.goto('/es/workbench');
+        await page.keyboard.press('Control+k');
+        const search = page.getByPlaceholder(/Buscar tools/i);
+        await expect(search).toBeVisible();
+        await search.fill('jwt');
+        await page.getByRole('button', { name: /JWT Playground/i }).first().click();
+        await expect(page).toHaveURL(/\/es\/workbench\/jwt-decode/);
+    });
+
     test('guía "Cómo se usa" se expande con pasos', async ({ page }) => {
         await page.goto('/es/workbench/type-checker');
         const toggle = page.getByRole('button', { name: /Cómo se usa/i });

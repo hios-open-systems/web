@@ -3,6 +3,7 @@
 import React from 'react';
 import { ConfigProvider, Layout } from 'antd';
 import { VersionWatcher } from '@/components/common/VersionWatcher';
+import { CommandPalette } from '@/components/common/CommandPalette';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { ThemeProvider, useTheme } from '@/lib/ThemeContext';
@@ -18,6 +19,7 @@ function ThemedLayout({ children, currentVersion }: { children: React.ReactNode;
         <ConfigProvider theme={currentTheme}>
             <FeedbackProvider>
                 <VersionWatcher currentVersion={currentVersion} />
+                <CommandPalette />
                 <Layout style={{ minHeight: '100vh', background: bgColor }}>
                     <Header />
                     <Layout.Content>
