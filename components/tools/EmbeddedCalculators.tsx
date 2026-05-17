@@ -11,6 +11,7 @@ import { RuntimeTab } from './calculators/RuntimeTab';
 import { ResistorLabTab } from './calculators/ResistorLabTab';
 import { AdcTab } from './calculators/AdcTab';
 import { RcTab } from './calculators/RcTab';
+import { RlTab } from './calculators/RlTab';
 import { RclTab } from './calculators/RclTab';
 import { GainTab } from './calculators/GainTab';
 import { I2sTab } from './calculators/I2sTab';
@@ -31,6 +32,7 @@ export function EmbeddedCalculators() {
     { key: 'resistorLab', label: tabLabel('resistorLab'), children: <ResistorLabTab c={c} /> },
     { key: 'adc', label: tabLabel('adc'), children: <AdcTab c={c} /> },
     { key: 'rc', label: tabLabel('rc'), children: <RcTab c={c} /> },
+    { key: 'rl', label: tabLabel('rl'), children: <RlTab c={c} /> },
     { key: 'rcl', label: tabLabel('rcl'), children: <RclTab c={c} /> },
     { key: 'gain', label: tabLabel('gain'), children: <GainTab c={c} /> },
     { key: 'i2s', label: tabLabel('i2s'), children: <I2sTab c={c} /> },

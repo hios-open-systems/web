@@ -996,6 +996,14 @@
             "buck3v3": "Buck 5V→3V3"
         },
         "cards": {
+            "rl": {
+                "title": "Filtro RL",
+                "r": "R (Ω)",
+                "l": "L (mH)",
+                "target": "fc objetivo (Hz)",
+                "fc": "fc actual",
+                "required": "L requerida"
+            },
             "rcl": {
                 "title": "RCL Serie"
             },
