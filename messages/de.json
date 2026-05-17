@@ -1,5 +1,9 @@
 {
     "Hero": {
+        "showcaseTitle": "Die Werkzeuge",
+        "showcaseSubtitle": "Alles läuft im Browser. Wähl eins oder lass den Zufall entscheiden.",
+        "showcaseRandomCta": "Zufälliges öffnen",
+        "showcaseToolCount": "Werkzeuge",
         "titlePrefix": "Offen",
         "black": "Schwarz",
         "brown": "Braun",
