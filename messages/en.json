@@ -525,6 +525,22 @@
         "localFootnote": "For now this is stored only in this browser. Sign in if you want it to follow your account later.",
         "accountFootnote": "Changes still apply locally first, but your account copy becomes the source for future devices."
     },
+    "CommandPalette": {
+        "placeholder": "Search tools and pages…",
+        "empty": "No matches",
+        "hint": "↑↓ navigate · Enter open · Esc close",
+        "toolsGroup": "Tools",
+        "pagesGroup": "Pages",
+        "pages": {
+            "home": "Home",
+            "workbench": "Workbench",
+            "calculators": "Calculators",
+            "pinouts": "Pinouts",
+            "snippets": "Snippets",
+            "settings": "Settings",
+            "feedback": "Feedback"
+        }
+    },
     "Workbench": {
         "guides": {
             "_label": "How to use",

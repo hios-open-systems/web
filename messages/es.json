@@ -524,6 +524,22 @@
         "localFootnote": "Por ahora se guarda solo en este navegador. Iniciá sesión si querés que después siga a tu cuenta.",
         "accountFootnote": "Los cambios siguen aplicando local primero, pero la copia de cuenta pasa a ser la referencia para futuros dispositivos."
     },
+    "CommandPalette": {
+        "placeholder": "Buscar tools y páginas…",
+        "empty": "Sin resultados",
+        "hint": "↑↓ navegar · Enter abrir · Esc cerrar",
+        "toolsGroup": "Tools",
+        "pagesGroup": "Páginas",
+        "pages": {
+            "home": "Inicio",
+            "workbench": "Workbench",
+            "calculators": "Calculadoras",
+            "pinouts": "Pinouts",
+            "snippets": "Snippets",
+            "settings": "Ajustes",
+            "feedback": "Feedback"
+        }
+    },
     "Workbench": {
         "guides": {
             "_label": "Cómo se usa",
