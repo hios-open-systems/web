@@ -542,6 +542,7 @@
         }
     },
     "Presets": {
+        "base": "Built-in",
         "save": "Save preset",
         "presets": "Presets",
         "namePrompt": "Name this preset",

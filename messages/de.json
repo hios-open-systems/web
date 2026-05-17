@@ -441,6 +441,7 @@
         }
     },
     "Presets": {
+        "base": "Vorlagen",
         "save": "Preset speichern",
         "presets": "Presets",
         "namePrompt": "Preset benennen",

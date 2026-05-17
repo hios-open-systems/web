@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Space, Segmented, Tabs, Typography } from 'antd';
+import { Button, Space, Tabs } from 'antd';
 import { ToolHeader } from '@/components/workbench/ToolHeader';
 import { UrlPresets } from '@/components/common/UrlPresets';
 import styles from './embeddedCalculators.module.css';
@@ -17,7 +17,15 @@ import { RclTab } from './calculators/RclTab';
 import { GainTab } from './calculators/GainTab';
 import { I2sTab } from './calculators/I2sTab';
 
-const { Text } = Typography;
+const BASE_PRESET_IDS = ['esp32-adc', 'audio-44k', 'audio-48k', 'low-power', 'rgb-led', 'buck-3v3'] as const;
+const PRESET_I18N: Record<(typeof BASE_PRESET_IDS)[number], string> = {
+  'esp32-adc': 'presets.esp32adc',
+  'audio-44k': 'presets.audio44',
+  'audio-48k': 'presets.audio48',
+  'low-power': 'presets.lowPower',
+  'rgb-led': 'presets.rgbLed',
+  'buck-3v3': 'presets.buck3v3',
+};
 
 export function EmbeddedCalculators() {
   const c = useCalculatorState();
@@ -49,31 +57,14 @@ export function EmbeddedCalculators() {
         locality="local"
       />
 
-      <Space wrap style={{ width: '100%', justifyContent: 'space-between' }}>
-        <Space direction="vertical" size={6} style={{ minWidth: 320 }}>
-          <Text style={{ fontSize: 12, color: c.palette.textSecondary, textTransform: 'uppercase', letterSpacing: 0.35 }}>
-            {t('presets_label')}
-          </Text>
-          <Segmented
-            size="small"
-            value={c.preset}
-            onChange={(value) => c.applyPreset(value as PresetId)}
-            options={[
-              { label: t('presets.custom'), value: 'custom' },
-              { label: t('presets.esp32adc'), value: 'esp32-adc' },
-              { label: t('presets.audio44'), value: 'audio-44k' },
-              { label: t('presets.audio48'), value: 'audio-48k' },
-              { label: t('presets.lowPower'), value: 'low-power' },
-              { label: t('presets.rgbLed'), value: 'rgb-led' },
-              { label: t('presets.buck3v3'), value: 'buck-3v3' },
-            ]}
-          />
-        </Space>
-        <Space wrap>
-          <UrlPresets storageKey="calculators" />
-          <Button onClick={c.copySummary} style={{ borderRadius: 10 }}>{t('copy_summary')}</Button>
-          <Button onClick={c.copyShareLink} style={{ borderRadius: 10 }}>{t('copy_link')}</Button>
-        </Space>
+      <Space wrap style={{ width: '100%', justifyContent: 'flex-end' }}>
+        <UrlPresets
+          storageKey="calculators"
+          basePresets={BASE_PRESET_IDS.map((id) => ({ id, name: t(PRESET_I18N[id]) }))}
+          onSelectBase={(id) => c.applyPreset(id as PresetId)}
+        />
+        <Button onClick={c.copySummary} style={{ borderRadius: 10 }}>{t('copy_summary')}</Button>
+        <Button onClick={c.copyShareLink} style={{ borderRadius: 10 }}>{t('copy_link')}</Button>
       </Space>
 
       <Tabs

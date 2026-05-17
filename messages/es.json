@@ -541,6 +541,7 @@
         }
     },
     "Presets": {
+        "base": "Plantillas",
         "save": "Guardar preset",
         "presets": "Presets",
         "namePrompt": "Nombrá el preset",

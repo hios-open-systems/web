@@ -441,6 +441,7 @@
         }
     },
     "Presets": {
+        "base": "Predefiniti",
         "save": "Salva preset",
         "presets": "Preset",
         "namePrompt": "Dai un nome al preset",

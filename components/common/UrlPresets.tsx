@@ -17,7 +17,16 @@ interface Preset {
  * navigation so the tool's existing one-time URL hydration re-runs — no
  * coupling to each tool's internal state, nothing server-side.
  */
-export function UrlPresets({ storageKey }: { storageKey: string }) {
+export function UrlPresets({
+  storageKey,
+  basePresets = [],
+  onSelectBase,
+}: {
+  storageKey: string;
+  /** Read-only built-in presets shown above the saved ones. */
+  basePresets?: { id: string; name: string }[];
+  onSelectBase?: (id: string) => void;
+}) {
   const t = useTranslations('Presets');
   const lsKey = `hios-presets-${storageKey}`;
   const [presets, setPresets] = useState<Preset[]>([]);
@@ -70,29 +79,50 @@ export function UrlPresets({ storageKey }: { storageKey: string }) {
 
   const remove = (id: string) => persist(presets.filter((p) => p.id !== id));
 
+  const savedItems =
+    presets.length === 0
+      ? [{ key: 'empty', disabled: true, label: t('empty') }]
+      : presets.map((p) => ({
+          key: `saved:${p.id}`,
+          label: (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 200 }}>
+              <span style={{ flex: 1 }}>{p.name}</span>
+              <DeleteOutlined
+                aria-label={t('delete')}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  remove(p.id);
+                }}
+                style={{ opacity: 0.6 }}
+              />
+            </div>
+          ),
+        }));
+
   const menu: MenuProps = {
-    items:
-      presets.length === 0
-        ? [{ key: 'empty', disabled: true, label: t('empty') }]
-        : presets.map((p) => ({
-            key: p.id,
-            label: (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 200 }}>
-                <span style={{ flex: 1 }}>{p.name}</span>
-                <DeleteOutlined
-                  aria-label={t('delete')}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    remove(p.id);
-                  }}
-                  style={{ opacity: 0.6 }}
-                />
-              </div>
-            ),
-          })),
+    items: [
+      ...(basePresets.length
+        ? [
+            {
+              key: 'base',
+              type: 'group' as const,
+              label: t('base'),
+              children: basePresets.map((b) => ({ key: `base:${b.id}`, label: b.name })),
+            },
+            { type: 'divider' as const },
+          ]
+        : []),
+      ...savedItems,
+    ],
     onClick: ({ key }) => {
-      const preset = presets.find((p) => p.id === key);
-      if (preset) load(preset);
+      if (key.startsWith('base:')) {
+        onSelectBase?.(key.slice(5));
+        return;
+      }
+      if (key.startsWith('saved:')) {
+        const preset = presets.find((p) => p.id === key.slice(6));
+        if (preset) load(preset);
+      }
     },
   };
 
