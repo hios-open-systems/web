@@ -457,6 +457,15 @@
     "Workbench": {
         "guides": {
             "_label": "Anleitung",
+            "snippets": {
+                "intro": "Code-Snippets ablegen und wiederverwenden — lokal, ohne Konto.",
+                "steps": [
+                    "Titel, optionale Tags und den Snippet-Text schreiben.",
+                    "Speichern; bleibt im Browser via localStorage erhalten.",
+                    "Optional anmelden, um Snippets geräteübergreifend zu synchronisieren."
+                ],
+                "tip": "„Link kopieren“ teilt ein Snippet; beim ersten Login werden lokale importiert."
+            },
             "payload": {
                 "intro": "JSON formatieren, inspizieren und teilen — alles bleibt im Browser.",
                 "steps": [

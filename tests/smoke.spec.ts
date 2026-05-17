@@ -108,6 +108,14 @@ test.describe('Workbench', () => {
         await expect(page.getByText(/Definí tus interfaces/i)).toBeVisible();
     });
 
+    test('Snippets también tiene guía "Cómo se usa"', async ({ page }) => {
+        await page.goto('/es/workbench/snippets');
+        const toggle = page.getByRole('button', { name: /Cómo se usa/i });
+        await expect(toggle).toBeVisible();
+        await toggle.click();
+        await expect(page.getByText(/Escribí un título/i)).toBeVisible();
+    });
+
     test('Random string genera valores al cargar', async ({ page }) => {
         await page.goto('/es/workbench/random-string');
         // Esperamos al menos un valor monoespaciado en la lista de resultados.

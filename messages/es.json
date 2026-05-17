@@ -557,6 +557,15 @@
     "Workbench": {
         "guides": {
             "_label": "Cómo se usa",
+            "snippets": {
+                "intro": "Guardá y reutilizá snippets de código — local, sin cuenta.",
+                "steps": [
+                    "Escribí un título, tags opcionales y el cuerpo del snippet.",
+                    "Guardalo; persiste en este navegador vía localStorage.",
+                    "Iniciá sesión (opcional) para sincronizar entre dispositivos."
+                ],
+                "tip": "Usá “Copiar enlace” para compartir uno; al primer login se importan los locales."
+            },
             "payload": {
                 "intro": "Formateá, inspeccioná y compartí JSON — todo se queda en tu navegador.",
                 "steps": [

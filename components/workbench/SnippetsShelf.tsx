@@ -5,6 +5,7 @@ import { Alert, Button, Card, Empty, Input, Space, Tag, Typography, message } fr
 import { CopyOutlined, DeleteOutlined, LinkOutlined, SaveOutlined, UploadOutlined } from '@ant-design/icons';
 import { useLocale, useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
+import { ToolGuide } from './ToolGuide';
 import { useCurrentUser } from '@/lib/hooks/useCurrentUser';
 import type { SnippetRecord } from '@/lib/snippets';
 import {
@@ -271,6 +272,8 @@ export function SnippetsShelf() {
                     <Title level={4} style={{ margin: 0 }}>{t('title')}</Title>
                     <Text className={styles.subtleText}>{t('subtitle')}</Text>
                 </div>
+
+                <ToolGuide guideId="snippets" />
 
                 <div className={styles.snippetStatusRow}>
                     <Space wrap>
