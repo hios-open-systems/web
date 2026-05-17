@@ -425,6 +425,90 @@
         "rcl": "RCL"
     },
     "Workbench": {
+        "guides": {
+            "_label": "Anleitung",
+            "payload": {
+                "intro": "JSON formatieren, inspizieren und teilen — alles bleibt im Browser.",
+                "steps": [
+                    "JSON in den Editor einfügen oder tippen.",
+                    "Mit Prettify / Minify und dem Pfad-Explorer navigieren.",
+                    "Auf „Link teilen“ klicken, um eine URL zu kopieren, die genau dieses Payload reproduziert."
+                ],
+                "tip": "Das Payload steckt in der URL — gut für Bug-Reports, aber teile so keine Geheimnisse."
+            },
+            "typeChecker": {
+                "intro": "Prüfe im Browser, ob ein JSON-Wert einem TypeScript-Typ zuweisbar ist.",
+                "steps": [
+                    "Interfaces / Typen im Typ-Panel definieren.",
+                    "Den Root-Typnamen zum Validieren angeben.",
+                    "JSON-Wert einfügen und Check drücken, um Diagnosen zu sehen."
+                ],
+                "tip": "Lade das Beispiel für einen gültigen Fall und ändere dann das JSON."
+            },
+            "jwtPlayground": {
+                "intro": "JWTs (HS, RS, ES) dekodieren, signieren und verifizieren — nichts verlässt dein Gerät.",
+                "steps": [
+                    "Token einfügen, um Header und Payload sofort zu dekodieren.",
+                    "Zu Encode wechseln, um ein neues Token zu bauen und zu signieren.",
+                    "Mit Verify und Secret oder Public Key die Signatur bestätigen."
+                ],
+                "tip": "Für RS/ES kannst du ein Demo-Schlüsselpaar erzeugen — Schlüssel bleiben im Browser."
+            },
+            "dnsLookup": {
+                "intro": "Live-DNS-Records (A, AAAA, MX, TXT, NS, CNAME) jeder Domain inspizieren.",
+                "steps": [
+                    "Domainnamen eingeben.",
+                    "Den gewünschten Record-Typ wählen.",
+                    "Aufgelöste Records lesen; Typ wechseln zum Vergleichen."
+                ],
+                "tip": "In TXT-Records stecken meist SPF, DKIM und Verifizierungs-Tokens."
+            },
+            "certificateCheck": {
+                "intro": "TLS-Zertifikat einer Seite prüfen: Gültigkeit, Aussteller und Ablaufrisiko.",
+                "steps": [
+                    "Hostname eingeben (ohne https://).",
+                    "Prüfung starten.",
+                    "Ablaufdatum und Risiko-Indikator ansehen."
+                ],
+                "tip": "Ein kurzes Restgültigkeitsfenster ist die Frühwarnung für eine vergessene Erneuerung."
+            },
+            "objectToTypes": {
+                "intro": "Ein echtes JSON-Objekt in Sekunden in TypeScript-Interfaces verwandeln.",
+                "steps": [
+                    "Repräsentatives JSON-Objekt einfügen.",
+                    "Namen des Root-Interface festlegen.",
+                    "Generierte Typen in den Code kopieren."
+                ],
+                "tip": "Nimm das reichhaltigste Beispiel — optionale Felder werden aus dem Vorhandenen abgeleitet."
+            },
+            "randomString": {
+                "intro": "Zufallsstrings für Tokens, IDs, Demos oder schnelle Secrets erzeugen.",
+                "steps": [
+                    "Länge und Zeichensatz / Optionen wählen.",
+                    "Live-Entropie-Schätzung beobachten.",
+                    "Erzeugten Wert kopieren."
+                ],
+                "tip": "Mehr Entropie ist schwerer zu erraten — deutlich über 80 Bit für Sensibles anpeilen."
+            },
+            "objectCompare": {
+                "intro": "Zwei JSON-Objekte vergleichen und Strukturunterschiede schnell finden.",
+                "steps": [
+                    "Linkes und rechtes Objekt einfügen.",
+                    "Swap nutzen, falls vertauscht.",
+                    "Hervorgehobene Unterschiede lesen."
+                ],
+                "tip": "Ideal, um eine API-Antwort vor/nach einer Änderung zu diffen."
+            },
+            "siteChecker": {
+                "intro": "URLs aus dem Browser mit lokalen Checks und Client-Benachrichtigungen überwachen.",
+                "steps": [
+                    "Die zu überwachende URL hinzufügen.",
+                    "Benachrichtigungen erlauben, wenn du Alarme willst.",
+                    "Tab offen lassen; Checks laufen clientseitig in einem Intervall."
+                ],
+                "tip": "Local-first — die Überwachung stoppt beim Schließen des Tabs, nichts läuft serverseitig."
+            }
+        },
         "signals": {
             "localFirst": "Local-first und privat",
             "shareable": "Teilbare Sessions",

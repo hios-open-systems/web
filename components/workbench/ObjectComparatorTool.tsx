@@ -57,6 +57,7 @@ export function ObjectComparatorTool() {
                 title={t('title')}
                 description={t('subtitle')}
                 locality="local"
+                guideId="objectCompare"
                 actions={
                     <Space wrap>
                         <Button icon={<ReloadOutlined />} onClick={() => {

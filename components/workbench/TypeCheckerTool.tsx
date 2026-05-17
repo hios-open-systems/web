@@ -80,6 +80,7 @@ export function TypeCheckerTool() {
         title={t('title')}
         description={t('subtitle')}
         locality="local"
+        guideId="typeChecker"
         actions={
           <Space wrap>
             <Button icon={<SafetyCertificateOutlined />} loading={loading} onClick={() => void runCheck(typeSource, valueSource, rootTypeName)}>{t('check')}</Button>

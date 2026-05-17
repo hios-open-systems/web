@@ -425,6 +425,90 @@
         "rcl": "RCL"
     },
     "Workbench": {
+        "guides": {
+            "_label": "Come si usa",
+            "payload": {
+                "intro": "Formatta, ispeziona e condividi JSON — tutto resta nel browser.",
+                "steps": [
+                    "Incolla o scrivi JSON nell’editor.",
+                    "Usa Prettify / Minify e l’esploratore di path per navigarlo.",
+                    "Clicca “Condividi link” per copiare una URL che riproduce questo payload esatto."
+                ],
+                "tip": "Il payload viaggia nella URL — ottimo per i bug report, ma non condividere segreti così."
+            },
+            "typeChecker": {
+                "intro": "Verifica se un valore JSON è assegnabile a un tipo TypeScript, tutto nel browser.",
+                "steps": [
+                    "Definisci interfacce / tipi nel pannello dei tipi.",
+                    "Imposta il nome del tipo radice da validare.",
+                    "Incolla il valore JSON e premi Check per i diagnostici."
+                ],
+                "tip": "Carica l’esempio per un caso valido, poi modifica il JSON per vedere i diagnostici."
+            },
+            "jwtPlayground": {
+                "intro": "Decodifica, firma e verifica JWT (HS, RS, ES) senza che nulla esca dal dispositivo.",
+                "steps": [
+                    "Incolla un token per decodificare header e payload all’istante.",
+                    "Passa a Encode per creare e firmare un nuovo token.",
+                    "Usa Verify con il segreto o la chiave pubblica per confermare la firma."
+                ],
+                "tip": "Per RS/ES puoi generare una coppia di chiavi demo — le chiavi non lasciano il browser."
+            },
+            "dnsLookup": {
+                "intro": "Ispeziona record DNS live (A, AAAA, MX, TXT, NS, CNAME) di qualsiasi dominio.",
+                "steps": [
+                    "Inserisci un nome di dominio.",
+                    "Scegli il tipo di record da interrogare.",
+                    "Leggi i record risolti; cambia tipo per confrontare."
+                ],
+                "tip": "Nei record TXT vivono di solito SPF, DKIM e token di verifica."
+            },
+            "certificateCheck": {
+                "intro": "Controlla il certificato TLS di un sito: validità, issuer e rischio di scadenza.",
+                "steps": [
+                    "Inserisci l’hostname (senza https://).",
+                    "Avvia il controllo.",
+                    "Controlla la data di scadenza e l’indicatore di rischio."
+                ],
+                "tip": "Una finestra di validità breve è l’allerta precoce di un rinnovo dimenticato."
+            },
+            "objectToTypes": {
+                "intro": "Trasforma un oggetto JSON reale in interfacce TypeScript in secondi.",
+                "steps": [
+                    "Incolla un oggetto JSON rappresentativo.",
+                    "Imposta il nome dell’interfaccia radice.",
+                    "Copia i tipi generati nel tuo codice."
+                ],
+                "tip": "Usa l’esempio più ricco che hai — i campi opzionali si deducono da ciò che è presente."
+            },
+            "randomString": {
+                "intro": "Genera stringhe casuali per token, ID, demo o segreti rapidi.",
+                "steps": [
+                    "Scegli lunghezza e set di caratteri / opzioni.",
+                    "Osserva la stima di entropia live.",
+                    "Copia il valore generato."
+                ],
+                "tip": "Più entropia è più difficile da indovinare — punta ben oltre 80 bit per cose sensibili."
+            },
+            "objectCompare": {
+                "intro": "Confronta due oggetti JSON e individua le differenze strutturali in fretta.",
+                "steps": [
+                    "Incolla l’oggetto sinistro e destro.",
+                    "Usa Swap se li hai invertiti.",
+                    "Leggi le differenze evidenziate."
+                ],
+                "tip": "Ottimo per fare il diff di una risposta API prima/dopo una modifica."
+            },
+            "siteChecker": {
+                "intro": "Monitora URL dal browser con controlli locali e notifiche client.",
+                "steps": [
+                    "Aggiungi la URL da sorvegliare.",
+                    "Consenti le notifiche se vuoi gli avvisi.",
+                    "Tieni la scheda aperta; i controlli girano lato client a intervalli."
+                ],
+                "tip": "È local-first — il monitoraggio si ferma chiudendo la scheda, nulla gira sul server."
+            }
+        },
         "signals": {
             "localFirst": "Local-first e privato",
             "shareable": "Sessioni condivisibili",

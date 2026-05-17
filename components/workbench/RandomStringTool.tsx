@@ -81,6 +81,7 @@ export function RandomStringTool() {
                 title={t('title')}
                 description={t('subtitle')}
                 locality="local"
+                guideId="randomString"
                 actions={
                     <Space wrap>
                         <Button icon={<ReloadOutlined />} onClick={regenerate}>{t('generate')}</Button>

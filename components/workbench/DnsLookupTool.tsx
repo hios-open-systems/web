@@ -122,6 +122,7 @@ export function DnsLookupTool() {
         title={t('title')}
         description={t('subtitle')}
         locality="network"
+        guideId="dnsLookup"
         actions={
           <Space wrap>
             <Button icon={<SearchOutlined />} loading={loading} onClick={() => void runLookup()}>{t('lookup')}</Button>

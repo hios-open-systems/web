@@ -525,6 +525,90 @@
         "accountFootnote": "Los cambios siguen aplicando local primero, pero la copia de cuenta pasa a ser la referencia para futuros dispositivos."
     },
     "Workbench": {
+        "guides": {
+            "_label": "Cómo se usa",
+            "payload": {
+                "intro": "Formateá, inspeccioná y compartí JSON — todo se queda en tu navegador.",
+                "steps": [
+                    "Pegá o escribí JSON en el editor.",
+                    "Usá Prettify / Minify y el explorador de paths para navegarlo.",
+                    "Tocá “Compartir enlace” para copiar una URL que reproduce este payload exacto."
+                ],
+                "tip": "El payload viaja dentro de la URL — ideal para reportes de bug, pero no compartas secretos así."
+            },
+            "typeChecker": {
+                "intro": "Verificá si un valor JSON es asignable a un tipo TypeScript, todo en el navegador.",
+                "steps": [
+                    "Definí tus interfaces / tipos en el panel de tipos.",
+                    "Indicá el nombre del tipo raíz contra el cual validar.",
+                    "Pegá el valor JSON y tocá Check para ver los diagnósticos."
+                ],
+                "tip": "Cargá el ejemplo para ver un caso que pasa, después tocá el JSON y mirá aparecer los diagnósticos."
+            },
+            "jwtPlayground": {
+                "intro": "Decodificá, firmá y verificá JWT (HS, RS, ES) sin que nada salga de tu equipo.",
+                "steps": [
+                    "Pegá un token para decodificar header y payload al instante.",
+                    "Cambiá a Encode para armar y firmar un token nuevo.",
+                    "Usá Verify con el secreto o la clave pública para confirmar la firma."
+                ],
+                "tip": "Para RS/ES podés generar un par de claves demo — las claves nunca salen del navegador."
+            },
+            "dnsLookup": {
+                "intro": "Inspeccioná registros DNS en vivo (A, AAAA, MX, TXT, NS, CNAME) de cualquier dominio.",
+                "steps": [
+                    "Ingresá un nombre de dominio.",
+                    "Elegí el tipo de registro a consultar.",
+                    "Leé los registros resueltos; cambiá el tipo para comparar."
+                ],
+                "tip": "En los registros TXT suelen vivir SPF, DKIM y tokens de verificación."
+            },
+            "certificateCheck": {
+                "intro": "Revisá el certificado TLS de un sitio: fechas de validez, issuer y riesgo de expiración.",
+                "steps": [
+                    "Ingresá el hostname (sin https://).",
+                    "Corré el chequeo.",
+                    "Revisá la fecha de expiración y el indicador de riesgo."
+                ],
+                "tip": "Una ventana de validez corta es el aviso temprano de una renovación que te olvidaste."
+            },
+            "objectToTypes": {
+                "intro": "Convertí un objeto JSON real en interfaces TypeScript en segundos.",
+                "steps": [
+                    "Pegá un objeto JSON representativo.",
+                    "Indicá el nombre de la interfaz raíz.",
+                    "Copiá los tipos generados a tu código."
+                ],
+                "tip": "Pasale el ejemplo más completo que tengas — los campos opcionales se infieren de lo que está presente."
+            },
+            "randomString": {
+                "intro": "Generá strings aleatorios para tokens, IDs, demos o secretos rápidos.",
+                "steps": [
+                    "Elegí el largo y el set de caracteres / opciones.",
+                    "Mirá la estimación de entropía en vivo.",
+                    "Copiá el valor generado."
+                ],
+                "tip": "Más entropía es más difícil de adivinar — apuntá bien por encima de 80 bits para algo sensible."
+            },
+            "objectCompare": {
+                "intro": "Compará dos objetos JSON y detectá diferencias estructurales rápido.",
+                "steps": [
+                    "Pegá los objetos izquierdo y derecho.",
+                    "Usá Swap si los mezclaste.",
+                    "Leé las diferencias resaltadas."
+                ],
+                "tip": "Ideal para diffear una respuesta de API antes vs después de un cambio."
+            },
+            "siteChecker": {
+                "intro": "Monitoreá URLs desde tu navegador con chequeos locales y notificaciones cliente.",
+                "steps": [
+                    "Agregá la URL que querés vigilar.",
+                    "Permití notificaciones si querés alertas.",
+                    "Dejá la pestaña abierta; los chequeos corren del lado cliente en un intervalo."
+                ],
+                "tip": "Es local-first — el monitoreo para cuando cerrás la pestaña, nada corre en el servidor."
+            }
+        },
         "signals": {
             "localFirst": "Local-first y privado",
             "shareable": "Sesiones compartibles",
