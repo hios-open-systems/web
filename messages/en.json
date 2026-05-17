@@ -1088,6 +1088,7 @@
         "title": "Embedded Calculators",
         "subtitle": "Practical tools for electronics design, validation, and quick decision making.",
         "presets_label": "Global Presets",
+        "eseries_label": "Standard",
         "go_rcl": "Open RCL Page",
         "copy_summary": "Copy Summary",
         "copy_link": "Copy Link",
@@ -1123,7 +1124,7 @@
                 "title": "RCL Series"
             },
             "invalid": "Check inputs — no valid result",
-            "eseries": "Nearest E24",
+            "eseries": "Nearest",
             "led": {
                 "title": "LED Resistor",
                 "vs": "Supply voltage (V)",

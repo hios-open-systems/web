@@ -11,29 +11,7 @@ export const formatOhm = (value: number) => {
   return `${value.toFixed(2)} Ω`;
 };
 
-// E24 series (±5%) base values — the set you actually find in a parts drawer.
-const E24 = [
-  10, 11, 12, 13, 15, 16, 18, 20, 22, 24, 27, 30, 33, 36, 39,
-  43, 47, 51, 56, 62, 68, 75, 82, 91,
-];
-
-/** Nearest standard E24 resistor value to an arbitrary resistance. */
-export const nearestE24 = (value: number): number | null => {
-  if (!Number.isFinite(value) || value <= 0) return null;
-  const decade = Math.pow(10, Math.floor(Math.log10(value)));
-  const norm = value / decade; // 1 .. <10
-  let best = E24[0];
-  let bestErr = Infinity;
-  for (const base of E24) {
-    const candidate = base / 10; // map 10..91 -> 1.0..9.1
-    const err = Math.abs(candidate - norm);
-    if (err < bestErr) {
-      bestErr = err;
-      best = candidate;
-    }
-  }
-  return best * decade;
-};
+// Standard-value (E-series) normalization lives in eseries.ts.
 
 export const calc = {
   ledResistor: (supply: number, ledVf: number, ledCurrentMa: number) => {

@@ -1,17 +1,22 @@
 import { Card, InputNumber } from 'antd';
 import styles from '../embeddedCalculators.module.css';
 import { ResultBar, Field } from './Primitives';
+import { formatOhm } from './calc';
+import { nearestStandard } from './eseries';
 import { AdcSchematic } from './viz/circuits';
 import type { CalculatorState } from './useCalculatorState';
 
 export function AdcTab({ c }: { c: CalculatorState }) {
   const { t } = c;
+  const std = c.divider.valid ? nearestStandard(c.divider.rTopK * 1000, c.eSeries) : null;
   return (
     <Card title={t('cards.adc.title')} style={c.calcCardStyle} styles={{ body: c.calcCardBodyStyle }}>
       <ResultBar
         label={t('cards.adc.rtop')}
         value={`${c.divider.rTopK.toFixed(1)} kΩ`}
-        hint={`${t('cards.adc.ratio')}: ${c.divider.ratio.toFixed(2)} : 1`}
+        hint={`${t('cards.adc.ratio')}: ${c.divider.ratio.toFixed(2)} : 1${
+          std ? ` · ${t('cards.eseries')} ${c.eSeries}: ${formatOhm(std)}` : ''
+        }`}
         invalid={!c.divider.valid}
         invalidText={t('cards.invalid')}
       />
