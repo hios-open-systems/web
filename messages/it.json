@@ -556,7 +556,10 @@
         "landing": {
             "badge": "Nuova linea di prodotto",
             "title": "Uno workspace pratico per payload, JWT, snippet e flussi reali di sviluppo.",
-            "subtitle": "Gli strumenti piccoli ma frequenti meritano una struttura vera. Validazione, generazione e test mantengono utile il catalogo mentre cresce.",
+            "subtitle": "Strumenti piccoli ma frequenti, pronti subito. Niente categorie né gate: entri e lo strumento è lì.",
+            "randomCta": "Aprine uno a caso",
+            "allToolsTitle": "Tutti gli strumenti",
+            "allToolsSubtitle": "Una griglia, senza livelli. Clicca e vai.",
             "primaryCta": "Apri validazione",
             "secondaryCta": "Apri generazione",
             "panelTitle": "Entra da una sezione dedicata",
