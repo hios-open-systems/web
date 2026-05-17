@@ -82,6 +82,19 @@ export const calc = {
     const gainDb = 20 * Math.log10(gain);
     return { gain, gainDb };
   },
+  rclSeries: (rOhm: number, lMilliH: number, cMicroF: number, freqHz: number) => {
+    const l = lMilliH / 1000;
+    const c = cMicroF / 1_000_000;
+    const valid = l > 0 && c > 0 && freqHz > 0;
+    if (!valid) return { xl: 0, xc: 0, z: 0, f0: 0, q: 0, valid: false };
+    const w = 2 * Math.PI * freqHz;
+    const xl = w * l;
+    const xc = 1 / (w * c);
+    const z = Math.sqrt(rOhm * rOhm + (xl - xc) * (xl - xc));
+    const f0 = 1 / (2 * Math.PI * Math.sqrt(l * c));
+    const q = rOhm > 0 ? (1 / rOhm) * Math.sqrt(l / c) : 0;
+    return { xl, xc, z, f0, q, valid: true };
+  },
   i2sClocks: (sampleRate: number, bits: number, channels: number, mclkMultiplier: number) => {
     if (sampleRate <= 0 || bits <= 0 || channels <= 0 || mclkMultiplier <= 0) {
       return { bclk: 0, mclk: 0, bitRateMbps: 0 };

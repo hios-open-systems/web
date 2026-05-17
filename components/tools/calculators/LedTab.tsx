@@ -2,6 +2,7 @@ import { Card, InputNumber } from 'antd';
 import styles from '../embeddedCalculators.module.css';
 import { ResultBar, Field } from './Primitives';
 import { formatOhm, nearestE24 } from './calc';
+import { LedSchematic } from './viz/circuits';
 import type { CalculatorState } from './useCalculatorState';
 
 export function LedTab({ c }: { c: CalculatorState }) {
@@ -18,6 +19,9 @@ export function LedTab({ c }: { c: CalculatorState }) {
         invalid={!c.led.valid}
         invalidText={t('cards.invalid')}
       />
+      <div className={styles.fullRow} style={{ marginTop: 16, maxWidth: 420, marginInline: 'auto' }}>
+        <LedSchematic rText={formatOhm(c.led.resistance)} vfText={`${c.ledVf} V`} />
+      </div>
       <div className={styles.fieldGrid}>
         <Field label={t('cards.led.vs')}>
           <InputNumber value={c.supply} onChange={(v) => c.setSupply(Number(v || 0))} min={0} style={c.inputStyle} />

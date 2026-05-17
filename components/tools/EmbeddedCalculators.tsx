@@ -1,8 +1,6 @@
 'use client';
 
-import Link from 'next/link';
 import { Button, Space, Segmented, Tabs, Typography } from 'antd';
-import { useLocale } from 'next-intl';
 import { ToolHeader } from '@/components/workbench/ToolHeader';
 import styles from './embeddedCalculators.module.css';
 import { PresetId, TabKey, useCalculatorState } from './calculators/useCalculatorState';
@@ -13,6 +11,7 @@ import { RuntimeTab } from './calculators/RuntimeTab';
 import { ResistorLabTab } from './calculators/ResistorLabTab';
 import { AdcTab } from './calculators/AdcTab';
 import { RcTab } from './calculators/RcTab';
+import { RclTab } from './calculators/RclTab';
 import { GainTab } from './calculators/GainTab';
 import { I2sTab } from './calculators/I2sTab';
 
@@ -21,7 +20,6 @@ const { Text } = Typography;
 export function EmbeddedCalculators() {
   const c = useCalculatorState();
   const { t } = c;
-  const locale = useLocale();
 
   const tabLabel = (key: string) => <span style={{ whiteSpace: 'nowrap' }}>{t(`cards.${key}.title`)}</span>;
 
@@ -33,6 +31,7 @@ export function EmbeddedCalculators() {
     { key: 'resistorLab', label: tabLabel('resistorLab'), children: <ResistorLabTab c={c} /> },
     { key: 'adc', label: tabLabel('adc'), children: <AdcTab c={c} /> },
     { key: 'rc', label: tabLabel('rc'), children: <RcTab c={c} /> },
+    { key: 'rcl', label: tabLabel('rcl'), children: <RclTab c={c} /> },
     { key: 'gain', label: tabLabel('gain'), children: <GainTab c={c} /> },
     { key: 'i2s', label: tabLabel('i2s'), children: <I2sTab c={c} /> },
   ];
@@ -45,11 +44,6 @@ export function EmbeddedCalculators() {
         title={t('title')}
         description={t('subtitle')}
         locality="local"
-        actions={
-          <Link href={`/${locale}/calculators/rcl`}>
-            <Button>{t('go_rcl')}</Button>
-          </Link>
-        }
       />
 
       <Space wrap style={{ width: '100%', justifyContent: 'space-between' }}>
