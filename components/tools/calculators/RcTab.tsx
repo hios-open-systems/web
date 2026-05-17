@@ -1,7 +1,8 @@
 import { Card, InputNumber } from 'antd';
 import styles from '../embeddedCalculators.module.css';
 import { ResultBar, Field } from './Primitives';
-import { formatOhm, nearestE24 } from './calc';
+import { formatOhm } from './calc';
+import { nearestStandard } from './eseries';
 import { RcSchematic } from './viz/circuits';
 import { Plot } from './viz/Plot';
 import { rcLowpass } from './viz/responses';
@@ -10,9 +11,9 @@ import type { CalculatorState } from './useCalculatorState';
 export function RcTab({ c }: { c: CalculatorState }) {
   const { t } = c;
   const bode = rcLowpass(c.rcR, c.rcC);
-  const e24 = c.requiredRValid ? nearestE24(c.requiredR) : null;
+  const std = c.requiredRValid ? nearestStandard(c.requiredR, c.eSeries) : null;
   const requiredHint = c.requiredRValid
-    ? `${t('cards.rc.required')}: ${formatOhm(c.requiredR)}${e24 ? ` · ${t('cards.eseries')}: ${formatOhm(e24)}` : ''}`
+    ? `${t('cards.rc.required')}: ${formatOhm(c.requiredR)}${std ? ` · ${t('cards.eseries')} ${c.eSeries}: ${formatOhm(std)}` : ''}`
     : `${t('cards.rc.required')}: —`;
   return (
     <Card title={t('cards.rc.title')} style={c.calcCardStyle} styles={{ body: c.calcCardBodyStyle }}>

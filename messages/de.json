@@ -964,6 +964,7 @@
         "title": "Embedded-Rechner",
         "subtitle": "Praktische Tools für Elektronikdesign, Validierung und schnelle Entscheidungen.",
         "presets_label": "Globale Presets",
+        "eseries_label": "Norm",
         "go_rcl": "RCL-Seite öffnen",
         "copy_summary": "Zusammenfassung kopieren",
         "copy_link": "Link kopieren",
@@ -999,7 +1000,7 @@
                 "title": "RCL (Serie)"
             },
             "invalid": "Eingaben prüfen — kein gültiges Ergebnis",
-            "eseries": "Nächster E24",
+            "eseries": "Nächster",
             "led": {
                 "title": "LED-Vorwiderstand",
                 "vs": "Versorgungsspannung (V)",

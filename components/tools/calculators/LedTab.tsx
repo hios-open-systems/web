@@ -1,20 +1,21 @@
 import { Card, InputNumber } from 'antd';
 import styles from '../embeddedCalculators.module.css';
 import { ResultBar, Field } from './Primitives';
-import { formatOhm, nearestE24 } from './calc';
+import { formatOhm } from './calc';
+import { nearestStandard } from './eseries';
 import { LedSchematic } from './viz/circuits';
 import type { CalculatorState } from './useCalculatorState';
 
 export function LedTab({ c }: { c: CalculatorState }) {
   const { t } = c;
-  const e24 = nearestE24(c.led.resistance);
+  const std = nearestStandard(c.led.resistance, c.eSeries);
   return (
     <Card title={t('cards.led.title')} style={c.calcCardStyle} styles={{ body: c.calcCardBodyStyle }}>
       <ResultBar
         label={t('cards.led.r')}
         value={formatOhm(c.led.resistance)}
         hint={`${t('cards.led.p')}: ${(c.led.power * 1000).toFixed(1)} mW${
-          e24 ? ` · ${t('cards.eseries')}: ${formatOhm(e24)}` : ''
+          std ? ` · ${t('cards.eseries')} ${c.eSeries}: ${formatOhm(std)}` : ''
         }`}
         invalid={!c.led.valid}
         invalidText={t('cards.invalid')}
