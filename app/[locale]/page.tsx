@@ -15,6 +15,16 @@ const HeroSection = dynamic(
   { ssr: true },
 );
 
+const HomeToolDeepLink = dynamic(
+  () => import('@/components/landing/HomeToolDeepLink').then((mod) => ({ default: mod.HomeToolDeepLink })),
+  { ssr: true },
+);
+
+const ToolShowcase = dynamic(
+  () => import('@/components/landing/ToolShowcase').then((mod) => ({ default: mod.ToolShowcase })),
+  { ssr: true },
+);
+
 const ProjectsGrid = dynamic(
   () => import('@/components/landing/ProjectsGrid').then((mod) => ({ default: mod.ProjectsGrid })),
   { ssr: true },
@@ -24,7 +34,9 @@ export default function Home({ params: { locale } }: { params: { locale: string 
   setRequestLocale(locale);
   return (
     <main>
+      <HomeToolDeepLink />
       <HeroSection />
+      <ToolShowcase />
       <ProjectsGrid />
     </main>
   );

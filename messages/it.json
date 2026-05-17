@@ -1,5 +1,9 @@
 {
     "Hero": {
+        "showcaseTitle": "Gli strumenti",
+        "showcaseSubtitle": "Tutto gira nel browser. Scegline uno o lascia decidere il caso.",
+        "showcaseRandomCta": "Aprine uno a caso",
+        "showcaseToolCount": "strumenti",
         "titlePrefix": "Open",
         "black": "Nero",
         "brown": "Marrone",
