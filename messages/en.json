@@ -657,7 +657,10 @@
         "landing": {
             "badge": "Product layer",
             "title": "Workbench",
-            "subtitle": "Small but frequent tools deserve real structure. Validation, generation, and testing keep the catalog useful as it grows.",
+            "subtitle": "Small but frequent tools, ready in one click. No categories, no gates — you walk in and the tool you need is right there.",
+            "randomCta": "Open a random one",
+            "allToolsTitle": "All tools",
+            "allToolsSubtitle": "One grid, no levels. Click and go.",
             "primaryCta": "Open validation",
             "secondaryCta": "Open generation",
             "panelTitle": "Enter through a clear section",

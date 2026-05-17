@@ -656,7 +656,10 @@
         "landing": {
             "badge": "Capa de producto",
             "title": "Workbench",
-            "subtitle": "Las herramientas chicas pero frecuentes necesitan una estructura real. Validación, generación y tests mantienen útil el catálogo mientras crece.",
+            "subtitle": "Herramientas chicas pero frecuentes, listas al toque. Sin categorías ni gates: entrás y la tool que necesitás está ahí.",
+            "randomCta": "Abrir una al azar",
+            "allToolsTitle": "Todas las tools",
+            "allToolsSubtitle": "Una grilla, sin niveles. Tocá y listo.",
             "primaryCta": "Abrir validación",
             "secondaryCta": "Abrir generación",
             "panelTitle": "Entrá por una sección clara",
