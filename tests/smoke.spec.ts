@@ -34,14 +34,24 @@ test.describe('Home', () => {
         await expect(page).toHaveURL(/\/es\/workbench\/?$/);
     });
 
-    test('hero spotlight rota tools (no clavado en JWT)', async ({ page }) => {
+    test('el showcase lista todas las tools en la home', async ({ page }) => {
         await page.goto('/es');
-        await expect(page.getByText('Tool destacada')).toBeVisible();
-        await expect(page.getByRole('link', { name: /Abrir tool/i })).toBeVisible();
-        // Rotar no debe romper el card.
-        await page.getByRole('button', { name: /Siguiente/i }).click();
-        await page.getByRole('button', { name: /Al azar/i }).click();
-        await expect(page.getByText('Tool destacada')).toBeVisible();
+        for (const name of ALL_TOOL_NAMES) {
+            await expect(page.getByText(name, { exact: true }).first()).toBeVisible();
+        }
+    });
+
+    test('botón al azar del showcase abre una tool', async ({ page }) => {
+        await page.goto('/es');
+        await page.getByRole('link', { name: /Abrir una al azar/i }).first().click();
+        await expect(page).toHaveURL(/\/es\/workbench\/[a-z-]+$/);
+    });
+
+    test('?tool= en la home abre la tool directo (deep-link y random)', async ({ page }) => {
+        await page.goto('/es?tool=jwt-decode');
+        await expect(page).toHaveURL(/\/es\/workbench\/jwt-decode/);
+        await page.goto('/es?tool=random');
+        await expect(page).toHaveURL(/\/es\/workbench\/[a-z-]+$/);
     });
 });
 
