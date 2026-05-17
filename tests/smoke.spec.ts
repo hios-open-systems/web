@@ -86,6 +86,20 @@ test.describe('Workbench', () => {
         await expect(page).toHaveURL(/\/es\/workbench\/jwt-decode/);
     });
 
+    test('tool chaining: Payload Lab manda el JSON al Type Checker', async ({ page }) => {
+        await page.goto('/es/workbench/payload');
+        await page.getByRole('button', { name: /Mandar a/i }).click();
+        await page.getByRole('menuitem', { name: /como valor/i }).click();
+        await expect(page).toHaveURL(/\/es\/workbench\/type-checker\?value=/);
+    });
+
+    test('tool chaining: Object→Types manda los tipos al Type Checker', async ({ page }) => {
+        await page.goto('/es/workbench/object-to-types');
+        await page.getByRole('button', { name: /Mandar a/i }).click();
+        await page.getByRole('menuitem', { name: /como tipos/i }).click();
+        await expect(page).toHaveURL(/\/es\/workbench\/type-checker\?types=/);
+    });
+
     test('guía "Cómo se usa" se expande con pasos', async ({ page }) => {
         await page.goto('/es/workbench/type-checker');
         const toggle = page.getByRole('button', { name: /Cómo se usa/i });
