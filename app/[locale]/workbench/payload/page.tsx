@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 import { PayloadLab } from '@/components/workbench/PayloadLab';
+import { ToolPager } from '@/components/workbench/ToolPager';
 import { Suspense } from 'react';
 
 export const metadata: Metadata = {
@@ -23,6 +24,7 @@ export default async function PayloadPage({ params }: PageProps) {
       <Suspense fallback={null}>
         <PayloadLab />
       </Suspense>
+      <ToolPager currentId="payload" />
     </main>
   );
 }
