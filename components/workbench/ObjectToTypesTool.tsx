@@ -78,6 +78,7 @@ export function ObjectToTypesTool() {
         title={t('title')}
         description={t('subtitle')}
         locality="local"
+        guideId="objectToTypes"
         actions={
           <Space wrap>
             <Button icon={<ReloadOutlined />} onClick={() => {

@@ -3,6 +3,7 @@
 import React from 'react';
 import { Typography } from 'antd';
 import { LocalityBadge, type Locality } from './LocalityBadge';
+import { ToolGuide } from './ToolGuide';
 import styles from './workbench.module.css';
 
 const { Title, Paragraph } = Typography;
@@ -14,6 +15,8 @@ interface ToolHeaderProps {
   locality: Locality;
   /** Action buttons (load example, clear, copy, …). */
   actions?: React.ReactNode;
+  /** Key into Workbench.guides.* — renders a collapsible "how to use" panel. */
+  guideId?: string;
 }
 
 /**
@@ -27,6 +30,7 @@ export function ToolHeader({
   description,
   locality,
   actions,
+  guideId,
 }: ToolHeaderProps) {
   return (
     <header className={styles.toolHeader}>
@@ -39,6 +43,7 @@ export function ToolHeader({
       </Title>
       <Paragraph className={styles.toolHeaderDescription}>{description}</Paragraph>
       {actions ? <div className={styles.toolHeaderActions}>{actions}</div> : null}
+      {guideId ? <ToolGuide guideId={guideId} /> : null}
     </header>
   );
 }

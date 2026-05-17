@@ -526,6 +526,90 @@
         "accountFootnote": "Changes still apply locally first, but your account copy becomes the source for future devices."
     },
     "Workbench": {
+        "guides": {
+            "_label": "How to use",
+            "payload": {
+                "intro": "Format, inspect and share JSON — everything stays in your browser.",
+                "steps": [
+                    "Paste or type JSON into the editor.",
+                    "Use Prettify / Minify and the path explorer to navigate it.",
+                    "Click “Share link” to copy a URL that reproduces this exact payload."
+                ],
+                "tip": "The payload travels inside the URL — great for bug reports, but don’t share secrets that way."
+            },
+            "typeChecker": {
+                "intro": "Check whether a JSON value is assignable to a TypeScript type, fully in the browser.",
+                "steps": [
+                    "Define your interfaces / types in the type panel.",
+                    "Set the root type name to validate against.",
+                    "Paste the JSON value and press Check to see diagnostics."
+                ],
+                "tip": "Load the example to see a passing case, then tweak the JSON to watch diagnostics appear."
+            },
+            "jwtPlayground": {
+                "intro": "Decode, sign and verify JWTs (HS, RS, ES) without anything leaving your machine.",
+                "steps": [
+                    "Paste a token to decode the header and payload instantly.",
+                    "Switch to Encode to build and sign a new token.",
+                    "Use Verify with the secret or public key to confirm the signature."
+                ],
+                "tip": "For RS/ES you can generate a demo key pair — the keys never leave the browser."
+            },
+            "dnsLookup": {
+                "intro": "Inspect live DNS records (A, AAAA, MX, TXT, NS, CNAME) for any domain.",
+                "steps": [
+                    "Enter a domain name.",
+                    "Pick the record type you want to query.",
+                    "Read the resolved records; change the type to compare."
+                ],
+                "tip": "TXT records are where SPF, DKIM and verification tokens usually live."
+            },
+            "certificateCheck": {
+                "intro": "Check a site's TLS certificate: validity dates, issuer and expiry risk.",
+                "steps": [
+                    "Enter the hostname (no https:// needed).",
+                    "Run the check.",
+                    "Review the expiry date and the risk indicator."
+                ],
+                "tip": "A short remaining validity window is the early warning for a renewal you forgot."
+            },
+            "objectToTypes": {
+                "intro": "Turn a real JSON object into TypeScript interfaces in seconds.",
+                "steps": [
+                    "Paste a representative JSON object.",
+                    "Set the root interface name.",
+                    "Copy the generated types into your codebase."
+                ],
+                "tip": "Feed the richest example you have — optional fields are inferred from what is present."
+            },
+            "randomString": {
+                "intro": "Generate random strings for tokens, IDs, demos or quick secrets.",
+                "steps": [
+                    "Choose the length and character set / options.",
+                    "Watch the live entropy estimate.",
+                    "Copy the generated value."
+                ],
+                "tip": "Higher entropy is harder to guess — aim well above 80 bits for anything sensitive."
+            },
+            "objectCompare": {
+                "intro": "Compare two JSON objects and spot structural differences fast.",
+                "steps": [
+                    "Paste the left and right objects.",
+                    "Use Swap if you mixed them up.",
+                    "Read the highlighted differences."
+                ],
+                "tip": "Great for diffing an API response before vs after a change."
+            },
+            "siteChecker": {
+                "intro": "Monitor URLs from your browser with local checks and client notifications.",
+                "steps": [
+                    "Add the URL you want to watch.",
+                    "Allow notifications if you want alerts.",
+                    "Keep the tab open; checks run client-side on an interval."
+                ],
+                "tip": "It is local-first — monitoring stops when you close the tab, nothing runs server-side."
+            }
+        },
         "signals": {
             "localFirst": "Local-first and private",
             "shareable": "Shareable sessions",

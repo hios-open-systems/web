@@ -110,6 +110,7 @@ export function CertificateCheckTool() {
         title={t('title')}
         description={t('subtitle')}
         locality="network"
+        guideId="certificateCheck"
         actions={
           <Space wrap>
             <Button icon={<SafetyCertificateOutlined />} loading={loading} onClick={() => void inspectCertificate()}>{t('inspect')}</Button>
