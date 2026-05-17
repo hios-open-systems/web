@@ -32,30 +32,25 @@ export function WorkbenchLanding() {
 
   return (
     <div className={styles.page}>
-      <section className={styles.landingHero}>
-        <div className={styles.heroCopy}>
-          <span className={styles.heroBadge}>{t('landing.badge')}</span>
-          <h1 className={styles.pageTitle}>{t('landing.title')}</h1>
-          <p className={styles.pageSubtitle}>{t('landing.subtitle')}</p>
-          <div className={styles.heroActions}>
-            <Link href={randomHref} className={styles.heroPrimaryCta}>
-              {t('landing.randomCta')} <ThunderboltOutlined />
-            </Link>
+      <header className={styles.landingHeaderCompact}>
+        <div className={styles.landingHeaderRow}>
+          <div className={styles.landingHeaderLeft}>
+            <span className={styles.heroBadge}>{t('landing.badge')}</span>
+            <h1 className={styles.pageTitleCompact}>{t('landing.title')}</h1>
+            <span className={styles.pageMetaInline}>
+              {visibleTools.length} {t('sectionToolCount')}
+            </span>
           </div>
-          <span className={styles.pageMeta}>
-            {visibleTools.length} {t('sectionToolCount')}
-          </span>
+          <Link href={randomHref} className={styles.heroPrimaryCta}>
+            {t('landing.randomCta')} <ThunderboltOutlined />
+          </Link>
         </div>
-      </section>
-
-      <div className={styles.sectionIntro}>
-        <h2 className={styles.sectionIntroTitle}>{t('landing.allToolsTitle')}</h2>
-        <p className={styles.sectionIntroSubtitle}>{t('landing.allToolsSubtitle')}</p>
-      </div>
+        <p className={styles.pageSubtitle}>{t('landing.subtitle')}</p>
+      </header>
 
       <ToolGrid tools={visibleTools} />
 
-      <section className={styles.principlesSection}>
+      <section className={`${styles.principlesSection} ${styles.principlesMuted}`}>
         <div className={styles.sectionIntro}>
           <h2 className={styles.sectionIntroTitle}>{t('landing.principlesTitle')}</h2>
           <p className={styles.sectionIntroSubtitle}>{t('landing.principlesSubtitle')}</p>
