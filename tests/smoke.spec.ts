@@ -25,7 +25,7 @@ const ALL_TOOL_NAMES = [
 test.describe('Home', () => {
     test('renderiza el hero con la nueva copy', async ({ page }) => {
         await page.goto('/es');
-        await expect(page.getByRole('heading', { level: 1 })).toContainText('patio de juegos');
+        await expect(page.getByRole('heading', { level: 1 })).toContainText('mesa de trabajo');
     });
 
     test('CTA primaria lleva al workbench', async ({ page }) => {
