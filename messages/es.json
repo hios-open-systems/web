@@ -548,6 +548,11 @@
         "delete": "Eliminar",
         "defaultName": "Preset {n}"
     },
+    "Chain": {
+        "sendTo": "Mandar a",
+        "asValue": "como valor",
+        "asTypes": "como tipos"
+    },
     "Workbench": {
         "guides": {
             "_label": "Cómo se usa",

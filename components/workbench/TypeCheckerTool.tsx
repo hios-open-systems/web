@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Card, Col, Input, Row, Space, Tag, Typography } from 'antd';
 import { ClearOutlined, ReloadOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
+import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { runBrowserTypeCheck, type TypeCheckResult } from '@/lib/workbench/typecheck';
@@ -48,6 +49,7 @@ export function TypeCheckerTool() {
   const [valueSource, setValueSource] = useState(EXAMPLE_VALUE);
   const [result, setResult] = useState<TypeCheckResult>(EMPTY_RESULT);
   const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams();
 
   const runCheck = useCallback(async (types: string, value: string, root: string) => {
     setLoading(true);
@@ -60,8 +62,19 @@ export function TypeCheckerTool() {
   }, []);
 
   useEffect(() => {
+    // Tool chaining: another tool may hand us a value/types via the URL.
+    const injectedValue = searchParams.get('value');
+    const injectedTypes = searchParams.get('types');
+    if (injectedValue !== null || injectedTypes !== null) {
+      const types = injectedTypes ?? EXAMPLE_TYPES;
+      const value = injectedValue ?? EXAMPLE_VALUE;
+      setTypeSource(types);
+      setValueSource(value);
+      void runCheck(types, value, 'ApiResponse');
+      return;
+    }
     void runCheck(EXAMPLE_TYPES, EXAMPLE_VALUE, 'ApiResponse');
-  }, [runCheck]);
+  }, [runCheck, searchParams]);
 
   const themeVars = {
     '--wb-surface-border': mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.08)',

@@ -448,6 +448,11 @@
         "delete": "Löschen",
         "defaultName": "Preset {n}"
     },
+    "Chain": {
+        "sendTo": "Senden an",
+        "asValue": "als Wert",
+        "asTypes": "als Typen"
+    },
     "Workbench": {
         "guides": {
             "_label": "Anleitung",
