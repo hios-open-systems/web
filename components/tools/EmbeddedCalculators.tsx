@@ -2,6 +2,7 @@
 
 import { Button, Space, Segmented, Tabs, Typography } from 'antd';
 import { ToolHeader } from '@/components/workbench/ToolHeader';
+import { UrlPresets } from '@/components/common/UrlPresets';
 import styles from './embeddedCalculators.module.css';
 import { PresetId, TabKey, useCalculatorState } from './calculators/useCalculatorState';
 import { LedTab } from './calculators/LedTab';
@@ -68,7 +69,8 @@ export function EmbeddedCalculators() {
             ]}
           />
         </Space>
-        <Space>
+        <Space wrap>
+          <UrlPresets storageKey="calculators" />
           <Button onClick={c.copySummary} style={{ borderRadius: 10 }}>{t('copy_summary')}</Button>
           <Button onClick={c.copyShareLink} style={{ borderRadius: 10 }}>{t('copy_link')}</Button>
         </Space>
