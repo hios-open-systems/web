@@ -306,6 +306,13 @@ test.describe('Calculators', () => {
         }
     });
 
+    test('preset base (Plantillas) aplica valores', async ({ page }) => {
+        await page.goto('/es/calculators?tab=runtime');
+        await page.getByRole('button', { name: /Presets/i }).click();
+        await page.getByRole('menuitem', { name: /Bajo Consumo/i }).click();
+        await expect(page).toHaveURL(/avgCurrent=80/);
+    });
+
     test('presets local-first: guardar y recargar restablece el estado', async ({ page }) => {
         await page.goto('/es/calculators?tab=rc&rcR=4700');
         await page.getByRole('button', { name: /Guardar preset/i }).click();
