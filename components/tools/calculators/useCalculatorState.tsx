@@ -17,16 +17,6 @@ export type PresetId =
   | 'rgb-led'
   | 'buck-3v3';
 
-export const PRESET_IDS: PresetId[] = [
-  'custom',
-  'esp32-adc',
-  'audio-44k',
-  'audio-48k',
-  'low-power',
-  'rgb-led',
-  'buck-3v3',
-];
-
 export type TabKey =
   | 'led'
   | 'cap'
@@ -102,7 +92,6 @@ export function useCalculatorState() {
   const [bitDepth, setBitDepth] = useState(16);
   const [channels, setChannels] = useState(2);
   const [mclkMult, setMclkMult] = useState(256);
-  const [preset, setPreset] = useState<PresetId>('custom');
   const [activeTab, setActiveTab] = useState<TabKey>('led');
 
   const [band1, setBand1] = useState('2');
@@ -203,13 +192,8 @@ export function useCalculatorState() {
       return Number.isFinite(parsed) ? parsed : fallback;
     };
     const parseString = (key: string, fallback: string) => searchParams.get(key) ?? fallback;
-    const presetParam = parseString('preset', 'custom');
-    const allowedPresets: string[] = PRESET_IDS;
     const tabParam = parseString('tab', 'led');
 
-    if (allowedPresets.includes(presetParam)) {
-      setPreset(presetParam as PresetId);
-    }
     if ((ALLOWED_TABS as string[]).includes(tabParam)) {
       setActiveTab(tabParam as TabKey);
     }
@@ -264,7 +248,6 @@ export function useCalculatorState() {
     if (!hydratedFromUrl.current) return;
 
     const params = new URLSearchParams(searchParams.toString());
-    params.set('preset', preset);
     params.set('tab', activeTab);
     params.set('supply', String(supply));
     params.set('ledVf', String(ledVf));
@@ -310,7 +293,7 @@ export function useCalculatorState() {
       router.replace(`${pathname}?${nextQuery}`, { scroll: false });
     }
   }, [
-    searchParams, router, pathname, preset, activeTab, supply, ledVf, ledCurrent,
+    searchParams, router, pathname, activeTab, supply, ledVf, ledCurrent,
     rippleCurrent, rippleDeltaV, rippleFreq, powerV, powerI, thetaJa, ambient,
     batteryMah, avgCurrent, efficiency, vinMax, vadcMax, rBottomK, rcR, rcC,
     targetFc, rlR, rlL, rlTargetFc, rclR, rclL, rclC, rclF, rf, rg, sampleRate, bitDepth, channels, mclkMult, band1, band2,
@@ -318,7 +301,6 @@ export function useCalculatorState() {
   ]);
 
   const applyPreset = (value: PresetId) => {
-    setPreset(value);
     if (value === 'rgb-led') {
       setSupply(5); setLedVf(3.2); setLedCurrent(20);
       return;
@@ -389,7 +371,7 @@ export function useCalculatorState() {
   return {
     t, palette, contextHolder,
     calcCardStyle, calcCardBodyStyle, inputStyle,
-    preset, applyPreset, activeTab, setActiveTab,
+    applyPreset, activeTab, setActiveTab,
     copySummary, copyShareLink,
     // led
     supply, setSupply, ledVf, setLedVf, ledCurrent, setLedCurrent, led,
