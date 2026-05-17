@@ -15,6 +15,8 @@ export type WorkbenchToolId =
 
 export type WorkbenchIcon = 'data' | 'notes' | 'circuits' | 'shield' | 'spark' | 'compare' | 'network';
 
+export type WorkbenchLocality = 'local' | 'network';
+
 export interface WorkbenchSection {
   id: WorkbenchSectionId;
     href: string;
@@ -28,6 +30,7 @@ export interface WorkbenchTool {
   href: string;
   accent: string;
   icon: WorkbenchIcon;
+  locality: WorkbenchLocality;
   featured?: boolean;
   external?: boolean;
 }
@@ -59,6 +62,7 @@ export const workbenchSections: WorkbenchSection[] = [
 export const workbenchTools: WorkbenchTool[] = [
   {
     id: 'payload',
+    locality: 'local',
     sectionId: 'validation',
     href: '/workbench/payload',
     accent: '#0ea5e9',
@@ -67,6 +71,7 @@ export const workbenchTools: WorkbenchTool[] = [
   },
   {
     id: 'type-checker',
+    locality: 'local',
     sectionId: 'validation',
     href: '/workbench/type-checker',
     accent: '#14b8a6',
@@ -75,6 +80,7 @@ export const workbenchTools: WorkbenchTool[] = [
   },
   {
     id: 'jwt-decode',
+    locality: 'local',
     sectionId: 'validation',
     href: '/workbench/jwt-decode',
     accent: '#38bdf8',
@@ -83,6 +89,7 @@ export const workbenchTools: WorkbenchTool[] = [
   },
   {
     id: 'dns-lookup',
+    locality: 'network',
     sectionId: 'validation',
     href: '/workbench/dns-lookup',
     accent: '#06b6d4',
@@ -91,6 +98,7 @@ export const workbenchTools: WorkbenchTool[] = [
   },
   {
     id: 'certificate-check',
+    locality: 'network',
     sectionId: 'validation',
     href: '/workbench/certificate-check',
     accent: '#3b82f6',
@@ -99,6 +107,7 @@ export const workbenchTools: WorkbenchTool[] = [
   },
   {
     id: 'object-to-types',
+    locality: 'local',
     sectionId: 'generation',
     href: '/workbench/object-to-types',
     accent: '#f97316',
@@ -107,6 +116,7 @@ export const workbenchTools: WorkbenchTool[] = [
   },
   {
     id: 'random-string',
+    locality: 'local',
     sectionId: 'generation',
     href: '/workbench/random-string',
     accent: '#f59e0b',
@@ -115,6 +125,7 @@ export const workbenchTools: WorkbenchTool[] = [
   },
   {
     id: 'object-compare',
+    locality: 'local',
     sectionId: 'testing',
     href: '/workbench/object-compare',
     accent: '#22c55e',
@@ -122,6 +133,7 @@ export const workbenchTools: WorkbenchTool[] = [
   },
   {
     id: 'site-checker',
+    locality: 'network',
     sectionId: 'testing',
     href: '/workbench/site-checker',
     accent: '#10b981',
@@ -130,6 +142,7 @@ export const workbenchTools: WorkbenchTool[] = [
   },
   {
     id: 'snippets',
+    locality: 'local',
     sectionId: 'generation',
     href: '/workbench/snippets',
     accent: '#fbbf24',
@@ -137,6 +150,7 @@ export const workbenchTools: WorkbenchTool[] = [
   },
   {
     id: 'embedded',
+    locality: 'local',
     sectionId: 'testing',
     href: '/calculators',
     accent: '#22c55e',

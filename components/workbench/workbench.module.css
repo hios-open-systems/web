@@ -468,6 +468,34 @@
   color: #94a3b8;
 }
 
+/* Vertical tool card (shared by workbench landing + home showcase):
+ * icon+name row, description, then a footer with badge + CTA. */
+.toolCardV {
+  flex-direction: column;
+  gap: 10px;
+}
+.toolCardHeadRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.toolCardV .toolName {
+  font-size: 15px;
+  font-weight: 700;
+}
+.toolCardV .toolDescription {
+  flex: 1;
+}
+.toolCardFootRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 2px;
+}
+
 .sectionHeroCard {
   display: flex;
   flex-direction: column;
