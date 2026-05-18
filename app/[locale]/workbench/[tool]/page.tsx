@@ -10,6 +10,7 @@ import { HashDigestTool } from '@/components/workbench/HashDigestTool';
 import { EncoderTool } from '@/components/workbench/EncoderTool';
 import { UuidUlidTool } from '@/components/workbench/UuidUlidTool';
 import { RegexTesterTool } from '@/components/workbench/RegexTesterTool';
+import { TextDiffTool } from '@/components/workbench/TextDiffTool';
 import { RandomStringTool } from '@/components/workbench/RandomStringTool';
 import { SiteCheckerTool } from '@/components/workbench/SiteCheckerTool';
 import { TypeCheckerTool } from '@/components/workbench/TypeCheckerTool';
@@ -52,6 +53,10 @@ const metadataMap: Record<string, Metadata> = {
   'regex': {
     title: 'Regex Tester | HIOS Workbench',
     description: 'Probá expresiones regulares con matches, grupos y replace, en el navegador.',
+  },
+  'text-diff': {
+    title: 'Text Diff | HIOS Workbench',
+    description: 'Compará dos textos línea por línea (LCS) enteramente en el navegador.',
   },
   'object-to-types': {
     title: 'Object to Types | HIOS Workbench',
@@ -102,6 +107,8 @@ function renderTool(toolId: WorkbenchToolId) {
       return <UuidUlidTool />;
     case 'regex':
       return <RegexTesterTool />;
+    case 'text-diff':
+      return <TextDiffTool />;
     case 'object-to-types':
       return <ObjectToTypesTool />;
     case 'random-string':
