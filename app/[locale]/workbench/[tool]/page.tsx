@@ -9,6 +9,7 @@ import { ObjectComparatorTool } from '@/components/workbench/ObjectComparatorToo
 import { HashDigestTool } from '@/components/workbench/HashDigestTool';
 import { EncoderTool } from '@/components/workbench/EncoderTool';
 import { UuidUlidTool } from '@/components/workbench/UuidUlidTool';
+import { RegexTesterTool } from '@/components/workbench/RegexTesterTool';
 import { RandomStringTool } from '@/components/workbench/RandomStringTool';
 import { SiteCheckerTool } from '@/components/workbench/SiteCheckerTool';
 import { TypeCheckerTool } from '@/components/workbench/TypeCheckerTool';
@@ -47,6 +48,10 @@ const metadataMap: Record<string, Metadata> = {
   'uuid-ulid': {
     title: 'UUID / ULID | HIOS Workbench',
     description: 'Genera UUID v4 y ULID en lote, enteramente en el navegador.',
+  },
+  'regex': {
+    title: 'Regex Tester | HIOS Workbench',
+    description: 'Probá expresiones regulares con matches, grupos y replace, en el navegador.',
   },
   'object-to-types': {
     title: 'Object to Types | HIOS Workbench',
@@ -95,6 +100,8 @@ function renderTool(toolId: WorkbenchToolId) {
       return <EncoderTool />;
     case 'uuid-ulid':
       return <UuidUlidTool />;
+    case 'regex':
+      return <RegexTesterTool />;
     case 'object-to-types':
       return <ObjectToTypesTool />;
     case 'random-string':

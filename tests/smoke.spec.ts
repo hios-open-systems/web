@@ -23,6 +23,7 @@ const ALL_TOOL_NAMES = [
     'Hash & Digest',
     'Encoder / Decoder',
     'UUID / ULID',
+    'Regex Tester',
 ];
 
 test.describe('Home', () => {
@@ -162,6 +163,13 @@ test.describe('Workbench', () => {
         await expect(
             page.getByText('d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592'),
         ).toBeVisible({ timeout: 10_000 });
+    });
+
+    test('Regex Tester matchea el ejemplo por defecto', async ({ page }) => {
+        await page.goto('/es/workbench/regex');
+        // El patrón de email por defecto debe matchear ambos correos del texto.
+        await expect(page.getByText('juan@openhios.dev').first()).toBeVisible({ timeout: 10_000 });
+        await expect(page.getByText('soporte@example.com').first()).toBeVisible();
     });
 
     test('UUID/ULID genera UUIDs al cargar', async ({ page }) => {

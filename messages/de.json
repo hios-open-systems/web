@@ -459,6 +459,21 @@
         "asTypes": "als Typen"
     },
     "Workbench": {
+        "regex": {
+            "badge": "Test-Tool",
+            "title": "Regex-Tester",
+            "subtitle": "Match, Capture und Replace mit JavaScript-Regex, im Browser.",
+            "patternPlaceholder": "Muster",
+            "flagsPlaceholder": "Flags",
+            "inputLabel": "Testtext",
+            "matchesLabel": "Treffer",
+            "groupsLabel": "Gruppen",
+            "noMatches": "Keine Treffer",
+            "invalidPattern": "Ungültiges Muster",
+            "replaceLabel": "Replace-Vorschau",
+            "replacePlaceholder": "Ersetzung ($1, $<name>)",
+            "replaceHint": "Ersetzung eingeben für die Vorschau"
+        },
         "uuidUlid": {
             "badge": "Generierungs-Tool",
             "title": "UUID / ULID",
@@ -504,6 +519,15 @@
             "empty": "Tippe etwas, um den Digest zu sehen"
         },
         "guides": {
+            "regex": {
+                "intro": "Teste einen regulären Ausdruck gegen Text, sieh Treffer/Gruppen und eine Replace-Vorschau — lokal.",
+                "steps": [
+                    "Muster und Flags schreiben (g, i, m, s, u, y).",
+                    "Testtext einfügen.",
+                    "Treffer und Gruppen prüfen; Ersetzung testen."
+                ],
+                "tip": "Flag g liefert alle Treffer; benannte Gruppen erscheinen neben den nummerierten."
+            },
             "uuidUlid": {
                 "intro": "Erzeuge lokal UUID-v4- (zufällig) oder ULID- (sortierbar, zeitpräfixiert) IDs.",
                 "steps": [
@@ -676,6 +700,10 @@
         "pagerPrev": "Zurück",
         "pagerNext": "Weiter",
         "packs": {
+            "regex": {
+                "title": "Regex-Tester",
+                "description": "Reguläre Ausdrücke mit Live-Treffern, Gruppen und Replace im Browser testen."
+            },
             "uuid-ulid": {
                 "title": "UUID / ULID",
                 "description": "UUID-v4- und ULID-IDs stapelweise im Browser erzeugen."

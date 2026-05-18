@@ -12,6 +12,7 @@ export type WorkbenchToolId =
   | 'encoder'
   | 'uuid-ulid'
   | 'object-compare'
+  | 'regex'
   | 'site-checker'
   | 'snippets'
   | 'embedded';
@@ -160,6 +161,15 @@ export const workbenchTools: WorkbenchTool[] = [
     href: '/workbench/object-compare',
     accent: '#22c55e',
     icon: 'compare',
+  },
+  {
+    id: 'regex',
+    locality: 'local',
+    sectionId: 'testing',
+    href: '/workbench/regex',
+    accent: '#22c55e',
+    icon: 'compare',
+    featured: true,
   },
   {
     id: 'site-checker',
