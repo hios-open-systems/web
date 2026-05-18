@@ -35,6 +35,18 @@ export function getCallbackUrl(): string {
     return `${getAuthBaseUrl()}/api/auth/github/callback`;
 }
 
+/**
+ * Sanitiza un destino post-login. Solo permite rutas internas absolutas.
+ * Rechaza protocol-relative (`//host`) y el truco de backslash (`/\host`),
+ * que `startsWith('/')` dejaba pasar y `new URL()` resolvía a otro dominio.
+ */
+export function safeNextPath(value: string | null | undefined): string {
+    if (!value || value[0] !== '/') return '/';
+    const second = value[1];
+    if (second === '/' || second === '\\') return '/';
+    return value;
+}
+
 export function generateOAuthState(): string {
     const bytes = new Uint8Array(16);
     crypto.getRandomValues(bytes);

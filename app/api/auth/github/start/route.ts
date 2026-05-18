@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import {
     buildGithubAuthorizeUrl,
     generateOAuthState,
+    safeNextPath,
 } from '@/lib/auth/github';
 
 export const runtime = 'edge';
@@ -12,8 +13,7 @@ const STATE_TTL = 60 * 10; // 10 min
 
 export async function GET(request: NextRequest) {
     const url = new URL(request.url);
-    const next = url.searchParams.get('next');
-    const safeNext = next && next.startsWith('/') ? next : '/';
+    const safeNext = safeNextPath(url.searchParams.get('next'));
     const state = generateOAuthState();
 
     const authorizeUrl = buildGithubAuthorizeUrl(state, safeNext);

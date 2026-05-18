@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { exchangeCodeForToken, fetchGithubProfile } from '@/lib/auth/github';
+import { exchangeCodeForToken, fetchGithubProfile, safeNextPath } from '@/lib/auth/github';
 import { getDb } from '@/lib/db';
 import {
     SESSION_COOKIE,
@@ -38,10 +38,12 @@ export async function GET(request: NextRequest) {
         const user = await upsertUserFromGithub(db, profile);
         const session = await createSession(db, user.id);
 
-        const target = new URL(
-            nextCookie && nextCookie.startsWith('/') ? nextCookie : '/',
-            request.url,
-        );
+        const requestOrigin = new URL(request.url).origin;
+        const target = new URL(safeNextPath(nextCookie), request.url);
+        // Belt-and-suspenders: never leave our own origin post-login.
+        if (target.origin !== requestOrigin) {
+            target.href = `${requestOrigin}/`;
+        }
         const response = NextResponse.redirect(target);
 
         response.cookies.set(SESSION_COOKIE, session.id, {
