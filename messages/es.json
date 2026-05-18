@@ -561,6 +561,27 @@
         "asTypes": "como tipos"
     },
     "Workbench": {
+        "mermaid": {
+            "badge": "Herramienta de generación",
+            "title": "Diagramas Mermaid",
+            "subtitle": "Editor Mermaid en vivo + render SVG, enteramente en tu navegador.",
+            "exportSvg": "Exportar SVG",
+            "exportError": "No se pudo exportar",
+            "templatesLabel": "Templates",
+            "templates": {
+                "flowchart": "Flowchart",
+                "sequence": "Secuencia",
+                "class": "Clase / UML",
+                "state": "Estados",
+                "er": "ER",
+                "gitgraph": "Git graph"
+            },
+            "codeLabel": "Código del diagrama",
+            "previewLabel": "Vista previa",
+            "invalid": "Diagrama inválido",
+            "empty": "Escribí un diagrama para previsualizar",
+            "parseError": "No se pudo parsear el diagrama"
+        },
         "textDiff": {
             "badge": "Herramienta de testing",
             "title": "Text Diff",
@@ -631,6 +652,15 @@
             "empty": "Escribí algo para ver su digest"
         },
         "guides": {
+            "mermaid": {
+                "intro": "Escribí sintaxis Mermaid y mirá el diagrama renderizar en vivo — todo local, compartible por URL.",
+                "steps": [
+                    "Elegí un template o escribí tu propio código de diagrama.",
+                    "La preview se re-renderiza mientras escribís.",
+                    "Exportá el SVG o copiá el enlace para compartir."
+                ],
+                "tip": "Corre con securityLevel strict — sin scripts ni acciones de click en los diagramas."
+            },
             "textDiff": {
                 "intro": "Diff a nivel línea entre dos bloques de texto libre — local, nada se sube.",
                 "steps": [
@@ -815,6 +845,10 @@
         "pagerPrev": "Anterior",
         "pagerNext": "Siguiente",
         "packs": {
+            "mermaid": {
+                "title": "Mermaid Diagrams",
+                "description": "Editá y renderizá diagramas Mermaid (flowchart, secuencia, UML…) en el navegador."
+            },
             "text-diff": {
                 "title": "Text Diff",
                 "description": "Compará dos textos línea por línea (LCS) enteramente en el navegador."
