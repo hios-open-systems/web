@@ -99,9 +99,13 @@ test.describe('Workbench', () => {
         }
     });
 
-    test('header compacto: el grid de tools se ve sin scroll', async ({ page }) => {
+    test('menú agrupado por sección con navegación', async ({ page }) => {
         await page.goto('/es/workbench');
-        await expect(page.getByText('Payload Lab', { exact: true }).first()).toBeInViewport();
+        await expect(page.getByRole('heading', { name: 'Validación', level: 2 })).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'Generación', level: 2 })).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'Tests', level: 2 })).toBeVisible();
+        await page.getByRole('link', { name: /Payload Lab/i }).first().click();
+        await expect(page).toHaveURL(/\/es\/workbench\/payload/);
     });
 
     test('rutas de sección viejas redirigen al workbench plano', async ({ page }) => {
