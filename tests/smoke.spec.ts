@@ -20,6 +20,7 @@ const ALL_TOOL_NAMES = [
     'Object Comparator',
     'Site Checker',
     'Snippets Shelf',
+    'Hash & Digest',
 ];
 
 test.describe('Home', () => {
@@ -152,6 +153,13 @@ test.describe('Workbench', () => {
         await page.goto('/es/workbench/random-string');
         // Esperamos al menos un valor monoespaciado en la lista de resultados.
         await expect(page.locator('text=/[A-Za-z0-9]{16,}/').first()).toBeVisible({ timeout: 10_000 });
+    });
+
+    test('Hash & Digest calcula SHA-256 del ejemplo', async ({ page }) => {
+        await page.goto('/es/workbench/hash-digest');
+        await expect(
+            page.getByText('d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592'),
+        ).toBeVisible({ timeout: 10_000 });
     });
 
     test('Snippets: agregar y persistir tras reload', async ({ page }) => {

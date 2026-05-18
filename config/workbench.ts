@@ -6,6 +6,7 @@ export type WorkbenchToolId =
   | 'jwt-decode'
   | 'dns-lookup'
   | 'certificate-check'
+  | 'hash-digest'
   | 'object-to-types'
   | 'random-string'
   | 'object-compare'
@@ -102,6 +103,15 @@ export const workbenchTools: WorkbenchTool[] = [
     sectionId: 'validation',
     href: '/workbench/certificate-check',
     accent: '#3b82f6',
+    icon: 'shield',
+    featured: true,
+  },
+  {
+    id: 'hash-digest',
+    locality: 'local',
+    sectionId: 'validation',
+    href: '/workbench/hash-digest',
+    accent: '#0ea5e9',
     icon: 'shield',
     featured: true,
   },
