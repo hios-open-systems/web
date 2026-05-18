@@ -6,6 +6,7 @@ import { DnsLookupTool } from '@/components/workbench/DnsLookupTool';
 import { JwtPlaygroundTool } from '@/components/workbench/JwtPlaygroundTool';
 import { ObjectToTypesTool } from '@/components/workbench/ObjectToTypesTool';
 import { ObjectComparatorTool } from '@/components/workbench/ObjectComparatorTool';
+import { HashDigestTool } from '@/components/workbench/HashDigestTool';
 import { RandomStringTool } from '@/components/workbench/RandomStringTool';
 import { SiteCheckerTool } from '@/components/workbench/SiteCheckerTool';
 import { TypeCheckerTool } from '@/components/workbench/TypeCheckerTool';
@@ -32,6 +33,10 @@ const metadataMap: Record<string, Metadata> = {
   'certificate-check': {
     title: 'Certificate Expiry | HIOS Workbench',
     description: 'Inspecciona fechas de validez, issuer y riesgo de expiración de certificados TLS en vivo.',
+  },
+  'hash-digest': {
+    title: 'Hash & Digest | HIOS Workbench',
+    description: 'Genera digests SHA-1/256/384/512 (hex y base64) enteramente en el navegador.',
   },
   'object-to-types': {
     title: 'Object to Types | HIOS Workbench',
@@ -74,6 +79,8 @@ function renderTool(toolId: WorkbenchToolId) {
       return <DnsLookupTool />;
     case 'certificate-check':
       return <CertificateCheckTool />;
+    case 'hash-digest':
+      return <HashDigestTool />;
     case 'object-to-types':
       return <ObjectToTypesTool />;
     case 'random-string':

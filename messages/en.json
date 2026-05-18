@@ -562,7 +562,30 @@
         "asTypes": "as types"
     },
     "Workbench": {
+        "hashDigest": {
+            "badge": "Validation tool",
+            "title": "Hash & Digest",
+            "subtitle": "Cryptographic digests of any text, computed in your browser with Web Crypto.",
+            "clear": "Clear",
+            "inputLabel": "Input",
+            "inputPlaceholder": "Text to hash…",
+            "resultLabel": "Digest",
+            "hexLabel": "hex",
+            "base64Label": "base64",
+            "copied": "Digest copied",
+            "copyError": "Could not copy",
+            "empty": "Type something to see its digest"
+        },
         "guides": {
+            "hashDigest": {
+                "intro": "Compute a cryptographic digest of any text, locally — nothing is sent anywhere.",
+                "steps": [
+                    "Pick an algorithm (SHA-1/256/384/512).",
+                    "Type or paste the input text.",
+                    "Copy the hex or base64 digest."
+                ],
+                "tip": "SHA-1 is fine for checksums but not for security — prefer SHA-256+."
+            },
             "_label": "How to use",
             "snippets": {
                 "intro": "Stash and reuse code snippets — saved locally, no account needed.",
@@ -702,6 +725,10 @@
         "pagerPrev": "Previous",
         "pagerNext": "Next",
         "packs": {
+            "hash-digest": {
+                "title": "Hash & Digest",
+                "description": "Generate SHA-1/256/384/512 digests (hex and base64) entirely in your browser."
+            },
             "payload": {
                 "title": "Payload Lab",
                 "description": "Format, validate, and share JSON payloads without leaving the browser."
