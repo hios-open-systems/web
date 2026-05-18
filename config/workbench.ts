@@ -14,6 +14,7 @@ export type WorkbenchToolId =
   | 'object-compare'
   | 'regex'
   | 'text-diff'
+  | 'mermaid'
   | 'site-checker'
   | 'snippets'
   | 'embedded';
@@ -179,6 +180,15 @@ export const workbenchTools: WorkbenchTool[] = [
     href: '/workbench/text-diff',
     accent: '#10b981',
     icon: 'compare',
+    featured: true,
+  },
+  {
+    id: 'mermaid',
+    locality: 'local',
+    sectionId: 'generation',
+    href: '/workbench/mermaid',
+    accent: '#8b5cf6',
+    icon: 'circuits',
     featured: true,
   },
   {
