@@ -27,6 +27,7 @@ const ALL_TOOL_NAMES = [
     'Text Diff',
     'Mermaid Diagrams',
     'Markdown Notes',
+    'Pattern Lessons',
 ];
 
 test.describe('Home', () => {
@@ -166,6 +167,15 @@ test.describe('Workbench', () => {
         await expect(
             page.getByText('d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592'),
         ).toBeVisible({ timeout: 10_000 });
+    });
+
+    test('Pattern Lessons: corre código en el sandbox', async ({ page }) => {
+        await page.goto('/es/workbench/patterns');
+        await page.getByText('Reducer / máquina de estados', { exact: true }).click();
+        await page.getByRole('button', { name: /Correr/i }).click();
+        await expect(page.getByTestId('patterns-output')).toContainText('final state: {"n":2}', {
+            timeout: 15_000,
+        });
     });
 
     test('Notes: preview markdown y persiste tras reload', async ({ page }) => {

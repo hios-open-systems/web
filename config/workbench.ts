@@ -18,6 +18,7 @@ export type WorkbenchToolId =
   | 'site-checker'
   | 'snippets'
   | 'notes'
+  | 'patterns'
   | 'embedded';
 
 export type WorkbenchIcon = 'data' | 'notes' | 'circuits' | 'shield' | 'spark' | 'compare' | 'network';
@@ -215,6 +216,15 @@ export const workbenchTools: WorkbenchTool[] = [
     sectionId: 'generation',
     href: '/workbench/notes',
     accent: '#fbbf24',
+    icon: 'notes',
+    featured: true,
+  },
+  {
+    id: 'patterns',
+    locality: 'local',
+    sectionId: 'generation',
+    href: '/workbench/patterns',
+    accent: '#a78bfa',
     icon: 'notes',
     featured: true,
   },
