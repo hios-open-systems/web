@@ -561,6 +561,21 @@
         "asTypes": "como tipos"
     },
     "Workbench": {
+        "uuidUlid": {
+            "badge": "Herramienta de generación",
+            "title": "UUID / ULID",
+            "subtitle": "Generación en lote de UUID v4 y ULID con Web Crypto, todo en tu navegador.",
+            "regenerate": "Regenerar",
+            "copyAll": "Copiar todos",
+            "copied": "ID copiado",
+            "allCopied": "Todos los IDs copiados",
+            "copyError": "No se pudo copiar",
+            "typeUuid": "UUID v4",
+            "typeUlid": "ULID",
+            "countLabel": "Cuántos",
+            "resultLabel": "IDs generados",
+            "empty": "Tocá Regenerar para crear IDs"
+        },
         "encoder": {
             "badge": "Herramienta de generación",
             "title": "Encoder / Decoder",
@@ -591,6 +606,15 @@
             "empty": "Escribí algo para ver su digest"
         },
         "guides": {
+            "uuidUlid": {
+                "intro": "Generá IDs UUID v4 (aleatorio) o ULID (ordenable, con timestamp) en local.",
+                "steps": [
+                    "Elegí UUID o ULID.",
+                    "Definí cuántos generar.",
+                    "Copiá uno, o copiá todos."
+                ],
+                "tip": "Los ULID ordenan lexicográficamente por fecha de creación — útil para keys/logs."
+            },
             "encoder": {
                 "intro": "Convertí texto desde/hacia Base64, base64url, hex o URL — todo local.",
                 "steps": [
@@ -748,6 +772,10 @@
         "pagerPrev": "Anterior",
         "pagerNext": "Siguiente",
         "packs": {
+            "uuid-ulid": {
+                "title": "UUID / ULID",
+                "description": "Generá identificadores UUID v4 y ULID en lote, en el navegador."
+            },
             "encoder": {
                 "title": "Encoder / Decoder",
                 "description": "Base64, base64url, hex y URL encode/decode (UTF-8) en el navegador."

@@ -10,6 +10,7 @@ export type WorkbenchToolId =
   | 'object-to-types'
   | 'random-string'
   | 'encoder'
+  | 'uuid-ulid'
   | 'object-compare'
   | 'site-checker'
   | 'snippets'
@@ -140,6 +141,15 @@ export const workbenchTools: WorkbenchTool[] = [
     sectionId: 'generation',
     href: '/workbench/encoder',
     accent: '#f59e0b',
+    icon: 'spark',
+    featured: true,
+  },
+  {
+    id: 'uuid-ulid',
+    locality: 'local',
+    sectionId: 'generation',
+    href: '/workbench/uuid-ulid',
+    accent: '#fbbf24',
     icon: 'spark',
     featured: true,
   },
