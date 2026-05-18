@@ -280,6 +280,26 @@ test.describe('API /api/auth/me', () => {
         expect(typeof data.version).toBe('string');
         expect(data.version && data.version.length > 0).toBeTruthy();
     });
+    test('sitemap.xml lista rutas con todos los locales', async ({ request }) => {
+        const res = await request.get('/sitemap.xml');
+        expect(res.status()).toBe(200);
+        const body = await res.text();
+        expect(body).toContain('/en/workbench');
+        expect(body).toContain('/de/calculators');
+    });
+
+    test('robots.txt apunta al sitemap', async ({ request }) => {
+        const res = await request.get('/robots.txt');
+        expect(res.status()).toBe(200);
+        expect((await res.text()).toLowerCase()).toContain('sitemap');
+    });
+
+    test('home expone OpenGraph + canonical', async ({ page }) => {
+        await page.goto('/es');
+        await expect(page.locator('meta[property="og:title"]')).toHaveCount(1);
+        await expect(page.locator('meta[property="og:image"]')).toHaveCount(1);
+        await expect(page.locator('link[rel="canonical"]')).toHaveCount(1);
+    });
 });
 
 test.describe('Feedback inbox', () => {
