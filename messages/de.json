@@ -459,6 +459,32 @@
         "asTypes": "als Typen"
     },
     "Workbench": {
+        "patterns": {
+            "badge": "Generierungs-Tool",
+            "title": "Pattern Lessons",
+            "subtitle": "Praktische Pattern-Lektionen; Code läuft sandboxed im Browser.",
+            "run": "Ausführen",
+            "running": "Läuft…",
+            "resetCode": "Code zurücksetzen",
+            "lessonsLabel": "Lektionen",
+            "outputLabel": "Ausgabe",
+            "outputEmpty": "Code ausführen für die Ausgabe",
+            "noOutput": "(keine Ausgabe)",
+            "lessons": {
+                "debounce": {
+                    "title": "Debounce",
+                    "explain": "**Debounce** verzögert einen Aufruf, bis die Eingabe stoppt. Ein Schwall kollabiert zu einem letzten Lauf — klassisch für Suchfelder und Resize. Code bearbeiten und ausführen."
+                },
+                "reducer": {
+                    "title": "Reducer / Zustandsmaschine",
+                    "explain": "Ein **Reducer** ist eine reine `(state, action) => state`-Funktion. Keine versteckte Mutation: jede Transition ist explizit und testbar. Füge eine Aktion hinzu."
+                },
+                "promisePool": {
+                    "title": "Begrenzte Nebenläufigkeit",
+                    "explain": "Viele async-Tasks **N gleichzeitig** statt alle auf einmal — schützt Rate-Limits und Speicher. Ändere `limit` und beobachte die Reihenfolge."
+                }
+            }
+        },
         "notes": {
             "badge": "Generierungs-Tool",
             "title": "Markdown Notes",
@@ -568,6 +594,15 @@
             "empty": "Tippe etwas, um den Digest zu sehen"
         },
         "guides": {
+            "patterns": {
+                "intro": "Lerne moderne JS-Patterns durch Bearbeiten und Ausführen echten Codes — sandboxed im Browser, kein Netz, kein Zugriff auf die Seite.",
+                "steps": [
+                    "Lektion links wählen.",
+                    "Erklärung lesen, Code anpassen.",
+                    "Ausführen und Konsolenausgabe lesen."
+                ],
+                "tip": "Code läuft in einem isolierten iframe (kein same-origin) — kein Zugriff auf Session oder Seite."
+            },
             "notes": {
                 "intro": "Lange Markdown-Notizen lokal halten — im Browser gespeichert, nie hochgeladen.",
                 "steps": [
@@ -776,6 +811,10 @@
         "pagerPrev": "Zurück",
         "pagerNext": "Weiter",
         "packs": {
+            "patterns": {
+                "title": "Pattern Lessons",
+                "description": "Interaktive Lektionen zu modernen Patterns mit editierbarem Code und Sandbox-Runner."
+            },
             "notes": {
                 "title": "Markdown Notes",
                 "description": "Local-first Markdown-Notizen mit Live-Vorschau, im Browser."
