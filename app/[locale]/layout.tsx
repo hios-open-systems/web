@@ -7,14 +7,43 @@ import { getCurrentDeployVersion } from '@/lib/appVersion';
 import '@/styles/globals.css';
 
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { getMessages, getTranslations } from 'next-intl/server';
 
 // const inter = Inter({ subsets: ['latin'] });
 
-export const metadata: Metadata = {
-  title: 'HIOS Platform',
-  description: 'Open Hardware/Software Initiative',
-};
+const SITE_URL = (process.env.AUTH_BASE_URL || 'https://openhios.dev').replace(/\/$/, '');
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'Hero' });
+  const title = `HIOS — ${t('title')}`;
+  const description = t('subtitle');
+  return {
+    metadataBase: new URL(SITE_URL),
+    title,
+    description,
+    applicationName: 'HIOS',
+    alternates: {
+      canonical: `/${locale}`,
+      languages: { en: '/en', es: '/es', de: '/de', it: '/it', 'x-default': '/en' },
+    },
+    openGraph: {
+      type: 'website',
+      siteName: 'HIOS',
+      url: `${SITE_URL}/${locale}`,
+      title,
+      description,
+      locale,
+    },
+    twitter: { card: 'summary_large_image', title, description },
+    robots: { index: true, follow: true },
+    icons: { icon: '/favicon.ico' },
+  };
+}
 
 type Props = {
   children: React.ReactNode;
