@@ -12,6 +12,7 @@
     "test:auth": "node --experimental-strip-types scripts/auth-selftest.ts",
     "test:hash": "node --experimental-strip-types scripts/hash-selftest.ts",
     "test:encoder": "node --experimental-strip-types scripts/encoder-selftest.ts",
+    "test:ids": "node --experimental-strip-types scripts/ids-selftest.ts",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:auth": "playwright test -c playwright.cloudflare.config.ts"
