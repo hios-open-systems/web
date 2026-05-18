@@ -459,6 +459,21 @@
         "asTypes": "come tipi"
     },
     "Workbench": {
+        "regex": {
+            "badge": "Strumento di test",
+            "title": "Regex Tester",
+            "subtitle": "Match, cattura e replace con regex JavaScript, nel browser.",
+            "patternPlaceholder": "pattern",
+            "flagsPlaceholder": "flag",
+            "inputLabel": "Testo di prova",
+            "matchesLabel": "Corrispondenze",
+            "groupsLabel": "gruppi",
+            "noMatches": "Nessuna corrispondenza",
+            "invalidPattern": "Pattern non valido",
+            "replaceLabel": "Anteprima replace",
+            "replacePlaceholder": "Sostituzione (usa $1, $<nome>)",
+            "replaceHint": "Scrivi una sostituzione per l’anteprima"
+        },
         "uuidUlid": {
             "badge": "Strumento di generazione",
             "title": "UUID / ULID",
@@ -504,6 +519,15 @@
             "empty": "Scrivi qualcosa per vedere il digest"
         },
         "guides": {
+            "regex": {
+                "intro": "Testa una regex su un testo, vedi match/gruppi e l’anteprima di un replace — tutto in locale.",
+                "steps": [
+                    "Scrivi il pattern e i flag (g, i, m, s, u, y).",
+                    "Incolla il testo di prova.",
+                    "Esamina match e gruppi; prova una sostituzione."
+                ],
+                "tip": "Il flag g restituisce tutti i match; i gruppi con nome appaiono accanto a quelli numerati."
+            },
             "uuidUlid": {
                 "intro": "Genera in locale ID UUID v4 (casuale) o ULID (ordinabile, con timestamp).",
                 "steps": [
@@ -676,6 +700,10 @@
         "pagerPrev": "Precedente",
         "pagerNext": "Successivo",
         "packs": {
+            "regex": {
+                "title": "Regex Tester",
+                "description": "Testa espressioni regolari con match, gruppi e replace, nel browser."
+            },
             "uuid-ulid": {
                 "title": "UUID / ULID",
                 "description": "Genera identificatori UUID v4 e ULID in batch, nel browser."
