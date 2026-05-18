@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { ThunderboltOutlined } from '@ant-design/icons';
 import { useLocale, useTranslations } from 'next-intl';
 import { workbenchSignals, workbenchTools } from '@/config/workbench';
-import { ToolGrid } from './ToolGrid';
+import { WorkbenchMenu } from './WorkbenchMenu';
 import styles from './workbench.module.css';
 
 export function WorkbenchLanding() {
@@ -48,7 +48,7 @@ export function WorkbenchLanding() {
         <p className={styles.pageSubtitle}>{t('landing.subtitle')}</p>
       </header>
 
-      <ToolGrid tools={visibleTools} />
+      <WorkbenchMenu />
 
       <section className={`${styles.principlesSection} ${styles.principlesMuted}`}>
         <div className={styles.sectionIntro}>
