@@ -459,6 +459,24 @@
         "asTypes": "als Typen"
     },
     "Workbench": {
+        "notes": {
+            "badge": "Generierungs-Tool",
+            "title": "Markdown Notes",
+            "subtitle": "Local-first Markdown-Notizen mit Live-Vorschau — nichts verlässt den Browser.",
+            "newNote": "Neue Notiz",
+            "notesLabel": "Notizen",
+            "empty": "Noch keine Notizen",
+            "untitled": "Ohne Titel",
+            "editorLabel": "Editor",
+            "titlePlaceholder": "Notiztitel…",
+            "bodyPlaceholder": "# Hier Markdown schreiben",
+            "selectOrCreate": "Notiz wählen oder anlegen",
+            "previewLabel": "Vorschau",
+            "previewEmpty": "Noch nichts zur Vorschau",
+            "importedTitle": "Geteilte Notiz",
+            "exampleTitle": "Willkommen",
+            "exampleBody": "# Hallo\\n\\nDies ist eine **local-first** Markdown-Notiz.\\n\\n- Lebt im Browser\\n- Live-Vorschau rechts"
+        },
         "mermaid": {
             "badge": "Generierungs-Tool",
             "title": "Mermaid-Diagramme",
@@ -550,6 +568,15 @@
             "empty": "Tippe etwas, um den Digest zu sehen"
         },
         "guides": {
+            "notes": {
+                "intro": "Lange Markdown-Notizen lokal halten — im Browser gespeichert, nie hochgeladen.",
+                "steps": [
+                    "Notiz anlegen und betiteln.",
+                    "Links Markdown schreiben.",
+                    "Rechts die gerenderte Vorschau ansehen."
+                ],
+                "tip": "Anders als Snippets: Notizen sind Prosa mit Vorschau, Snippets sind getaggter Code."
+            },
             "mermaid": {
                 "intro": "Mermaid-Syntax schreiben und das Diagramm live rendern lassen — komplett lokal, per URL teilbar.",
                 "steps": [
@@ -749,6 +776,10 @@
         "pagerPrev": "Zurück",
         "pagerNext": "Weiter",
         "packs": {
+            "notes": {
+                "title": "Markdown Notes",
+                "description": "Local-first Markdown-Notizen mit Live-Vorschau, im Browser."
+            },
             "mermaid": {
                 "title": "Mermaid Diagrams",
                 "description": "Mermaid-Diagramme (Flussdiagramm, Sequenz, UML…) im Browser bearbeiten und rendern."
