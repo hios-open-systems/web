@@ -25,6 +25,7 @@ const ALL_TOOL_NAMES = [
     'UUID / ULID',
     'Regex Tester',
     'Text Diff',
+    'Mermaid Diagrams',
 ];
 
 test.describe('Home', () => {
@@ -164,6 +165,13 @@ test.describe('Workbench', () => {
         await expect(
             page.getByText('d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592'),
         ).toBeVisible({ timeout: 10_000 });
+    });
+
+    test('Mermaid renderiza el diagrama por defecto', async ({ page }) => {
+        await page.goto('/es/workbench/mermaid');
+        await expect(page.locator('[data-testid="mermaid-preview"] svg').first()).toBeVisible({
+            timeout: 15_000,
+        });
     });
 
     test('Text Diff muestra cambios del ejemplo', async ({ page }) => {

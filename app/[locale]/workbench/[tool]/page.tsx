@@ -11,6 +11,7 @@ import { EncoderTool } from '@/components/workbench/EncoderTool';
 import { UuidUlidTool } from '@/components/workbench/UuidUlidTool';
 import { RegexTesterTool } from '@/components/workbench/RegexTesterTool';
 import { TextDiffTool } from '@/components/workbench/TextDiffTool';
+import { MermaidTool } from '@/components/workbench/MermaidTool';
 import { RandomStringTool } from '@/components/workbench/RandomStringTool';
 import { SiteCheckerTool } from '@/components/workbench/SiteCheckerTool';
 import { TypeCheckerTool } from '@/components/workbench/TypeCheckerTool';
@@ -57,6 +58,10 @@ const metadataMap: Record<string, Metadata> = {
   'text-diff': {
     title: 'Text Diff | HIOS Workbench',
     description: 'Compará dos textos línea por línea (LCS) enteramente en el navegador.',
+  },
+  'mermaid': {
+    title: 'Mermaid Diagrams | HIOS Workbench',
+    description: 'Editá y renderizá diagramas Mermaid (flowchart, secuencia, UML…) en el navegador.',
   },
   'object-to-types': {
     title: 'Object to Types | HIOS Workbench',
@@ -109,6 +114,8 @@ function renderTool(toolId: WorkbenchToolId) {
       return <RegexTesterTool />;
     case 'text-diff':
       return <TextDiffTool />;
+    case 'mermaid':
+      return <MermaidTool />;
     case 'object-to-types':
       return <ObjectToTypesTool />;
     case 'random-string':

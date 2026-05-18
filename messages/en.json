@@ -562,6 +562,27 @@
         "asTypes": "as types"
     },
     "Workbench": {
+        "mermaid": {
+            "badge": "Generation tool",
+            "title": "Mermaid Diagrams",
+            "subtitle": "Live Mermaid editor + SVG render, entirely in your browser.",
+            "exportSvg": "Export SVG",
+            "exportError": "Could not export",
+            "templatesLabel": "Templates",
+            "templates": {
+                "flowchart": "Flowchart",
+                "sequence": "Sequence",
+                "class": "Class / UML",
+                "state": "State",
+                "er": "ER",
+                "gitgraph": "Git graph"
+            },
+            "codeLabel": "Diagram code",
+            "previewLabel": "Preview",
+            "invalid": "Invalid diagram",
+            "empty": "Type a diagram to preview",
+            "parseError": "Could not parse the diagram"
+        },
         "textDiff": {
             "badge": "Testing tool",
             "title": "Text Diff",
@@ -632,6 +653,15 @@
             "empty": "Type something to see its digest"
         },
         "guides": {
+            "mermaid": {
+                "intro": "Write Mermaid syntax and see the diagram render live — fully local, share via URL.",
+                "steps": [
+                    "Pick a template or write your own diagram code.",
+                    "The preview re-renders as you type.",
+                    "Export the SVG or copy the share link."
+                ],
+                "tip": "It runs with securityLevel strict — no scripts or click actions in diagrams."
+            },
             "textDiff": {
                 "intro": "Line-level diff between two blocks of free text — local, nothing uploaded.",
                 "steps": [
@@ -816,6 +846,10 @@
         "pagerPrev": "Previous",
         "pagerNext": "Next",
         "packs": {
+            "mermaid": {
+                "title": "Mermaid Diagrams",
+                "description": "Edit and render Mermaid diagrams (flowchart, sequence, UML…) in your browser."
+            },
             "text-diff": {
                 "title": "Text Diff",
                 "description": "Compare two texts line by line (LCS) entirely in your browser."
