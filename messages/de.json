@@ -459,6 +459,21 @@
         "asTypes": "als Typen"
     },
     "Workbench": {
+        "encoder": {
+            "badge": "Generierungs-Tool",
+            "title": "Encoder / Decoder",
+            "subtitle": "Base64 / base64url / Hex / URL kodieren und dekodieren, UTF-8, im Browser.",
+            "swap": "Richtung tauschen",
+            "copied": "Ausgabe kopiert",
+            "copyError": "Kopieren fehlgeschlagen",
+            "dirEncode": "Kodieren",
+            "dirDecode": "Dekodieren",
+            "inputLabel": "Eingabe",
+            "inputPlaceholder": "Zu konvertierender Text…",
+            "outputLabel": "Ausgabe",
+            "error": "Ungültige Eingabe für diesen Modus",
+            "empty": "Tippe etwas zum Konvertieren"
+        },
         "hashDigest": {
             "badge": "Validierungs-Tool",
             "title": "Hash & Digest",
@@ -474,6 +489,15 @@
             "empty": "Tippe etwas, um den Digest zu sehen"
         },
         "guides": {
+            "encoder": {
+                "intro": "Text in/aus Base64, base64url, Hex oder URL umwandeln — komplett lokal.",
+                "steps": [
+                    "Modus und Richtung wählen (kodieren/dekodieren).",
+                    "Eingabe tippen oder einfügen.",
+                    "Ausgabe kopieren oder an ein anderes Tool senden."
+                ],
+                "tip": "base64url ist die URL-sichere Variante (JWT) — kein +/ und kein Padding."
+            },
             "hashDigest": {
                 "intro": "Berechne lokal den kryptografischen Digest eines Textes — nichts wird gesendet.",
                 "steps": [
@@ -628,6 +652,10 @@
         "pagerPrev": "Zurück",
         "pagerNext": "Weiter",
         "packs": {
+            "encoder": {
+                "title": "Encoder / Decoder",
+                "description": "Base64, base64url, Hex und URL kodieren/dekodieren (UTF-8) im Browser."
+            },
             "hash-digest": {
                 "title": "Hash & Digest",
                 "description": "SHA-1/256/384/512-Digests (hex und base64) komplett im Browser erzeugen."

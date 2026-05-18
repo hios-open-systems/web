@@ -7,6 +7,7 @@ import { JwtPlaygroundTool } from '@/components/workbench/JwtPlaygroundTool';
 import { ObjectToTypesTool } from '@/components/workbench/ObjectToTypesTool';
 import { ObjectComparatorTool } from '@/components/workbench/ObjectComparatorTool';
 import { HashDigestTool } from '@/components/workbench/HashDigestTool';
+import { EncoderTool } from '@/components/workbench/EncoderTool';
 import { RandomStringTool } from '@/components/workbench/RandomStringTool';
 import { SiteCheckerTool } from '@/components/workbench/SiteCheckerTool';
 import { TypeCheckerTool } from '@/components/workbench/TypeCheckerTool';
@@ -37,6 +38,10 @@ const metadataMap: Record<string, Metadata> = {
   'hash-digest': {
     title: 'Hash & Digest | HIOS Workbench',
     description: 'Genera digests SHA-1/256/384/512 (hex y base64) enteramente en el navegador.',
+  },
+  'encoder': {
+    title: 'Encoder / Decoder | HIOS Workbench',
+    description: 'Base64, base64url, hex y URL encode/decode UTF-8, todo en el navegador.',
   },
   'object-to-types': {
     title: 'Object to Types | HIOS Workbench',
@@ -81,6 +86,8 @@ function renderTool(toolId: WorkbenchToolId) {
       return <CertificateCheckTool />;
     case 'hash-digest':
       return <HashDigestTool />;
+    case 'encoder':
+      return <EncoderTool />;
     case 'object-to-types':
       return <ObjectToTypesTool />;
     case 'random-string':

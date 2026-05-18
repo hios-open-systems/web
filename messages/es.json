@@ -561,6 +561,21 @@
         "asTypes": "como tipos"
     },
     "Workbench": {
+        "encoder": {
+            "badge": "Herramienta de generación",
+            "title": "Encoder / Decoder",
+            "subtitle": "Base64 / base64url / hex / URL encode y decode, UTF-8, en tu navegador.",
+            "swap": "Invertir dirección",
+            "copied": "Salida copiada",
+            "copyError": "No se pudo copiar",
+            "dirEncode": "Codificar",
+            "dirDecode": "Decodificar",
+            "inputLabel": "Entrada",
+            "inputPlaceholder": "Texto a convertir…",
+            "outputLabel": "Salida",
+            "error": "Entrada inválida para este modo",
+            "empty": "Escribí algo para convertir"
+        },
         "hashDigest": {
             "badge": "Herramienta de validación",
             "title": "Hash & Digest",
@@ -576,6 +591,15 @@
             "empty": "Escribí algo para ver su digest"
         },
         "guides": {
+            "encoder": {
+                "intro": "Convertí texto desde/hacia Base64, base64url, hex o URL — todo local.",
+                "steps": [
+                    "Elegí modo y dirección (encode/decode).",
+                    "Escribí o pegá la entrada.",
+                    "Copiá la salida, o mandala a otra tool."
+                ],
+                "tip": "base64url es la variante URL-safe que usa JWT — sin +/ y sin padding."
+            },
             "hashDigest": {
                 "intro": "Calculá el digest criptográfico de cualquier texto, local — nada se manda afuera.",
                 "steps": [
@@ -724,6 +748,10 @@
         "pagerPrev": "Anterior",
         "pagerNext": "Siguiente",
         "packs": {
+            "encoder": {
+                "title": "Encoder / Decoder",
+                "description": "Base64, base64url, hex y URL encode/decode (UTF-8) en el navegador."
+            },
             "hash-digest": {
                 "title": "Hash & Digest",
                 "description": "Generá digests SHA-1/256/384/512 (hex y base64) enteramente en el navegador."
