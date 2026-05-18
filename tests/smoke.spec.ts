@@ -22,6 +22,7 @@ const ALL_TOOL_NAMES = [
     'Snippets Shelf',
     'Hash & Digest',
     'Encoder / Decoder',
+    'UUID / ULID',
 ];
 
 test.describe('Home', () => {
@@ -160,6 +161,13 @@ test.describe('Workbench', () => {
         await page.goto('/es/workbench/hash-digest');
         await expect(
             page.getByText('d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592'),
+        ).toBeVisible({ timeout: 10_000 });
+    });
+
+    test('UUID/ULID genera UUIDs al cargar', async ({ page }) => {
+        await page.goto('/es/workbench/uuid-ulid');
+        await expect(
+            page.locator('text=/[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/').first(),
         ).toBeVisible({ timeout: 10_000 });
     });
 
