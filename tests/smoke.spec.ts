@@ -36,6 +36,13 @@ test.describe('Home', () => {
         await expect(page.getByRole('heading', { level: 1 })).toContainText('mesa de trabajo');
     });
 
+    test('hero traducido en de e it (no claves crudas)', async ({ page }) => {
+        await page.goto('/de');
+        await expect(page.getByRole('heading', { level: 1 })).toContainText('Werkbank');
+        await page.goto('/it');
+        await expect(page.getByRole('heading', { level: 1 })).toContainText('banco di lavoro');
+    });
+
     test('CTA primaria lleva al workbench', async ({ page }) => {
         await page.goto('/es');
         await page.getByRole('link', { name: /Abrir Workbench/i }).first().click();
