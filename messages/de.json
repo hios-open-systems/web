@@ -1,5 +1,16 @@
 {
     "Hero": {
+        "title": "Meine Werkbank. Werkzeuge, die ich täglich nutze.",
+        "subtitle": "Dekodieren, validieren, vergleichen. Alles läuft lokal, alles ist offen, nichts verlässt deinen Browser.",
+        "cta": "Workbench öffnen",
+        "secondary": "Hardware-Projekte ansehen",
+        "fact_local": "Local-first",
+        "fact_open": "Open Source",
+        "fact_daily": "Für den täglichen Einsatz",
+        "previewKicker": "Tool im Fokus",
+        "previewOpenTool": "Tool öffnen",
+        "previewNext": "Weiter",
+        "previewRandom": "Zufällig",
         "showcaseTitle": "Die Werkzeuge",
         "showcaseSubtitle": "Alles läuft im Browser. Wähl eins oder lass den Zufall entscheiden.",
         "showcaseRandomCta": "Zufälliges öffnen",

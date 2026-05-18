@@ -1,5 +1,16 @@
 {
     "Hero": {
+        "title": "Il mio banco di lavoro. Strumenti che uso ogni giorno.",
+        "subtitle": "Decodifica, valida, confronta. Tutto gira in locale, tutto è aperto, niente esce dal browser.",
+        "cta": "Apri Workbench",
+        "secondary": "Vedi i progetti hardware",
+        "fact_local": "Local-first",
+        "fact_open": "Open source",
+        "fact_daily": "Pensato per l’uso quotidiano",
+        "previewKicker": "Tool in evidenza",
+        "previewOpenTool": "Apri tool",
+        "previewNext": "Avanti",
+        "previewRandom": "A caso",
         "showcaseTitle": "Gli strumenti",
         "showcaseSubtitle": "Tutto gira nel browser. Scegline uno o lascia decidere il caso.",
         "showcaseRandomCta": "Aprine uno a caso",
