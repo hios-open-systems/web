@@ -17,6 +17,7 @@ export type WorkbenchToolId =
   | 'mermaid'
   | 'site-checker'
   | 'snippets'
+  | 'notes'
   | 'embedded';
 
 export type WorkbenchIcon = 'data' | 'notes' | 'circuits' | 'shield' | 'spark' | 'compare' | 'network';
@@ -207,6 +208,15 @@ export const workbenchTools: WorkbenchTool[] = [
     href: '/workbench/snippets',
     accent: '#fbbf24',
     icon: 'notes',
+  },
+  {
+    id: 'notes',
+    locality: 'local',
+    sectionId: 'generation',
+    href: '/workbench/notes',
+    accent: '#fbbf24',
+    icon: 'notes',
+    featured: true,
   },
   {
     id: 'embedded',

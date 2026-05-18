@@ -561,6 +561,24 @@
         "asTypes": "como tipos"
     },
     "Workbench": {
+        "notes": {
+            "badge": "Herramienta de generación",
+            "title": "Markdown Notes",
+            "subtitle": "Notas markdown local-first con preview en vivo — nada sale de tu navegador.",
+            "newNote": "Nueva nota",
+            "notesLabel": "Notas",
+            "empty": "Todavía no hay notas",
+            "untitled": "Sin título",
+            "editorLabel": "Editor",
+            "titlePlaceholder": "Título de la nota…",
+            "bodyPlaceholder": "# Escribí markdown acá",
+            "selectOrCreate": "Seleccioná o creá una nota",
+            "previewLabel": "Vista previa",
+            "previewEmpty": "Nada para previsualizar aún",
+            "importedTitle": "Nota compartida",
+            "exampleTitle": "Bienvenida",
+            "exampleBody": "# Hola\\n\\nEsta es una nota markdown **local-first**.\\n\\n- Vive en tu navegador\\n- Preview en vivo a la derecha"
+        },
         "mermaid": {
             "badge": "Herramienta de generación",
             "title": "Diagramas Mermaid",
@@ -652,6 +670,15 @@
             "empty": "Escribí algo para ver su digest"
         },
         "guides": {
+            "notes": {
+                "intro": "Guardá notas markdown largas en local — quedan en tu navegador, nunca se suben.",
+                "steps": [
+                    "Creá una nota y ponele un título.",
+                    "Escribí markdown a la izquierda.",
+                    "Mirá el preview renderizado a la derecha."
+                ],
+                "tip": "Distinto de Snippets: las notas son prosa con preview, los snippets son código etiquetado."
+            },
             "mermaid": {
                 "intro": "Escribí sintaxis Mermaid y mirá el diagrama renderizar en vivo — todo local, compartible por URL.",
                 "steps": [
@@ -845,6 +872,10 @@
         "pagerPrev": "Anterior",
         "pagerNext": "Siguiente",
         "packs": {
+            "notes": {
+                "title": "Markdown Notes",
+                "description": "Notas markdown local-first con preview en vivo, en tu navegador."
+            },
             "mermaid": {
                 "title": "Mermaid Diagrams",
                 "description": "Editá y renderizá diagramas Mermaid (flowchart, secuencia, UML…) en el navegador."

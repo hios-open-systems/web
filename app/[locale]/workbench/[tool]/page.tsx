@@ -12,6 +12,7 @@ import { UuidUlidTool } from '@/components/workbench/UuidUlidTool';
 import { RegexTesterTool } from '@/components/workbench/RegexTesterTool';
 import { TextDiffTool } from '@/components/workbench/TextDiffTool';
 import { MermaidTool } from '@/components/workbench/MermaidTool';
+import { MarkdownNotesTool } from '@/components/workbench/MarkdownNotesTool';
 import { RandomStringTool } from '@/components/workbench/RandomStringTool';
 import { SiteCheckerTool } from '@/components/workbench/SiteCheckerTool';
 import { TypeCheckerTool } from '@/components/workbench/TypeCheckerTool';
@@ -62,6 +63,10 @@ const metadataMap: Record<string, Metadata> = {
   'mermaid': {
     title: 'Mermaid Diagrams | HIOS Workbench',
     description: 'Editá y renderizá diagramas Mermaid (flowchart, secuencia, UML…) en el navegador.',
+  },
+  'notes': {
+    title: 'Markdown Notes | HIOS Workbench',
+    description: 'Notas en markdown con preview en vivo, local-first en tu navegador.',
   },
   'object-to-types': {
     title: 'Object to Types | HIOS Workbench',
@@ -116,6 +121,8 @@ function renderTool(toolId: WorkbenchToolId) {
       return <TextDiffTool />;
     case 'mermaid':
       return <MermaidTool />;
+    case 'notes':
+      return <MarkdownNotesTool />;
     case 'object-to-types':
       return <ObjectToTypesTool />;
     case 'random-string':

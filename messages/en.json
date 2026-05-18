@@ -562,6 +562,24 @@
         "asTypes": "as types"
     },
     "Workbench": {
+        "notes": {
+            "badge": "Generation tool",
+            "title": "Markdown Notes",
+            "subtitle": "Local-first markdown notes with a live preview — nothing leaves your browser.",
+            "newNote": "New note",
+            "notesLabel": "Notes",
+            "empty": "No notes yet",
+            "untitled": "Untitled",
+            "editorLabel": "Editor",
+            "titlePlaceholder": "Note title…",
+            "bodyPlaceholder": "# Write markdown here",
+            "selectOrCreate": "Select or create a note",
+            "previewLabel": "Preview",
+            "previewEmpty": "Nothing to preview yet",
+            "importedTitle": "Shared note",
+            "exampleTitle": "Welcome",
+            "exampleBody": "# Hello\\n\\nThis is a **local-first** markdown note.\\n\\n- Lives in your browser\\n- Live preview on the right"
+        },
         "mermaid": {
             "badge": "Generation tool",
             "title": "Mermaid Diagrams",
@@ -653,6 +671,15 @@
             "empty": "Type something to see its digest"
         },
         "guides": {
+            "notes": {
+                "intro": "Keep long-form markdown notes locally — saved in your browser, never uploaded.",
+                "steps": [
+                    "Create a note and give it a title.",
+                    "Write markdown on the left.",
+                    "See the rendered preview on the right."
+                ],
+                "tip": "Different from Snippets: notes are prose with preview, snippets are tagged code."
+            },
             "mermaid": {
                 "intro": "Write Mermaid syntax and see the diagram render live — fully local, share via URL.",
                 "steps": [
@@ -846,6 +873,10 @@
         "pagerPrev": "Previous",
         "pagerNext": "Next",
         "packs": {
+            "notes": {
+                "title": "Markdown Notes",
+                "description": "Local-first markdown notes with a live preview, in your browser."
+            },
             "mermaid": {
                 "title": "Mermaid Diagrams",
                 "description": "Edit and render Mermaid diagrams (flowchart, sequence, UML…) in your browser."

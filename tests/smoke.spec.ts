@@ -26,6 +26,7 @@ const ALL_TOOL_NAMES = [
     'Regex Tester',
     'Text Diff',
     'Mermaid Diagrams',
+    'Markdown Notes',
 ];
 
 test.describe('Home', () => {
@@ -165,6 +166,16 @@ test.describe('Workbench', () => {
         await expect(
             page.getByText('d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592'),
         ).toBeVisible({ timeout: 10_000 });
+    });
+
+    test('Notes: preview markdown y persiste tras reload', async ({ page }) => {
+        await page.goto('/es/workbench/notes');
+        const preview = page.locator('[data-testid="notes-preview"]');
+        await expect(preview).toBeVisible({ timeout: 10_000 });
+        await expect(preview.getByRole('heading', { name: /Hola/i })).toBeVisible();
+        await page.reload();
+        await expect(page.locator('[data-testid="notes-preview"]')).toBeVisible();
+        await page.evaluate(() => window.localStorage.removeItem('hios-workbench-notes'));
     });
 
     test('Mermaid renderiza el diagrama por defecto', async ({ page }) => {
