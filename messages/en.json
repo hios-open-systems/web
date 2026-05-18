@@ -562,6 +562,21 @@
         "asTypes": "as types"
     },
     "Workbench": {
+        "regex": {
+            "badge": "Testing tool",
+            "title": "Regex Tester",
+            "subtitle": "Match, capture and replace with JavaScript regular expressions, in your browser.",
+            "patternPlaceholder": "pattern",
+            "flagsPlaceholder": "flags",
+            "inputLabel": "Test text",
+            "matchesLabel": "Matches",
+            "groupsLabel": "groups",
+            "noMatches": "No matches",
+            "invalidPattern": "Invalid pattern",
+            "replaceLabel": "Replace preview",
+            "replacePlaceholder": "Replacement (use $1, $<name>)",
+            "replaceHint": "Type a replacement to preview the result"
+        },
         "uuidUlid": {
             "badge": "Generation tool",
             "title": "UUID / ULID",
@@ -607,6 +622,15 @@
             "empty": "Type something to see its digest"
         },
         "guides": {
+            "regex": {
+                "intro": "Test a regular expression against text, see matches/groups and preview a replace — all local.",
+                "steps": [
+                    "Write the pattern and flags (g, i, m, s, u, y).",
+                    "Paste the test text.",
+                    "Inspect matches and groups; try a replacement."
+                ],
+                "tip": "Use the g flag to get every match; named groups show up alongside numbered ones."
+            },
             "uuidUlid": {
                 "intro": "Generate UUID v4 (random) or ULID (sortable, time-prefixed) IDs locally.",
                 "steps": [
@@ -773,6 +797,10 @@
         "pagerPrev": "Previous",
         "pagerNext": "Next",
         "packs": {
+            "regex": {
+                "title": "Regex Tester",
+                "description": "Test regular expressions with live matches, groups and replace, in your browser."
+            },
             "uuid-ulid": {
                 "title": "UUID / ULID",
                 "description": "Generate UUID v4 and ULID identifiers in batches, in your browser."

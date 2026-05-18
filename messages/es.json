@@ -561,6 +561,21 @@
         "asTypes": "como tipos"
     },
     "Workbench": {
+        "regex": {
+            "badge": "Herramienta de testing",
+            "title": "Regex Tester",
+            "subtitle": "Match, captura y replace con expresiones regulares de JavaScript, en tu navegador.",
+            "patternPlaceholder": "patrón",
+            "flagsPlaceholder": "flags",
+            "inputLabel": "Texto de prueba",
+            "matchesLabel": "Coincidencias",
+            "groupsLabel": "grupos",
+            "noMatches": "Sin coincidencias",
+            "invalidPattern": "Patrón inválido",
+            "replaceLabel": "Vista previa del replace",
+            "replacePlaceholder": "Reemplazo (usá $1, $<nombre>)",
+            "replaceHint": "Escribí un reemplazo para previsualizar el resultado"
+        },
         "uuidUlid": {
             "badge": "Herramienta de generación",
             "title": "UUID / ULID",
@@ -606,6 +621,15 @@
             "empty": "Escribí algo para ver su digest"
         },
         "guides": {
+            "regex": {
+                "intro": "Probá una expresión regular contra un texto, mirá matches/grupos y previsualizá un replace — todo local.",
+                "steps": [
+                    "Escribí el patrón y los flags (g, i, m, s, u, y).",
+                    "Pegá el texto de prueba.",
+                    "Mirá matches y grupos; probá un reemplazo."
+                ],
+                "tip": "Usá el flag g para traer todos los matches; los grupos con nombre aparecen junto a los numerados."
+            },
             "uuidUlid": {
                 "intro": "Generá IDs UUID v4 (aleatorio) o ULID (ordenable, con timestamp) en local.",
                 "steps": [
@@ -772,6 +796,10 @@
         "pagerPrev": "Anterior",
         "pagerNext": "Siguiente",
         "packs": {
+            "regex": {
+                "title": "Regex Tester",
+                "description": "Probá expresiones regulares con matches, grupos y replace, en el navegador."
+            },
             "uuid-ulid": {
                 "title": "UUID / ULID",
                 "description": "Generá identificadores UUID v4 y ULID en lote, en el navegador."
