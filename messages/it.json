@@ -459,6 +459,16 @@
         "asTypes": "come tipi"
     },
     "Workbench": {
+        "textDiff": {
+            "badge": "Strumento di test",
+            "title": "Text Diff",
+            "subtitle": "Diff LCS riga per riga di due testi, calcolato nel browser.",
+            "leftLabel": "Originale",
+            "rightLabel": "Modificato",
+            "diffLabel": "Diff",
+            "identical": "I due testi sono identici",
+            "truncated": "Troncato (input molto grande)"
+        },
         "regex": {
             "badge": "Strumento di test",
             "title": "Regex Tester",
@@ -519,6 +529,15 @@
             "empty": "Scrivi qualcosa per vedere il digest"
         },
         "guides": {
+            "textDiff": {
+                "intro": "Diff a livello di riga tra due blocchi di testo libero — locale, niente upload.",
+                "steps": [
+                    "Incolla l’originale a sinistra.",
+                    "Incolla la versione modificata a destra.",
+                    "Leggi le righe +aggiunte / −rimosse sotto."
+                ],
+                "tip": "A differenza del Comparatore di Oggetti (JSON strutturale), questo diffa testo libero."
+            },
             "regex": {
                 "intro": "Testa una regex su un testo, vedi match/gruppi e l’anteprima di un replace — tutto in locale.",
                 "steps": [
@@ -700,6 +719,10 @@
         "pagerPrev": "Precedente",
         "pagerNext": "Successivo",
         "packs": {
+            "text-diff": {
+                "title": "Text Diff",
+                "description": "Confronta due testi riga per riga (LCS) interamente nel browser."
+            },
             "regex": {
                 "title": "Regex Tester",
                 "description": "Testa espressioni regolari con match, gruppi e replace, nel browser."

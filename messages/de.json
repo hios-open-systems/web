@@ -459,6 +459,16 @@
         "asTypes": "als Typen"
     },
     "Workbench": {
+        "textDiff": {
+            "badge": "Test-Tool",
+            "title": "Text-Diff",
+            "subtitle": "Zeilenweiser LCS-Diff zweier Texte, im Browser berechnet.",
+            "leftLabel": "Original",
+            "rightLabel": "Geändert",
+            "diffLabel": "Diff",
+            "identical": "Die beiden Texte sind identisch",
+            "truncated": "Gekürzt (sehr große Eingabe)"
+        },
         "regex": {
             "badge": "Test-Tool",
             "title": "Regex-Tester",
@@ -519,6 +529,15 @@
             "empty": "Tippe etwas, um den Digest zu sehen"
         },
         "guides": {
+            "textDiff": {
+                "intro": "Zeilenweiser Diff zwischen zwei freien Textblöcken — lokal, nichts wird hochgeladen.",
+                "steps": [
+                    "Original links einfügen.",
+                    "Geänderte Version rechts einfügen.",
+                    "+hinzugefügte / −entfernte Zeilen unten lesen."
+                ],
+                "tip": "Anders als der Objekt-Vergleich (JSON-strukturell) difft das freien Text."
+            },
             "regex": {
                 "intro": "Teste einen regulären Ausdruck gegen Text, sieh Treffer/Gruppen und eine Replace-Vorschau — lokal.",
                 "steps": [
@@ -700,6 +719,10 @@
         "pagerPrev": "Zurück",
         "pagerNext": "Weiter",
         "packs": {
+            "text-diff": {
+                "title": "Text-Diff",
+                "description": "Zwei Texte zeilenweise (LCS) komplett im Browser vergleichen."
+            },
             "regex": {
                 "title": "Regex-Tester",
                 "description": "Reguläre Ausdrücke mit Live-Treffern, Gruppen und Replace im Browser testen."
