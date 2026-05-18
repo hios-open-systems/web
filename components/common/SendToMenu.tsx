@@ -29,6 +29,8 @@ export function SendToMenu({ kind, getValue }: { kind: ChainKind; getValue: () =
           { href: '/workbench/payload', param: 'payload', packId: 'payload' },
           { href: '/workbench/type-checker', param: 'value', packId: 'type-checker', qualifier: t('asValue') },
           { href: '/workbench/object-to-types', param: 'object', packId: 'object-to-types' },
+          { href: '/workbench/encoder', param: 'input', packId: 'encoder' },
+          { href: '/workbench/hash-digest', param: 'input', packId: 'hash-digest' },
         ]
       : [{ href: '/workbench/type-checker', param: 'types', packId: 'type-checker', qualifier: t('asTypes') }];
 

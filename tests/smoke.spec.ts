@@ -21,6 +21,7 @@ const ALL_TOOL_NAMES = [
     'Site Checker',
     'Snippets Shelf',
     'Hash & Digest',
+    'Encoder / Decoder',
 ];
 
 test.describe('Home', () => {
@@ -160,6 +161,12 @@ test.describe('Workbench', () => {
         await expect(
             page.getByText('d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592'),
         ).toBeVisible({ timeout: 10_000 });
+    });
+
+    test('Encoder: base64 del input por defecto', async ({ page }) => {
+        await page.goto('/es/workbench/encoder');
+        // "Hola, HIOS 👋" en base64 (UTF-8)
+        await expect(page.getByText('SG9sYSwgSElPUyDwn5GL')).toBeVisible({ timeout: 10_000 });
     });
 
     test('Snippets: agregar y persistir tras reload', async ({ page }) => {

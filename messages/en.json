@@ -562,6 +562,21 @@
         "asTypes": "as types"
     },
     "Workbench": {
+        "encoder": {
+            "badge": "Generation tool",
+            "title": "Encoder / Decoder",
+            "subtitle": "Base64 / base64url / hex / URL encode and decode, UTF-8 safe, in your browser.",
+            "swap": "Swap direction",
+            "copied": "Output copied",
+            "copyError": "Could not copy",
+            "dirEncode": "Encode",
+            "dirDecode": "Decode",
+            "inputLabel": "Input",
+            "inputPlaceholder": "Text to convert…",
+            "outputLabel": "Output",
+            "error": "Invalid input for this mode",
+            "empty": "Type something to convert"
+        },
         "hashDigest": {
             "badge": "Validation tool",
             "title": "Hash & Digest",
@@ -577,6 +592,15 @@
             "empty": "Type something to see its digest"
         },
         "guides": {
+            "encoder": {
+                "intro": "Convert text to/from Base64, base64url, hex or URL encoding — fully local.",
+                "steps": [
+                    "Pick a mode and direction (encode/decode).",
+                    "Type or paste the input.",
+                    "Copy the output, or send it to another tool."
+                ],
+                "tip": "base64url is the URL-safe variant used in JWT — no +/ and no padding."
+            },
             "hashDigest": {
                 "intro": "Compute a cryptographic digest of any text, locally — nothing is sent anywhere.",
                 "steps": [
@@ -725,6 +749,10 @@
         "pagerPrev": "Previous",
         "pagerNext": "Next",
         "packs": {
+            "encoder": {
+                "title": "Encoder / Decoder",
+                "description": "Base64, base64url, hex and URL encode/decode (UTF-8) in your browser."
+            },
             "hash-digest": {
                 "title": "Hash & Digest",
                 "description": "Generate SHA-1/256/384/512 digests (hex and base64) entirely in your browser."

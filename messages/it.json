@@ -459,6 +459,21 @@
         "asTypes": "come tipi"
     },
     "Workbench": {
+        "encoder": {
+            "badge": "Strumento di generazione",
+            "title": "Encoder / Decoder",
+            "subtitle": "Base64 / base64url / hex / URL encode e decode, UTF-8, nel browser.",
+            "swap": "Inverti direzione",
+            "copied": "Output copiato",
+            "copyError": "Impossibile copiare",
+            "dirEncode": "Codifica",
+            "dirDecode": "Decodifica",
+            "inputLabel": "Input",
+            "inputPlaceholder": "Testo da convertire…",
+            "outputLabel": "Output",
+            "error": "Input non valido per questa modalità",
+            "empty": "Scrivi qualcosa da convertire"
+        },
         "hashDigest": {
             "badge": "Strumento di validazione",
             "title": "Hash & Digest",
@@ -474,6 +489,15 @@
             "empty": "Scrivi qualcosa per vedere il digest"
         },
         "guides": {
+            "encoder": {
+                "intro": "Converti testo da/verso Base64, base64url, hex o URL — tutto in locale.",
+                "steps": [
+                    "Scegli modalità e direzione (encode/decode).",
+                    "Scrivi o incolla l’input.",
+                    "Copia l’output o invialo a un altro strumento."
+                ],
+                "tip": "base64url è la variante URL-safe usata nei JWT — niente +/ e niente padding."
+            },
             "hashDigest": {
                 "intro": "Calcola in locale il digest crittografico di un testo — niente esce dal browser.",
                 "steps": [
@@ -628,6 +652,10 @@
         "pagerPrev": "Precedente",
         "pagerNext": "Successivo",
         "packs": {
+            "encoder": {
+                "title": "Encoder / Decoder",
+                "description": "Base64, base64url, hex e URL encode/decode (UTF-8) nel browser."
+            },
             "hash-digest": {
                 "title": "Hash & Digest",
                 "description": "Genera digest SHA-1/256/384/512 (hex e base64) interamente nel browser."

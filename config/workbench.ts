@@ -9,6 +9,7 @@ export type WorkbenchToolId =
   | 'hash-digest'
   | 'object-to-types'
   | 'random-string'
+  | 'encoder'
   | 'object-compare'
   | 'site-checker'
   | 'snippets'
@@ -129,6 +130,15 @@ export const workbenchTools: WorkbenchTool[] = [
     locality: 'local',
     sectionId: 'generation',
     href: '/workbench/random-string',
+    accent: '#f59e0b',
+    icon: 'spark',
+    featured: true,
+  },
+  {
+    id: 'encoder',
+    locality: 'local',
+    sectionId: 'generation',
+    href: '/workbench/encoder',
     accent: '#f59e0b',
     icon: 'spark',
     featured: true,
