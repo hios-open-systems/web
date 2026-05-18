@@ -13,6 +13,7 @@ import { RegexTesterTool } from '@/components/workbench/RegexTesterTool';
 import { TextDiffTool } from '@/components/workbench/TextDiffTool';
 import { MermaidTool } from '@/components/workbench/MermaidTool';
 import { MarkdownNotesTool } from '@/components/workbench/MarkdownNotesTool';
+import { PatternsTool } from '@/components/workbench/PatternsTool';
 import { RandomStringTool } from '@/components/workbench/RandomStringTool';
 import { SiteCheckerTool } from '@/components/workbench/SiteCheckerTool';
 import { TypeCheckerTool } from '@/components/workbench/TypeCheckerTool';
@@ -67,6 +68,10 @@ const metadataMap: Record<string, Metadata> = {
   'notes': {
     title: 'Markdown Notes | HIOS Workbench',
     description: 'Notas en markdown con preview en vivo, local-first en tu navegador.',
+  },
+  'patterns': {
+    title: 'Pattern Lessons | HIOS Workbench',
+    description: 'Lecciones interactivas de patrones modernos con código editable y runner sandbox.',
   },
   'object-to-types': {
     title: 'Object to Types | HIOS Workbench',
@@ -123,6 +128,8 @@ function renderTool(toolId: WorkbenchToolId) {
       return <MermaidTool />;
     case 'notes':
       return <MarkdownNotesTool />;
+    case 'patterns':
+      return <PatternsTool />;
     case 'object-to-types':
       return <ObjectToTypesTool />;
     case 'random-string':

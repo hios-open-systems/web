@@ -561,6 +561,32 @@
         "asTypes": "como tipos"
     },
     "Workbench": {
+        "patterns": {
+            "badge": "Herramienta de generación",
+            "title": "Pattern Lessons",
+            "subtitle": "Lecciones prácticas de patrones modernos; el código corre sandbox en tu navegador.",
+            "run": "Correr",
+            "running": "Corriendo…",
+            "resetCode": "Reset código",
+            "lessonsLabel": "Lecciones",
+            "outputLabel": "Salida",
+            "outputEmpty": "Corré el código para ver la salida",
+            "noOutput": "(sin salida)",
+            "lessons": {
+                "debounce": {
+                    "title": "Debounce",
+                    "explain": "**Debounce** retrasa una llamada hasta que el input para. Una ráfaga colapsa en una sola ejecución final — clásico para búsquedas y resize. Editá el código y corrélo."
+                },
+                "reducer": {
+                    "title": "Reducer / máquina de estados",
+                    "explain": "Un **reducer** es una función pura `(state, action) => state`. Sin mutación oculta: cada transición es explícita y testeable. Probá agregar una acción nueva."
+                },
+                "promisePool": {
+                    "title": "Concurrencia acotada",
+                    "explain": "Corré muchas tareas async **de a N** en vez de todas juntas — protege rate limits y memoria. Cambiá el `limit` y mirá el orden de los resultados."
+                }
+            }
+        },
         "notes": {
             "badge": "Herramienta de generación",
             "title": "Markdown Notes",
@@ -670,6 +696,15 @@
             "empty": "Escribí algo para ver su digest"
         },
         "guides": {
+            "patterns": {
+                "intro": "Aprendé patrones modernos de JS editando y corriendo código real — sandbox en tu navegador, sin red, sin acceso al sitio.",
+                "steps": [
+                    "Elegí una lección a la izquierda.",
+                    "Leé la explicación, tocá el código.",
+                    "Corrélo y mirá la salida de consola."
+                ],
+                "tip": "El código corre en un iframe aislado (sin same-origin) — no puede tocar tu sesión ni este sitio."
+            },
             "notes": {
                 "intro": "Guardá notas markdown largas en local — quedan en tu navegador, nunca se suben.",
                 "steps": [
@@ -872,6 +907,10 @@
         "pagerPrev": "Anterior",
         "pagerNext": "Siguiente",
         "packs": {
+            "patterns": {
+                "title": "Pattern Lessons",
+                "description": "Lecciones interactivas de patrones modernos con código editable y runner sandbox."
+            },
             "notes": {
                 "title": "Markdown Notes",
                 "description": "Notas markdown local-first con preview en vivo, en tu navegador."
