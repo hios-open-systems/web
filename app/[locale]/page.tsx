@@ -20,6 +20,11 @@ const HomeToolDeepLink = dynamic(
   { ssr: true },
 );
 
+const HeroRandomTool = dynamic(
+  () => import('@/components/landing/HeroRandomTool').then((mod) => ({ default: mod.HeroRandomTool })),
+  { ssr: true },
+);
+
 const ToolShowcase = dynamic(
   () => import('@/components/landing/ToolShowcase').then((mod) => ({ default: mod.ToolShowcase })),
   { ssr: true },
@@ -36,6 +41,7 @@ export default function Home({ params: { locale } }: { params: { locale: string 
     <main>
       <HomeToolDeepLink />
       <HeroSection />
+      <HeroRandomTool />
       <ToolShowcase />
       <ProjectsGrid />
     </main>

@@ -36,6 +36,15 @@ test.describe('Home', () => {
         await expect(page.getByRole('heading', { level: 1 })).toContainText('mesa de trabajo');
     });
 
+    test('box de tool al azar en el home con reroll', async ({ page }) => {
+        await page.goto('/es');
+        await expect(page.getByText('Tool destacada').first()).toBeVisible();
+        const reroll = page.getByRole('button', { name: /Al azar/i });
+        await expect(reroll).toBeVisible();
+        await reroll.click();
+        await expect(page.getByRole('link', { name: /Abrir tool/i }).first()).toBeVisible();
+    });
+
     test('hero traducido en de e it (no claves crudas)', async ({ page }) => {
         await page.goto('/de');
         await expect(page.getByRole('heading', { level: 1 })).toContainText('Werkbank');
