@@ -14,6 +14,7 @@
     "test:encoder": "node --experimental-strip-types scripts/encoder-selftest.ts",
     "test:ids": "node --experimental-strip-types scripts/ids-selftest.ts",
     "test:regex": "node --experimental-strip-types scripts/regex-selftest.ts",
+    "test:textdiff": "node --experimental-strip-types scripts/textdiff-selftest.ts",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:auth": "playwright test -c playwright.cloudflare.config.ts"

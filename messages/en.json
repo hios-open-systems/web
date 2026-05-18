@@ -562,6 +562,16 @@
         "asTypes": "as types"
     },
     "Workbench": {
+        "textDiff": {
+            "badge": "Testing tool",
+            "title": "Text Diff",
+            "subtitle": "Line-by-line LCS diff of any two texts, computed in your browser.",
+            "leftLabel": "Original",
+            "rightLabel": "Changed",
+            "diffLabel": "Diff",
+            "identical": "The two texts are identical",
+            "truncated": "Truncated (very large input)"
+        },
         "regex": {
             "badge": "Testing tool",
             "title": "Regex Tester",
@@ -622,6 +632,15 @@
             "empty": "Type something to see its digest"
         },
         "guides": {
+            "textDiff": {
+                "intro": "Line-level diff between two blocks of free text — local, nothing uploaded.",
+                "steps": [
+                    "Paste the original on the left.",
+                    "Paste the changed version on the right.",
+                    "Read the +added / −removed lines below."
+                ],
+                "tip": "Unlike Object Comparator (JSON-structural), this diffs any free text."
+            },
             "regex": {
                 "intro": "Test a regular expression against text, see matches/groups and preview a replace — all local.",
                 "steps": [
@@ -797,6 +816,10 @@
         "pagerPrev": "Previous",
         "pagerNext": "Next",
         "packs": {
+            "text-diff": {
+                "title": "Text Diff",
+                "description": "Compare two texts line by line (LCS) entirely in your browser."
+            },
             "regex": {
                 "title": "Regex Tester",
                 "description": "Test regular expressions with live matches, groups and replace, in your browser."

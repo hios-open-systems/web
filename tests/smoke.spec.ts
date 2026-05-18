@@ -24,6 +24,7 @@ const ALL_TOOL_NAMES = [
     'Encoder / Decoder',
     'UUID / ULID',
     'Regex Tester',
+    'Text Diff',
 ];
 
 test.describe('Home', () => {
@@ -163,6 +164,13 @@ test.describe('Workbench', () => {
         await expect(
             page.getByText('d7a8fbb307d7809469ca9abcb0082e4f8d5651e46d3cdb762d02d0bf37c9e592'),
         ).toBeVisible({ timeout: 10_000 });
+    });
+
+    test('Text Diff muestra cambios del ejemplo', async ({ page }) => {
+        await page.goto('/es/workbench/text-diff');
+        // El ejemplo difiere en la línea del return → debe haber +/- > 0.
+        await expect(page.getByText('+1', { exact: false }).first()).toBeVisible({ timeout: 10_000 });
+        await expect(page.locator('text=/Hello, \\$\\{name\\}/').first()).toBeVisible();
     });
 
     test('Regex Tester matchea el ejemplo por defecto', async ({ page }) => {
