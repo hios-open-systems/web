@@ -470,6 +470,10 @@
         "asTypes": "come tipi"
     },
     "Workbench": {
+        "pinnedTitle": "Fissate",
+        "recentTitle": "Usate di recente",
+        "pin": "Fissa tool",
+        "unpin": "Rimuovi fissaggio",
         "common": {
             "copy": "Copia",
             "copied": "Copiato",
