@@ -416,6 +416,18 @@ test.describe('Theme settings', () => {
 
         await page.evaluate(() => window.localStorage.removeItem('hios-theme-config'));
     });
+
+    test('temas guardables: guardar, aparece y borrar', async ({ page }) => {
+        await page.goto('/es/workbench/settings');
+        await expect(page.getByRole('heading', { name: 'Configuración', level: 1 })).toBeVisible();
+        const name = page.getByTestId('saved-theme-name');
+        await name.fill('Smoke tema');
+        await page.getByRole('button', { name: /Guardar actual/i }).click();
+        await expect(page.getByText(/Smoke tema/).first()).toBeVisible();
+        await page.reload();
+        await expect(page.getByText(/Smoke tema/).first()).toBeVisible();
+        await page.evaluate(() => window.localStorage.removeItem('hios-saved-themes'));
+    });
 });
 
 test.describe('Páginas secundarias', () => {
