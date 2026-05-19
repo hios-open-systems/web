@@ -162,3 +162,24 @@ Una fila por herramienta. Sirve como **spec previo** (antes de codear) y como **
 - **Output**: JSON Schema con $schema, 	itle, tipos, ormat (date-time, email, uri), equired, dditionalProperties: false en raíz, y oneOf para arrays heterogéneos.
 - **Casos borde**: array vacío → items: {}; strings cortos adjuntan xamples; errores de parse se muestran inline.
 - **Status**: works (local only)
+
+### UrlParserTool (/workbench/url-parser)
+- **Propósito**: parsear cualquier URL, inspeccionar y editar query params, reconstruir y copiar partes individuales.
+- **Input**: URL cruda en el input principal; se actualiza en tiempo real.
+- **Output**: partes de la URL (protocol, origin, pathname, hash, auth), tabla de query params editable, URL reconstruida al aplicar cambios.
+- **Casos borde**: URLs sin query params desactivan el editor; protocolo relativo o sin esquema muestra error inline.
+- **Status**: works (local only)
+
+### RegexTool (/workbench/regex)
+- **Propósito**: probar expresiones regulares contra texto de entrada con highlight en tiempo real.
+- **Input**: patrón regex + flags (g, i, m, s) + texto de prueba multilínea.
+- **Output**: preview resaltado con todas las coincidencias marcadas, lista de matches con índices, grupos numerados y grupos nombrados.
+- **Casos borde**: max 1000 matches por seguridad; sin flag g solo muestra primer match; errores de regex se muestran inline.
+- **Status**: works (local only)
+
+### ImageBase64Tool (/workbench/image-base64)
+- **Propósito**: convertir imágenes a representaciones base64 para uso en firmware, CSS o HTML.
+- **Input**: drag-and-drop o click-to-select (PNG, JPEG, SVG, WebP, GIF).
+- **Output**: Data URI completa, base64 puro, snippet CSS ackground-image, etiqueta HTML <img> con dimensiones.
+- **Casos borde**: muestra tamaño del archivo original y del base64 resultante para awareness de overhead; archivos no-imagen son rechazados.
+- **Status**: works (local only)

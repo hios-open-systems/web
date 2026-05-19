@@ -24,6 +24,9 @@ export type WorkbenchToolId =
   | 'timestamp'
   | 'number-base'
   | 'json-schema'
+  | 'url-parser'
+  | 'regex'
+  | 'image-base64'
   | 'embedded';
 
 export type WorkbenchIcon = 'data' | 'notes' | 'circuits' | 'shield' | 'spark' | 'compare' | 'network';
@@ -277,6 +280,33 @@ export const workbenchTools: WorkbenchTool[] = [
     accent: '#f59e0b',
     icon: 'notes',
     featured: true,
+  },
+  {
+    id: 'url-parser',
+    locality: 'local',
+    sectionId: 'testing',
+    href: '/workbench/url-parser',
+    accent: '#6366f1',
+    icon: 'network',
+    featured: true,
+  },
+  {
+    id: 'regex',
+    locality: 'local',
+    sectionId: 'testing',
+    href: '/workbench/regex',
+    accent: '#f97316',
+    icon: 'spark',
+    featured: true,
+  },
+  {
+    id: 'image-base64',
+    locality: 'local',
+    sectionId: 'generation',
+    href: '/workbench/image-base64',
+    accent: '#ec4899',
+    icon: 'data',
+    featured: false,
   },
   {
     id: 'embedded',
