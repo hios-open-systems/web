@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { replacePreview, runRegex, sanitizeFlags } from '@/lib/workbench/regex';
 import { ToolHeader } from './ToolHeader';
+import { CopyButton } from './CopyButton';
 import { UrlPresets } from '@/components/common/UrlPresets';
 import styles from './workbench.module.css';
 
@@ -107,7 +108,16 @@ export function RegexTesterTool() {
         title={t('matchesLabel')}
         className={styles.sectionCard}
         styles={{ body: { padding: 20 } }}
-        extra={result.ok ? <Tag>{result.matches.length}{result.truncated ? '+' : ''}</Tag> : null}
+        extra={
+          result.ok ? (
+            <Space>
+              <Tag>{result.matches.length}{result.truncated ? '+' : ''}</Tag>
+              {result.matches.length > 0 ? (
+                <CopyButton value={() => result.matches.map((m) => m.match).join('\n')} />
+              ) : null}
+            </Space>
+          ) : null
+        }
       >
         {result.ok && result.matches.length > 0 ? (
           <div className={styles.generatedList}>

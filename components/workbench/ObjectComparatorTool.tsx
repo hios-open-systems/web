@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { compareJsonInputs } from '@/lib/workbench/compare';
 import { ToolHeader } from './ToolHeader';
+import { CopyButton } from './CopyButton';
 import styles from './workbench.module.css';
 
 const { Text } = Typography;
@@ -103,7 +104,20 @@ export function ObjectComparatorTool() {
 
             <Card
                 title={t('differences')}
-                extra={result.status === 'valid' ? <Tag color={result.equal ? 'green' : 'blue'}>{result.equal ? t('equal') : t('differences')}</Tag> : <Tag color="red">JSON</Tag>}
+                extra={
+                    <Space>
+                        {result.status === 'valid' ? <Tag color={result.equal ? 'green' : 'blue'}>{result.equal ? t('equal') : t('differences')}</Tag> : <Tag color="red">JSON</Tag>}
+                        {result.status === 'valid' && !result.equal && result.differences.length > 0 ? (
+                            <CopyButton
+                                value={() =>
+                                    result.differences
+                                        .map((d) => `${d.kind} ${d.path} | L:${d.leftPreview} R:${d.rightPreview}`)
+                                        .join('\n')
+                                }
+                            />
+                        ) : null}
+                    </Space>
+                }
                 className={styles.sectionCard}
                 styles={{ body: { padding: 20 } }}
             >
