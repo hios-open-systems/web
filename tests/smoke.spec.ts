@@ -198,6 +198,15 @@ test.describe('Workbench', () => {
         });
     });
 
+    test('Ctrl+Enter dispara la acción primaria (Pattern Lessons)', async ({ page }) => {
+        await page.goto('/es/workbench/patterns');
+        await page.getByText('Reducer / máquina de estados', { exact: true }).click();
+        await page.keyboard.press('Control+Enter');
+        await expect(page.getByTestId('patterns-output')).toContainText('final state: {"n":2}', {
+            timeout: 15_000,
+        });
+    });
+
     test('Notes: preview markdown y persiste tras reload', async ({ page }) => {
         await page.goto('/es/workbench/notes');
         const preview = page.locator('[data-testid="notes-preview"]');

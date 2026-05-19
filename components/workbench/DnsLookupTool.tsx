@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { dnsRecordTypes, type DnsLookupResponse, type DnsRecordType } from '@/lib/workbench/network';
 import { ToolHeader } from './ToolHeader';
+import { useRunHotkey } from '@/lib/hooks/useRunHotkey';
 import styles from './workbench.module.css';
 
 const { Paragraph, Text } = Typography;
@@ -113,6 +114,8 @@ export function DnsLookupTool() {
     '--wb-code-bg': mode === 'dark' ? '#020617' : '#e2e8f0',
     '--wb-code-text': mode === 'dark' ? '#e2e8f0' : '#0f172a',
   } as React.CSSProperties;
+
+  useRunHotkey(() => void runLookup());
 
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
