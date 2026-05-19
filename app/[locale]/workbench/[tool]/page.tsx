@@ -16,6 +16,9 @@ import { MarkdownNotesTool } from '@/components/workbench/MarkdownNotesTool';
 import { PatternsTool } from '@/components/workbench/PatternsTool';
 import { RandomStringTool } from '@/components/workbench/RandomStringTool';
 import { SiteCheckerTool } from '@/components/workbench/SiteCheckerTool';
+import { CronTool } from '@/components/workbench/CronTool';
+import { ColorTool } from '@/components/workbench/ColorTool';
+import { TimestampTool } from '@/components/workbench/TimestampTool';
 import { TypeCheckerTool } from '@/components/workbench/TypeCheckerTool';
 import { ToolPager } from '@/components/workbench/ToolPager';
 import { ToolUsageTracker } from '@/components/workbench/ToolUsageTracker';
@@ -86,6 +89,18 @@ const metadataMap: Record<string, Metadata> = {
     title: 'Object Comparator | HIOS Workbench',
     description: 'Compara dos objetos JSON y detecta diferencias estructurales rápido.',
   },
+  'cron': {
+    title: 'Cron Expression | HIOS Workbench',
+    description: 'Parse cron expressions, get next run times and field breakdown, entirely in your browser.',
+  },
+  'color': {
+    title: 'Color Tools | HIOS Workbench',
+    description: 'Convert between HEX, RGB and HSL, pick colors, inspect contrast ratios — all in your browser.',
+  },
+  'timestamp': {
+    title: 'Timestamp Converter | HIOS Workbench',
+    description: 'Convert Unix timestamps to human-readable dates and ISO formats, entirely in your browser.',
+  },
   'site-checker': {
     title: 'Site Checker | HIOS Workbench',
     description: 'Monitoriza URLs desde el navegador, con checks locales y notificaciones cliente.',
@@ -139,6 +154,12 @@ function renderTool(toolId: WorkbenchToolId) {
       return <ObjectComparatorTool />;
     case 'site-checker':
       return <SiteCheckerTool />;
+    case 'cron':
+      return <CronTool />;
+    case 'color':
+      return <ColorTool />;
+    case 'timestamp':
+      return <TimestampTool />;
     default:
       return null;
   }

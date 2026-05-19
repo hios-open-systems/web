@@ -87,6 +87,28 @@ Una fila por herramienta. Sirve como **spec previo** (antes de codear) y como **
 - **Propósito**: link a las calculadoras embebidas legacy desde el workbench. No es una tool nueva.
 - **Status**: works
 
+
+### Cron Expression 
+- **Proposito**: parsear expresiones cron de 5 campos, ver desglose por campo y las proximas 8 ejecuciones en hora local.
+- **Input**: expresion cron (5 campos: min hr dom mon dow) + presets rapidos.
+- **Output**: estado valid/invalid, tarjetas por campo con token y descripcion, lista de proximas ejecuciones.
+- **Casos borde**: expresion vacia no muestra error. Token invalido o fuera de rango marca invalid con mensaje.
+- **Status**: works
+
+### Color Tools 
+- **Proposito**: convertir colores entre HEX, RGB y HSL; picar con color picker nativo; inspeccionar ratio de contraste WCAG.
+- **Input**: hex manual, picker nativo o preset palette (10 colores).
+- **Output**: valores HEX, RGB, HSL + contraste sobre blanco y negro + sliders RGB y HSL interactivos.
+- **Casos borde**: hex corto (3 digitos) se expande. Input invalido no aplica hasta confirmar.
+- **Status**: works
+
+### Timestamp Converter 
+- **Proposito**: convertir timestamps Unix y strings de fecha a multiples representaciones legibles.
+- **Input**: Unix timestamp (9-13 digitos) o cualquier string parseable por Date. Tab "Now" muestra representaciones del momento actual.
+- **Output**: ISO 8601, UTC, local, date-only, time-only, unix seg, unix ms, relativo.
+- **Casos borde**: input invalido muestra mensaje de error. Valor ambiguo de 10 digitos se trata como unix seconds.
+- **Status**: works
+
 ---
 
 ## Sistema (no-tool pero igual cuenta)
