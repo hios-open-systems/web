@@ -315,6 +315,32 @@ test.describe('API /api/auth/me', () => {
     });
 });
 
+test.describe('PWA', () => {
+    test('manifest.webmanifest válido y servible', async ({ request }) => {
+        const res = await request.get('/manifest.webmanifest');
+        expect(res.status()).toBe(200);
+        const m = (await res.json()) as { name?: string; start_url?: string; display?: string; icons?: unknown[] };
+        expect(m.name).toContain('HIOS');
+        expect(m.start_url).toBe('/');
+        expect(m.display).toBe('standalone');
+        expect(Array.isArray(m.icons) && m.icons.length > 0).toBeTruthy();
+    });
+
+    test('service worker y offline fallback servibles', async ({ request }) => {
+        const sw = await request.get('/sw.js');
+        expect(sw.status()).toBe(200);
+        expect(await sw.text()).toContain('hios-cache');
+        const off = await request.get('/offline.html');
+        expect(off.status()).toBe(200);
+        expect((await off.text()).toLowerCase()).toContain('offline');
+    });
+
+    test('home enlaza el manifest', async ({ page }) => {
+        await page.goto('/es');
+        await expect(page.locator('link[rel="manifest"]')).toHaveCount(1);
+    });
+});
+
 test.describe('Feedback inbox', () => {
     test('entrada manual se guarda y persiste tras reload', async ({ page }) => {
         await page.goto('/es/workbench/feedback');
