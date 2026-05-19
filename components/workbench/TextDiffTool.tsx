@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { diffLines } from '@/lib/workbench/textDiff';
 import { ToolHeader } from './ToolHeader';
+import { CopyButton } from './CopyButton';
 import { UrlPresets } from '@/components/common/UrlPresets';
 import styles from './workbench.module.css';
 
@@ -102,7 +103,20 @@ export function TextDiffTool() {
         title={t('diffLabel')}
         className={styles.sectionCard}
         styles={{ body: { padding: 0 } }}
-        extra={diff.truncated ? <Tag color="orange">{t('truncated')}</Tag> : null}
+        extra={
+          <Space>
+            {diff.truncated ? <Tag color="orange">{t('truncated')}</Tag> : null}
+            {diff.added || diff.removed ? (
+              <CopyButton
+                value={() =>
+                  diff.lines
+                    .map((l) => (l.type === 'add' ? '+' : l.type === 'del' ? '-' : ' ') + l.value)
+                    .join('\n')
+                }
+              />
+            ) : null}
+          </Space>
+        }
       >
         {diff.added === 0 && diff.removed === 0 ? (
           <div className={styles.emptyPanel}>

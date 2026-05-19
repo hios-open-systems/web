@@ -9,6 +9,7 @@ import remarkGfm from 'remark-gfm';
 import { useTheme } from '@/lib/ThemeContext';
 import { LESSONS, getLesson } from '@/lib/workbench/patterns';
 import { ToolHeader } from './ToolHeader';
+import { CopyButton } from './CopyButton';
 import styles from './workbench.module.css';
 
 const { Text } = Typography;
@@ -186,7 +187,12 @@ export function PatternsTool() {
           </Card>
         </Col>
         <Col xs={24} lg={9}>
-          <Card title={t('outputLabel')} className={styles.sectionCard} styles={{ body: { padding: 16 } }}>
+          <Card
+            title={t('outputLabel')}
+            className={styles.sectionCard}
+            styles={{ body: { padding: 16 } }}
+            extra={output ? <CopyButton value={output} /> : null}
+          >
             {output ? (
               <pre
                 data-testid="patterns-output"

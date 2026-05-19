@@ -470,6 +470,11 @@
         "asTypes": "als Typen"
     },
     "Workbench": {
+        "common": {
+            "copy": "Kopieren",
+            "copied": "Kopiert",
+            "copyError": "Kopieren fehlgeschlagen"
+        },
         "patterns": {
             "badge": "Generierungs-Tool",
             "title": "Pattern Lessons",

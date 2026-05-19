@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { runBrowserTypeCheck, type TypeCheckResult } from '@/lib/workbench/typecheck';
 import { ToolHeader } from './ToolHeader';
+import { CopyButton } from './CopyButton';
 import styles from './workbench.module.css';
 
 const { Text } = Typography;
@@ -146,9 +147,20 @@ export function TypeCheckerTool() {
       <Card
         title={t('results')}
         extra={
-          <Tag color={result.status === 'valid' ? 'green' : result.status === 'invalid' ? 'red' : 'gold'}>
-            {result.status === 'valid' ? t('valid') : result.status === 'invalid' ? t('invalid') : t('checkError')}
-          </Tag>
+          <Space>
+            <Tag color={result.status === 'valid' ? 'green' : result.status === 'invalid' ? 'red' : 'gold'}>
+              {result.status === 'valid' ? t('valid') : result.status === 'invalid' ? t('invalid') : t('checkError')}
+            </Tag>
+            {result.diagnostics.length > 0 ? (
+              <CopyButton
+                value={() =>
+                  result.diagnostics
+                    .map((d) => `L${d.line} [${d.segment}] ${d.message}`)
+                    .join('\n')
+                }
+              />
+            ) : null}
+          </Space>
         }
         className={styles.sectionCard}
         styles={{ body: { padding: 20 } }}
