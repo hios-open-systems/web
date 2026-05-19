@@ -657,18 +657,17 @@
         },
         "regex": {
             "badge": "Herramienta de testing",
-            "title": "Regex Tester",
-            "subtitle": "Match, captura y replace con expresiones regulares de JavaScript, en tu navegador.",
-            "patternPlaceholder": "patrón",
-            "flagsPlaceholder": "flags",
+            "title": "Tester de Regex",
+            "subtitle": "Escribe un patrón, elige flags, pega input — coincidencias resaltadas en tiempo real.",
+            "patternPlaceholder": "Ingresa el patrón…",
             "inputLabel": "Texto de prueba",
+            "inputPlaceholder": "Pega texto de prueba aquí…",
+            "previewLabel": "Vista previa resaltada",
             "matchesLabel": "Coincidencias",
-            "groupsLabel": "grupos",
-            "noMatches": "Sin coincidencias",
-            "invalidPattern": "Patrón inválido",
-            "replaceLabel": "Vista previa del replace",
-            "replacePlaceholder": "Reemplazo (usá $1, $<nombre>)",
-            "replaceHint": "Escribí un reemplazo para previsualizar el resultado"
+            "matchCount": "coincidencia(s)",
+            "copyPattern": "Copiar patrón",
+            "copied": "¡Copiado!",
+            "copyError": "Error al copiar"
         },
         "uuidUlid": {
             "badge": "Herramienta de generación",
@@ -943,8 +942,8 @@
                 "description": "Compará dos textos línea por línea (LCS) enteramente en el navegador."
             },
             "regex": {
-                "title": "Regex Tester",
-                "description": "Probá expresiones regulares con matches, grupos y replace, en el navegador."
+                "title": "Tester de Regex",
+                "description": "Prueba patrones regex con resaltado en tiempo real y captura de grupos."
             },
             "uuid-ulid": {
                 "title": "UUID / ULID",
@@ -1021,6 +1020,14 @@
             "json-schema": {
                 "title": "Generador de JSON Schema",
                 "description": "Infiere un JSON Schema de cualquier ejemplo JSON con detección de formatos."
+            },
+            "url-parser": {
+                "title": "Parser de URLs",
+                "description": "Analiza URLs, inspecciona params y construye URLs modificadas — todo en el navegador."
+            },
+            "image-base64": {
+                "title": "Imagen a Base64",
+                "description": "Convierte imágenes a data URIs, base64, snippets CSS o etiquetas HTML img."
             }
         },
         "payload": {
@@ -1453,6 +1460,45 @@
             "copied": "¡Copiado!",
             "copyError": "Error al copiar",
             "empty": "Ingresa JSON válido a la izquierda para generar un schema."
+        },
+        "urlParser": {
+            "badge": "Herramienta de testing",
+            "title": "Parser de URLs",
+            "subtitle": "Analiza cualquier URL en sus partes, inspecciona y edita query params, reconstruye y copia.",
+            "inputPlaceholder": "Pega una URL aquí…",
+            "loadExample": "Cargar ejemplo",
+            "clear": "Limpiar",
+            "partsLabel": "Partes de la URL",
+            "paramsLabel": "Query params",
+            "copied": "¡Copiado!",
+            "copyError": "Error al copiar",
+            "invalid": "URL no válida",
+            "noParams": "Sin parámetros",
+            "edit": "Editar params",
+            "addParam": "Agregar param",
+            "apply": "Aplicar",
+            "cancel": "Cancelar",
+            "colKey": "Clave",
+            "colValue": "Valor"
+        },
+        "imageBase64": {
+            "badge": "Herramienta de generación",
+            "title": "Imagen → Base64",
+            "subtitle": "Arrastrá una imagen y obtené data URI, base64 puro, background-image CSS o etiqueta img HTML.",
+            "dropHint": "Arrastrá una imagen aquí o hacé clic para seleccionar",
+            "dropSub": "PNG, JPEG, SVG, WebP, GIF…",
+            "notAnImage": "El archivo no es una imagen",
+            "clear": "Limpiar",
+            "outputLabel": "Formatos de salida",
+            "labelName": "Nombre",
+            "labelType": "Tipo",
+            "labelSize": "Tamaño original",
+            "labelDimensions": "Dimensiones",
+            "labelBase64Size": "Tamaño base64",
+            "copy": "Copiar",
+            "copied": "copiado!",
+            "copyError": "Error al copiar",
+            "expand": "expandir"
         }
     },
     "VersionWatcher": {

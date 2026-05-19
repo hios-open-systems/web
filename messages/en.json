@@ -659,17 +659,16 @@
         "regex": {
             "badge": "Testing tool",
             "title": "Regex Tester",
-            "subtitle": "Match, capture and replace with JavaScript regular expressions, in your browser.",
-            "patternPlaceholder": "pattern",
-            "flagsPlaceholder": "flags",
-            "inputLabel": "Test text",
+            "subtitle": "Write a pattern, pick flags, paste input — matches highlighted in real time with group capture.",
+            "patternPlaceholder": "Enter pattern…",
+            "inputLabel": "Test input",
+            "inputPlaceholder": "Paste test text here…",
+            "previewLabel": "Highlighted preview",
             "matchesLabel": "Matches",
-            "groupsLabel": "groups",
-            "noMatches": "No matches",
-            "invalidPattern": "Invalid pattern",
-            "replaceLabel": "Replace preview",
-            "replacePlaceholder": "Replacement (use $1, $<name>)",
-            "replaceHint": "Type a replacement to preview the result"
+            "matchCount": "match(es)",
+            "copyPattern": "Copy pattern",
+            "copied": "Copied!",
+            "copyError": "Copy failed"
         },
         "uuidUlid": {
             "badge": "Generation tool",
@@ -945,7 +944,7 @@
             },
             "regex": {
                 "title": "Regex Tester",
-                "description": "Test regular expressions with live matches, groups and replace, in your browser."
+                "description": "Test regex patterns against multiline input with live highlight and group capture."
             },
             "uuid-ulid": {
                 "title": "UUID / ULID",
@@ -1022,6 +1021,14 @@
             "json-schema": {
                 "title": "JSON Schema Generator",
                 "description": "Infer a JSON Schema from any JSON sample with format detection and required-field analysis."
+            },
+            "url-parser": {
+                "title": "URL Parser & Builder",
+                "description": "Parse URLs, inspect query params and build modified URLs — all in your browser."
+            },
+            "image-base64": {
+                "title": "Image to Base64",
+                "description": "Convert images to data URIs, base64, CSS snippets or HTML img tags."
             }
         },
         "payload": {
@@ -1454,6 +1461,45 @@
             "copied": "Copied!",
             "copyError": "Copy failed",
             "empty": "Enter valid JSON on the left to generate a schema."
+        },
+        "urlParser": {
+            "badge": "Testing tool",
+            "title": "URL Parser & Builder",
+            "subtitle": "Parse any URL into its parts, inspect and edit query params, rebuild and copy.",
+            "inputPlaceholder": "Paste a URL here…",
+            "loadExample": "Load example",
+            "clear": "Clear",
+            "partsLabel": "URL parts",
+            "paramsLabel": "Query params",
+            "copied": "Copied!",
+            "copyError": "Copy failed",
+            "invalid": "Not a valid URL",
+            "noParams": "No query parameters",
+            "edit": "Edit params",
+            "addParam": "Add param",
+            "apply": "Apply",
+            "cancel": "Cancel",
+            "colKey": "Key",
+            "colValue": "Value"
+        },
+        "imageBase64": {
+            "badge": "Generation tool",
+            "title": "Image → Base64",
+            "subtitle": "Drop any image and get a data URI, raw base64, CSS background-image or HTML img snippet — entirely local.",
+            "dropHint": "Drop an image here or click to select",
+            "dropSub": "PNG, JPEG, SVG, WebP, GIF…",
+            "notAnImage": "File is not an image",
+            "clear": "Clear",
+            "outputLabel": "Output formats",
+            "labelName": "File name",
+            "labelType": "Type",
+            "labelSize": "Original size",
+            "labelDimensions": "Dimensions",
+            "labelBase64Size": "Base64 size",
+            "copy": "Copy",
+            "copied": "copied!",
+            "copyError": "Copy failed",
+            "expand": "expand"
         }
     },
     "VersionWatcher": {

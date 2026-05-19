@@ -21,6 +21,9 @@ import { ColorTool } from '@/components/workbench/ColorTool';
 import { TimestampTool } from '@/components/workbench/TimestampTool';
 import { NumberBaseTool } from '@/components/workbench/NumberBaseTool';
 import { JsonSchemaTool } from '@/components/workbench/JsonSchemaTool';
+import { UrlParserTool } from '@/components/workbench/UrlParserTool';
+import { RegexTool } from '@/components/workbench/RegexTool';
+import { ImageBase64Tool } from '@/components/workbench/ImageBase64Tool';
 import { TypeCheckerTool } from '@/components/workbench/TypeCheckerTool';
 import { ToolPager } from '@/components/workbench/ToolPager';
 import { ToolUsageTracker } from '@/components/workbench/ToolUsageTracker';
@@ -166,6 +169,12 @@ function renderTool(toolId: WorkbenchToolId) {
       return <NumberBaseTool />;
     case 'json-schema':
       return <JsonSchemaTool />;
+    case 'url-parser':
+      return <UrlParserTool />;
+    case 'regex':
+      return <RegexTool />;
+    case 'image-base64':
+      return <ImageBase64Tool />;
     default:
       return null;
   }
