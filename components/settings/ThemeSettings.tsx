@@ -6,16 +6,46 @@ import { Alert } from 'antd';
 import { CheckOutlined } from '@ant-design/icons';
 import { useTheme } from '@/lib/ThemeContext';
 import { DEFAULT_ACCENT, isValidHex, THEME_PRESETS, findPresetByAccent } from '@/lib/themes/config';
+import {
+    type SavedTheme,
+    addSavedTheme,
+    readSavedThemes,
+    removeSavedTheme,
+    writeSavedThemes,
+} from '@/lib/themes/saved';
 import styles from './themeSettings.module.css';
 
 export function ThemeSettings() {
     const t = useTranslations('Settings');
-    const { accent, setAccent, applyPreset, isAuthenticated, isSyncing, syncState, syncError, syncCurrentAccent } = useTheme();
+    const { accent, mode, toggleTheme, setAccent, applyPreset, isAuthenticated, isSyncing, syncState, syncError, syncCurrentAccent } = useTheme();
     const [hexDraft, setHexDraft] = useState(accent);
+    const [savedThemes, setSavedThemes] = useState<SavedTheme[]>([]);
+    const [themeName, setThemeName] = useState('');
 
     useEffect(() => {
         setHexDraft(accent);
     }, [accent]);
+
+    useEffect(() => {
+        setSavedThemes(readSavedThemes());
+    }, []);
+
+    const persistThemes = (next: SavedTheme[]) => {
+        setSavedThemes(next);
+        writeSavedThemes(next);
+    };
+
+    const saveCurrentTheme = () => {
+        const next = addSavedTheme(savedThemes, themeName, accent, mode);
+        if (next === savedThemes) return;
+        persistThemes(next);
+        setThemeName('');
+    };
+
+    const applySavedTheme = (theme: SavedTheme) => {
+        setAccent(theme.accent);
+        if (mode !== theme.mode) toggleTheme();
+    };
 
     const activePreset = findPresetByAccent(accent);
     const draftValid = isValidHex(hexDraft);
@@ -177,6 +207,75 @@ export function ThemeSettings() {
                     </button>
                 </div>
                 {!draftValid ? <span className={styles.errorText}>{t('invalidHex')}</span> : null}
+            </section>
+
+            <section className={styles.section} aria-labelledby="theme-saved">
+                <div className={styles.sectionHeader}>
+                    <h2 id="theme-saved" className={styles.sectionTitle}>{t('savedTitle')}</h2>
+                    <span className={styles.sectionHint}>{t('savedHint')}</span>
+                </div>
+                <div className={styles.customRow}>
+                    <label className={styles.customField}>
+                        <span className={styles.customLabel}>{t('savedName')}</span>
+                        <div className={styles.hexInputWrap}>
+                            <input
+                                type="text"
+                                value={themeName}
+                                onChange={(event) => setThemeName(event.target.value)}
+                                onKeyDown={(event) => {
+                                    if (event.key === 'Enter') saveCurrentTheme();
+                                }}
+                                className={styles.hexInput}
+                                placeholder={t('savedNamePlaceholder')}
+                                maxLength={40}
+                                data-testid="saved-theme-name"
+                            />
+                        </div>
+                    </label>
+                    <button
+                        type="button"
+                        className={styles.resetButton}
+                        onClick={saveCurrentTheme}
+                        disabled={!themeName.trim()}
+                    >
+                        {t('savedSave')}
+                    </button>
+                </div>
+                {savedThemes.length === 0 ? (
+                    <span className={styles.sectionHint}>{t('savedEmpty')}</span>
+                ) : (
+                    <div className={styles.presetRow} role="list">
+                        {savedThemes.map((theme) => (
+                            <div key={theme.id} className={styles.presetChip} role="listitem">
+                                <button
+                                    type="button"
+                                    className={styles.presetChip}
+                                    style={{ border: 'none', background: 'transparent', padding: 0 }}
+                                    onClick={() => applySavedTheme(theme)}
+                                    title={t('savedApply')}
+                                >
+                                    <span
+                                        className={styles.presetSwatch}
+                                        style={{ background: theme.accent }}
+                                        aria-hidden
+                                    />
+                                    <span className={styles.presetLabel}>
+                                        {theme.name} · {theme.mode === 'dark' ? t('savedModeDark') : t('savedModeLight')}
+                                    </span>
+                                </button>
+                                <button
+                                    type="button"
+                                    aria-label={t('savedDelete')}
+                                    className={styles.resetButton}
+                                    style={{ marginLeft: 8 }}
+                                    onClick={() => persistThemes(removeSavedTheme(savedThemes, theme.id))}
+                                >
+                                    ×
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </section>
 
             <section className={styles.section} aria-label={t('preview')}>

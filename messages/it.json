@@ -1392,6 +1392,16 @@
         "share_error": "Impossibile copiare il link"
     },
     "Settings": {
+        "savedTitle": "I miei temi",
+        "savedHint": "Salva accent + modalità correnti e riapplicali quando vuoi. Restano in questo browser.",
+        "savedName": "Nome",
+        "savedNamePlaceholder": "es. Ambra notturna",
+        "savedSave": "Salva corrente",
+        "savedEmpty": "Nessun tema salvato",
+        "savedApply": "Applica tema",
+        "savedDelete": "Elimina tema",
+        "savedModeDark": "scuro",
+        "savedModeLight": "chiaro",
         "summaryRegion": "Riepilogo tema",
         "summarySyncLabel": "Sync",
         "summarySyncHintLocal": "Non c’è ancora una copia remota per questo accent.",
