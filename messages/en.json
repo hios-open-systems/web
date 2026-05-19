@@ -572,6 +572,11 @@
         "asTypes": "as types"
     },
     "Workbench": {
+        "common": {
+            "copy": "Copy",
+            "copied": "Copied",
+            "copyError": "Could not copy"
+        },
         "patterns": {
             "badge": "Generation tool",
             "title": "Pattern Lessons",

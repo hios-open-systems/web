@@ -215,6 +215,14 @@ test.describe('Workbench', () => {
         });
     });
 
+    test('output tiene botón Copiar consistente (text-diff)', async ({ page }) => {
+        await page.goto('/es/workbench/text-diff');
+        // El ejemplo por defecto difiere -> el CopyButton del diff debe verse.
+        await expect(page.getByRole('button', { name: /Copiar/i }).first()).toBeVisible({
+            timeout: 10_000,
+        });
+    });
+
     test('Text Diff muestra cambios del ejemplo', async ({ page }) => {
         await page.goto('/es/workbench/text-diff');
         // El ejemplo difiere en la línea del return → debe haber +/- > 0.
