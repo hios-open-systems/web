@@ -494,6 +494,16 @@
         "localFootnote": "Stored locally for now. Once auth lands it will sync to your account automatically."
     },
     "Settings": {
+        "savedTitle": "My themes",
+        "savedHint": "Save the current accent + mode and reapply it anytime. Stored in this browser.",
+        "savedName": "Name",
+        "savedNamePlaceholder": "e.g. Night amber",
+        "savedSave": "Save current",
+        "savedEmpty": "No saved themes yet",
+        "savedApply": "Apply theme",
+        "savedDelete": "Delete theme",
+        "savedModeDark": "dark",
+        "savedModeLight": "light",
         "title": "Settings",
         "subtitle": "Customize the workbench theme. Saved locally in this browser.",
         "syncTitle": "Sync",

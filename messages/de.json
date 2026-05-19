@@ -1392,6 +1392,16 @@
         "share_error": "Link konnte nicht kopiert werden"
     },
     "Settings": {
+        "savedTitle": "Meine Themes",
+        "savedHint": "Aktuellen Akzent + Modus speichern und jederzeit erneut anwenden. Bleibt in diesem Browser.",
+        "savedName": "Name",
+        "savedNamePlaceholder": "z. B. Nacht-Amber",
+        "savedSave": "Aktuelles speichern",
+        "savedEmpty": "Noch keine gespeicherten Themes",
+        "savedApply": "Theme anwenden",
+        "savedDelete": "Theme löschen",
+        "savedModeDark": "dunkel",
+        "savedModeLight": "hell",
         "summaryRegion": "Theme-Übersicht",
         "summarySyncLabel": "Sync",
         "summarySyncHintLocal": "Für diesen Accent gibt es noch keine Remote-Kopie.",

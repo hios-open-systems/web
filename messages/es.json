@@ -493,6 +493,16 @@
         "localFootnote": "Hoy se guarda local. Cuando llegue la auth se sincroniza a tu cuenta automáticamente."
     },
     "Settings": {
+        "savedTitle": "Mis temas",
+        "savedHint": "Guardá el accent + modo actual y reaplicalo cuando quieras. Queda en este navegador.",
+        "savedName": "Nombre",
+        "savedNamePlaceholder": "ej. Ámbar nocturno",
+        "savedSave": "Guardar actual",
+        "savedEmpty": "Todavía no hay temas guardados",
+        "savedApply": "Aplicar tema",
+        "savedDelete": "Eliminar tema",
+        "savedModeDark": "oscuro",
+        "savedModeLight": "claro",
         "title": "Configuración",
         "subtitle": "Personalizá el tema del workbench. Se guarda local en este navegador.",
         "syncTitle": "Sync",
