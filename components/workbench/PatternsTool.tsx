@@ -10,6 +10,7 @@ import { useTheme } from '@/lib/ThemeContext';
 import { LESSONS, getLesson } from '@/lib/workbench/patterns';
 import { ToolHeader } from './ToolHeader';
 import { CopyButton } from './CopyButton';
+import { useRunHotkey } from '@/lib/hooks/useRunHotkey';
 import styles from './workbench.module.css';
 
 const { Text } = Typography;
@@ -117,6 +118,8 @@ export function PatternsTool() {
       }) as React.CSSProperties,
     [mode],
   );
+
+  useRunHotkey(run);
 
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
