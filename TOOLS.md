@@ -148,3 +148,17 @@ Una fila por herramienta. Sirve como **spec previo** (antes de codear) y como **
 - **Propósito**: locales `en` y `es` mantenidos, `de` y `it` con fallback profundo a `en`.
 - **Casos borde**: keys faltantes en de/it caen a en automáticamente (ver `i18n/request.ts`).
 - **Status**: works (en/es completos, de/it parciales)
+
+### NumberBaseTool (/workbench/number-base)
+- **Propósito**: convertir números entre decimal, hexadecimal, binario y octal con precisión BigInt (soporte 64-bit sin overflow).
+- **Input**: número en la base activa; se puede cambiar de base y el valor se reconvierte automáticamente.
+- **Output**: representación en las 4 bases, visualizador de bit-field por bytes con índices, y quick-facts (bit width, bytes, set bits, power-of-2).
+- **Casos borde**: negativos soportados en decimal/hex; BigInt evita overflow en valores 32/64-bit.
+- **Status**: works (local only)
+
+### JsonSchemaTool (/workbench/json-schema)
+- **Propósito**: inferir un JSON Schema draft-07 desde cualquier ejemplo de JSON pegado.
+- **Input**: JSON libre + nombre del root type.
+- **Output**: JSON Schema con $schema, 	itle, tipos, ormat (date-time, email, uri), equired, dditionalProperties: false en raíz, y oneOf para arrays heterogéneos.
+- **Casos borde**: array vacío → items: {}; strings cortos adjuntan xamples; errores de parse se muestran inline.
+- **Status**: works (local only)

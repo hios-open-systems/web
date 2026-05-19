@@ -19,6 +19,8 @@ import { SiteCheckerTool } from '@/components/workbench/SiteCheckerTool';
 import { CronTool } from '@/components/workbench/CronTool';
 import { ColorTool } from '@/components/workbench/ColorTool';
 import { TimestampTool } from '@/components/workbench/TimestampTool';
+import { NumberBaseTool } from '@/components/workbench/NumberBaseTool';
+import { JsonSchemaTool } from '@/components/workbench/JsonSchemaTool';
 import { TypeCheckerTool } from '@/components/workbench/TypeCheckerTool';
 import { ToolPager } from '@/components/workbench/ToolPager';
 import { ToolUsageTracker } from '@/components/workbench/ToolUsageTracker';
@@ -160,6 +162,10 @@ function renderTool(toolId: WorkbenchToolId) {
       return <ColorTool />;
     case 'timestamp':
       return <TimestampTool />;
+    case 'number-base':
+      return <NumberBaseTool />;
+    case 'json-schema':
+      return <JsonSchemaTool />;
     default:
       return null;
   }

@@ -1013,6 +1013,14 @@
             "timestamp": {
                 "title": "Conversor de Timestamps",
                 "description": "Convierte timestamps Unix y fechas a ISO, UTC, relativo y más formatos."
+            },
+            "number-base": {
+                "title": "Conversor de Bases Numéricas",
+                "description": "Convierte entre decimal, hexadecimal, binario y octal con visualizador de bits."
+            },
+            "json-schema": {
+                "title": "Generador de JSON Schema",
+                "description": "Infiere un JSON Schema de cualquier ejemplo JSON con detección de formatos."
             }
         },
         "payload": {
@@ -1400,6 +1408,51 @@
             "copy": "Copiar",
             "useNow": "Usar tiempo actual",
             "refreshNow": "Actualizar"
+        },
+        "numberBase": {
+            "badge": "Herramienta de testing",
+            "title": "Conversor de Bases Numéricas",
+            "subtitle": "Convierte entre decimal, hex, binario y octal con precisión BigInt y visualizador de bits.",
+            "inputPlaceholder": "Ingresa un número…",
+            "copy": "Copiar",
+            "copied": "¡Copiado!",
+            "copyError": "Error al copiar",
+            "clear": "Limpiar",
+            "labelDec": "Decimal",
+            "labelHex": "Hexadecimal",
+            "labelBin": "Binario",
+            "labelOct": "Octal",
+            "labelBits": "Ancho en bits",
+            "labelSetBits": "Bits activos",
+            "labelBytes": "Bytes",
+            "labelPow2": "Potencia de 2",
+            "bitVisualizer": "Visualizador de bits",
+            "quickFacts": "Datos rápidos",
+            "empty": "Ingresa un número arriba para ver las conversiones.",
+            "conversions": "Conversiones",
+            "bits": "Visualizador de bits",
+            "facts": "Datos rapidos",
+            "factWidth": "Ancho en bits",
+            "factBytes": "Bytes",
+            "factSetBits": "Bits activos",
+            "factPow2": "Potencia de 2",
+            "yes": "Si",
+            "no": "No"
+        },
+        "jsonSchema": {
+            "badge": "Herramienta de datos",
+            "title": "Generador de JSON Schema",
+            "subtitle": "Infiere un JSON Schema (draft-07) de cualquier ejemplo JSON — detección de formatos, campos requeridos.",
+            "inputLabel": "Entrada JSON",
+            "outputLabel": "Schema Generado",
+            "rootNamePlaceholder": "Nombre raíz…",
+            "inputPlaceholder": "Pega cualquier JSON válido aquí…",
+            "loadExample": "Cargar ejemplo",
+            "clear": "Limpiar",
+            "copy": "Copiar",
+            "copied": "¡Copiado!",
+            "copyError": "Error al copiar",
+            "empty": "Ingresa JSON válido a la izquierda para generar un schema."
         }
     },
     "VersionWatcher": {
