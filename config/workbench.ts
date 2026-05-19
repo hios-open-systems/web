@@ -19,6 +19,9 @@ export type WorkbenchToolId =
   | 'snippets'
   | 'notes'
   | 'patterns'
+  | 'cron'
+  | 'color'
+  | 'timestamp'
   | 'embedded';
 
 export type WorkbenchIcon = 'data' | 'notes' | 'circuits' | 'shield' | 'spark' | 'compare' | 'network';
@@ -226,6 +229,33 @@ export const workbenchTools: WorkbenchTool[] = [
     href: '/workbench/patterns',
     accent: '#a78bfa',
     icon: 'notes',
+    featured: true,
+  },
+  {
+    id: 'cron',
+    locality: 'local',
+    sectionId: 'testing',
+    href: '/workbench/cron',
+    accent: '#06b6d4',
+    icon: 'compare',
+    featured: true,
+  },
+  {
+    id: 'color',
+    locality: 'local',
+    sectionId: 'generation',
+    href: '/workbench/color',
+    accent: '#ec4899',
+    icon: 'spark',
+    featured: true,
+  },
+  {
+    id: 'timestamp',
+    locality: 'local',
+    sectionId: 'generation',
+    href: '/workbench/timestamp',
+    accent: '#f59e0b',
+    icon: 'spark',
     featured: true,
   },
   {

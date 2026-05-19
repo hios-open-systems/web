@@ -1001,6 +1001,18 @@
             "embedded": {
                 "title": "Embedded Bridge",
                 "description": "Conectá esta nueva capa de workbench con las herramientas embebidas que ya existen."
+            },
+            "cron": {
+                "title": "Expresión Cron",
+                "description": "Parsea expresiones cron y ve las próximas ejecuciones con desglose de campos — sin servidor."
+            },
+            "color": {
+                "title": "Herramientas de Color",
+                "description": "Convierte HEX, RGB, HSL; elige colores e inspecciona contraste WCAG — todo en el navegador."
+            },
+            "timestamp": {
+                "title": "Conversor de Timestamps",
+                "description": "Convierte timestamps Unix y fechas a ISO, UTC, relativo y más formatos."
             }
         },
         "payload": {
@@ -1352,6 +1364,42 @@
             "publicKeyLabel": "Clave pública (para verificar)",
             "copyPublic": "Copiar clave pública",
             "demoKeyNote": "Clave demo generada en tu navegador. Solo para pruebas — no la uses para nada sensible."
+        },
+        "cron": {
+            "badge": "Herramienta de prueba",
+            "title": "Expresión Cron",
+            "subtitle": "Parsea expresiones cron, ve las próximas ejecuciones e inspecciona los campos — sin servidor.",
+            "breakdown": "Desglose de campos",
+            "nextRuns": "Próximas 8 ejecuciones (hora local)",
+            "field_minute": "Minuto",
+            "field_hour": "Hora",
+            "field_dayOfMonth": "Día del mes",
+            "field_month": "Mes",
+            "field_dayOfWeek": "Día de la semana",
+            "copy": "Copiar expresión",
+            "copied": "Copiado"
+        },
+        "color": {
+            "badge": "Herramienta de generación",
+            "title": "Herramientas de Color",
+            "subtitle": "Convertí entre HEX, RGB y HSL, elegí colores e inspeccioná contraste WCAG — todo en el navegador.",
+            "values": "Valores de color",
+            "sliders": "Sliders",
+            "copy": "Copiar",
+            "contrastOnWhite": "Contraste sobre blanco",
+            "contrastOnBlack": "Contraste sobre negro"
+        },
+        "timestamp": {
+            "badge": "Herramienta de prueba",
+            "title": "Conversor de Timestamps",
+            "subtitle": "Convertí timestamps Unix y fechas a múltiples formatos — enteramente en tu navegador.",
+            "tabParse": "Parsear",
+            "tabNow": "Ahora",
+            "inputPlaceholder": "Timestamp Unix o fecha…",
+            "invalid": "No se pudo parsear este valor",
+            "copy": "Copiar",
+            "useNow": "Usar tiempo actual",
+            "refreshNow": "Actualizar"
         }
     },
     "VersionWatcher": {
