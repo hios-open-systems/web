@@ -19,6 +19,7 @@
     "test:notes": "node --experimental-strip-types scripts/notes-selftest.ts",
     "test:patterns": "node --experimental-strip-types scripts/patterns-selftest.ts",
     "test:themes": "node --experimental-strip-types scripts/themes-selftest.ts",
+    "test:usage": "node --experimental-strip-types scripts/usage-selftest.ts",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:auth": "playwright test -c playwright.cloudflare.config.ts"

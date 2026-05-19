@@ -572,6 +572,10 @@
         "asTypes": "as types"
     },
     "Workbench": {
+        "pinnedTitle": "Pinned",
+        "recentTitle": "Recently used",
+        "pin": "Pin tool",
+        "unpin": "Unpin tool",
         "common": {
             "copy": "Copy",
             "copied": "Copied",

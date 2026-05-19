@@ -108,6 +108,17 @@ test.describe('Workbench', () => {
         await expect(page).toHaveURL(/\/es\/workbench\/payload/);
     });
 
+    test('pinned/recientes: usar una tool y fijarla', async ({ page }) => {
+        await page.goto('/es/workbench/regex'); // registra uso
+        await page.goto('/es/workbench');
+        await expect(page.getByRole('heading', { name: 'Usadas recientemente', level: 2 })).toBeVisible({
+            timeout: 10_000,
+        });
+        await page.getByRole('button', { name: /Fijar tool/i }).first().click();
+        await expect(page.getByRole('heading', { name: 'Fijadas', level: 2 })).toBeVisible();
+        await page.evaluate(() => window.localStorage.removeItem('hios-tool-usage'));
+    });
+
     test('rutas de sección viejas redirigen al workbench plano', async ({ page }) => {
         await page.goto('/es/workbench/sections/validation');
         await expect(page).toHaveURL(/\/es\/workbench$/);

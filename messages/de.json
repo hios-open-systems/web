@@ -470,6 +470,10 @@
         "asTypes": "als Typen"
     },
     "Workbench": {
+        "pinnedTitle": "Angeheftet",
+        "recentTitle": "Zuletzt verwendet",
+        "pin": "Tool anheften",
+        "unpin": "Tool lösen",
         "common": {
             "copy": "Kopieren",
             "copied": "Kopiert",
