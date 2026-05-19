@@ -6,6 +6,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import { useLocale, useTranslations } from 'next-intl';
 import { usePathname, useRouter } from 'next/navigation';
 import { workbenchTools } from '@/config/workbench';
+import { EMPTY_USAGE, readUsage } from '@/lib/workbench/usage';
 
 interface Entry {
   href: string;
@@ -38,11 +39,21 @@ export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [active, setActive] = useState(0);
+  const [usage, setUsage] = useState(EMPTY_USAGE);
   const inputRef = useRef<InputRef>(null);
 
   const entries = useMemo<Entry[]>(() => {
+    const rank = (id: string) => {
+      const p = usage.pinned.indexOf(id);
+      if (p !== -1) return p;
+      const r = usage.recent.indexOf(id);
+      if (r !== -1) return 100 + r;
+      return 1000;
+    };
     const tools: Entry[] = workbenchTools
       .filter((tool) => tool.id !== 'embedded')
+      .slice()
+      .sort((a, b) => rank(a.id) - rank(b.id))
       .map((tool) => ({
         href: `/${locale}${tool.href}`,
         label: packs(`${tool.id}.title`),
@@ -56,7 +67,7 @@ export function CommandPalette() {
       group: t('pagesGroup'),
     }));
     return [...pages, ...tools];
-  }, [locale, packs, t]);
+  }, [locale, packs, t, usage]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -86,6 +97,7 @@ export function CommandPalette() {
     if (open) {
       setQuery('');
       setActive(0);
+      setUsage(readUsage());
       setTimeout(() => inputRef.current?.focus(), 0);
     }
   }, [open]);
