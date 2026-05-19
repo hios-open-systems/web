@@ -1014,6 +1014,14 @@
             "timestamp": {
                 "title": "Timestamp Converter",
                 "description": "Convert Unix timestamps and date strings to ISO, UTC, relative and more formats."
+            },
+            "number-base": {
+                "title": "Number Base Converter",
+                "description": "Convert between decimal, hexadecimal, binary and octal with a bit-field visualizer."
+            },
+            "json-schema": {
+                "title": "JSON Schema Generator",
+                "description": "Infer a JSON Schema from any JSON sample with format detection and required-field analysis."
             }
         },
         "payload": {
@@ -1401,6 +1409,51 @@
             "copy": "Copy",
             "useNow": "Use current time",
             "refreshNow": "Refresh"
+        },
+        "numberBase": {
+            "badge": "Testing tool",
+            "title": "Number Base Converter",
+            "subtitle": "Convert between decimal, hex, binary and octal with BigInt precision and a bit-field visualizer.",
+            "inputPlaceholder": "Enter a number…",
+            "copy": "Copy",
+            "copied": "Copied!",
+            "copyError": "Copy failed",
+            "clear": "Clear",
+            "labelDec": "Decimal",
+            "labelHex": "Hex",
+            "labelBin": "Binary",
+            "labelOct": "Octal",
+            "labelBits": "Bit width",
+            "labelSetBits": "Set bits",
+            "labelBytes": "Bytes",
+            "labelPow2": "Power of 2",
+            "bitVisualizer": "Bit visualizer",
+            "quickFacts": "Quick facts",
+            "empty": "Enter a number above to see conversions.",
+            "conversions": "Conversions",
+            "bits": "Bit visualizer",
+            "facts": "Quick facts",
+            "factWidth": "Bit width",
+            "factBytes": "Bytes",
+            "factSetBits": "Set bits",
+            "factPow2": "Power of 2",
+            "yes": "Yes",
+            "no": "No"
+        },
+        "jsonSchema": {
+            "badge": "Data tool",
+            "title": "JSON Schema Generator",
+            "subtitle": "Infer a JSON Schema (draft-07) from any JSON sample — format detection, required fields, nested objects.",
+            "inputLabel": "JSON Input",
+            "outputLabel": "Generated Schema",
+            "rootNamePlaceholder": "Root name…",
+            "inputPlaceholder": "Paste any valid JSON here…",
+            "loadExample": "Load example",
+            "clear": "Clear",
+            "copy": "Copy",
+            "copied": "Copied!",
+            "copyError": "Copy failed",
+            "empty": "Enter valid JSON on the left to generate a schema."
         }
     },
     "VersionWatcher": {

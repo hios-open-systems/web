@@ -22,6 +22,8 @@ export type WorkbenchToolId =
   | 'cron'
   | 'color'
   | 'timestamp'
+  | 'number-base'
+  | 'json-schema'
   | 'embedded';
 
 export type WorkbenchIcon = 'data' | 'notes' | 'circuits' | 'shield' | 'spark' | 'compare' | 'network';
@@ -256,6 +258,24 @@ export const workbenchTools: WorkbenchTool[] = [
     href: '/workbench/timestamp',
     accent: '#f59e0b',
     icon: 'spark',
+    featured: true,
+  },
+  {
+    id: 'number-base',
+    locality: 'local',
+    sectionId: 'testing',
+    href: '/workbench/number-base',
+    accent: '#a78bfa',
+    icon: 'data',
+    featured: true,
+  },
+  {
+    id: 'json-schema',
+    locality: 'local',
+    sectionId: 'generation',
+    href: '/workbench/json-schema',
+    accent: '#f59e0b',
+    icon: 'notes',
     featured: true,
   },
   {
