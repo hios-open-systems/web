@@ -9,6 +9,7 @@ import { useTheme } from '@/lib/ThemeContext';
 import { runBrowserTypeCheck, type TypeCheckResult } from '@/lib/workbench/typecheck';
 import { ToolHeader } from './ToolHeader';
 import { CopyButton } from './CopyButton';
+import { useRunHotkey } from '@/lib/hooks/useRunHotkey';
 import styles from './workbench.module.css';
 
 const { Text } = Typography;
@@ -86,6 +87,8 @@ export function TypeCheckerTool() {
     '--wb-code-bg': mode === 'dark' ? '#020617' : '#e2e8f0',
     '--wb-code-text': mode === 'dark' ? '#e2e8f0' : '#0f172a',
   } as React.CSSProperties;
+
+  useRunHotkey(() => void runCheck(typeSource, valueSource, rootTypeName));
 
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>

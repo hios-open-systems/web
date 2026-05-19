@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { type CertificateLookupResponse } from '@/lib/workbench/network';
 import { ToolHeader } from './ToolHeader';
+import { useRunHotkey } from '@/lib/hooks/useRunHotkey';
 import styles from './workbench.module.css';
 
 const { Paragraph, Text } = Typography;
@@ -101,6 +102,8 @@ export function CertificateCheckTool() {
 
   const statusColor = result?.isExpired ? 'red' : result && result.daysRemaining <= 21 ? 'gold' : 'green';
   const statusLabel = result?.isExpired ? t('expired') : result && result.daysRemaining <= 21 ? t('expiringSoon') : t('active');
+
+  useRunHotkey(() => void inspectCertificate());
 
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
