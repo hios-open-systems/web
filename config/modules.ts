@@ -6,6 +6,7 @@
  */
 
 export type ModuleCategory = 'microcontroller' | 'audio' | 'power' | 'amplifier';
+export type ModuleCategoryFilter = 'all' | ModuleCategory;
 
 export interface ModuleSpecs {
   voltage?: string;
@@ -108,11 +109,22 @@ export const CATEGORIES: Record<ModuleCategory, { label: string; color: string }
   power: { label: 'Alimentación', color: '#ef4444' },
 };
 
+export const MODULE_CATEGORIES = Object.keys(CATEGORIES) as ModuleCategory[];
+
 /**
  * Helper para obtener módulos por categoría
  */
 export const getModulesByCategory = (category: ModuleCategory): Module[] =>
   MODULES.filter((m) => m.category === category);
+
+export const getModuleCategoryCounts = (modules: Module[] = MODULES) =>
+  MODULE_CATEGORIES.reduce<Record<ModuleCategoryFilter, number>>(
+    (counts, category) => ({
+      ...counts,
+      [category]: modules.filter((module) => module.category === category).length,
+    }),
+    { all: modules.length, microcontroller: 0, audio: 0, power: 0, amplifier: 0 },
+  );
 
 /**
  * Helper para buscar módulos por texto
@@ -127,6 +139,26 @@ export const searchModules = (query: string): Module[] => {
       m.description.toLowerCase().includes(normalizedQuery) ||
       m.id.toLowerCase().includes(normalizedQuery)
   );
+};
+
+export const filterModules = (
+  modules: Module[],
+  query: string,
+  category: ModuleCategoryFilter,
+): Module[] => {
+  const normalizedQuery = query.toLowerCase().trim();
+
+  return modules.filter((module) => {
+    const matchesCategory = category === 'all' || module.category === category;
+    const matchesQuery =
+      !normalizedQuery ||
+      module.name.toLowerCase().includes(normalizedQuery) ||
+      module.description.toLowerCase().includes(normalizedQuery) ||
+      module.id.toLowerCase().includes(normalizedQuery) ||
+      module.specs?.interface?.toLowerCase().includes(normalizedQuery);
+
+    return matchesCategory && matchesQuery;
+  });
 };
 
 /**

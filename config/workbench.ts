@@ -32,6 +32,7 @@ export type WorkbenchToolId =
   | 'spectrum-analyzer'
   | 'metronome'
   | 'beat-counter'
+  | 'delay-calculator'
   | 'embedded';
 
 export type WorkbenchIcon = 'audio' | 'data' | 'notes' | 'circuits' | 'shield' | 'spark' | 'compare' | 'network';
@@ -129,6 +130,15 @@ export const workbenchTools: WorkbenchTool[] = [
     sectionId: 'audio',
     href: '/workbench/beat-counter',
     accent: '#ec4899',
+    icon: 'audio',
+    featured: true,
+  },
+  {
+    id: 'delay-calculator',
+    locality: 'local',
+    sectionId: 'audio',
+    href: '/workbench/delay-calculator',
+    accent: '#22c55e',
     icon: 'audio',
     featured: true,
   },

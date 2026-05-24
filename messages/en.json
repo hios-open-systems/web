@@ -359,9 +359,16 @@
         "print_pinout": "Print Pinout"
     },
     "Pinouts": {
+        "eyebrow": "Hardware reference",
         "title": "Interactive Pinouts",
         "subtitle": "Explore the pin diagrams of modules used in our projects",
         "available_modules": "Available Modules",
+        "all": "All",
+        "search_placeholder": "Search module, interface, or family...",
+        "empty_filtered": "No modules match this filter.",
+        "stats_modules": "modules",
+        "stats_microcontrollers": "MCUs",
+        "stats_audio": "audio",
         "select_module": "Select a module to see its pinouts",
         "print": "Print",
         "print_tooltip": "Print pinout",
@@ -950,6 +957,10 @@
             "beat-counter": {
                 "title": "Beat Counter",
                 "description": "Estimate BPM by tapping the pulse with clicks or the spacebar."
+            },
+            "delay-calculator": {
+                "title": "Delay Calculator",
+                "description": "Convert BPM to musical delay times and milliseconds to acoustic distance."
             },
             "patterns": {
                 "title": "Pattern Lessons",

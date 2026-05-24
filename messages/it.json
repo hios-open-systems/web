@@ -349,9 +349,16 @@
         "print_pinout": "Stampa Pinout"
     },
     "Pinouts": {
+        "eyebrow": "Riferimento hardware",
         "title": "Pinout Interattivi",
         "subtitle": "Esplora i diagrammi dei pin dei moduli utilizzati nei nostri progetti",
         "available_modules": "Moduli Disponibili",
+        "all": "Tutti",
+        "search_placeholder": "Cerca modulo, interfaccia o famiglia...",
+        "empty_filtered": "Nessun modulo corrisponde a questo filtro.",
+        "stats_modules": "moduli",
+        "stats_microcontrollers": "MCU",
+        "stats_audio": "audio",
         "select_module": "Seleziona un modulo per vedere i suoi pinout",
         "print": "Stampa",
         "print_tooltip": "Stampa pinout",
@@ -855,6 +862,10 @@
             "beat-counter": {
                 "title": "Beat Counter",
                 "description": "Stima i BPM battendo il tempo con click o barra spaziatrice."
+            },
+            "delay-calculator": {
+                "title": "Calcolatore delay",
+                "description": "Converti BPM in tempi musicali e millisecondi in distanza acustica."
             },
             "patterns": {
                 "title": "Pattern Lessons",

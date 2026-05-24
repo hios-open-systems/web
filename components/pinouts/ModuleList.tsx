@@ -1,23 +1,61 @@
 'use client';
 
 import React from 'react';
+import { Input, Segmented } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
-import type { Module } from '@/config/modules';
-import { CATEGORIES } from '@/config/modules';
+import type { Module, ModuleCategoryFilter } from '@/config/modules';
+import { CATEGORIES, MODULE_CATEGORIES, getModuleCategoryCounts } from '@/config/modules';
 import styles from './pinouts.module.css';
 
 interface ModuleListProps {
   modules: Module[];
   selectedModuleId?: string;
+  query: string;
+  category: ModuleCategoryFilter;
   onSelect: (moduleId: string) => void;
+  onQueryChange: (query: string) => void;
+  onCategoryChange: (category: ModuleCategoryFilter) => void;
 }
 
-export function ModuleList({ modules, selectedModuleId, onSelect }: ModuleListProps) {
+export function ModuleList({
+  modules,
+  selectedModuleId,
+  query,
+  category,
+  onSelect,
+  onQueryChange,
+  onCategoryChange,
+}: ModuleListProps) {
   const t = useTranslations('Pinouts');
+  const counts = getModuleCategoryCounts();
+  const categoryOptions = [
+    { label: `${t('all')} ${counts.all}`, value: 'all' },
+    ...MODULE_CATEGORIES.map((id) => ({
+      label: `${t(`Categories.${id}`)} ${counts[id]}`,
+      value: id,
+    })),
+  ];
 
   return (
     <nav className={styles.moduleList} aria-label={t('available_modules')}>
       <p className={styles.moduleListTitle}>{t('available_modules')}</p>
+      <div className={styles.moduleTools}>
+        <Input
+          value={query}
+          onChange={(event) => onQueryChange(event.target.value)}
+          prefix={<SearchOutlined />}
+          placeholder={t('search_placeholder')}
+          allowClear
+        />
+        <Segmented
+          block
+          size="small"
+          value={category}
+          onChange={(value) => onCategoryChange(value as ModuleCategoryFilter)}
+          options={categoryOptions}
+        />
+      </div>
       <ul className={styles.moduleListItems}>
         {modules.map((module) => {
           const category = CATEGORIES[module.category];
@@ -46,6 +84,7 @@ export function ModuleList({ modules, selectedModuleId, onSelect }: ModuleListPr
           );
         })}
       </ul>
+      {modules.length === 0 ? <p className={styles.moduleEmpty}>{t('empty_filtered')}</p> : null}
     </nav>
   );
 }
