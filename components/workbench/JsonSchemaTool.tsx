@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import { Button, Card, Input, Space, Tabs, Typography, message } from 'antd';
+import { Button, Card, Input, Space, Typography, message } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';

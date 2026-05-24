@@ -47,5 +47,7 @@ next-env.d.ts
 .vscode/
 .idea/
 
+# local assistant settings
+.claude/
 
 .ia
