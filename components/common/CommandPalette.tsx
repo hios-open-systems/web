@@ -5,7 +5,7 @@ import { Modal, Input, type InputRef } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useLocale, useTranslations } from 'next-intl';
 import { usePathname, useRouter } from 'next/navigation';
-import { workbenchTools } from '@/config/workbench';
+import { workbenchSections, workbenchTools } from '@/config/workbench';
 import { EMPTY_USAGE, readUsage } from '@/lib/workbench/usage';
 
 interface Entry {
@@ -23,6 +23,7 @@ const STATIC_PAGES = [
   { key: 'snippets', href: '/workbench/snippets' },
   { key: 'settings', href: '/workbench/settings' },
   { key: 'feedback', href: '/workbench/feedback' },
+  { key: 'random', href: '/workbench?tool=random' },
 ];
 
 /**
@@ -36,6 +37,7 @@ export function CommandPalette() {
   const pathname = usePathname();
   const t = useTranslations('CommandPalette');
   const packs = useTranslations('Workbench.packs');
+  const workbench = useTranslations('Workbench');
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [active, setActive] = useState(0);
@@ -66,8 +68,14 @@ export function CommandPalette() {
       hint: '',
       group: t('pagesGroup'),
     }));
-    return [...pages, ...tools];
-  }, [locale, packs, t, usage]);
+    const sections: Entry[] = workbenchSections.map((section) => ({
+      href: `/${locale}${section.href}`,
+      label: workbench(`sections.${section.id}.title`),
+      hint: workbench(`sections.${section.id}.description`),
+      group: t('sectionsGroup'),
+    }));
+    return [...pages, ...sections, ...tools];
+  }, [locale, packs, t, usage, workbench]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -133,7 +141,7 @@ export function CommandPalette() {
       onCancel={() => setOpen(false)}
       footer={null}
       closable={false}
-      destroyOnClose
+      destroyOnHidden
       styles={{ body: { padding: 0 } }}
       width={560}
     >

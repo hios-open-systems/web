@@ -144,7 +144,7 @@ export function UrlPresets({
         okText={t('save')}
         title={t('namePrompt')}
         width={420}
-        destroyOnClose
+        destroyOnHidden
       >
         <Input
           autoFocus
