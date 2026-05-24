@@ -942,6 +942,14 @@
                 "title": "Analizador de espectro",
                 "description": "FFT en tiempo real desde el micrófono para inspeccionar energía por frecuencia."
             },
+            "metronome": {
+                "title": "Metrónomo",
+                "description": "Click musical configurable con tempo, pulsos y subdivisiones para practicar o probar timing."
+            },
+            "beat-counter": {
+                "title": "Beat counter",
+                "description": "Estimá BPM marcando el pulso con clicks o barra espaciadora."
+            },
             "patterns": {
                 "title": "Pattern Lessons",
                 "description": "Lecciones interactivas de patrones modernos con código editable y runner sandbox."

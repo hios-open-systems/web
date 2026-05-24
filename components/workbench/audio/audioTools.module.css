@@ -78,6 +78,57 @@
   gap: 10px;
 }
 
+.beatDots {
+  display: grid;
+  grid-template-columns: repeat(var(--beats, 4), minmax(28px, 1fr));
+  gap: 10px;
+  width: min(420px, 100%);
+}
+
+.beatDot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.beatDotActive {
+  border-color: color-mix(in srgb, var(--accent) 70%, transparent);
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  color: var(--accent);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+:global([data-theme="dark"]) .beatDot {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  color: #94a3b8;
+}
+
+.tapPad {
+  width: 100%;
+  min-height: 180px;
+  border-radius: 16px;
+  border: 1px dashed color-mix(in srgb, var(--accent) 48%, transparent);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  color: var(--accent);
+  cursor: pointer;
+  font-size: clamp(2rem, 6vw, 4rem);
+  font-weight: 800;
+  transition: transform 0.12s ease, background 0.12s ease;
+}
+
+.tapPad:active {
+  transform: scale(0.99);
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
 .stat {
   border: 1px solid rgba(15, 23, 42, 0.08);
   border-radius: 10px;

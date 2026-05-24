@@ -848,6 +848,14 @@
                 "title": "Spektrumanalysator",
                 "description": "Echtzeit-FFT vom Mikrofon zur Analyse der Frequenzenergie im Browser."
             },
+            "metronome": {
+                "title": "Metronom",
+                "description": "Konfigurierbarer musikalischer Klick mit Tempo, Takten und Unterteilungen."
+            },
+            "beat-counter": {
+                "title": "Beat Counter",
+                "description": "BPM durch Tippen des Pulses mit Klicks oder Leertaste schätzen."
+            },
             "patterns": {
                 "title": "Pattern Lessons",
                 "description": "Interaktive Lektionen zu modernen Patterns mit editierbarem Code und Sandbox-Runner."
