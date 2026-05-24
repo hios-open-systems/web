@@ -1,6 +1,7 @@
 import React from 'react';
 import {
     ApartmentOutlined,
+    AudioOutlined,
     DatabaseOutlined,
     FileTextOutlined,
     GlobalOutlined,
@@ -11,6 +12,7 @@ import {
 import type { WorkbenchIcon } from '@/config/workbench';
 
 const iconMap: Record<WorkbenchIcon, React.ReactNode> = {
+    audio: <AudioOutlined />,
     data: <DatabaseOutlined />,
     notes: <FileTextOutlined />,
     circuits: <ToolOutlined />,

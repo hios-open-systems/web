@@ -1,4 +1,4 @@
-export type WorkbenchSectionId = 'validation' | 'generation' | 'testing';
+export type WorkbenchSectionId = 'audio' | 'validation' | 'generation' | 'testing';
 
 export type WorkbenchToolId =
   | 'payload'
@@ -27,9 +27,12 @@ export type WorkbenchToolId =
   | 'url-parser'
   | 'regex'
   | 'image-base64'
+  | 'tone-generator'
+  | 'guitar-tuner'
+  | 'spectrum-analyzer'
   | 'embedded';
 
-export type WorkbenchIcon = 'data' | 'notes' | 'circuits' | 'shield' | 'spark' | 'compare' | 'network';
+export type WorkbenchIcon = 'audio' | 'data' | 'notes' | 'circuits' | 'shield' | 'spark' | 'compare' | 'network';
 
 export type WorkbenchLocality = 'local' | 'network';
 
@@ -56,6 +59,12 @@ export type WorkbenchPackId = WorkbenchToolId;
 
 export const workbenchSections: WorkbenchSection[] = [
   {
+    id: 'audio',
+    href: '/workbench/sections/audio',
+    accent: '#06b6d4',
+    icon: 'audio',
+  },
+  {
     id: 'validation',
     href: '/workbench/sections/validation',
     accent: '#0ea5e9',
@@ -76,6 +85,33 @@ export const workbenchSections: WorkbenchSection[] = [
 ];
 
 export const workbenchTools: WorkbenchTool[] = [
+  {
+    id: 'tone-generator',
+    locality: 'local',
+    sectionId: 'audio',
+    href: '/workbench/tone-generator',
+    accent: '#06b6d4',
+    icon: 'audio',
+    featured: true,
+  },
+  {
+    id: 'guitar-tuner',
+    locality: 'local',
+    sectionId: 'audio',
+    href: '/workbench/guitar-tuner',
+    accent: '#14b8a6',
+    icon: 'audio',
+    featured: true,
+  },
+  {
+    id: 'spectrum-analyzer',
+    locality: 'local',
+    sectionId: 'audio',
+    href: '/workbench/spectrum-analyzer',
+    accent: '#8b5cf6',
+    icon: 'audio',
+    featured: true,
+  },
   {
     id: 'payload',
     locality: 'local',

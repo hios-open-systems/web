@@ -434,6 +434,7 @@
         }
     },
     "Header": {
+        "tools": "Tools",
         "workbench": "Workbench",
         "pinouts": "Pinouts",
         "calculators": "Rechner",
@@ -785,8 +786,8 @@
         },
         "landing": {
             "badge": "Neue Produktlinie",
-            "title": "Ein praktischer Workspace für Payloads, JWTs, Snippets und echte Entwickler-Workflows.",
-            "subtitle": "Kleine, aber häufige Werkzeuge, sofort bereit. Keine Kategorien, kein Gate — du kommst rein und das Tool ist da.",
+            "title": "Tools",
+            "subtitle": "Audio, Validierung, Generierung und Tests in einer local-first Oberfläche für ein echtes Labor.",
             "randomCta": "Zufälliges öffnen",
             "allToolsTitle": "Alle Werkzeuge",
             "allToolsSubtitle": "Ein Raster, keine Ebenen. Klick und los.",
@@ -808,6 +809,10 @@
             }
         },
         "sections": {
+            "audio": {
+                "title": "Audio Lab",
+                "description": "Tuning, Referenztöne und schnelle Analyse für Lautsprecher, DACs und Signalketten im Browser."
+            },
             "validation": {
                 "title": "Validierung",
                 "description": "Payloads, Auth-Artefakte, DNS-Einträge oder TLS-Zustand prüfen, bevor sie Produktion erreichen."
@@ -831,6 +836,18 @@
         "pagerPrev": "Zurück",
         "pagerNext": "Weiter",
         "packs": {
+            "tone-generator": {
+                "title": "Tongenerator",
+                "description": "Konfigurierbarer Oszillator zum Testen von Lautsprechern, DACs, Filtern und Audioketten."
+            },
+            "guitar-tuner": {
+                "title": "Gitarrenstimmgerät",
+                "description": "Lokales chromatisches Stimmgerät mit Pitch-Erkennung, nächster Note und Cent-Abweichung."
+            },
+            "spectrum-analyzer": {
+                "title": "Spektrumanalysator",
+                "description": "Echtzeit-FFT vom Mikrofon zur Analyse der Frequenzenergie im Browser."
+            },
             "patterns": {
                 "title": "Pattern Lessons",
                 "description": "Interaktive Lektionen zu modernen Patterns mit editierbarem Code und Sandbox-Runner."
