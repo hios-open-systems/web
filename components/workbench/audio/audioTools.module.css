@@ -129,6 +129,27 @@
   background: color-mix(in srgb, var(--accent) 16%, transparent);
 }
 
+.delayTable {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.delayRow {
+  display: grid;
+  grid-template-columns: 72px repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #f8fafc;
+  font-size: 13px;
+}
+
+:global([data-theme="dark"]) .delayRow {
+  background: rgba(255, 255, 255, 0.03);
+}
+
 .stat {
   border: 1px solid rgba(15, 23, 42, 0.08);
   border-radius: 10px;
@@ -159,7 +180,8 @@
 @media (max-width: 760px) {
   .panelGrid,
   .controlRow,
-  .statGrid {
+  .statGrid,
+  .delayRow {
     grid-template-columns: 1fr;
   }
 }

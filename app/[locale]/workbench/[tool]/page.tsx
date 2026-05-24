@@ -26,6 +26,7 @@ import { RegexTool } from '@/components/workbench/RegexTool';
 import { ImageBase64Tool } from '@/components/workbench/ImageBase64Tool';
 import { TypeCheckerTool } from '@/components/workbench/TypeCheckerTool';
 import { BeatCounterTool } from '@/components/workbench/audio/BeatCounterTool';
+import { DelayCalculatorTool } from '@/components/workbench/audio/DelayCalculatorTool';
 import { GuitarTunerTool } from '@/components/workbench/audio/GuitarTunerTool';
 import { MetronomeTool } from '@/components/workbench/audio/MetronomeTool';
 import { SpectrumAnalyzerTool } from '@/components/workbench/audio/SpectrumAnalyzerTool';
@@ -58,6 +59,10 @@ const metadataMap: Record<string, Metadata> = {
   'beat-counter': {
     title: 'Beat counter | HIOS Audio Lab',
     description: 'Calcula BPM marcando el pulso con clicks o barra espaciadora.',
+  },
+  'delay-calculator': {
+    title: 'Calculadora de delay | HIOS Audio Lab',
+    description: 'Convierte BPM a delays musicales y milisegundos a distancia acústica.',
   },
   'jwt-decode': {
     title: 'JWT Playground | HIOS Workbench',
@@ -162,6 +167,8 @@ function renderTool(toolId: WorkbenchToolId) {
       return <MetronomeTool />;
     case 'beat-counter':
       return <BeatCounterTool />;
+    case 'delay-calculator':
+      return <DelayCalculatorTool />;
     case 'type-checker':
       return <TypeCheckerTool />;
     case 'jwt-decode':

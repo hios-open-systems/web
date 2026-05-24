@@ -22,7 +22,7 @@ export default function PinoutsPage({
   setRequestLocale(locale);
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div>
       <PinoutsContent />
     </div>
   );
