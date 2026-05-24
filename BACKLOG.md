@@ -10,6 +10,30 @@ Una sección por idea. Llenala al menos hasta `Sketch` antes de empezarla — si
 
 ---
 
+## Investigar warning webpack cache con next-intl
+- **Why**: en build aparece warning de `webpack.cache.PackFileCacheStrategy` al parsear `next-intl/.../extractor/format/index.js` con `import(t)`. No rompe release, pero ensucia logs y puede ocultar señales reales.
+- **Sketch**:
+  1. Confirmar en issue tracker de `next-intl`/`next` si está reportado para la versión actual (`next-intl@4.7.0`, `next@14.2.35`).
+  2. Probar upgrade controlado de `next-intl` (y/o pin recomendado) en rama corta con `npm run build`.
+  3. Si persiste, documentar que es warning no bloqueante y agregar nota en `TOOLS.md` para evitar falsos positivos en QA.
+  4. Re-evaluar al migrar de major de Next.
+- **Dependencies**: acceso a changelog/issues de `next-intl` y ventana breve para prueba de upgrade.
+- **Status**: parked.
+
+---
+
+## Reducir ruido de 401 esperado en desarrollo
+- **Why**: algunos endpoints protegidos devuelven `401` sin sesión (comportamiento correcto), pero ese ruido puede confundirse con errores reales durante QA local.
+- **Sketch**:
+  1. Listar endpoints donde `401` sin sesión es esperado y dejar tabla corta en docs operativas.
+  2. Ajustar fetch cliente en superficies públicas para no loguear como error cuando `401` es parte del flujo normal.
+  3. Revisar tests de humo para asegurar cobertura explícita de `401 expected` vs `401 unexpected`.
+  4. Agregar guía de debugging rápida en `TOOLS.md` para distinguir auth faltante vs bug de sesión.
+- **Dependencies**: acordar estándar de logging cliente para APIs autenticadas.
+- **Status**: next.
+
+---
+
 ## Version watcher hardening
 - **Why**: el aviso base de deploy nuevo ya existe. Lo que queda pendiente es endurecer bordes y decidir si más adelante conviene pasar de aviso simple a changelog/reload más inteligente.
 - **Sketch**:
