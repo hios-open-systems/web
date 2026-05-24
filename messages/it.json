@@ -848,6 +848,14 @@
                 "title": "Analizzatore di spettro",
                 "description": "FFT in tempo reale dal microfono per ispezionare l'energia per frequenza."
             },
+            "metronome": {
+                "title": "Metronomo",
+                "description": "Click musicale configurabile con tempo, battiti e suddivisioni."
+            },
+            "beat-counter": {
+                "title": "Beat Counter",
+                "description": "Stima i BPM battendo il tempo con click o barra spaziatrice."
+            },
             "patterns": {
                 "title": "Pattern Lessons",
                 "description": "Lezioni interattive su pattern moderni con codice editabile e runner sandbox."

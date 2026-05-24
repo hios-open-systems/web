@@ -25,7 +25,9 @@ import { UrlParserTool } from '@/components/workbench/UrlParserTool';
 import { RegexTool } from '@/components/workbench/RegexTool';
 import { ImageBase64Tool } from '@/components/workbench/ImageBase64Tool';
 import { TypeCheckerTool } from '@/components/workbench/TypeCheckerTool';
+import { BeatCounterTool } from '@/components/workbench/audio/BeatCounterTool';
 import { GuitarTunerTool } from '@/components/workbench/audio/GuitarTunerTool';
+import { MetronomeTool } from '@/components/workbench/audio/MetronomeTool';
 import { SpectrumAnalyzerTool } from '@/components/workbench/audio/SpectrumAnalyzerTool';
 import { ToneGeneratorTool } from '@/components/workbench/audio/ToneGeneratorTool';
 import { ToolPager } from '@/components/workbench/ToolPager';
@@ -48,6 +50,14 @@ const metadataMap: Record<string, Metadata> = {
   'spectrum-analyzer': {
     title: 'Analizador de espectro | HIOS Audio Lab',
     description: 'FFT en tiempo real para inspeccionar energia por frecuencia desde el navegador.',
+  },
+  'metronome': {
+    title: 'Metrónomo | HIOS Audio Lab',
+    description: 'Click musical configurable con tempo, pulsos y subdivisiones.',
+  },
+  'beat-counter': {
+    title: 'Beat counter | HIOS Audio Lab',
+    description: 'Calcula BPM marcando el pulso con clicks o barra espaciadora.',
   },
   'jwt-decode': {
     title: 'JWT Playground | HIOS Workbench',
@@ -148,6 +158,10 @@ function renderTool(toolId: WorkbenchToolId) {
       return <GuitarTunerTool />;
     case 'spectrum-analyzer':
       return <SpectrumAnalyzerTool />;
+    case 'metronome':
+      return <MetronomeTool />;
+    case 'beat-counter':
+      return <BeatCounterTool />;
     case 'type-checker':
       return <TypeCheckerTool />;
     case 'jwt-decode':

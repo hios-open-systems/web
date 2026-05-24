@@ -943,6 +943,14 @@
                 "title": "Spectrum Analyzer",
                 "description": "Realtime microphone FFT to inspect frequency energy from the browser."
             },
+            "metronome": {
+                "title": "Metronome",
+                "description": "Configurable musical click with tempo, beats and subdivisions for practice or timing tests."
+            },
+            "beat-counter": {
+                "title": "Beat Counter",
+                "description": "Estimate BPM by tapping the pulse with clicks or the spacebar."
+            },
             "patterns": {
                 "title": "Pattern Lessons",
                 "description": "Interactive modern-pattern lessons with editable code and a sandboxed runner."

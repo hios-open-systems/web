@@ -30,6 +30,8 @@ export type WorkbenchToolId =
   | 'tone-generator'
   | 'guitar-tuner'
   | 'spectrum-analyzer'
+  | 'metronome'
+  | 'beat-counter'
   | 'embedded';
 
 export type WorkbenchIcon = 'audio' | 'data' | 'notes' | 'circuits' | 'shield' | 'spark' | 'compare' | 'network';
@@ -109,6 +111,24 @@ export const workbenchTools: WorkbenchTool[] = [
     sectionId: 'audio',
     href: '/workbench/spectrum-analyzer',
     accent: '#8b5cf6',
+    icon: 'audio',
+    featured: true,
+  },
+  {
+    id: 'metronome',
+    locality: 'local',
+    sectionId: 'audio',
+    href: '/workbench/metronome',
+    accent: '#f59e0b',
+    icon: 'audio',
+    featured: true,
+  },
+  {
+    id: 'beat-counter',
+    locality: 'local',
+    sectionId: 'audio',
+    href: '/workbench/beat-counter',
+    accent: '#ec4899',
     icon: 'audio',
     featured: true,
   },
