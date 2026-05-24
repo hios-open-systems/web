@@ -19,7 +19,7 @@ export default async function CalculatorsPage({ params }: PageProps) {
   setRequestLocale(locale);
 
   return (
-    <main style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 24px 56px' }}>
+    <main style={{ maxWidth: 1180, margin: '0 auto', padding: '40px 24px 72px' }}>
       <Suspense fallback={null}>
         <EmbeddedCalculators />
       </Suspense>

@@ -71,6 +71,19 @@
   color: #94a3b8;
 }
 
+/* Page-level rhythm: header, presets toolbar and calculator body should read
+ * as separate work zones instead of one compressed block. */
+.toolbar {
+  width: 100%;
+  justify-content: flex-end;
+  padding: 0 2px 2px;
+}
+
+.toolbar :global(.ant-btn),
+.toolbar :global(.ant-segmented) {
+  min-height: 34px;
+}
+
 /* Elements that must break out of the grid (visualizer, color strip, notes). */
 .fullRow {
   grid-column: 1 / -1;
@@ -89,7 +102,7 @@
  * "..." overflow) + active panel on the right. */
 .calcTabs :global(.ant-tabs-nav) {
   min-width: 220px;
-  padding: 10px;
+  padding: 12px;
   border-radius: 16px;
   border: 1px solid rgba(15, 23, 42, 0.08);
   background: #ffffff;
@@ -101,8 +114,8 @@
 }
 
 .calcTabs :global(.ant-tabs-tab) {
-  margin: 2px 0 !important;
-  padding: 9px 12px !important;
+  margin: 3px 0 !important;
+  padding: 10px 12px !important;
   border-radius: 10px;
   transition: background 0.15s ease;
 }
@@ -129,14 +142,19 @@
 }
 
 .calcTabs :global(.ant-tabs-content-holder) {
-  padding-left: 20px;
+  padding-left: 24px;
 }
 
 @media (max-width: 760px) {
+  .toolbar {
+    justify-content: flex-start;
+  }
+
   .calcTabs :global(.ant-tabs-nav) {
     min-width: 0;
   }
   .calcTabs :global(.ant-tabs-content-holder) {
-    padding-left: 12px;
+    padding-left: 0;
+    padding-top: 12px;
   }
 }
