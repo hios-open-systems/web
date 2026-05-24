@@ -1,7 +1,7 @@
 .showcase {
-  max-width: 1280px;
+  max-width: 1180px;
   margin: 0 auto;
-  padding: 8px 24px 56px;
+  padding: 24px 24px 72px;
 }
 
 .showcaseHeader {
@@ -10,7 +10,7 @@
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
-  margin-bottom: 16px;
+  margin-bottom: 22px;
 }
 
 .showcaseHeadings {
@@ -45,7 +45,7 @@
 
 @media (max-width: 720px) {
   .showcase {
-    padding: 8px 18px 48px;
+    padding: 18px 18px 56px;
   }
   .showcaseHeader {
     flex-direction: column;

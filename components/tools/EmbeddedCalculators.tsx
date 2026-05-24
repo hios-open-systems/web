@@ -48,7 +48,7 @@ export function EmbeddedCalculators() {
   ];
 
   return (
-    <Space direction="vertical" size={20} style={{ width: '100%', background: c.palette.page, padding: '4px 2px' }}>
+    <Space direction="vertical" size={24} style={{ width: '100%', background: c.palette.page, padding: '4px 2px' }}>
       {c.contextHolder}
       <ToolHeader
         eyebrow={t('tags.embedded')}
@@ -57,7 +57,7 @@ export function EmbeddedCalculators() {
         locality="local"
       />
 
-      <Space wrap style={{ width: '100%', justifyContent: 'flex-end' }}>
+      <Space wrap className={styles.toolbar}>
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
           <span style={{ fontSize: 12, color: c.palette.textSecondary, textTransform: 'uppercase', letterSpacing: 0.35 }}>
             {t('eseries_label')}

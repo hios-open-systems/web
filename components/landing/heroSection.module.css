@@ -1,6 +1,6 @@
 .hero {
   position: relative;
-  padding: 56px 24px 64px;
+  padding: 72px 24px 88px;
   background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
 }
 
@@ -12,7 +12,7 @@
 }
 
 .container {
-  max-width: 1280px;
+  max-width: 1180px;
   margin: 0 auto;
 }
 
@@ -26,7 +26,8 @@
 .content {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 20px;
+  max-width: 880px;
 }
 
 .eyebrow {
@@ -42,6 +43,7 @@
 
 .title {
   margin: 0;
+  max-width: 980px;
   font-size: clamp(2rem, 3.6vw, 3rem);
   line-height: 1.08;
   letter-spacing: -0.02em;
@@ -70,7 +72,7 @@
   flex-wrap: wrap;
   gap: 12px;
   align-items: center;
-  margin-top: 4px;
+  margin-top: 6px;
 }
 
 .primary {
@@ -129,7 +131,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 18px;
-  margin: 10px 0 0;
+  margin: 12px 0 0;
   padding: 0;
   list-style: none;
   font-size: 13px;
@@ -163,7 +165,7 @@
 
 @media (max-width: 960px) {
   .hero {
-    padding: 44px 20px 48px;
+    padding: 48px 20px 56px;
   }
   .grid {
     grid-template-columns: 1fr;

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRightOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useLocale, useTranslations } from 'next-intl';
@@ -18,8 +18,12 @@ export function HeroRandomTool() {
   const locale = useLocale();
   const t = useTranslations('Hero');
   const packs = useTranslations('Workbench.packs');
-  const [idx, setIdx] = useState(() => Math.floor(Math.random() * TOOLS.length));
+  const [idx, setIdx] = useState(0);
   const tool = TOOLS[idx];
+
+  useEffect(() => {
+    setIdx(Math.floor(Math.random() * TOOLS.length));
+  }, []);
 
   const reroll = useCallback(
     () =>
