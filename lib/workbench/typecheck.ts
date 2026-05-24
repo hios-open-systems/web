@@ -87,23 +87,43 @@ export async function runBrowserTypeCheck(typeSource: string, valueSource: strin
     module: ts.ModuleKind.ESNext,
   };
 
-  const host = ts.createCompilerHost(compilerOptions, true);
-  host.getSourceFile = (requestedFileName, languageVersion) => {
-    if (requestedFileName !== fileName) {
-      return undefined;
-    }
+  // Build a browser-safe host instead of relying on ts.sys via createCompilerHost.
+  const host: import('typescript').CompilerHost = {
+    getSourceFile(requestedFileName, languageVersion) {
+      if (requestedFileName !== fileName) {
+        return undefined;
+      }
 
-    return ts.createSourceFile(fileName, source, languageVersion, true, ts.ScriptKind.TS);
+      return ts.createSourceFile(fileName, source, languageVersion, true, ts.ScriptKind.TS);
+    },
+    readFile(requestedFileName) {
+      return requestedFileName === fileName ? source : undefined;
+    },
+    fileExists(requestedFileName) {
+      return requestedFileName === fileName;
+    },
+    writeFile() {
+      return undefined;
+    },
+    getDefaultLibFileName() {
+      return 'lib.d.ts';
+    },
+    getCurrentDirectory() {
+      return '';
+    },
+    getDirectories() {
+      return [];
+    },
+    getCanonicalFileName(requestedFileName) {
+      return requestedFileName;
+    },
+    useCaseSensitiveFileNames() {
+      return true;
+    },
+    getNewLine() {
+      return '\n';
+    },
   };
-  host.readFile = (requestedFileName) => (requestedFileName === fileName ? source : undefined);
-  host.fileExists = (requestedFileName) => requestedFileName === fileName;
-  host.writeFile = () => undefined;
-  host.getDefaultLibFileName = () => 'lib.d.ts';
-  host.getCurrentDirectory = () => '';
-  host.getDirectories = () => [];
-  host.getCanonicalFileName = (requestedFileName) => requestedFileName;
-  host.useCaseSensitiveFileNames = () => true;
-  host.getNewLine = () => '\n';
 
   const program = ts.createProgram([fileName], compilerOptions, host);
   const diagnostics = ts.getPreEmitDiagnostics(program)

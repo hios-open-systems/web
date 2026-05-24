@@ -3,6 +3,7 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Button, Card, Space, Tag, Typography, Upload, message } from 'antd';
 import { CopyOutlined, InboxOutlined } from '@ant-design/icons';
+import NextImage from 'next/image';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { ToolHeader } from './ToolHeader';
@@ -36,7 +37,6 @@ export function ImageBase64Tool() {
   const { mode } = useTheme();
   const [messageApi, contextHolder] = message.useMessage();
   const [imageInfo, setImageInfo] = useState<ImageInfo | null>(null);
-  const [loading, setLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const themeVars = useMemo(
@@ -56,12 +56,11 @@ export function ImageBase64Tool() {
         messageApi.error(t('notAnImage'));
         return;
       }
-      setLoading(true);
       const reader = new FileReader();
       reader.onload = (e) => {
         const dataUri = e.target?.result as string;
         const base64 = dataUri.split(',')[1] ?? '';
-        const img = new Image();
+        const img = new window.Image();
         img.onload = () => {
           setImageInfo({
             name: file.name,
@@ -72,7 +71,6 @@ export function ImageBase64Tool() {
             dataUri,
             base64,
           });
-          setLoading(false);
         };
         img.src = dataUri;
       };
@@ -132,10 +130,15 @@ export function ImageBase64Tool() {
           {/* Preview + meta */}
           <Card className={styles.sectionCard} styles={{ body: { padding: 20 } }}>
             <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start', flexWrap: 'wrap' }}>
-              <img
+                <NextImage
                 src={imageInfo.dataUri}
                 alt={imageInfo.name}
+                  width={imageInfo.width}
+                  height={imageInfo.height}
+                  unoptimized
                 style={{
+                  width: 'auto',
+                  height: 'auto',
                   maxWidth: 220,
                   maxHeight: 180,
                   borderRadius: 8,
