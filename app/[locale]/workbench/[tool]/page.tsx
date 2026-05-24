@@ -16,6 +16,7 @@ import { MarkdownNotesTool } from '@/components/workbench/MarkdownNotesTool';
 import { PatternsTool } from '@/components/workbench/PatternsTool';
 import { RandomStringTool } from '@/components/workbench/RandomStringTool';
 import { SiteCheckerTool } from '@/components/workbench/SiteCheckerTool';
+import { SubnetCalculatorTool } from '@/components/workbench/SubnetCalculatorTool';
 import { CronTool } from '@/components/workbench/CronTool';
 import { ColorTool } from '@/components/workbench/ColorTool';
 import { TimestampTool } from '@/components/workbench/TimestampTool';
@@ -25,6 +26,7 @@ import { UrlParserTool } from '@/components/workbench/UrlParserTool';
 import { RegexTool } from '@/components/workbench/RegexTool';
 import { ImageBase64Tool } from '@/components/workbench/ImageBase64Tool';
 import { TypeCheckerTool } from '@/components/workbench/TypeCheckerTool';
+import { WhoisRdapTool } from '@/components/workbench/WhoisRdapTool';
 import { BeatCounterTool } from '@/components/workbench/audio/BeatCounterTool';
 import { DelayCalculatorTool } from '@/components/workbench/audio/DelayCalculatorTool';
 import { GuitarTunerTool } from '@/components/workbench/audio/GuitarTunerTool';
@@ -75,6 +77,14 @@ const metadataMap: Record<string, Metadata> = {
   'dns-lookup': {
     title: 'DNS Inspector | HIOS Workbench',
     description: 'Consulta registros DNS en vivo, incluidos MX, TXT, NS, A y AAAA, desde una sola superficie.',
+  },
+  'subnet-calculator': {
+    title: 'Subnet Calculator | HIOS Network Lab',
+    description: 'Calcula red, broadcast, máscara y hosts usables desde una IPv4 con CIDR.',
+  },
+  'whois-rdap': {
+    title: 'WHOIS / RDAP | HIOS Network Lab',
+    description: 'Consulta datos públicos de registro de dominios usando RDAP.',
   },
   'certificate-check': {
     title: 'Certificate Expiry | HIOS Workbench',
@@ -175,6 +185,10 @@ function renderTool(toolId: WorkbenchToolId) {
       return <JwtPlaygroundTool />;
     case 'dns-lookup':
       return <DnsLookupTool />;
+    case 'subnet-calculator':
+      return <SubnetCalculatorTool />;
+    case 'whois-rdap':
+      return <WhoisRdapTool />;
     case 'certificate-check':
       return <CertificateCheckTool />;
     case 'hash-digest':

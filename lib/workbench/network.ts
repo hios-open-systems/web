@@ -31,6 +31,76 @@ export interface CertificateLookupResponse {
   fetchedAt: string;
 }
 
+export interface RdapEvent {
+  action: string;
+  date: string;
+}
+
+export interface RdapLookupResponse {
+  domain: string;
+  handle?: string;
+  status: string[];
+  nameservers: string[];
+  registrar?: string;
+  events: RdapEvent[];
+  links: string[];
+  durationMs: number;
+  fetchedAt: string;
+}
+
+export interface SubnetInfo {
+  cidr: string;
+  address: string;
+  prefix: number;
+  subnetMask: string;
+  wildcardMask: string;
+  networkAddress: string;
+  broadcastAddress: string;
+  firstHost: string;
+  lastHost: string;
+  totalAddresses: number;
+  usableHosts: number;
+}
+
+export function ipv4ToNumber(ip: string) {
+  const parts = ip.trim().split('.').map(Number);
+  if (parts.length !== 4 || parts.some((part) => !Number.isInteger(part) || part < 0 || part > 255)) {
+    return null;
+  }
+
+  return parts.reduce((acc, part) => ((acc << 8) | part) >>> 0, 0);
+}
+
+export function numberToIpv4(value: number) {
+  return [24, 16, 8, 0].map((shift) => (value >>> shift) & 255).join('.');
+}
+
+export function calculateSubnet(address: string, prefix: number): SubnetInfo | null {
+  const ipNumber = ipv4ToNumber(address);
+  if (ipNumber === null || !Number.isInteger(prefix) || prefix < 0 || prefix > 32) return null;
+
+  const mask = prefix === 0 ? 0 : (0xffffffff << (32 - prefix)) >>> 0;
+  const wildcard = (~mask) >>> 0;
+  const network = (ipNumber & mask) >>> 0;
+  const broadcast = (network | wildcard) >>> 0;
+  const totalAddresses = 2 ** (32 - prefix);
+  const usableHosts = prefix >= 31 ? totalAddresses : Math.max(0, totalAddresses - 2);
+
+  return {
+    cidr: `${numberToIpv4(network)}/${prefix}`,
+    address: numberToIpv4(ipNumber),
+    prefix,
+    subnetMask: numberToIpv4(mask),
+    wildcardMask: numberToIpv4(wildcard),
+    networkAddress: numberToIpv4(network),
+    broadcastAddress: numberToIpv4(broadcast),
+    firstHost: numberToIpv4(prefix >= 31 ? network : network + 1),
+    lastHost: numberToIpv4(prefix >= 31 ? broadcast : broadcast - 1),
+    totalAddresses,
+    usableHosts,
+  };
+}
+
 export function normalizeHostname(input: string) {
   return input
     .trim()

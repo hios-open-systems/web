@@ -820,6 +820,10 @@
                 "title": "Audio Lab",
                 "description": "Accordatura, toni di riferimento e analisi rapida per speaker, DAC e catene di segnale dal browser."
             },
+            "network": {
+                "title": "Network Lab",
+                "description": "DNS, certificati, subnet, domini e controlli di connettività in una sola superficie."
+            },
             "validation": {
                 "title": "Validazione",
                 "description": "Decodifica, ispeziona e valida payload, artefatti auth, record DNS o stato TLS prima che arrivino in produzione."
@@ -914,6 +918,14 @@
             "dns-lookup": {
                 "title": "DNS Inspector",
                 "description": "Interroga record DNS live, inclusi MX, TXT, NS, A e AAAA, senza uscire dal workbench."
+            },
+            "subnet-calculator": {
+                "title": "Calcolatore IPv4/Subnet",
+                "description": "Calcola rete, broadcast, maschera, wildcard e host utilizzabili da CIDR."
+            },
+            "whois-rdap": {
+                "title": "WHOIS / RDAP",
+                "description": "Consulta dati pubblici di registrazione domini con RDAP."
             },
             "certificate-check": {
                 "title": "Certificate Expiry",
