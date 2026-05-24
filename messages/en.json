@@ -444,6 +444,7 @@
         }
     },
     "Header": {
+        "tools": "Tools",
         "workbench": "Workbench",
         "pinouts": "Pinouts",
         "calculators": "Calculators",
@@ -886,8 +887,8 @@
         },
         "landing": {
             "badge": "Product layer",
-            "title": "Workbench",
-            "subtitle": "Small but frequent tools, ready in one click. No categories, no gates — you walk in and the tool you need is right there.",
+            "title": "Tools",
+            "subtitle": "Audio, validation, generation and testing in one local-first surface designed as a real lab, not a loose collection.",
             "randomCta": "Open a random one",
             "allToolsTitle": "All tools",
             "allToolsSubtitle": "One grid, no levels. Click and go.",
@@ -907,6 +908,10 @@
             }
         },
         "sections": {
+            "audio": {
+                "title": "Audio Lab",
+                "description": "Tuning, reference tones and quick analysis for testing speakers, DACs and signal chains from the browser."
+            },
             "validation": {
                 "title": "Validation",
                 "description": "Decode, inspect, and verify payloads, auth artifacts, DNS records, or TLS state before they reach production."
@@ -926,6 +931,18 @@
         "pagerPrev": "Previous",
         "pagerNext": "Next",
         "packs": {
+            "tone-generator": {
+                "title": "Tone Generator",
+                "description": "Configurable oscillator for testing speakers, DACs, filters and audio signal chains."
+            },
+            "guitar-tuner": {
+                "title": "Guitar Tuner",
+                "description": "Local chromatic tuner with pitch detection, nearest note and cents offset."
+            },
+            "spectrum-analyzer": {
+                "title": "Spectrum Analyzer",
+                "description": "Realtime microphone FFT to inspect frequency energy from the browser."
+            },
             "patterns": {
                 "title": "Pattern Lessons",
                 "description": "Interactive modern-pattern lessons with editable code and a sandboxed runner."

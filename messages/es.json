@@ -443,6 +443,7 @@
         }
     },
     "Header": {
+        "tools": "Herramientas",
         "workbench": "Workbench",
         "pinouts": "Pinouts",
         "calculators": "Calculadoras",
@@ -885,8 +886,8 @@
         },
         "landing": {
             "badge": "Capa de producto",
-            "title": "Workbench",
-            "subtitle": "Herramientas chicas pero frecuentes, listas al toque. Sin categorías ni gates: entrás y la tool que necesitás está ahí.",
+            "title": "Herramientas",
+            "subtitle": "Audio, validación, generación y testing en una superficie local-first pensada como laboratorio real, no como colección suelta.",
             "randomCta": "Abrir una al azar",
             "allToolsTitle": "Todas las tools",
             "allToolsSubtitle": "Una grilla, sin niveles. Tocá y listo.",
@@ -906,6 +907,10 @@
             }
         },
         "sections": {
+            "audio": {
+                "title": "Audio Lab",
+                "description": "Afinación, tonos de referencia y análisis rápido para probar parlantes, DACs y cadenas de señal desde el navegador."
+            },
             "validation": {
                 "title": "Validación",
                 "description": "Decodificá, inspeccioná y validá payloads, artefactos de auth, registros DNS o estado TLS antes de llegar a producción."
@@ -925,6 +930,18 @@
         "pagerPrev": "Anterior",
         "pagerNext": "Siguiente",
         "packs": {
+            "tone-generator": {
+                "title": "Generador de tonos",
+                "description": "Oscilador configurable para pruebas de parlantes, DACs, filtros y cadenas de audio."
+            },
+            "guitar-tuner": {
+                "title": "Afinador de guitarra",
+                "description": "Afinador cromático local con detección de pitch, nota cercana y desviación en cents."
+            },
+            "spectrum-analyzer": {
+                "title": "Analizador de espectro",
+                "description": "FFT en tiempo real desde el micrófono para inspeccionar energía por frecuencia."
+            },
             "patterns": {
                 "title": "Pattern Lessons",
                 "description": "Lecciones interactivas de patrones modernos con código editable y runner sandbox."

@@ -434,6 +434,7 @@
         }
     },
     "Header": {
+        "tools": "Strumenti",
         "workbench": "Workbench",
         "pinouts": "Pinouts",
         "calculators": "Calcolatori",
@@ -785,8 +786,8 @@
         },
         "landing": {
             "badge": "Nuova linea di prodotto",
-            "title": "Uno workspace pratico per payload, JWT, snippet e flussi reali di sviluppo.",
-            "subtitle": "Strumenti piccoli ma frequenti, pronti subito. Niente categorie né gate: entri e lo strumento è lì.",
+            "title": "Strumenti",
+            "subtitle": "Audio, validazione, generazione e test in una superficie local-first pensata come laboratorio reale.",
             "randomCta": "Aprine uno a caso",
             "allToolsTitle": "Tutti gli strumenti",
             "allToolsSubtitle": "Una griglia, senza livelli. Clicca e vai.",
@@ -808,6 +809,10 @@
             }
         },
         "sections": {
+            "audio": {
+                "title": "Audio Lab",
+                "description": "Accordatura, toni di riferimento e analisi rapida per speaker, DAC e catene di segnale dal browser."
+            },
             "validation": {
                 "title": "Validazione",
                 "description": "Decodifica, ispeziona e valida payload, artefatti auth, record DNS o stato TLS prima che arrivino in produzione."
@@ -831,6 +836,18 @@
         "pagerPrev": "Precedente",
         "pagerNext": "Successivo",
         "packs": {
+            "tone-generator": {
+                "title": "Generatore di toni",
+                "description": "Oscillatore configurabile per testare speaker, DAC, filtri e catene audio."
+            },
+            "guitar-tuner": {
+                "title": "Accordatore chitarra",
+                "description": "Accordatore cromatico locale con rilevamento pitch, nota vicina e offset in cents."
+            },
+            "spectrum-analyzer": {
+                "title": "Analizzatore di spettro",
+                "description": "FFT in tempo reale dal microfono per ispezionare l'energia per frequenza."
+            },
             "patterns": {
                 "title": "Pattern Lessons",
                 "description": "Lezioni interattive su pattern moderni con codice editabile e runner sandbox."

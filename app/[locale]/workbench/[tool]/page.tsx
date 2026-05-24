@@ -25,6 +25,9 @@ import { UrlParserTool } from '@/components/workbench/UrlParserTool';
 import { RegexTool } from '@/components/workbench/RegexTool';
 import { ImageBase64Tool } from '@/components/workbench/ImageBase64Tool';
 import { TypeCheckerTool } from '@/components/workbench/TypeCheckerTool';
+import { GuitarTunerTool } from '@/components/workbench/audio/GuitarTunerTool';
+import { SpectrumAnalyzerTool } from '@/components/workbench/audio/SpectrumAnalyzerTool';
+import { ToneGeneratorTool } from '@/components/workbench/audio/ToneGeneratorTool';
 import { ToolPager } from '@/components/workbench/ToolPager';
 import { ToolUsageTracker } from '@/components/workbench/ToolUsageTracker';
 import { getWorkbenchTool, workbenchTools, type WorkbenchToolId } from '@/config/workbench';
@@ -34,6 +37,18 @@ const dynamicToolIds = workbenchTools
   .map((tool) => tool.id);
 
 const metadataMap: Record<string, Metadata> = {
+  'tone-generator': {
+    title: 'Generador de tonos | HIOS Audio Lab',
+    description: 'Oscilador de referencia para probar cadenas de audio desde el navegador.',
+  },
+  'guitar-tuner': {
+    title: 'Afinador de guitarra | HIOS Audio Lab',
+    description: 'Afinador cromatico local con deteccion de pitch desde el microfono.',
+  },
+  'spectrum-analyzer': {
+    title: 'Analizador de espectro | HIOS Audio Lab',
+    description: 'FFT en tiempo real para inspeccionar energia por frecuencia desde el navegador.',
+  },
   'jwt-decode': {
     title: 'JWT Playground | HIOS Workbench',
     description: 'Decodifica, firma y verifica JWT (HS, RS, ES) enteramente en el navegador. El token y las claves nunca salen de tu equipo.',
@@ -127,6 +142,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 function renderTool(toolId: WorkbenchToolId) {
   switch (toolId) {
+    case 'tone-generator':
+      return <ToneGeneratorTool />;
+    case 'guitar-tuner':
+      return <GuitarTunerTool />;
+    case 'spectrum-analyzer':
+      return <SpectrumAnalyzerTool />;
     case 'type-checker':
       return <TypeCheckerTool />;
     case 'jwt-decode':

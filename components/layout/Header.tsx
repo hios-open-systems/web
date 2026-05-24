@@ -21,6 +21,7 @@ import styles from './header.module.css';
 const { Header: AntHeader } = Layout;
 
 type NavKind = 'primary' | 'secondary';
+type HeaderKey = 'tools' | 'workbench' | 'pinouts' | 'calculators';
 type NavItem = { href: string; label: string; kind: NavKind };
 
 export function Header() {
@@ -30,13 +31,14 @@ export function Header() {
   const t = useTranslations('Header');
   const { unreadCount } = useFeedback();
 
-  const resolveLabel = (key: 'workbench' | 'pinouts' | 'calculators', fallback: string) => {
+  const resolveLabel = (key: HeaderKey, fallback: string) => {
     const value = t(key);
     return value === `Header.${key}` || value === key ? fallback : value;
   };
 
   const navItems: NavItem[] = [
-    { href: `/${locale}/workbench`, label: resolveLabel('workbench', 'Workbench'), kind: 'primary' },
+    { href: `/${locale}/tools`, label: resolveLabel('tools', 'Herramientas'), kind: 'primary' },
+    { href: `/${locale}/workbench`, label: resolveLabel('workbench', 'Workbench'), kind: 'secondary' },
     { href: `/${locale}/pinouts`, label: resolveLabel('pinouts', 'Pinouts'), kind: 'secondary' },
     { href: `/${locale}/calculators`, label: resolveLabel('calculators', 'Calculadoras'), kind: 'secondary' },
   ];
