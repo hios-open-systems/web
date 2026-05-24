@@ -1,10 +1,12 @@
-export type WorkbenchSectionId = 'audio' | 'validation' | 'generation' | 'testing';
+export type WorkbenchSectionId = 'audio' | 'network' | 'validation' | 'generation' | 'testing';
 
 export type WorkbenchToolId =
   | 'payload'
   | 'type-checker'
   | 'jwt-decode'
   | 'dns-lookup'
+  | 'subnet-calculator'
+  | 'whois-rdap'
   | 'certificate-check'
   | 'hash-digest'
   | 'object-to-types'
@@ -66,6 +68,12 @@ export const workbenchSections: WorkbenchSection[] = [
     href: '/workbench/sections/audio',
     accent: '#06b6d4',
     icon: 'audio',
+  },
+  {
+    id: 'network',
+    href: '/workbench/sections/network',
+    accent: '#6366f1',
+    icon: 'network',
   },
   {
     id: 'validation',
@@ -172,16 +180,34 @@ export const workbenchTools: WorkbenchTool[] = [
   {
     id: 'dns-lookup',
     locality: 'network',
-    sectionId: 'validation',
+    sectionId: 'network',
     href: '/workbench/dns-lookup',
     accent: '#06b6d4',
     icon: 'network',
     featured: true,
   },
   {
+    id: 'subnet-calculator',
+    locality: 'local',
+    sectionId: 'network',
+    href: '/workbench/subnet-calculator',
+    accent: '#6366f1',
+    icon: 'network',
+    featured: true,
+  },
+  {
+    id: 'whois-rdap',
+    locality: 'network',
+    sectionId: 'network',
+    href: '/workbench/whois-rdap',
+    accent: '#8b5cf6',
+    icon: 'network',
+    featured: true,
+  },
+  {
     id: 'certificate-check',
     locality: 'network',
-    sectionId: 'validation',
+    sectionId: 'network',
     href: '/workbench/certificate-check',
     accent: '#3b82f6',
     icon: 'shield',
@@ -270,7 +296,7 @@ export const workbenchTools: WorkbenchTool[] = [
   {
     id: 'site-checker',
     locality: 'network',
-    sectionId: 'testing',
+    sectionId: 'network',
     href: '/workbench/site-checker',
     accent: '#10b981',
     icon: 'network',
@@ -350,7 +376,7 @@ export const workbenchTools: WorkbenchTool[] = [
   {
     id: 'url-parser',
     locality: 'local',
-    sectionId: 'testing',
+    sectionId: 'network',
     href: '/workbench/url-parser',
     accent: '#6366f1',
     icon: 'network',
