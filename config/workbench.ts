@@ -27,7 +27,6 @@ export type WorkbenchToolId =
   | 'number-base'
   | 'json-schema'
   | 'url-parser'
-  | 'regex'
   | 'image-base64'
   | 'tone-generator'
   | 'guitar-tuner'
@@ -380,15 +379,6 @@ export const workbenchTools: WorkbenchTool[] = [
     href: '/workbench/url-parser',
     accent: '#6366f1',
     icon: 'network',
-    featured: true,
-  },
-  {
-    id: 'regex',
-    locality: 'local',
-    sectionId: 'testing',
-    href: '/workbench/regex',
-    accent: '#f97316',
-    icon: 'spark',
     featured: true,
   },
   {

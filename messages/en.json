@@ -4,13 +4,13 @@
         "showcaseSubtitle": "Everything runs in your browser. Pick one, or roll the dice.",
         "showcaseRandomCta": "Open a random one",
         "showcaseToolCount": "tools",
-        "title": "My workbench. Tools I use every day.",
-        "subtitle": "Decode, validate, compare. Everything runs locally, everything is open, nothing leaves your browser.",
+        "title": "Local tools for validating, generating, and testing.",
+        "subtitle": "A clear workbench for payloads, audio, networking, and technical debugging. Runs in the browser with speed and privacy in mind.",
         "cta": "Open Workbench",
         "secondary": "View hardware projects",
         "fact_local": "Local-first",
         "fact_open": "Open source",
-        "fact_daily": "Built for daily use",
+        "fact_daily": "Built for real work",
         "previewKicker": "Tool spotlight",
         "previewOpenTool": "Open tool",
         "previewNext": "Next",
@@ -451,6 +451,7 @@
         }
     },
     "Header": {
+        "home": "Home",
         "tools": "Tools",
         "workbench": "Workbench",
         "pinouts": "Pinouts",
@@ -555,6 +556,7 @@
         "hint": "↑↓ navigate · Enter open · Esc close",
         "toolsGroup": "Tools",
         "pagesGroup": "Pages",
+        "sectionsGroup": "Sections",
         "pages": {
             "home": "Home",
             "workbench": "Workbench",
@@ -562,7 +564,8 @@
             "pinouts": "Pinouts",
             "snippets": "Snippets",
             "settings": "Settings",
-            "feedback": "Feedback"
+            "feedback": "Feedback",
+            "random": "Open a random tool"
         }
     },
     "Presets": {
@@ -893,25 +896,25 @@
             "dailyUse": "Built for daily return"
         },
         "landing": {
-            "badge": "Product layer",
-            "title": "Tools",
-            "subtitle": "Audio, validation, generation and testing in one local-first surface designed as a real lab, not a loose collection.",
+            "badge": "Local lab",
+            "title": "Workbench",
+            "subtitle": "A clear catalog for validating, generating, inspecting, and testing from the browser.",
             "randomCta": "Open a random one",
             "allToolsTitle": "All tools",
             "allToolsSubtitle": "One grid, no levels. Click and go.",
             "primaryCta": "Open validation",
             "secondaryCta": "Open generation",
-            "panelTitle": "Enter through a clear section",
-            "panelSubtitle": "Start from intent, not from a wall of cards. Each section groups related tools so the workbench can scale without losing readability.",
-            "sectionsTitle": "Catalog by intent",
-            "sectionsSubtitle": "Each section can grow without breaking the information architecture or turning the workbench into a flat list.",
+            "panelTitle": "Start from the task, not the list",
+            "panelSubtitle": "Each section groups related tools so the catalog can grow without turning confusing.",
+            "sectionsTitle": "Workbench areas",
+            "sectionsSubtitle": "Audio, network, validation, generation, and testing in a structure that stays easy to scan.",
             "cardCta": "Open section",
-            "principlesTitle": "What this surface is optimizing for",
-            "principlesSubtitle": "Clarity, speed, and good mobile use first. Complexity second.",
+            "principlesTitle": "What this surface prioritizes",
+            "principlesSubtitle": "Clarity, contrast, and fast response before density.",
             "principles": {
                 "localFirst": "Payloads, notes, and state stay local whenever that makes sense. Less friction and real privacy.",
                 "shareable": "When a workflow really matters, you can share it by URL instead of explaining ten manual steps.",
-                "dailyUse": "The goal is not a pretty demo. It is a workbench you actually want to return to during the workday."
+                "dailyUse": "It is not trying to look like a demo. It is trying to solve real work with as little friction as possible."
             }
         },
         "sections": {

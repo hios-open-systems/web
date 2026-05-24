@@ -1,12 +1,12 @@
 {
     "Hero": {
-        "title": "Meine Werkbank. Werkzeuge, die ich täglich nutze.",
-        "subtitle": "Dekodieren, validieren, vergleichen. Alles läuft lokal, alles ist offen, nichts verlässt deinen Browser.",
+        "title": "Lokale Tools zum Validieren, Erzeugen und Testen.",
+        "subtitle": "Eine klare Workbench für Payloads, Audio, Netzwerk und technisches Debugging. Läuft im Browser, mit Fokus auf Tempo und Privatsphäre.",
         "cta": "Workbench öffnen",
         "secondary": "Hardware-Projekte ansehen",
         "fact_local": "Local-first",
         "fact_open": "Open Source",
-        "fact_daily": "Für den täglichen Einsatz",
+        "fact_daily": "Für echte Arbeit gebaut",
         "previewKicker": "Tool im Fokus",
         "previewOpenTool": "Tool öffnen",
         "previewNext": "Weiter",
@@ -441,6 +441,7 @@
         }
     },
     "Header": {
+        "home": "Start",
         "tools": "Tools",
         "workbench": "Workbench",
         "pinouts": "Pinouts",
@@ -453,6 +454,7 @@
         "hint": "↑↓ navigieren · Enter öffnen · Esc schließen",
         "toolsGroup": "Tools",
         "pagesGroup": "Seiten",
+        "sectionsGroup": "Bereiche",
         "pages": {
             "home": "Start",
             "workbench": "Workbench",
@@ -460,7 +462,8 @@
             "pinouts": "Pinouts",
             "snippets": "Snippets",
             "settings": "Einstellungen",
-            "feedback": "Feedback"
+            "feedback": "Feedback",
+            "random": "Zufälliges Tool öffnen"
         }
     },
     "Presets": {

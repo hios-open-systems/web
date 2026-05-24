@@ -4,13 +4,13 @@
         "showcaseSubtitle": "Todo corre en tu navegador. Elegí una, o tirá los dados.",
         "showcaseRandomCta": "Abrir una al azar",
         "showcaseToolCount": "herramientas",
-        "title": "Mi mesa de trabajo. Herramientas que uso a diario.",
-        "subtitle": "Decodificá, validá, compará. Todo corre local, todo es abierto, nada se manda afuera.",
+        "title": "Herramientas locales para validar, generar y probar.",
+        "subtitle": "Un workbench claro para payloads, audio, red y debugging técnico. Corre en el navegador, con foco en velocidad y privacidad.",
         "cta": "Abrir Workbench",
         "secondary": "Ver proyectos de hardware",
         "fact_local": "Local-first",
         "fact_open": "Código abierto",
-        "fact_daily": "Pensado para uso diario",
+        "fact_daily": "Pensado para trabajo real",
         "previewKicker": "Tool destacada",
         "previewOpenTool": "Abrir tool",
         "previewNext": "Siguiente",
@@ -450,6 +450,7 @@
         }
     },
     "Header": {
+        "home": "Inicio",
         "tools": "Herramientas",
         "workbench": "Workbench",
         "pinouts": "Pinouts",
@@ -554,6 +555,7 @@
         "hint": "↑↓ navegar · Enter abrir · Esc cerrar",
         "toolsGroup": "Tools",
         "pagesGroup": "Páginas",
+        "sectionsGroup": "Secciones",
         "pages": {
             "home": "Inicio",
             "workbench": "Workbench",
@@ -561,7 +563,8 @@
             "pinouts": "Pinouts",
             "snippets": "Snippets",
             "settings": "Ajustes",
-            "feedback": "Feedback"
+            "feedback": "Feedback",
+            "random": "Abrir una tool al azar"
         }
     },
     "Presets": {
@@ -892,25 +895,25 @@
             "dailyUse": "Hecho para volver todos los días"
         },
         "landing": {
-            "badge": "Capa de producto",
-            "title": "Herramientas",
-            "subtitle": "Audio, validación, generación y testing en una superficie local-first pensada como laboratorio real, no como colección suelta.",
+            "badge": "Laboratorio local",
+            "title": "Workbench",
+            "subtitle": "Un catálogo claro para validar, generar, inspeccionar y probar desde el navegador.",
             "randomCta": "Abrir una al azar",
             "allToolsTitle": "Todas las tools",
             "allToolsSubtitle": "Una grilla, sin niveles. Tocá y listo.",
             "primaryCta": "Abrir validación",
             "secondaryCta": "Abrir generación",
-            "panelTitle": "Entrá por una sección clara",
-            "panelSubtitle": "Empezá por intención, no por una pared de cards. Cada sección agrupa tools relacionadas para que el workbench pueda escalar sin perder legibilidad.",
-            "sectionsTitle": "Catálogo por intención",
-            "sectionsSubtitle": "Cada sección puede crecer sin romper la arquitectura de información ni convertir el workbench en una lista plana.",
+            "panelTitle": "Entrá por la tarea, no por la lista",
+            "panelSubtitle": "Cada sección agrupa herramientas relacionadas para que el catálogo crezca sin volverse confuso.",
+            "sectionsTitle": "Áreas del workbench",
+            "sectionsSubtitle": "Audio, red, validación, generación y testing en una estructura simple de recorrer.",
             "cardCta": "Abrir sección",
-            "principlesTitle": "Qué optimiza esta superficie",
-            "principlesSubtitle": "Primero claridad, velocidad y una buena experiencia móvil. Después complejidad.",
+            "principlesTitle": "Qué prioriza esta superficie",
+            "principlesSubtitle": "Claridad, contraste y respuesta rápida antes que densidad visual.",
             "principles": {
                 "localFirst": "Payloads, notas y estados quedan locales siempre que tenga sentido. Menos fricción y privacidad real.",
                 "shareable": "Cuando un flujo importa de verdad, lo podés compartir por URL en vez de explicar diez pasos manuales.",
-                "dailyUse": "La meta no es una demo linda. Es un workbench al que querés volver durante el día de trabajo."
+                "dailyUse": "No busca verse como demo. Busca resolver trabajo real con la menor fricción posible."
             }
         },
         "sections": {

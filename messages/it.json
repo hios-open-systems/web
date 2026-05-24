@@ -1,12 +1,12 @@
 {
     "Hero": {
-        "title": "Il mio banco di lavoro. Strumenti che uso ogni giorno.",
-        "subtitle": "Decodifica, valida, confronta. Tutto gira in locale, tutto è aperto, niente esce dal browser.",
+        "title": "Strumenti locali per validare, generare e testare.",
+        "subtitle": "Un workbench chiaro per payload, audio, rete e debugging tecnico. Gira nel browser, con attenzione a velocità e privacy.",
         "cta": "Apri Workbench",
         "secondary": "Vedi i progetti hardware",
         "fact_local": "Local-first",
         "fact_open": "Open source",
-        "fact_daily": "Pensato per l’uso quotidiano",
+        "fact_daily": "Pensato per il lavoro reale",
         "previewKicker": "Tool in evidenza",
         "previewOpenTool": "Apri tool",
         "previewNext": "Avanti",
@@ -441,6 +441,7 @@
         }
     },
     "Header": {
+        "home": "Home",
         "tools": "Strumenti",
         "workbench": "Workbench",
         "pinouts": "Pinouts",
@@ -453,6 +454,7 @@
         "hint": "↑↓ naviga · Enter apri · Esc chiudi",
         "toolsGroup": "Tool",
         "pagesGroup": "Pagine",
+        "sectionsGroup": "Sezioni",
         "pages": {
             "home": "Home",
             "workbench": "Workbench",
@@ -460,7 +462,8 @@
             "pinouts": "Pinouts",
             "snippets": "Snippet",
             "settings": "Impostazioni",
-            "feedback": "Feedback"
+            "feedback": "Feedback",
+            "random": "Apri un tool casuale"
         }
     },
     "Presets": {
