@@ -17,6 +17,7 @@ interface Entry {
 
 const STATIC_PAGES = [
   { key: 'home', href: '' },
+  { key: 'tools', href: '/tools' },
   { key: 'workbench', href: '/workbench' },
   { key: 'calculators', href: '/calculators' },
   { key: 'pinouts', href: '/pinouts' },

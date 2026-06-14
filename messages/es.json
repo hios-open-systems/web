@@ -284,7 +284,10 @@
         "open_source_note": "Todo el software y los diseños de hardware son de <strong>código abierto</strong>.",
         "filter_all": "Todos",
         "filter_software": "Software",
-        "filter_hardware": "Hardware"
+        "filter_hardware": "Hardware",
+        "catalog_count": "herramientas recomendadas",
+        "used_in_projects": "Usado en {count} proyecto(s)",
+        "official_site": "Sitio oficial"
     },
     "Tutorials": {
         "badge": "Inicio Rápido",
@@ -389,7 +392,8 @@
             "microcontroller": "Microcontrolador",
             "audio": "Audio DAC",
             "amplifier": "Amplificador",
-            "power": "Alimentación"
+            "power": "Alimentación",
+            "connector": "Conectores"
         },
         "Modules": {
             "esp32-wroom-32": {
@@ -440,6 +444,24 @@
                     "Eficiencia 73%",
                     "Frecuencia 150kHz",
                     "Protección térmica"
+                ]
+            },
+            "audio-jack-trs": {
+                "description": "Conector hembra estéreo Tip/Ring/Sleeve para línea o auriculares",
+                "features": [
+                    "Tip = canal izquierdo",
+                    "Ring = canal derecho",
+                    "Sleeve = masa",
+                    "Switch de detección opcional"
+                ]
+            },
+            "audio-plug-trrs": {
+                "description": "Conector macho TRRS para auriculares con micrófono en estándar CTIA",
+                "features": [
+                    "Tip = canal izquierdo",
+                    "Ring 1 = canal derecho",
+                    "Ring 2 = masa",
+                    "Sleeve = micrófono"
                 ]
             }
         },
@@ -558,6 +580,7 @@
         "sectionsGroup": "Secciones",
         "pages": {
             "home": "Inicio",
+            "tools": "Herramientas",
             "workbench": "Workbench",
             "calculators": "Calculadoras",
             "pinouts": "Pinouts",
@@ -655,6 +678,16 @@
             "invalid": "Diagrama inválido",
             "empty": "Escribí un diagrama para previsualizar",
             "parseError": "No se pudo parsear el diagrama"
+        },
+        "excalidraw": {
+            "badge": "Herramienta de generación",
+            "title": "Diagramas Excalidraw",
+            "subtitle": "Pizarra libre para UML y arquitectura, local-first en tu navegador.",
+            "downloadScene": "Descargar escena",
+            "downloadError": "No se pudo exportar la escena",
+            "clear": "Limpiar lienzo",
+            "cleared": "Lienzo reiniciado",
+            "loading": "Cargando editor de diagramas..."
         },
         "textDiff": {
             "badge": "Herramienta de testing",
@@ -945,8 +978,8 @@
         "pagerNext": "Siguiente",
         "packs": {
             "tone-generator": {
-                "title": "Generador de tonos",
-                "description": "Oscilador configurable para pruebas de parlantes, DACs, filtros y cadenas de audio."
+                "title": "Generador de señal",
+                "description": "Tonos, ruido blanco/rosa/marrón, sweep y test L/R para probar parlantes, DACs y cadenas de audio."
             },
             "guitar-tuner": {
                 "title": "Afinador de guitarra",
@@ -955,6 +988,10 @@
             "spectrum-analyzer": {
                 "title": "Analizador de espectro",
                 "description": "FFT en tiempo real desde el micrófono para inspeccionar energía por frecuencia."
+            },
+            "level-meter": {
+                "title": "Medidor de nivel",
+                "description": "Medición relativa desde el micrófono para comparar volumen, ruido de fondo y picos de señal."
             },
             "metronome": {
                 "title": "Metrónomo",
@@ -979,6 +1016,10 @@
             "mermaid": {
                 "title": "Mermaid Diagrams",
                 "description": "Editá y renderizá diagramas Mermaid (flowchart, secuencia, UML…) en el navegador."
+            },
+            "excalidraw": {
+                "title": "Diagramas Excalidraw",
+                "description": "Dibujá UML y arquitectura de forma visual, guardando/exportando la escena localmente."
             },
             "text-diff": {
                 "title": "Text Diff",

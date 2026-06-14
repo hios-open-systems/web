@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
+import { RecommendedSoftwareCatalog } from '@/components/tools/RecommendedSoftwareCatalog';
 
 export const runtime = 'edge';
 
@@ -10,5 +10,6 @@ interface PageProps {
 export default async function ToolsPage({ params }: PageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
-  redirect(`/${locale}/workbench`);
+
+  return <RecommendedSoftwareCatalog />;
 }

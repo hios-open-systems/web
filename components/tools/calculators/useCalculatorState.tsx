@@ -119,10 +119,10 @@ export function useCalculatorState() {
   const calcCardBodyStyle = { padding: 20 } as const;
   const inputStyle = {
     width: '100%',
-    height: 44,
+    height: 'clamp(38px, 4.6vw, 44px)',
     borderRadius: 10,
-    background: mode === 'dark' ? '#1b1b1b' : '#ffffff',
-    borderColor: palette.borderSoft,
+    backgroundColor: mode === 'dark' ? '#1b1b1b' : '#ffffff',
+    border: `1px solid ${palette.borderSoft}`,
   };
 
   const led = useMemo(() => calc.ledResistor(supply, ledVf, ledCurrent), [supply, ledVf, ledCurrent]);

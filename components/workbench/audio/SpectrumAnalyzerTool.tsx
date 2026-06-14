@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Button, Card, Space, Typography } from 'antd';
+import { Alert, Button, Card, Space, Typography } from 'antd';
 import { BarChartOutlined, StopOutlined } from '@ant-design/icons';
 import { ToolHeader } from '../ToolHeader';
 import workbenchStyles from '../workbench.module.css';
@@ -12,6 +12,7 @@ const { Text } = Typography;
 export function SpectrumAnalyzerTool() {
   const [running, setRunning] = useState(false);
   const [peak, setPeak] = useState({ frequency: 0, level: -100 });
+  const [error, setError] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const contextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
@@ -68,18 +69,25 @@ export function SpectrumAnalyzerTool() {
   };
 
   const start = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const context = contextRef.current ?? new AudioContext();
-    contextRef.current = context;
-    await context.resume();
-    const analyser = context.createAnalyser();
-    analyser.fftSize = 4096;
-    analyser.smoothingTimeConstant = 0.82;
-    context.createMediaStreamSource(stream).connect(analyser);
-    streamRef.current = stream;
-    analyserRef.current = analyser;
-    setRunning(true);
-    draw();
+    try {
+      setError(null);
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false },
+      });
+      const context = contextRef.current ?? new AudioContext();
+      contextRef.current = context;
+      await context.resume();
+      const analyser = context.createAnalyser();
+      analyser.fftSize = 4096;
+      analyser.smoothingTimeConstant = 0.82;
+      context.createMediaStreamSource(stream).connect(analyser);
+      streamRef.current = stream;
+      analyserRef.current = analyser;
+      setRunning(true);
+      draw();
+    } catch {
+      setError('No se pudo acceder al microfono. Revisá permisos del navegador.');
+    }
   };
 
   return (
@@ -99,6 +107,7 @@ export function SpectrumAnalyzerTool() {
           >
             {running ? 'Detener analisis' : 'Activar analizador'}
           </Button>
+          {error ? <Alert type="error" showIcon message={error} /> : null}
           <canvas ref={canvasRef} width={960} height={300} className={styles.canvas} />
           <div className={styles.statGrid}>
             <span className={styles.stat}>

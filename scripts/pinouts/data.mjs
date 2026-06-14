@@ -24,6 +24,11 @@ const C = {
   spkr: { key: 'spkr', label: 'Speaker', color: '#f59e0b' },
   vin: { key: 'vin', label: 'V-In', color: '#ef4444' },
   vout: { key: 'vout', label: 'V-Out', color: '#22c55e' },
+  tip: { key: 'tip', label: 'Tip', color: '#38bdf8' },
+  ring: { key: 'ring', label: 'Ring', color: '#8b5cf6' },
+  sleeve: { key: 'sleeve', label: 'Sleeve', color: '#64748b' },
+  mic: { key: 'mic', label: 'Mic', color: '#ec4899' },
+  detect: { key: 'detect', label: 'Detect', color: '#f97316' },
 };
 
 const L = (text, type, primary = false) => ({ text, type, primary });
@@ -240,4 +245,52 @@ const lm2596 = {
   ],
 };
 
-export const MODULES = [wroom, s3, pcm5102, max98357, lm2596];
+/* ---------------- 3.5mm TRS Audio Jack ---------------- */
+const trsJack = {
+  id: 'audio-jack-trs',
+  title: '3.5mm TRS Audio Jack',
+  badge: 'Stereo',
+  subtitle: 'Conector hembra estéreo • Tip=L • Ring=R • Sleeve=GND',
+  chip: { type: 'module', name: '3.5mm', sub: 'TRS Jack', display: 'TRS' },
+  categories: [C.tip, C.ring, C.sleeve, C.audio, C.gnd, C.detect],
+  left: [
+    P(1, L('TIP', 'tip', true), L('Left', 'audio')),
+    P(2, L('RING', 'ring', true), L('Right', 'audio')),
+  ],
+  right: [
+    P(3, L('SLEEVE', 'sleeve', true), L('GND', 'gnd')),
+    P(4, L('SW', 'detect', true), L('Detect', 'detect')),
+  ],
+  info: [
+    { color: C.tip.color, title: 'Tip', html: 'Punta del conector. En audio estéreo suele llevar el canal izquierdo (<code>L</code>).' },
+    { color: C.ring.color, title: 'Ring', html: 'Primer anillo. En TRS estéreo suele llevar el canal derecho (<code>R</code>).' },
+    { color: C.sleeve.color, title: 'Sleeve', html: 'Cuerpo del conector. Referencia de masa o blindaje (<code>GND</code>).' },
+    { color: C.detect.color, title: 'Switch opcional', html: 'Algunos jacks agregan un contacto de detección que abre/cierra al insertar el plug. No está presente en todos los modelos.' },
+  ],
+};
+
+/* ---------------- 3.5mm TRRS CTIA Audio Plug ---------------- */
+const trrsPlug = {
+  id: 'audio-plug-trrs',
+  title: '3.5mm TRRS Audio Plug',
+  badge: 'CTIA',
+  subtitle: 'Conector macho TRRS • Tip=L • Ring1=R • Ring2=GND • Sleeve=MIC',
+  chip: { type: 'module', name: '3.5mm', sub: 'TRRS Plug', display: 'CTIA' },
+  categories: [C.tip, C.ring, C.sleeve, C.audio, C.gnd, C.mic],
+  left: [
+    P(1, L('TIP', 'tip', true), L('Left', 'audio')),
+    P(2, L('RING 1', 'ring', true), L('Right', 'audio')),
+  ],
+  right: [
+    P(3, L('RING 2', 'ring', true), L('GND', 'gnd')),
+    P(4, L('SLEEVE', 'sleeve', true), L('MIC', 'mic')),
+  ],
+  info: [
+    { color: C.tip.color, title: 'Tip / Ring 1', html: '<code>Tip</code> = canal izquierdo, <code>Ring 1</code> = canal derecho.' },
+    { color: C.gnd.color, title: 'CTIA', html: 'En CTIA, <code>Ring 2</code> es masa y <code>Sleeve</code> es micrófono. Es el estándar común en celulares modernos.' },
+    { color: C.mic.color, title: 'Micrófono', html: 'La línea <code>MIC</code> normalmente usa polarización desde el dispositivo. No conectar directo a una entrada de línea sin adaptar.' },
+    { color: C.ring.color, title: 'OMTP', html: 'En OMTP se invierten <code>GND</code> y <code>MIC</code>. Si el micrófono no funciona, puede ser una diferencia de estándar.' },
+  ],
+};
+
+export const MODULES = [wroom, s3, pcm5102, max98357, lm2596, trsJack, trrsPlug];

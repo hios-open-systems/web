@@ -5,7 +5,7 @@
  * Referencia: https://www.luisllamas.es/en/esp32-hardware-details-pinout/
  */
 
-export type ModuleCategory = 'microcontroller' | 'audio' | 'power' | 'amplifier';
+export type ModuleCategory = 'microcontroller' | 'audio' | 'power' | 'amplifier' | 'connector';
 export type ModuleCategoryFilter = 'all' | ModuleCategory;
 
 export interface ModuleSpecs {
@@ -100,6 +100,32 @@ export const MODULES: Module[] = [
       package: 'TO-220 / TO-263',
     },
   },
+  {
+    id: 'audio-jack-trs',
+    name: 'Jack 3.5mm TRS',
+    description: 'Conector hembra estéreo Tip/Ring/Sleeve para línea o auriculares',
+    category: 'connector',
+    htmlPath: '/pinouts/modules/audio-jack-trs.html',
+    specs: {
+      voltage: 'Pasivo',
+      features: ['Tip = canal izquierdo', 'Ring = canal derecho', 'Sleeve = masa', 'Opcional: switch de detección'],
+      interface: 'Audio analógico TRS',
+      package: 'Jack hembra 3.5mm',
+    },
+  },
+  {
+    id: 'audio-plug-trrs',
+    name: 'Plug 3.5mm TRRS CTIA',
+    description: 'Conector macho TRRS para auriculares con micrófono en estándar CTIA',
+    category: 'connector',
+    htmlPath: '/pinouts/modules/audio-plug-trrs.html',
+    specs: {
+      voltage: 'Pasivo',
+      features: ['Tip = canal izquierdo', 'Ring 1 = canal derecho', 'Ring 2 = masa', 'Sleeve = micrófono'],
+      interface: 'Audio analógico TRRS CTIA',
+      package: 'Plug macho 3.5mm',
+    },
+  },
 ];
 
 export const CATEGORIES: Record<ModuleCategory, { label: string; color: string }> = {
@@ -107,6 +133,7 @@ export const CATEGORIES: Record<ModuleCategory, { label: string; color: string }
   audio: { label: 'Audio DAC', color: '#10b981' },
   amplifier: { label: 'Amplificador', color: '#f59e0b' },
   power: { label: 'Alimentación', color: '#ef4444' },
+  connector: { label: 'Conectores', color: '#38bdf8' },
 };
 
 export const MODULE_CATEGORIES = Object.keys(CATEGORIES) as ModuleCategory[];
@@ -123,7 +150,7 @@ export const getModuleCategoryCounts = (modules: Module[] = MODULES) =>
       ...counts,
       [category]: modules.filter((module) => module.category === category).length,
     }),
-    { all: modules.length, microcontroller: 0, audio: 0, power: 0, amplifier: 0 },
+    { all: modules.length, microcontroller: 0, audio: 0, power: 0, amplifier: 0, connector: 0 },
   );
 
 /**

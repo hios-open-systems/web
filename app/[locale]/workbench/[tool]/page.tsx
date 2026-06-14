@@ -12,6 +12,7 @@ import { UuidUlidTool } from '@/components/workbench/UuidUlidTool';
 import { RegexTesterTool } from '@/components/workbench/RegexTesterTool';
 import { TextDiffTool } from '@/components/workbench/TextDiffTool';
 import { MermaidTool } from '@/components/workbench/MermaidTool';
+import { ExcalidrawTool } from '@/components/workbench/ExcalidrawTool';
 import { MarkdownNotesTool } from '@/components/workbench/MarkdownNotesTool';
 import { PatternsTool } from '@/components/workbench/PatternsTool';
 import { RandomStringTool } from '@/components/workbench/RandomStringTool';
@@ -30,6 +31,7 @@ import { WhoisRdapTool } from '@/components/workbench/WhoisRdapTool';
 import { BeatCounterTool } from '@/components/workbench/audio/BeatCounterTool';
 import { DelayCalculatorTool } from '@/components/workbench/audio/DelayCalculatorTool';
 import { GuitarTunerTool } from '@/components/workbench/audio/GuitarTunerTool';
+import { LevelMeterTool } from '@/components/workbench/audio/LevelMeterTool';
 import { MetronomeTool } from '@/components/workbench/audio/MetronomeTool';
 import { SpectrumAnalyzerTool } from '@/components/workbench/audio/SpectrumAnalyzerTool';
 import { ToneGeneratorTool } from '@/components/workbench/audio/ToneGeneratorTool';
@@ -43,8 +45,8 @@ const dynamicToolIds = workbenchTools
 
 const metadataMap: Record<string, Metadata> = {
   'tone-generator': {
-    title: 'Generador de tonos | HIOS Audio Lab',
-    description: 'Oscilador de referencia para probar cadenas de audio desde el navegador.',
+    title: 'Generador de señal | HIOS Audio Lab',
+    description: 'Genera tonos, ruido, sweeps y pruebas L/R para cadenas de audio desde el navegador.',
   },
   'guitar-tuner': {
     title: 'Afinador de guitarra | HIOS Audio Lab',
@@ -53,6 +55,10 @@ const metadataMap: Record<string, Metadata> = {
   'spectrum-analyzer': {
     title: 'Analizador de espectro | HIOS Audio Lab',
     description: 'FFT en tiempo real para inspeccionar energia por frecuencia desde el navegador.',
+  },
+  'level-meter': {
+    title: 'Medidor de nivel | HIOS Audio Lab',
+    description: 'Mide nivel relativo desde el microfono para comparar volumen, ruido y picos de señal.',
   },
   'metronome': {
     title: 'Metrónomo | HIOS Audio Lab',
@@ -114,6 +120,10 @@ const metadataMap: Record<string, Metadata> = {
     title: 'Mermaid Diagrams | HIOS Workbench',
     description: 'Editá y renderizá diagramas Mermaid (flowchart, secuencia, UML…) en el navegador.',
   },
+  'excalidraw': {
+    title: 'Excalidraw Diagrams | HIOS Workbench',
+    description: 'Dibuja y exporta diagramas visuales tipo UML y arquitectura directamente en el navegador.',
+  },
   'notes': {
     title: 'Markdown Notes | HIOS Workbench',
     description: 'Notas en markdown con preview en vivo, local-first en tu navegador.',
@@ -173,6 +183,8 @@ function renderTool(toolId: WorkbenchToolId) {
       return <GuitarTunerTool />;
     case 'spectrum-analyzer':
       return <SpectrumAnalyzerTool />;
+    case 'level-meter':
+      return <LevelMeterTool />;
     case 'metronome':
       return <MetronomeTool />;
     case 'beat-counter':
@@ -203,6 +215,8 @@ function renderTool(toolId: WorkbenchToolId) {
       return <TextDiffTool />;
     case 'mermaid':
       return <MermaidTool />;
+    case 'excalidraw':
+      return <ExcalidrawTool />;
     case 'notes':
       return <MarkdownNotesTool />;
     case 'patterns':

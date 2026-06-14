@@ -275,7 +275,10 @@
         "open_source_note": "Tutti i design software e hardware sono <strong>open source</strong>.",
         "filter_all": "Tutti",
         "filter_software": "Software",
-        "filter_hardware": "Hardware"
+        "filter_hardware": "Hardware",
+        "catalog_count": "strumenti consigliati",
+        "used_in_projects": "Usato in {count} progetto/i",
+        "official_site": "Sito ufficiale"
     },
     "Tutorials": {
         "badge": "Inizio Rapido",
@@ -380,7 +383,8 @@
             "microcontroller": "Microcontrollore",
             "audio": "DAC Audio",
             "amplifier": "Amplificatore",
-            "power": "Alimentazione"
+            "power": "Alimentazione",
+            "connector": "Connettori"
         },
         "Modules": {
             "esp32-wroom-32": {
@@ -432,6 +436,24 @@
                     "Frequenza 150kHz",
                     "Protezione termica"
                 ]
+            },
+            "audio-jack-trs": {
+                "description": "Connettore femmina stereo Tip/Ring/Sleeve per linea audio o cuffie",
+                "features": [
+                    "Tip = canale sinistro",
+                    "Ring = canale destro",
+                    "Sleeve = massa",
+                    "Switch di rilevamento opzionale"
+                ]
+            },
+            "audio-plug-trrs": {
+                "description": "Connettore maschio TRRS per cuffie con microfono secondo lo standard CTIA",
+                "features": [
+                    "Tip = canale sinistro",
+                    "Ring 1 = canale destro",
+                    "Ring 2 = massa",
+                    "Sleeve = microfono"
+                ]
             }
         },
         "Buttons": {
@@ -457,6 +479,7 @@
         "sectionsGroup": "Sezioni",
         "pages": {
             "home": "Home",
+            "tools": "Strumenti",
             "workbench": "Workbench",
             "calculators": "Calcolatrici",
             "pinouts": "Pinouts",
@@ -554,6 +577,16 @@
             "invalid": "Diagramma non valido",
             "empty": "Scrivi un diagramma per l’anteprima",
             "parseError": "Impossibile fare il parsing del diagramma"
+        },
+        "excalidraw": {
+            "badge": "Strumento di generazione",
+            "title": "Diagrammi Excalidraw",
+            "subtitle": "Lavagna libera per UML e architettura, local-first nel browser.",
+            "downloadScene": "Scarica scena",
+            "downloadError": "Impossibile esportare la scena",
+            "clear": "Pulisci canvas",
+            "cleared": "Canvas ripristinato",
+            "loading": "Caricamento editor diagrammi..."
         },
         "textDiff": {
             "badge": "Strumento di test",
@@ -862,6 +895,10 @@
                 "title": "Analizzatore di spettro",
                 "description": "FFT in tempo reale dal microfono per ispezionare l'energia per frequenza."
             },
+            "level-meter": {
+                "title": "Misuratore di livello",
+                "description": "Misura relativa dal microfono per confrontare volume, rumore di fondo e picchi di segnale."
+            },
             "metronome": {
                 "title": "Metronomo",
                 "description": "Click musicale configurabile con tempo, battiti e suddivisioni."
@@ -885,6 +922,10 @@
             "mermaid": {
                 "title": "Mermaid Diagrams",
                 "description": "Modifica e renderizza diagrammi Mermaid (flowchart, sequenza, UML…) nel browser."
+            },
+            "excalidraw": {
+                "title": "Diagrammi Excalidraw",
+                "description": "Disegna UML e architetture in modo visuale, con salvataggio/export locale della scena."
             },
             "text-diff": {
                 "title": "Text Diff",

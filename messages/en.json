@@ -285,7 +285,10 @@
         "open_source_note": "All software and hardware designs are <strong>open source</strong>.",
         "filter_all": "All",
         "filter_software": "Software",
-        "filter_hardware": "Hardware"
+        "filter_hardware": "Hardware",
+        "catalog_count": "recommended tools",
+        "used_in_projects": "Used in {count} project(s)",
+        "official_site": "Official site"
     },
     "Tutorials": {
         "badge": "Quick Start",
@@ -390,7 +393,8 @@
             "microcontroller": "Microcontroller",
             "audio": "Audio DAC",
             "amplifier": "Amplifier",
-            "power": "Power Supply"
+            "power": "Power Supply",
+            "connector": "Connectors"
         },
         "Modules": {
             "esp32-wroom-32": {
@@ -441,6 +445,24 @@
                     "Efficiency 73%",
                     "Frequency 150kHz",
                     "Thermal protection"
+                ]
+            },
+            "audio-jack-trs": {
+                "description": "Stereo Tip/Ring/Sleeve female connector for line audio or headphones",
+                "features": [
+                    "Tip = left channel",
+                    "Ring = right channel",
+                    "Sleeve = ground",
+                    "Optional detection switch"
+                ]
+            },
+            "audio-plug-trrs": {
+                "description": "TRRS male connector for headphones with microphone using the CTIA standard",
+                "features": [
+                    "Tip = left channel",
+                    "Ring 1 = right channel",
+                    "Ring 2 = ground",
+                    "Sleeve = microphone"
                 ]
             }
         },
@@ -559,6 +581,7 @@
         "sectionsGroup": "Sections",
         "pages": {
             "home": "Home",
+            "tools": "Tools",
             "workbench": "Workbench",
             "calculators": "Calculators",
             "pinouts": "Pinouts",
@@ -656,6 +679,16 @@
             "invalid": "Invalid diagram",
             "empty": "Type a diagram to preview",
             "parseError": "Could not parse the diagram"
+        },
+        "excalidraw": {
+            "badge": "Generation tool",
+            "title": "Excalidraw Diagrams",
+            "subtitle": "Freeform diagram board for UML and architecture sketches, local-first in your browser.",
+            "downloadScene": "Download scene",
+            "downloadError": "Could not export scene",
+            "clear": "Clear canvas",
+            "cleared": "Canvas reset",
+            "loading": "Loading diagram editor..."
         },
         "textDiff": {
             "badge": "Testing tool",
@@ -946,8 +979,8 @@
         "pagerNext": "Next",
         "packs": {
             "tone-generator": {
-                "title": "Tone Generator",
-                "description": "Configurable oscillator for testing speakers, DACs, filters and audio signal chains."
+                "title": "Signal Generator",
+                "description": "Tones, white/pink/brown noise, sweeps and L/R tests for speakers, DACs and audio chains."
             },
             "guitar-tuner": {
                 "title": "Guitar Tuner",
@@ -956,6 +989,10 @@
             "spectrum-analyzer": {
                 "title": "Spectrum Analyzer",
                 "description": "Realtime microphone FFT to inspect frequency energy from the browser."
+            },
+            "level-meter": {
+                "title": "Level Meter",
+                "description": "Relative microphone meter for comparing loudness, noise floor and signal peaks."
             },
             "metronome": {
                 "title": "Metronome",
@@ -980,6 +1017,10 @@
             "mermaid": {
                 "title": "Mermaid Diagrams",
                 "description": "Edit and render Mermaid diagrams (flowchart, sequence, UML…) in your browser."
+            },
+            "excalidraw": {
+                "title": "Excalidraw Diagrams",
+                "description": "Sketch UML and architecture diagrams visually, then keep/export your scene locally."
             },
             "text-diff": {
                 "title": "Text Diff",

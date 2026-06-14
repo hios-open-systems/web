@@ -155,3 +155,15 @@
 :global([data-theme="dark"]) .menuItem:hover {
   background: rgba(255, 255, 255, 0.06);
 }
+
+@media (max-width: 640px) {
+  .loginButton {
+    width: 32px;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .loginLabel {
+    display: none;
+  }
+}
