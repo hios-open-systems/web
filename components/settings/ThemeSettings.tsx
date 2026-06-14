@@ -244,13 +244,12 @@ export function ThemeSettings() {
                 {savedThemes.length === 0 ? (
                     <span className={styles.sectionHint}>{t('savedEmpty')}</span>
                 ) : (
-                    <div className={styles.presetRow} role="list">
+                    <div className={styles.savedRow} role="list">
                         {savedThemes.map((theme) => (
-                            <div key={theme.id} className={styles.presetChip} role="listitem">
+                            <div key={theme.id} className={styles.savedChip} role="listitem">
                                 <button
                                     type="button"
-                                    className={styles.presetChip}
-                                    style={{ border: 'none', background: 'transparent', padding: 0 }}
+                                    className={styles.savedApply}
                                     onClick={() => applySavedTheme(theme)}
                                     title={t('savedApply')}
                                 >
@@ -259,15 +258,17 @@ export function ThemeSettings() {
                                         style={{ background: theme.accent }}
                                         aria-hidden
                                     />
-                                    <span className={styles.presetLabel}>
-                                        {theme.name} · {theme.mode === 'dark' ? t('savedModeDark') : t('savedModeLight')}
+                                    <span className={styles.savedLabel}>
+                                        <span className={styles.savedName}>{theme.name}</span>
+                                        <span className={styles.savedMode}>
+                                            {theme.mode === 'dark' ? t('savedModeDark') : t('savedModeLight')}
+                                        </span>
                                     </span>
                                 </button>
                                 <button
                                     type="button"
                                     aria-label={t('savedDelete')}
-                                    className={styles.resetButton}
-                                    style={{ marginLeft: 8 }}
+                                    className={styles.savedDelete}
                                     onClick={() => persistThemes(removeSavedTheme(savedThemes, theme.id))}
                                 >
                                     ×

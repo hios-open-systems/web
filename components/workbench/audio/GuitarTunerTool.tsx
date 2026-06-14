@@ -2,7 +2,14 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Card, InputNumber, Select, Space, Typography } from 'antd';
-import { AudioOutlined, CheckCircleFilled, SoundOutlined, StopOutlined } from '@ant-design/icons';
+import {
+  AudioOutlined,
+  CheckCircleFilled,
+  PauseCircleFilled,
+  PlayCircleOutlined,
+  SoundOutlined,
+  StopOutlined,
+} from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import {
   TUNINGS,
@@ -13,7 +20,7 @@ import {
 import { detectPitch } from '@/lib/workbench/pitch';
 import { freqToNote } from '@/lib/workbench/noteFreq';
 import { ToolHeader } from '../ToolHeader';
-import { playTone } from './audioEngine';
+import { playTone, startTone } from './audioEngine';
 import { useMicAnalyser } from './useMicAnalyser';
 import workbenchStyles from '../workbench.module.css';
 import styles from './audioTools.module.css';
@@ -33,8 +40,10 @@ export function GuitarTunerTool() {
   const [tuningId, setTuningId] = useState(TUNINGS[0].id);
   const [a4, setA4] = useState<number | null>(440);
   const [detected, setDetected] = useState<{ frequency: number; clarity: number } | null>(null);
+  const [loopIndex, setLoopIndex] = useState<number | null>(null);
 
   const outCtxRef = useRef<AudioContext | null>(null);
+  const stopDroneRef = useRef<(() => void) | null>(null);
   const frameRef = useRef<number | null>(null);
 
   const refA4 = a4 && a4 >= 400 && a4 <= 480 ? a4 : 440;
@@ -69,14 +78,51 @@ export function GuitarTunerTool() {
     };
   }, [active, getAnalyser, getContext, tuning, refA4]);
 
-  useEffect(() => () => void outCtxRef.current?.close().catch(() => null), []);
-
-  const playString = useCallback((freq: number) => {
+  const ensureContext = useCallback(() => {
     const context = outCtxRef.current ?? new AudioContext();
     outCtxRef.current = context;
     void context.resume();
-    playTone(context, freq, { durationMs: 1100, gain: 0.18 });
+    return context;
   }, []);
+
+  const stopDrone = useCallback(() => {
+    stopDroneRef.current?.();
+    stopDroneRef.current = null;
+  }, []);
+
+  // Tear down audio output on unmount.
+  useEffect(
+    () => () => {
+      stopDroneRef.current?.();
+      void outCtxRef.current?.close().catch(() => null);
+    },
+    [],
+  );
+
+  // Changing tuning/instrument stops any sustained reference tone.
+  useEffect(() => {
+    stopDrone();
+    setLoopIndex(null);
+  }, [tuningId, stopDrone]);
+
+  const pluck = useCallback(
+    (freq: number) => playTone(ensureContext(), freq, { durationMs: 1100, gain: 0.18 }),
+    [ensureContext],
+  );
+
+  const toggleLoop = useCallback(
+    (index: number, freq: number) => {
+      if (loopIndex === index) {
+        stopDrone();
+        setLoopIndex(null);
+        return;
+      }
+      stopDrone();
+      stopDroneRef.current = startTone(ensureContext(), freq, { gain: 0.14 });
+      setLoopIndex(index);
+    },
+    [loopIndex, stopDrone, ensureContext],
+  );
 
   const onInstrument = (next: string) => {
     setInstrument(next);
@@ -85,16 +131,11 @@ export function GuitarTunerTool() {
   };
 
   const near = detected && active ? nearestString(detected.frequency, tuning, refA4) : null;
+  const hasNear = near != null;
   const chroma = detected && active ? freqToNote(detected.frequency, refA4) : null;
   const cents = near?.cents ?? 0;
-  const inTune = near != null && Math.abs(cents) <= 5;
-  const status = !near
-    ? t('listening')
-    : inTune
-      ? t('inTune')
-      : cents < 0
-        ? t('tooLow')
-        : t('tooHigh');
+  const inTune = hasNear && Math.abs(cents) <= 5;
+  const status = !hasNear ? '' : inTune ? t('inTune') : cents < 0 ? t('tooLow') : t('tooHigh');
 
   return (
     <Space
@@ -155,19 +196,33 @@ export function GuitarTunerTool() {
             {strings.map((s, i) => {
               const isNear = near?.index === i;
               const tuned = isNear && inTune;
+              const looping = loopIndex === i;
               return (
-                <button
+                <div
                   key={`${s.label}-${i}`}
-                  type="button"
                   className={`${styles.stringRow} ${isNear ? styles.stringRowActive : ''} ${tuned ? styles.stringInTune : ''}`}
-                  onClick={() => playString(s.freq)}
-                  aria-label={`${s.label} · ${s.freq.toFixed(1)} Hz`}
                 >
-                  <span className={styles.stringLabel}>{s.label}</span>
-                  <span className={styles.stringLine} style={{ height: 2 + (strings.length - i) }} />
-                  <span className={styles.stringFreq}>{s.freq.toFixed(1)} Hz</span>
+                  <button
+                    type="button"
+                    className={styles.stringMain}
+                    onClick={() => pluck(s.freq)}
+                    aria-label={`${t('pluckString')} ${s.label}`}
+                  >
+                    <span className={styles.stringLabel}>{s.label}</span>
+                    <span className={styles.stringLine} style={{ height: 2 + (strings.length - i) }} />
+                    <span className={styles.stringFreq}>{s.freq.toFixed(1)} Hz</span>
+                  </button>
+                  <button
+                    type="button"
+                    className={`${styles.stringLoop} ${looping ? styles.stringLoopActive : ''}`}
+                    onClick={() => toggleLoop(i, s.freq)}
+                    aria-label={looping ? t('loopStop') : t('loopPlay')}
+                    title={looping ? t('loopStop') : t('loopPlay')}
+                  >
+                    {looping ? <PauseCircleFilled /> : <PlayCircleOutlined />}
+                  </button>
                   <span className={styles.stringCheck}>{tuned ? <CheckCircleFilled /> : null}</span>
-                </button>
+                </div>
               );
             })}
           </div>
@@ -175,16 +230,23 @@ export function GuitarTunerTool() {
 
         <Card className={`${workbenchStyles.sectionCard} ${styles.readoutCard}`} styles={{ body: { padding: 16 } }}>
           <div className={styles.readout}>
-            <span className={styles.note} style={{ color: inTune ? '#22c55e' : undefined }}>
-              {near ? near.label : '--'}
+            <span
+              className={styles.note}
+              style={{ color: inTune ? '#22c55e' : undefined, opacity: hasNear ? 1 : 0.25 }}
+            >
+              {near ? near.label : '—'}
             </span>
             <span className={styles.frequency}>
-              {detected && active ? `${detected.frequency.toFixed(1)} Hz` : t('listening')}
+              {hasNear && detected
+                ? `${detected.frequency.toFixed(1)} Hz`
+                : active
+                  ? t('listening')
+                  : t('micPrompt')}
             </span>
             <div className={styles.needleTrack} aria-hidden>
               <span className={styles.needle} style={{ left: `${50 + clampCents(cents)}%` }} />
             </div>
-            <Text strong style={{ color: inTune ? '#22c55e' : undefined }}>
+            <Text strong style={{ color: inTune ? '#22c55e' : undefined, minHeight: 24 }}>
               {status}
             </Text>
             <div className={styles.statGrid}>
@@ -194,7 +256,7 @@ export function GuitarTunerTool() {
               </span>
               <span className={styles.stat}>
                 <span className={styles.statLabel}>{t('centsLabel')}</span>
-                <span className={styles.statValue}>{near ? `${cents > 0 ? '+' : ''}${cents}` : '-'}</span>
+                <span className={styles.statValue}>{hasNear ? `${cents > 0 ? '+' : ''}${cents}` : '-'}</span>
               </span>
               <span className={styles.stat}>
                 <span className={styles.statLabel}>{t('referenceLabel')}</span>
