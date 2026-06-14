@@ -757,7 +757,225 @@
             "copyError": "No se pudo copiar",
             "empty": "Escribí algo para ver su digest"
         },
+        "ohmsLaw": {
+            "badge": "Electrónica",
+            "title": "Ley de Ohm",
+            "subtitle": "Ingresá dos de voltaje, corriente, resistencia y potencia; los otros dos se calculan.",
+            "inputLabel": "Valores conocidos",
+            "voltage": "Voltaje",
+            "current": "Corriente",
+            "resistance": "Resistencia",
+            "power": "Potencia",
+            "voltageUnit": "V",
+            "currentUnit": "A",
+            "resistanceUnit": "Ω",
+            "powerUnit": "W",
+            "hint": "Ingresá exactamente dos valores para resolver el resto.",
+            "error": "Esos dos valores no se pueden combinar (revisá si hay ceros).",
+            "resultLabel": "Resultado"
+        },
+        "resistorColorCode": {
+            "badge": "Electrónica",
+            "title": "Código de resistencias",
+            "subtitle": "Decodifica las bandas de color de una resistencia a su valor y tolerancia, con 4 y 5 bandas.",
+            "bands4": "4 bandas",
+            "bands5": "5 bandas",
+            "band1": "Banda 1",
+            "band2": "Banda 2",
+            "band3": "Banda 3",
+            "multiplier": "Multiplicador",
+            "tolerance": "Tolerancia",
+            "resultLabel": "Valor",
+            "value": "Resistencia",
+            "toleranceLabel": "Tolerancia",
+            "error": "Esa combinación de bandas no es válida."
+        },
+        "httpStatusCodes": {
+            "badge": "Referencia",
+            "title": "Códigos de estado HTTP",
+            "subtitle": "Referencia buscable de códigos de estado HTTP con su categoría y significado.",
+            "searchPlaceholder": "Buscá por código o texto (ej. 404, teapot)…",
+            "colCode": "Código",
+            "colName": "Nombre",
+            "colDescription": "Descripción",
+            "empty": "Ningún código coincide con tu búsqueda"
+        },
+        "asciiUnicode": {
+            "badge": "Referencia",
+            "title": "Tabla ASCII / Unicode",
+            "subtitle": "Inspecciona cualquier carácter o code point en decimal, hex, octal y binario.",
+            "inputLabel": "Carácter o code point",
+            "inputPlaceholder": "A, 65, 0x41 o U+1F600…",
+            "decLabel": "Decimal",
+            "hexLabel": "Hex",
+            "octLabel": "Octal",
+            "binLabel": "Binario",
+            "controlFlag": "Carácter de control",
+            "printableFlag": "Imprimible",
+            "notAssigned": "No es un code point reconocido",
+            "colCode": "Código",
+            "colAbbr": "Abrev.",
+            "colName": "Nombre",
+            "controlTitle": "Caracteres de control"
+        },
+        "noteFrequency": {
+            "badge": "Audio",
+            "title": "Nota · Frecuencia · MIDI",
+            "subtitle": "Convertí entre nota musical, frecuencia y número de nota MIDI, con A4 ajustable.",
+            "a4Label": "A4",
+            "fromNote": "Desde nota",
+            "octaveLabel": "Octava",
+            "freqLabel": "Frecuencia",
+            "midiLabel": "MIDI",
+            "fromFreq": "Desde frecuencia",
+            "noteLabel": "Nota",
+            "centsLabel": "Cents",
+            "fromMidi": "Desde MIDI"
+        },
+        "ipv6Expand": {
+            "badge": "Red",
+            "title": "IPv6 Expandir / Comprimir",
+            "subtitle": "Expandí una dirección IPv6 a sus 8 grupos o comprimila a la forma corta RFC 5952.",
+            "inputLabel": "Dirección IPv6",
+            "inputPlaceholder": "2001:db8::1",
+            "invalid": "No es una dirección IPv6 válida.",
+            "expandedLabel": "Expandida",
+            "compressedLabel": "Comprimida",
+            "copied": "Copiado",
+            "copyError": "No se pudo copiar"
+        },
+        "hmac": {
+            "badge": "Validación",
+            "title": "Generador HMAC",
+            "subtitle": "Código de autenticación de mensajes con clave, calculado en tu navegador con Web Crypto.",
+            "clear": "Limpiar",
+            "keyLabel": "Clave secreta",
+            "keyPlaceholder": "Tu clave secreta…",
+            "messageLabel": "Mensaje",
+            "messagePlaceholder": "Mensaje a autenticar…",
+            "resultLabel": "HMAC",
+            "hexLabel": "hex",
+            "base64Label": "base64",
+            "copied": "HMAC copiado",
+            "copyError": "No se pudo copiar",
+            "empty": "Ingresá un mensaje para ver su HMAC"
+        },
+        "csvJson": {
+            "badge": "Testing",
+            "title": "CSV ⇄ JSON",
+            "subtitle": "Convertí CSV a JSON y de vuelta, con comillas RFC 4180 y delimitador configurable.",
+            "toJson": "CSV → JSON",
+            "toCsv": "JSON → CSV",
+            "delimiterLabel": "Delimitador",
+            "headerLabel": "Fila de encabezado",
+            "csvLabel": "CSV",
+            "jsonLabel": "JSON",
+            "csvPlaceholder": "nombre,edad\nJuan,30…",
+            "jsonPlaceholder": "[{\"nombre\":\"Juan\",\"edad\":30}]…",
+            "error": "No se pudo interpretar la entrada — revisá el formato.",
+            "copied": "Copiado",
+            "copyError": "No se pudo copiar"
+        },
+        "usageAnalytics": {
+            "badge": "Herramienta de validación",
+            "title": "Dashboard de uso",
+            "subtitle": "Métricas agregadas de navegación y apertura de herramientas, sin contenido sensible.",
+            "days": "Ventana",
+            "locale": "Locale",
+            "localeAll": "Todos",
+            "scope": "{days}d · {locale}",
+            "loading": "Cargando métricas...",
+            "authRequiredTitle": "Iniciá sesión para ver métricas",
+            "authRequiredDescription": "Este panel solo está disponible para usuarios autenticados.",
+            "errorTitle": "No se pudo cargar el resumen",
+            "errorDescription": "Volvé a intentar en unos segundos.",
+            "totalsEvents": "Eventos",
+            "totalsViews": "Vistas",
+            "totalsToolOpens": "Aperturas de tools",
+            "totalsUsers": "Usuarios únicos",
+            "timelineTitle": "Timeline",
+            "topPagesTitle": "Top páginas",
+            "topToolsTitle": "Top tools",
+            "colDay": "Día",
+            "colEvent": "Evento",
+            "colCount": "Cantidad",
+            "colPath": "Ruta",
+            "colTool": "Tool",
+            "empty": "Sin datos en este rango"
+        },
         "guides": {
+            "resistorColorCode": {
+                "intro": "Leé el valor de una resistencia desde sus bandas de color, o al revés desde un valor — todo local.",
+                "steps": [
+                    "Elegí 4 o 5 bandas.",
+                    "Asigná el color de cada banda.",
+                    "Leé la resistencia y la tolerancia."
+                ],
+                "tip": "Las resistencias de 5 bandas suman un tercer dígito significativo — para tolerancias más finas (1%)."
+            },
+            "ohmsLaw": {
+                "intro": "Resolvé la ley de Ohm y la potencia: ingresá dos de V, I, R, P y obtené el resto.",
+                "steps": [
+                    "Escribí exactamente dos valores conocidos.",
+                    "Dejá los otros dos vacíos.",
+                    "Leé los resultados calculados abajo."
+                ],
+                "tip": "Se aplican P=V·I, V=I·R y las formas derivadas P=I²·R y P=V²/R."
+            },
+            "httpStatusCodes": {
+                "intro": "Buscá cualquier código de estado HTTP, su categoría y su significado.",
+                "steps": [
+                    "Escribí un código (ej. 404) o una palabra (ej. teapot).",
+                    "Recorré la tabla filtrada.",
+                    "Usá el color de la etiqueta para ver la clase de un vistazo."
+                ],
+                "tip": "1xx info · 2xx éxito · 3xx redirección · 4xx cliente · 5xx servidor."
+            },
+            "asciiUnicode": {
+                "intro": "Inspeccioná cualquier carácter o code point en decimal, hex, octal y binario.",
+                "steps": [
+                    "Escribí un carácter, o un code point como 65, 0x41 o U+0041.",
+                    "Leé sus formatos y su nombre.",
+                    "Explorá la tabla de caracteres de control abajo."
+                ],
+                "tip": "Funciona con emoji y otros code points del plano astral, no solo ASCII."
+            },
+            "noteFrequency": {
+                "intro": "Convertí entre nota musical, frecuencia y número de nota MIDI.",
+                "steps": [
+                    "Fijá la referencia A4 (por defecto 440 Hz).",
+                    "Ingresá una nota, una frecuencia o un número MIDI.",
+                    "Leé los valores equivalentes y el desvío en cents."
+                ],
+                "tip": "Los cents muestran qué tan lejos está una frecuencia de la nota temperada más cercana."
+            },
+            "ipv6Expand": {
+                "intro": "Expandí una dirección IPv6 a su forma completa o comprimila a la forma corta canónica.",
+                "steps": [
+                    "Pegá cualquier dirección IPv6.",
+                    "Leé las formas expandida y comprimida.",
+                    "Copiá la que necesites."
+                ],
+                "tip": "La compresión sigue RFC 5952: minúsculas y la racha de ceros más larga colapsada a ::."
+            },
+            "hmac": {
+                "intro": "Calculá un HMAC con clave de un mensaje, localmente con Web Crypto — nada se sube.",
+                "steps": [
+                    "Elegí un algoritmo (SHA-1/256/384/512).",
+                    "Ingresá la clave secreta y el mensaje.",
+                    "Copiá el MAC en hex o base64."
+                ],
+                "tip": "A diferencia de un hash simple, el HMAC mezcla una clave secreta para autenticar el mensaje."
+            },
+            "csvJson": {
+                "intro": "Convertí CSV a JSON y de vuelta, con comillas RFC 4180 correctas — todo local.",
+                "steps": [
+                    "Elegí una dirección (CSV→JSON o JSON→CSV).",
+                    "Pegá tus datos y elegí el delimitador.",
+                    "Copiá la salida convertida."
+                ],
+                "tip": "Con la fila de encabezado activada, las filas CSV se vuelven objetos con clave de la primera fila."
+            },
             "patterns": {
                 "intro": "Aprendé patrones modernos de JS editando y corriendo código real — sandbox en tu navegador, sin red, sin acceso al sitio.",
                 "steps": [
@@ -969,6 +1187,14 @@
             "testing": {
                 "title": "Tests",
                 "description": "Compará objetos, inspeccioná diferencias y conectá el flujo con validaciones embebidas."
+            },
+            "electronics": {
+                "title": "Electrónica",
+                "description": "Cálculos rápidos de hardware: código de resistencias, ley de Ohm y afines, al lado de los pinouts."
+            },
+            "reference": {
+                "title": "Referencia",
+                "description": "Consultas rápidas del día a día: códigos HTTP, tabla ASCII/Unicode y más."
             }
         },
         "sectionToolCount": "herramientas",
@@ -977,6 +1203,38 @@
         "pagerPrev": "Anterior",
         "pagerNext": "Siguiente",
         "packs": {
+            "resistor-color-code": {
+                "title": "Código de resistencias",
+                "description": "Decodifica colores de resistencias de 4 y 5 bandas a su valor, y al revés."
+            },
+            "ohms-law": {
+                "title": "Ley de Ohm",
+                "description": "Resolvé voltaje, corriente, resistencia y potencia desde dos valores conocidos."
+            },
+            "http-status-codes": {
+                "title": "Códigos HTTP",
+                "description": "Referencia buscable de códigos de estado HTTP con su categoría y significado."
+            },
+            "ascii-unicode": {
+                "title": "Tabla ASCII / Unicode",
+                "description": "Inspecciona caracteres y code points en decimal, hex, octal y binario."
+            },
+            "note-frequency": {
+                "title": "Nota · Frecuencia · MIDI",
+                "description": "Convertí entre nota musical, frecuencia en Hz y número MIDI, con A4 ajustable."
+            },
+            "ipv6-expand": {
+                "title": "IPv6 Expandir / Comprimir",
+                "description": "Expande y comprime direcciones IPv6 según RFC 5952, todo en el navegador."
+            },
+            "hmac": {
+                "title": "Generador HMAC",
+                "description": "Calculá HMAC SHA-1/256/384/512 desde una clave y un mensaje con Web Crypto."
+            },
+            "csv-json": {
+                "title": "CSV ⇄ JSON",
+                "description": "Convertí CSV a JSON y de vuelta, con comillas RFC 4180 y delimitador configurable."
+            },
             "tone-generator": {
                 "title": "Generador de señal",
                 "description": "Tonos, ruido blanco/rosa/marrón, sweep y test L/R para probar parlantes, DACs y cadenas de audio."
@@ -1040,6 +1298,10 @@
             "hash-digest": {
                 "title": "Hash & Digest",
                 "description": "Generá digests SHA-1/256/384/512 (hex y base64) enteramente en el navegador."
+            },
+            "usage-analytics": {
+                "title": "Dashboard de uso",
+                "description": "Métricas agregadas de páginas y tools usadas por período y locale."
             },
             "payload": {
                 "title": "Payload Lab",

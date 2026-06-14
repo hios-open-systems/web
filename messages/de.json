@@ -657,6 +657,33 @@
             "copyError": "Kopieren fehlgeschlagen",
             "empty": "Tippe etwas, um den Digest zu sehen"
         },
+        "usageAnalytics": {
+            "badge": "Validierungs-Tool",
+            "title": "Nutzungs-Dashboard",
+            "subtitle": "Aggregierte Metriken für Navigation und Tool-Öffnungen ohne sensible Inhalte.",
+            "days": "Zeitraum",
+            "locale": "Locale",
+            "localeAll": "Alle",
+            "scope": "{days}d · {locale}",
+            "loading": "Metriken werden geladen...",
+            "authRequiredTitle": "Anmelden, um Metriken zu sehen",
+            "authRequiredDescription": "Dieses Panel ist nur für authentifizierte Benutzer verfügbar.",
+            "errorTitle": "Zusammenfassung konnte nicht geladen werden",
+            "errorDescription": "Bitte in ein paar Sekunden erneut versuchen.",
+            "totalsEvents": "Ereignisse",
+            "totalsViews": "Seitenaufrufe",
+            "totalsToolOpens": "Tool-Öffnungen",
+            "totalsUsers": "Eindeutige Benutzer",
+            "timelineTitle": "Zeitverlauf",
+            "topPagesTitle": "Top-Seiten",
+            "topToolsTitle": "Top-Tools",
+            "colDay": "Tag",
+            "colEvent": "Ereignis",
+            "colCount": "Anzahl",
+            "colPath": "Pfad",
+            "colTool": "Tool",
+            "empty": "Keine Daten in diesem Zeitraum"
+        },
         "guides": {
             "patterns": {
                 "intro": "Lerne moderne JS-Patterns durch Bearbeiten und Ausführen echten Codes — sandboxed im Browser, kein Netz, kein Zugriff auf die Seite.",
@@ -946,6 +973,10 @@
             "hash-digest": {
                 "title": "Hash & Digest",
                 "description": "SHA-1/256/384/512-Digests (hex und base64) komplett im Browser erzeugen."
+            },
+            "usage-analytics": {
+                "title": "Nutzungs-Dashboard",
+                "description": "Aggregierte Metriken zu Top-Seiten und Tools nach Zeitraum und Locale."
             },
             "payload": {
                 "title": "Payload Lab",

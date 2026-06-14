@@ -758,7 +758,225 @@
             "copyError": "Could not copy",
             "empty": "Type something to see its digest"
         },
+        "ohmsLaw": {
+            "badge": "Electronics tool",
+            "title": "Ohm's Law",
+            "subtitle": "Enter any two of voltage, current, resistance and power; the other two are computed.",
+            "inputLabel": "Known values",
+            "voltage": "Voltage",
+            "current": "Current",
+            "resistance": "Resistance",
+            "power": "Power",
+            "voltageUnit": "V",
+            "currentUnit": "A",
+            "resistanceUnit": "Ω",
+            "powerUnit": "W",
+            "hint": "Enter exactly two values to solve the rest.",
+            "error": "Those two values can't be combined (check for zeros).",
+            "resultLabel": "Result"
+        },
+        "resistorColorCode": {
+            "badge": "Electronics tool",
+            "title": "Resistor Color Code",
+            "subtitle": "Decode resistor color bands into a value and tolerance, with 4 and 5-band support.",
+            "bands4": "4 bands",
+            "bands5": "5 bands",
+            "band1": "Band 1",
+            "band2": "Band 2",
+            "band3": "Band 3",
+            "multiplier": "Multiplier",
+            "tolerance": "Tolerance",
+            "resultLabel": "Value",
+            "value": "Resistance",
+            "toleranceLabel": "Tolerance",
+            "error": "That band combination isn't valid."
+        },
+        "httpStatusCodes": {
+            "badge": "Reference",
+            "title": "HTTP Status Codes",
+            "subtitle": "Searchable reference of HTTP status codes with their category and meaning.",
+            "searchPlaceholder": "Search by code or text (e.g. 404, teapot)…",
+            "colCode": "Code",
+            "colName": "Name",
+            "colDescription": "Description",
+            "empty": "No status codes match your search"
+        },
+        "asciiUnicode": {
+            "badge": "Reference",
+            "title": "ASCII / Unicode Table",
+            "subtitle": "Inspect any character or code point across decimal, hex, octal and binary.",
+            "inputLabel": "Character or code point",
+            "inputPlaceholder": "A, 65, 0x41 or U+1F600…",
+            "decLabel": "Decimal",
+            "hexLabel": "Hex",
+            "octLabel": "Octal",
+            "binLabel": "Binary",
+            "controlFlag": "Control character",
+            "printableFlag": "Printable",
+            "notAssigned": "Not a recognized code point",
+            "colCode": "Code",
+            "colAbbr": "Abbr",
+            "colName": "Name",
+            "controlTitle": "Control characters"
+        },
+        "noteFrequency": {
+            "badge": "Audio tool",
+            "title": "Note · Frequency · MIDI",
+            "subtitle": "Convert between musical note, frequency and MIDI note number, with a tunable A4.",
+            "a4Label": "A4",
+            "fromNote": "From note",
+            "octaveLabel": "Octave",
+            "freqLabel": "Frequency",
+            "midiLabel": "MIDI",
+            "fromFreq": "From frequency",
+            "noteLabel": "Note",
+            "centsLabel": "Cents",
+            "fromMidi": "From MIDI"
+        },
+        "ipv6Expand": {
+            "badge": "Network tool",
+            "title": "IPv6 Expand / Compress",
+            "subtitle": "Expand an IPv6 address to all 8 groups or compress it to RFC 5952 short form.",
+            "inputLabel": "IPv6 address",
+            "inputPlaceholder": "2001:db8::1",
+            "invalid": "Not a valid IPv6 address.",
+            "expandedLabel": "Expanded",
+            "compressedLabel": "Compressed",
+            "copied": "Copied",
+            "copyError": "Could not copy"
+        },
+        "hmac": {
+            "badge": "Validation tool",
+            "title": "HMAC Generator",
+            "subtitle": "Keyed-hash message authentication code, computed in your browser with Web Crypto.",
+            "clear": "Clear",
+            "keyLabel": "Secret key",
+            "keyPlaceholder": "Your secret key…",
+            "messageLabel": "Message",
+            "messagePlaceholder": "Message to authenticate…",
+            "resultLabel": "HMAC",
+            "hexLabel": "hex",
+            "base64Label": "base64",
+            "copied": "HMAC copied",
+            "copyError": "Could not copy",
+            "empty": "Enter a message to see its HMAC"
+        },
+        "csvJson": {
+            "badge": "Testing tool",
+            "title": "CSV ⇄ JSON",
+            "subtitle": "Convert CSV to JSON and back, with RFC 4180 quoting and a configurable delimiter.",
+            "toJson": "CSV → JSON",
+            "toCsv": "JSON → CSV",
+            "delimiterLabel": "Delimiter",
+            "headerLabel": "Header row",
+            "csvLabel": "CSV",
+            "jsonLabel": "JSON",
+            "csvPlaceholder": "name,age\nJuan,30…",
+            "jsonPlaceholder": "[{\"name\":\"Juan\",\"age\":30}]…",
+            "error": "Couldn't parse the input — check the format.",
+            "copied": "Copied",
+            "copyError": "Could not copy"
+        },
+        "usageAnalytics": {
+            "badge": "Validation tool",
+            "title": "Usage Dashboard",
+            "subtitle": "Aggregated metrics for navigation and tool openings, with no sensitive content.",
+            "days": "Window",
+            "locale": "Locale",
+            "localeAll": "All",
+            "scope": "{days}d · {locale}",
+            "loading": "Loading metrics...",
+            "authRequiredTitle": "Sign in to view metrics",
+            "authRequiredDescription": "This panel is only available to authenticated users.",
+            "errorTitle": "Could not load summary",
+            "errorDescription": "Please retry in a few seconds.",
+            "totalsEvents": "Events",
+            "totalsViews": "Page views",
+            "totalsToolOpens": "Tool opens",
+            "totalsUsers": "Unique users",
+            "timelineTitle": "Timeline",
+            "topPagesTitle": "Top pages",
+            "topToolsTitle": "Top tools",
+            "colDay": "Day",
+            "colEvent": "Event",
+            "colCount": "Count",
+            "colPath": "Path",
+            "colTool": "Tool",
+            "empty": "No data for this range"
+        },
         "guides": {
+            "resistorColorCode": {
+                "intro": "Read a resistor's value from its color bands, or work backwards from a value — all local.",
+                "steps": [
+                    "Pick 4 or 5 bands.",
+                    "Set each band's color.",
+                    "Read the resistance and tolerance."
+                ],
+                "tip": "5-band resistors add a third significant digit — used for tighter (1%) tolerances."
+            },
+            "ohmsLaw": {
+                "intro": "Solve Ohm's law and power: enter any two of V, I, R, P and get the rest.",
+                "steps": [
+                    "Type exactly two known values.",
+                    "Leave the other two empty.",
+                    "Read the computed results below."
+                ],
+                "tip": "P=V·I, V=I·R, plus the derived forms P=I²·R and P=V²/R are all applied."
+            },
+            "httpStatusCodes": {
+                "intro": "Look up any HTTP status code, its category and what it means.",
+                "steps": [
+                    "Type a code (e.g. 404) or a word (e.g. teapot).",
+                    "Scan the filtered table.",
+                    "Use the color tag to read the class at a glance."
+                ],
+                "tip": "1xx info · 2xx success · 3xx redirect · 4xx client · 5xx server."
+            },
+            "asciiUnicode": {
+                "intro": "Inspect any character or code point in decimal, hex, octal and binary.",
+                "steps": [
+                    "Type a character, or a code point as 65, 0x41 or U+0041.",
+                    "Read its formats and name.",
+                    "Browse the control-character table below."
+                ],
+                "tip": "Works with emoji and other astral-plane code points, not just ASCII."
+            },
+            "noteFrequency": {
+                "intro": "Convert between musical note, frequency and MIDI note number.",
+                "steps": [
+                    "Set the A4 reference (default 440 Hz).",
+                    "Enter a note, a frequency, or a MIDI number.",
+                    "Read the matching values and cents offset."
+                ],
+                "tip": "Cents show how far a frequency is from the nearest equal-tempered note."
+            },
+            "ipv6Expand": {
+                "intro": "Expand an IPv6 address to its full form or compress it to the canonical short form.",
+                "steps": [
+                    "Paste any IPv6 address.",
+                    "Read both the expanded and compressed forms.",
+                    "Copy whichever you need."
+                ],
+                "tip": "Compression follows RFC 5952: lowercase, longest zero-run collapsed to ::."
+            },
+            "hmac": {
+                "intro": "Compute a keyed HMAC of a message, locally with Web Crypto — nothing is uploaded.",
+                "steps": [
+                    "Pick an algorithm (SHA-1/256/384/512).",
+                    "Enter the secret key and the message.",
+                    "Copy the hex or base64 MAC."
+                ],
+                "tip": "Unlike a plain hash, HMAC mixes in a secret key to authenticate the message."
+            },
+            "csvJson": {
+                "intro": "Convert CSV to JSON and back, with proper RFC 4180 quoting — fully local.",
+                "steps": [
+                    "Choose a direction (CSV→JSON or JSON→CSV).",
+                    "Paste your data and pick the delimiter.",
+                    "Copy the converted output."
+                ],
+                "tip": "With the header row on, CSV rows become objects keyed by the first row."
+            },
             "patterns": {
                 "intro": "Learn modern JS patterns by editing and running real code — sandboxed in your browser, no network, no access to the site.",
                 "steps": [
@@ -970,6 +1188,14 @@
             "testing": {
                 "title": "Testing",
                 "description": "Compare objects, inspect differences, and jump into embedded validation flows."
+            },
+            "electronics": {
+                "title": "Electronics",
+                "description": "Quick hardware math — resistor color codes, Ohm's law and friends, next to the pinouts."
+            },
+            "reference": {
+                "title": "Reference",
+                "description": "Fast lookups you reach for daily: HTTP status codes, ASCII/Unicode and more."
             }
         },
         "sectionToolCount": "tools",
@@ -978,6 +1204,38 @@
         "pagerPrev": "Previous",
         "pagerNext": "Next",
         "packs": {
+            "resistor-color-code": {
+                "title": "Resistor Color Code",
+                "description": "Decode 4 and 5-band resistor colors to a value, or build the bands from a value."
+            },
+            "ohms-law": {
+                "title": "Ohm's Law",
+                "description": "Solve voltage, current, resistance and power from any two known values."
+            },
+            "http-status-codes": {
+                "title": "HTTP Status Codes",
+                "description": "Searchable reference of HTTP status codes with category and meaning."
+            },
+            "ascii-unicode": {
+                "title": "ASCII / Unicode Table",
+                "description": "Inspect characters and code points in decimal, hex, octal and binary."
+            },
+            "note-frequency": {
+                "title": "Note · Frequency · MIDI",
+                "description": "Convert between musical note, frequency in Hz and MIDI note number, with tunable A4."
+            },
+            "ipv6-expand": {
+                "title": "IPv6 Expand / Compress",
+                "description": "Expand and compress IPv6 addresses following RFC 5952, fully in the browser."
+            },
+            "hmac": {
+                "title": "HMAC Generator",
+                "description": "Compute HMAC SHA-1/256/384/512 from a key and message with Web Crypto."
+            },
+            "csv-json": {
+                "title": "CSV ⇄ JSON",
+                "description": "Convert CSV to JSON and back with RFC 4180 quoting and a configurable delimiter."
+            },
             "tone-generator": {
                 "title": "Signal Generator",
                 "description": "Tones, white/pink/brown noise, sweeps and L/R tests for speakers, DACs and audio chains."
@@ -1041,6 +1299,10 @@
             "hash-digest": {
                 "title": "Hash & Digest",
                 "description": "Generate SHA-1/256/384/512 digests (hex and base64) entirely in your browser."
+            },
+            "usage-analytics": {
+                "title": "Usage Dashboard",
+                "description": "Aggregated metrics for top pages and tools by period and locale."
             },
             "payload": {
                 "title": "Payload Lab",
