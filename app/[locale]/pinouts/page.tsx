@@ -1,7 +1,7 @@
 import { PinoutsContent } from '@/components/pinouts/PinoutsContent';
 import { setRequestLocale } from 'next-intl/server';
 
-export const dynamic = 'force-static';
+export const runtime = 'edge';
 
 export const metadata = {
   title: 'Pinouts Interactivos | HIOS Platform',
