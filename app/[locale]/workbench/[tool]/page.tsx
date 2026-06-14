@@ -26,6 +26,7 @@ import { JsonSchemaTool } from '@/components/workbench/JsonSchemaTool';
 import { UrlParserTool } from '@/components/workbench/UrlParserTool';
 import { RegexTool } from '@/components/workbench/RegexTool';
 import { ImageBase64Tool } from '@/components/workbench/ImageBase64Tool';
+import { UsageAnalyticsTool } from '@/components/workbench/UsageAnalyticsTool';
 import { TypeCheckerTool } from '@/components/workbench/TypeCheckerTool';
 import { WhoisRdapTool } from '@/components/workbench/WhoisRdapTool';
 import { BeatCounterTool } from '@/components/workbench/audio/BeatCounterTool';
@@ -35,6 +36,14 @@ import { LevelMeterTool } from '@/components/workbench/audio/LevelMeterTool';
 import { MetronomeTool } from '@/components/workbench/audio/MetronomeTool';
 import { SpectrumAnalyzerTool } from '@/components/workbench/audio/SpectrumAnalyzerTool';
 import { ToneGeneratorTool } from '@/components/workbench/audio/ToneGeneratorTool';
+import { NoteFrequencyTool } from '@/components/workbench/audio/NoteFrequencyTool';
+import { ResistorColorCodeTool } from '@/components/workbench/ResistorColorCodeTool';
+import { OhmsLawTool } from '@/components/workbench/OhmsLawTool';
+import { HttpStatusCodesTool } from '@/components/workbench/HttpStatusCodesTool';
+import { AsciiUnicodeTool } from '@/components/workbench/AsciiUnicodeTool';
+import { Ipv6ExpandTool } from '@/components/workbench/Ipv6ExpandTool';
+import { HmacTool } from '@/components/workbench/HmacTool';
+import { CsvJsonTool } from '@/components/workbench/CsvJsonTool';
 import { ToolPager } from '@/components/workbench/ToolPager';
 import { ToolUsageTracker } from '@/components/workbench/ToolUsageTracker';
 import { getWorkbenchTool, workbenchTools, type WorkbenchToolId } from '@/config/workbench';
@@ -100,6 +109,10 @@ const metadataMap: Record<string, Metadata> = {
     title: 'Hash & Digest | HIOS Workbench',
     description: 'Genera digests SHA-1/256/384/512 (hex y base64) enteramente en el navegador.',
   },
+  'usage-analytics': {
+    title: 'Analytics Dashboard | HIOS Workbench',
+    description: 'Resumen de uso por páginas y herramientas con agregación por período y locale.',
+  },
   'encoder': {
     title: 'Encoder / Decoder | HIOS Workbench',
     description: 'Base64, base64url, hex y URL encode/decode UTF-8, todo en el navegador.',
@@ -160,6 +173,38 @@ const metadataMap: Record<string, Metadata> = {
     title: 'Site Checker | HIOS Workbench',
     description: 'Monitoriza URLs desde el navegador, con checks locales y notificaciones cliente.',
   },
+  'resistor-color-code': {
+    title: 'Código de colores de resistencias | HIOS Electronics',
+    description: 'Convierte bandas de color a valor de resistencia (4 y 5 bandas) y viceversa, en el navegador.',
+  },
+  'ohms-law': {
+    title: 'Ley de Ohm | HIOS Electronics',
+    description: 'Calculá voltaje, corriente, resistencia y potencia a partir de dos valores conocidos.',
+  },
+  'http-status-codes': {
+    title: 'HTTP Status Codes | HIOS Reference',
+    description: 'Busca y consulta códigos de estado HTTP con su categoría y descripción.',
+  },
+  'ascii-unicode': {
+    title: 'Tabla ASCII / Unicode | HIOS Reference',
+    description: 'Inspecciona caracteres y code points en decimal, hex, octal y binario.',
+  },
+  'note-frequency': {
+    title: 'Nota / Frecuencia / MIDI | HIOS Audio Lab',
+    description: 'Convierte entre nota musical, frecuencia en Hz y número MIDI, con A4 configurable.',
+  },
+  'ipv6-expand': {
+    title: 'IPv6 Expand / Compress | HIOS Network Lab',
+    description: 'Expande y comprime direcciones IPv6 según RFC 5952, en el navegador.',
+  },
+  'hmac': {
+    title: 'HMAC | HIOS Workbench',
+    description: 'Genera HMAC SHA-1/256/384/512 con clave y mensaje, enteramente en el navegador.',
+  },
+  'csv-json': {
+    title: 'CSV ⇄ JSON | HIOS Workbench',
+    description: 'Convierte CSV a JSON y de vuelta, con comillas RFC 4180 y delimitador configurable.',
+  },
 };
 
 interface PageProps {
@@ -205,6 +250,8 @@ function renderTool(toolId: WorkbenchToolId) {
       return <CertificateCheckTool />;
     case 'hash-digest':
       return <HashDigestTool />;
+    case 'usage-analytics':
+      return <UsageAnalyticsTool />;
     case 'encoder':
       return <EncoderTool />;
     case 'uuid-ulid':
@@ -245,6 +292,22 @@ function renderTool(toolId: WorkbenchToolId) {
       return <RegexTool />;
     case 'image-base64':
       return <ImageBase64Tool />;
+    case 'resistor-color-code':
+      return <ResistorColorCodeTool />;
+    case 'ohms-law':
+      return <OhmsLawTool />;
+    case 'http-status-codes':
+      return <HttpStatusCodesTool />;
+    case 'ascii-unicode':
+      return <AsciiUnicodeTool />;
+    case 'note-frequency':
+      return <NoteFrequencyTool />;
+    case 'ipv6-expand':
+      return <Ipv6ExpandTool />;
+    case 'hmac':
+      return <HmacTool />;
+    case 'csv-json':
+      return <CsvJsonTool />;
     default:
       return null;
   }

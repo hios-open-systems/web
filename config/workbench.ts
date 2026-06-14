@@ -1,4 +1,4 @@
-export type WorkbenchSectionId = 'audio' | 'network' | 'validation' | 'generation' | 'testing';
+export type WorkbenchSectionId = 'audio' | 'network' | 'validation' | 'generation' | 'testing' | 'electronics' | 'reference';
 
 export type WorkbenchToolId =
   | 'payload'
@@ -28,6 +28,7 @@ export type WorkbenchToolId =
   | 'json-schema'
   | 'url-parser'
   | 'image-base64'
+  | 'usage-analytics'
   | 'excalidraw'
   | 'tone-generator'
   | 'guitar-tuner'
@@ -36,9 +37,17 @@ export type WorkbenchToolId =
   | 'metronome'
   | 'beat-counter'
   | 'delay-calculator'
+  | 'resistor-color-code'
+  | 'ohms-law'
+  | 'http-status-codes'
+  | 'ascii-unicode'
+  | 'note-frequency'
+  | 'ipv6-expand'
+  | 'hmac'
+  | 'csv-json'
   | 'embedded';
 
-export type WorkbenchIcon = 'audio' | 'data' | 'notes' | 'circuits' | 'shield' | 'spark' | 'compare' | 'network';
+export type WorkbenchIcon = 'audio' | 'data' | 'notes' | 'circuits' | 'shield' | 'spark' | 'compare' | 'network' | 'chip' | 'table';
 
 export type WorkbenchLocality = 'local' | 'network';
 
@@ -93,6 +102,18 @@ export const workbenchSections: WorkbenchSection[] = [
     href: '/workbench/sections/testing',
     accent: '#22c55e',
     icon: 'compare',
+  },
+  {
+    id: 'electronics',
+    href: '/workbench/sections/electronics',
+    accent: '#eab308',
+    icon: 'chip',
+  },
+  {
+    id: 'reference',
+    href: '/workbench/sections/reference',
+    accent: '#64748b',
+    icon: 'table',
   },
 ];
 
@@ -409,6 +430,87 @@ export const workbenchTools: WorkbenchTool[] = [
     accent: '#ec4899',
     icon: 'data',
     featured: false,
+  },
+  {
+    id: 'usage-analytics',
+    locality: 'local',
+    sectionId: 'validation',
+    href: '/workbench/usage-analytics',
+    accent: '#0ea5e9',
+    icon: 'data',
+    featured: true,
+  },
+  {
+    id: 'resistor-color-code',
+    locality: 'local',
+    sectionId: 'electronics',
+    href: '/workbench/resistor-color-code',
+    accent: '#eab308',
+    icon: 'chip',
+    featured: true,
+  },
+  {
+    id: 'ohms-law',
+    locality: 'local',
+    sectionId: 'electronics',
+    href: '/workbench/ohms-law',
+    accent: '#f59e0b',
+    icon: 'chip',
+    featured: true,
+  },
+  {
+    id: 'http-status-codes',
+    locality: 'local',
+    sectionId: 'reference',
+    href: '/workbench/http-status-codes',
+    accent: '#64748b',
+    icon: 'table',
+    featured: true,
+  },
+  {
+    id: 'ascii-unicode',
+    locality: 'local',
+    sectionId: 'reference',
+    href: '/workbench/ascii-unicode',
+    accent: '#94a3b8',
+    icon: 'table',
+    featured: true,
+  },
+  {
+    id: 'note-frequency',
+    locality: 'local',
+    sectionId: 'audio',
+    href: '/workbench/note-frequency',
+    accent: '#06b6d4',
+    icon: 'audio',
+    featured: true,
+  },
+  {
+    id: 'ipv6-expand',
+    locality: 'local',
+    sectionId: 'network',
+    href: '/workbench/ipv6-expand',
+    accent: '#6366f1',
+    icon: 'network',
+    featured: true,
+  },
+  {
+    id: 'hmac',
+    locality: 'local',
+    sectionId: 'validation',
+    href: '/workbench/hmac',
+    accent: '#0ea5e9',
+    icon: 'shield',
+    featured: true,
+  },
+  {
+    id: 'csv-json',
+    locality: 'local',
+    sectionId: 'testing',
+    href: '/workbench/csv-json',
+    accent: '#22c55e',
+    icon: 'compare',
+    featured: true,
   },
   {
     id: 'embedded',

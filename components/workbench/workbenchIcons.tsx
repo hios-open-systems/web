@@ -1,11 +1,13 @@
 import React from 'react';
 import {
     ApartmentOutlined,
+    ApiOutlined,
     AudioOutlined,
     DatabaseOutlined,
     FileTextOutlined,
     GlobalOutlined,
     SafetyCertificateOutlined,
+    TableOutlined,
     ThunderboltOutlined,
     ToolOutlined,
 } from '@ant-design/icons';
@@ -20,6 +22,8 @@ const iconMap: Record<WorkbenchIcon, React.ReactNode> = {
     spark: <ThunderboltOutlined />,
     compare: <ApartmentOutlined />,
     network: <GlobalOutlined />,
+    chip: <ApiOutlined />,
+    table: <TableOutlined />,
 };
 
 export function getWorkbenchIcon(icon: WorkbenchIcon) {

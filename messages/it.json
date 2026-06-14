@@ -657,6 +657,33 @@
             "copyError": "Impossibile copiare",
             "empty": "Scrivi qualcosa per vedere il digest"
         },
+        "usageAnalytics": {
+            "badge": "Strumento di validazione",
+            "title": "Dashboard di utilizzo",
+            "subtitle": "Metriche aggregate di navigazione e apertura tool, senza contenuti sensibili.",
+            "days": "Finestra",
+            "locale": "Locale",
+            "localeAll": "Tutti",
+            "scope": "{days}d · {locale}",
+            "loading": "Caricamento metriche...",
+            "authRequiredTitle": "Accedi per vedere le metriche",
+            "authRequiredDescription": "Questo pannello è disponibile solo per utenti autenticati.",
+            "errorTitle": "Impossibile caricare il riepilogo",
+            "errorDescription": "Riprova tra qualche secondo.",
+            "totalsEvents": "Eventi",
+            "totalsViews": "Visualizzazioni",
+            "totalsToolOpens": "Aperture tool",
+            "totalsUsers": "Utenti unici",
+            "timelineTitle": "Timeline",
+            "topPagesTitle": "Pagine top",
+            "topToolsTitle": "Tool top",
+            "colDay": "Giorno",
+            "colEvent": "Evento",
+            "colCount": "Conteggio",
+            "colPath": "Percorso",
+            "colTool": "Tool",
+            "empty": "Nessun dato in questo intervallo"
+        },
         "guides": {
             "patterns": {
                 "intro": "Impara pattern JS moderni modificando ed eseguendo codice reale — sandbox nel browser, niente rete, nessun accesso al sito.",
@@ -946,6 +973,10 @@
             "hash-digest": {
                 "title": "Hash & Digest",
                 "description": "Genera digest SHA-1/256/384/512 (hex e base64) interamente nel browser."
+            },
+            "usage-analytics": {
+                "title": "Dashboard di utilizzo",
+                "description": "Metriche aggregate su pagine e tool più usati per periodo e locale."
             },
             "payload": {
                 "title": "Payload Lab",
