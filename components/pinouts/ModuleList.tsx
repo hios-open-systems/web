@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Input, Segmented } from 'antd';
+import { Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import type { Module, ModuleCategoryFilter } from '@/config/modules';
@@ -18,6 +18,15 @@ interface ModuleListProps {
   onCategoryChange: (category: ModuleCategoryFilter) => void;
 }
 
+function categoryFilterLabel(label: string, count: number) {
+  return (
+    <span className={styles.categoryFilterLabel}>
+      <span>{label}</span>
+      <strong>{count}</strong>
+    </span>
+  );
+}
+
 export function ModuleList({
   modules,
   selectedModuleId,
@@ -29,10 +38,10 @@ export function ModuleList({
 }: ModuleListProps) {
   const t = useTranslations('Pinouts');
   const counts = getModuleCategoryCounts();
-  const categoryOptions = [
-    { label: `${t('all')} ${counts.all}`, value: 'all' },
+  const categoryOptions: { label: React.ReactNode; value: ModuleCategoryFilter }[] = [
+    { label: categoryFilterLabel(t('all'), counts.all), value: 'all' },
     ...MODULE_CATEGORIES.map((id) => ({
-      label: `${t(`Categories.${id}`)} ${counts[id]}`,
+      label: categoryFilterLabel(t(`Categories.${id}`), counts[id]),
       value: id,
     })),
   ];
@@ -48,13 +57,21 @@ export function ModuleList({
           placeholder={t('search_placeholder')}
           allowClear
         />
-        <Segmented
-          block
-          size="small"
-          value={category}
-          onChange={(value) => onCategoryChange(value as ModuleCategoryFilter)}
-          options={categoryOptions}
-        />
+        <div className={styles.categoryFilters} aria-label={t('category')}>
+          {categoryOptions.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              className={`${styles.categoryFilter} ${
+                category === option.value ? styles.categoryFilterActive : ''
+              }`}
+              onClick={() => onCategoryChange(option.value)}
+              aria-pressed={category === option.value}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
       </div>
       <ul className={styles.moduleListItems}>
         {modules.map((module) => {

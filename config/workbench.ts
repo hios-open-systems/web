@@ -28,9 +28,11 @@ export type WorkbenchToolId =
   | 'json-schema'
   | 'url-parser'
   | 'image-base64'
+  | 'excalidraw'
   | 'tone-generator'
   | 'guitar-tuner'
   | 'spectrum-analyzer'
+  | 'level-meter'
   | 'metronome'
   | 'beat-counter'
   | 'delay-calculator'
@@ -119,6 +121,15 @@ export const workbenchTools: WorkbenchTool[] = [
     sectionId: 'audio',
     href: '/workbench/spectrum-analyzer',
     accent: '#8b5cf6',
+    icon: 'audio',
+    featured: true,
+  },
+  {
+    id: 'level-meter',
+    locality: 'local',
+    sectionId: 'audio',
+    href: '/workbench/level-meter',
+    accent: '#38bdf8',
     icon: 'audio',
     featured: true,
   },
@@ -289,6 +300,15 @@ export const workbenchTools: WorkbenchTool[] = [
     sectionId: 'generation',
     href: '/workbench/mermaid',
     accent: '#8b5cf6',
+    icon: 'circuits',
+    featured: true,
+  },
+  {
+    id: 'excalidraw',
+    locality: 'local',
+    sectionId: 'generation',
+    href: '/workbench/excalidraw',
+    accent: '#f97316',
     icon: 'circuits',
     featured: true,
   },

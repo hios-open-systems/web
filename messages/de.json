@@ -275,7 +275,10 @@
         "open_source_note": "Alle Software- und Hardware-Designs sind <strong>Open Source</strong>.",
         "filter_all": "Alle",
         "filter_software": "Software",
-        "filter_hardware": "Hardware"
+        "filter_hardware": "Hardware",
+        "catalog_count": "empfohlene Tools",
+        "used_in_projects": "In {count} Projekt(en) verwendet",
+        "official_site": "Offizielle Seite"
     },
     "Tutorials": {
         "badge": "Schnellstart",
@@ -380,7 +383,8 @@
             "microcontroller": "Mikrocontroller",
             "audio": "Audio-DAC",
             "amplifier": "Verstärker",
-            "power": "Stromversorgung"
+            "power": "Stromversorgung",
+            "connector": "Anschlüsse"
         },
         "Modules": {
             "esp32-wroom-32": {
@@ -432,6 +436,24 @@
                     "Frequenz 150kHz",
                     "Überhitzungsschutz"
                 ]
+            },
+            "audio-jack-trs": {
+                "description": "Stereo Tip/Ring/Sleeve Buchse für Line-Audio oder Kopfhörer",
+                "features": [
+                    "Tip = linker Kanal",
+                    "Ring = rechter Kanal",
+                    "Sleeve = Masse",
+                    "Optionaler Erkennungsschalter"
+                ]
+            },
+            "audio-plug-trrs": {
+                "description": "TRRS Stecker für Kopfhörer mit Mikrofon nach CTIA-Standard",
+                "features": [
+                    "Tip = linker Kanal",
+                    "Ring 1 = rechter Kanal",
+                    "Ring 2 = Masse",
+                    "Sleeve = Mikrofon"
+                ]
             }
         },
         "Buttons": {
@@ -457,6 +479,7 @@
         "sectionsGroup": "Bereiche",
         "pages": {
             "home": "Start",
+            "tools": "Tools",
             "workbench": "Workbench",
             "calculators": "Rechner",
             "pinouts": "Pinouts",
@@ -554,6 +577,16 @@
             "invalid": "Ungültiges Diagramm",
             "empty": "Tippe ein Diagramm für die Vorschau",
             "parseError": "Diagramm konnte nicht geparst werden"
+        },
+        "excalidraw": {
+            "badge": "Generierungs-Tool",
+            "title": "Excalidraw-Diagramme",
+            "subtitle": "Freies Diagrammboard für UML und Architektur, local-first im Browser.",
+            "downloadScene": "Szene herunterladen",
+            "downloadError": "Szene konnte nicht exportiert werden",
+            "clear": "Leinwand leeren",
+            "cleared": "Leinwand zurückgesetzt",
+            "loading": "Diagramm-Editor wird geladen..."
         },
         "textDiff": {
             "badge": "Test-Tool",
@@ -862,6 +895,10 @@
                 "title": "Spektrumanalysator",
                 "description": "Echtzeit-FFT vom Mikrofon zur Analyse der Frequenzenergie im Browser."
             },
+            "level-meter": {
+                "title": "Pegel-Meter",
+                "description": "Relative Mikrofonmessung zum Vergleichen von Lautstärke, Grundrauschen und Signalspitzen."
+            },
             "metronome": {
                 "title": "Metronom",
                 "description": "Konfigurierbarer musikalischer Klick mit Tempo, Takten und Unterteilungen."
@@ -885,6 +922,10 @@
             "mermaid": {
                 "title": "Mermaid Diagrams",
                 "description": "Mermaid-Diagramme (Flussdiagramm, Sequenz, UML…) im Browser bearbeiten und rendern."
+            },
+            "excalidraw": {
+                "title": "Excalidraw-Diagramme",
+                "description": "UML- und Architekturdiagramme visuell skizzieren und lokal speichern/exportieren."
             },
             "text-diff": {
                 "title": "Text-Diff",

@@ -41,6 +41,19 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+function getInitialMode(): ThemeMode {
+    if (typeof window === 'undefined') return 'dark';
+
+    const attrMode = document.documentElement.getAttribute('data-theme');
+    if (attrMode === 'light' || attrMode === 'dark') return attrMode;
+
+    const storedMode = localStorage.getItem('theme');
+    if (storedMode === 'light' || storedMode === 'dark') return storedMode;
+
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
+    return 'light';
+}
+
 function applyAccentCssVar(accent: string) {
     if (typeof document === 'undefined') return;
     document.documentElement.style.setProperty('--accent', accent);
@@ -48,7 +61,7 @@ function applyAccentCssVar(accent: string) {
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
     const { user, isLoading: isUserLoading } = useCurrentUser();
-    const [mode, setMode] = useState<ThemeMode>('dark');
+    const [mode, setMode] = useState<ThemeMode>(getInitialMode);
     const [accent, setAccentState] = useState<string>(DEFAULT_ACCENT);
     const [isReady, setIsReady] = useState(false);
     const [isSyncing, setIsSyncing] = useState(false);
@@ -62,18 +75,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     }, []);
 
     useEffect(() => {
-        const savedMode = (typeof window !== 'undefined'
-            ? (localStorage.getItem('theme') as ThemeMode | null)
-            : null);
-        if (savedMode === 'light' || savedMode === 'dark') {
-            setMode(savedMode);
-        } else if (
-            typeof window !== 'undefined' &&
-            window.matchMedia('(prefers-color-scheme: dark)').matches
-        ) {
-            setMode('dark');
-        }
-
         const savedConfig: ThemeConfig = readThemeConfig();
         setAccentState(savedConfig.accent);
         applyAccentCssVar(savedConfig.accent);

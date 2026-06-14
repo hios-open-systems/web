@@ -6,8 +6,8 @@
   height: 56px;
   padding: 0 20px;
   line-height: normal;
-  background: rgba(255, 255, 255, 0.78);
-  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+  background: rgba(2, 6, 23, 0.82);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(10px);
 }
 
@@ -37,7 +37,7 @@
   font-weight: 700;
   font-size: 16px;
   letter-spacing: 0.12em;
-  color: #0f172a;
+  color: #f8fafc;
 }
 
 :global([data-theme="dark"]) .brand {
@@ -62,7 +62,7 @@
   font-size: 13px;
   font-weight: 500;
   text-decoration: none;
-  color: #475569;
+  color: #94a3b8;
   transition: color 0.18s ease, background-color 0.18s ease;
 }
 
@@ -71,8 +71,8 @@
 }
 
 .navLink:hover {
-  color: #0f172a;
-  background: rgba(15, 23, 42, 0.04);
+  color: #f1f5f9;
+  background: rgba(255, 255, 255, 0.04);
 }
 
 :global([data-theme="dark"]) .navLink:hover {
@@ -82,7 +82,7 @@
 
 .navLinkPrimary {
   font-weight: 600;
-  color: #0f172a;
+  color: #f1f5f9;
 }
 
 :global([data-theme="dark"]) .navLinkPrimary {
@@ -94,8 +94,8 @@
 }
 
 .navLinkActive {
-  color: #0f172a;
-  background: rgba(15, 23, 42, 0.06);
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.06);
 }
 
 :global([data-theme="dark"]) .navLinkActive {
@@ -117,7 +117,8 @@
 .controls {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
+  margin-left: auto;
   flex-shrink: 0;
 }
 
@@ -144,7 +145,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #475569 !important;
+  color: #94a3b8 !important;
 }
 
 .iconLink {
@@ -155,7 +156,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 8px;
-  color: #475569;
+  color: #94a3b8;
   text-decoration: none;
   font-size: 16px;
   transition: color 0.18s ease, background-color 0.18s ease;
@@ -170,7 +171,7 @@
   height: 8px;
   border-radius: 50%;
   background: #ef4444;
-  border: 2px solid var(--header-bg, #ffffff);
+  border: 2px solid rgba(2, 6, 23, 0.82);
 }
 
 :global([data-theme="dark"]) .iconLinkDot::after {
@@ -182,8 +183,8 @@
 }
 
 .iconLink:hover {
-  color: #0f172a;
-  background: rgba(15, 23, 42, 0.04);
+  color: #f1f5f9;
+  background: rgba(255, 255, 255, 0.04);
 }
 
 :global([data-theme="dark"]) .iconLink:hover {
@@ -196,8 +197,8 @@
 }
 
 .iconButton:hover {
-  color: #0f172a !important;
-  background: rgba(15, 23, 42, 0.04) !important;
+  color: #f1f5f9 !important;
+  background: rgba(255, 255, 255, 0.04) !important;
 }
 
 :global([data-theme="dark"]) .iconButton:hover {
@@ -205,20 +206,60 @@
   background: rgba(255, 255, 255, 0.04) !important;
 }
 
+@media (max-width: 1240px) {
+  .shell {
+    gap: 16px;
+  }
+  .navLink {
+    padding: 0 10px;
+  }
+  .localeSelect {
+    min-width: 32px;
+    width: 32px !important;
+  }
+  .localeSelect :global(.ant-select-selector) {
+    padding-inline: 0 !important;
+  }
+  .localeSelect :global(.ant-select-selection-item) {
+    display: none;
+  }
+  .controls [aria-label='GitHub'] {
+    display: none;
+  }
+}
+
 @media (max-width: 640px) {
   .header {
     padding: 0 12px;
   }
   .shell {
-    gap: 12px;
+    gap: 8px;
   }
   .nav {
     gap: 0;
+    flex: 0 1 auto;
+    margin-right: 8px;
   }
   .navLink {
     padding: 0 8px;
   }
+  .navLinkPrimary:not(.navLinkActive) {
+    display: none;
+  }
   .navLinkSecondary {
+    display: none;
+  }
+  .navLinkSecondary.navLinkActive {
+    display: inline-flex;
+  }
+  .controls {
+    gap: 4px;
+    margin-left: auto;
+  }
+  .localeSelect {
+    display: none !important;
+  }
+  .controls [aria-label='GitHub'] {
     display: none;
   }
 }

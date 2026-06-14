@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import Link from 'next/link';
 import { RightOutlined, StarFilled, StarOutlined } from '@ant-design/icons';
 import { useLocale, useTranslations } from 'next-intl';
@@ -83,11 +83,14 @@ export function WorkbenchMenu() {
 
   const quickGroup = (key: 'pinnedTitle' | 'recentTitle', tools: WorkbenchTool[]) =>
     tools.length === 0 ? null : (
-      <section className={styles.wbMenuGroup}>
+      <section className={`${styles.wbMenuGroup} ${styles.wbMenuQuickGroup}`}>
         <div className={styles.wbMenuGroupHead}>
           <div>
             <h2 className={styles.wbMenuGroupTitle}>{t(key)}</h2>
           </div>
+          <span className={styles.wbMenuGroupCount}>
+            {tools.length} {t('sectionToolCount')}
+          </span>
         </div>
         <ul className={styles.wbMenuList}>{tools.map(renderRow)}</ul>
       </section>
@@ -100,8 +103,14 @@ export function WorkbenchMenu() {
       {workbenchSections.map((section) => {
         const tools = getWorkbenchToolsBySection(section.id).filter((tool) => !tool.external);
         if (tools.length === 0) return null;
+        const sectionStyle = { '--group-accent': section.accent } as CSSProperties;
         return (
-          <section key={section.id} className={styles.wbMenuGroup}>
+          <section
+            key={section.id}
+            id={`workbench-section-${section.id}`}
+            className={`${styles.wbMenuGroup} ${styles.wbMenuSectionGroup}`}
+            style={sectionStyle}
+          >
             <div className={styles.wbMenuGroupHead}>
               <span
                 className={styles.wbMenuGroupIcon}
@@ -114,6 +123,9 @@ export function WorkbenchMenu() {
                 <h2 className={styles.wbMenuGroupTitle}>{t(`sections.${section.id}.title`)}</h2>
                 <p className={styles.wbMenuGroupDesc}>{t(`sections.${section.id}.description`)}</p>
               </div>
+              <span className={styles.wbMenuGroupCount}>
+                {tools.length} {t('sectionToolCount')}
+              </span>
             </div>
             <ul className={styles.wbMenuList}>{tools.map(renderRow)}</ul>
           </section>

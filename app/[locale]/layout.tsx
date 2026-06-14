@@ -5,6 +5,7 @@ import { ThemeLayout } from '@/components/ThemeLayout';
 import AntdRegistry from '@/lib/AntdRegistry';
 import { getCurrentDeployVersion } from '@/lib/appVersion';
 import '@/styles/globals.css';
+import '@excalidraw/excalidraw/index.css';
 
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
@@ -18,6 +19,7 @@ export const viewport: Viewport = {
 };
 
 const SITE_URL = (process.env.AUTH_BASE_URL || 'https://openhios.dev').replace(/\/$/, '');
+const THEME_BOOTSTRAP_SCRIPT = `(function(){try{var stored=localStorage.getItem('theme');var next=(stored==='light'||stored==='dark')?stored:null;if(!next&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches){next='dark';}if(!next){next='dark';}document.documentElement.setAttribute('data-theme',next);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`;
 
 export async function generateMetadata({
   params,
@@ -70,7 +72,10 @@ export default async function RootLayout({ children, params }: Props) {
   const messages = await getMessages();
 
   return (
-    <html lang={locale}>
+    <html lang={locale} data-theme="dark" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP_SCRIPT }} />
+      </head>
       {/* <body className={inter.className}> */}
       <body style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
         <NextIntlClientProvider messages={messages}>

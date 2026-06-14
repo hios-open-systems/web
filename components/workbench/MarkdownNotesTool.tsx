@@ -15,6 +15,11 @@ import styles from './workbench.module.css';
 const { Text } = Typography;
 const { TextArea } = Input;
 
+function normalizeEscapedNewlines(value: string): string {
+  if (!value.includes('\\n') || value.includes('\n')) return value;
+  return value.replace(/\\n/g, '\n');
+}
+
 export function MarkdownNotesTool() {
   const t = useTranslations('Workbench.notes');
   const { mode } = useTheme();
@@ -27,14 +32,25 @@ export function MarkdownNotesTool() {
   useEffect(() => {
     if (hydrated.current) return;
     hydrated.current = true;
-    let loaded = readNotes();
+    let loaded = readNotes().map((note) => ({
+      ...note,
+      body: normalizeEscapedNewlines(note.body),
+    }));
     const shared = searchParams.get('note');
     if (shared !== null) {
-      const imported = createNoteDraft({ title: t('importedTitle'), body: shared });
+      const imported = createNoteDraft({
+        title: t('importedTitle'),
+        body: normalizeEscapedNewlines(shared),
+      });
       loaded = [imported, ...loaded];
     }
     if (loaded.length === 0) {
-      loaded = [createNoteDraft({ title: t('exampleTitle'), body: t('exampleBody') })];
+      loaded = [
+        createNoteDraft({
+          title: t('exampleTitle'),
+          body: normalizeEscapedNewlines(t('exampleBody')),
+        }),
+      ];
     }
     setNotes(loaded);
     setActiveId(loaded[0]?.id ?? null);
@@ -167,18 +183,14 @@ export function MarkdownNotesTool() {
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   components={{
-                    code: ({ children }) => (
-                      <code
-                        style={{
-                          background: 'var(--wb-code-bg)',
-                          color: 'var(--wb-code-text)',
-                          padding: '2px 5px',
-                          borderRadius: 4,
-                        }}
-                      >
-                        {children}
-                      </code>
-                    ),
+                    code: ({ children, className }) => {
+                      const isBlock = Boolean(className);
+                      if (isBlock) {
+                        return <code className={className}>{children}</code>;
+                      }
+                      return <code>{children}</code>;
+                    },
+                    pre: ({ children }) => <pre>{children}</pre>,
                     a: ({ children, href }) => (
                       <a href={href} target="_blank" rel="noopener noreferrer">
                         {children}
