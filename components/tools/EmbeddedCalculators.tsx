@@ -78,14 +78,16 @@ export function EmbeddedCalculators() {
         <Button onClick={c.copyShareLink} style={{ borderRadius: 10 }}>{t('copy_link')}</Button>
       </Space>
 
-      <Tabs
-        tabPosition="left"
-        activeKey={c.activeTab}
-        onChange={(key) => c.setActiveTab(key as TabKey)}
-        className={styles.calcTabs}
-        style={{ width: '100%' }}
-        items={items}
-      />
+      <div className={styles.tabsShell}>
+        <Tabs
+          tabPosition="left"
+          activeKey={c.activeTab}
+          onChange={(key) => c.setActiveTab(key as TabKey)}
+          className={styles.calcTabs}
+          style={{ width: '100%' }}
+          items={items}
+        />
+      </div>
     </Space>
   );
 }
