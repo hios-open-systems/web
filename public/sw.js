@@ -6,7 +6,7 @@
  * Versioned cache + skipWaiting/clientsClaim so deploys roll out fast
  * (the site deploys on every push, SW must not pin stale content).
  */
-const VERSION = 'hios-v1';
+const VERSION = 'hios-v2';
 const CACHE = `hios-cache-${VERSION}`;
 const PRECACHE = ['/offline.html', '/icons/icon.svg'];
 
@@ -44,8 +44,10 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(request)
         .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put(request, copy));
+          if (res.ok) {
+            const copy = res.clone();
+            caches.open(CACHE).then((c) => c.put(request, copy));
+          }
           return res;
         })
         .catch(() =>
@@ -61,8 +63,10 @@ self.addEventListener('fetch', (event) => {
         (hit) =>
           hit ||
           fetch(request).then((res) => {
-            const copy = res.clone();
-            caches.open(CACHE).then((c) => c.put(request, copy));
+            if (res.ok) {
+              const copy = res.clone();
+              caches.open(CACHE).then((c) => c.put(request, copy));
+            }
             return res;
           }),
       ),
@@ -75,8 +79,10 @@ self.addEventListener('fetch', (event) => {
     caches.match(request).then((hit) => {
       const fetched = fetch(request)
         .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put(request, copy));
+          if (res.ok) {
+            const copy = res.clone();
+            caches.open(CACHE).then((c) => c.put(request, copy));
+          }
           return res;
         })
         .catch(() => hit);
