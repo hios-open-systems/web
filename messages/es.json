@@ -832,6 +832,33 @@
             "centsLabel": "Cents",
             "fromMidi": "Desde MIDI"
         },
+        "guitarTuner": {
+            "badge": "Audio",
+            "title": "Afinador de instrumentos",
+            "subtitle": "Afinador multi-instrumento con referencia ajustable. Tocá una cuerda para oír su tono; el medidor muestra la nota más cercana y los cents — todo local.",
+            "a4Label": "Ref A4",
+            "micStart": "Activar micrófono",
+            "micStop": "Detener micrófono",
+            "micError": "No se pudo acceder al micrófono. Revisá los permisos del navegador.",
+            "instrumentLabel": "Instrumento",
+            "tuningLabel": "Afinación",
+            "stringHint": "Clic en una cuerda para oírla",
+            "listening": "Escuchando…",
+            "inTune": "Afinada",
+            "tooLow": "Baja — tensá",
+            "tooHigh": "Alta — aflojá",
+            "chromaticLabel": "Nota cercana",
+            "centsLabel": "Cents",
+            "referenceLabel": "Referencia",
+            "instruments": {
+                "guitar": "Guitarra",
+                "bass": "Bajo",
+                "ukulele": "Ukelele",
+                "violin": "Violín",
+                "viola": "Viola",
+                "cello": "Cello"
+            }
+        },
         "ipv6Expand": {
             "badge": "Red",
             "title": "IPv6 Expandir / Comprimir",
@@ -904,6 +931,15 @@
             "empty": "Sin datos en este rango"
         },
         "guides": {
+            "guitarTuner": {
+                "intro": "Afiná guitarra, bajo, ukelele o cuerdas de arco a oído o por micrófono — todo local, el audio no sale de tu navegador.",
+                "steps": [
+                    "Elegí instrumento y afinación, y ajustá la referencia A4 si hace falta.",
+                    "Clic en una cuerda para oír su tono de referencia.",
+                    "Activá el micrófono y tocá una cuerda — la cuerda correspondiente se ilumina y la aguja muestra cuán desafinada está."
+                ],
+                "tip": "El A4 estándar es 440 Hz; muchas orquestas usan 442, y algunos setups de música antigua 415."
+            },
             "resistorColorCode": {
                 "intro": "Leé el valor de una resistencia desde sus bandas de color, o al revés desde un valor — todo local.",
                 "steps": [
@@ -1240,8 +1276,8 @@
                 "description": "Tonos, ruido blanco/rosa/marrón, sweep y test L/R para probar parlantes, DACs y cadenas de audio."
             },
             "guitar-tuner": {
-                "title": "Afinador de guitarra",
-                "description": "Afinador cromático local con detección de pitch, nota cercana y desviación en cents."
+                "title": "Afinador de instrumentos",
+                "description": "Afinador multi-instrumento (guitarra, bajo, ukelele, cuerdas) con A4 ajustable y diagrama de cuerdas clickeable."
             },
             "spectrum-analyzer": {
                 "title": "Analizador de espectro",

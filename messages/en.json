@@ -833,6 +833,33 @@
             "centsLabel": "Cents",
             "fromMidi": "From MIDI"
         },
+        "guitarTuner": {
+            "badge": "Audio tool",
+            "title": "Instrument Tuner",
+            "subtitle": "Multi-instrument tuner with adjustable reference. Pluck a string to hear its tone; the meter shows the nearest note and cents — all local.",
+            "a4Label": "Ref A4",
+            "micStart": "Start mic",
+            "micStop": "Stop mic",
+            "micError": "Could not access the microphone. Check your browser permissions.",
+            "instrumentLabel": "Instrument",
+            "tuningLabel": "Tuning",
+            "stringHint": "Click a string to hear it",
+            "listening": "Listening…",
+            "inTune": "In tune",
+            "tooLow": "Too low — tighten",
+            "tooHigh": "Too high — loosen",
+            "chromaticLabel": "Nearest note",
+            "centsLabel": "Cents",
+            "referenceLabel": "Reference",
+            "instruments": {
+                "guitar": "Guitar",
+                "bass": "Bass",
+                "ukulele": "Ukulele",
+                "violin": "Violin",
+                "viola": "Viola",
+                "cello": "Cello"
+            }
+        },
         "ipv6Expand": {
             "badge": "Network tool",
             "title": "IPv6 Expand / Compress",
@@ -905,6 +932,15 @@
             "empty": "No data for this range"
         },
         "guides": {
+            "guitarTuner": {
+                "intro": "Tune guitar, bass, ukulele or bowed strings by ear or by mic — fully local, no audio leaves your browser.",
+                "steps": [
+                    "Pick your instrument and tuning, and set the reference A4 if needed.",
+                    "Click a string to hear its reference tone.",
+                    "Start the mic and play a string — the matching string lights up and the needle shows how far off you are."
+                ],
+                "tip": "Standard A4 is 440 Hz; orchestras often use 442, and some early-music setups 415."
+            },
             "resistorColorCode": {
                 "intro": "Read a resistor's value from its color bands, or work backwards from a value — all local.",
                 "steps": [
@@ -1241,8 +1277,8 @@
                 "description": "Tones, white/pink/brown noise, sweeps and L/R tests for speakers, DACs and audio chains."
             },
             "guitar-tuner": {
-                "title": "Guitar Tuner",
-                "description": "Local chromatic tuner with pitch detection, nearest note and cents offset."
+                "title": "Instrument Tuner",
+                "description": "Multi-instrument tuner (guitar, bass, ukulele, strings) with adjustable A4 and a clickable string diagram."
             },
             "spectrum-analyzer": {
                 "title": "Spectrum Analyzer",

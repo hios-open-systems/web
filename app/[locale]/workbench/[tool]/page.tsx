@@ -58,8 +58,8 @@ const metadataMap: Record<string, Metadata> = {
     description: 'Genera tonos, ruido, sweeps y pruebas L/R para cadenas de audio desde el navegador.',
   },
   'guitar-tuner': {
-    title: 'Afinador de guitarra | HIOS Audio Lab',
-    description: 'Afinador cromatico local con deteccion de pitch desde el microfono.',
+    title: 'Afinador de instrumentos | HIOS Audio Lab',
+    description: 'Afinador multi-instrumento (guitarra, bajo, ukelele, cuerdas) con A4 ajustable y diagrama de cuerdas clickeable.',
   },
   'spectrum-analyzer': {
     title: 'Analizador de espectro | HIOS Audio Lab',
