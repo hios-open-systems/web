@@ -1,9 +1,10 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Alert, Button, Card, Space, Typography } from 'antd';
 import { AudioOutlined, StopOutlined } from '@ant-design/icons';
 import { ToolHeader } from '../ToolHeader';
+import { useMicAnalyser } from './useMicAnalyser';
 import workbenchStyles from '../workbench.module.css';
 import styles from './audioTools.module.css';
 
@@ -19,59 +20,35 @@ function percentFromDb(db: number) {
 }
 
 export function LevelMeterTool() {
-  const [running, setRunning] = useState(false);
+  const mic = useMicAnalyser(2048);
+  const { active, getAnalyser } = mic;
   const [level, setLevel] = useState(MIN_DB);
   const [peak, setPeak] = useState(MIN_DB);
-  const [error, setError] = useState<string | null>(null);
-  const contextRef = useRef<AudioContext | null>(null);
-  const analyserRef = useRef<AnalyserNode | null>(null);
-  const streamRef = useRef<MediaStream | null>(null);
   const frameRef = useRef<number | null>(null);
 
-  const stop = useCallback(() => {
-    if (frameRef.current) cancelAnimationFrame(frameRef.current);
-    streamRef.current?.getTracks().forEach((track) => track.stop());
-    streamRef.current = null;
-    analyserRef.current = null;
-    setRunning(false);
-  }, []);
-
-  useEffect(() => stop, [stop]);
-
-  const tick = () => {
-    const analyser = analyserRef.current;
-    if (!analyser) return;
-    const data = new Float32Array(analyser.fftSize);
-    analyser.getFloatTimeDomainData(data);
-    const rms = Math.sqrt(data.reduce((sum, sample) => sum + sample * sample, 0) / data.length);
-    const nextLevel = dbFromRms(rms);
-    setLevel(nextLevel);
-    setPeak((currentPeak) => Math.max(nextLevel, currentPeak - 0.12));
-    frameRef.current = requestAnimationFrame(tick);
-  };
-
-  const start = async () => {
-    try {
-      setError(null);
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false },
-      });
-      const context = contextRef.current ?? new AudioContext();
-      contextRef.current = context;
-      await context.resume();
-      const analyser = context.createAnalyser();
-      analyser.fftSize = 2048;
-      analyser.smoothingTimeConstant = 0.55;
-      context.createMediaStreamSource(stream).connect(analyser);
-      streamRef.current = stream;
-      analyserRef.current = analyser;
-      setPeak(MIN_DB);
-      setRunning(true);
-      tick();
-    } catch {
-      setError('No se pudo acceder al microfono. Revisá permisos del navegador.');
+  useEffect(() => {
+    if (!active) {
+      setLevel(MIN_DB);
+      return;
     }
-  };
+    setPeak(MIN_DB);
+    const data = new Float32Array(2048);
+    const tick = () => {
+      const analyser = getAnalyser();
+      if (analyser) {
+        analyser.getFloatTimeDomainData(data);
+        const rms = Math.sqrt(data.reduce((sum, sample) => sum + sample * sample, 0) / data.length);
+        const nextLevel = dbFromRms(rms);
+        setLevel(nextLevel);
+        setPeak((currentPeak) => Math.max(nextLevel, currentPeak - 0.12));
+      }
+      frameRef.current = requestAnimationFrame(tick);
+    };
+    frameRef.current = requestAnimationFrame(tick);
+    return () => {
+      if (frameRef.current) cancelAnimationFrame(frameRef.current);
+    };
+  }, [active, getAnalyser]);
 
   const levelPercent = percentFromDb(level);
   const peakPercent = percentFromDb(peak);
@@ -90,13 +67,15 @@ export function LevelMeterTool() {
             <Button
               block
               size="large"
-              type={running ? 'default' : 'primary'}
-              icon={running ? <StopOutlined /> : <AudioOutlined />}
-              onClick={running ? stop : start}
+              type={active ? 'default' : 'primary'}
+              icon={active ? <StopOutlined /> : <AudioOutlined />}
+              onClick={active ? mic.stop : mic.start}
             >
-              {running ? 'Detener microfono' : 'Activar medidor'}
+              {active ? 'Detener microfono' : 'Activar medidor'}
             </Button>
-            {error ? <Alert type="error" showIcon message={error} /> : null}
+            {mic.error ? (
+              <Alert type="error" showIcon message="No se pudo acceder al microfono. Revisá permisos del navegador." />
+            ) : null}
             <Text type="secondary">
               Usa dBFS relativo. Sirve para comparar posiciones o niveles, no para SPL calibrado.
             </Text>
@@ -121,7 +100,7 @@ export function LevelMeterTool() {
               </span>
               <span className={styles.stat}>
                 <span className={styles.statLabel}>Modo</span>
-                <span className={styles.statValue}>{running ? 'Live' : 'Pausa'}</span>
+                <span className={styles.statValue}>{active ? 'Live' : 'Pausa'}</span>
               </span>
             </div>
           </div>

@@ -28,6 +28,8 @@
     "test:ipv6": "node --experimental-strip-types scripts/ipv6-selftest.ts",
     "test:hmac": "node --experimental-strip-types scripts/hmac-selftest.ts",
     "test:csvjson": "node --experimental-strip-types scripts/csvjson-selftest.ts",
+    "test:tuning": "node --experimental-strip-types scripts/tuning-selftest.ts",
+    "test:pitch": "node --experimental-strip-types scripts/pitch-selftest.ts",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:auth": "playwright test -c playwright.cloudflare.config.ts"
