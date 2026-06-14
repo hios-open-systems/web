@@ -1,49 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
-import { CertificateCheckTool } from '@/components/workbench/CertificateCheckTool';
-import { DnsLookupTool } from '@/components/workbench/DnsLookupTool';
-import { JwtPlaygroundTool } from '@/components/workbench/JwtPlaygroundTool';
-import { ObjectToTypesTool } from '@/components/workbench/ObjectToTypesTool';
-import { ObjectComparatorTool } from '@/components/workbench/ObjectComparatorTool';
-import { HashDigestTool } from '@/components/workbench/HashDigestTool';
-import { EncoderTool } from '@/components/workbench/EncoderTool';
-import { UuidUlidTool } from '@/components/workbench/UuidUlidTool';
-import { RegexTesterTool } from '@/components/workbench/RegexTesterTool';
-import { TextDiffTool } from '@/components/workbench/TextDiffTool';
-import { MermaidTool } from '@/components/workbench/MermaidTool';
-import { ExcalidrawTool } from '@/components/workbench/ExcalidrawTool';
-import { MarkdownNotesTool } from '@/components/workbench/MarkdownNotesTool';
-import { PatternsTool } from '@/components/workbench/PatternsTool';
-import { RandomStringTool } from '@/components/workbench/RandomStringTool';
-import { SiteCheckerTool } from '@/components/workbench/SiteCheckerTool';
-import { SubnetCalculatorTool } from '@/components/workbench/SubnetCalculatorTool';
-import { CronTool } from '@/components/workbench/CronTool';
-import { ColorTool } from '@/components/workbench/ColorTool';
-import { TimestampTool } from '@/components/workbench/TimestampTool';
-import { NumberBaseTool } from '@/components/workbench/NumberBaseTool';
-import { JsonSchemaTool } from '@/components/workbench/JsonSchemaTool';
-import { UrlParserTool } from '@/components/workbench/UrlParserTool';
-import { RegexTool } from '@/components/workbench/RegexTool';
-import { ImageBase64Tool } from '@/components/workbench/ImageBase64Tool';
-import { UsageAnalyticsTool } from '@/components/workbench/UsageAnalyticsTool';
-import { TypeCheckerTool } from '@/components/workbench/TypeCheckerTool';
-import { WhoisRdapTool } from '@/components/workbench/WhoisRdapTool';
-import { BeatCounterTool } from '@/components/workbench/audio/BeatCounterTool';
-import { DelayCalculatorTool } from '@/components/workbench/audio/DelayCalculatorTool';
-import { GuitarTunerTool } from '@/components/workbench/audio/GuitarTunerTool';
-import { LevelMeterTool } from '@/components/workbench/audio/LevelMeterTool';
-import { MetronomeTool } from '@/components/workbench/audio/MetronomeTool';
-import { SpectrumAnalyzerTool } from '@/components/workbench/audio/SpectrumAnalyzerTool';
-import { ToneGeneratorTool } from '@/components/workbench/audio/ToneGeneratorTool';
-import { NoteFrequencyTool } from '@/components/workbench/audio/NoteFrequencyTool';
-import { ResistorColorCodeTool } from '@/components/workbench/ResistorColorCodeTool';
-import { OhmsLawTool } from '@/components/workbench/OhmsLawTool';
-import { HttpStatusCodesTool } from '@/components/workbench/HttpStatusCodesTool';
-import { AsciiUnicodeTool } from '@/components/workbench/AsciiUnicodeTool';
-import { Ipv6ExpandTool } from '@/components/workbench/Ipv6ExpandTool';
-import { HmacTool } from '@/components/workbench/HmacTool';
-import { CsvJsonTool } from '@/components/workbench/CsvJsonTool';
+import { ToolRenderer } from '@/components/workbench/ToolRenderer';
 import { ToolPager } from '@/components/workbench/ToolPager';
 import { ToolUsageTracker } from '@/components/workbench/ToolUsageTracker';
 import { getWorkbenchTool, workbenchTools, type WorkbenchToolId } from '@/config/workbench';
@@ -220,99 +178,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return metadataMap[tool] ?? { title: 'Workbench Tool | HIOS' };
 }
 
-function renderTool(toolId: WorkbenchToolId) {
-  switch (toolId) {
-    case 'tone-generator':
-      return <ToneGeneratorTool />;
-    case 'guitar-tuner':
-      return <GuitarTunerTool />;
-    case 'spectrum-analyzer':
-      return <SpectrumAnalyzerTool />;
-    case 'level-meter':
-      return <LevelMeterTool />;
-    case 'metronome':
-      return <MetronomeTool />;
-    case 'beat-counter':
-      return <BeatCounterTool />;
-    case 'delay-calculator':
-      return <DelayCalculatorTool />;
-    case 'type-checker':
-      return <TypeCheckerTool />;
-    case 'jwt-decode':
-      return <JwtPlaygroundTool />;
-    case 'dns-lookup':
-      return <DnsLookupTool />;
-    case 'subnet-calculator':
-      return <SubnetCalculatorTool />;
-    case 'whois-rdap':
-      return <WhoisRdapTool />;
-    case 'certificate-check':
-      return <CertificateCheckTool />;
-    case 'hash-digest':
-      return <HashDigestTool />;
-    case 'usage-analytics':
-      return <UsageAnalyticsTool />;
-    case 'encoder':
-      return <EncoderTool />;
-    case 'uuid-ulid':
-      return <UuidUlidTool />;
-    case 'regex':
-      return <RegexTesterTool />;
-    case 'text-diff':
-      return <TextDiffTool />;
-    case 'mermaid':
-      return <MermaidTool />;
-    case 'excalidraw':
-      return <ExcalidrawTool />;
-    case 'notes':
-      return <MarkdownNotesTool />;
-    case 'patterns':
-      return <PatternsTool />;
-    case 'object-to-types':
-      return <ObjectToTypesTool />;
-    case 'random-string':
-      return <RandomStringTool />;
-    case 'object-compare':
-      return <ObjectComparatorTool />;
-    case 'site-checker':
-      return <SiteCheckerTool />;
-    case 'cron':
-      return <CronTool />;
-    case 'color':
-      return <ColorTool />;
-    case 'timestamp':
-      return <TimestampTool />;
-    case 'number-base':
-      return <NumberBaseTool />;
-    case 'json-schema':
-      return <JsonSchemaTool />;
-    case 'url-parser':
-      return <UrlParserTool />;
-    case 'regex':
-      return <RegexTool />;
-    case 'image-base64':
-      return <ImageBase64Tool />;
-    case 'resistor-color-code':
-      return <ResistorColorCodeTool />;
-    case 'ohms-law':
-      return <OhmsLawTool />;
-    case 'http-status-codes':
-      return <HttpStatusCodesTool />;
-    case 'ascii-unicode':
-      return <AsciiUnicodeTool />;
-    case 'note-frequency':
-      return <NoteFrequencyTool />;
-    case 'ipv6-expand':
-      return <Ipv6ExpandTool />;
-    case 'hmac':
-      return <HmacTool />;
-    case 'csv-json':
-      return <CsvJsonTool />;
-    default:
-      return null;
-  }
-}
-
 export const runtime = 'edge';
 
 export default async function DynamicWorkbenchToolPage({ params }: PageProps) {
@@ -324,15 +189,10 @@ export default async function DynamicWorkbenchToolPage({ params }: PageProps) {
     notFound();
   }
 
-  const content = renderTool(workbenchTool.id);
-  if (!content) {
-    notFound();
-  }
-
   return (
     <main style={{ maxWidth: 1180, margin: '0 auto', padding: '32px 24px 56px' }}>
       <ToolUsageTracker toolId={workbenchTool.id} />
-      {content}
+      <ToolRenderer toolId={workbenchTool.id} />
       <ToolPager currentId={workbenchTool.id} />
     </main>
   );
