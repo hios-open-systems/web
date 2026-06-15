@@ -583,6 +583,7 @@
         "syncing": "Syncing with your account...",
         "needsImport": "Ready to import local accent",
         "syncErrorState": "Sync needs attention",
+        "syncUnavailable": "Sync unavailable",
         "syncHintLocal": "Without sign-in the accent stays only in this browser.",
         "syncHintAccount": "With sign-in the current accent can follow your account across devices.",
         "syncNow": "Save current accent to account",

@@ -582,6 +582,7 @@
         "syncing": "Sincronizando con tu cuenta...",
         "needsImport": "Listo para importar el accent local",
         "syncErrorState": "El sync necesita atención",
+        "syncUnavailable": "Sync no disponible",
         "syncHintLocal": "Sin login el accent queda solo en este navegador.",
         "syncHintAccount": "Con login el accent actual puede seguirte entre dispositivos.",
         "syncNow": "Guardar accent actual en la cuenta",

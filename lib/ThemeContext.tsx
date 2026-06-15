@@ -5,6 +5,7 @@ import React, {
     useCallback,
     useContext,
     useEffect,
+    useRef,
     useState,
     type ReactNode,
 } from 'react';
@@ -23,7 +24,7 @@ import { fetchRemoteThemeSettings, updateRemoteThemeAccent } from '@/lib/themes/
 import { shouldOfferThemeImport } from '@/lib/userSettings';
 
 type ThemeMode = 'light' | 'dark';
-type ThemeSyncState = 'anonymous' | 'checking' | 'needs-import' | 'synced' | 'error';
+type ThemeSyncState = 'anonymous' | 'checking' | 'needs-import' | 'synced' | 'error' | 'unavailable';
 
 interface ThemeContextType {
     mode: ThemeMode;
@@ -100,9 +101,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
             applyAccent(normalized);
             setSyncError(null);
             setSyncState('synced');
-        } catch (error) {
-            setSyncError(error instanceof Error ? error.message : 'Failed to sync theme');
-            setSyncState('error');
+        } catch {
+            // Sync is best-effort and optional — the accent already applied
+            // locally. Degrade quietly instead of alarming the user.
+            setSyncError(null);
+            setSyncState('unavailable');
         } finally {
             setIsSyncing(false);
         }
@@ -133,6 +136,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         await pushAccentToAccount(accent);
     }, [accent, pushAccentToAccount]);
 
+    // Read the latest accent inside the initial-sync effect without making it a
+    // dependency — otherwise every accent change re-runs the remote fetch.
+    const accentRef = useRef(accent);
+    useEffect(() => {
+        accentRef.current = accent;
+    }, [accent]);
+
     useEffect(() => {
         if (!isReady || isUserLoading) return;
 
@@ -157,12 +167,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
                 }
 
                 setSyncError(null);
-                setSyncState(shouldOfferThemeImport(accent, settings.themeAccent) ? 'needs-import' : 'synced');
+                setSyncState(shouldOfferThemeImport(accentRef.current, settings.themeAccent) ? 'needs-import' : 'synced');
             })
-            .catch((error) => {
+            .catch(() => {
                 if (cancelled) return;
-                setSyncError(error instanceof Error ? error.message : 'Failed to load account theme settings');
-                setSyncState('error');
+                // Backend/sync unavailable (e.g. D1 unreachable) — optional
+                // feature, so degrade quietly. The local theme still works.
+                setSyncError(null);
+                setSyncState('unavailable');
             })
             .finally(() => {
                 if (!cancelled) {
@@ -173,7 +185,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         return () => {
             cancelled = true;
         };
-    }, [accent, applyAccent, isReady, isUserLoading, user]);
+    }, [applyAccent, isReady, isUserLoading, user]);
 
     const isCustomAccent = !findPresetByAccent(accent);
 
