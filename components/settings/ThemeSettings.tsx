@@ -55,9 +55,11 @@ export function ThemeSettings() {
             ? t('syncing')
             : syncState === 'needs-import'
                 ? t('needsImport')
-                : syncState === 'error'
-                    ? t('syncErrorState')
-                    : t('accountMode');
+                : syncState === 'unavailable'
+                    ? t('syncUnavailable')
+                    : syncState === 'error'
+                        ? t('syncErrorState')
+                        : t('accountMode');
     const summaryCards = [
         {
             label: t('summarySyncLabel'),
