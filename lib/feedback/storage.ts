@@ -199,6 +199,7 @@ export interface AppendDraft {
     toolSlug?: string;
     authState?: FeedbackEntry['authState'];
     userId?: string;
+    rating?: number;
 }
 
 export function appendEntry(draft: AppendDraft): FeedbackEntry {
@@ -225,6 +226,7 @@ export function appendEntry(draft: AppendDraft): FeedbackEntry {
         toolSlug: draft.toolSlug ?? context.toolSlug,
         authState: draft.authState ?? 'anonymous',
         userId: draft.userId,
+        rating: draft.rating,
     };
 
     const currentEntries = readEntries();

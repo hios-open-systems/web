@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 import { FeedbackInbox } from '@/components/feedback/FeedbackInbox';
+import { ServerFeedbackInbox } from '@/components/feedback/ServerFeedbackInbox';
 
 export const metadata: Metadata = {
     title: 'Feedback | HIOS Workbench',
@@ -18,8 +19,11 @@ export default async function WorkbenchFeedbackPage({ params }: PageProps) {
     setRequestLocale(locale);
 
     return (
-        <main style={{ maxWidth: 880, margin: '0 auto', padding: '32px 24px 56px' }}>
+        <main style={{ maxWidth: 980, margin: '0 auto', padding: '32px 24px 56px' }}>
             <FeedbackInbox />
+            <div style={{ marginTop: 36 }}>
+                <ServerFeedbackInbox />
+            </div>
         </main>
     );
 }
