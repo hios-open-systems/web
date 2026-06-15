@@ -28,7 +28,70 @@ function labelRules(categories) {
     .join('\n');
 }
 
+/**
+ * Vector drawing of a 3.5mm audio plug: each conductor (Tip / Ring / Sleeve)
+ * is a metal band painted with its pin color, separated by black insulators,
+ * with a rounded tip and the body/cable at the bottom. Scales perfectly and
+ * tracks the same colors as the pin labels.
+ */
+function connectorSvg(segments) {
+  const W = 80;
+  const cx = 40;
+  const cylW = 44;
+  const bodyW = 60;
+  const segH = 26;
+  const insH = 4;
+  const domeH = 14;
+  const bodyH = 54;
+  const cableH = 14;
+  const xCyl = cx - cylW / 2;
+  const xBody = cx - bodyW / 2;
+  const n = segments.length;
+  const yEnd = n * segH + (n - 1) * insH;
+  const h = yEnd + bodyH + cableH;
+
+  const segs = segments
+    .map((seg, i) => {
+      const y = i * (segH + insH);
+      const label = `<text x="${cx}" y="${y + segH / 2 + 3.5}" text-anchor="middle" font-size="9" font-weight="700" fill="${contrast(seg.color)}" font-family="ui-monospace, monospace">${esc(seg.label)}</text>`;
+      if (i === 0) {
+        const tip = `M${xCyl} ${y + domeH} a ${cylW / 2} ${domeH} 0 0 1 ${cylW} 0 v ${segH - domeH} h -${cylW} z`;
+        return `<path d="${tip}" fill="${seg.color}"/><path d="${tip}" fill="url(#plugShine)"/>${label}`;
+      }
+      const r = `<rect x="${xCyl}" y="${y}" width="${cylW}" height="${segH}" rx="3"`;
+      return `${r} fill="${seg.color}"/>${r} fill="url(#plugShine)"/>${label}`;
+    })
+    .join('');
+
+  return `<svg viewBox="0 0 ${W} ${h}" width="${W}" height="${h}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Conector de audio">
+        <defs>
+          <linearGradient id="plugShine" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#000" stop-opacity="0.42"/>
+            <stop offset="0.42" stop-color="#fff" stop-opacity="0.5"/>
+            <stop offset="0.58" stop-color="#fff" stop-opacity="0.4"/>
+            <stop offset="1" stop-color="#000" stop-opacity="0.42"/>
+          </linearGradient>
+        </defs>
+        <rect x="${cx - 4}" y="${yEnd + bodyH - 4}" width="8" height="${cableH + 4}" rx="3" fill="#2a2a2a"/>
+        <rect x="${xBody}" y="${yEnd - 8}" width="${bodyW}" height="${bodyH + 8}" rx="12" fill="#15171c" stroke="#3a3a3a"/>
+        <rect x="${xBody}" y="${yEnd - 8}" width="${bodyW}" height="${bodyH + 8}" rx="12" fill="url(#plugShine)" opacity="0.5"/>
+        ${segs}
+      </svg>`;
+}
+
 function chipHtml(chip) {
+  if (chip.image) {
+    return `<div class="chip board">
+        <img src="${esc(chip.image)}" alt="${esc(chip.name)}" class="board-img" loading="lazy" />
+      </div>`;
+  }
+  if (chip.type === 'connector') {
+    return `<div class="chip connector">
+        ${connectorSvg(chip.segments ?? [])}
+        <span class="chip-name">${esc(chip.name)}</span>
+        ${chip.sub ? `<span class="chip-module">${esc(chip.sub)}</span>` : ''}
+      </div>`;
+  }
   if (chip.type === 'mcu') {
     return `<div class="chip">
         <div class="antenna"></div>
@@ -228,7 +291,28 @@ ${rootVars(m.categories)}
       border-radius: 0 0 12px 12px;
     }
 
-    .chip.ic::before, .chip.module::before { display: none; }
+    .chip.ic::before, .chip.module::before, .chip.board::before, .chip.connector::before { display: none; }
+
+    .chip.board, .chip.connector {
+      border: none;
+      background: transparent;
+      width: auto;
+      min-width: 120px;
+      padding: 0 6px;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .board-img {
+      height: 100%;
+      width: auto;
+      max-height: 560px;
+      object-fit: contain;
+      display: block;
+      border-radius: 8px;
+    }
+
+    .chip.connector svg { display: block; }
 
     .chip-name { font-size: 12px; font-weight: 700; color: #888; text-align: center; margin-top: 8px; }
     .chip-module { font-size: 9px; color: #555; margin-top: 2px; }

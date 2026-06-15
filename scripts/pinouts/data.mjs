@@ -40,7 +40,7 @@ const wroom = {
   title: 'ESP32-WROOM-32',
   badge: 'DevKit 38p',
   subtitle: '38 pines • Dual-core 240MHz • WiFi + BT 4.2 • 520KB SRAM • 18 ADC · 2 DAC · 10 Touch',
-  chip: { type: 'mcu', name: 'ESP32', sub: 'WROOM-32' },
+  chip: { type: 'mcu', name: 'ESP32', sub: 'WROOM-32', image: '/esp32wroom.avif' },
   categories: [C.power, C.gnd, C.gpio, C.adc, C.touch, C.spi, C.i2c, C.uart, C.dac, C.boot, C.in],
   left: [
     P(1, L('3V3', 'power', true)),
@@ -251,7 +251,16 @@ const trsJack = {
   title: '3.5mm TRS Audio Jack',
   badge: 'Stereo',
   subtitle: 'Conector hembra estéreo • Tip=L • Ring=R • Sleeve=GND',
-  chip: { type: 'module', name: '3.5mm', sub: 'TRS Jack', display: 'TRS' },
+  chip: {
+    type: 'connector',
+    name: '3.5mm',
+    sub: 'TRS Jack',
+    segments: [
+      { label: 'T', color: C.tip.color },
+      { label: 'R', color: C.ring.color },
+      { label: 'S', color: C.sleeve.color },
+    ],
+  },
   categories: [C.tip, C.ring, C.sleeve, C.audio, C.gnd, C.detect],
   left: [
     P(1, L('TIP', 'tip', true), L('Left', 'audio')),
@@ -275,7 +284,17 @@ const trrsPlug = {
   title: '3.5mm TRRS Audio Plug',
   badge: 'CTIA',
   subtitle: 'Conector macho TRRS • Tip=L • Ring1=R • Ring2=GND • Sleeve=MIC',
-  chip: { type: 'module', name: '3.5mm', sub: 'TRRS Plug', display: 'CTIA' },
+  chip: {
+    type: 'connector',
+    name: '3.5mm',
+    sub: 'TRRS Plug',
+    segments: [
+      { label: 'T', color: C.tip.color },
+      { label: 'R1', color: C.ring.color },
+      { label: 'R2', color: C.gnd.color },
+      { label: 'S', color: C.mic.color },
+    ],
+  },
   categories: [C.tip, C.ring, C.sleeve, C.audio, C.gnd, C.mic],
   left: [
     P(1, L('TIP', 'tip', true), L('Left', 'audio')),
