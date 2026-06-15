@@ -34,46 +34,72 @@ function labelRules(categories) {
  * with a rounded tip and the body/cable at the bottom. Scales perfectly and
  * tracks the same colors as the pin labels.
  */
-function connectorSvg(segments) {
+/**
+ * Connector diagram: a horizontal audio plug with a callout per conductor
+ * (a line from each ring up to a colored pill with its function), plus the
+ * ring label on each band and any extras (e.g. the jack's detection switch)
+ * noted below — so it reads as a real plug, not a column of pins.
+ */
+function connectorDiagram(segments, extras) {
   const n = segments.length;
-  const cy = 38;
-  const cylH = 30;
-  const yCyl = cy - cylH / 2;
-  const bodyH = 48;
-  const yBody = cy - bodyH / 2;
-  const tipX = 10;
+  const tipX = 24;
   const domeW = 12;
-  const segArea = 150;
+  const segArea = 170;
   const segW = segArea / n;
+  const bodyW = 54;
+  const cy = 88;
+  const cylH = 34;
+  const yCyl = cy - cylH / 2;
+  const bodyH = 52;
+  const yBody = cy - bodyH / 2;
   const bodyX = tipX + segArea;
-  const bodyW = 56;
   const cableW = 18;
-  const W = bodyX + bodyW + cableW + 4;
-  const H = 78;
+  const W = bodyX + bodyW + cableW + 8;
+  const hasExtras = Array.isArray(extras) && extras.length > 0;
+  const H = hasExtras ? 168 : 138;
 
   const parts = [];
-  // cable + body (drawn first, behind the last band's overlap)
+
+  // Callouts above each ring: line + colored pill with the function.
+  segments.forEach((seg, i) => {
+    const cxSeg = tipX + i * segW + segW / 2;
+    const pillY = 12;
+    const pillH = 20;
+    const pillW = Math.max(30, esc(seg.fn).length * 5.6 + 12);
+    parts.push(`<line x1="${cxSeg}" y1="${pillY + pillH}" x2="${cxSeg}" y2="${yCyl}" stroke="${seg.color}" stroke-width="1.4" stroke-opacity="0.55"/>`);
+    parts.push(`<rect x="${cxSeg - pillW / 2}" y="${pillY}" width="${pillW}" height="${pillH}" rx="6" fill="${seg.color}"/>`);
+    parts.push(`<text x="${cxSeg}" y="${pillY + 14}" text-anchor="middle" font-size="9" font-weight="700" fill="${contrast(seg.color)}" font-family="ui-monospace, monospace">${esc(seg.fn)}</text>`);
+  });
+
+  // Plug: cable, grip body, then the colored bands (so bands cover the overlap).
   parts.push(`<rect x="${bodyX + bodyW - 6}" y="${cy - 4}" width="${cableW + 8}" height="8" rx="3" fill="#2b2b2b"/>`);
   parts.push(`<rect x="${bodyX - 6}" y="${yBody}" width="${bodyW + 6}" height="${bodyH}" rx="10" fill="#16181d" stroke="#3a3a3a"/>`);
   parts.push(`<rect x="${bodyX - 6}" y="${yBody}" width="${bodyW + 6}" height="${bodyH}" rx="10" fill="url(#plugShine)" opacity="0.6"/>`);
-  // ridges on the grip
   parts.push(`<path d="M${bodyX + 10} ${yBody + 8} v ${bodyH - 16} M${bodyX + 22} ${yBody + 8} v ${bodyH - 16} M${bodyX + 34} ${yBody + 8} v ${bodyH - 16}" stroke="#000" stroke-opacity="0.35" stroke-width="2"/>`);
 
   segments.forEach((seg, i) => {
     const x = tipX + i * segW;
     if (i === 0) {
       const tip = `M${x + domeW} ${yCyl} a ${domeW} ${cylH / 2} 0 0 0 0 ${cylH} h ${segW - domeW} v -${cylH} z`;
-      parts.push(`<path d="${tip}" fill="${seg.color}"/>`);
-      parts.push(`<path d="${tip}" fill="url(#plugShine)"/>`);
+      parts.push(`<path d="${tip}" fill="${seg.color}"/><path d="${tip}" fill="url(#plugShine)"/>`);
     } else {
-      parts.push(`<rect x="${x}" y="${yCyl}" width="${segW}" height="${cylH}" fill="${seg.color}"/>`);
-      parts.push(`<rect x="${x}" y="${yCyl}" width="${segW}" height="${cylH}" fill="url(#plugShine)"/>`);
-      parts.push(`<rect x="${x - 1.5}" y="${yCyl}" width="3" height="${cylH}" fill="#0a0a0a"/>`);
+      parts.push(`<rect x="${x}" y="${yCyl}" width="${segW}" height="${cylH}" fill="${seg.color}"/><rect x="${x}" y="${yCyl}" width="${segW}" height="${cylH}" fill="url(#plugShine)"/><rect x="${x - 1.5}" y="${yCyl}" width="3" height="${cylH}" fill="#0a0a0a"/>`);
     }
-    parts.push(`<text x="${x + segW / 2}" y="${cy + 3.5}" text-anchor="middle" font-size="10" font-weight="700" fill="${contrast(seg.color)}" font-family="ui-monospace, monospace">${esc(seg.label)}</text>`);
+    parts.push(`<text x="${x + segW / 2}" y="${cy + 3.5}" text-anchor="middle" font-size="11" font-weight="700" fill="${contrast(seg.color)}" font-family="ui-monospace, monospace">${esc(seg.ring)}</text>`);
   });
 
-  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Conector de audio">
+  // Extras below (e.g. the jack's detection switch — not a ring of the plug).
+  if (hasExtras) {
+    const ey = cy + bodyH / 2 + 22;
+    extras.forEach((ex, i) => {
+      const exY = ey + i * 16;
+      const col = ex.color || '#f97316';
+      parts.push(`<circle cx="${tipX + 5}" cy="${exY - 4}" r="5" fill="none" stroke="${col}" stroke-width="1.5"/>`);
+      parts.push(`<text x="${tipX + 16}" y="${exY}" font-size="10" fill="#9ca3af" font-family="ui-monospace, monospace"><tspan font-weight="700" fill="${col}">${esc(ex.label)}</tspan> · ${esc(ex.note)}</text>`);
+    });
+  }
+
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width: ${W}px" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Conector de audio">
         <defs>
           <linearGradient id="plugShine" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stop-color="#000" stop-opacity="0.42"/>
@@ -143,13 +169,6 @@ function chipHtml(chip) {
         <img src="${esc(chip.image)}" alt="${esc(chip.name)}" class="board-img" loading="lazy" />
       </div>`;
   }
-  if (chip.type === 'connector') {
-    return `<div class="chip connector">
-        ${connectorSvg(chip.segments ?? [])}
-        <span class="chip-name">${esc(chip.name)}</span>
-        ${chip.sub ? `<span class="chip-module">${esc(chip.sub)}</span>` : ''}
-      </div>`;
-  }
   if (chip.type === 'ic') {
     return `<div class="chip ic">
         ${icSvg(chip.name)}
@@ -217,6 +236,36 @@ export function renderPinout(m) {
         </div>`,
     )
     .join('\n');
+
+  const isConnector = m.chip.type === 'connector';
+
+  const toolbarHtml = isConnector
+    ? ''
+    : `<div class="toolbar">
+      <div class="toolbar-group">
+${filters}
+      </div>
+      <div class="btn-group">
+        <button class="btn-small" onclick="selectAll()">Todos</button>
+        <button class="btn-small" onclick="selectNone()">Ninguno</button>
+      </div>
+    </div>`;
+
+  const centerHtml = isConnector
+    ? `<div class="pinout-container connector-diagram">
+      ${connectorDiagram(m.chip.segments ?? [], m.chip.extras ?? [])}
+    </div>`
+    : `<div class="pinout-container">
+      <div class="pin-column left">
+${m.left.map((p) => pinRow(p, 'left')).join('\n')}
+      </div>
+
+      ${chipHtml(m.chip)}
+
+      <div class="pin-column right">
+${m.right.map((p) => pinRow(p, 'right')).join('\n')}
+      </div>
+    </div>`;
 
   return `<!DOCTYPE html>
 <html lang="es">
@@ -332,6 +381,9 @@ ${rootVars(m.categories)}
       overflow-x: auto;
       padding: 20px 0;
     }
+
+    .pinout-container.connector-diagram { align-items: center; padding: 8px 16px 24px; }
+    .pinout-container.connector-diagram svg { width: 100%; height: auto; }
 
     .pin-column { display: flex; flex-direction: column; gap: 1px; }
     .pin-column.left { align-items: flex-end; }
@@ -566,27 +618,9 @@ ${labelRules(m.categories)}
       <p class="subtitle">${esc(m.subtitle)}</p>
     </header>
 
-    <div class="toolbar">
-      <div class="toolbar-group">
-${filters}
-      </div>
-      <div class="btn-group">
-        <button class="btn-small" onclick="selectAll()">Todos</button>
-        <button class="btn-small" onclick="selectNone()">Ninguno</button>
-      </div>
-    </div>
+    ${toolbarHtml}
 
-    <div class="pinout-container">
-      <div class="pin-column left">
-${m.left.map((p) => pinRow(p, 'left')).join('\n')}
-      </div>
-
-      ${chipHtml(m.chip)}
-
-      <div class="pin-column right">
-${m.right.map((p) => pinRow(p, 'right')).join('\n')}
-      </div>
-    </div>
+    ${centerHtml}
 
     <div class="info-section">
       <h3>Información de Pines · ${esc(m.title)}</h3>
