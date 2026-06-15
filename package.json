@@ -30,6 +30,8 @@
     "test:csvjson": "node --experimental-strip-types scripts/csvjson-selftest.ts",
     "test:tuning": "node --experimental-strip-types scripts/tuning-selftest.ts",
     "test:pitch": "node --experimental-strip-types scripts/pitch-selftest.ts",
+    "db:migrate": "npx --yes wrangler d1 migrations apply hios-playground --remote",
+    "db:migrate:local": "npx --yes wrangler d1 migrations apply hios-playground --local",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:auth": "playwright test -c playwright.cloudflare.config.ts"
