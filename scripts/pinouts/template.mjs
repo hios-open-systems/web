@@ -35,47 +35,54 @@ function labelRules(categories) {
  * tracks the same colors as the pin labels.
  */
 function connectorSvg(segments) {
-  const W = 80;
-  const cx = 40;
-  const cylW = 44;
-  const bodyW = 60;
-  const segH = 26;
-  const insH = 4;
-  const domeH = 14;
-  const bodyH = 54;
-  const cableH = 14;
-  const xCyl = cx - cylW / 2;
-  const xBody = cx - bodyW / 2;
   const n = segments.length;
-  const yEnd = n * segH + (n - 1) * insH;
-  const h = yEnd + bodyH + cableH;
+  const cy = 38;
+  const cylH = 30;
+  const yCyl = cy - cylH / 2;
+  const bodyH = 48;
+  const yBody = cy - bodyH / 2;
+  const tipX = 10;
+  const domeW = 12;
+  const segArea = 150;
+  const segW = segArea / n;
+  const bodyX = tipX + segArea;
+  const bodyW = 56;
+  const cableW = 18;
+  const W = bodyX + bodyW + cableW + 4;
+  const H = 78;
 
-  const segs = segments
-    .map((seg, i) => {
-      const y = i * (segH + insH);
-      const label = `<text x="${cx}" y="${y + segH / 2 + 3.5}" text-anchor="middle" font-size="9" font-weight="700" fill="${contrast(seg.color)}" font-family="ui-monospace, monospace">${esc(seg.label)}</text>`;
-      if (i === 0) {
-        const tip = `M${xCyl} ${y + domeH} a ${cylW / 2} ${domeH} 0 0 1 ${cylW} 0 v ${segH - domeH} h -${cylW} z`;
-        return `<path d="${tip}" fill="${seg.color}"/><path d="${tip}" fill="url(#plugShine)"/>${label}`;
-      }
-      const r = `<rect x="${xCyl}" y="${y}" width="${cylW}" height="${segH}" rx="3"`;
-      return `${r} fill="${seg.color}"/>${r} fill="url(#plugShine)"/>${label}`;
-    })
-    .join('');
+  const parts = [];
+  // cable + body (drawn first, behind the last band's overlap)
+  parts.push(`<rect x="${bodyX + bodyW - 6}" y="${cy - 4}" width="${cableW + 8}" height="8" rx="3" fill="#2b2b2b"/>`);
+  parts.push(`<rect x="${bodyX - 6}" y="${yBody}" width="${bodyW + 6}" height="${bodyH}" rx="10" fill="#16181d" stroke="#3a3a3a"/>`);
+  parts.push(`<rect x="${bodyX - 6}" y="${yBody}" width="${bodyW + 6}" height="${bodyH}" rx="10" fill="url(#plugShine)" opacity="0.6"/>`);
+  // ridges on the grip
+  parts.push(`<path d="M${bodyX + 10} ${yBody + 8} v ${bodyH - 16} M${bodyX + 22} ${yBody + 8} v ${bodyH - 16} M${bodyX + 34} ${yBody + 8} v ${bodyH - 16}" stroke="#000" stroke-opacity="0.35" stroke-width="2"/>`);
 
-  return `<svg viewBox="0 0 ${W} ${h}" width="${W}" height="${h}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Conector de audio">
+  segments.forEach((seg, i) => {
+    const x = tipX + i * segW;
+    if (i === 0) {
+      const tip = `M${x + domeW} ${yCyl} a ${domeW} ${cylH / 2} 0 0 0 0 ${cylH} h ${segW - domeW} v -${cylH} z`;
+      parts.push(`<path d="${tip}" fill="${seg.color}"/>`);
+      parts.push(`<path d="${tip}" fill="url(#plugShine)"/>`);
+    } else {
+      parts.push(`<rect x="${x}" y="${yCyl}" width="${segW}" height="${cylH}" fill="${seg.color}"/>`);
+      parts.push(`<rect x="${x}" y="${yCyl}" width="${segW}" height="${cylH}" fill="url(#plugShine)"/>`);
+      parts.push(`<rect x="${x - 1.5}" y="${yCyl}" width="3" height="${cylH}" fill="#0a0a0a"/>`);
+    }
+    parts.push(`<text x="${x + segW / 2}" y="${cy + 3.5}" text-anchor="middle" font-size="10" font-weight="700" fill="${contrast(seg.color)}" font-family="ui-monospace, monospace">${esc(seg.label)}</text>`);
+  });
+
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Conector de audio">
         <defs>
-          <linearGradient id="plugShine" x1="0" y1="0" x2="1" y2="0">
+          <linearGradient id="plugShine" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stop-color="#000" stop-opacity="0.42"/>
-            <stop offset="0.42" stop-color="#fff" stop-opacity="0.5"/>
-            <stop offset="0.58" stop-color="#fff" stop-opacity="0.4"/>
-            <stop offset="1" stop-color="#000" stop-opacity="0.42"/>
+            <stop offset="0.42" stop-color="#fff" stop-opacity="0.52"/>
+            <stop offset="0.6" stop-color="#fff" stop-opacity="0.36"/>
+            <stop offset="1" stop-color="#000" stop-opacity="0.46"/>
           </linearGradient>
         </defs>
-        <rect x="${cx - 4}" y="${yEnd + bodyH - 4}" width="8" height="${cableH + 4}" rx="3" fill="#2a2a2a"/>
-        <rect x="${xBody}" y="${yEnd - 8}" width="${bodyW}" height="${bodyH + 8}" rx="12" fill="#15171c" stroke="#3a3a3a"/>
-        <rect x="${xBody}" y="${yEnd - 8}" width="${bodyW}" height="${bodyH + 8}" rx="12" fill="url(#plugShine)" opacity="0.5"/>
-        ${segs}
+        ${parts.join('\n        ')}
       </svg>`;
 }
 
