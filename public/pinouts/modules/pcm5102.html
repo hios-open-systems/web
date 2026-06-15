@@ -148,9 +148,9 @@
       border-radius: 0 0 12px 12px;
     }
 
-    .chip.module::before, .chip.board::before, .chip.connector::before, .chip.ic::before, .chip.buck::before { display: none; }
+    .chip.module::before, .chip.board::before, .chip.connector::before, .chip.ic::before, .chip.buck::before, .chip.mcu::before { display: none; }
 
-    .chip.board, .chip.connector, .chip.ic, .chip.buck {
+    .chip.board, .chip.connector, .chip.ic, .chip.buck, .chip.mcu {
       border: none;
       background: transparent;
       width: auto;
@@ -159,6 +159,8 @@
       justify-content: center;
       gap: 6px;
     }
+
+    .chip.mcu svg { display: block; height: 100%; width: auto; max-height: 560px; }
 
     .board-img {
       height: 100%;

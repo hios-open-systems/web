@@ -112,6 +112,49 @@ function connectorDiagram(segments, extras) {
       </svg>`;
 }
 
+/**
+ * ESP32 DevKit board: dark PCB with the metal-can module + meander antenna,
+ * USB connector, two buttons and unlabeled side headers. Illustrative on
+ * purpose — no pin labels that would imply alignment with the pin columns.
+ */
+function mcuSvg(chip) {
+  const W = 116;
+  const H = 300;
+  const pcbX = 22;
+  const pcbW = 72;
+  const pcbR = pcbX + pcbW;
+  const cx = W / 2;
+  const nPads = 16;
+  const padTop = 80;
+  const padBottom = H - 14;
+  const padGap = (padBottom - padTop) / (nPads - 1);
+  const pads = [];
+  for (let i = 0; i < nPads; i += 1) {
+    const py = padTop + i * padGap;
+    pads.push(`<circle cx="${pcbX + 6}" cy="${py}" r="3" fill="#0b0b0b" stroke="#333"/>`);
+    pads.push(`<circle cx="${pcbR - 6}" cy="${py}" r="3" fill="#0b0b0b" stroke="#333"/>`);
+  }
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(chip.name)} DevKit">
+        <defs>
+          <linearGradient id="mcuMetal" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#8a8f96"/>
+            <stop offset="0.5" stop-color="#cbcfd4"/>
+            <stop offset="1" stop-color="#7e838a"/>
+          </linearGradient>
+        </defs>
+        <rect x="${pcbX}" y="6" width="${pcbW}" height="${H - 12}" rx="7" fill="#15181f" stroke="#2a2f3a"/>
+        ${pads.join('')}
+        <rect x="${cx - 13}" y="0" width="26" height="16" rx="2" fill="#aeb2b8" stroke="#7c8088"/>
+        <rect x="${pcbX + 8}" y="26" width="13" height="13" rx="2" fill="#1b1b1b" stroke="#3a3a3a"/>
+        <rect x="${pcbR - 21}" y="26" width="13" height="13" rx="2" fill="#1b1b1b" stroke="#3a3a3a"/>
+        <rect x="${pcbX + 10}" y="46" width="${pcbW - 20}" height="9" rx="2" fill="#0e0e0e"/>
+        <rect x="${cx - 18}" y="60" width="36" height="22" rx="2" fill="#10131a"/>
+        <path d="M${cx - 14} 65 h28 M${cx - 14} 71 h28 M${cx - 14} 77 h28" stroke="#3a4150" stroke-width="2"/>
+        <rect x="${pcbX + 8}" y="88" width="${pcbW - 16}" height="158" rx="3" fill="url(#mcuMetal)" stroke="#6b7077"/>
+        <text x="${cx}" y="167" text-anchor="middle" font-size="13" font-weight="700" fill="#585d64" font-family="ui-monospace, monospace" transform="rotate(-90 ${cx} 167)">${esc(chip.name)}</text>
+      </svg>`;
+}
+
 /** SOIC/TSSOP-style chip: dark body with gull-wing pins, a pin-1 dot, name rotated inside. */
 function icSvg(name) {
   const W = 80;
@@ -183,11 +226,9 @@ function chipHtml(chip) {
       </div>`;
   }
   if (chip.type === 'mcu') {
-    return `<div class="chip">
-        <div class="antenna"></div>
-        <span class="chip-name">${esc(chip.name)}</span>
+    return `<div class="chip mcu">
+        ${mcuSvg(chip)}
         ${chip.sub ? `<span class="chip-module">${esc(chip.sub)}</span>` : ''}
-        <div class="usb-port"></div>
       </div>`;
   }
   if (chip.type === 'module') {
@@ -414,9 +455,9 @@ ${rootVars(m.categories)}
       border-radius: 0 0 12px 12px;
     }
 
-    .chip.module::before, .chip.board::before, .chip.connector::before, .chip.ic::before, .chip.buck::before { display: none; }
+    .chip.module::before, .chip.board::before, .chip.connector::before, .chip.ic::before, .chip.buck::before, .chip.mcu::before { display: none; }
 
-    .chip.board, .chip.connector, .chip.ic, .chip.buck {
+    .chip.board, .chip.connector, .chip.ic, .chip.buck, .chip.mcu {
       border: none;
       background: transparent;
       width: auto;
@@ -425,6 +466,8 @@ ${rootVars(m.categories)}
       justify-content: center;
       gap: 6px;
     }
+
+    .chip.mcu svg { display: block; height: 100%; width: auto; max-height: 560px; }
 
     .board-img {
       height: 100%;
