@@ -323,7 +323,25 @@ ${m.right.map((p) => pinRow(p, 'right')).join('\n')}
       --text: #e5e5e5;
       --text-dim: #888;
       --accent: #10b981;
+      --accent-text: #10b981;
+      --hover: rgba(255, 255, 255, 0.05);
+      --card-inset: rgba(255, 255, 255, 0.02);
+      --code-bg: rgba(255, 255, 255, 0.1);
 ${rootVars(m.categories)}
+    }
+
+    /* Light palette — the parent app drives data-theme; only the chrome flips,
+       the hardware drawings (dark PCB, black IC, metal can) stay as they are. */
+    :root[data-theme="light"] {
+      --bg: #f4f6f8;
+      --card: #ffffff;
+      --border: #e3e7ec;
+      --text: #1f2328;
+      --text-dim: #5b6168;
+      --accent-text: #047857;
+      --hover: rgba(0, 0, 0, 0.045);
+      --card-inset: rgba(0, 0, 0, 0.028);
+      --code-bg: rgba(0, 0, 0, 0.07);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -346,7 +364,7 @@ ${rootVars(m.categories)}
       border-bottom: 1px solid var(--border);
     }
 
-    h1 { color: var(--accent); font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+    h1 { color: var(--accent-text); font-size: 28px; font-weight: 700; margin-bottom: 8px; }
     .subtitle { color: var(--text-dim); font-size: 14px; }
 
     .badge {
@@ -548,7 +566,7 @@ ${rootVars(m.categories)}
       cursor: default;
     }
 
-    .pin-row:hover { background: rgba(255, 255, 255, 0.05); }
+    .pin-row:hover { background: var(--hover); }
     .pin-row.dimmed { opacity: 0.15; }
     .pin-row.highlight { background: rgba(16, 185, 129, 0.15); }
 
@@ -579,7 +597,7 @@ ${labelRules(m.categories)}
       margin-top: 24px;
     }
 
-    .info-section h3 { font-size: 14px; color: var(--accent); margin-bottom: 12px; }
+    .info-section h3 { font-size: 14px; color: var(--accent-text); margin-bottom: 12px; }
 
     .info-grid {
       display: grid;
@@ -587,7 +605,7 @@ ${labelRules(m.categories)}
       gap: 16px;
     }
 
-    .info-card { background: rgba(255,255,255,0.02); border-radius: 8px; padding: 12px; }
+    .info-card { background: var(--card-inset); border-radius: 8px; padding: 12px; }
 
     .info-card h4 {
       font-size: 12px;
@@ -600,7 +618,7 @@ ${labelRules(m.categories)}
 
     .info-card h4 .dot { width: 8px; height: 8px; border-radius: 2px; }
     .info-card p { font-size: 11px; color: var(--text-dim); line-height: 1.6; }
-    .info-card code { background: rgba(255,255,255,0.1); padding: 1px 4px; border-radius: 3px; font-size: 10px; }
+    .info-card code { background: var(--code-bg); padding: 1px 4px; border-radius: 3px; font-size: 10px; }
 
     .print-btn {
       position: fixed;
@@ -628,7 +646,7 @@ ${labelRules(m.categories)}
       border-top: 1px solid var(--border);
     }
 
-    .footer a { color: var(--accent); text-decoration: none; }
+    .footer a { color: var(--accent-text); text-decoration: none; }
 
     @media print {
       body { background: #fff; color: #000; padding: 10mm; }
@@ -644,6 +662,21 @@ ${labelRules(m.categories)}
       .filter-btn { padding: 5px 8px; font-size: 11px; }
     }
   </style>
+  <script>
+    // The parent app owns the theme: the initial mode arrives in the URL hash
+    // (#theme=light|dark) so the very first paint is correct, and live toggles
+    // arrive via postMessage so the frame never reloads. Falls back to the OS
+    // preference when the page is opened standalone (print / new tab).
+    (function () {
+      var root = document.documentElement;
+      function apply(t) { if (t === 'light' || t === 'dark') root.setAttribute('data-theme', t); }
+      var m = (location.hash || '').match(/theme=(light|dark)/);
+      apply(m ? m[1] : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'));
+      window.addEventListener('message', function (e) {
+        if (e && e.data && e.data.type === 'hios-pinout-theme') apply(e.data.mode);
+      });
+    })();
+  </script>
 </head>
 
 <body>
