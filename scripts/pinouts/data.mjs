@@ -256,10 +256,11 @@ const trsJack = {
     name: '3.5mm',
     sub: 'TRS Jack',
     segments: [
-      { label: 'T', color: C.tip.color },
-      { label: 'R', color: C.ring.color },
-      { label: 'S', color: C.sleeve.color },
+      { ring: 'T', fn: 'Left', color: C.tip.color },
+      { ring: 'R', fn: 'Right', color: C.ring.color },
+      { ring: 'S', fn: 'GND', color: C.sleeve.color },
     ],
+    extras: [{ label: 'SW', note: 'detección (jack hembra)', color: C.detect.color }],
   },
   categories: [C.tip, C.ring, C.sleeve, C.audio, C.gnd, C.detect],
   left: [
@@ -289,11 +290,12 @@ const trrsPlug = {
     name: '3.5mm',
     sub: 'TRRS Plug',
     segments: [
-      { label: 'T', color: C.tip.color },
-      { label: 'R1', color: C.ring.color },
-      { label: 'R2', color: C.gnd.color },
-      { label: 'S', color: C.mic.color },
+      { ring: 'T', fn: 'Left', color: C.tip.color },
+      { ring: 'R1', fn: 'Right', color: C.ring.color },
+      { ring: 'R2', fn: 'GND', color: C.gnd.color },
+      { ring: 'S', fn: 'Mic', color: C.mic.color },
     ],
+    extras: [],
   },
   categories: [C.tip, C.ring, C.sleeve, C.audio, C.gnd, C.mic],
   left: [
