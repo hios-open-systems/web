@@ -79,6 +79,57 @@ function connectorSvg(segments) {
       </svg>`;
 }
 
+/** SOIC/TSSOP-style chip: dark body with gull-wing pins, a pin-1 dot, name rotated inside. */
+function icSvg(name) {
+  const W = 80;
+  const cx = 40;
+  const bodyW = 46;
+  const bodyH = 104;
+  const x = cx - bodyW / 2;
+  const y = 16;
+  const perSide = 6;
+  const pinW = 12;
+  const pinH = 5;
+  const span = bodyH - 20;
+  const pins = [];
+  for (let i = 0; i < perSide; i += 1) {
+    const py = y + 10 + (span / (perSide - 1)) * i - pinH / 2;
+    pins.push(`<rect x="${x - pinW + 3}" y="${py}" width="${pinW}" height="${pinH}" rx="1.5" fill="#9ca3af"/>`);
+    pins.push(`<rect x="${x + bodyW - 3}" y="${py}" width="${pinW}" height="${pinH}" rx="1.5" fill="#9ca3af"/>`);
+  }
+  return `<svg viewBox="0 0 ${W} ${bodyH + 32}" width="${W}" height="${bodyH + 32}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(name)}">
+        <defs>
+          <linearGradient id="icBody" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#1f1f1f"/>
+            <stop offset="0.5" stop-color="#3a3a3a"/>
+            <stop offset="1" stop-color="#161616"/>
+          </linearGradient>
+        </defs>
+        ${pins.join('')}
+        <rect x="${x}" y="${y}" width="${bodyW}" height="${bodyH}" rx="5" fill="url(#icBody)" stroke="#4a4a4a"/>
+        <circle cx="${x + 9}" cy="${y + 11}" r="2.8" fill="#777"/>
+        <text x="${cx}" y="${y + bodyH / 2}" text-anchor="middle" font-size="11" font-weight="700" fill="#9ca3af" font-family="ui-monospace, monospace" transform="rotate(-90 ${cx} ${y + bodyH / 2})">${esc(name)}</text>
+      </svg>`;
+}
+
+/** LM2596-style buck module: green PCB with electrolytic cap, shielded inductor, blue trimmer pot and the IC. */
+function buckSvg() {
+  const W = 92;
+  const H = 128;
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Modulo buck LM2596">
+        <rect x="6" y="6" width="80" height="116" rx="5" fill="#0e3b2e" stroke="#1c6b51"/>
+        <rect x="14" y="18" width="26" height="34" rx="12" fill="#181826" stroke="#333"/>
+        <ellipse cx="27" cy="20" rx="13" ry="4.5" fill="#26263c"/>
+        <rect x="48" y="18" width="30" height="30" rx="4" fill="#161616" stroke="#3a3a3a"/>
+        <path d="M54 25 h18 M54 31 h18 M54 37 h18 M54 43 h18" stroke="#555" stroke-width="2.4"/>
+        <rect x="14" y="84" width="28" height="28" rx="3" fill="#1e40af" stroke="#1b357f"/>
+        <circle cx="28" cy="98" r="9" fill="#d4d9e0"/>
+        <line x1="21" y1="98" x2="35" y2="98" stroke="#475569" stroke-width="3"/>
+        <rect x="50" y="86" width="30" height="22" rx="2" fill="#14161b" stroke="#333"/>
+        <text x="65" y="99" text-anchor="middle" font-size="6.5" fill="#9ca3af" font-family="ui-monospace, monospace">LM2596</text>
+      </svg>`;
+}
+
 function chipHtml(chip) {
   if (chip.image) {
     return `<div class="chip board">
@@ -88,6 +139,19 @@ function chipHtml(chip) {
   if (chip.type === 'connector') {
     return `<div class="chip connector">
         ${connectorSvg(chip.segments ?? [])}
+        <span class="chip-name">${esc(chip.name)}</span>
+        ${chip.sub ? `<span class="chip-module">${esc(chip.sub)}</span>` : ''}
+      </div>`;
+  }
+  if (chip.type === 'ic') {
+    return `<div class="chip ic">
+        ${icSvg(chip.name)}
+        ${chip.sub ? `<span class="chip-module">${esc(chip.sub)}</span>` : ''}
+      </div>`;
+  }
+  if (chip.type === 'buck') {
+    return `<div class="chip buck">
+        ${buckSvg()}
         <span class="chip-name">${esc(chip.name)}</span>
         ${chip.sub ? `<span class="chip-module">${esc(chip.sub)}</span>` : ''}
       </div>`;
@@ -291,9 +355,9 @@ ${rootVars(m.categories)}
       border-radius: 0 0 12px 12px;
     }
 
-    .chip.ic::before, .chip.module::before, .chip.board::before, .chip.connector::before { display: none; }
+    .chip.module::before, .chip.board::before, .chip.connector::before, .chip.ic::before, .chip.buck::before { display: none; }
 
-    .chip.board, .chip.connector {
+    .chip.board, .chip.connector, .chip.ic, .chip.buck {
       border: none;
       background: transparent;
       width: auto;
@@ -312,7 +376,7 @@ ${rootVars(m.categories)}
       border-radius: 8px;
     }
 
-    .chip.connector svg { display: block; }
+    .chip.connector svg, .chip.ic svg, .chip.buck svg { display: block; }
 
     .chip-name { font-size: 12px; font-weight: 700; color: #888; text-align: center; margin-top: 8px; }
     .chip-module { font-size: 9px; color: #555; margin-top: 2px; }
