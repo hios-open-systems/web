@@ -155,9 +155,9 @@
       border-radius: 0 0 12px 12px;
     }
 
-    .chip.module::before, .chip.board::before, .chip.connector::before, .chip.ic::before, .chip.buck::before { display: none; }
+    .chip.module::before, .chip.board::before, .chip.connector::before, .chip.ic::before, .chip.buck::before, .chip.mcu::before { display: none; }
 
-    .chip.board, .chip.connector, .chip.ic, .chip.buck {
+    .chip.board, .chip.connector, .chip.ic, .chip.buck, .chip.mcu {
       border: none;
       background: transparent;
       width: auto;
@@ -166,6 +166,8 @@
       justify-content: center;
       gap: 6px;
     }
+
+    .chip.mcu svg { display: block; height: 100%; width: auto; max-height: 560px; }
 
     .board-img {
       height: 100%;
@@ -434,8 +436,27 @@
         <div class="pin-row" data-types="power"><span class="pin-labels"><span class="pin-label primary" data-type="power">5V</span></span><span class="pin-num">19</span></div>
       </div>
 
-      <div class="chip board">
-        <img src="/esp32wroom.avif" alt="ESP32" class="board-img" loading="lazy" />
+      <div class="chip mcu">
+        <svg viewBox="0 0 116 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ESP32 DevKit">
+        <defs>
+          <linearGradient id="mcuMetal" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#8a8f96"/>
+            <stop offset="0.5" stop-color="#cbcfd4"/>
+            <stop offset="1" stop-color="#7e838a"/>
+          </linearGradient>
+        </defs>
+        <rect x="22" y="6" width="72" height="288" rx="7" fill="#15181f" stroke="#2a2f3a"/>
+        <circle cx="28" cy="80" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="88" cy="80" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="28" cy="93.73333333333333" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="88" cy="93.73333333333333" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="28" cy="107.46666666666667" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="88" cy="107.46666666666667" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="28" cy="121.19999999999999" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="88" cy="121.19999999999999" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="28" cy="134.93333333333334" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="88" cy="134.93333333333334" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="28" cy="148.66666666666666" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="88" cy="148.66666666666666" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="28" cy="162.39999999999998" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="88" cy="162.39999999999998" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="28" cy="176.13333333333333" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="88" cy="176.13333333333333" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="28" cy="189.86666666666667" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="88" cy="189.86666666666667" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="28" cy="203.6" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="88" cy="203.6" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="28" cy="217.33333333333331" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="88" cy="217.33333333333331" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="28" cy="231.06666666666666" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="88" cy="231.06666666666666" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="28" cy="244.79999999999998" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="88" cy="244.79999999999998" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="28" cy="258.5333333333333" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="88" cy="258.5333333333333" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="28" cy="272.26666666666665" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="88" cy="272.26666666666665" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="28" cy="286" r="3" fill="#0b0b0b" stroke="#333"/><circle cx="88" cy="286" r="3" fill="#0b0b0b" stroke="#333"/>
+        <rect x="45" y="0" width="26" height="16" rx="2" fill="#aeb2b8" stroke="#7c8088"/>
+        <rect x="30" y="26" width="13" height="13" rx="2" fill="#1b1b1b" stroke="#3a3a3a"/>
+        <rect x="73" y="26" width="13" height="13" rx="2" fill="#1b1b1b" stroke="#3a3a3a"/>
+        <rect x="32" y="46" width="52" height="9" rx="2" fill="#0e0e0e"/>
+        <rect x="40" y="60" width="36" height="22" rx="2" fill="#10131a"/>
+        <path d="M44 65 h28 M44 71 h28 M44 77 h28" stroke="#3a4150" stroke-width="2"/>
+        <rect x="30" y="88" width="56" height="158" rx="3" fill="url(#mcuMetal)" stroke="#6b7077"/>
+        <text x="58" y="167" text-anchor="middle" font-size="13" font-weight="700" fill="#585d64" font-family="ui-monospace, monospace" transform="rotate(-90 58 167)">ESP32</text>
+      </svg>
+        <span class="chip-module">WROOM-32</span>
       </div>
 
       <div class="pin-column right">

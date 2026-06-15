@@ -40,7 +40,7 @@ const wroom = {
   title: 'ESP32-WROOM-32',
   badge: 'DevKit 38p',
   subtitle: '38 pines • Dual-core 240MHz • WiFi + BT 4.2 • 520KB SRAM • 18 ADC · 2 DAC · 10 Touch',
-  chip: { type: 'mcu', name: 'ESP32', sub: 'WROOM-32', image: '/esp32wroom.avif' },
+  chip: { type: 'mcu', name: 'ESP32', sub: 'WROOM-32' },
   categories: [C.power, C.gnd, C.gpio, C.adc, C.touch, C.spi, C.i2c, C.uart, C.dac, C.boot, C.in],
   left: [
     P(1, L('3V3', 'power', true)),
