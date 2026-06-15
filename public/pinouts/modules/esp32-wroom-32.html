@@ -152,9 +152,9 @@
       border-radius: 0 0 12px 12px;
     }
 
-    .chip.ic::before, .chip.module::before, .chip.board::before, .chip.connector::before { display: none; }
+    .chip.module::before, .chip.board::before, .chip.connector::before, .chip.ic::before, .chip.buck::before { display: none; }
 
-    .chip.board, .chip.connector {
+    .chip.board, .chip.connector, .chip.ic, .chip.buck {
       border: none;
       background: transparent;
       width: auto;
@@ -173,7 +173,7 @@
       border-radius: 8px;
     }
 
-    .chip.connector svg { display: block; }
+    .chip.connector svg, .chip.ic svg, .chip.buck svg { display: block; }
 
     .chip-name { font-size: 12px; font-weight: 700; color: #888; text-align: center; margin-top: 8px; }
     .chip-module { font-size: 9px; color: #555; margin-top: 2px; }

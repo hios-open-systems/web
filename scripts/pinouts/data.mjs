@@ -227,7 +227,7 @@ const lm2596 = {
   title: 'LM2596 Buck',
   badge: 'Step-Down 3A',
   subtitle: 'Regulador DC-DC reductor ajustable • 4.5–40V in • 1.2–37V out • 3A',
-  chip: { type: 'module', name: 'LM2596', sub: 'Step-Down', display: 'ADJ' },
+  chip: { type: 'buck', name: 'LM2596', sub: 'Step-Down' },
   categories: [C.vin, C.vout, C.gnd],
   left: [
     P(1, L('IN+', 'vin', true)),
