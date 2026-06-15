@@ -37,6 +37,10 @@ export interface FeedbackEntry {
     lastSeenAt: number;
     /** Si el usuario ya lo vio en el inbox. */
     read: boolean;
+    /** Puntuación opcional 1-5 (feedback manual con estrellas). */
+    rating?: number;
+    /** Si la entrada se envió al server (D1). */
+    sentToServer?: boolean;
     /** Contexto útil para producción. */
     buildId?: string;
     locale?: string;

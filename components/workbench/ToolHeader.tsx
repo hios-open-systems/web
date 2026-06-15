@@ -1,9 +1,10 @@
 'use client';
 
 import React from 'react';
-import { Typography } from 'antd';
+import { Space, Typography } from 'antd';
 import { LocalityBadge, type Locality } from './LocalityBadge';
 import { ToolGuide } from './ToolGuide';
+import { FeedbackButton } from '@/components/feedback/FeedbackButton';
 import styles from './workbench.module.css';
 
 const { Title, Paragraph } = Typography;
@@ -36,7 +37,10 @@ export function ToolHeader({
     <header className={styles.toolHeader}>
       <div className={styles.toolHeaderTopRow}>
         <span className={styles.toolHeaderEyebrow}>{eyebrow}</span>
-        <LocalityBadge kind={locality} />
+        <Space size={8}>
+          <LocalityBadge kind={locality} />
+          <FeedbackButton />
+        </Space>
       </div>
       <Title level={1} className={styles.toolHeaderTitle}>
         {title}

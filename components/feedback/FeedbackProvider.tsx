@@ -28,7 +28,7 @@ import type { FeedbackEntry, FeedbackKind } from '@/lib/feedback/types';
 interface FeedbackContextValue {
     entries: FeedbackEntry[];
     unreadCount: number;
-    addManual: (kind: FeedbackKind, title: string, body: string) => FeedbackEntry;
+    addManual: (kind: FeedbackKind, title: string, body: string, rating?: number) => FeedbackEntry;
     remove: (id: string) => void;
     clear: () => void;
     markRead: () => void;
@@ -101,12 +101,13 @@ export function FeedbackProvider({ children }: { children: ReactNode }) {
     }, [refresh, user]);
 
     const addManual = useCallback<FeedbackContextValue['addManual']>(
-        (kind, title, body) => {
+        (kind, title, body, rating) => {
             const draft: AppendDraft = {
                 kind,
                 source: 'manual',
                 title,
                 body,
+                rating,
                 url: typeof window !== 'undefined' ? window.location.href : undefined,
                 userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
                 authState: user ? 'authenticated' : 'anonymous',
