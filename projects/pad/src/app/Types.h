@@ -53,6 +53,7 @@ struct UiSnapshot {
   uint16_t stickY;
   uint8_t  activeLayer; // capa activa
   bool     mouseOn;     // modo mouse del stick activo (toggle por SW del stick)
+  uint8_t  clickFlash;  // flash de click reciente en el box del mouse: 0=nada, 1=izq, 2=der
   uint8_t  encMode;     // override del encoder por doble-tap: 0=capa,1=Vol,2=Scroll,3=Zoom,4=Pestanas
   uint8_t  longFlash;   // bitmask: botones cuyo long-press acaba de dispararse (flash de confirmacion)
   // --- estado optimista (lo que el pad cree haber dejado) ---

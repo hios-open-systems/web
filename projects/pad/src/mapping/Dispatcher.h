@@ -24,6 +24,7 @@ public:
   bool    mouseOn() const { return m_mouseOn; }
   uint8_t encMode() const { return m_encOverride; }     // 0=capa, 1=Vol, 2=Scroll, 3=Zoom, 4=Pestanas
   uint8_t longFlashMask(uint32_t now) const;            // bits de botones en ventana de flash de confirmacion
+  uint8_t clickFlash(uint32_t now) const;               // click reciente del mouse: 0=nada, 1=izq, 2=der (ventana de flash)
 
 private:
   void applyLayer(const LayerAction& la);
@@ -43,6 +44,8 @@ private:
   bool     m_stickLongDone = false;
   bool     m_tapPending = false;
   uint32_t m_tapMs = 0;
+  uint8_t  m_lastClickBtn = 0;       // 1=izq, 2=der (para el flash en el box del mouse)
+  uint32_t m_lastClickMs = 0;
 
   // Botones de cara: ¿el long-press ya consumio el press? (para no disparar el tap al soltar)
   bool     m_btnConsumed[5] = {false, false, false, false, false};
