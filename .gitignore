@@ -51,3 +51,7 @@ next-env.d.ts
 .claude/
 
 .ia
+
+# external integration credentials / non-project work files — never commit
+external.integrations.md
+*.integrations.md
