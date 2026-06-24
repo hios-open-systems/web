@@ -1,0 +1,81 @@
+# HIOS PAD — Macropad / Control-Deck ESP32-S3
+
+Macropad de escritorio con pantalla a color, encoder, joystick analógico y 5 teclas, que actúa como **teclado/mouse/multimedia HID** por **USB, Bluetooth (BLE) y WiFi**. Capas por contexto (edición, dev, multimedia, navegador, videollamadas) navegables desde la propia pantalla, con feedback real del estado de la PC vía un daemon companion.
+
+## Quick Start
+
+```bash
+cd projects/pad
+
+# Compilar y flashear (PlatformIO)
+pio run -t upload
+
+# Monitor serial
+pio device monitor -b 115200
+```
+
+> **Flasheo en WSL:** el puerto serie del DevKit (CH343, UART) no aparece solo en WSL. Desde PowerShell (Windows): `usbipd list` → `usbipd attach --wsl --busid <id>` (al reconectar el cable hay que re-attachear). Recién ahí aparece `/dev/ttyACM0`. El USB **nativo** del S3 (303a:1001) es el HID; el CH343 es para flashear/serial.
+
+## ¿Qué es?
+
+Un control-deck que reemplaza atajos y controles dispersos por **capas** físicas. Cada capa mapea los 5 botones + encoder + stick a acciones (atajos de teclado, multimedia, mouse, macros). Es **HID nativo** (la PC lo ve como teclado/mouse), así que funciona sin drivers.
+
+- **Multi-transporte:** USB (TinyUSB) y BLE (NimBLE, HID compuesto teclado+mouse+consumer) en simultáneo; auto-switch (enchufado → USB, desenchufado → BLE). WiFi para feedback/control mediado (no es HID).
+- **Local-first:** todo funciona sin red ni companion. El WiFi y el daemon son una capa opcional que **mejora** (feedback real, mute global), nunca bloquea.
+- **Stick como mouse:** el joystick mueve el puntero; tap = click izq, doble = click der, long = toggle modo mouse.
+- **Encoder contextual:** gira según la capa (volumen/scroll/zoom/pestañas); doble-click cicla entre comportamientos; press abre el menú.
+
+## Capas y menú
+
+Las capas se agrupan por tipo. El menú (encoder-press) es un **picker de un nivel**: muestra las capas del grupo sobre los **5 botones físicos** y girás el encoder para pasar de grupo. Apretás un botón → saltás a esa capa.
+
+| Grupo | Capas |
+|-------|-------|
+| **Trabajo** | Edición, Dev, Apps |
+| **Multimedia** | Multimedia, YouTube, Netflix |
+| **Web** | Navegador |
+| **Llamadas** | Meet, Slack, Zoom, Teams |
+| **Sistema** | RGB |
+| **Ajustes** *(página final)* | Brillo, Tema, Color, Skin, Dimmer, Hora, WiFi, Calibrar |
+
+- **Girar** = cambiar de grupo/página · **Botón 1-5** = saltar a la capa · **Encoder-press** = abrir Ajustes · **Long-press** = volver/cerrar.
+
+### Videollamadas (grupo Llamadas)
+
+Una capa por app con sus atajos. El **mic** tiene doble vía: **tap** = atajo de la app (Meet `Ctrl+D`, Zoom `Alt+A`, Teams `Ctrl+Shift+M`); **hold** (long-press) = **mute global** a nivel OS vía companion (Core Audio), que funciona en cualquier app y refleja el estado real. Slack no tiene atajo de mic → usa el mute global. La cámara va por atajo de la app.
+
+> Zoom requiere activar *global shortcuts* (Settings → Keyboard Shortcuts) para mutear sin foco en la ventana.
+
+## Feedback real (companion)
+
+El display muestra mic/volumen/temps **reales** cuando corre el daemon [`pad-companion`](../../../pad-companion) (repo hermano), que lee el estado de la PC (Windows Core Audio / Linux PipeWire) y lo empuja por `POST /api/state`. Sin companion, el display cae a estado **optimista** (lo que el pad cree haber dejado). El canal también lleva comandos pad→companion (mute global) en la respuesta del POST.
+
+## Arquitectura
+
+FreeRTOS, tareas separadas por core:
+
+- **inputTask** (core1): lee botones/encoder/stick → `Dispatcher` resuelve la acción de la capa → cola de acciones; arma el snapshot de UI.
+- **transportTask** (core1): consume acciones → transporte HID activo (USB/BLE) vía `TransportRouter`.
+- **uiTask** (core0): dibuja dashboard/menu/portal con `TFT_eSprite` (sin parpadeo).
+- **netTask** (core0): WiFi STA + portal cautivo + NTP + WebServer (`/api/state`).
+
+Directorios: `actions/` (modelo de `Action`), `mapping/` (`KeyMap`/`Dispatcher`), `inputs/` (botones/encoder/stick), `transport/` (USB/BLE/router), `net/`, `ui/` (skins, menu, dock, iconos vectoriales), `storage/` (config por defecto), `app/` (config, pines, estado).
+
+## Hardware
+
+- **ESP32-S3-DevKitC-1** (N16, 16MB flash, sin PSRAM).
+- **Display ILI9488** 480×320 SPI (HSPI, 27MHz). *No es ST7796.*
+- **Encoder** KY-040 · **Joystick** HW-504 (alimentado a **3V3**, no 5V) · **5 pulsadores** NA a GND.
+- Pines en [`src/app/Pins.h`](src/app/Pins.h); cableado y alimentación (batería 2S) en [WIRING.md](WIRING.md).
+
+## Gotchas (aprendidos a los golpes)
+
+- **Sprite + fuente:** `new TFT_eSprite` deja `gfxFont` sin inicializar → boot loop. Llamar `setTextFont(1)` tras crear cada sprite.
+- **Joystick a 3V3:** a 5V sobre-voltea el ADC del S3 y acopla los ejes (diagonales fantasma). El stick va a 3V3.
+- **BLE symbol clash:** `USBHIDKeyboard.h` y las libs BLE chocan (`KEY_*`/`KeyReport`); se aíslan con fábricas (`transport/`), `main` nunca ve ambos headers.
+- **Heap del menú:** el sprite del carrusel (~60KB) se libera al cerrar el menú; si queda alocado, el heap steady-state (con BLE+WiFi) se agota.
+- **Brownout:** un cable USB fino / fuente floja tira la tensión en los picos de corriente (WiFi+BLE) → boot loop. No es software.
+
+## Estado
+
+USB + BLE HID, WiFi+portal+NTP, stick→mouse, capas+menú, feedback real y mute global por companion: **funcionando**. Batería (medición 2S por divisor→GPIO9) **lista pero apagada** (`cfg::BATTERY_ENABLED`, ver WIRING.md). Pendiente/futuro: config por JSON, control desde el celu (PWA), pantalla remota.

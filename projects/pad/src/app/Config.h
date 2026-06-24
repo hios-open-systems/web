@@ -49,6 +49,19 @@ static constexpr uint32_t NTP_RESYNC_MS    = 3600000UL;         // re-sincroniza
 static constexpr uint32_t STATE_FRESH_MS   = 4000;             // POST mas viejo que esto -> "sin companion" (vuelve a optimista)
 static constexpr char     API_TOKEN[]      = "";               // "" = abierto en LAN; pone un token para exigir el header X-Pad-Token
 
+// --- Bateria (medicion 2S Li-ion por divisor resistivo -> ADC1) ---
+// LISTO PERO APAGADO: poner BATTERY_ENABLED=true cuando cablees el divisor.
+// Cadena: V+ bateria --[R1]--+--[R2]-- GND ; el nodo medio va a BAT_ADC_PIN.
+//   Vadc = Vbat * R2/(R1+R2). Con 100k/47k: 8.4V -> 2.69V (dentro del ADC).
+// Ver WIRING.md. El ADC del S3 es no-lineal: calibra los extremos si hace falta.
+static constexpr bool     BATTERY_ENABLED = false;  // <- encender cuando este el divisor
+static constexpr uint8_t  BAT_ADC_PIN     = 9;      // GPIO9 (ADC1, libre)
+static constexpr uint16_t BAT_R1_K        = 100;    // R1 (a V+ bateria), kohm
+static constexpr uint16_t BAT_R2_K        = 47;     // R2 (a GND), kohm
+static constexpr uint16_t BAT_FULL_MV     = 8400;   // 2S lleno (4.2V x2) -> 100%
+static constexpr uint16_t BAT_EMPTY_MV    = 6000;   // 2S vacio (3.0V x2) -> 0%
+static constexpr uint32_t BAT_SAMPLE_MS   = 5000;   // periodo de muestreo
+
 // --- Backlight TFT (PWM por LEDC, API core 2.x) ---
 static constexpr uint8_t  BL_CANAL  = 0;     // canal LEDC
 static constexpr uint32_t BL_FREQ   = 5000;  // Hz

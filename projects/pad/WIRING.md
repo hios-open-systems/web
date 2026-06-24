@@ -33,6 +33,27 @@ A la **placa de expansión** se conecta todo: **encoder, botones, stick, pantall
   4. (Software) bajar `WiFi.setTxPower` → picos más chicos.
 - ⛔ **Nunca** alimentar el pin `3V3` directo (saltea el regulador → puede dañar el S3). Usar la ficha (6.5–9 V) o USB (5 V).
 
+## Medición de batería (2S) — listo pero apagado
+
+El firmware ya tiene el lector (`cfg::BATTERY_ENABLED`, hoy `false`). Para activarlo:
+
+1. **Cablear un divisor resistivo** de V+ de la batería (2S, hasta 8.4 V) al pin **GPIO9** (ADC1, libre):
+
+   ```
+   V+ batería ──[ R1 = 100k ]──┬──► GPIO9 (BAT_ADC_PIN)
+                               │
+                            [ R2 = 47k ]
+                               │
+                              GND
+   ```
+   `Vadc = Vbat · R2/(R1+R2)`. Con 100k/47k: **8.4 V → 2.69 V** (dentro del rango del ADC, con margen). Mantené R1+R2 altos (≥100k) para que el divisor no drene la batería.
+
+2. Poner `BATTERY_ENABLED = true` en [`src/app/Config.h`](src/app/Config.h) (ajustá `BAT_R1_K`/`BAT_R2_K` a tus resistencias reales, y `BAT_FULL_MV`/`BAT_EMPTY_MV` si tu pack difiere de 8.4/6.0 V).
+
+3. El ADC del S3 es **no-lineal**: si la lectura difiere, calibrá midiendo con multímetro en lleno/vacío y ajustando los `*_MV`. El firmware promedia 8 lecturas cada `BAT_SAMPLE_MS`.
+
+> ⚠️ El valor llega a `UiSnapshot.battery` (0..100; 255 = sin dato), pero **falta el tile en la UI** (el dock tiene 5 tiles llenos): agregar el indicador cuando se valide la lectura en hardware.
+
 ## Mapa de pines (ESP32-S3)
 
 | Función | GPIO | Notas |
@@ -40,6 +61,7 @@ A la **placa de expansión** se conecta todo: **encoder, botones, stick, pantall
 | Botones 1–5 | 15, 16, 17, 18, 8 | NA a GND, `INPUT_PULLUP` (activos en bajo) |
 | Encoder CLK / DT / SW | 4 / 5 / 6 | KY-040; SW `INPUT_PULLUP` |
 | Stick X / Y / SW | 1 / 2 / 7 | X/Y en **ADC1**; SW `INPUT_PULLUP` |
+| Batería (divisor) | 9 | ADC1, opcional; `BATTERY_ENABLED` |
 | TFT MOSI / SCLK / CS / DC / RST | 11 / 12 / 13(*) / 14(*) | ILI9488, HSPI. (Ver platformio.ini: CS=10, DC=13, RST=14, MISO=-1) |
 | TFT backlight | 21 | PWM por software (LEDC) |
 | USB nativo (HID) | 19 / 20 | `ARDUINO_USB_MODE=0` (TinyUSB OTG = HID) |
