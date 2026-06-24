@@ -1,0 +1,426 @@
+// ============================================================================
+//  Macropad / Control Deck - ESP32-S3
+//  Capas + macros + UI funcional. main.cpp crea las colas y tres tareas:
+//    - inputTask  (Core 1): samplea -> Dispatcher (capa activa) -> actionQueue
+//    - transportTask (Core 1): ejecuta Action/TEXT/MACRO en el transporte HID
+//    - uiTask     (Core 0): dashboard (skin activo) con capa, keycaps y estado
+//
+//  La UI usa componentes reutilizables + un sistema de skins:
+//    ui/Layout.h  -> tokens de layout (posiciones/tamanos)
+//    ui/IconKit.h -> iconos vectoriales unificados
+//    ui/UiKit.h   -> primitivas de widget (card, pill, badge, iconWell, fitText)
+//    ui/Skin.h    -> interfaz de skin; ui/Skins.cpp -> Cards / Minimal / Watch
+//  renderUI() es agnostico al skin: delega en el skin activo y maneja el
+//  dirty-check generico (solo redibuja lo que cambia).
+// ============================================================================
+#include <Arduino.h>
+#include <TFT_eSPI.h>
+#include <qrcode.h>
+#include <string.h>
+
+#include "app/Config.h"
+#include "app/Pins.h"
+#include "app/Theme.h"
+#include "app/Types.h"
+#include "app/EventBus.h"
+#include "inputs/InputManager.h"
+#include "mapping/KeyMap.h"
+#include "mapping/Dispatcher.h"
+#include "actions/Action.h"
+#include "actions/MacroEngine.h"
+#include "storage/DefaultConfig.h"
+#include "storage/Nvs.h"
+#include "transport/TransportRouter.h"
+#include "transport/UsbHidTransport.h"
+#include "app/AppState.h"
+#include "app/StateManager.h"
+#include "app/Calibration.h"
+#include "ui/Menu.h"
+#include "ui/StatusPanel.h"
+#include "ui/Layout.h"
+#include "ui/Skin.h"
+#include "net/Net.h"
+
+static TFT_eSPI        tft = TFT_eSPI();
+static InputManager    inputs;
+static KeyMap          keymap;
+static Dispatcher      dispatcher;
+static StateManager    stateManager;
+static MacroEngine     macroEngine;
+static TransportRouter router;
+static UsbHidTransport usbHid;
+
+static void uiForceRedraw();   // fwd
+
+// Sink en modo NORMAL: cada evento va al Dispatcher.
+class DispatchSink : public InputSink {
+public:
+  void emit(const InputEvent& e) override {
+    appstate::lastInputMs = e.t_ms;
+    dispatcher.dispatch(e);
+  }
+};
+
+// Sink en modo MENU: el encoder maneja el menu (girar/elegir/cerrar).
+class MenuSink : public InputSink {
+public:
+  uint32_t lastInput = 0;
+  bool     longConsumed = false;
+  void emit(const InputEvent& e) override {
+    if (e.id == InputId::ENC_ROT && e.edge == Edge::ROTATE) {
+      appstate::lastInputMs = e.t_ms;
+      menu::turn(e.v1 > 0 ? +1 : -1);
+      lastInput = e.t_ms;
+    } else if (e.id == InputId::ENC_SW) {
+      appstate::lastInputMs = e.t_ms;
+      if (e.edge == Edge::PRESS) longConsumed = false;
+      else if (e.edge == Edge::LONG_PRESS) { longConsumed = true; menu::back(); appstate::mode = AppMode::NORMAL; uiForceRedraw(); }
+      else if (e.edge == Edge::RELEASE && !longConsumed) {
+        MenuResult r = menu::press();
+        if (r == MenuResult::SWITCH_LAYER) { dispatcher.setLayer(menu::selectedLayer()); menu::close(); appstate::mode = AppMode::NORMAL; uiForceRedraw(); }
+        else if (r == MenuResult::CALIBRATE) { menu::close(); appstate::mode = AppMode::CALIBRATING; }
+        else if (r == MenuResult::WIFI_SETUP) { menu::close(); net::requestPortal(); appstate::mode = AppMode::WIFI; }
+      }
+      lastInput = e.t_ms;
+    }
+  }
+};
+
+// Sink en modo WIFI: el portal es dueno de la pantalla; el long-press del
+// encoder lo cierra y vuelve al dashboard.
+class WifiSink : public InputSink {
+public:
+  bool exit = false;
+  void emit(const InputEvent& e) override {
+    if (e.id == InputId::ENC_SW && e.edge == Edge::LONG_PRESS) exit = true;
+  }
+};
+
+// ----------------------------------------------------------------------------
+static void backlightBegin() {
+  ledcSetup(cfg::BL_CANAL, cfg::BL_FREQ, cfg::BL_RES);
+  ledcAttachPin(pins::TFT_BL, cfg::BL_CANAL);
+}
+static void applyBacklight(uint8_t pct) {
+  if (pct > 100) pct = 100;
+  ledcWrite(cfg::BL_CANAL, (uint32_t)pct * 255 / 100);
+}
+
+// ============================================================================
+//  UI - delega en el skin activo (ver ui/Skins.cpp).
+// ============================================================================
+static char g_clock[8] = "--:--";   // placeholder hasta NTP/RTC
+
+static void updateClock(uint32_t now) {
+  uint16_t minute = appstate::currentClockMinute(now);
+  snprintf(g_clock, sizeof(g_clock), "%02u:%02u", minute / 60, minute % 60);
+}
+
+static bool s_uiForce = false;
+static void uiForceRedraw() { s_uiForce = true; }
+
+static uint8_t activeSkinIndex() {
+  uint8_t i = appstate::prefs.skinIndex;
+  return i < skins::count() ? i : 0;
+}
+
+// Dirty-check generico (el skin pone el COMO):
+//   primer frame / cambio de capa / cambio de skin -> limpia y full()
+//   cambio de minuto -> full() (repinta opaco, sin flash)
+//   boton -> keycap() en su lugar; estado -> status(); mouse -> full();
+//   stick (en modo mouse) -> stick() si el skin lo soporta.
+static void renderUI(const UiSnapshot& s) {
+  static bool       first = true;
+  static UiSnapshot prev{};
+  static int        prevLayer = -1;
+  static uint8_t    prevSkin = 255;
+
+  if (s_uiForce) { first = true; s_uiForce = false; }
+
+  const uint8_t skinIdx = activeSkinIndex();
+  const Skin&   sk = skins::get(skinIdx);
+  SkinContext   ctx{ &tft, &keymap, g_clock };
+
+  bool layerChanged = (s.activeLayer != prevLayer);
+  bool skinChanged  = (skinIdx != prevSkin);
+
+  uint16_t clockMinute = appstate::currentClockMinute(millis());
+  static int prevClockMinute = -1;
+  bool clockChanged = ((int)clockMinute != prevClockMinute);
+  if (clockChanged) { updateClock(millis()); prevClockMinute = clockMinute; }
+
+  if (first || layerChanged || skinChanged) {
+    tft.fillScreen(theme::BG);
+    sk.full(ctx, s);
+    prev = s; prevLayer = s.activeLayer; prevSkin = skinIdx; first = false;
+    return;
+  }
+
+  if (clockChanged) { sk.full(ctx, s); prev = s; return; }
+
+  // Botones: solo el keycap que cambio.
+  for (uint8_t i = 0; i < layout::KC_COUNT; i++) {
+    bool on = s.buttons & (1 << i), prevOn = prev.buttons & (1 << i);
+    if (on != prevOn) sk.keycap(ctx, s, i, on);
+  }
+
+  // Estado (mic/cam/media/vol/enlace).
+  bool statusChanged = s.micMuted != prev.micMuted || s.camOff != prev.camOff ||
+                       s.mediaPlay != prev.mediaPlay || s.volume != prev.volume ||
+                       s.transports != prev.transports;
+  if (statusChanged) sk.status(ctx, s);
+
+  // Modo mouse cambio -> full (poco frecuente). Solo movimiento del stick y el
+  // skin con cursor en vivo -> redibujo solo el cursor.
+  if (s.mouseOn != prev.mouseOn) {
+    sk.full(ctx, s);
+  } else if (s.mouseOn && sk.stick) {
+    bool stickMoved = (abs((int)s.stickX - (int)prev.stickX) > cfg::STICK_DISPLAY_DELTA) ||
+                      (abs((int)s.stickY - (int)prev.stickY) > cfg::STICK_DISPLAY_DELTA);
+    if (stickMoved) sk.stick(ctx, s);
+  }
+
+  prev = s;
+}
+
+// ============================================================================
+//  Tareas
+// ============================================================================
+static void inputTask(void*) {
+  DispatchSink dsink;
+  MenuSink     msink;
+  Serial.printf("[inputTask] core %d\n", xPortGetCoreID());
+  static uint32_t comboStart = 0;
+  static bool     menuEntered = false;
+  for (;;) {
+    uint32_t now = millis();
+
+    // En calibracion el inputTask se pausa (la rutina en uiTask lee el stick).
+    if (appstate::mode == AppMode::CALIBRATING) { comboStart = 0; vTaskDelay(pdMS_TO_TICKS(20)); continue; }
+
+    // En el menu, el encoder lo maneja (girar/elegir/cerrar) via msink.
+    if (appstate::mode == AppMode::MENU) {
+      if (!menuEntered) { msink.lastInput = now; menuEntered = true; }
+      inputs.update(now, msink);
+      if (now - msink.lastInput > cfg::MENU_TIMEOUT_MS) { menu::close(); appstate::mode = AppMode::NORMAL; uiForceRedraw(); }
+      if (appstate::mode != AppMode::MENU) { menuEntered = false; nvs::saveUiPrefs(appstate::prefs); }
+      vTaskDelay(pdMS_TO_TICKS(5));
+      continue;
+    }
+    menuEntered = false;
+
+    // En modo WiFi el portal manda; solo escuchamos el long-press para salir.
+    if (appstate::mode == AppMode::WIFI) {
+      WifiSink wsink;
+      inputs.update(now, wsink);
+      if (wsink.exit) { net::stopPortal(); appstate::mode = AppMode::NORMAL; uiForceRedraw(); }
+      vTaskDelay(pdMS_TO_TICKS(10));
+      continue;
+    }
+
+    // NORMAL
+    inputs.update(now, dsink);
+    dispatcher.tick(now);   // cierra el tap simple del stick pasada la ventana
+
+    // Combo de calibracion: ENC_SW (5) + STICK_SW (6) mantenidos juntos.
+    if (inputs.buttons().pressed(5) && inputs.buttons().pressed(6)) {
+      if (comboStart == 0) comboStart = now;
+      else if (now - comboStart >= cfg::CAL_COMBO_MS) appstate::mode = AppMode::CALIBRATING;
+    } else comboStart = 0;
+
+    const OptState& st = stateManager.get();
+    UiSnapshot s{};
+    for (uint8_t i = 0; i < 7; i++)
+      if (inputs.buttons().pressed(i)) s.buttons |= (1 << i);
+    s.encPos      = inputs.encoder().count() / 4;
+    s.stickX      = inputs.stick().x();
+    s.stickY      = inputs.stick().y();
+    s.activeLayer = dispatcher.activeLayer();
+    s.mouseOn     = dispatcher.mouseOn();
+    s.micMuted    = st.micMuted;
+    s.mediaPlay   = st.mediaPlay;
+    s.camOff      = st.camOff;
+    s.volume      = st.volume;
+    s.transports  = (router.activeConnected() ? tport::USB : 0) |
+                    (net::isConnected() ? tport::WIFI : 0);     // estado real
+
+    s.battery     = 255;            // sin medicion aun
+    xQueueOverwrite(bus::uiMailbox, &s);
+
+    vTaskDelay(pdMS_TO_TICKS(2));
+  }
+}
+
+static void transportTask(void*) {
+  Serial.printf("[transportTask] core %d\n", xPortGetCoreID());
+  router.registerHid(&usbHid);
+  router.setActiveHid(TransportId::USB);
+  usbHid.begin();
+  Serial.println(F("[transport] USB HID activo"));
+
+  Action a;
+  for (;;) {
+    if (xQueueReceive(bus::actionQueue, &a, pdMS_TO_TICKS(20)) == pdTRUE) {
+      ITransport* hid = router.activeHid();
+      if (a.type == ActionType::TEXT) {
+        if (hid) hid->sendText(textById(a.p.text.id));
+      } else if (a.type == ActionType::MACRO) {
+        if (hid) macroEngine.run(a.p.macro.id, *hid);
+      } else {
+        router.execute(a);
+      }
+    }
+    router.tick();
+  }
+}
+
+// Pantalla del portal de configuracion WiFi (la dibuja el uiTask, dueno del TFT).
+// QR (derecha) que UNE el celu al AP de setup (formato WIFI:), texto a la izq.
+static void drawWifiSetup() {
+  tft.fillScreen(theme::BG);
+
+  // QR: "WIFI:T:nopass;S:<ssid>;;" -> el celu se une solo a la red de setup.
+  char payload[64];
+  snprintf(payload, sizeof(payload), "WIFI:T:nopass;S:%s;;", net::apName());
+  QRCode qr;
+  uint8_t qrData[qrcode_getBufferSize(3)];
+  qrcode_initText(&qr, qrData, 3, ECC_LOW, payload);
+  const int scale = 5, quiet = 3;                     // quiet zone obligatoria
+  const int dim = (qr.size + 2 * quiet) * scale;
+  const int ox = 466 - dim, oy = (320 - dim) / 2;     // pegado a la derecha
+  tft.fillRoundRect(ox, oy, dim, dim, 8, TFT_WHITE);  // QR necesita fondo claro
+  for (uint8_t yy = 0; yy < qr.size; yy++)
+    for (uint8_t xx = 0; xx < qr.size; xx++)
+      if (qrcode_getModule(&qr, xx, yy))
+        tft.fillRect(ox + (quiet + xx) * scale, oy + (quiet + yy) * scale, scale, scale, TFT_BLACK);
+
+  // Instrucciones (izquierda).
+  tft.setTextDatum(TL_DATUM);
+  tft.setTextColor(theme::CYAN, theme::BG);
+  tft.drawString("WiFi setup", 22, 34, 4);
+  tft.setTextColor(theme::FG, theme::BG);
+  tft.drawString("Escanea el QR para", 22, 90, 2);
+  tft.drawString("unirte a la red:", 22, 112, 2);
+  tft.setTextColor(theme::GREEN, theme::BG);
+  tft.drawString(net::apName(), 22, 136, 4);
+  tft.setTextColor(theme::SOFT, theme::BG);
+  tft.drawString("Luego abri en el navegador:", 22, 182, 2);
+  tft.setTextColor(theme::FG, theme::BG);
+  char url[40]; snprintf(url, sizeof(url), "http://%s", net::ip());
+  tft.drawString(url, 22, 204, 4);
+  tft.setTextColor(theme::DIM, theme::BG);
+  tft.drawString("Manten el encoder para salir", 22, 252, 1);
+}
+
+static void uiTask(void*) {
+  Serial.printf("[uiTask] core %d\n", xPortGetCoreID());
+  UiSnapshot snap{};
+  snap.stickX = snap.stickY = 2048;
+  bool portalShown = false;
+  bool startingShown = false;
+  for (;;) {
+    // Modo WiFi: el portal es dueno exclusivo del TFT mientras este activo.
+    if (appstate::mode == AppMode::WIFI) {
+      if (net::portalActive()) {
+        if (!portalShown) { drawWifiSetup(); portalShown = true; }
+      } else if (!startingShown) {               // AP levantando (<1s)
+        tft.fillScreen(theme::BG);
+        tft.setTextDatum(MC_DATUM);
+        tft.setTextColor(theme::CYAN, theme::BG);
+        tft.drawString("Iniciando WiFi...", 240, 160, 4);
+        startingShown = true;
+      }
+      vTaskDelay(pdMS_TO_TICKS(150));
+      continue;
+    }
+    if (portalShown || startingShown) { portalShown = startingShown = false; uiForceRedraw(); }
+
+    if (appstate::mode == AppMode::CALIBRATING) {
+      runStickCalibration(tft);   // modal; vuelve a NORMAL al terminar
+      uiForceRedraw();
+      continue;
+    }
+    if (appstate::mode == AppMode::MENU) {
+      applyBacklight(appstate::brightness);   // brillo en vivo al editar
+      menu::render(tft);                       // dirty-check interno
+      vTaskDelay(pdMS_TO_TICKS(16));
+      continue;
+    }
+    xQueuePeek(bus::uiMailbox, &snap, pdMS_TO_TICKS(50));
+    uint32_t now = millis();
+    uint16_t dimSecs = appstate::dimTimeoutSeconds();
+    uint8_t targetBrightness = appstate::brightness;
+    if (dimSecs > 0 && now - appstate::lastInputMs > (uint32_t)dimSecs * 1000UL) {
+      targetBrightness = targetBrightness > 20 ? 20 : targetBrightness;
+    }
+    applyBacklight(targetBrightness);
+    renderUI(snap);
+    vTaskDelay(pdMS_TO_TICKS(50));
+  }
+}
+
+// WiFi + portal + NTP (M1). Vive en su propia tarea para no bloquear input/UI.
+static void netTask(void*) {
+  Serial.printf("[netTask] core %d\n", xPortGetCoreID());
+  net::begin();
+  for (;;) {
+    net::tick();
+    vTaskDelay(pdMS_TO_TICKS(10));
+  }
+}
+
+// ============================================================================
+void setup() {
+  Serial.begin(115200);
+  delay(300);
+  Serial.println();
+  Serial.println(F("=== control-deck (ESP32-S3) - capas + macros + UI ==="));
+
+  loadDefaults(keymap);
+  dispatcher.begin(&keymap);
+  dispatcher.setState(&stateManager);
+  menu::init(&keymap);
+
+  nvs::begin();
+  // Calibracion del stick desde NVS (si existe). Si no, fallback al centro de boot.
+  if (nvs::loadStickCal(appstate::stickCal))
+    Serial.println(F("[cal] calibracion del stick cargada de NVS"));
+  else
+    Serial.println(F("[cal] sin calibracion (usando centro de boot). Manten ENC+Stick 1.5s para calibrar."));
+  if (!nvs::loadUiPrefs(appstate::prefs)) {
+    appstate::resetPrefs();
+    appstate::prefs.brightness = nvs::loadBrightness(100);
+  }
+  appstate::prefs.magic = UI_PREFS_MAGIC;
+  if (appstate::prefs.themeMode > theme::MODE_LIGHT) appstate::prefs.themeMode = theme::MODE_DARK;
+  if (appstate::prefs.accentIndex > 6) appstate::prefs.accentIndex = 0;
+  if (appstate::prefs.dimTimeout > 4) appstate::prefs.dimTimeout = 2;
+  if (appstate::prefs.skinIndex >= skins::count()) appstate::prefs.skinIndex = 0;
+  if (appstate::prefs.brightness < 10 || appstate::prefs.brightness > 100) appstate::prefs.brightness = 100;
+  if (appstate::prefs.clockMinute >= 24 * 60) appstate::prefs.clockMinute = 12 * 60;
+  appstate::brightness = appstate::prefs.brightness;
+  appstate::prefs.clockSetAtMs = millis();
+  appstate::lastInputMs = millis();
+  theme::applyMode(appstate::prefs.themeMode);
+  updateClock(millis());
+
+  inputs.begin();
+  backlightBegin();
+  applyBacklight(appstate::brightness);
+  tft.init();
+  tft.setRotation(3);   // landscape 180 (modulo montado al reves)
+  statuspanel::begin(tft);   // crea el sprite del panel de estado (lo usa el skin Cards)
+
+  bus::begin();
+
+  xTaskCreatePinnedToCore(inputTask,     "input",     4096, nullptr, 5, nullptr, 1);
+  xTaskCreatePinnedToCore(transportTask, "transport", 4096, nullptr, 4, nullptr, 1);
+  xTaskCreatePinnedToCore(uiTask,        "ui",        8192, nullptr, 2, nullptr, 0);
+  xTaskCreatePinnedToCore(netTask,       "net",      16384, nullptr, 1, nullptr, 0);
+
+  Serial.printf("Capas: %u. Encoder press = menu (capas/settings/calibrar).\n", keymap.count());
+}
+
+void loop() {
+  vTaskDelay(pdMS_TO_TICKS(1000));
+}
