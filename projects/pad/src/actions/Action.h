@@ -20,8 +20,13 @@ enum class ActionType : uint8_t {
   MOUSE_TOGGLE, // activar/desactivar el modo mouse del stick (estilo TrackPoint)
   NET_HTTP,   // disparar request HTTP (indexa NetActionTable)
   NET_MQTT,   // publicar MQTT (indexa NetActionTable)
+  NET_CMD,    // comando al companion (mute global mic/cam via Core Audio, etc.)
   GAMEPAD     // RESERVADO (post-v1); el tag existe para no romper enum/JSON
 };
+
+// Comandos que el pad le pide al companion (viajan en la respuesta a POST
+// /api/state; el companion los ejecuta a nivel OS). NONE = sin comando.
+enum class CompanionCmd : uint8_t { NONE = 0, MIC_TOGGLE, CAM_TOGGLE };
 
 // Bits de modificadores de teclado.
 namespace kmod { enum : uint8_t { CTRL = 1, SHIFT = 2, ALT = 4, GUI = 8 }; }
@@ -44,6 +49,7 @@ struct LayerAction { uint8_t layer; LayerMode mode; };
 struct NetRef      { uint16_t id; };
 struct MacroRef    { uint16_t id; };
 struct TextRef     { uint16_t id; };
+struct CmdRef      { CompanionCmd cmd; };
 
 struct Action {
   ActionType type = ActionType::NONE;
@@ -55,6 +61,7 @@ struct Action {
     NetRef      net;
     MacroRef    macro;
     TextRef     text;
+    CmdRef      cmd;
     Payload() : key{0, {0, 0, 0, 0, 0, 0}} {}
   } p;
 };
@@ -91,6 +98,9 @@ inline Action macroAction(uint16_t id) {
 inline Action mouseToggleAction() {
   Action a; a.type = ActionType::MOUSE_TOGGLE; return a;
 }
+inline Action netCmdAction(CompanionCmd c) {
+  Action a; a.type = ActionType::NET_CMD; a.p.cmd = {c}; return a;
+}
 
 // Descripcion legible para logging (M1).
 inline String describeAction(const Action& a) {
@@ -116,6 +126,7 @@ inline String describeAction(const Action& a) {
     case ActionType::MOUSE_TOGGLE: return "MOUSE_TOGGLE";
     case ActionType::NET_HTTP: return "NET_HTTP #" + String(a.p.net.id);
     case ActionType::NET_MQTT: return "NET_MQTT #" + String(a.p.net.id);
+    case ActionType::NET_CMD:  return "NET_CMD " + String((uint8_t)a.p.cmd.cmd);
     case ActionType::GAMEPAD:  return "GAMEPAD";
     default: return "?";
   }

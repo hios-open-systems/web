@@ -99,6 +99,11 @@ inline Glyph glyphFor(const char* label) {
   if (!strcmp(label, "Recargar"))   return Glyph::RELOAD;
   if (!strcmp(label, "Nueva tab"))  return Glyph::PLUS;
   if (!strcmp(label, "Marcadores")) return Glyph::BOOKMARK;
+  if (!strcmp(label, "-10s"))       return Glyph::PREV;   // seek atras (YouTube/Netflix)
+  if (!strcmp(label, "+10s"))       return Glyph::NEXT;   // seek adelante
+  if (!strcmp(label, "Salir"))      return Glyph::POWER;  // salir/colgar llamada
+  if (!strcmp(label, "Colgar"))     return Glyph::POWER;
+  if (!strcmp(label, "Buscar"))     return Glyph::COMMAND;
   return Glyph::GENERIC;
 }
 

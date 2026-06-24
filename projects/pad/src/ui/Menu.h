@@ -1,9 +1,12 @@
 // ============================================================================
-//  Menu - Menu navegable on-device, manejado SOLO con el encoder.
-//  Abrir: press del encoder (desde el dashboard). Girar = mover seleccion /
-//  editar valor. Press = elegir/entrar. Long-press o timeout = cerrar.
-//  Superficie compacta tipo settings: [capas...] + Brillo + Tema + Color +
-//  Dimmer + Hora + Calibrar. El caller actua segun el resultado.
+//  Menu - Menu navegable on-device, en DOS niveles.
+//  Nivel 1: grupos (Trabajo / Multimedia / Web-Llamadas / Sistema), girando el
+//           encoder; press = entrar.
+//  Nivel 2: - grupos de capas -> "picker" de 5 botones: cada capa del grupo se
+//             mapea a un boton fisico; apretarlo salta a esa capa.
+//           - grupo Sistema -> carrusel de ajustes (RGB + Brillo/Tema/Color/
+//             Skin/Dimmer/Hora/WiFi/Calibrar), navegado con el encoder.
+//  Long-press del encoder = subir un nivel / cerrar. Timeout = cerrar.
 // ============================================================================
 #pragma once
 #include <TFT_eSPI.h>
@@ -17,10 +20,14 @@ void open(uint8_t currentLayer);
 void close();
 bool isOpen();
 
-void       turn(int delta);     // mover seleccion o editar brillo
-MenuResult press();             // elegir/entrar (ver MenuResult)
-void       back();              // cerrar (long-press)
-uint8_t    selectedLayer();     // capa elegida cuando press()==SWITCH_LAYER
+void       turn(int delta);     // mover seleccion o editar valor
+MenuResult press();             // entrar/elegir (ver MenuResult)
+void       back();              // subir un nivel; en nivel 1 cierra (long-press)
+uint8_t    selectedLayer();     // capa elegida cuando se devuelve SWITCH_LAYER
+
+// Nivel 2 "picker": las capas del grupo estan mapeadas a los 5 botones.
+bool       inLayerPicker();         // true si los botones fisicos eligen capa
+MenuResult pickButton(uint8_t i);   // i=0..4 -> SWITCH_LAYER si hay capa ahi
 
 void render(TFT_eSPI& tft);
 }  // namespace menu

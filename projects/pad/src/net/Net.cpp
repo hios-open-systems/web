@@ -22,6 +22,11 @@ static St           s_state = St::IDLE;
 static volatile bool s_portalReq = false;   // pedido de levantar portal (desde otra task)
 static volatile bool s_stopReq   = false;   // pedido de bajar el portal
 static RealState     s_real;                // ultimo estado real del companion (lo escribe handlePostState)
+// Comandos pendientes pad->companion (bitmask: bit0=mic toggle, bit1=cam toggle).
+// Se setean desde el inputTask (core1) y se leen/limpian en handlePostState
+// (netTask, core0) -> seccion critica para no perder ni duplicar.
+static volatile uint8_t s_pendingCmds = 0;
+static portMUX_TYPE     s_cmdMux = portMUX_INITIALIZER_UNLOCKED;
 static char          s_ssid[33] = {0};      // creds guardadas (para reintentar STA sin recargar de NVS)
 static char          s_pass[65] = {0};
 static bool          s_haveCreds = false;
@@ -109,7 +114,23 @@ static void handlePostState() {
     }
   }
   s_real.updatedAtMs = millis();
-  s_web.send(204, "text/plain", "");
+
+  // Respuesta: si hay comandos pendientes para el companion, se los devolvemos
+  // en el cuerpo (y los limpiamos); si no, 204 sin body (igual que antes).
+  uint8_t pend;
+  portENTER_CRITICAL(&s_cmdMux);
+  pend = s_pendingCmds; s_pendingCmds = 0;
+  portEXIT_CRITICAL(&s_cmdMux);
+  if (pend) {
+    JsonDocument res;
+    JsonArray arr = res["cmds"].to<JsonArray>();
+    if (pend & 0x01) arr.add("micToggle");
+    if (pend & 0x02) arr.add("camToggle");
+    String out; serializeJson(res, out);
+    s_web.send(200, "application/json", out);
+  } else {
+    s_web.send(204, "text/plain", "");
+  }
 }
 
 static void setupRoutes() {
@@ -250,6 +271,15 @@ bool hasFreshState(uint32_t now) {
   return s_real.updatedAtMs != 0 && (now - s_real.updatedAtMs) < cfg::STATE_FRESH_MS;
 }
 const RealState& realState() { return s_real; }
+
+void queueCommand(CompanionCmd cmd) {
+  uint8_t bit = cmd == CompanionCmd::MIC_TOGGLE ? 0x01
+              : cmd == CompanionCmd::CAM_TOGGLE ? 0x02 : 0;
+  if (!bit) return;
+  portENTER_CRITICAL(&s_cmdMux);
+  s_pendingCmds |= bit;
+  portEXIT_CRITICAL(&s_cmdMux);
+}
 const char* ip()    { return s_ip; }
 const char* apName(){ return cfg::WIFI_AP_NAME; }
 

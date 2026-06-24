@@ -58,6 +58,14 @@ void Dispatcher::fireResolved(const InputEvent& e) {
     Serial.printf("[mouse] %s\n", m_mouseOn ? "ON" : "OFF");
     return;
   }
+  if (a.type == ActionType::NET_CMD) {              // comando al companion (mute global, etc.)
+    if (m_state && e.edge == Edge::PRESS) {
+      StateToggle st = m_km->stateToggleFor(m_activeLayer, e.id);
+      if (st != StateToggle::NONE) m_state->applyToggle(st);
+    }
+    if (e.edge == Edge::PRESS) net::queueCommand(a.p.cmd.cmd);
+    return;
+  }
   if (m_state && e.edge == Edge::PRESS) {
     StateToggle st = m_km->stateToggleFor(m_activeLayer, e.id);
     if (st != StateToggle::NONE) m_state->applyToggle(st);
@@ -86,16 +94,18 @@ void Dispatcher::handleFaceButton(const InputEvent& e) {
   }
 }
 
-// Toggle del card por long-press del boton N:
-//   1 mic, 2 camara  -> atajos de la app de videollamada (default Meet; app-especifico)
-//   3 media          -> play/pausa (HID universal)
-//   4 volumen        -> mute (HID universal)
-//   5 enlace         -> WiFi on/off (no es HID; ahorro de energia)
+// Toggle del card por long-press del boton N (universal, en cualquier capa):
+//   1 mic     -> MUTE GLOBAL via companion (Core Audio, app-independiente)
+//   2 camara  -> solo optimista (no hay mute de camara a nivel OS; la app lo hace en el tap)
+//   3 media   -> play/pausa (HID universal)
+//   4 volumen -> mute (HID universal)
+//   5 enlace  -> WiFi on/off (no es HID; ahorro de energia)
 void Dispatcher::statusToggle(int i) {
   Action a{};
   switch (i) {
-    case 0: a = keyAction(kmod::CTRL, 'd'); if (m_state) m_state->applyToggle(StateToggle::MIC);    break;
-    case 1: a = keyAction(kmod::CTRL, 'e'); if (m_state) m_state->applyToggle(StateToggle::CAMERA);  break;
+    case 0: net::queueCommand(CompanionCmd::MIC_TOGGLE);
+            if (m_state) m_state->applyToggle(StateToggle::MIC); return;     // mute global
+    case 1: if (m_state) m_state->applyToggle(StateToggle::CAMERA); return;  // optimista
     case 2: a = mediaAction(MediaUsage::PLAY_PAUSE); if (m_state) m_state->applyToggle(StateToggle::MEDIA); break;
     case 3: a = mediaAction(MediaUsage::MUTE); break;
     case 4: net::toggleWifi(); return;

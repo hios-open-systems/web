@@ -16,6 +16,7 @@
 // ============================================================================
 #pragma once
 #include <stdint.h>
+#include "../actions/Action.h"   // CompanionCmd
 
 struct RealState;          // definido en app/StateManager.h
 
@@ -37,6 +38,10 @@ bool timeSynced();         // NTP sincronizado al menos una vez
 // reciente (< STATE_FRESH_MS); realState() = ultimo estado aceptado.
 bool             hasFreshState(uint32_t nowMs);
 const RealState& realState();
+
+// Comandos pad->companion: el pad los encola y viajan en la respuesta al
+// proximo POST /api/state; el companion los ejecuta (mute global, etc.).
+void queueCommand(CompanionCmd cmd);
 
 const char* ip();          // IP actual (STA o AP)
 const char* apName();      // SSID del portal de config

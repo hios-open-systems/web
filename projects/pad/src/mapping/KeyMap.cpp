@@ -7,11 +7,12 @@ static void copyLabel(char* dst, const char* src) {
   dst[LABEL_LEN - 1] = '\0';
 }
 
-int KeyMap::addLayer(const char* name, uint16_t color) {
+int KeyMap::addLayer(const char* name, uint16_t color, LayerGroup group) {
   if (m_count >= MAX_LAYERS) return m_count - 1;
   Layer& L = m_layers[m_count];
   copyLabel(L.name, name);
   L.color = color;
+  L.group = group;
   for (int i = 0; i < (int)InputId::_COUNT; i++) {
     L.bindings[i] = Binding{};
     L.bindings[i].label[0] = '\0';

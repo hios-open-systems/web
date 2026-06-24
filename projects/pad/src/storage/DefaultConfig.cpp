@@ -42,7 +42,7 @@ void loadDefaults(KeyMap& km) {
   km.clear();
 
   // --- Capa 0: Edicion (cyan) ---
-  int e = km.addLayer("Edicion", theme::CYAN);
+  int e = km.addLayer("Edicion", theme::CYAN, LayerGroup::TRABAJO);
   km.bind(e, InputId::BTN_1, keyAction(kmod::CTRL, 'c'), "Copiar");
   km.bind(e, InputId::BTN_2, keyAction(kmod::CTRL, 'v'), "Pegar");
   km.bind(e, InputId::BTN_3, keyAction(kmod::CTRL, 'z'), "Deshacer");
@@ -54,7 +54,7 @@ void loadDefaults(KeyMap& km) {
   km.bind(e, InputId::STICK_SW, mouseToggleAction(), "Mouse");
 
   // --- Capa 1: Multimedia (magenta) ---
-  int m = km.addLayer("Multimedia", theme::MAGENTA);
+  int m = km.addLayer("Multimedia", theme::MAGENTA, LayerGroup::MULTIMEDIA);
   km.bind(m, InputId::BTN_1, mediaAction(MediaUsage::PREV), "Anterior");
   km.bind(m, InputId::BTN_2, mediaAction(MediaUsage::PLAY_PAUSE), "Play", Action{}, StateToggle::MEDIA);
   km.bind(m, InputId::BTN_3, mediaAction(MediaUsage::NEXT), "Siguiente");
@@ -66,7 +66,7 @@ void loadDefaults(KeyMap& km) {
   km.bind(m, InputId::STICK_SW, mouseToggleAction(), "Mouse");
 
   // --- Capa 2: Dev (verde) ---
-  int d = km.addLayer("Dev", theme::GREEN);
+  int d = km.addLayer("Dev", theme::GREEN, LayerGroup::TRABAJO);
   km.bind(d, InputId::BTN_1, keyAction(kmod::CTRL, '`'), "Terminal");
   km.bind(d, InputId::BTN_2, keyAction(kmod::CTRL | kmod::SHIFT, 'p'), "Paleta");
   km.bind(d, InputId::BTN_3, keyAction(kmod::CTRL, '/'), "Comentar");
@@ -78,7 +78,7 @@ void loadDefaults(KeyMap& km) {
   km.bind(d, InputId::STICK_SW, mouseToggleAction(), "Mouse");
 
   // --- Capa 3: Apps / Ventanas (naranja) ---
-  int a = km.addLayer("Apps", theme::ORANGE);
+  int a = km.addLayer("Apps", theme::ORANGE, LayerGroup::TRABAJO);
   km.bind(a, InputId::BTN_1, keyCode(kmod::GUI, '1'), "App 1");
   km.bind(a, InputId::BTN_2, keyCode(kmod::GUI, '2'), "App 2");
   km.bind(a, InputId::BTN_3, keyCode(kmod::GUI, 'd'), "Escritorio");
@@ -93,7 +93,7 @@ void loadDefaults(KeyMap& km) {
   // Cada control manda un atajo Ctrl+Alt+Shift+X que el script de la PC traduce
   // a un comando de OpenRGB. Combos raros a proposito, para no chocar con apps.
   const uint8_t RGBM = kmod::CTRL | kmod::ALT | kmod::SHIFT;
-  int r = km.addLayer("RGB", theme::VIOLET);
+  int r = km.addLayer("RGB", theme::VIOLET, LayerGroup::SISTEMA);
   km.bind(r, InputId::BTN_1, keyAction(RGBM, 'r'), "Rojo");
   km.bind(r, InputId::BTN_2, keyAction(RGBM, 'g'), "Verde");
   km.bind(r, InputId::BTN_3, keyAction(RGBM, 'b'), "Azul");
@@ -103,24 +103,53 @@ void loadDefaults(KeyMap& km) {
   km.bind(r, InputId::ENC_SW, Action{}, "Menu");
   km.bind(r, InputId::STICK_SW, mouseToggleAction(), "Mouse");
 
-  // --- Capa 5: Calls (coral) -> atajos de Zoom + mute de parlantes del sistema ---
-  // Mic mute es app-especifico (default Zoom = Alt+A). Para que ande sin foco en
-  // Zoom, activa "atajos globales" en Zoom (Settings -> Keyboard Shortcuts).
-  // Si usas Meet/Teams/Discord, avisame y cambio los atajos.
-  int c = km.addLayer("Calls", theme::ROSE);
-  km.bind(c, InputId::BTN_1, keyAction(kmod::ALT, 'a'), "Mic", Action{}, StateToggle::MIC);  // Zoom: mute mic
-  km.bind(c, InputId::BTN_2, keyAction(kmod::ALT, 'v'), "Camara", Action{}, StateToggle::CAMERA);  // Zoom: video on/off
-  km.bind(c, InputId::BTN_3, keyAction(kmod::ALT, 's'), "Pantalla");   // Zoom: compartir
-  km.bind(c, InputId::BTN_4, keyAction(kmod::ALT, 'y'), "Mano");       // Zoom: levantar mano
-  km.bind(c, InputId::BTN_5, mediaAction(MediaUsage::MUTE), "Altavoz"); // mute parlantes (sistema)
-  km.bindRotate(c, mediaAction(MediaUsage::VOL_UP),
-                   mediaAction(MediaUsage::VOL_DOWN), "Volumen");
-  km.bind(c, InputId::ENC_SW, Action{}, "Menu");
-  km.bind(c, InputId::STICK_SW, mouseToggleAction(), "Mouse");
+  // === Grupo Llamadas: una capa por app. En TODAS, el long-press del boton de
+  //     mic (hold) hace MUTE GLOBAL via companion (Core Audio, app-independiente);
+  //     el tap usa el atajo de la app. La camara se togglea con el atajo de la app.
+
+  // --- Capa: Meet (verde) -> atajos web de Google Meet (Chrome) ---
+  int mt = km.addLayer("Meet", theme::GREEN, LayerGroup::LLAMADAS);
+  km.bind(mt, InputId::BTN_1, keyAction(kmod::CTRL, 'd'), "Mic", Action{}, StateToggle::MIC);      // Ctrl+D
+  km.bind(mt, InputId::BTN_2, keyAction(kmod::CTRL, 'e'), "Camara", Action{}, StateToggle::CAMERA);// Ctrl+E
+  km.bind(mt, InputId::BTN_3, keyAction(kmod::CTRL | kmod::ALT, 'h'), "Mano");                     // Ctrl+Alt+H
+  km.bindRotate(mt, mediaAction(MediaUsage::VOL_UP), mediaAction(MediaUsage::VOL_DOWN), "Volumen");
+  km.bind(mt, InputId::ENC_SW, Action{}, "Menu");
+  km.bind(mt, InputId::STICK_SW, mouseToggleAction(), "Mouse");
+
+  // --- Capa: Slack (violeta) -> huddles. Sin atajo de mic: el tap usa el mute
+  //     global del companion (igual que el hold). ---
+  int sl = km.addLayer("Slack", theme::VIOLET, LayerGroup::LLAMADAS);
+  km.bind(sl, InputId::BTN_1, netCmdAction(CompanionCmd::MIC_TOGGLE), "Mic", Action{}, StateToggle::MIC);
+  km.bind(sl, InputId::BTN_2, keyAction(kmod::CTRL, 'k'), "Buscar");                               // Ctrl+K quick switcher
+  km.bindRotate(sl, mediaAction(MediaUsage::VOL_UP), mediaAction(MediaUsage::VOL_DOWN), "Volumen");
+  km.bind(sl, InputId::ENC_SW, Action{}, "Menu");
+  km.bind(sl, InputId::STICK_SW, mouseToggleAction(), "Mouse");
+
+  // --- Capa: Zoom (cyan). Requiere "global shortcuts" ON en Zoom para andar sin foco. ---
+  int zm = km.addLayer("Zoom", theme::CYAN, LayerGroup::LLAMADAS);
+  km.bind(zm, InputId::BTN_1, keyAction(kmod::ALT, 'a'), "Mic", Action{}, StateToggle::MIC);       // Alt+A
+  km.bind(zm, InputId::BTN_2, keyAction(kmod::ALT, 'v'), "Camara", Action{}, StateToggle::CAMERA); // Alt+V
+  km.bind(zm, InputId::BTN_3, keyAction(kmod::ALT, 's'), "Pantalla");                              // Alt+S compartir
+  km.bind(zm, InputId::BTN_4, keyAction(kmod::ALT, 'y'), "Mano");                                  // Alt+Y
+  km.bind(zm, InputId::BTN_5, keyAction(kmod::ALT, 'q'), "Salir");                                 // Alt+Q
+  km.bindRotate(zm, mediaAction(MediaUsage::VOL_UP), mediaAction(MediaUsage::VOL_DOWN), "Volumen");
+  km.bind(zm, InputId::ENC_SW, Action{}, "Menu");
+  km.bind(zm, InputId::STICK_SW, mouseToggleAction(), "Mouse");
+
+  // --- Capa: Teams (naranja) -> atajos de Microsoft Teams ---
+  int tm = km.addLayer("Teams", theme::ORANGE, LayerGroup::LLAMADAS);
+  km.bind(tm, InputId::BTN_1, keyAction(kmod::CTRL | kmod::SHIFT, 'm'), "Mic", Action{}, StateToggle::MIC);      // Ctrl+Shift+M
+  km.bind(tm, InputId::BTN_2, keyAction(kmod::CTRL | kmod::SHIFT, 'o'), "Camara", Action{}, StateToggle::CAMERA);// Ctrl+Shift+O
+  km.bind(tm, InputId::BTN_3, keyAction(kmod::CTRL | kmod::SHIFT, 'k'), "Mano");                                 // Ctrl+Shift+K
+  km.bind(tm, InputId::BTN_4, keyAction(kmod::CTRL | kmod::SHIFT, 'e'), "Pantalla");                             // Ctrl+Shift+E compartir
+  km.bind(tm, InputId::BTN_5, keyAction(kmod::CTRL | kmod::SHIFT, 'b'), "Colgar");                               // Ctrl+Shift+B
+  km.bindRotate(tm, mediaAction(MediaUsage::VOL_UP), mediaAction(MediaUsage::VOL_DOWN), "Volumen");
+  km.bind(tm, InputId::ENC_SW, Action{}, "Menu");
+  km.bind(tm, InputId::STICK_SW, mouseToggleAction(), "Mouse");
 
   // --- Capa 6: Navegador (azul) -> atajos del navegador (back/forward/tabs/marcadores) ---
   // Atajos estandar de Chrome/Firefox/Edge. El stick (Mouse) sirve para clickear links.
-  int n = km.addLayer("Navegador", theme::BLUE);
+  int n = km.addLayer("Navegador", theme::BLUE, LayerGroup::WEB);
   km.bind(n, InputId::BTN_1, keyCode(kmod::ALT, KEY_LEFT_ARROW), "Atras");       // Alt+Left
   km.bind(n, InputId::BTN_2, keyCode(kmod::ALT, KEY_RIGHT_ARROW), "Adelante");   // Alt+Right
   km.bind(n, InputId::BTN_3, keyAction(kmod::CTRL, 'r'), "Recargar");            // Ctrl+R
@@ -130,4 +159,28 @@ void loadDefaults(KeyMap& km) {
                    keyCode(kmod::CTRL, KEY_PAGE_UP), "Pestanas");                // cambiar pestana
   km.bind(n, InputId::ENC_SW, Action{}, "Menu");
   km.bind(n, InputId::STICK_SW, mouseToggleAction(), "Mouse");
+
+  // --- Capa 7: YouTube (rojo) -> atajos del reproductor de YouTube (web) ---
+  int yt = km.addLayer("YouTube", theme::RED, LayerGroup::MULTIMEDIA);
+  km.bind(yt, InputId::BTN_1, keyAction(0, 'k'), "Play");        // k = play/pausa
+  km.bind(yt, InputId::BTN_2, keyAction(0, 'j'), "-10s");        // j = atras 10s
+  km.bind(yt, InputId::BTN_3, keyAction(0, 'l'), "+10s");        // l = adelante 10s
+  km.bind(yt, InputId::BTN_4, keyAction(0, 'f'), "Pantalla");    // f = pantalla completa
+  km.bind(yt, InputId::BTN_5, keyAction(0, 'm'), "Mute");        // m = silenciar
+  km.bindRotate(yt, mediaAction(MediaUsage::VOL_UP),
+                    mediaAction(MediaUsage::VOL_DOWN), "Volumen");
+  km.bind(yt, InputId::ENC_SW, Action{}, "Menu");
+  km.bind(yt, InputId::STICK_SW, mouseToggleAction(), "Mouse");
+
+  // --- Capa 8: Netflix (purpura) -> atajos del reproductor de Netflix ---
+  int nf = km.addLayer("Netflix", theme::PURPLE, LayerGroup::MULTIMEDIA);
+  km.bind(nf, InputId::BTN_1, keyCode(0, ' '), "Play");                  // espacio = play/pausa
+  km.bind(nf, InputId::BTN_2, keyCode(0, KEY_LEFT_ARROW), "-10s");       // <- atras 10s
+  km.bind(nf, InputId::BTN_3, keyCode(0, KEY_RIGHT_ARROW), "+10s");      // -> adelante 10s
+  km.bind(nf, InputId::BTN_4, keyAction(0, 'f'), "Pantalla");            // f = pantalla completa
+  km.bind(nf, InputId::BTN_5, keyAction(0, 'm'), "Mute");                // m = silenciar
+  km.bindRotate(nf, mediaAction(MediaUsage::VOL_UP),
+                    mediaAction(MediaUsage::VOL_DOWN), "Volumen");
+  km.bind(nf, InputId::ENC_SW, Action{}, "Menu");
+  km.bind(nf, InputId::STICK_SW, mouseToggleAction(), "Mouse");
 }

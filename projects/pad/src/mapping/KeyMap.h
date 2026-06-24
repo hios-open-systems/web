@@ -8,8 +8,12 @@
 #include "../app/Types.h"
 #include "../actions/Action.h"
 
-static constexpr uint8_t MAX_LAYERS = 8;
+static constexpr uint8_t MAX_LAYERS = 16;   // margen para capas nuevas (apps de llamada, etc.)
 static constexpr uint8_t LABEL_LEN  = 14;
+
+// Grupo tematico de la capa: lo usa el menu para agrupar (las muestra de a <=5
+// sobre los botones). Cada capa declara el suyo en DefaultConfig.
+enum class LayerGroup : uint8_t { TRABAJO, MULTIMEDIA, WEB, LLAMADAS, SISTEMA, _COUNT };
 
 struct Binding {
   Action      onPress;
@@ -21,16 +25,18 @@ struct Binding {
 };
 
 struct Layer {
-  char     name[LABEL_LEN];
-  uint16_t color;
-  Binding  bindings[(int)InputId::_COUNT];
+  char       name[LABEL_LEN];
+  uint16_t   color;
+  LayerGroup group = LayerGroup::TRABAJO;
+  Binding    bindings[(int)InputId::_COUNT];
 };
 
 class KeyMap {
 public:
   // --- Builders (config) ---
   void clear() { m_count = 0; }
-  int  addLayer(const char* name, uint16_t color);
+  int  addLayer(const char* name, uint16_t color,
+                LayerGroup group = LayerGroup::TRABAJO);
   void bind(int layer, InputId id, const Action& onPress, const char* label,
             const Action& onLong = Action{}, StateToggle st = StateToggle::NONE);
   void bindRotate(int layer, const Action& cw, const Action& ccw, const char* label);
