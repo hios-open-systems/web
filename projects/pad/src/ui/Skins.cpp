@@ -1,0 +1,307 @@
+// ============================================================================
+//  Skins.cpp - Los skins precargados del dashboard. Cada skin compone los
+//  mismos IconKit/UiKit de otra forma. Registro al final (array SKINS).
+//
+//  Agregar un skin: escribir <nombre>Full/Keycap/Status (+Stick opcional) y
+//  sumar una entrada al array SKINS. El menu y el render lo toman solos.
+// ============================================================================
+#include "Skin.h"
+#include "Layout.h"
+#include "IconKit.h"
+#include "UiKit.h"
+#include "StatusPanel.h"
+#include "../app/Theme.h"
+#include "../mapping/KeyMap.h"
+#include <string.h>
+
+using iconkit::Glyph;
+
+static InputId btnId(uint8_t i) { return (InputId)((int)InputId::BTN_1 + i); }
+
+// Texto a la izquierda con recorte por ancho (no desborda su zona).
+static void clip(TFT_eSPI& g, const char* s, int x, int y, int maxw, uint8_t font,
+                 uint16_t fg, uint16_t bg) {
+  char buf[20];
+  strncpy(buf, s ? s : "", sizeof(buf) - 1);
+  buf[sizeof(buf) - 1] = '\0';
+  while (strlen(buf) > 1 && g.textWidth(buf, font) > maxw) buf[strlen(buf) - 1] = '\0';
+  g.setTextDatum(TL_DATUM);
+  g.setTextColor(fg, bg);
+  g.drawString(buf, x, y, font);
+}
+
+static void pips(TFT_eSPI& g, KeyMap& km, uint8_t layer, int y, uint16_t bg) {
+  int n = km.count();
+  const int slot = 13, cxc = layout::W / 2;
+  int x0 = cxc - (n * slot) / 2 + slot / 2;
+  for (int i = 0; i < n; i++) {
+    bool cur = (i == layer);
+    int w = cur ? 12 : 5;
+    uint16_t col = cur ? km.layer(i).color : theme::blend(theme::DIM, bg, 120);
+    g.fillRoundRect(x0 + i * slot - w / 2, y, w, 5, 2, col);
+  }
+}
+
+// Fila de estado compartida (Minimal/Watch): mic | cam | media | vol | enlace.
+static void statusStrip(TFT_eSPI& g, const UiSnapshot& s, int cy) {
+  for (int i = 0; i < 5; i++) {
+    int cx = 88 + i * 76;
+    if (i == 3) {  // volumen
+      char vb[8]; snprintf(vb, sizeof(vb), "%u%%", s.volume);
+      g.setTextDatum(MC_DATUM);
+      g.setTextColor(theme::FG, theme::BG);
+      g.drawString(vb, cx, cy, 2);
+      g.setTextColor(theme::DIM, theme::BG);
+      g.drawString("vol", cx, cy + 20, 1);
+      continue;
+    }
+    Glyph gl; uint16_t col; const char* lab;
+    if (i == 0)      { gl = Glyph::MIC;    col = s.micMuted ? theme::RED : theme::GREEN; lab = s.micMuted ? "mute" : "abierto"; }
+    else if (i == 1) { gl = Glyph::CAMERA; col = s.camOff   ? theme::RED : theme::GREEN; lab = s.camOff   ? "off" : "on"; }
+    else if (i == 2) { gl = s.mediaPlay ? Glyph::PLAY : Glyph::PAUSE; col = s.mediaPlay ? theme::GREEN : theme::YELLOW; lab = s.mediaPlay ? "play" : "pausa"; }
+    else             { bool wifi = s.transports & tport::WIFI; bool usb = s.transports & tport::USB; gl = Glyph::LINK;
+                        col = wifi ? theme::CYAN : (usb ? theme::GREEN : theme::DIM); lab = wifi ? "WiFi" : (usb ? "USB" : "off"); }
+    iconkit::icon(g, gl, cx, cy, col);
+    if (i == 0 && s.micMuted) iconkit::ln(g, cx - 11, cy - 10, cx + 11, cy + 10, theme::RED);
+    if (i == 1 && s.camOff)   iconkit::ln(g, cx - 11, cy - 9, cx + 11, cy + 9, theme::RED);
+    g.setTextDatum(MC_DATUM);
+    g.setTextColor(col, theme::BG);
+    g.drawString(lab, cx, cy + 20, 1);
+  }
+}
+
+// ============================================================================
+//  SKIN 0 - CARDS (denso, una tarjeta por tecla)
+// ============================================================================
+static void cardsHeader(const SkinContext& ctx, const UiSnapshot& s) {
+  TFT_eSPI& g = *ctx.tft; KeyMap& km = *ctx.km;
+  const Layer& L = km.layer(s.activeLayer);
+  g.fillRect(0, 0, layout::W, layout::HEADER_H, theme::PANEL);
+  g.fillRect(0, layout::HEADER_H, layout::W, layout::HEADER_ACC, L.color);
+  g.setTextDatum(TL_DATUM);
+  g.setTextColor(theme::DIM, theme::PANEL);
+  g.drawString("HIOS PAD", 12, 6, 1);
+  clip(g, L.name, 12, 15, 168, 4, theme::FG, theme::PANEL);
+  pips(g, km, s.activeLayer, 21, theme::PANEL);
+  g.setTextDatum(TR_DATUM);
+  g.setTextColor(theme::SOFT, theme::PANEL);
+  g.drawString("USB / listo", 468, 6, 1);
+  g.setTextColor(theme::FG, theme::PANEL);
+  g.drawString(ctx.clock, 468, 15, 4);
+  g.setTextDatum(TL_DATUM);
+}
+
+static void cardsKeycap(const SkinContext& ctx, const UiSnapshot& s, uint8_t i, bool on) {
+  TFT_eSPI& g = *ctx.tft; KeyMap& km = *ctx.km;
+  const Layer& L = km.layer(s.activeLayer);
+  const char* label = km.label(s.activeLayer, btnId(i));
+  const int x = layout::kcX(i), y = layout::KC_Y, w = layout::KC_W, h = layout::KC_H;
+  uint16_t fill   = on ? L.color : theme::CARD;
+  uint16_t border = on ? theme::FG : theme::blend(L.color, theme::EDGE, 165);
+  uint16_t ic     = on ? theme::BG : L.color;
+  uint16_t tc     = on ? theme::BG : theme::FG;
+  g.fillRoundRect(x + 3, y + 5, w, h, 10, theme::BG);
+  g.fillRoundRect(x, y, w, h, 10, fill);
+  g.drawRoundRect(x, y, w, h, 10, border);
+  char num[2] = { (char)('1' + i), '\0' };
+  uint16_t bf = on ? theme::blend(L.color, theme::FG, 70) : theme::DARK;
+  uikit::badge(g, {x + 8, y + layout::KC_BADGE_DY, 20, 16}, num, bf, on ? theme::BG : theme::SOFT, 5, 2);
+  const int cx = x + w / 2, cyW = y + layout::KC_ICON_DY;
+  uint16_t well = on ? theme::blend(L.color, theme::FG, 50) : theme::blend(theme::CARD, L.color, 42);
+  uikit::iconWell(g, cx, cyW, layout::ICON_WELL_R, well);
+  iconkit::icon(g, iconkit::glyphFor(label), cx, cyW, ic);
+  uikit::fitText(g, label, cx, y + layout::KC_LABEL_DY, w - 14, tc, fill, 2);
+  if (on) g.fillRoundRect(x + 18, y + h - 12, w - 36, 4, 2, theme::BG);
+}
+
+static void cardsStick(const SkinContext& ctx, const UiSnapshot& s) {
+  TFT_eSPI& g = *ctx.tft;
+  using namespace layout;
+  const int bs = 26, bx = ENC_S3_X + 8, by = ENC_Y + (ENC_H - bs) / 2;
+  uint16_t cross = theme::blend(theme::DARK, theme::GREEN, 60);
+  g.fillRoundRect(bx + 1, by + 1, bs - 2, bs - 2, 4, theme::DARK);
+  g.drawRoundRect(bx, by, bs, bs, 5, theme::GREEN);
+  g.drawFastHLine(bx + 4, by + bs / 2, bs - 8, cross);
+  g.drawFastVLine(bx + bs / 2, by + 4, bs - 8, cross);
+  const int pad = 4, span = bs - 2 * pad;
+  int dx = bx + pad + (int)((long)s.stickX * span / 4095);
+  int dy = by + pad + (int)((long)s.stickY * span / 4095);
+  g.fillCircle(dx, dy, 3, theme::GREEN);
+}
+
+static void cardsEncStrip(const SkinContext& ctx, const UiSnapshot& s) {
+  TFT_eSPI& g = *ctx.tft; KeyMap& km = *ctx.km;
+  using namespace layout;
+  const Layer& L = km.layer(s.activeLayer);
+  g.fillRect(0, ENC_Y - 2, W, ENC_H + 4, theme::BG);
+  g.fillRoundRect(ENC_S1_X, ENC_Y, ENC_S1_W, ENC_H, 8, theme::PANEL);
+  g.drawRoundRect(ENC_S1_X, ENC_Y, ENC_S1_W, ENC_H, 8, theme::EDGE);
+  iconkit::icon(g, Glyph::DIAL, ENC_S1_X + 18, ENC_Y + ENC_H / 2, L.color);
+  g.setTextDatum(TL_DATUM);
+  g.setTextColor(theme::DIM, theme::PANEL);
+  g.drawString("ENCODER", ENC_S1_X + 36, ENC_Y + 6, 1);
+  clip(g, km.label(s.activeLayer, InputId::ENC_ROT), ENC_S1_X + 36, ENC_Y + 16, ENC_S1_W - 44, 2, L.color, theme::PANEL);
+
+  uint16_t f2 = theme::blend(theme::BG, L.color, 42);
+  g.fillRoundRect(ENC_S2_X, ENC_Y, ENC_S2_W, ENC_H, 8, f2);
+  iconkit::icon(g, Glyph::COMMAND, ENC_S2_X + 20, ENC_Y + ENC_H / 2, theme::SOFT);
+  g.setTextDatum(ML_DATUM);
+  g.setTextColor(theme::SOFT, f2);
+  g.drawString("menu", ENC_S2_X + 38, ENC_Y + ENC_H / 2 + 1, 2);
+
+  bool mo = s.mouseOn;
+  uint16_t f3 = mo ? theme::blend(theme::BG, theme::GREEN, 40) : theme::PANEL;
+  uint16_t st3 = mo ? theme::GREEN : theme::EDGE;
+  g.fillRoundRect(ENC_S3_X, ENC_Y, ENC_S3_W, ENC_H, 8, f3);
+  g.drawRoundRect(ENC_S3_X, ENC_Y, ENC_S3_W, ENC_H, 8, st3);
+  const int rx = ENC_S3_X + ENC_S3_W - 12;
+  g.setTextDatum(TR_DATUM);
+  if (mo) {
+    cardsStick(ctx, s);
+    g.setTextColor(theme::GREEN, f3); g.drawString("MOUSE ON", rx, ENC_Y + 4, 1);
+    g.setTextColor(theme::SOFT, f3);  g.drawString("tap=clic  2x=der", rx, ENC_Y + 14, 1);
+    g.setTextColor(theme::DIM, f3);   g.drawString("hold=salir", rx, ENC_Y + 24, 1);
+  } else {
+    iconkit::icon(g, Glyph::POINTER, ENC_S3_X + 18, ENC_Y + ENC_H / 2, theme::DIM);
+    g.setTextColor(theme::DIM, f3);  g.drawString("STICK", rx, ENC_Y + 6, 1);
+    g.setTextColor(theme::SOFT, f3); g.drawString("hold = mouse", rx, ENC_Y + 16, 2);
+  }
+  g.setTextDatum(TL_DATUM);
+}
+
+static void cardsStatus(const SkinContext& ctx, const UiSnapshot& s) {
+  statuspanel::render(*ctx.tft, s, ctx.km->count());
+}
+
+static void cardsFull(const SkinContext& ctx, const UiSnapshot& s) {
+  cardsHeader(ctx, s);
+  for (uint8_t i = 0; i < layout::KC_COUNT; i++) cardsKeycap(ctx, s, i, s.buttons & (1 << i));
+  cardsEncStrip(ctx, s);
+  statuspanel::forceRedraw();
+  statuspanel::render(*ctx.tft, s, ctx.km->count());
+}
+
+// ============================================================================
+//  SKIN 1 - MINIMAL (anillos espaciados, mucho aire)
+// ============================================================================
+static void minKeycap(const SkinContext& ctx, const UiSnapshot& s, uint8_t i, bool on) {
+  TFT_eSPI& g = *ctx.tft; KeyMap& km = *ctx.km;
+  const Layer& L = km.layer(s.activeLayer);
+  const char* label = km.label(s.activeLayer, btnId(i));
+  const int cx = 48 + i * 96, cy = 118;
+  g.fillRect(cx - 30, cy - 30, 60, 60, theme::BG);   // limpia el anillo+badge
+  uint16_t ring = on ? L.color : theme::blend(theme::CARD, L.color, 36);
+  uint16_t ic   = on ? theme::BG : L.color;
+  g.fillCircle(cx, cy, 26, ring);
+  if (!on) g.drawCircle(cx, cy, 26, L.color);
+  iconkit::icon(g, iconkit::glyphFor(label), cx, cy, ic);
+  uint16_t nb = on ? theme::FG : L.color;
+  g.fillCircle(cx + 19, cy - 19, 8, nb);
+  char num[2] = { (char)('1' + i), '\0' };
+  g.setTextDatum(MC_DATUM);
+  g.setTextColor(theme::BG, nb);
+  g.drawString(num, cx + 19, cy - 19, 1);
+  uikit::fitText(g, label, cx, cy + 42, 92, on ? L.color : theme::FG, theme::BG, 2);
+}
+
+static void minStatus(const SkinContext& ctx, const UiSnapshot& s) {
+  TFT_eSPI& g = *ctx.tft;
+  g.fillRect(0, 240, layout::W, layout::H - 240, theme::BG);
+  statusStrip(g, s, 262);
+}
+
+static void minFull(const SkinContext& ctx, const UiSnapshot& s) {
+  TFT_eSPI& g = *ctx.tft; KeyMap& km = *ctx.km;
+  const Layer& L = km.layer(s.activeLayer);
+  g.setTextDatum(TL_DATUM);
+  g.setTextColor(theme::DIM, theme::BG);
+  g.drawString("HIOS PAD", 16, 8, 1);
+  clip(g, L.name, 16, 18, 300, 4, L.color, theme::BG);
+  char cap[16]; snprintf(cap, sizeof(cap), "capa %u / %u", s.activeLayer + 1, km.count());
+  g.setTextColor(theme::SOFT, theme::BG);
+  g.drawString(cap, 16, 44, 1);
+  g.setTextDatum(TR_DATUM);
+  g.setTextColor(theme::SOFT, theme::BG);
+  g.drawString("USB / listo", 464, 8, 1);
+  g.setTextColor(theme::FG, theme::BG);
+  g.drawString(ctx.clock, 464, 18, 4);
+  g.setTextDatum(TL_DATUM);
+  g.drawFastHLine(16, 58, 448, theme::EDGE);
+
+  for (uint8_t i = 0; i < layout::KC_COUNT; i++) minKeycap(ctx, s, i, s.buttons & (1 << i));
+
+  g.fillRoundRect(40, 188, 400, 30, 15, theme::PANEL);
+  g.drawRoundRect(40, 188, 400, 30, 15, theme::EDGE);
+  iconkit::icon(g, Glyph::DIAL, 62, 203, L.color);
+  g.setTextDatum(ML_DATUM);
+  g.setTextColor(L.color, theme::PANEL);
+  g.drawString(km.label(s.activeLayer, InputId::ENC_ROT), 80, 204, 2);
+  g.setTextDatum(MC_DATUM);
+  g.setTextColor(theme::SOFT, theme::PANEL);
+  g.drawString("press = menu", 240, 204, 2);
+  iconkit::icon(g, Glyph::POINTER, 356, 203, s.mouseOn ? theme::GREEN : theme::DIM);
+  g.setTextDatum(MR_DATUM);
+  g.setTextColor(s.mouseOn ? theme::GREEN : theme::SOFT, theme::PANEL);
+  g.drawString(s.mouseOn ? "mouse" : "stick idle", 428, 204, 1);
+  g.setTextDatum(TL_DATUM);
+
+  g.drawFastHLine(16, 236, 448, theme::EDGE);
+  statusStrip(g, s, 262);
+}
+
+// ============================================================================
+//  SKIN 2 - WATCH (reloj central glanceable + tira de teclas)
+// ============================================================================
+static void watchKeycap(const SkinContext& ctx, const UiSnapshot& s, uint8_t i, bool on) {
+  TFT_eSPI& g = *ctx.tft; KeyMap& km = *ctx.km;
+  const Layer& L = km.layer(s.activeLayer);
+  const char* label = km.label(s.activeLayer, btnId(i));
+  const int x = 14 + i * 94, y = 212, w = 86, h = 96;
+  uint16_t fill = on ? L.color : theme::CARD;
+  uint16_t ic = on ? theme::BG : L.color;
+  uint16_t tc = on ? theme::BG : theme::SOFT;
+  g.fillRoundRect(x, y, w, h, 10, fill);
+  g.drawRoundRect(x, y, w, h, 10, on ? theme::FG : theme::blend(L.color, theme::EDGE, 155));
+  g.setTextDatum(TL_DATUM);
+  g.setTextColor(on ? theme::BG : theme::DIM, fill);
+  char num[2] = { (char)('1' + i), '\0' };
+  g.drawString(num, x + 10, y + 9, 1);
+  uint16_t well = on ? theme::blend(L.color, theme::FG, 50) : theme::blend(theme::CARD, L.color, 42);
+  g.fillCircle(x + w / 2, y + 32, 19, well);
+  iconkit::icon(g, iconkit::glyphFor(label), x + w / 2, y + 32, ic);
+  uikit::fitText(g, label, x + w / 2, y + 66, w - 12, tc, fill, 1);
+}
+
+static void watchStatus(const SkinContext& ctx, const UiSnapshot& s) {
+  TFT_eSPI& g = *ctx.tft;
+  g.fillRect(0, 160, layout::W, 44, theme::BG);
+  statusStrip(g, s, 178);
+}
+
+static void watchFull(const SkinContext& ctx, const UiSnapshot& s) {
+  TFT_eSPI& g = *ctx.tft; KeyMap& km = *ctx.km;
+  const Layer& L = km.layer(s.activeLayer);
+  g.setTextDatum(MC_DATUM);
+  g.setTextColor(theme::FG, theme::BG);
+  g.drawString(ctx.clock, 240, 78, 6);                 // reloj grande (font6)
+  g.setTextColor(L.color, theme::BG);
+  g.drawString(L.name, 240, 124, 2);
+  pips(g, km, s.activeLayer, 140, theme::BG);
+  statusStrip(g, s, 178);
+  for (uint8_t i = 0; i < layout::KC_COUNT; i++) watchKeycap(ctx, s, i, s.buttons & (1 << i));
+}
+
+// ============================================================================
+//  Registro
+// ============================================================================
+static const Skin SKINS[] = {
+  { "Cards",   cardsFull, cardsKeycap, cardsStatus, cardsStick },
+  { "Minimal", minFull,   minKeycap,   minStatus,   nullptr },
+  { "Watch",   watchFull, watchKeycap, watchStatus, nullptr },
+};
+
+namespace skins {
+uint8_t count() { return sizeof(SKINS) / sizeof(SKINS[0]); }
+const Skin& get(uint8_t i) { return SKINS[i < count() ? i : 0]; }
+const char* name(uint8_t i) { return get(i).name; }
+}  // namespace skins

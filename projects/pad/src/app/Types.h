@@ -1,0 +1,79 @@
+// ============================================================================
+//  Types.h - Tipos base del flujo de entrada.
+//  Un InputEvent es la entrada NORMALIZADA: las fuentes (botones/encoder/stick)
+//  emiten esto y el resto del sistema nunca toca GPIO directamente.
+// ============================================================================
+#pragma once
+#include <stdint.h>
+
+// Ids logicos estables, independientes del GPIO fisico.
+enum class InputId : uint8_t {
+  BTN_1, BTN_2, BTN_3, BTN_4, BTN_5,
+  ENC_SW, STICK_SW,
+  ENC_ROT,      // rotacion: delta en v1 (con signo)
+  STICK_AXIS,   // ejes: x en v1, y en v2
+  _COUNT
+};
+
+enum class Edge : uint8_t {
+  PRESS,        // pulsador: flanco a pulsado
+  RELEASE,      // pulsador: flanco a soltado
+  LONG_PRESS,   // pulsador: mantenido > umbral
+  ROTATE,       // encoder: hubo giro (delta en v1)
+  MOVE          // stick: cambio de posicion (x en v1, y en v2)
+};
+
+struct InputEvent {
+  InputId  id;
+  Edge     edge;
+  int16_t  v1;      // delta de giro, o stick X
+  int16_t  v2;      // stick Y (sin usar en el resto)
+  uint32_t t_ms;
+};
+
+// Sink de eventos: en M0 imprime/dibuja; en M1+ empuja a una cola FreeRTOS.
+// Mantenerlo como interfaz permite cambiar el destino sin tocar las fuentes.
+struct InputSink {
+  virtual void emit(const InputEvent& e) = 0;
+  virtual ~InputSink() = default;
+};
+
+// Snapshot del estado para la UI. El productor (inputTask) lo escribe con
+// xQueueOverwrite a un mailbox; la UI (otro core) lee el ultimo sin bloquear.
+// Qué estado togglea un binding (para que la UI pueda reflejarlo, "optimista").
+enum class StateToggle : uint8_t { NONE, MIC, MOUSE, MEDIA, CAMERA };
+
+// Bits de transporte para UiSnapshot.transports
+namespace tport { enum : uint8_t { USB = 1, BLE = 2, WIFI = 4 }; }
+
+struct UiSnapshot {
+  uint8_t  buttons;     // bitmask: bit i = pulsador i (0..4 botones,5 encSW,6 stickSW)
+  long     encPos;      // posicion acumulada del encoder (detentes)
+  uint16_t stickX;      // crudo 0..4095
+  uint16_t stickY;
+  uint8_t  activeLayer; // capa activa
+  bool     mouseOn;     // modo mouse del stick activo (toggle por SW del stick)
+  // --- estado optimista (lo que el pad cree haber dejado) ---
+  bool     micMuted;
+  bool     mediaPlay;
+  bool     camOff;
+  uint8_t  volume;      // 0..100 (estimado)
+  uint8_t  transports;  // bits tport::USB/BLE/WIFI
+  uint8_t  battery;     // 0..100 (placeholder hasta sumar medicion; 255 = sin dato)
+};
+
+// Nombre legible de un input (para Serial / UI).
+inline const char* inputName(InputId id) {
+  switch (id) {
+    case InputId::BTN_1:      return "Boton 1";
+    case InputId::BTN_2:      return "Boton 2";
+    case InputId::BTN_3:      return "Boton 3";
+    case InputId::BTN_4:      return "Boton 4";
+    case InputId::BTN_5:      return "Boton 5";
+    case InputId::ENC_SW:     return "Encoder SW";
+    case InputId::STICK_SW:   return "Stick SW";
+    case InputId::ENC_ROT:    return "Encoder";
+    case InputId::STICK_AXIS: return "Stick";
+    default:                  return "?";
+  }
+}
