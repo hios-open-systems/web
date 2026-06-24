@@ -48,7 +48,7 @@ Una capa por app con sus atajos. El **mic** tiene doble vía: **tap** = atajo de
 
 ## Feedback real (companion)
 
-El display muestra mic/volumen/temps **reales** cuando corre el daemon [`pad-companion`](../../../pad-companion) (repo hermano), que lee el estado de la PC (Windows Core Audio / Linux PipeWire) y lo empuja por `POST /api/state`. Sin companion, el display cae a estado **optimista** (lo que el pad cree haber dejado). El canal también lleva comandos pad→companion (mute global) en la respuesta del POST.
+El display muestra mic/volumen/temps **reales** cuando corre el daemon [`pad-companion`](companion) (en `companion/`), que lee el estado de la PC (Windows Core Audio / Linux PipeWire) y lo empuja por `POST /api/state`. Sin companion, el display cae a estado **optimista** (lo que el pad cree haber dejado). El canal también lleva comandos pad→companion (mute global) en la respuesta del POST.
 
 ## Arquitectura
 
