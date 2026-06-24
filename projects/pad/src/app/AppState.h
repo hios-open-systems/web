@@ -27,6 +27,7 @@ extern StickCal         stickCal;
 extern uint8_t          brightness;   // 0..100 (brillo del backlight, persiste en NVS)
 extern UiPrefs          prefs;
 extern volatile uint32_t lastInputMs;
+extern int              mouseAccel;   // aceleracion del stick (default cfg::MOUSE_ACCEL); ajustable en vivo (serial +/-)
 
 void resetPrefs();
 uint16_t currentClockMinute(uint32_t nowMs);

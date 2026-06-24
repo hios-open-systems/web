@@ -1,6 +1,7 @@
 #include "KeyMap.h"
 #include <string.h>
 #include "../app/Config.h"
+#include "../app/AppState.h"
 
 static void copyLabel(char* dst, const char* src) {
   strncpy(dst, src ? src : "", LABEL_LEN - 1);
@@ -66,8 +67,8 @@ Action KeyMap::resolve(uint8_t layerIdx, const InputEvent& e) const {
   if (e.id == InputId::STICK_AXIS && e.edge == Edge::MOVE) {
     int rawX = e.v1, rawY = e.v2;
     if (cfg::MOUSE_SWAP_XY) { int t = rawX; rawX = rawY; rawY = t; }  // stick girado 90
-    int dx = rawX / cfg::MOUSE_SPEED_DIV;
-    int dy = rawY / cfg::MOUSE_SPEED_DIV;
+    int dx = cfg::mouseAccel(rawX, appstate::mouseAccel);   // curva: centro preciso, extremos rapidos (accel ajustable en vivo)
+    int dy = cfg::mouseAccel(rawY, appstate::mouseAccel);
     if (cfg::MOUSE_INVERT_X) dx = -dx;   // horizontal en pantalla
     if (cfg::MOUSE_INVERT_Y) dy = -dy;   // vertical en pantalla
     return mouseAction(MouseMode::MOVE_FROM_STICK, (int8_t)dx, (int8_t)dy);

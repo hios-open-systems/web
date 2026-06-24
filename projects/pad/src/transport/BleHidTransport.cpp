@@ -2,6 +2,7 @@
 #include <Arduino.h>
 #include <NimBLEDevice.h>
 #include <NimBLEHIDDevice.h>
+#include "../app/AppState.h"
 
 // ============================================================================
 //  Descriptor HID compuesto: teclado (ID 1) + mouse (ID 2) + consumer (ID 3).
@@ -90,18 +91,74 @@ static uint16_t consumerUsage(MediaUsage u) {
 }
 
 // ----------------------------------------------------------------------------
+#if CONFIG_BT_NIMBLE_EXT_ADV
+// Advertising conmutable EN RUNTIME (sin reflashear): 0=legacy, 1=extended, 2=dual.
+// Se elige por serial en tick() (l/e/d). Default EXTENDED: el MT7921 de Linux solo
+// descubre extendido; el celu/Windows modernos tambien lo toman.
+static NimBLEHIDDevice* s_hidDev  = nullptr;
+static uint8_t          s_advMode = 1;
+
+static void fillAdv(NimBLEExtAdvertisement& a, bool legacy) {
+  a.setLegacyAdvertising(legacy);
+  a.setConnectable(true);
+  a.setScannable(legacy);               // legacy conectable exige scannable; ext conectable lo prohibe
+  a.setFlags(0x06);                     // LE General Discoverable + BR/EDR no soportado
+  a.setName("HIOS PAD");
+  a.setAppearance(0x03C0);
+  a.setCompleteServices(s_hidDev->hidService()->getUUID());
+}
+
+static void startAdvMode(uint8_t mode) {
+  NimBLEExtAdvertising* adv = NimBLEDevice::getAdvertising();
+  adv->stop();
+  NimBLEExtAdvertisement a0;
+  fillAdv(a0, mode != 1);               // legacy en modo 0/2, extended en modo 1
+  adv->setInstanceData(0, a0);
+  adv->start(0);
+  if (mode == 2) {                      // dual: instancia 1 extendida (para que el MT7921 lo descubra)
+    NimBLEExtAdvertisement a1;
+    fillAdv(a1, false);
+    adv->setInstanceData(1, a1);
+    adv->start(1);
+  }
+  s_advMode = mode;
+  Serial.printf("[ble] adv mode=%u (%s)\n", mode, mode == 0 ? "LEGACY" : mode == 1 ? "EXTENDED" : "DUAL");
+}
+#endif
+
+// ----------------------------------------------------------------------------
 // Callbacks de conexion: actualizan el flag y re-arrancan advertising al cortar.
 class SrvCb : public NimBLEServerCallbacks {
 public:
   volatile bool* flag = nullptr;
-  void onConnect(NimBLEServer*) override    { if (flag) *flag = true; }
-  void onDisconnect(NimBLEServer*) override { if (flag) *flag = false; NimBLEDevice::startAdvertising(); }
+  void onConnect(NimBLEServer* s, ble_gap_conn_desc* desc) override {
+    if (flag) *flag = true;
+    Serial.println("[ble] central CONECTADO");
+    // Pedir intervalo de conexion corto (7.5-15ms) -> mouse/HID con baja latencia.
+    // Sin esto Linux negocia un intervalo lento (~30-50ms) -> puntero con lag.
+    s->updateConnParams(desc->conn_handle, 6, 12, 0, 200);
+  }
+  void onDisconnect(NimBLEServer*) override {
+    if (flag) *flag = false;
+    Serial.println("[ble] central DESCONECTADO");
+#if CONFIG_BT_NIMBLE_EXT_ADV
+    startAdvMode(s_advMode);            // re-arranca el modo actual (legacy/ext/dual)
+#else
+    NimBLEDevice::startAdvertising();
+#endif
+  }
+  void onAuthenticationComplete(ble_gap_conn_desc* desc) override {
+    Serial.printf("[ble] auth: enc=%d auth=%d bond=%d keysz=%d\n",
+                  desc->sec_state.encrypted, desc->sec_state.authenticated,
+                  desc->sec_state.bonded, desc->sec_state.key_size);
+  }
 };
 static SrvCb s_srvCb;
 
 // ----------------------------------------------------------------------------
 bool BleHidTransport::begin() {
   NimBLEDevice::init("HIOS PAD");
+  NimBLEDevice::setPower(ESP_PWR_LVL_P9);             // TX al maximo: discovery/alcance robustos. Las tramas de adv son chicas -> costo de bateria despreciable.
   NimBLEDevice::setSecurityAuth(true, false, true);   // bonding + secure connections (just works)
 
   NimBLEServer* server = NimBLEDevice::createServer();
@@ -119,11 +176,37 @@ bool BleHidTransport::begin() {
   m_hid->startServices();
   m_hid->setBatteryLevel(100);
 
+#if CONFIG_BT_NIMBLE_EXT_ADV
+  s_hidDev = m_hid;
+  // BUG de NimBLE-Arduino: el ctor de NimBLEExtAdvertising no inicializa m_pCallbacks.
+  // Al entrar una conexion, el advertising termina -> evento ADV_COMPLETE -> deref de
+  // puntero basura -> panic LoadProhibited (el pad reboota en cada conexion). setCallbacks(nullptr)
+  // lo apunta a defaultCallbacks (onStopped no-op) y mata el crash.
+  NimBLEDevice::getAdvertising()->setCallbacks(nullptr);
+  startAdvMode(s_advMode);                             // arranca en legacy; conmutable por serial
+#else
   NimBLEAdvertising* adv = NimBLEDevice::getAdvertising();
   adv->setAppearance(0x03C0);                          // HID generico
   adv->addServiceUUID(m_hid->hidService()->getUUID());
   adv->start();
+#endif
+  Serial.printf("[ble] adv 'HIOS PAD'  addr=%s  (serial: l=legacy e=ext d=dual s=status)\n",
+                NimBLEDevice::getAddress().toString().c_str());
   return true;
+}
+
+void BleHidTransport::tick() {
+#if CONFIG_BT_NIMBLE_EXT_ADV
+  while (Serial.available()) {
+    char c = (char)Serial.read();
+    if      (c == 'l') startAdvMode(0);
+    else if (c == 'e') startAdvMode(1);
+    else if (c == 'd') startAdvMode(2);
+    else if (c == 's') Serial.printf("[ble] mode=%u conn=%d  stick accel=%d\n", s_advMode, (int)m_connected, appstate::mouseAccel);
+    else if (c == '+') { appstate::mouseAccel++; Serial.printf("[stick] accel=%d\n", appstate::mouseAccel); }
+    else if (c == '-') { if (appstate::mouseAccel > 0) appstate::mouseAccel--; Serial.printf("[stick] accel=%d\n", appstate::mouseAccel); }
+  }
+#endif
 }
 
 void BleHidTransport::kbReport(const uint8_t* r)    { m_inKb->setValue(r, 8);    m_inKb->notify(); }
@@ -177,9 +260,14 @@ void BleHidTransport::sendMouse(const MouseAction& m) {
     }
     case MouseMode::CLICK: {
       uint8_t btn = m.buttons ? m.buttons : 0x01;   // 0x01=izq, 0x02=der, 0x04=medio
+      Serial.printf("[mouse] click btn=%u\n", btn);
       uint8_t down[4] = { btn, 0, 0, 0 };
-      mouseReport(down); delay(12);
       uint8_t up[4] = { 0, 0, 0, 0 };
+      // Robusto sobre BLE: hold largo (cruza varios eventos de conexion sea cual sea el
+      // intervalo negociado) + reenvio del down por si una notif se pierde. Asi el host
+      // ve un press claro y sostenido, no una pulsacion de ~0ms que descarta.
+      mouseReport(down); delay(55);
+      mouseReport(down); delay(55);
       mouseReport(up);
       break;
     }

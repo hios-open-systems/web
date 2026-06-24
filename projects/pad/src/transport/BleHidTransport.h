@@ -13,7 +13,7 @@ class NimBLECharacteristic;
 class BleHidTransport : public ITransport {
 public:
   bool begin() override;
-  void tick() override {}
+  void tick() override;                  // lee comandos de advertising por serial (l/e/d/s)
   bool isConnected() override { return m_connected; }
 
   void sendKey(const KeyAction& k) override;

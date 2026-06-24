@@ -413,7 +413,7 @@ static void uiTask(void*) {
     uint16_t dimSecs = appstate::dimTimeoutSeconds();
     uint8_t targetBrightness = appstate::brightness;
     if (dimSecs > 0 && now - appstate::lastInputMs > (uint32_t)dimSecs * 1000UL) {
-      targetBrightness = targetBrightness > 20 ? 20 : targetBrightness;
+      targetBrightness = 0;
     }
     applyBacklight(targetBrightness);
     renderUI(snap);
