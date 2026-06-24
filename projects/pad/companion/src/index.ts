@@ -5,6 +5,7 @@ import type { PadState } from './state';
 import { log } from './log';
 
 async function main(): Promise<void> {
+  process.title = 'pad-companion';                  // se ve asi en top/ps/htop (no como "node")
   const cfg = loadConfig(process.argv);
   log.info(`pad-companion -> http://${cfg.host}/api/state  cada ${cfg.pollMs}ms  (${process.platform})`);
 

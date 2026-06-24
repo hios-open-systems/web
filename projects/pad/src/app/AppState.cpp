@@ -1,5 +1,6 @@
 #include "AppState.h"
 #include "Theme.h"
+#include "Config.h"
 
 namespace appstate {
 volatile AppMode mode = AppMode::NORMAL;
@@ -7,6 +8,7 @@ StickCal         stickCal = {0, {0, 2048, 4095, 450}, {0, 2048, 4095, 450}, fals
 uint8_t          brightness = 100;
 UiPrefs          prefs;
 volatile uint32_t lastInputMs = 0;
+int              mouseAccel = cfg::MOUSE_ACCEL;
 
 void resetPrefs() {
   prefs.magic = UI_PREFS_MAGIC;

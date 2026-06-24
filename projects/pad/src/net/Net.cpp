@@ -7,6 +7,7 @@
 #include <WebServer.h>
 #include <DNSServer.h>
 #include <ESPmDNS.h>
+#include <ArduinoOTA.h>
 #include <ArduinoJson.h>
 #include <time.h>
 #include "../app/Config.h"
@@ -161,6 +162,8 @@ static void onConnected() {
   setIp(WiFi.localIP());
   MDNS.begin(cfg::MDNS_HOST);
   MDNS.addService("http", "tcp", 80);
+  ArduinoOTA.setHostname(cfg::MDNS_HOST);          // flasheo wireless: pio run -t upload --upload-port hiospad.local
+  ArduinoOTA.begin();
   configTzTime(cfg::NTP_TZ, cfg::NTP_SERVER);
   setupRoutes();
   s_web.begin();
@@ -247,6 +250,7 @@ void tick() {
       }
       break;
     case St::CONNECTED:
+      ArduinoOTA.handle();
       s_web.handleClient();
       if (WiFi.status() != WL_CONNECTED) { s_state = St::CONNECTING; s_connectStart = millis(); break; }
       if (s_lastSync == 0 || millis() - s_lastSync > cfg::NTP_RESYNC_MS) {

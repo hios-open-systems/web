@@ -31,11 +31,22 @@ static constexpr uint16_t STICK_SETTLE_US    = 60;   // espera entre descartes (
 static constexpr uint16_t STICK_DEADZONE     = 450;  // crudo: zona muerta (el ADC del S3 es ruidoso)
 static constexpr uint32_t STICK_MOUSE_MS     = 25;   // periodo de emision mientras esta desviado
 static constexpr int16_t  STICK_HALFRANGE    = 1800; // crudo aprox del centro al tope (p/ normalizar)
-static constexpr uint8_t  MOUSE_SPEED_DIV    = 10;   // divisor: normalizado(-127..127)/div = px por tick
+static constexpr uint8_t  MOUSE_SPEED_DIV    = 10;   // divisor base (centro): normalizado(-127..127)/div = px por tick
+static constexpr uint16_t MOUSE_ACCEL        = 3;    // aceleracion no-lineal (default): 0=lineal; mayor = extremos mas rapidos (el centro queda igual). Ajustable en vivo por serial +/-.
 static constexpr bool     MOUSE_SWAP_XY      = true;  // stick montado girado 90 -> intercambia X/Y
 static constexpr bool     MOUSE_INVERT_Y     = false; // invertir eje Y vertical (se aplica DESPUES del swap)
 static constexpr bool     MOUSE_INVERT_X     = true;  // invertir eje X horizontal (se aplica DESPUES del swap). Stick medido: derecha estaba invertida.
 static constexpr uint16_t STICK_DISPLAY_DELTA = 12;  // UI: solo redibujar stick si cambia mas que esto
+
+// Curva de aceleracion del stick: px por tick a partir del eje normalizado (-127..127).
+// Cerca del centro ~ n/MOUSE_SPEED_DIV (preciso, igual que antes); en el extremo sube
+// hasta ~(1+MOUSE_ACCEL)*n/MOUSE_SPEED_DIV (rapido, para cruzar pantallas). Tope HID +-127.
+inline int mouseAccel(int n, int accel) {
+  long t2  = (long)n * n * 256 / (127 * 127);          // |n|^2 normalizado a 0..256 (la curva)
+  long g   = 256 + (long)accel * t2;                   // ganancia*256: 256 en el centro -> 256*(1+accel) en el extremo
+  long out = (long)n * g / (256L * MOUSE_SPEED_DIV);
+  return out > 127 ? 127 : (out < -127 ? -127 : (int)out);
+}
 
 // --- Red / hora (M1: WiFi STA + portal cautivo + NTP) ---
 static constexpr char     WIFI_AP_NAME[]   = "HIOS-PAD-setup";  // SSID del portal de config

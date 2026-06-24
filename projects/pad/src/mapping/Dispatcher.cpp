@@ -153,13 +153,7 @@ void Dispatcher::handleStickSw(const InputEvent& e) {
       break;
     case Edge::RELEASE:
       if (m_stickLongDone) break;
-      if (m_tapPending && (e.t_ms - m_tapMs) <= cfg::DOUBLE_TAP_MS) {
-        m_tapPending = false;
-        if (m_mouseOn) enqueueClick(0x02);     // doble -> click derecho
-      } else {
-        m_tapPending = true;
-        m_tapMs = e.t_ms;
-      }
+      if (m_mouseOn) enqueueClick(0x01);       // tap -> click izquierdo INSTANTANEO (sin esperar doble-tap)
       break;
     default:
       break;
@@ -167,10 +161,6 @@ void Dispatcher::handleStickSw(const InputEvent& e) {
 }
 
 void Dispatcher::tick(uint32_t now) {
-  if (m_tapPending && (now - m_tapMs) > cfg::DOUBLE_TAP_MS) {
-    m_tapPending = false;
-    if (m_mouseOn) enqueueClick(0x01);          // tap simple -> click izquierdo
-  }
   // Encoder: el tap simple expira (no hubo 2do) -> abrir menu.
   if (m_encTapPending && (now - m_encTapMs) > cfg::DOUBLE_TAP_MS) {
     m_encTapPending = false;
