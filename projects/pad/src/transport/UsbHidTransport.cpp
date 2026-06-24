@@ -72,3 +72,7 @@ void UsbHidTransport::sendMouse(const MouseAction& m) {
       break;
   }
 }
+
+// Fabrica (ver Transports.h): aisla USBHIDKeyboard.h de BleKeyboard.h.
+#include "Transports.h"
+ITransport* usbHidInstance() { static UsbHidTransport t; return &t; }

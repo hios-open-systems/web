@@ -53,13 +53,22 @@ struct UiSnapshot {
   uint16_t stickY;
   uint8_t  activeLayer; // capa activa
   bool     mouseOn;     // modo mouse del stick activo (toggle por SW del stick)
+  uint8_t  encMode;     // override del encoder por doble-tap: 0=capa,1=Vol,2=Scroll,3=Zoom,4=Pestanas
+  uint8_t  longFlash;   // bitmask: botones cuyo long-press acaba de dispararse (flash de confirmacion)
   // --- estado optimista (lo que el pad cree haber dejado) ---
   bool     micMuted;
   bool     mediaPlay;
   bool     camOff;
   uint8_t  volume;      // 0..100 (estimado)
   uint8_t  transports;  // bits tport::USB/BLE/WIFI
+  bool     wifiOff;     // WiFi apagado por el usuario (long-press boton 5) -> aviso en pantalla
   uint8_t  battery;     // 0..100 (placeholder hasta sumar medicion; 255 = sin dato)
+  // --- feedback real del companion (Fase 1); sentinela = sin dato ---
+  bool     live;        // hay estado fresco del companion (mic/vol son reales)
+  int16_t  cpuTemp;     // C, -1000 = sin dato
+  int16_t  gpuTemp;     // C, -1000 = sin dato
+  uint8_t  cpuLoad;     // 0..100, 255 = sin dato
+  uint8_t  gpuLoad;     // 0..100, 255 = sin dato
 };
 
 // Nombre legible de un input (para Serial / UI).

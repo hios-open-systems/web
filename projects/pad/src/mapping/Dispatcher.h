@@ -22,11 +22,16 @@ public:
   uint8_t activeLayer() const { return m_activeLayer; }
   void    setLayer(uint8_t n);
   bool    mouseOn() const { return m_mouseOn; }
+  uint8_t encMode() const { return m_encOverride; }     // 0=capa, 1=Vol, 2=Scroll, 3=Zoom, 4=Pestanas
+  uint8_t longFlashMask(uint32_t now) const;            // bits de botones en ventana de flash de confirmacion
 
 private:
   void applyLayer(const LayerAction& la);
   void handleStickSw(const InputEvent& e);
   void handleEncSwNav(const InputEvent& e);   // encoder = navegacion (abre menu)
+  void handleFaceButton(const InputEvent& e); // botones 1-5: tap=capa / hold=toggle card
+  void fireResolved(const InputEvent& e);     // resuelve y procesa la accion de la capa
+  void statusToggle(int i);                   // long-press boton i -> toggle del card
   void enqueueClick(uint8_t button);
 
   KeyMap*       m_km = nullptr;
@@ -39,6 +44,13 @@ private:
   bool     m_tapPending = false;
   uint32_t m_tapMs = 0;
 
-  // Navegacion del SW del encoder
+  // Botones de cara: ¿el long-press ya consumio el press? (para no disparar el tap al soltar)
+  bool     m_btnConsumed[5] = {false, false, false, false, false};
+  uint32_t m_longFlashMs[5] = {0, 0, 0, 0, 0};   // millis del ultimo long-press por boton (flash)
+
+  // Navegacion del SW del encoder (tap=menu, doble=cicla modo del encoder, largo=cicla capa)
   bool     m_encLong = false;
+  uint8_t  m_encOverride = 0;       // override del rotar: 0=capa,1=Vol,2=Scroll,3=Zoom,4=Pestanas
+  bool     m_encTapPending = false;
+  uint32_t m_encTapMs = 0;
 };

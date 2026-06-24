@@ -16,12 +16,34 @@ struct OptState {
   uint8_t brightness = 100;   // 0..100 (para futuro WiZ/backlight)
 };
 
+// Estado REAL reportado por el companion (PC) via POST /api/state (Fase 1).
+// Cuando llega fresco, pisa al optimista en la UI; si se queda viejo (> STATE_FRESH_MS)
+// se vuelve al optimista. El pad sigue 100% usable sin companion (local-first).
+struct RealState {
+  bool     micMuted    = false;
+  bool     camOff      = false;
+  bool     mediaPlay   = true;
+  uint8_t  volume      = 0;       // 0..100
+  int16_t  cpuTemp     = -1000;   // C, -1000 = sin dato
+  int16_t  gpuTemp     = -1000;
+  uint8_t  cpuLoad     = 255;     // 0..100, 255 = sin dato
+  uint8_t  gpuLoad     = 255;
+  uint32_t updatedAtMs = 0;       // millis() del ultimo POST aceptado (0 = nunca)
+};
+
 class StateManager {
 public:
   void applyToggle(StateToggle t);     // flip de mic/media/camara
   void setMouse(bool on)   { m_s.mouseOn = on; }
   void bumpVolume(int d);              // clamp 0..100
   void setVolume(uint8_t v) { m_s.volume = v > 100 ? 100 : v; }
+
+  // Re-ancla el optimista al ultimo real conocido: si el companion se cae, el
+  // fallback arranca del ultimo valor bueno en vez de un estimado viejo.
+  void syncFrom(const RealState& r) {
+    m_s.micMuted = r.micMuted; m_s.camOff = r.camOff;
+    m_s.mediaPlay = r.mediaPlay; m_s.volume = r.volume;
+  }
 
   const OptState& get() const { return m_s; }
 

@@ -31,6 +31,8 @@ struct Skin {
   void (*keycap)(const SkinContext&, const UiSnapshot&, uint8_t i, bool on);
   void (*status)(const SkinContext&, const UiSnapshot&);
   void (*stick) (const SkinContext&, const UiSnapshot&);  // puede ser nullptr
+  void (*clock) (const SkinContext&);                     // redibuja SOLO el reloj (nullptr -> full)
+  void (*encoder)(const SkinContext&, const UiSnapshot&); // redibuja la franja del encoder (mouse/stick); nullptr -> full
 };
 
 namespace skins {

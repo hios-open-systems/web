@@ -31,7 +31,7 @@
 #include "storage/DefaultConfig.h"
 #include "storage/Nvs.h"
 #include "transport/TransportRouter.h"
-#include "transport/UsbHidTransport.h"
+#include "transport/Transports.h"
 #include "app/AppState.h"
 #include "app/StateManager.h"
 #include "app/Calibration.h"
@@ -48,7 +48,6 @@ static Dispatcher      dispatcher;
 static StateManager    stateManager;
 static MacroEngine     macroEngine;
 static TransportRouter router;
-static UsbHidTransport usbHid;
 
 static void uiForceRedraw();   // fwd
 
@@ -150,30 +149,40 @@ static void renderUI(const UiSnapshot& s) {
   if (clockChanged) { updateClock(millis()); prevClockMinute = clockMinute; }
 
   if (first || layerChanged || skinChanged) {
-    tft.fillScreen(theme::BG);
+    // Solo limpiar a negro en boot o cambio de skin (layout distinto). En cambio
+    // de CAPA el full() repinta opaco region por region -> sin flash negro.
+    if (first || skinChanged) tft.fillScreen(theme::BG);
     sk.full(ctx, s);
     prev = s; prevLayer = s.activeLayer; prevSkin = skinIdx; first = false;
     return;
   }
 
-  if (clockChanged) { sk.full(ctx, s); prev = s; return; }
+  if (clockChanged) {
+    if (sk.clock) sk.clock(ctx);                  // redibuja SOLO el reloj (sin flash)
+    else { sk.full(ctx, s); prev = s; return; }   // skins sin clock(): full opaco
+  }
 
-  // Botones: solo el keycap que cambio.
+  // Botones: redibuja el keycap si cambio su estado o su flash de long-press.
   for (uint8_t i = 0; i < layout::KC_COUNT; i++) {
     bool on = s.buttons & (1 << i), prevOn = prev.buttons & (1 << i);
-    if (on != prevOn) sk.keycap(ctx, s, i, on);
+    bool fl = s.longFlash & (1 << i), prevFl = prev.longFlash & (1 << i);
+    if (on != prevOn || fl != prevFl) sk.keycap(ctx, s, i, on);
   }
 
   // Estado (mic/cam/media/vol/enlace).
   bool statusChanged = s.micMuted != prev.micMuted || s.camOff != prev.camOff ||
                        s.mediaPlay != prev.mediaPlay || s.volume != prev.volume ||
-                       s.transports != prev.transports;
+                       s.transports != prev.transports || s.live != prev.live ||
+                       s.cpuTemp != prev.cpuTemp || s.gpuTemp != prev.gpuTemp ||
+                       s.cpuLoad != prev.cpuLoad || s.gpuLoad != prev.gpuLoad ||
+                       s.wifiOff != prev.wifiOff;
   if (statusChanged) sk.status(ctx, s);
 
   // Modo mouse cambio -> full (poco frecuente). Solo movimiento del stick y el
   // skin con cursor en vivo -> redibujo solo el cursor.
-  if (s.mouseOn != prev.mouseOn) {
-    sk.full(ctx, s);
+  if (s.mouseOn != prev.mouseOn || s.encMode != prev.encMode) {
+    if (sk.encoder) sk.encoder(ctx, s);   // redibuja SOLO la franja del encoder (sin flash)
+    else sk.full(ctx, s);
   } else if (s.mouseOn && sk.stick) {
     bool stickMoved = (abs((int)s.stickX - (int)prev.stickX) > cfg::STICK_DISPLAY_DELTA) ||
                       (abs((int)s.stickY - (int)prev.stickY) > cfg::STICK_DISPLAY_DELTA);
@@ -237,12 +246,33 @@ static void inputTask(void*) {
     s.stickY      = inputs.stick().y();
     s.activeLayer = dispatcher.activeLayer();
     s.mouseOn     = dispatcher.mouseOn();
-    s.micMuted    = st.micMuted;
-    s.mediaPlay   = st.mediaPlay;
-    s.camOff      = st.camOff;
-    s.volume      = st.volume;
-    s.transports  = (router.activeConnected() ? tport::USB : 0) |
-                    (net::isConnected() ? tport::WIFI : 0);     // estado real
+    s.encMode     = dispatcher.encMode();
+    s.longFlash   = dispatcher.longFlashMask(now);   // flash de confirmacion de long-press
+    // Feedback REAL-first: si el companion mando estado fresco, pisa al optimista;
+    // si no, fallback al optimista (= comportamiento de siempre, sin companion).
+    const bool live = net::hasFreshState(now);
+    if (live) {
+      const RealState& r = net::realState();
+      stateManager.syncFrom(r);                // re-ancla el optimista al ultimo real
+      s.micMuted = r.micMuted;   s.camOff  = r.camOff;
+      s.mediaPlay = r.mediaPlay; s.volume  = r.volume;
+      s.cpuTemp = r.cpuTemp;     s.gpuTemp = r.gpuTemp;
+      s.cpuLoad = r.cpuLoad;     s.gpuLoad = r.gpuLoad;
+    } else {
+      s.micMuted = st.micMuted;   s.camOff  = st.camOff;
+      s.mediaPlay = st.mediaPlay; s.volume  = st.volume;
+      s.cpuTemp = s.gpuTemp = -1000;           // sin dato
+      s.cpuLoad = s.gpuLoad = 255;
+    }
+    s.live        = live;
+    uint8_t tp = 0;                                  // transporte HID activo + WiFi
+    if (router.activeConnected()) {
+      ITransport* ah = router.activeHid();
+      tp |= (ah && ah->id() == TransportId::BLE) ? tport::BLE : tport::USB;
+    }
+    if (net::isConnected()) tp |= tport::WIFI;
+    s.transports  = tp;
+    s.wifiOff     = !net::isWifiEnabled();          // aviso si el usuario apago el WiFi
 
     s.battery     = 255;            // sin medicion aun
     xQueueOverwrite(bus::uiMailbox, &s);
@@ -253,13 +283,21 @@ static void inputTask(void*) {
 
 static void transportTask(void*) {
   Serial.printf("[transportTask] core %d\n", xPortGetCoreID());
-  router.registerHid(&usbHid);
+  ITransport* usbHid = usbHidInstance();
+  ITransport* bleHid = bleHidInstance();
+  router.registerHid(usbHid);
+  router.registerHid(bleHid);
+  usbHid->begin();
+  bleHid->begin();                // arranca advertising BLE ("HIOS PAD")
   router.setActiveHid(TransportId::USB);
-  usbHid.begin();
-  Serial.println(F("[transport] USB HID activo"));
+  Serial.println(F("[transport] USB HID + BLE ('HIOS PAD') activos"));
 
   Action a;
   for (;;) {
+    // Auto-switch: si un host enumero el USB -> USB; si no (desenchufado o solo
+    // alimentacion) -> BLE. Asi "ir wireless" = desenchufar del PC y emparejar.
+    router.setActiveHid(usbHid->isConnected() ? TransportId::USB : TransportId::BLE);
+
     if (xQueueReceive(bus::actionQueue, &a, pdMS_TO_TICKS(20)) == pdTRUE) {
       ITransport* hid = router.activeHid();
       if (a.type == ActionType::TEXT) {
@@ -375,6 +413,8 @@ void setup() {
   delay(300);
   Serial.println();
   Serial.println(F("=== control-deck (ESP32-S3) - capas + macros + UI ==="));
+  Serial.printf("[hw] PSRAM=%u  heap=%u  flash=%u\n",
+                (unsigned)ESP.getPsramSize(), (unsigned)ESP.getFreeHeap(), (unsigned)ESP.getFlashChipSize());
 
   loadDefaults(keymap);
   dispatcher.begin(&keymap);
