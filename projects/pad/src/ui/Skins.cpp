@@ -122,24 +122,22 @@ static void cardsKeycap(const SkinContext& ctx, const UiSnapshot& s, uint8_t i, 
 static void cardsStick(const SkinContext& ctx, const UiSnapshot& s) {
   TFT_eSPI& g = *ctx.tft;
   using namespace layout;
-  const int bs = 26, bx = ENC_S3_X + 8, by = ENC_Y + (ENC_H - bs) / 2;
-  uint16_t cross = theme::blend(theme::DARK, theme::GREEN, 60);
-  g.fillRoundRect(bx + 1, by + 1, bs - 2, bs - 2, 4, theme::DARK);
-  g.drawRoundRect(bx, by, bs, bs, 5, theme::GREEN);
-  g.drawFastHLine(bx + 4, by + bs / 2, bs - 8, cross);
-  g.drawFastVLine(bx + bs / 2, by + 4, bs - 8, cross);
-  const int pad = 4, span = bs - 2 * pad;
-  // Mismo transform que el mouse (SWAP_XY + INVERT_X): el eje horizontal del
-  // stick es stickY (invertido -> X de pantalla); el vertical es stickX (-> Y).
-  int dx = bx + pad + (int)((long)(4095 - s.stickY) * span / 4095);
-  int dy = by + pad + (int)((long)s.stickX * span / 4095);
-  g.fillCircle(dx, dy, 3, theme::GREEN);
+  const uint16_t f3 = theme::blend(theme::BG, theme::GREEN, 40);
+  const uint16_t mc = theme::GREEN;
 
-  // Valores crudos del ADC en vivo (instrumento de diagnostico del stick):
-  // reemplazan la leyenda tap/hold mientras el modo mouse esta activo.
-  uint16_t f3 = theme::blend(theme::BG, theme::GREEN, 40);
+  // Glyph de mouse con flash del boton clickeado (izq/der). La posicion del stick
+  // ya se ve en los crudos X/Y de la derecha, asi que el dibujo es el estado del click.
+  const int mcx = ENC_S3_X + 22, mcy = ENC_Y + ENC_H / 2;
+  g.fillRect(mcx - 11, ENC_Y + 3, 22, ENC_H - 6, f3);    // limpia la zona (borra el flash previo)
+  g.drawRoundRect(mcx - 8, mcy - 12, 16, 24, 7, mc);     // cuerpo
+  g.drawFastVLine(mcx, mcy - 12, 9, mc);                 // division L | R
+  g.drawFastHLine(mcx - 8, mcy - 3, 16, mc);             // linea bajo los botones
+  g.drawFastVLine(mcx, mcy + 1, 4, mc);                  // ruedita
+  if (s.clickFlash == 1) g.fillRect(mcx - 7, mcy - 11, 6, 8, mc);   // click izquierdo
+  if (s.clickFlash == 2) g.fillRect(mcx + 2, mcy - 11, 6, 8, mc);   // click derecho
+
+  // Crudos del ADC del stick (diagnostico en vivo), a la derecha del box.
   const int rx = ENC_S3_X + ENC_S3_W - 12;
-  g.fillRect(rx - 74, ENC_Y + 12, 76, 22, f3);
   g.setTextDatum(TR_DATUM);
   char b[12];
   snprintf(b, sizeof(b), "X:%4u", s.stickX);

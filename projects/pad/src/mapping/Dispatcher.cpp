@@ -178,8 +178,14 @@ uint8_t Dispatcher::longFlashMask(uint32_t now) const {
 }
 
 void Dispatcher::enqueueClick(uint8_t button) {
+  m_lastClickBtn = (button == 0x02) ? 2 : 1;   // para el flash L/R del box del mouse
+  m_lastClickMs  = millis();
   Action a = mouseAction(MouseMode::CLICK, 0, 0, 0, button);
   xQueueSend(bus::actionQueue, &a, 0);
+}
+
+uint8_t Dispatcher::clickFlash(uint32_t now) const {
+  return (now - m_lastClickMs < 220) ? m_lastClickBtn : 0;   // ~220ms de flash
 }
 
 void Dispatcher::setLayer(uint8_t n) {

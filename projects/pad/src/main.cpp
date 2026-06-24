@@ -193,7 +193,7 @@ static void renderUI(const UiSnapshot& s) {
   } else if (s.mouseOn && sk.stick) {
     bool stickMoved = (abs((int)s.stickX - (int)prev.stickX) > cfg::STICK_DISPLAY_DELTA) ||
                       (abs((int)s.stickY - (int)prev.stickY) > cfg::STICK_DISPLAY_DELTA);
-    if (stickMoved) sk.stick(ctx, s);
+    if (stickMoved || s.clickFlash != prev.clickFlash) sk.stick(ctx, s);
   }
 
   prev = s;
@@ -270,6 +270,7 @@ static void inputTask(void*) {
     s.stickY      = inputs.stick().y();
     s.activeLayer = dispatcher.activeLayer();
     s.mouseOn     = dispatcher.mouseOn();
+    s.clickFlash  = dispatcher.clickFlash(now);       // flash L/R en el box del mouse
     s.encMode     = dispatcher.encMode();
     s.longFlash   = dispatcher.longFlashMask(now);   // flash de confirmacion de long-press
     // Feedback REAL-first: si el companion mando estado fresco, pisa al optimista;
