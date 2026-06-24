@@ -9,17 +9,41 @@
 
 namespace menu {
 
+// ---------------------------------------------------------------------------
+//  Menu de UN nivel: el "picker" muestra siempre las capas del grupo actual
+//  sobre los 5 botones fisicos (acceso rapido, sin scrollear). El encoder solo
+//  cambia de grupo (girar) y abre Ajustes (press). Long-press cierra / vuelve.
+//
+//  Grupos (nivel "pagina"): cada capa declara su LayerGroup en DefaultConfig;
+//  aca solo decidimos nombre/color/orden.
+// ---------------------------------------------------------------------------
+struct GroupDef { const char* name; LayerGroup tag; uint16_t color; };
+static const GroupDef GROUPS[] = {
+  {"Trabajo",    LayerGroup::TRABAJO,    theme::CYAN},
+  {"Multimedia", LayerGroup::MULTIMEDIA, theme::MAGENTA},
+  {"Web",        LayerGroup::WEB,        theme::BLUE},
+  {"Llamadas",   LayerGroup::LLAMADAS,   theme::ROSE},
+  {"Sistema",    LayerGroup::SISTEMA,    theme::GREEN},
+};
+static const int G_COUNT = sizeof(GROUPS) / sizeof(GROUPS[0]);
+
+enum { MODE_PICKER = 0, MODE_SETTINGS = 1 };
+
 static KeyMap* s_km = nullptr;
-static bool    s_open = false;
-static int     s_sel = 0;
+static bool    s_open     = false;
+static int     s_mode     = MODE_PICKER;
+static int     s_groupSel = 0;     // grupo/pagina actual (0..G_COUNT-1)
+static int     s_setCur   = 0;     // cursor del carrusel de Ajustes
+static int     s_sel      = 0;     // indice REAL: capa elegida o item de ajuste
 static bool    s_editItem = false;
-static bool    s_dirty = true;
+static bool    s_dirty    = true;
 static bool    s_needFull = true;
 
-static TFT_eSprite* s_spr = nullptr;        // banda del carrusel (sprite, sin parpadeo)
+static TFT_eSprite* s_spr = nullptr;        // banda del carrusel de Ajustes (sin parpadeo)
 static const int CARW = 480, CARH = 126, CARY = 82;
 static const int STEP = 152;                 // separacion entre cards
 
+// --- indices de los items de ajuste (despues de las capas) ---
 static int idxBright() { return s_km ? s_km->count() : 0; }
 static int idxTheme()  { return idxBright() + 1; }
 static int idxAccent() { return idxBright() + 2; }
@@ -28,17 +52,40 @@ static int idxDim()    { return idxBright() + 4; }
 static int idxClock()  { return idxBright() + 5; }
 static int idxWifi()   { return idxBright() + 6; }
 static int idxCal()    { return idxBright() + 7; }
+static const int N_SETTINGS = 8;
+static int settingsItem(int cur) { return idxBright() + cur; }
 
-static int itemCountFull() { return (s_km ? s_km->count() : 0) + 8; }
+// Capas que pertenecen a un grupo, en orden de capa. Devuelve cuantas (<=max).
+static int groupLayers(LayerGroup tag, uint8_t* out, int maxOut) {
+  int k = 0;
+  if (!s_km) return 0;
+  for (uint8_t i = 0; i < s_km->count() && k < maxOut; i++)
+    if (s_km->layer(i).group == tag) out[k++] = i;
+  return k;
+}
+static int groupIndexOf(LayerGroup g) {
+  for (int i = 0; i < G_COUNT; i++) if (GROUPS[i].tag == g) return i;
+  return 0;
+}
+
+// Paginas del picker = grupos de capas + 1 pagina "Ajustes" al final (visible
+// girando el encoder; se abre con press). s_groupSel == G_COUNT => Ajustes.
+static int  pageCount()  { return G_COUNT + 1; }
+static bool ajustesPage(){ return s_groupSel == G_COUNT; }
+static const char* pageName()  { return ajustesPage() ? "Ajustes" : GROUPS[s_groupSel].name; }
+static uint16_t    pageColor() { return ajustesPage() ? theme::GREEN : GROUPS[s_groupSel].color; }
 
 void init(KeyMap* km) { s_km = km; }
 
 void open(uint8_t currentLayer) {
-  s_open = true; s_sel = currentLayer; s_editItem = false;
+  s_open = true; s_mode = MODE_PICKER; s_editItem = false; s_setCur = 0;
+  s_sel = currentLayer;
+  s_groupSel = (s_km && currentLayer < s_km->count())
+             ? groupIndexOf(s_km->layer(currentLayer).group) : 0;
   s_dirty = true; s_needFull = true;
 }
-void close()  {
-  s_open = false; s_editItem = false;
+void close() {
+  s_open = false; s_editItem = false; s_mode = MODE_PICKER;
   // Libera el sprite del carrusel (~60KB). Si queda alocado todo el tiempo,
   // el heap steady-state (con BLE+WiFi+companion) se agota -> crash. Se recrea
   // lazy al reabrir el menu (render()).
@@ -46,6 +93,17 @@ void close()  {
 }
 bool isOpen() { return s_open; }
 
+bool inLayerPicker() { return s_open && s_mode == MODE_PICKER && !ajustesPage(); }
+
+MenuResult pickButton(uint8_t i) {
+  if (!inLayerPicker()) return MenuResult::NONE;
+  uint8_t lys[5]; int k = groupLayers(GROUPS[s_groupSel].tag, lys, 5);
+  if ((int)i >= k) return MenuResult::NONE;
+  s_sel = lys[i];
+  return MenuResult::SWITCH_LAYER;
+}
+
+// ---------------------------------------------------------------------------
 static void editSelected(int delta) {
   if (s_sel == idxBright()) {
     int b = (int)appstate::brightness + delta * 5;
@@ -82,29 +140,41 @@ static void editSelected(int delta) {
 
 void turn(int delta) {
   if (!s_open) return;
-  s_dirty = true;
-  if (s_editItem) {
-    editSelected(delta);
+  if (s_mode == MODE_PICKER) {                     // girar = cambiar de pagina (grupos + Ajustes)
+    s_groupSel = (s_groupSel + delta + pageCount()) % pageCount();
+    s_dirty = true;
     return;
   }
-  int n = itemCountFull();
-  s_sel += delta;
-  if (s_sel < 0) s_sel = n - 1;
-  if (s_sel >= n) s_sel = 0;
+  // Ajustes
+  if (s_editItem) { editSelected(delta); s_dirty = true; return; }
+  s_setCur = (s_setCur + delta + N_SETTINGS) % N_SETTINGS;
+  s_sel = settingsItem(s_setCur);
+  s_dirty = true;
 }
 
 MenuResult press() {
   if (!s_open) return MenuResult::NONE;
+  if (s_mode == MODE_PICKER) {                     // press = abrir Ajustes
+    s_mode = MODE_SETTINGS; s_setCur = 0; s_sel = settingsItem(0);
+    s_editItem = false; s_needFull = true; s_dirty = true;
+    return MenuResult::NONE;
+  }
+  // Ajustes
   s_dirty = true;
   if (s_editItem) { s_editItem = false; return MenuResult::NONE; }
-  if (s_sel < idxBright())  return MenuResult::SWITCH_LAYER;
   if (s_sel == idxCal())  return MenuResult::CALIBRATE;
   if (s_sel == idxWifi()) return MenuResult::WIFI_SETUP;
   s_editItem = true;
   return MenuResult::NONE;
 }
 
-void back() { close(); }
+void back() {
+  if (s_mode == MODE_SETTINGS) {                   // Ajustes -> picker
+    s_mode = MODE_PICKER; s_editItem = false; s_needFull = true; s_dirty = true;
+  } else {
+    close();                                       // picker -> cerrar
+  }
+}
 uint8_t selectedLayer() { return (uint8_t)s_sel; }
 
 // ---------------------------------------------------------------------------
@@ -118,6 +188,9 @@ static uint16_t itemAccent(int i) {
   if (i == idxClock()) return theme::ORANGE;
   if (i == idxWifi()) return theme::CYAN;
   return theme::GREEN;
+}
+static uint16_t uiAccent() {
+  return s_mode == MODE_SETTINGS ? itemAccent(s_sel) : pageColor();
 }
 
 static const char* itemTitle(int i) {
@@ -136,15 +209,12 @@ static const char* dimLabel(uint8_t dim) {
   static const char* labels[] = {"off", "15s", "30s", "60s", "120s"};
   return labels[dim < 5 ? dim : 2];
 }
-
 static void timeLabel(uint16_t minute, char* buf, size_t len) {
   snprintf(buf, len, "%02u:%02u", minute / 60, minute % 60);
 }
 
 static const char* itemMeta(int i, char* buf, size_t len) {
-  if (i < idxBright()) {
-    snprintf(buf, len, "capa %d/%d", i + 1, idxBright());
-  } else if (i == idxBright()) {
+  if (i == idxBright()) {
     snprintf(buf, len, "%u%%", appstate::brightness);
   } else if (i == idxTheme()) {
     snprintf(buf, len, "%s", appstate::prefs.themeMode == theme::MODE_LIGHT ? "claro" : "oscuro");
@@ -164,18 +234,9 @@ static const char* itemMeta(int i, char* buf, size_t len) {
   return buf;
 }
 
-// Iconos del menu: grilla comun ~±13px, centrados. Como el fondo (fill del card)
-// es conocido, la "mordida" de la luna con bg es controlada (no artefactos).
-static void drawMenuIcon(int cx, int cy, int i, uint16_t col, uint16_t bg, bool seld) {
-  if (i < idxBright()) {                         // capa: well numerado
-    int r = seld ? 16 : 13;
-    s_spr->fillCircle(cx, cy, r, theme::blend(bg, col, 60));
-    s_spr->drawCircle(cx, cy, r, col);
-    s_spr->setTextDatum(MC_DATUM);
-    s_spr->setTextColor(col, theme::blend(bg, col, 60));
-    s_spr->drawNumber(i + 1, cx, cy + 1, seld ? 4 : 2);
-    return;
-  }
+// Iconos del carrusel de Ajustes. Como el fondo (fill del card) es conocido, la
+// "mordida" de la luna con bg es controlada (no artefactos).
+static void drawMenuIcon(int cx, int cy, int i, uint16_t col, uint16_t bg) {
   if (i == idxBright()) {                         // brillo: sol
     s_spr->fillCircle(cx, cy, 6, col);
     for (uint8_t a = 0; a < 8; a++) {
@@ -248,9 +309,8 @@ static void drawCard(int sx, int i, bool seld) {
     s_spr->drawRoundRect(x + 1, y + 1, w - 2, h - 2, 9, theme::blend(accent, theme::FG, 55));
     s_spr->fillRoundRect(x + 14, y + 9, w - 28, 4, 2, accent);
   }
-
   char meta[16];
-  drawMenuIcon(sx, y + (seld ? 40 : 26), i, accent, fill, seld);
+  drawMenuIcon(sx, y + (seld ? 40 : 26), i, accent, fill);
   uikit::fitText(*s_spr, itemTitle(i), sx, y + h - (seld ? 30 : 26), w - 16,
                  seld ? theme::FG : theme::SOFT, fill, seld ? 4 : 2);
   s_spr->setTextDatum(MC_DATUM);
@@ -258,15 +318,82 @@ static void drawCard(int sx, int i, bool seld) {
   s_spr->drawString(itemMeta(i, meta, sizeof(meta)), sx, y + h - 11, 1);
 }
 
-static void renderCarousel() {
+static void renderSettingsCarousel() {
   s_spr->fillSprite(theme::BG);
-  int n = itemCountFull();
-  for (int i = 0; i < n; i++) {
-    int sx = CARW / 2 + (i - s_sel) * STEP;
+  for (int c = 0; c < N_SETTINGS; c++) {
+    int sx = CARW / 2 + (c - s_setCur) * STEP;
     if (sx < -100 || sx > CARW + 100) continue;
-    drawCard(sx, i, i == s_sel);
+    drawCard(sx, settingsItem(c), c == s_setCur);
   }
   s_spr->pushSprite(0, CARY);
+}
+
+// Picker: 5 keycaps = 5 botones fisicos. El que tiene capa muestra
+// numero+nombre+color; los vacios quedan apagados.
+static void renderPicker(TFT_eSPI& tft) {
+  tft.fillRect(0, 74, 480, 142, theme::BG);
+  uint8_t lys[5]; int k = groupLayers(GROUPS[s_groupSel].tag, lys, 5);
+  const int N = 5, gap = 8;
+  const int cw = (480 - gap * (N + 1)) / N;        // ~83px
+  const int y = 82, ch = 118;
+  for (int i = 0; i < N; i++) {
+    int x = gap + i * (cw + gap);
+    bool occ = i < k;
+    uint16_t accent = occ ? s_km->layer(lys[i]).color : theme::EDGE;
+    uint16_t fill   = occ ? theme::CARD : theme::DARK;
+    tft.fillRoundRect(x, y, cw, ch, 10, fill);
+    tft.drawRoundRect(x, y, cw, ch, 10, accent);
+    if (occ) tft.drawRoundRect(x + 1, y + 1, cw - 2, ch - 2, 9, theme::blend(accent, theme::FG, 50));
+    tft.setTextDatum(MC_DATUM);
+    tft.setTextColor(occ ? accent : theme::DIM, fill);
+    tft.drawNumber(i + 1, x + cw / 2, y + 34, 6);  // numero del boton fisico
+    if (occ) {
+      uikit::fitText(tft, s_km->layer(lys[i]).name, x + cw / 2, y + ch - 26, cw - 8,
+                     theme::FG, fill, 2);
+      tft.fillRoundRect(x + 10, y + ch - 12, cw - 20, 5, 2, accent);
+    } else {
+      tft.setTextColor(theme::DIM, fill);
+      tft.drawString("--", x + cw / 2, y + ch - 26, 2);
+    }
+  }
+  tft.setTextDatum(MC_DATUM);                       // caption
+  tft.setTextColor(theme::SOFT, theme::BG);
+  tft.drawString("apreta un boton para saltar a la capa", 240, 208, 1);
+}
+
+// Pagina "Ajustes" del picker: una tarjeta que LISTA lo que hay adentro (para
+// que se vea que nada se perdio) y se abre con encoder-press.
+static void renderAjustesPage(TFT_eSPI& tft) {
+  tft.fillRect(0, 74, 480, 142, theme::BG);
+  const int x = 54, y = 82, w = 372, h = 120;
+  tft.fillRoundRect(x, y, w, h, 12, theme::CARD);
+  tft.drawRoundRect(x, y, w, h, 12, theme::GREEN);
+  tft.drawRoundRect(x + 1, y + 1, w - 2, h - 2, 11, theme::blend(theme::GREEN, theme::FG, 50));
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(theme::FG, theme::CARD);
+  tft.drawString("Ajustes", 240, y + 26, 4);
+  tft.setTextColor(theme::SOFT, theme::CARD);
+  tft.drawString("Brillo  Tema  Color  Skin  Dimmer", 240, y + 56, 2);
+  tft.drawString("Hora   WiFi   Calibrar", 240, y + 78, 2);
+  tft.setTextColor(theme::DIM, theme::CARD);
+  tft.drawString("apreta el encoder para abrir", 240, y + 102, 1);
+}
+
+static void drawHeader(TFT_eSPI& tft) {
+  tft.fillRect(0, 0, 480, 70, theme::PANEL);
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(theme::SOFT, theme::PANEL);
+  tft.drawString("CONTROL CENTER", 240, 16, 1);
+  tft.setTextColor(theme::FG, theme::PANEL);
+  if (s_mode == MODE_PICKER) {
+    tft.drawString(pageName(), 240, 44, 4);
+    char p[8]; snprintf(p, sizeof(p), "%d/%d", s_groupSel + 1, pageCount());
+    tft.setTextDatum(MR_DATUM);
+    tft.setTextColor(pageColor(), theme::PANEL);
+    tft.drawString(p, 470, 14, 2);
+  } else {
+    tft.drawString("Ajustes", 240, 44, 4);
+  }
 }
 
 static void drawHint(TFT_eSPI& tft) {
@@ -277,9 +404,12 @@ static void drawHint(TFT_eSPI& tft) {
   tft.fillRoundRect(310, 220, 92, 22, 11, bg);
   tft.setTextDatum(MC_DATUM);
   tft.setTextColor(theme::SOFT, bg);
-  tft.drawString(s_editItem ? "ajustar" : "mover", 124, 231, 1);
-  tft.drawString(s_editItem ? "guardar" : "elegir", 240, 231, 1);
-  tft.drawString("salir", 356, 231, 1);
+  const char *a, *b, *c;
+  if (s_mode == MODE_PICKER) { a = "grupo"; b = ajustesPage() ? "abrir" : "ajustes"; c = "salir"; }
+  else { a = s_editItem ? "ajustar" : "mover"; b = s_editItem ? "guardar" : "elegir"; c = "volver"; }
+  tft.drawString(a, 124, 231, 1);
+  tft.drawString(b, 240, 231, 1);
+  tft.drawString(c, 356, 231, 1);
 }
 
 static void drawEditor(TFT_eSPI& tft) {
@@ -300,6 +430,12 @@ static void drawEditor(TFT_eSPI& tft) {
   tft.drawString(b, 445, by + 11, 2);
 }
 
+static void renderBody(TFT_eSPI& tft) {
+  if (s_mode == MODE_SETTINGS) { renderSettingsCarousel(); return; }
+  if (ajustesPage()) renderAjustesPage(tft);
+  else               renderPicker(tft);
+}
+
 void render(TFT_eSPI& tft) {
   if (!s_km) return;
   if (!s_spr) {                         // crear el sprite del carrusel (lazy)
@@ -315,14 +451,9 @@ void render(TFT_eSPI& tft) {
 
   if (s_needFull) {
     tft.fillScreen(theme::BG);
-    tft.fillRect(0, 0, 480, 70, theme::PANEL);
-    tft.fillRect(0, 68, 480, 4, itemAccent(s_sel));
-    tft.setTextDatum(MC_DATUM);
-    tft.setTextColor(theme::SOFT, theme::PANEL);
-    tft.drawString("CONTROL CENTER", 240, 20, 1);
-    tft.setTextColor(theme::FG, theme::PANEL);
-    tft.drawString("Elegir capa o ajuste", 240, 43, 4);
-    renderCarousel();
+    drawHeader(tft);
+    tft.fillRect(0, 68, 480, 4, uiAccent());
+    renderBody(tft);
     drawHint(tft);
     drawEditor(tft);
     s_needFull = false; s_dirty = false;
@@ -330,8 +461,9 @@ void render(TFT_eSPI& tft) {
   }
   if (!s_dirty) return;
   s_dirty = false;
-  tft.fillRect(0, 68, 480, 4, itemAccent(s_sel));
-  renderCarousel();      // sprite -> sin parpadeo
+  drawHeader(tft);
+  tft.fillRect(0, 68, 480, 4, uiAccent());
+  renderBody(tft);
   drawHint(tft);
   drawEditor(tft);
 }

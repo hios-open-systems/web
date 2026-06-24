@@ -60,28 +60,35 @@ public:
   }
 };
 
-// Sink en modo MENU: el encoder maneja el menu (girar/elegir/cerrar).
+// Sink en modo MENU: el encoder navega (girar/entrar/subir) y, en el "picker"
+// de un grupo de capas, los 5 botones fisicos eligen capa directamente.
 class MenuSink : public InputSink {
 public:
   uint32_t lastInput = 0;
   bool     longConsumed = false;
   void emit(const InputEvent& e) override {
+    appstate::lastInputMs = e.t_ms;
+    lastInput = e.t_ms;
     if (e.id == InputId::ENC_ROT && e.edge == Edge::ROTATE) {
-      appstate::lastInputMs = e.t_ms;
       menu::turn(e.v1 > 0 ? +1 : -1);
-      lastInput = e.t_ms;
     } else if (e.id == InputId::ENC_SW) {
-      appstate::lastInputMs = e.t_ms;
       if (e.edge == Edge::PRESS) longConsumed = false;
-      else if (e.edge == Edge::LONG_PRESS) { longConsumed = true; menu::back(); appstate::mode = AppMode::NORMAL; uiForceRedraw(); }
-      else if (e.edge == Edge::RELEASE && !longConsumed) {
-        MenuResult r = menu::press();
-        if (r == MenuResult::SWITCH_LAYER) { dispatcher.setLayer(menu::selectedLayer()); menu::close(); appstate::mode = AppMode::NORMAL; uiForceRedraw(); }
-        else if (r == MenuResult::CALIBRATE) { menu::close(); appstate::mode = AppMode::CALIBRATING; }
-        else if (r == MenuResult::WIFI_SETUP) { menu::close(); net::requestPortal(); appstate::mode = AppMode::WIFI; }
+      else if (e.edge == Edge::LONG_PRESS) {        // sube un nivel; en nivel 1 cierra
+        longConsumed = true; menu::back();
+        if (!menu::isOpen()) { appstate::mode = AppMode::NORMAL; uiForceRedraw(); }
+      } else if (e.edge == Edge::RELEASE && !longConsumed) {
+        applyResult(menu::press());
       }
-      lastInput = e.t_ms;
+    } else if (e.edge == Edge::PRESS && menu::inLayerPicker() &&
+               (int)e.id <= (int)InputId::BTN_5) {  // BTN_1..BTN_5 -> elegir capa
+      applyResult(menu::pickButton((uint8_t)e.id - (uint8_t)InputId::BTN_1));
     }
+  }
+private:
+  void applyResult(MenuResult r) {
+    if (r == MenuResult::SWITCH_LAYER) { dispatcher.setLayer(menu::selectedLayer()); menu::close(); appstate::mode = AppMode::NORMAL; uiForceRedraw(); }
+    else if (r == MenuResult::CALIBRATE) { menu::close(); appstate::mode = AppMode::CALIBRATING; }
+    else if (r == MenuResult::WIFI_SETUP) { menu::close(); net::requestPortal(); appstate::mode = AppMode::WIFI; }
   }
 };
 
