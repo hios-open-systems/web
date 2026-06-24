@@ -199,6 +199,23 @@ static void renderUI(const UiSnapshot& s) {
   prev = s;
 }
 
+// Lee la bateria (2S por divisor -> ADC) y devuelve 0..100, o 255 si esta
+// desactivada (BATTERY_ENABLED=false). Muestrea cada BAT_SAMPLE_MS y cachea.
+static uint8_t readBatteryPct(uint32_t now) {
+  if (!cfg::BATTERY_ENABLED) return 255;
+  static uint32_t lastMs = 0;
+  static uint8_t  cached = 255;
+  if (lastMs != 0 && (now - lastMs) < cfg::BAT_SAMPLE_MS) return cached;
+  lastMs = now;
+  uint32_t mv = 0;
+  for (int i = 0; i < 8; i++) mv += analogReadMilliVolts(cfg::BAT_ADC_PIN);
+  mv /= 8;
+  uint32_t vbat = mv * (cfg::BAT_R1_K + cfg::BAT_R2_K) / cfg::BAT_R2_K;   // deshace el divisor
+  long pct = (long)(vbat - cfg::BAT_EMPTY_MV) * 100 / (cfg::BAT_FULL_MV - cfg::BAT_EMPTY_MV);
+  cached = (uint8_t)(pct < 0 ? 0 : pct > 100 ? 100 : pct);
+  return cached;
+}
+
 // ============================================================================
 //  Tareas
 // ============================================================================
@@ -281,7 +298,7 @@ static void inputTask(void*) {
     s.transports  = tp;
     s.wifiOff     = !net::isWifiEnabled();          // aviso si el usuario apago el WiFi
 
-    s.battery     = 255;            // sin medicion aun
+    s.battery     = readBatteryPct(now);            // 255 = sin medicion (BATTERY_ENABLED=false)
     xQueueOverwrite(bus::uiMailbox, &s);
 
     vTaskDelay(pdMS_TO_TICKS(2));
