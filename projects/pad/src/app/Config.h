@@ -26,15 +26,15 @@ static constexpr uint8_t  ENC_REPS_MAX   = 12;  // tope de repeticiones por even
 
 // --- Stick como mouse (M2) ---
 static constexpr uint8_t  STICK_SAMPLES      = 4;    // promedio de lecturas ADC por update (anti-ruido)
-static constexpr uint8_t  STICK_SETTLE_READS = 4;    // lecturas de descarte por canal (anti-crosstalk del S/H)
-static constexpr uint16_t STICK_SETTLE_US    = 60;   // espera entre descartes (us) para asentar el sample-and-hold
+static constexpr uint8_t  STICK_SETTLE_READS = 8;    // lecturas de descarte por canal (anti-crosstalk del S/H)
+static constexpr uint16_t STICK_SETTLE_US    = 60;   // espera entre descartes (us)
 static constexpr uint16_t STICK_DEADZONE     = 450;  // crudo: zona muerta (el ADC del S3 es ruidoso)
 static constexpr uint32_t STICK_MOUSE_MS     = 25;   // periodo de emision mientras esta desviado
 static constexpr int16_t  STICK_HALFRANGE    = 1800; // crudo aprox del centro al tope (p/ normalizar)
 static constexpr uint8_t  MOUSE_SPEED_DIV    = 10;   // divisor: normalizado(-127..127)/div = px por tick
 static constexpr bool     MOUSE_SWAP_XY      = true;  // stick montado girado 90 -> intercambia X/Y
 static constexpr bool     MOUSE_INVERT_Y     = false; // invertir eje Y vertical (se aplica DESPUES del swap)
-static constexpr bool     MOUSE_INVERT_X     = false; // invertir eje X horizontal (se aplica DESPUES del swap)
+static constexpr bool     MOUSE_INVERT_X     = true;  // invertir eje X horizontal (se aplica DESPUES del swap). Stick medido: derecha estaba invertida.
 static constexpr uint16_t STICK_DISPLAY_DELTA = 12;  // UI: solo redibujar stick si cambia mas que esto
 
 // --- Red / hora (M1: WiFi STA + portal cautivo + NTP) ---
@@ -44,6 +44,10 @@ static constexpr char     NTP_TZ[]         = "<-03>3";          // Argentina UTC
 static constexpr char     NTP_SERVER[]     = "pool.ntp.org";
 static constexpr uint32_t WIFI_CONNECT_MS  = 12000;             // timeout de conexion STA -> portal
 static constexpr uint32_t NTP_RESYNC_MS    = 3600000UL;         // re-sincronizar hora cada 1h
+
+// --- Feedback real (Fase 1: companion -> POST /api/state) ---
+static constexpr uint32_t STATE_FRESH_MS   = 4000;             // POST mas viejo que esto -> "sin companion" (vuelve a optimista)
+static constexpr char     API_TOKEN[]      = "";               // "" = abierto en LAN; pone un token para exigir el header X-Pad-Token
 
 // --- Backlight TFT (PWM por LEDC, API core 2.x) ---
 static constexpr uint8_t  BL_CANAL  = 0;     // canal LEDC

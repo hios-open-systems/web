@@ -1,6 +1,7 @@
 #include "Menu.h"
 #include <Arduino.h>
 #include <math.h>
+#include <esp_heap_caps.h>
 #include "../app/Theme.h"
 #include "../app/AppState.h"
 #include "UiKit.h"
@@ -36,7 +37,13 @@ void open(uint8_t currentLayer) {
   s_open = true; s_sel = currentLayer; s_editItem = false;
   s_dirty = true; s_needFull = true;
 }
-void close()  { s_open = false; s_editItem = false; }
+void close()  {
+  s_open = false; s_editItem = false;
+  // Libera el sprite del carrusel (~60KB). Si queda alocado todo el tiempo,
+  // el heap steady-state (con BLE+WiFi+companion) se agota -> crash. Se recrea
+  // lazy al reabrir el menu (render()).
+  if (s_spr) { s_spr->deleteSprite(); delete s_spr; s_spr = nullptr; }
+}
 bool isOpen() { return s_open; }
 
 static void editSelected(int delta) {
@@ -65,7 +72,7 @@ static void editSelected(int delta) {
     if (d > 4) d = 0;
     appstate::prefs.dimTimeout = (uint8_t)d;
   } else if (s_sel == idxClock()) {
-    int m = (int)appstate::prefs.clockMinute + delta * 5;
+    int m = (int)appstate::prefs.clockMinute + delta;   // ajuste fino (±1 min)
     while (m < 0) m += 24 * 60;
     while (m >= 24 * 60) m -= 24 * 60;
     appstate::prefs.clockMinute = (uint16_t)m;
@@ -299,7 +306,11 @@ void render(TFT_eSPI& tft) {
     s_spr = new TFT_eSprite(&tft);
     s_spr->setTextFont(1);                // gfxFont=NULL: el ctor de TFT_eSprite no lo inicializa (heap basura -> crash)
     s_spr->setColorDepth(8);
-    s_spr->createSprite(CARW, CARH);
+    void* buf = s_spr->createSprite(CARW, CARH);
+    Serial.printf("[menu] carrusel sprite %s  heap=%u  maxblk=%u  need=%u\n",
+                  buf ? "OK" : "FALLO", (unsigned)ESP.getFreeHeap(),
+                  (unsigned)heap_caps_get_largest_free_block(MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT),
+                  (unsigned)(CARW * CARH));
   }
 
   if (s_needFull) {

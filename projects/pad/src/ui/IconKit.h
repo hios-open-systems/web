@@ -25,7 +25,8 @@ enum class Glyph : uint8_t {
   APP, DESKTOP, LEFT, RIGHT,
   SWATCH_R, SWATCH_G, SWATCH_B, SWATCH_W, POWER,
   MIC, CAMERA, SCREEN, HAND, SPEAKER,
-  DIAL, POINTER, LINK
+  DIAL, POINTER, LINK,
+  RELOAD, PLUS, BOOKMARK
 };
 
 // --- helpers de trazo (2px) ---
@@ -93,6 +94,11 @@ inline Glyph glyphFor(const char* label) {
   if (!strcmp(label, "Pantalla"))   return Glyph::SCREEN;
   if (!strcmp(label, "Mano"))       return Glyph::HAND;
   if (!strcmp(label, "Altavoz"))    return Glyph::SPEAKER;
+  if (!strcmp(label, "Atras"))      return Glyph::LEFT;
+  if (!strcmp(label, "Adelante"))   return Glyph::RIGHT;
+  if (!strcmp(label, "Recargar"))   return Glyph::RELOAD;
+  if (!strcmp(label, "Nueva tab"))  return Glyph::PLUS;
+  if (!strcmp(label, "Marcadores")) return Glyph::BOOKMARK;
   return Glyph::GENERIC;
 }
 
@@ -251,6 +257,21 @@ void icon(G& g, Glyph gl, int cx, int cy, uint16_t col) {
       g.drawRoundRect(cx - 9, cy - 5, 18, 10, 5, col);
       vln(g, cx - 2, cy - 5, 10, col);
       vln(g, cx + 2, cy - 5, 10, col);
+      break;
+    case Glyph::RELOAD:                              // refresco: arco ~300 + punta
+      strokeArc(g, cx, cy, 9, 0.7f, 5.7f, col);
+      g.fillTriangle(cx + 9, cy - 8, cx + 1, cy - 7, cx + 8, cy, col);
+      break;
+    case Glyph::PLUS:                               // nueva pestana
+      vln(g, cx - 1, cy - 9, 19, col);
+      hln(g, cx - 9, cy - 1, 19, col);
+      break;
+    case Glyph::BOOKMARK:                           // cinta de marcador (V abajo)
+      vln(g, cx - 7, cy - 10, 17, col);
+      vln(g, cx + 6, cy - 10, 17, col);
+      hln(g, cx - 7, cy - 10, 15, col);
+      ln(g, cx - 7, cy + 8, cx, cy + 2, col);
+      ln(g, cx + 7, cy + 8, cx, cy + 2, col);
       break;
     default:
       g.drawCircle(cx, cy, 9, col);

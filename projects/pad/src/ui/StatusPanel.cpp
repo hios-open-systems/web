@@ -59,7 +59,8 @@ static bool changed(const UiSnapshot& s) {
   if (!s_havePrev) return true;
   return s.micMuted != s_prev.micMuted || s.mediaPlay != s_prev.mediaPlay ||
          s.volume != s_prev.volume || s.transports != s_prev.transports ||
-         s.camOff != s_prev.camOff || s.battery != s_prev.battery;
+         s.camOff != s_prev.camOff || s.battery != s_prev.battery ||
+         s.wifiOff != s_prev.wifiOff;
 }
 
 void render(TFT_eSPI& tft, const UiSnapshot& s, uint8_t layerCount) {
@@ -114,7 +115,9 @@ void render(TFT_eSPI& tft, const UiSnapshot& s, uint8_t layerCount) {
   uint16_t linkC = wifi ? theme::CYAN : (ble ? theme::MAGENTA : (usb ? theme::GREEN : theme::DIM));
   tile(4, (usb || ble || wifi) ? linkC : theme::EDGE, theme::DARK);
   iconkit::icon(*sp, iconkit::Glyph::LINK, tileCx(4), ICON_CY, linkC);
-  tileLabel(4, wifi ? "WiFi" : (ble ? "BLE" : (usb ? "USB" : "off")), linkC, theme::DARK);
+  if (s.wifiOff) slash(tileCx(4), ICON_CY);   // WiFi apagado por el usuario (aviso)
+  tileLabel(4, s.wifiOff ? "WiFi off" : (wifi ? "WiFi" : (ble ? "BLE" : (usb ? "USB" : "off"))),
+            s.wifiOff ? theme::ORANGE : linkC, theme::DARK);
 
   sp->pushSprite(PX, PY);
 }

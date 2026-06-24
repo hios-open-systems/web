@@ -117,4 +117,17 @@ void loadDefaults(KeyMap& km) {
                    mediaAction(MediaUsage::VOL_DOWN), "Volumen");
   km.bind(c, InputId::ENC_SW, Action{}, "Menu");
   km.bind(c, InputId::STICK_SW, mouseToggleAction(), "Mouse");
+
+  // --- Capa 6: Navegador (azul) -> atajos del navegador (back/forward/tabs/marcadores) ---
+  // Atajos estandar de Chrome/Firefox/Edge. El stick (Mouse) sirve para clickear links.
+  int n = km.addLayer("Navegador", theme::BLUE);
+  km.bind(n, InputId::BTN_1, keyCode(kmod::ALT, KEY_LEFT_ARROW), "Atras");       // Alt+Left
+  km.bind(n, InputId::BTN_2, keyCode(kmod::ALT, KEY_RIGHT_ARROW), "Adelante");   // Alt+Right
+  km.bind(n, InputId::BTN_3, keyAction(kmod::CTRL, 'r'), "Recargar");            // Ctrl+R
+  km.bind(n, InputId::BTN_4, keyAction(kmod::CTRL, 't'), "Nueva tab");           // Ctrl+T
+  km.bind(n, InputId::BTN_5, keyAction(kmod::CTRL | kmod::SHIFT, 'o'), "Marcadores"); // Ctrl+Shift+O
+  km.bindRotate(n, keyCode(kmod::CTRL, KEY_PAGE_DOWN),
+                   keyCode(kmod::CTRL, KEY_PAGE_UP), "Pestanas");                // cambiar pestana
+  km.bind(n, InputId::ENC_SW, Action{}, "Menu");
+  km.bind(n, InputId::STICK_SW, mouseToggleAction(), "Mouse");
 }

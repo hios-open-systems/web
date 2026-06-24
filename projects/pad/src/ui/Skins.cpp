@@ -18,6 +18,10 @@ using iconkit::Glyph;
 
 static InputId btnId(uint8_t i) { return (InputId)((int)InputId::BTN_1 + i); }
 
+// encoder() no-op: skins que no muestran estado de mouse no redibujan nada al
+// togglear el mouse (en vez de un full() que parpadea).
+static void noEncoder(const SkinContext&, const UiSnapshot&) {}
+
 // Texto a la izquierda con recorte por ancho (no desborda su zona).
 static void clip(TFT_eSPI& g, const char* s, int x, int y, int maxw, uint8_t font,
                  uint16_t fg, uint16_t bg) {
@@ -96,10 +100,11 @@ static void cardsKeycap(const SkinContext& ctx, const UiSnapshot& s, uint8_t i, 
   const Layer& L = km.layer(s.activeLayer);
   const char* label = km.label(s.activeLayer, btnId(i));
   const int x = layout::kcX(i), y = layout::KC_Y, w = layout::KC_W, h = layout::KC_H;
-  uint16_t fill   = on ? L.color : theme::CARD;
-  uint16_t border = on ? theme::FG : theme::blend(L.color, theme::EDGE, 165);
-  uint16_t ic     = on ? theme::BG : L.color;
-  uint16_t tc     = on ? theme::BG : theme::FG;
+  const bool flash = s.longFlash & (1 << i);            // flash de confirmacion del long-press
+  uint16_t fill   = flash ? theme::FG : (on ? L.color : theme::CARD);
+  uint16_t border = flash ? theme::FG : (on ? theme::FG : theme::blend(L.color, theme::EDGE, 165));
+  uint16_t ic     = flash ? theme::BG : (on ? theme::BG : L.color);
+  uint16_t tc     = flash ? theme::BG : (on ? theme::BG : theme::FG);
   g.fillRoundRect(x + 3, y + 5, w, h, 10, theme::BG);
   g.fillRoundRect(x, y, w, h, 10, fill);
   g.drawRoundRect(x, y, w, h, 10, border);
@@ -124,9 +129,24 @@ static void cardsStick(const SkinContext& ctx, const UiSnapshot& s) {
   g.drawFastHLine(bx + 4, by + bs / 2, bs - 8, cross);
   g.drawFastVLine(bx + bs / 2, by + 4, bs - 8, cross);
   const int pad = 4, span = bs - 2 * pad;
-  int dx = bx + pad + (int)((long)s.stickX * span / 4095);
-  int dy = by + pad + (int)((long)s.stickY * span / 4095);
+  // Mismo transform que el mouse (SWAP_XY + INVERT_X): el eje horizontal del
+  // stick es stickY (invertido -> X de pantalla); el vertical es stickX (-> Y).
+  int dx = bx + pad + (int)((long)(4095 - s.stickY) * span / 4095);
+  int dy = by + pad + (int)((long)s.stickX * span / 4095);
   g.fillCircle(dx, dy, 3, theme::GREEN);
+
+  // Valores crudos del ADC en vivo (instrumento de diagnostico del stick):
+  // reemplazan la leyenda tap/hold mientras el modo mouse esta activo.
+  uint16_t f3 = theme::blend(theme::BG, theme::GREEN, 40);
+  const int rx = ENC_S3_X + ENC_S3_W - 12;
+  g.fillRect(rx - 74, ENC_Y + 12, 76, 22, f3);
+  g.setTextDatum(TR_DATUM);
+  char b[12];
+  snprintf(b, sizeof(b), "X:%4u", s.stickX);
+  g.setTextColor(theme::SOFT, f3); g.drawString(b, rx, ENC_Y + 13, 1);
+  snprintf(b, sizeof(b), "Y:%4u", s.stickY);
+  g.setTextColor(theme::SOFT, f3); g.drawString(b, rx, ENC_Y + 23, 1);
+  g.setTextDatum(TL_DATUM);
 }
 
 static void cardsEncStrip(const SkinContext& ctx, const UiSnapshot& s) {
@@ -136,11 +156,15 @@ static void cardsEncStrip(const SkinContext& ctx, const UiSnapshot& s) {
   g.fillRect(0, ENC_Y - 2, W, ENC_H + 4, theme::BG);
   g.fillRoundRect(ENC_S1_X, ENC_Y, ENC_S1_W, ENC_H, 8, theme::PANEL);
   g.drawRoundRect(ENC_S1_X, ENC_Y, ENC_S1_W, ENC_H, 8, theme::EDGE);
-  iconkit::icon(g, Glyph::DIAL, ENC_S1_X + 18, ENC_Y + ENC_H / 2, L.color);
+  static const char* ENC_MODE[] = {"", "Volumen", "Scroll", "Zoom", "Pestanas"};   // override (doble-tap)
+  const bool ovr = (s.encMode != 0 && s.encMode < 5);
+  const char* encLab  = ovr ? ENC_MODE[s.encMode] : km.label(s.activeLayer, InputId::ENC_ROT);
+  const uint16_t encC = ovr ? theme::CYAN : L.color;
+  iconkit::icon(g, Glyph::DIAL, ENC_S1_X + 18, ENC_Y + ENC_H / 2, encC);
   g.setTextDatum(TL_DATUM);
   g.setTextColor(theme::DIM, theme::PANEL);
-  g.drawString("ENCODER", ENC_S1_X + 36, ENC_Y + 6, 1);
-  clip(g, km.label(s.activeLayer, InputId::ENC_ROT), ENC_S1_X + 36, ENC_Y + 16, ENC_S1_W - 44, 2, L.color, theme::PANEL);
+  g.drawString(ovr ? "ENCODER 2x" : "ENCODER", ENC_S1_X + 36, ENC_Y + 6, 1);
+  clip(g, encLab, ENC_S1_X + 36, ENC_Y + 16, ENC_S1_W - 44, 2, encC, theme::PANEL);
 
   uint16_t f2 = theme::blend(theme::BG, L.color, 42);
   g.fillRoundRect(ENC_S2_X, ENC_Y, ENC_S2_W, ENC_H, 8, f2);
@@ -157,10 +181,8 @@ static void cardsEncStrip(const SkinContext& ctx, const UiSnapshot& s) {
   const int rx = ENC_S3_X + ENC_S3_W - 12;
   g.setTextDatum(TR_DATUM);
   if (mo) {
-    cardsStick(ctx, s);
     g.setTextColor(theme::GREEN, f3); g.drawString("MOUSE ON", rx, ENC_Y + 4, 1);
-    g.setTextColor(theme::SOFT, f3);  g.drawString("tap=clic  2x=der", rx, ENC_Y + 14, 1);
-    g.setTextColor(theme::DIM, f3);   g.drawString("hold=salir", rx, ENC_Y + 24, 1);
+    cardsStick(ctx, s);   // cursor + valores crudos X/Y en vivo (debajo de MOUSE ON)
   } else {
     iconkit::icon(g, Glyph::POINTER, ENC_S3_X + 18, ENC_Y + ENC_H / 2, theme::DIM);
     g.setTextColor(theme::DIM, f3);  g.drawString("STICK", rx, ENC_Y + 6, 1);
@@ -190,8 +212,9 @@ static void minKeycap(const SkinContext& ctx, const UiSnapshot& s, uint8_t i, bo
   const char* label = km.label(s.activeLayer, btnId(i));
   const int cx = 48 + i * 96, cy = 118;
   g.fillRect(cx - 30, cy - 30, 60, 60, theme::BG);   // limpia el anillo+badge
-  uint16_t ring = on ? L.color : theme::blend(theme::CARD, L.color, 36);
-  uint16_t ic   = on ? theme::BG : L.color;
+  const bool flash = s.longFlash & (1 << i);
+  uint16_t ring = flash ? theme::FG : (on ? L.color : theme::blend(theme::CARD, L.color, 36));
+  uint16_t ic   = flash ? theme::BG : (on ? theme::BG : L.color);
   g.fillCircle(cx, cy, 26, ring);
   if (!on) g.drawCircle(cx, cy, 26, L.color);
   iconkit::icon(g, iconkit::glyphFor(label), cx, cy, ic);
@@ -257,9 +280,10 @@ static void watchKeycap(const SkinContext& ctx, const UiSnapshot& s, uint8_t i, 
   const Layer& L = km.layer(s.activeLayer);
   const char* label = km.label(s.activeLayer, btnId(i));
   const int x = 14 + i * 94, y = 212, w = 86, h = 96;
-  uint16_t fill = on ? L.color : theme::CARD;
-  uint16_t ic = on ? theme::BG : L.color;
-  uint16_t tc = on ? theme::BG : theme::SOFT;
+  const bool flash = s.longFlash & (1 << i);
+  uint16_t fill = flash ? theme::FG : (on ? L.color : theme::CARD);
+  uint16_t ic = flash ? theme::BG : (on ? theme::BG : L.color);
+  uint16_t tc = flash ? theme::BG : (on ? theme::BG : theme::SOFT);
   g.fillRoundRect(x, y, w, h, 10, fill);
   g.drawRoundRect(x, y, w, h, 10, on ? theme::FG : theme::blend(L.color, theme::EDGE, 155));
   g.setTextDatum(TL_DATUM);
@@ -292,12 +316,131 @@ static void watchFull(const SkinContext& ctx, const UiSnapshot& s) {
 }
 
 // ============================================================================
+//  SKIN 3 - SENSORES (telemetria real del companion: temps + carga CPU/GPU)
+//  Con companion conectado muestra valores reales; sin el, "s/d" + pill "sin PC".
+// ============================================================================
+static void sensorTile(TFT_eSPI& g, int x, int y, int w, int h,
+                       const char* label, bool isTemp, int16_t tempC, uint8_t load) {
+  g.fillRoundRect(x, y, w, h, 10, theme::CARD);
+  g.drawRoundRect(x, y, w, h, 10, theme::EDGE);
+  g.setTextDatum(TL_DATUM);
+  g.setTextColor(theme::DIM, theme::CARD);
+  g.drawString(label, x + 14, y + 8, 2);
+
+  bool noData = isTemp ? (tempC <= -1000) : (load == 255);
+  char buf[8];
+  uint16_t col = theme::DIM;
+  if (!noData && isTemp) {
+    snprintf(buf, sizeof(buf), "%d", tempC);
+    col = tempC >= 80 ? theme::RED : (tempC >= 65 ? theme::YELLOW : theme::GREEN);
+  } else if (!noData) {
+    snprintf(buf, sizeof(buf), "%u", load);
+    col = load >= 90 ? theme::RED : (load >= 70 ? theme::YELLOW : theme::CYAN);
+  }
+  g.setTextDatum(ML_DATUM);
+  if (noData) {
+    g.setTextColor(theme::DIM, theme::CARD);
+    g.drawString("s/d", x + 14, y + 50, 4);
+  } else {
+    g.setTextColor(col, theme::CARD);
+    g.drawString(buf, x + 14, y + 48, 6);                 // numero grande (font6)
+    g.setTextColor(theme::SOFT, theme::CARD);
+    g.drawString(isTemp ? "C" : "%", x + 14 + g.textWidth(buf, 6) + 6, y + 50, 4);
+  }
+  if (!isTemp && !noData) {                                // barra de carga
+    int bx = x + 14, bw = w - 28, by = y + h - 13, bh = 6;
+    g.fillRoundRect(bx, by, bw, bh, 3, theme::DARK);
+    g.fillRoundRect(bx, by, (int)load * bw / 100, bh, 3, col);
+  }
+}
+
+static void sensorPanel(const SkinContext& ctx, const UiSnapshot& s) {
+  TFT_eSPI& g = *ctx.tft;
+  const int m = 8, gap = 12, cw = (layout::W - 2 * m - gap) / 2, ch = 88;
+  const int x2 = m + cw + gap, y1 = 52, y2 = y1 + ch + gap;
+  sensorTile(g, m,  y1, cw, ch, "CPU  temp",  true,  s.cpuTemp, 0);
+  sensorTile(g, x2, y1, cw, ch, "GPU  temp",  true,  s.gpuTemp, 0);
+  sensorTile(g, m,  y2, cw, ch, "CPU  carga", false, 0, s.cpuLoad);
+  sensorTile(g, x2, y2, cw, ch, "GPU  carga", false, 0, s.gpuLoad);
+  uint16_t pc = s.live ? theme::GREEN : theme::DIM;        // pill LIVE / sin PC
+  g.fillRoundRect(196, 14, 88, 22, 11, theme::blend(theme::BG, pc, 50));
+  g.drawRoundRect(196, 14, 88, 22, 11, pc);
+  g.setTextDatum(MC_DATUM);
+  g.setTextColor(pc, theme::blend(theme::BG, pc, 50));
+  g.drawString(s.live ? "LIVE" : "sin PC", 240, 25, 2);
+}
+
+static void sensorStrip(const SkinContext& ctx, const UiSnapshot& s) {
+  TFT_eSPI& g = *ctx.tft;
+  g.fillRect(0, 248, layout::W, layout::H - 248, theme::BG);
+  statusStrip(g, s, 272);
+}
+
+static void sensoresKeycap(const SkinContext&, const UiSnapshot&, uint8_t, bool) {}  // vista sin teclas
+
+static void sensoresStatus(const SkinContext& ctx, const UiSnapshot& s) {
+  sensorPanel(ctx, s);
+  sensorStrip(ctx, s);
+}
+
+static void sensoresFull(const SkinContext& ctx, const UiSnapshot& s) {
+  TFT_eSPI& g = *ctx.tft;
+  g.fillScreen(theme::BG);
+  g.setTextDatum(TL_DATUM);
+  g.setTextColor(theme::CYAN, theme::BG);
+  g.drawString("SENSORES", 16, 14, 4);
+  g.setTextDatum(TR_DATUM);
+  g.setTextColor(theme::FG, theme::BG);
+  g.drawString(ctx.clock, 464, 14, 4);
+  g.setTextDatum(TL_DATUM);
+  sensorPanel(ctx, s);
+  sensorStrip(ctx, s);
+}
+
+// ============================================================================
+//  clock() por skin: redibuja SOLO el area del reloj (opaco) -> sin el flash
+//  del redibujo completo cada minuto.
+// ============================================================================
+static void cardsClock(const SkinContext& ctx) {
+  TFT_eSPI& g = *ctx.tft;
+  g.fillRect(390, 14, 82, 29, theme::PANEL);
+  g.setTextDatum(TR_DATUM);
+  g.setTextColor(theme::FG, theme::PANEL);
+  g.drawString(ctx.clock, 468, 15, 4);
+  g.setTextDatum(TL_DATUM);
+}
+static void minClock(const SkinContext& ctx) {
+  TFT_eSPI& g = *ctx.tft;
+  g.fillRect(386, 16, 82, 30, theme::BG);
+  g.setTextDatum(TR_DATUM);
+  g.setTextColor(theme::FG, theme::BG);
+  g.drawString(ctx.clock, 464, 18, 4);
+  g.setTextDatum(TL_DATUM);
+}
+static void watchClock(const SkinContext& ctx) {
+  TFT_eSPI& g = *ctx.tft;
+  g.fillRect(148, 52, 184, 56, theme::BG);          // reloj central grande (font6)
+  g.setTextDatum(MC_DATUM);
+  g.setTextColor(theme::FG, theme::BG);
+  g.drawString(ctx.clock, 240, 78, 6);
+}
+static void sensoresClock(const SkinContext& ctx) {
+  TFT_eSPI& g = *ctx.tft;
+  g.fillRect(386, 12, 82, 30, theme::BG);
+  g.setTextDatum(TR_DATUM);
+  g.setTextColor(theme::FG, theme::BG);
+  g.drawString(ctx.clock, 464, 14, 4);
+  g.setTextDatum(TL_DATUM);
+}
+
+// ============================================================================
 //  Registro
 // ============================================================================
 static const Skin SKINS[] = {
-  { "Cards",   cardsFull, cardsKeycap, cardsStatus, cardsStick },
-  { "Minimal", minFull,   minKeycap,   minStatus,   nullptr },
-  { "Watch",   watchFull, watchKeycap, watchStatus, nullptr },
+  { "Cards",    cardsFull,    cardsKeycap,    cardsStatus,    cardsStick, cardsClock,    cardsEncStrip },
+  { "Minimal",  minFull,      minKeycap,      minStatus,      nullptr,    minClock,      noEncoder },
+  { "Watch",    watchFull,    watchKeycap,    watchStatus,    nullptr,    watchClock,    noEncoder },
+  { "Sensores", sensoresFull, sensoresKeycap, sensoresStatus, nullptr,    sensoresClock, noEncoder },
 };
 
 namespace skins {

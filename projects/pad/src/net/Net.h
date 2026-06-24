@@ -17,6 +17,8 @@
 #pragma once
 #include <stdint.h>
 
+struct RealState;          // definido en app/StateManager.h
+
 namespace net {
 void begin();              // arranca STA (si hay creds); si no, queda OFFLINE (no portal)
 void tick();               // servicia la maquina de estados (netTask)
@@ -24,9 +26,17 @@ void tick();               // servicia la maquina de estados (netTask)
 void requestPortal();      // pide levantar el portal de config (lo atiende netTask)
 void stopPortal();         // baja el portal/AP y vuelve a OFFLINE
 
+void toggleWifi();         // prende/apaga el radio WiFi (lo atiende netTask). Ahorra energia.
+bool isWifiEnabled();      // false si el usuario apago el WiFi
+
 bool isConnected();        // STA conectado a la red
 bool portalActive();       // modo portal de configuracion (AP)
 bool timeSynced();         // NTP sincronizado al menos una vez
+
+// Feedback real del companion (POST /api/state). hasFreshState() = llego algo
+// reciente (< STATE_FRESH_MS); realState() = ultimo estado aceptado.
+bool             hasFreshState(uint32_t nowMs);
+const RealState& realState();
 
 const char* ip();          // IP actual (STA o AP)
 const char* apName();      // SSID del portal de config
