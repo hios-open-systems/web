@@ -52,7 +52,8 @@ static int idxDim()    { return idxBright() + 4; }
 static int idxClock()  { return idxBright() + 5; }
 static int idxWifi()   { return idxBright() + 6; }
 static int idxCal()    { return idxBright() + 7; }
-static const int N_SETTINGS = 8;
+static int idxPrec()   { return idxBright() + 8; }
+static const int N_SETTINGS = 9;
 static int settingsItem(int cur) { return idxBright() + cur; }
 
 // Capas que pertenecen a un grupo, en orden de capa. Devuelve cuantas (<=max).
@@ -75,7 +76,7 @@ static int groupIndexOf(LayerGroup g) {
 struct SettingsPage { const char* name; uint16_t color; int start; int count; const char* items; };
 static const SettingsPage SET_PAGES[] = {
   { "Apariencia", theme::MAGENTA, 0, 5, "Brillo  Tema  Color  Skin  Dimmer" },
-  { "Sistema",    theme::GREEN,   5, 3, "Hora   WiFi   Calibrar" },
+  { "Sistema",    theme::GREEN,   5, 4, "Hora  WiFi  Calibrar  Precision" },
 };
 static const int SET_PAGE_COUNT = sizeof(SET_PAGES) / sizeof(SET_PAGES[0]);
 
@@ -145,6 +146,11 @@ static void editSelected(int delta) {
     while (m >= 24 * 60) m -= 24 * 60;
     appstate::prefs.clockMinute = (uint16_t)m;
     appstate::prefs.clockSetAtMs = millis();
+  } else if (s_sel == idxPrec()) {
+    int p = (int)appstate::prefs.stickPrecision + delta;
+    if (p < 1) p = 1;
+    if (p > 7) p = 7;
+    appstate::prefs.stickPrecision = (uint8_t)p;
   }
 }
 
@@ -202,6 +208,7 @@ static uint16_t itemAccent(int i) {
   if (i == idxDim()) return theme::CYAN;
   if (i == idxClock()) return theme::ORANGE;
   if (i == idxWifi()) return theme::CYAN;
+  if (i == idxPrec()) return theme::ROSE;
   return theme::GREEN;
 }
 static uint16_t uiAccent() {
@@ -217,6 +224,7 @@ static const char* itemTitle(int i) {
   if (i == idxDim()) return "Dimmer";
   if (i == idxClock()) return "Hora";
   if (i == idxWifi()) return "WiFi";
+  if (i == idxPrec()) return "Precision";
   return "Calibrar";
 }
 
@@ -243,6 +251,8 @@ static const char* itemMeta(int i, char* buf, size_t len) {
     timeLabel(appstate::prefs.clockMinute, buf, len);
   } else if (i == idxWifi()) {
     snprintf(buf, len, "setup");
+  } else if (i == idxPrec()) {
+    snprintf(buf, len, "%u/7", appstate::prefs.stickPrecision);
   } else {
     snprintf(buf, len, "stick");
   }
@@ -304,6 +314,13 @@ static void drawMenuIcon(int cx, int cy, int i, uint16_t col, uint16_t bg) {
         float t = a * 0.0174533f;
         s_spr->drawPixel(cx + (int)(r * cosf(t)), by + (int)(r * sinf(t)), col);
       }
+    return;
+  }
+  if (i == idxPrec()) {                            // precision: barras crecientes (nivel)
+    for (int b = 0; b < 4; b++) {
+      int bh = 5 + b * 5;
+      s_spr->fillRect(cx - 15 + b * 9, cy + 9 - bh, 6, bh, col);
+    }
     return;
   }
   s_spr->drawCircle(cx, cy, 13, col);             // calibrar: target
@@ -446,6 +463,7 @@ static void drawEditor(TFT_eSPI& tft) {
   if (s_sel == idxBright()) pct = appstate::brightness;
   else if (s_sel == idxDim()) pct = appstate::prefs.dimTimeout * 25;
   else if (s_sel == idxClock()) pct = (uint8_t)((appstate::prefs.clockMinute * 100UL) / (24UL * 60UL));
+  else if (s_sel == idxPrec()) pct = (uint8_t)(appstate::prefs.stickPrecision * 100 / 7);
   uikit::progress(tft, {bx, by, bw, bh}, pct, accent, theme::DARK);
   tft.drawRoundRect(bx, by, bw, bh, 11, theme::EDGE);
   char b[16]; itemMeta(s_sel, b, sizeof(b));
