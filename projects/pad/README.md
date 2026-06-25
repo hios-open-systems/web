@@ -79,3 +79,7 @@ Directorios: `actions/` (modelo de `Action`), `mapping/` (`KeyMap`/`Dispatcher`)
 ## Estado
 
 USB + BLE HID, WiFi+portal+NTP, stick→mouse, capas+menú, feedback real y mute global por companion: **funcionando**. Batería (medición 2S por divisor→GPIO9) **lista pero apagada** (`cfg::BATTERY_ENABLED`, ver WIRING.md). Pendiente/futuro: config por JSON, control desde el celu (PWA), pantalla remota.
+
+## Créditos
+
+La perilla impresa del joystick analógico sale de [este modelo en Thingiverse](https://www.thingiverse.com/thing:6189483). Gracias a su autor por publicarlo.
