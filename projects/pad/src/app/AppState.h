@@ -17,6 +17,7 @@ struct UiPrefs {
   uint8_t  brightness;     // 10..100
   uint8_t  dimTimeout;     // index: off, 15s, 30s, 60s, 120s
   uint8_t  skinIndex;      // skin del dashboard (ver ui/Skin.h)
+  uint8_t  stickPrecision; // 1..7 (4=default): sensibilidad del stick->mouse, pasos de 20%
   uint16_t clockMinute;    // minutos desde 00:00
   uint32_t clockSetAtMs;   // millis() cuando se ajusto clockMinute
 };

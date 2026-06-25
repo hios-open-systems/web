@@ -66,6 +66,17 @@ void AnalogStick::update(uint32_t now, InputSink& sink) {
     nx = normAxis(m_fx, m_centerX);
     ny = normAxis(m_fy, m_centerY);
   }
+  // Nivel de precision del stick (1..7, 4=default): escala la sensibilidad en pasos de
+  // 20% (nivel 1=40% ... nivel 7=160%). Es una pre-escala del valor antes del HID.
+  int lvl = appstate::prefs.stickPrecision; if (lvl < 1 || lvl > 7) lvl = 4;
+  if (lvl != 4) {
+    int pp = 40 + (lvl - 1) * 20;
+    nx = (int16_t)((long)nx * pp / 100);
+    ny = (int16_t)((long)ny * pp / 100);
+    if (nx >  127) nx =  127; else if (nx < -127) nx = -127;
+    if (ny >  127) ny =  127; else if (ny < -127) ny = -127;
+  }
+
   bool active = (nx != 0 || ny != 0);
 
 #ifdef STICK_DEBUG
