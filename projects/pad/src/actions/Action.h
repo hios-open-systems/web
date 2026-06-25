@@ -27,7 +27,8 @@ enum class ActionType : uint8_t {
 // Comandos que el pad le pide al companion (viajan en la respuesta a POST
 // /api/state; el companion los ejecuta a nivel OS). NONE = sin comando.
 enum class CompanionCmd : uint8_t { NONE = 0, MIC_TOGGLE, CAM_TOGGLE,
-                                    WIZ_TOGGLE, WIZ_BRIGHT_UP, WIZ_BRIGHT_DOWN, WIZ_WARMER, WIZ_COOLER };
+                                    WIZ_TOGGLE, WIZ_BRIGHT_UP, WIZ_BRIGHT_DOWN, WIZ_WARMER, WIZ_COOLER,
+                                    WIZ_ROOM_NEXT, WIZ_LIGHT_NEXT };
 
 // Bits de modificadores de teclado.
 namespace kmod { enum : uint8_t { CTRL = 1, SHIFT = 2, ALT = 4, GUI = 8 }; }

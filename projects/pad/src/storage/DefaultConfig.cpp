@@ -105,11 +105,12 @@ void loadDefaults(KeyMap& km) {
 
   // --- Capa: WiZ (amarillo) -> control de luces WiZ por UDP via companion ---
   int wz = km.addLayer("WiZ", theme::YELLOW, LayerGroup::SISTEMA);
-  km.bind(wz, InputId::BTN_1, netCmdAction(CompanionCmd::WIZ_TOGGLE),      "On/Off");
-  km.bind(wz, InputId::BTN_2, netCmdAction(CompanionCmd::WIZ_BRIGHT_UP),   "Brillo +");
-  km.bind(wz, InputId::BTN_3, netCmdAction(CompanionCmd::WIZ_BRIGHT_DOWN), "Brillo -");
-  km.bind(wz, InputId::BTN_4, netCmdAction(CompanionCmd::WIZ_WARMER),      "Calido");
-  km.bind(wz, InputId::BTN_5, netCmdAction(CompanionCmd::WIZ_COOLER),      "Frio");
+  km.bind(wz, InputId::BTN_1, netCmdAction(CompanionCmd::WIZ_TOGGLE),     "On/Off");
+  km.bind(wz, InputId::BTN_2, netCmdAction(CompanionCmd::WIZ_ROOM_NEXT),  "Cuarto");
+  km.bind(wz, InputId::BTN_3, netCmdAction(CompanionCmd::WIZ_WARMER),     "Calido");
+  km.bind(wz, InputId::BTN_4, netCmdAction(CompanionCmd::WIZ_COOLER),     "Frio");
+  km.bind(wz, InputId::BTN_5, netCmdAction(CompanionCmd::WIZ_LIGHT_NEXT), "Luz");
+  km.bindRotate(wz, netCmdAction(CompanionCmd::WIZ_BRIGHT_UP), netCmdAction(CompanionCmd::WIZ_BRIGHT_DOWN), "Brillo");
   km.bind(wz, InputId::ENC_SW, Action{}, "Menu");
   km.bind(wz, InputId::STICK_SW, mouseToggleAction(), "Mouse");
 
