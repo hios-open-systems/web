@@ -2,6 +2,8 @@ import React from 'react';
 import { setRequestLocale } from 'next-intl/server';
 import { ProjectsIndex } from '@/components/projects/ProjectsIndex';
 
+export const runtime = 'edge';
+
 const locales = ['en', 'es', 'de', 'it'];
 
 export function generateStaticParams() {
