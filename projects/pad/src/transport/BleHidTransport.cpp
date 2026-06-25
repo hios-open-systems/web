@@ -93,10 +93,11 @@ static uint16_t consumerUsage(MediaUsage u) {
 // ----------------------------------------------------------------------------
 #if CONFIG_BT_NIMBLE_EXT_ADV
 // Advertising conmutable EN RUNTIME (sin reflashear): 0=legacy, 1=extended, 2=dual.
-// Se elige por serial en tick() (l/e/d). Default EXTENDED: el MT7921 de Linux solo
-// descubre extendido; el celu/Windows modernos tambien lo toman.
+// Se elige por serial en tick() (l/e/d). Default DUAL: instancia legacy para que
+// Windows lo descubra (su stack NO escanea advertising extendido) + instancia
+// extendida para el MT7921 de Linux. Asi empareja en ambos sin tocar nada.
 static NimBLEHIDDevice* s_hidDev  = nullptr;
-static uint8_t          s_advMode = 1;
+static uint8_t          s_advMode = 2;
 
 static void fillAdv(NimBLEExtAdvertisement& a, bool legacy) {
   a.setLegacyAdvertising(legacy);
