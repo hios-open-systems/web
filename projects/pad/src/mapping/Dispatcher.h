@@ -43,7 +43,8 @@ private:
 
   // Gestos del SW del stick
   bool     m_stickLongDone = false;
-  bool     m_tapPending = false;
+  bool     m_stickDblConsumed = false;   // el press fue el 2do tap de un doble -> su release no encola nada
+  bool     m_tapPending = false;         // tap simple esperando la ventana de doble-tap (puede volverse derecho)
   uint32_t m_tapMs = 0;
   uint8_t  m_lastClickBtn = 0;       // 1=izq, 2=der (para el flash en el box del mouse)
   uint32_t m_lastClickMs = 0;

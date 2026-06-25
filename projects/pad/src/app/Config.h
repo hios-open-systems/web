@@ -14,6 +14,7 @@ static constexpr char DEVICE_NAME[] = "control-deck";
 static constexpr uint32_t DEBOUNCE_MS      = 25;   // antirrebote de pulsadores
 static constexpr uint32_t LONGPRESS_MS     = 600;  // umbral de pulsacion larga
 static constexpr uint32_t DOUBLE_TAP_MS    = 220;  // ventana de doble-tap (y delay del tap simple)
+static constexpr uint32_t STICK_DBLTAP_MS  = 140;  // ventana corta de doble-tap del stick (tap=izq / doble=der); el izq se retrasa esto
 static constexpr uint32_t CAL_COMBO_MS     = 1500; // mantener ENC_SW+STICK_SW juntos -> calibrar stick
 static constexpr uint32_t MENU_TIMEOUT_MS  = 5000; // cerrar el menu solo tras inactividad
 static constexpr uint32_t STICK_PERIOD_MS  = 500;  // reporte periodico del stick
