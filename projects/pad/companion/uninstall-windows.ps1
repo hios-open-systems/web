@@ -1,6 +1,6 @@
 # ============================================================================
-#  uninstall-windows.ps1 — Quita el autostart del pad-companion en Windows.
-#  Detiene y borra la Tarea Programada y elimina la copia pad-companion.exe.
+#  uninstall-windows.ps1 — Quita el autostart nativo del pad-companion.
+#  Detiene/borra la Tarea Programada y elimina la carpeta nativa de Windows.
 #
 #  Uso:  powershell -ExecutionPolicy Bypass -File .\uninstall-windows.ps1
 # ============================================================================
@@ -8,11 +8,10 @@
 $ErrorActionPreference = 'SilentlyContinue'
 
 $TaskName = 'HIOS-Pad-Companion'
-$Here     = Split-Path -Parent $MyInvocation.MyCommand.Path
-$PadExe   = Join-Path $Here 'pad-companion.exe'
+$Dest     = Join-Path $env:LOCALAPPDATA 'pad-companion'
 
 Stop-ScheduledTask       -TaskName $TaskName
 Unregister-ScheduledTask -TaskName $TaskName -Confirm:$false
-Remove-Item $PadExe -Force
+Remove-Item $Dest -Recurse -Force
 
-Write-Host "Removido '$TaskName' y pad-companion.exe." -ForegroundColor Green
+Write-Host "Removido '$TaskName' y la carpeta $Dest." -ForegroundColor Green
