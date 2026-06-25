@@ -156,20 +156,32 @@ void Dispatcher::handleEncSwNav(const InputEvent& e) {
 }
 
 // --- Gestos del SW del stick (tap=click izq / doble=click der / largo=toggle) ---
+// El izquierdo NO es instantaneo: el tap simple espera STICK_DBLTAP_MS por un 2do
+// tap. Si llega -> click derecho; si la ventana expira (en tick) -> click izquierdo.
 void Dispatcher::handleStickSw(const InputEvent& e) {
   switch (e.edge) {
     case Edge::PRESS:
       m_stickLongDone = false;
+      // 2do tap dentro de la ventana corta -> click derecho; consume este gesto.
+      if (m_mouseOn && m_tapPending && (e.t_ms - m_tapMs) <= cfg::STICK_DBLTAP_MS) {
+        enqueueClick(0x02);                    // doble -> click derecho
+        m_tapPending = false;
+        m_stickDblConsumed = true;
+      } else {
+        m_stickDblConsumed = false;
+      }
       break;
     case Edge::LONG_PRESS:
       m_mouseOn = !m_mouseOn;
       if (m_state) m_state->setMouse(m_mouseOn);
       m_stickLongDone = true;
+      m_tapPending = false;                     // cancela cualquier tap pendiente al togglear
       Serial.printf("[mouse] %s (long)\n", m_mouseOn ? "ON" : "OFF");
       break;
     case Edge::RELEASE:
       if (m_stickLongDone) break;
-      if (m_mouseOn) enqueueClick(0x01);       // tap -> click izquierdo INSTANTANEO (sin esperar doble-tap)
+      if (m_stickDblConsumed) { m_stickDblConsumed = false; break; }  // release del 2do tap: no encolar
+      if (m_mouseOn) { m_tapPending = true; m_tapMs = e.t_ms; }       // tap simple: esperar la ventana
       break;
     default:
       break;
@@ -182,6 +194,11 @@ void Dispatcher::tick(uint32_t now) {
     m_encTapPending = false;
     menu::open(m_activeLayer);
     appstate::mode = AppMode::MENU;
+  }
+  // Stick: el tap simple expira (no hubo 2do) -> click izquierdo.
+  if (m_tapPending && (now - m_tapMs) > cfg::STICK_DBLTAP_MS) {
+    m_tapPending = false;
+    if (m_mouseOn) enqueueClick(0x01);
   }
 }
 
