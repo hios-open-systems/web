@@ -33,6 +33,7 @@ struct Skin {
   void (*stick) (const SkinContext&, const UiSnapshot&);  // puede ser nullptr
   void (*clock) (const SkinContext&);                     // redibuja SOLO el reloj (nullptr -> full)
   void (*encoder)(const SkinContext&, const UiSnapshot&); // redibuja la franja del encoder (mouse/stick); nullptr -> full
+  void (*encDial)(const SkinContext&, const UiSnapshot&); // redibuja SOLO el dial (girar/apretar el encoder); nullptr -> encoder
 };
 
 namespace skins {
