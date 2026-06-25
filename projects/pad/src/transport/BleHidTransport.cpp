@@ -191,7 +191,7 @@ bool BleHidTransport::begin() {
   adv->addServiceUUID(m_hid->hidService()->getUUID());
   adv->start();
 #endif
-  Serial.printf("[ble] adv 'HIOS PAD'  addr=%s  (serial: l=legacy e=ext d=dual s=status)\n",
+  Serial.printf("[ble] adv 'HIOS PAD'  addr=%s  (serial: l=legacy e=ext d=dual s=status c=clear-bonds)\n",
                 NimBLEDevice::getAddress().toString().c_str());
   return true;
 }
@@ -204,6 +204,11 @@ void BleHidTransport::tick() {
     else if (c == 'e') startAdvMode(1);
     else if (c == 'd') startAdvMode(2);
     else if (c == 's') Serial.printf("[ble] mode=%u conn=%d  stick accel=%d\n", s_advMode, (int)m_connected, appstate::mouseAccel);
+    else if (c == 'c') {  // borra los bonds del ESP: ante desync de claves con un host, limpiar aca + 'bluetoothctl remove' del lado del host y re-emparejar
+      NimBLEDevice::deleteAllBonds();
+      Serial.println("[ble] bonds borrados -> re-emparejar host (remove + pair)");
+      startAdvMode(s_advMode);
+    }
     else if (c == '+') { appstate::mouseAccel++; Serial.printf("[stick] accel=%d\n", appstate::mouseAccel); }
     else if (c == '-') { if (appstate::mouseAccel > 0) appstate::mouseAccel--; Serial.printf("[stick] accel=%d\n", appstate::mouseAccel); }
   }
@@ -264,11 +269,12 @@ void BleHidTransport::sendMouse(const MouseAction& m) {
       Serial.printf("[mouse] click btn=%u\n", btn);
       uint8_t down[4] = { btn, 0, 0, 0 };
       uint8_t up[4] = { 0, 0, 0, 0 };
-      // Robusto sobre BLE: hold largo (cruza varios eventos de conexion sea cual sea el
-      // intervalo negociado) + reenvio del down por si una notif se pierde. Asi el host
-      // ve un press claro y sostenido, no una pulsacion de ~0ms que descarta.
-      mouseReport(down); delay(55);
-      mouseReport(down); delay(55);
+      // Click limpio y atomico, igual que el de USB (que SI se cocina en Xorg): un solo
+      // press, hold corto, un solo release. Los reportes duplicados (down,down,up,up) hacian
+      // que Xorg/libinput registrara el press CRUDO pero no lo cocinara en un click entregable.
+      // El soltado sobre BLE ya es confiable porque el drift dejo de inundar la cola de MOVEs.
+      mouseReport(down);
+      delay(70);
       mouseReport(up);
       break;
     }
