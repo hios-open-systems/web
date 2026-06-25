@@ -7,6 +7,7 @@ export interface Config {
   token: string;                    // "" = sin token; si no, va en el header X-Pad-Token
   pollMs: number;                   // periodo del loop
   send: Record<string, boolean>;    // que campos mandar
+  wiz: { ips: string[] };           // luces WiZ: ips fijas (vacio = autodescubrir por broadcast)
 }
 
 const DEFAULTS: Config = {
@@ -15,6 +16,7 @@ const DEFAULTS: Config = {
   pollMs: 1000,
   send: { mic: true, cam: false, media: false, vol: true,
           cpuTemp: true, gpuTemp: true, cpuLoad: true, gpuLoad: true, clock: true },
+  wiz: { ips: [] },
 };
 
 // Carga config.json (o --config <path>). Sin archivo -> defaults.
@@ -31,5 +33,6 @@ export function loadConfig(argv: string[]): Config {
     ...DEFAULTS,
     ...fromFile,
     send: { ...DEFAULTS.send, ...(fromFile.send ?? {}) },
+    wiz: { ...DEFAULTS.wiz, ...(fromFile.wiz ?? {}) },
   };
 }
