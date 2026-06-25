@@ -2,3 +2,4 @@ node_modules/
 dist/
 config.json
 pad-companion.exe
+companion.log
