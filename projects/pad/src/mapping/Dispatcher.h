@@ -55,6 +55,7 @@ private:
 
   // Navegacion del SW del encoder (tap=menu, doble=cicla modo del encoder, largo=cicla capa)
   bool     m_encLong = false;
+  bool     m_encDown = false;       // el Dispatcher vio el PRESS? (descarta RELEASE huerfanos al salir del menu)
   uint8_t  m_encOverride = 0;       // override del rotar: 0=capa,1=Vol,2=Scroll,3=Zoom,4=Pestanas
   bool     m_encTapPending = false;
   uint32_t m_encTapMs = 0;

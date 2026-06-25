@@ -130,7 +130,7 @@ void Dispatcher::statusToggle(int i) {
 // --- Navegacion: el SW del encoder abre el menu (tap). Sin acciones de capa. ---
 void Dispatcher::handleEncSwNav(const InputEvent& e) {
   switch (e.edge) {
-    case Edge::PRESS:      m_encLong = false; break;
+    case Edge::PRESS:      m_encLong = false; m_encDown = true; break;
     case Edge::LONG_PRESS: {                            // mantener -> ciclar capa
       m_encLong = true;
       m_encTapPending = false;
@@ -139,6 +139,10 @@ void Dispatcher::handleEncSwNav(const InputEvent& e) {
       break;
     }
     case Edge::RELEASE:
+      // RELEASE huerfano (el PRESS ocurrio en otro modo, p.ej. al salir del menu con
+      // hold del encoder): NO contarlo como tap, o reabriria el menu al soltar.
+      if (!m_encDown) break;
+      m_encDown = false;
       if (m_encLong) break;
       if (m_encTapPending && (e.t_ms - m_encTapMs) <= cfg::DOUBLE_TAP_MS) {
         m_encTapPending = false;

@@ -354,7 +354,7 @@ static void renderPicker(TFT_eSPI& tft) {
       tft.drawCircle(icx, icy, ir, accent);
       char ini[2] = { nm[0], 0 };
       tft.setTextColor(accent, chip);
-      tft.drawString(ini, icx, icy, 4);
+      tft.drawString(ini, icx, icy + 1, 4);   // +1: las mayusculas de la font 4 quedan altas; centra mejor
       uikit::fitText(tft, nm, x + cw / 2, y + 64, cw - 8, theme::FG, fill, 2);  // leyenda
       // El numero de boton asignado: secundario, chico, abajo.
       tft.setTextColor(theme::DIM, fill);
