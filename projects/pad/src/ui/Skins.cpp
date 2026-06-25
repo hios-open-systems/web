@@ -365,7 +365,42 @@ static void watchFull(const SkinContext& ctx, const UiSnapshot& s) {
 //  SKIN 3 - SENSORES (telemetria real del companion: temps + carga CPU/GPU)
 //  Con companion conectado muestra valores reales; sin el, "s/d" + pill "sin PC".
 // ============================================================================
-static void sensorTile(TFT_eSPI& g, int x, int y, int w, int h,
+// Historial para los sparklines de performance (~1 muestra por update del companion).
+static const int HN = 56;
+static uint8_t s_hist[4][HN];   // 0=cpuT 1=gpuT 2=cpuL 3=gpuL (0..100 normalizado, 255=s/d)
+static int     s_histHead = 0, s_histCount = 0;
+static uint8_t normTempPct(int16_t t) {            // 30..95C -> 0..100 (clamp); 255 = s/d
+  if (t <= -1000) return 255;
+  int v = (int)(t - 30) * 100 / (95 - 30);
+  return (uint8_t)(v < 0 ? 0 : (v > 100 ? 100 : v));
+}
+static void pushSensorHist(const UiSnapshot& s) {
+  s_hist[0][s_histHead] = normTempPct(s.cpuTemp);
+  s_hist[1][s_histHead] = normTempPct(s.gpuTemp);
+  s_hist[2][s_histHead] = s.cpuLoad;
+  s_hist[3][s_histHead] = s.gpuLoad;
+  s_histHead = (s_histHead + 1) % HN;
+  if (s_histCount < HN) s_histCount++;
+}
+// Sparkline del metric en (spx,spy,spw,sph). Mas nuevo a la derecha; corta la linea en s/d.
+static void drawSpark(TFT_eSPI& g, int metric, int spx, int spy, int spw, int sph, uint16_t col) {
+  int n = s_histCount;
+  if (n < 2) return;
+  g.drawFastHLine(spx, spy + sph, spw, theme::EDGE);       // base
+  const uint8_t* h = s_hist[metric];
+  int px = -1, py = -1;
+  for (int k = 0; k < n; k++) {
+    int idx = (s_histHead - n + k + HN * 2) % HN;
+    uint8_t v = h[idx];
+    if (v == 255) { px = -1; continue; }
+    int sx = spx + spw - (n - 1 - k) * spw / (HN - 1);
+    int sy = spy + sph - (int)v * sph / 100;
+    if (px >= 0) g.drawLine(px, py, sx, sy, col);
+    px = sx; py = sy;
+  }
+}
+
+static void sensorTile(TFT_eSPI& g, int x, int y, int w, int h, int metric,
                        const char* label, bool isTemp, int16_t tempC, uint8_t load) {
   g.fillRoundRect(x, y, w, h, 10, theme::CARD);
   g.drawRoundRect(x, y, w, h, 10, theme::EDGE);
@@ -398,16 +433,18 @@ static void sensorTile(TFT_eSPI& g, int x, int y, int w, int h,
     g.fillRoundRect(bx, by, bw, bh, 3, theme::DARK);
     g.fillRoundRect(bx, by, (int)load * bw / 100, bh, 3, col);
   }
+  if (!noData) drawSpark(g, metric, x + w - 108, y + 22, 94, h - 42, col);   // tendencia
 }
 
 static void sensorPanel(const SkinContext& ctx, const UiSnapshot& s) {
   TFT_eSPI& g = *ctx.tft;
   const int m = 8, gap = 12, cw = (layout::W - 2 * m - gap) / 2, ch = 88;
   const int x2 = m + cw + gap, y1 = 52, y2 = y1 + ch + gap;
-  sensorTile(g, m,  y1, cw, ch, "CPU  temp",  true,  s.cpuTemp, 0);
-  sensorTile(g, x2, y1, cw, ch, "GPU  temp",  true,  s.gpuTemp, 0);
-  sensorTile(g, m,  y2, cw, ch, "CPU  carga", false, 0, s.cpuLoad);
-  sensorTile(g, x2, y2, cw, ch, "GPU  carga", false, 0, s.gpuLoad);
+  if (s.live) pushSensorHist(s);   // acumula tendencia solo con datos reales
+  sensorTile(g, m,  y1, cw, ch, 0, "CPU  temp",  true,  s.cpuTemp, 0);
+  sensorTile(g, x2, y1, cw, ch, 1, "GPU  temp",  true,  s.gpuTemp, 0);
+  sensorTile(g, m,  y2, cw, ch, 2, "CPU  carga", false, 0, s.cpuLoad);
+  sensorTile(g, x2, y2, cw, ch, 3, "GPU  carga", false, 0, s.gpuLoad);
   uint16_t pc = s.live ? theme::GREEN : theme::DIM;        // pill LIVE / sin PC
   g.fillRoundRect(196, 14, 88, 22, 11, theme::blend(theme::BG, pc, 50));
   g.drawRoundRect(196, 14, 88, 22, 11, pc);
