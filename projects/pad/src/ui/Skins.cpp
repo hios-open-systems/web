@@ -77,6 +77,19 @@ static void statusStrip(TFT_eSPI& g, const UiSnapshot& s, int cy) {
 // ============================================================================
 //  SKIN 0 - CARDS (denso, una tarjeta por tecla)
 // ============================================================================
+// Linea de estado WiZ en el centro del header (solo en la capa WiZ y con companion vivo).
+// La dibujan cardsHeader (full) y cardsStatus (en vivo, al llegar feedback del companion).
+static void drawWizHeader(TFT_eSPI& g, KeyMap& km, const UiSnapshot& s) {
+  g.fillRect(186, 4, 200, layout::HEADER_H - 6, theme::PANEL);   // limpia la zona central
+  if (!(s.live && strcmp(km.layer(s.activeLayer).name, "WiZ") == 0)) return;
+  char w[40];
+  snprintf(w, sizeof(w), "%s  %s  %s %u%%", s.wizRoom, s.wizTarget, s.wizOn ? "ON" : "OFF", s.wizBright);
+  g.setTextDatum(MC_DATUM);
+  g.setTextColor(s.wizOn ? theme::YELLOW : theme::DIM, theme::PANEL);
+  g.drawString(w, 286, 16, 2);
+  g.setTextDatum(TL_DATUM);
+}
+
 static void cardsHeader(const SkinContext& ctx, const UiSnapshot& s) {
   TFT_eSPI& g = *ctx.tft; KeyMap& km = *ctx.km;
   const Layer& L = km.layer(s.activeLayer);
@@ -93,6 +106,7 @@ static void cardsHeader(const SkinContext& ctx, const UiSnapshot& s) {
   g.setTextColor(theme::FG, theme::PANEL);
   g.drawString(ctx.clock, 468, 15, 4);
   g.setTextDatum(TL_DATUM);
+  drawWizHeader(g, km, s);
 }
 
 static void cardsKeycap(const SkinContext& ctx, const UiSnapshot& s, uint8_t i, bool on) {
@@ -239,6 +253,7 @@ static void cardsEncStrip(const SkinContext& ctx, const UiSnapshot& s) {
 
 static void cardsStatus(const SkinContext& ctx, const UiSnapshot& s) {
   statuspanel::render(*ctx.tft, s, ctx.km->count());
+  drawWizHeader(*ctx.tft, *ctx.km, s);   // refresca el estado WiZ en vivo (al llegar feedback)
 }
 
 static void cardsFull(const SkinContext& ctx, const UiSnapshot& s) {
