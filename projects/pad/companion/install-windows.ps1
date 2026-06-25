@@ -48,8 +48,19 @@ if (-not (Test-Path (Join-Path $Dest 'config.json'))) {
 }
 Copy-Item $NodeExe $PadExe -Force                                  # node con nombre claro
 
+# Lanzador VBS: corre pad-companion.exe SIN ventana de consola (0 = oculto), en la sesion
+# del usuario (necesaria para el audio). Asi no hay terminal que cerrar ni se mata al cerrarla.
+$vbs = Join-Path $Dest 'launch.vbs'
+@'
+Set sh = CreateObject("WScript.Shell")
+Set fso = CreateObject("Scripting.FileSystemObject")
+d = fso.GetParentFolderName(WScript.ScriptFullName)
+sh.CurrentDirectory = d
+sh.Run """" & d & "\pad-companion.exe"" ""dist\index.js""", 0, False
+'@ | Set-Content -Path $vbs -Encoding ASCII
+
 Write-Host "[4/5] Registrando la Tarea Programada '$TaskName'..." -ForegroundColor Cyan
-$action    = New-ScheduledTaskAction -Execute $PadExe -Argument "`"$Entry`"" -WorkingDirectory $Dest
+$action    = New-ScheduledTaskAction -Execute 'wscript.exe' -Argument "`"$vbs`"" -WorkingDirectory $Dest
 $trigger   = New-ScheduledTaskTrigger -AtLogOn
 $settings  = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries `
                                           -StartWhenAvailable -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)
