@@ -1,6 +1,7 @@
 import { loadConfig } from './config';
 import { Device } from './device';
 import { pickProviders } from './providers';
+import { Wiz } from './wiz';
 import type { PadState } from './state';
 import { log } from './log';
 
@@ -11,6 +12,10 @@ async function main(): Promise<void> {
 
   const providers = await pickProviders();
   const device = new Device(cfg.host, cfg.token);
+
+  const wiz = new Wiz(cfg.wiz.ips);
+  const nWiz = await wiz.discover();
+  log.info(`WiZ: ${nWiz} luz(ces) ${nWiz ? '✓' : '(ninguna; revisa la red o pone ips en config.json)'}`);
 
   let stop = false;
   const quit = () => { stop = true; log.info('saliendo...'); };
@@ -53,6 +58,11 @@ async function main(): Promise<void> {
         log.info(`comando micToggle -> mic ${nm === null ? '??' : nm ? 'MUTEADO' : 'abierto'}`);
       } else if (cmd === 'camToggle') {
         log.info('comando camToggle -> sin mute de camara a nivel OS (lo hace el atajo de la app)');
+      } else if (cmd === 'wizToggle')    { wiz.toggle();   log.info('WiZ on/off');
+      } else if (cmd === 'wizBrightUp')  { wiz.brighter(); log.info('WiZ +brillo');
+      } else if (cmd === 'wizBrightDown'){ wiz.dimmer();   log.info('WiZ -brillo');
+      } else if (cmd === 'wizWarmer')    { wiz.warmer();   log.info('WiZ +calido');
+      } else if (cmd === 'wizCooler')    { wiz.cooler();   log.info('WiZ +frio');
       } else {
         log.info(`comando desconocido: ${cmd}`);
       }
