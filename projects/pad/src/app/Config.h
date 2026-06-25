@@ -31,6 +31,9 @@ static constexpr uint8_t  STICK_SETTLE_READS = 8;    // lecturas de descarte por
 static constexpr uint16_t STICK_SETTLE_US    = 60;   // espera entre descartes (us)
 static constexpr uint16_t STICK_DEADZONE     = 450;  // crudo: zona muerta (el ADC del S3 es ruidoso)
 static constexpr uint32_t STICK_MOUSE_MS     = 25;   // periodo de emision mientras esta desviado
+static constexpr uint16_t STICK_REST_BAND    = 500;  // crudo: banda alrededor del centro donde el auto-recentrado adapta (fuera = empuje real, no toca)
+static constexpr uint16_t STICK_RECENTER_MS  = 20;   // cadencia del paso +-1 de auto-recentrado (seguimiento lento del reposo real)
+static constexpr uint16_t STICK_RECENTER_WARMUP = 32; // updates antes del snap inicial: deja asentar el EMA para snapear el reposo REAL (no el centro de boot)
 static constexpr int16_t  STICK_HALFRANGE    = 1800; // crudo aprox del centro al tope (p/ normalizar)
 static constexpr uint8_t  MOUSE_SPEED_DIV    = 10;   // divisor base (centro): normalizado(-127..127)/div = px por tick
 static constexpr uint16_t MOUSE_ACCEL        = 3;    // aceleracion no-lineal (default): 0=lineal; mayor = extremos mas rapidos (el centro queda igual). Ajustable en vivo por serial +/-.
