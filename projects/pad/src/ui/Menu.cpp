@@ -345,15 +345,24 @@ static void renderPicker(TFT_eSPI& tft) {
     tft.drawRoundRect(x, y, cw, ch, 10, accent);
     if (occ) tft.drawRoundRect(x + 1, y + 1, cw - 2, ch - 2, 9, theme::blend(accent, theme::FG, 50));
     tft.setTextDatum(MC_DATUM);
-    tft.setTextColor(occ ? accent : theme::DIM, fill);
-    tft.drawNumber(i + 1, x + cw / 2, y + 34, 6);  // numero del boton fisico
     if (occ) {
-      uikit::fitText(tft, s_km->layer(lys[i]).name, x + cw / 2, y + ch - 26, cw - 8,
-                     theme::FG, fill, 2);
-      tft.fillRoundRect(x + 10, y + ch - 12, cw - 20, 5, 2, accent);
+      const char* nm = s_km->layer(lys[i]).name;
+      // La CAPA manda: chip-icono con la inicial (en su color) + leyenda (nombre).
+      const int icx = x + cw / 2, icy = y + 30, ir = 17;
+      const uint16_t chip = theme::blend(fill, accent, 32);
+      tft.fillCircle(icx, icy, ir, chip);
+      tft.drawCircle(icx, icy, ir, accent);
+      char ini[2] = { nm[0], 0 };
+      tft.setTextColor(accent, chip);
+      tft.drawString(ini, icx, icy, 4);
+      uikit::fitText(tft, nm, x + cw / 2, y + 64, cw - 8, theme::FG, fill, 2);  // leyenda
+      // El numero de boton asignado: secundario, chico, abajo.
+      tft.setTextColor(theme::DIM, fill);
+      tft.drawNumber(i + 1, x + cw / 2, y + ch - 18, 2);
+      tft.fillRoundRect(x + 10, y + ch - 8, cw - 20, 4, 2, accent);
     } else {
       tft.setTextColor(theme::DIM, fill);
-      tft.drawString("--", x + cw / 2, y + ch - 26, 2);
+      tft.drawString("--", x + cw / 2, y + ch / 2, 4);
     }
   }
   tft.setTextDatum(MC_DATUM);                       // caption
