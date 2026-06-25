@@ -15,18 +15,29 @@ namespace menu {
 //  setting editable -> el encoder ajusta el valor en vivo; WiFi/Calibrar -> accion).
 //  El encoder gira = cambiar de pagina; long-press = cerrar. Sin carrusel ni caratula.
 //
-//  Grupos (nivel "pagina"): cada capa declara su LayerGroup en DefaultConfig;
-//  aca solo decidimos nombre/color/orden.
+//  Cada pagina (PAGES[]) lista hasta 5 items que MEZCLAN capas y settings libremente
+//  (ej: Apariencia = Brillo/Tema/Color/Skin/RGB). Las capas se referencian por NOMBRE.
 // ---------------------------------------------------------------------------
-struct GroupDef { const char* name; LayerGroup tag; uint16_t color; };
-static const GroupDef GROUPS[] = {
-  {"Trabajo",    LayerGroup::TRABAJO,    theme::CYAN},
-  {"Multimedia", LayerGroup::MULTIMEDIA, theme::MAGENTA},
-  {"Web",        LayerGroup::WEB,        theme::BLUE},
-  {"Llamadas",   LayerGroup::LLAMADAS,   theme::ROSE},
-  {"Luces",      LayerGroup::SISTEMA,    theme::VIOLET},   // RGB (iluminacion); el nombre "Sistema"
-};                                                          // choca con la pagina de settings Sistema
-static const int G_COUNT = sizeof(GROUPS) / sizeof(GROUPS[0]);
+// Un item del menu es una CAPA (por nombre -> robusto a reordenar DefaultConfig) o un
+// SETTING (offset 0..8 respecto de idxBright()). Cada pagina lista hasta 5 items y los
+// mezcla libremente: asi RGB (capa) puede vivir en Apariencia junto a settings, etc.
+enum { S_BRIGHT, S_THEME, S_ACCENT, S_SKIN, S_DIM, S_CLOCK, S_WIFI, S_CAL, S_PREC };
+struct PageItem { const char* layer; int8_t setting; };   // layer!=nullptr => capa; si no => setting
+struct Page     { const char* name; uint16_t color; const PageItem* items; int count; };
+
+static const PageItem PI_TRABAJO[]    = { {"Edicion",-1},{"Dev",-1},{"Apps",-1},{"Navegador",-1} };
+static const PageItem PI_MULTIMEDIA[] = { {"Multimedia",-1},{"YouTube",-1},{"Netflix",-1} };
+static const PageItem PI_LLAMADAS[]   = { {"Meet",-1},{"Slack",-1},{"Zoom",-1},{"Teams",-1} };
+static const PageItem PI_APARIENCIA[] = { {nullptr,S_BRIGHT},{nullptr,S_THEME},{nullptr,S_ACCENT},{nullptr,S_SKIN},{"RGB",-1} };
+static const PageItem PI_SISTEMA[]    = { {nullptr,S_CLOCK},{nullptr,S_WIFI},{nullptr,S_CAL},{nullptr,S_PREC},{nullptr,S_DIM} };
+
+static const Page PAGES[] = {
+  { "Trabajo",    theme::CYAN,    PI_TRABAJO,    4 },
+  { "Multimedia", theme::MAGENTA, PI_MULTIMEDIA, 3 },
+  { "Llamadas",   theme::ROSE,    PI_LLAMADAS,   4 },
+  { "Apariencia", theme::VIOLET,  PI_APARIENCIA, 5 },   // Brillo,Tema,Color,Skin,RGB(capa)
+  { "Sistema",    theme::GREEN,   PI_SISTEMA,    5 },   // Hora,WiFi,Calibrar,Precision,Dimmer
+};
 
 static KeyMap* s_km = nullptr;
 static bool    s_open     = false;
@@ -46,45 +57,33 @@ static int idxClock()  { return idxBright() + 5; }
 static int idxWifi()   { return idxBright() + 6; }
 static int idxCal()    { return idxBright() + 7; }
 static int idxPrec()   { return idxBright() + 8; }
-static const int N_SETTINGS = 9;
 
-// Capas que pertenecen a un grupo, en orden de capa. Devuelve cuantas (<=max).
-static int groupLayers(LayerGroup tag, uint8_t* out, int maxOut) {
-  int k = 0;
-  if (!s_km) return 0;
-  for (uint8_t i = 0; i < s_km->count() && k < maxOut; i++)
-    if (s_km->layer(i).group == tag) out[k++] = i;
-  return k;
+// Indice de una capa por nombre (-1 si no esta). Robusto a reordenar DefaultConfig.
+static int layerIndexByName(const char* name) {
+  if (!s_km) return -1;
+  for (uint8_t i = 0; i < s_km->count(); i++)
+    if (strcmp(s_km->layer(i).name, name) == 0) return (int)i;
+  return -1;
 }
-static int groupIndexOf(LayerGroup g) {
-  for (int i = 0; i < G_COUNT; i++) if (GROUPS[i].tag == g) return i;
+static int pageCount() { return (int)(sizeof(PAGES) / sizeof(PAGES[0])); }
+// Pagina que contiene a la capa actual (para abrir el menu en el lugar correcto).
+static int pageOfLayer(uint8_t layerIdx) {
+  if (!s_km || layerIdx >= s_km->count()) return 0;
+  const char* nm = s_km->layer(layerIdx).name;
+  for (int p = 0; p < pageCount(); p++)
+    for (int i = 0; i < PAGES[p].count; i++)
+      if (PAGES[p].items[i].layer && strcmp(PAGES[p].items[i].layer, nm) == 0) return p;
   return 0;
 }
-
-// Paginas del picker = grupos de capas + paginas de settings al final. Los settings
-// se parten en Apariencia (personalizacion) y Sistema (config). s_groupSel >= G_COUNT
-// => pagina de settings (indice = settingsPageIdx()). start/count en indices relativos
-// a idxBright() (los 8 items ya estan ordenados: 0-4 apariencia, 5-7 sistema).
-struct SettingsPage { const char* name; uint16_t color; int start; int count; const char* items; };
-static const SettingsPage SET_PAGES[] = {
-  { "Apariencia", theme::MAGENTA, 0, 5, "Brillo  Tema  Color  Skin  Dimmer" },
-  { "Sistema",    theme::GREEN,   5, 4, "Hora  WiFi  Calibrar  Precision" },
-};
-static const int SET_PAGE_COUNT = sizeof(SET_PAGES) / sizeof(SET_PAGES[0]);
-
-static int  pageCount()       { return G_COUNT + SET_PAGE_COUNT; }
-static bool settingsPage()    { return s_groupSel >= G_COUNT; }
-static int  settingsPageIdx() { return s_groupSel - G_COUNT; }      // valido solo si settingsPage()
-static const char* pageName()  { return settingsPage() ? SET_PAGES[settingsPageIdx()].name  : GROUPS[s_groupSel].name; }
-static uint16_t    pageColor() { return settingsPage() ? SET_PAGES[settingsPageIdx()].color : GROUPS[s_groupSel].color; }
+static const char* pageName()  { return PAGES[s_groupSel].name; }
+static uint16_t    pageColor() { return PAGES[s_groupSel].color; }
 
 void init(KeyMap* km) { s_km = km; }
 
 void open(uint8_t currentLayer) {
   s_open = true; s_editItem = false;
   s_sel = currentLayer;
-  s_groupSel = (s_km && currentLayer < s_km->count())
-             ? groupIndexOf(s_km->layer(currentLayer).group) : 0;
+  s_groupSel = pageOfLayer(currentLayer);
   s_dirty = true; s_needFull = true;
 }
 void close() {
@@ -95,26 +94,26 @@ bool isOpen() { return s_open; }
 // Hay botones-card en TODAS las paginas (capas y settings): los botones eligen.
 bool inLayerPicker() { return s_open; }
 
-// Boton i (0..4): en pagina de capas salta a la capa; en pagina de settings elige el
-// item (los editables entran en modo ajuste -> el encoder cambia el valor; WiFi/Calibrar
-// son acciones directas). Asi todo se elige con botones, sin carrusel ni caratula.
+// Boton i (0..4): elige el item i de la pagina actual. Capa -> salta; setting editable ->
+// entra en ajuste (el encoder cambia el valor); WiFi/Calibrar -> accion directa.
 MenuResult pickButton(uint8_t i) {
   if (!s_open) return MenuResult::NONE;
-  if (settingsPage()) {
-    const SettingsPage& sp = SET_PAGES[settingsPageIdx()];
-    if ((int)i >= sp.count) return MenuResult::NONE;
-    int item = idxBright() + sp.start + i;
-    if (item == idxCal())  { s_editItem = false; return MenuResult::CALIBRATE; }
-    if (item == idxWifi()) { s_editItem = false; return MenuResult::WIFI_SETUP; }
-    if (s_editItem && s_sel == item) s_editItem = false;   // 2do toque del mismo item: listo
-    else { s_sel = item; s_editItem = true; }              // entra en ajuste
-    s_dirty = true;
-    return MenuResult::NONE;
+  const Page& pg = PAGES[s_groupSel];
+  if ((int)i >= pg.count) return MenuResult::NONE;
+  const PageItem& it = pg.items[i];
+  if (it.layer) {                                  // capa -> saltar
+    int li = layerIndexByName(it.layer);
+    if (li < 0) return MenuResult::NONE;
+    s_sel = li; s_editItem = false;
+    return MenuResult::SWITCH_LAYER;
   }
-  uint8_t lys[5]; int k = groupLayers(GROUPS[s_groupSel].tag, lys, 5);
-  if ((int)i >= k) return MenuResult::NONE;
-  s_sel = lys[i];
-  return MenuResult::SWITCH_LAYER;
+  int item = idxBright() + it.setting;             // setting
+  if (item == idxCal())  { s_editItem = false; return MenuResult::CALIBRATE; }
+  if (item == idxWifi()) { s_editItem = false; return MenuResult::WIFI_SETUP; }
+  if (s_editItem && s_sel == item) s_editItem = false;   // 2do toque del mismo item: listo
+  else { s_sel = item; s_editItem = true; }              // entra en ajuste
+  s_dirty = true;
+  return MenuResult::NONE;
 }
 
 // ---------------------------------------------------------------------------
@@ -337,35 +336,37 @@ static bool drawLayerIcon(TFT_eSPI& g, const char* nm, int cx, int cy, uint16_t 
   return false;
 }
 
-// Picker unificado: 5 cards = 5 botones fisicos. En pagina de capas cada card es una
-// capa; en pagina de settings cada card es un item con su valor (el que se ajusta queda
-// resaltado). Los botones eligen en ambos casos -> mismo componente, sin carrusel/caratula.
+// Picker unificado: hasta 5 cards = 5 botones. Cada card es un item de la pagina actual
+// (capa o setting, mezclados). Los settings muestran su valor; el que se ajusta queda
+// resaltado. Las capas muestran su icono + numero de boton. Los botones eligen.
 static void renderPicker(TFT_eSPI& tft) {
   tft.fillRect(0, 74, 480, 142, theme::BG);
-  const bool settings = settingsPage();
-  uint8_t lys[5]; int k; int base = 0;
-  if (settings) { const SettingsPage& sp = SET_PAGES[settingsPageIdx()]; k = sp.count; base = idxBright() + sp.start; }
-  else          { k = groupLayers(GROUPS[s_groupSel].tag, lys, 5); }
+  const Page& pg = PAGES[s_groupSel];
   const int N = 5, gap = 8;
   const int cw = (480 - gap * (N + 1)) / N;        // ~83px
   const int y = 82, ch = 118;
   char buf[16];
   for (int i = 0; i < N; i++) {
     int x = gap + i * (cw + gap);
-    bool occ = i < k;
-    int item = (settings && occ) ? base + i : -1;
-    bool editing = settings && occ && s_editItem && s_sel == item;
-    uint16_t accent = occ ? (settings ? itemAccent(item) : s_km->layer(lys[i]).color) : theme::EDGE;
-    uint16_t fill   = occ ? theme::CARD : theme::DARK;
+    bool occ = i < pg.count;
+    const PageItem* it = occ ? &pg.items[i] : nullptr;
+    bool isSetting = occ && it->layer == nullptr;
+    int sIdx = isSetting ? idxBright() + it->setting : -1;
+    int lIdx = (occ && !isSetting) ? layerIndexByName(it->layer) : -1;
+    bool editing = isSetting && s_editItem && s_sel == sIdx;
+    uint16_t accent = !occ ? theme::EDGE
+                    : isSetting ? itemAccent(sIdx)
+                    : (lIdx >= 0 ? s_km->layer(lIdx).color : pg.color);
+    uint16_t fill = occ ? theme::CARD : theme::DARK;
     tft.fillRoundRect(x, y, cw, ch, 10, fill);
     tft.drawRoundRect(x, y, cw, ch, 10, accent);
     if (occ) tft.drawRoundRect(x + 1, y + 1, cw - 2, ch - 2, 9, theme::blend(accent, theme::FG, editing ? 90 : 50));
     tft.setTextDatum(MC_DATUM);
     if (occ) {
-      const char* nm = settings ? itemTitle(item) : s_km->layer(lys[i]).name;
+      const char* nm = isSetting ? itemTitle(sIdx) : it->layer;
       const int icx = x + cw / 2, icy = y + 30;
-      if (settings) {
-        drawMenuIcon(tft, icx, icy, item, accent, fill);          // icono vectorial del setting
+      if (isSetting) {
+        drawMenuIcon(tft, icx, icy, sIdx, accent, fill);          // icono vectorial del setting
       } else if (!drawLayerIcon(tft, nm, icx, icy, accent, fill)) {
         const int ir = 17;                                        // capa sin icono: chip + inicial
         const uint16_t chip = theme::blend(fill, accent, 32);
@@ -376,8 +377,8 @@ static void renderPicker(TFT_eSPI& tft) {
         tft.drawString(ini, icx, icy + 1, 4);
       }
       uikit::fitText(tft, nm, x + cw / 2, y + 64, cw - 8, theme::FG, fill, 2);   // leyenda
-      if (settings) {                                                            // valor del setting
-        uikit::fitText(tft, itemMeta(item, buf, sizeof(buf)), x + cw / 2, y + ch - 18, cw - 8,
+      if (isSetting) {                                                           // valor del setting
+        uikit::fitText(tft, itemMeta(sIdx, buf, sizeof(buf)), x + cw / 2, y + ch - 18, cw - 8,
                        editing ? accent : theme::SOFT, fill, 2);
       } else {                                                                   // numero de boton
         tft.setTextColor(theme::DIM, fill);
@@ -391,8 +392,7 @@ static void renderPicker(TFT_eSPI& tft) {
   }
   tft.setTextDatum(MC_DATUM);                       // caption
   tft.setTextColor(theme::SOFT, theme::BG);
-  tft.drawString(settings ? "apreta un boton para elegir / ajustar" : "apreta un boton para saltar a la capa",
-                 240, 208, 1);
+  tft.drawString("apreta un boton para elegir", 240, 208, 1);
 }
 
 static void drawHeader(TFT_eSPI& tft) {
