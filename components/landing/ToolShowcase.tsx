@@ -8,12 +8,16 @@ import { ToolGrid } from '@/components/workbench/ToolGrid';
 import wb from '@/components/workbench/workbench.module.css';
 import styles from './toolShowcase.module.css';
 
-const TOOLS = workbenchTools.filter((tool) => !tool.external);
+const ALL_TOOLS = workbenchTools.filter((tool) => !tool.external);
+const FEATURED_COUNT = 8;
+const TOOLS = ALL_TOOLS.slice(0, FEATURED_COUNT);
+
+const SEE_ALL: Record<string, string> = { en: 'See all', es: 'Ver todas', de: 'Alle ansehen', it: 'Vedi tutte' };
 
 /**
- * Tool catalog on the home page itself — same cards as /workbench.
- * Replaces the old single rotating spotlight: you see everything, with a
- * random shortcut up top. /?tool=random is resolved by HomeToolDeepLink.
+ * Muestra una selección de herramientas en el Home (no las 44): un pantallazo,
+ * con atajo al azar y link a /workbench para ver todas. Así Proyectos y los
+ * accesos tienen más aire arriba. /?tool=random lo resuelve HomeToolDeepLink.
  */
 export function ToolShowcase() {
   const locale = useLocale();
@@ -25,7 +29,7 @@ export function ToolShowcase() {
         <div className={styles.showcaseHeadings}>
           <h2 className={styles.showcaseTitle}>{t('showcaseTitle')}</h2>
           <p className={styles.showcaseSubtitle}>
-            {TOOLS.length} {t('showcaseToolCount')} · {t('showcaseSubtitle')}
+            {ALL_TOOLS.length} {t('showcaseToolCount')} · {t('showcaseSubtitle')}
           </p>
         </div>
         <Link href={`/${locale}?tool=random`} className={wb.heroPrimaryCta}>
@@ -33,6 +37,14 @@ export function ToolShowcase() {
         </Link>
       </div>
       <ToolGrid tools={TOOLS} />
+      <div style={{ textAlign: 'center', marginTop: 24 }}>
+        <Link
+          href={`/${locale}/workbench`}
+          style={{ color: '#f59e0b', fontWeight: 500, textDecoration: 'none', fontSize: 15 }}
+        >
+          {SEE_ALL[locale] ?? SEE_ALL.es} ({ALL_TOOLS.length}) →
+        </Link>
+      </div>
     </section>
   );
 }
