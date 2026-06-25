@@ -1,5 +1,6 @@
 #include "Dispatcher.h"
 #include <Arduino.h>
+#include <string.h>
 #include "../app/Config.h"
 #include "../app/EventBus.h"
 #include "../app/AppState.h"
@@ -16,6 +17,18 @@ static Action encModeAction(uint8_t mode, bool cw) {
     case 4: return keyCode(kmod::CTRL, cw ? 0xD6 : 0xD3);                        // Pestanas (PgDn/PgUp)
     default: return Action{};
   }
+}
+
+// El modo de override que la capa ya hace nativamente con el encoder (segun su
+// etiqueta), para no volver a ofrecerlo al ciclar y evitar el duplicado. 0 = ninguno.
+uint8_t Dispatcher::layerEncMode() const {
+  const char* lab = m_km ? m_km->label(m_activeLayer, InputId::ENC_ROT) : nullptr;
+  if (!lab) return 0;
+  if (!strcmp(lab, "Volumen"))  return 1;
+  if (!strcmp(lab, "Scroll"))   return 2;
+  if (!strcmp(lab, "Zoom"))     return 3;
+  if (!strcmp(lab, "Pestanas")) return 4;
+  return 0;
 }
 
 void Dispatcher::dispatch(const InputEvent& e) {
@@ -129,7 +142,10 @@ void Dispatcher::handleEncSwNav(const InputEvent& e) {
       if (m_encLong) break;
       if (m_encTapPending && (e.t_ms - m_encTapMs) <= cfg::DOUBLE_TAP_MS) {
         m_encTapPending = false;
-        m_encOverride = (m_encOverride + 1) % 5;       // doble-tap -> cicla modo del encoder
+        const uint8_t native = layerEncMode();         // lo que la capa ya hace con el encoder
+        do {
+          m_encOverride = (m_encOverride + 1) % 5;     // doble-tap -> cicla modo del encoder
+        } while (m_encOverride != 0 && m_encOverride == native);   // salteando el nativo (sin duplicar)
         Serial.printf("[enc] modo override = %u\n", m_encOverride);
       } else {
         m_encTapPending = true; m_encTapMs = e.t_ms;   // espera posible 2do tap (el menu abre en tick)

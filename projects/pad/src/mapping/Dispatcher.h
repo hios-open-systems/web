@@ -34,6 +34,7 @@ private:
   void fireResolved(const InputEvent& e);     // resuelve y procesa la accion de la capa
   void statusToggle(int i);                   // long-press boton i -> toggle del card
   void enqueueClick(uint8_t button);
+  uint8_t layerEncMode() const;               // modo de override que la capa ya hace de fabrica (0=ninguno)
 
   KeyMap*       m_km = nullptr;
   StateManager* m_state = nullptr;
