@@ -114,6 +114,22 @@ void loadDefaults(KeyMap& km) {
   km.bind(wz, InputId::ENC_SW, Action{}, "Menu");
   km.bind(wz, InputId::STICK_SW, mouseToggleAction(), "Mouse");
 
+  // === Grupo Monitor: vistas de telemetria del companion (CPU/GPU temps+coolers,
+  //     RAM, red, carga por nucleo). La UI las renderiza a pantalla completa via
+  //     skin homonimo (sin teclas); el nombre de la capa DEBE coincidir con el del
+  //     skin (ver ui/Skins.cpp: monitorIndex). Encoder press = menu para navegar. ===
+  int mg = km.addLayer("General", theme::CYAN, LayerGroup::SISTEMA);
+  km.bind(mg, InputId::ENC_SW, Action{}, "Menu");
+  km.bind(mg, InputId::STICK_SW, mouseToggleAction(), "Mouse");
+
+  int rd = km.addLayer("Red", theme::GREEN, LayerGroup::SISTEMA);
+  km.bind(rd, InputId::ENC_SW, Action{}, "Menu");
+  km.bind(rd, InputId::STICK_SW, mouseToggleAction(), "Mouse");
+
+  int nc = km.addLayer("Nucleos", theme::VIOLET, LayerGroup::SISTEMA);
+  km.bind(nc, InputId::ENC_SW, Action{}, "Menu");
+  km.bind(nc, InputId::STICK_SW, mouseToggleAction(), "Mouse");
+
   // === Grupo Llamadas: una capa por app. En TODAS, el long-press del boton de
   //     mic (hold) hace MUTE GLOBAL via companion (Core Audio, app-independiente);
   //     el tap usa el atajo de la app. La camara se togglea con el atajo de la app.

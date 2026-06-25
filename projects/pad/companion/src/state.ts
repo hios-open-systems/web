@@ -11,8 +11,15 @@ export interface PadState {
   vol?: number;      // 0..100 volumen del sistema
   cpuTemp?: number;  // C
   gpuTemp?: number;  // C
-  cpuLoad?: number;  // 0..100
+  cpuLoad?: number;  // 0..100 (promedio de nucleos)
   gpuLoad?: number;  // 0..100
+  cpuFan?: number;   // RPM del cooler de CPU/gabinete
+  gpuFan?: number;   // 0..100 del cooler de GPU
+  ram?: number;      // 0..100 RAM usada
+  cores?: number[];  // carga 0..100 por nucleo (capa Nucleos)
+  netDown?: number;  // KB/s de bajada
+  netUp?: number;    // KB/s de subida
+  ip?: string;       // IP local (capa Red)
   clockMin?: number; // hora local en minutos desde 00:00 (0..1439) -> sincroniza el reloj del pad
   // --- feedback WiZ (para que la capa WiZ muestre que se esta controlando) ---
   wizRoom?: string;    // cuarto activo

@@ -28,9 +28,18 @@ struct RealState {
   int16_t  gpuTemp     = -1000;
   uint8_t  cpuLoad     = 255;     // 0..100, 255 = sin dato
   uint8_t  gpuLoad     = 255;
+  // --- monitor extendido (capas General/Red/Nucleos); sentinela = sin dato ---
+  int16_t  cpuFan      = -1;      // RPM, -1 = sin dato
+  uint8_t  gpuFan      = 255;     // 0..100, 255 = sin dato
+  uint8_t  ram         = 255;     // 0..100, 255 = sin dato
+  uint32_t netDown     = 0xFFFFFFFF;  // KB/s, 0xFFFFFFFF = sin dato
+  uint32_t netUp       = 0xFFFFFFFF;
+  char     ip[16]      = {0};     // IP local
+  uint8_t  cores[24]   = {0};     // carga por nucleo 0..100
+  uint8_t  coreCount   = 0;       // nucleos validos (0 = sin dato)
   // --- feedback WiZ (lo manda el companion para que la capa WiZ muestre que controla) ---
   char     wizRoom[16] = {0};     // cuarto activo
-  char     wizTarget[8] = {0};    // "Todas" o "n/N"
+  char     wizTarget[16] = {0};   // "Todas" o el nombre de la luz
   bool     wizOn       = false;
   uint8_t  wizBright   = 0;       // 0..100
   uint32_t updatedAtMs = 0;       // millis() del ultimo POST aceptado (0 = nunca)

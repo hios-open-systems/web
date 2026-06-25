@@ -13,19 +13,22 @@ export async function pickProviders(): Promise<PlatformProviders> {
   if (process.platform === 'win32') {
     const { WindowsAudio } = await import('./windows/audio');
     const { WindowsSensors } = await import('./windows/sensors');
-    return { audio: new WindowsAudio(), sensors: new WindowsSensors() };
+    const { WindowsNet } = await import('./windows/net');
+    return { audio: new WindowsAudio(), sensors: new WindowsSensors(), net: new WindowsNet() };
   }
   if (isWSL()) {
-    // WSL leyendo el host: audio de Windows (powershell.exe) + sensores Linux
-    // (nvidia-smi anda en WSL; CPU temp del host no se ve -> null).
+    // WSL leyendo el host: audio de Windows (powershell.exe) + sensores/red Linux
+    // (nvidia-smi anda en WSL; CPU temp del host no se ve -> null; red = la de WSL).
     const { WindowsAudio } = await import('./windows/audio');
     const { LinuxSensors } = await import('./linux/sensors');
-    return { audio: new WindowsAudio(), sensors: new LinuxSensors() };
+    const { LinuxNet } = await import('./linux/net');
+    return { audio: new WindowsAudio(), sensors: new LinuxSensors(), net: new LinuxNet() };
   }
   if (process.platform === 'linux') {
     const { LinuxAudio } = await import('./linux/audio');
     const { LinuxSensors } = await import('./linux/sensors');
-    return { audio: new LinuxAudio(), sensors: new LinuxSensors() };
+    const { LinuxNet } = await import('./linux/net');
+    return { audio: new LinuxAudio(), sensors: new LinuxSensors(), net: new LinuxNet() };
   }
   throw new Error(`Plataforma no soportada aun: ${process.platform}`);
 }

@@ -8,7 +8,7 @@
 #include "../app/Types.h"
 #include "../actions/Action.h"
 
-static constexpr uint8_t MAX_LAYERS = 16;   // margen para capas nuevas (apps de llamada, etc.)
+static constexpr uint8_t MAX_LAYERS = 20;   // margen para capas nuevas (apps de llamada, monitor, etc.)
 static constexpr uint8_t LABEL_LEN  = 14;
 
 // Grupo tematico de la capa: lo usa el menu para agrupar (las muestra de a <=5

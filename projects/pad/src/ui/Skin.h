@@ -38,6 +38,8 @@ struct Skin {
 
 namespace skins {
 uint8_t      count();
+uint8_t      dashboardCount();          // skins elegibles en Apariencia (excluye vistas de Monitor)
+int          monitorIndex(const char* layerName);  // skin de la capa de Monitor, o -1 si no lo es
 const Skin&  get(uint8_t i);
 const char*  name(uint8_t i);
 }  // namespace skins

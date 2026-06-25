@@ -31,6 +31,7 @@ static const PageItem PI_LLAMADAS[]   = { {"Meet",-1},{"Slack",-1},{"Zoom",-1},{
 static const PageItem PI_APARIENCIA[] = { {nullptr,S_BRIGHT},{nullptr,S_THEME},{nullptr,S_ACCENT},{nullptr,S_SKIN} };
 static const PageItem PI_SISTEMA[]    = { {nullptr,S_CLOCK},{nullptr,S_WIFI},{nullptr,S_CAL},{nullptr,S_PREC},{nullptr,S_DIM} };
 static const PageItem PI_LUCES[]      = { {"RGB",-1},{"WiZ",-1} };
+static const PageItem PI_MONITOR[]    = { {"General",-1},{"Red",-1},{"Nucleos",-1} };
 
 static const Page PAGES[] = {
   { "Trabajo",    theme::CYAN,    PI_TRABAJO,    4 },
@@ -39,6 +40,7 @@ static const Page PAGES[] = {
   { "Apariencia", theme::VIOLET,  PI_APARIENCIA, 4 },   // Brillo,Tema,Color,Skin
   { "Sistema",    theme::GREEN,   PI_SISTEMA,    5 },   // Hora,WiFi,Calibrar,Precision,Dimmer
   { "Luces",      theme::YELLOW,  PI_LUCES,      2 },   // RGB + WiZ (iluminacion)
+  { "Monitor",    theme::CYAN,    PI_MONITOR,    3 },   // General/Red/Nucleos (telemetria companion)
 };
 
 static KeyMap* s_km = nullptr;
@@ -346,6 +348,31 @@ static bool drawLayerIcon(TFT_eSPI& g, const char* nm, int cx, int cy, uint16_t 
     g.fillCircle(cx, cy - 3, 9, col);
     g.fillRect(cx - 5, cy + 5, 10, 5, col);
     g.drawFastHLine(cx - 4, cy + 11, 8, col);
+    return true;
+  }
+  if (is("General")) {                                  // pantallita con grafico
+    g.drawRoundRect(cx - 12, cy - 9, 24, 18, 3, col);
+    g.drawLine(cx - 8, cy + 3, cx - 3, cy - 3, col);
+    g.drawLine(cx - 3, cy - 3, cx + 2, cy + 1, col);
+    g.drawLine(cx + 2, cy + 1, cx + 8, cy - 5, col);
+    return true;
+  }
+  if (is("Red")) {                                      // flechas subida/bajada (throughput)
+    g.fillTriangle(cx - 6, cy - 10, cx - 11, cy - 3, cx - 1, cy - 3, col);
+    g.fillRect(cx - 8, cy - 3, 4, 11, col);
+    g.fillTriangle(cx + 6, cy + 10, cx + 1, cy + 3, cx + 11, cy + 3, col);
+    g.fillRect(cx + 4, cy - 8, 4, 11, col);
+    return true;
+  }
+  if (is("Nucleos")) {                                  // chip de CPU
+    g.drawRoundRect(cx - 9, cy - 9, 18, 18, 2, col);
+    g.drawRect(cx - 4, cy - 4, 8, 8, col);
+    for (int k = -4; k <= 4; k += 4) {
+      g.drawFastVLine(cx + k, cy - 13, 4, col);
+      g.drawFastVLine(cx + k, cy + 10, 4, col);
+      g.drawFastHLine(cx - 13, cy + k, 4, col);
+      g.drawFastHLine(cx + 10, cy + k, 4, col);
+    }
     return true;
   }
   return false;

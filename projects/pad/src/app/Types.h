@@ -70,9 +70,18 @@ struct UiSnapshot {
   int16_t  gpuTemp;     // C, -1000 = sin dato
   uint8_t  cpuLoad;     // 0..100, 255 = sin dato
   uint8_t  gpuLoad;     // 0..100, 255 = sin dato
+  // --- monitor extendido (capas General/Red/Nucleos); sentinela = sin dato ---
+  int16_t  cpuFan;      // RPM, -1 = sin dato
+  uint8_t  gpuFan;      // 0..100, 255 = sin dato
+  uint8_t  ram;         // 0..100, 255 = sin dato
+  uint32_t netDown;     // KB/s, 0xFFFFFFFF = sin dato
+  uint32_t netUp;       // KB/s, 0xFFFFFFFF = sin dato
+  char     ip[16];      // IP local ("" = sin dato)
+  uint8_t  cores[24];   // carga por nucleo 0..100, 255 = sin dato
+  uint8_t  coreCount;   // nucleos validos en cores[] (0 = sin dato)
   // --- feedback WiZ (para la capa WiZ): cuarto/luz/on/brillo ---
   char     wizRoom[16];
-  char     wizTarget[8];
+  char     wizTarget[16];   // "Todas" o el nombre de la luz
   bool     wizOn;
   uint8_t  wizBright;   // 0..100
 };

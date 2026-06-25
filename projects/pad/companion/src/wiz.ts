@@ -1,52 +1,55 @@
 // Control de luces WiZ por su API local UDP (puerto 38899).
-// - Descubre por broadcast SOLO las bombitas energizadas (las apagadas desde la llave no
-//   responden; eso es de la API local — la de nube listaria todas pero necesita login).
-// - Identifica por MAC (estable); resuelve MAC->IP en cada descubrimiento (DHCP cambia IPs).
-// - Cuartos = grupos de MACs (config.json). Sin cuartos -> uno "Todas" con lo descubierto.
-// - Target: dentro del cuarto se puede apuntar a TODAS (-1) o a una luz puntual (indice).
+// - Descubre por broadcast SOLO las bombitas energizadas (las apagadas no responden).
+// - Identifica por MAC (estable); resuelve MAC->IP en cada descubrimiento (DHCP).
+// - Cuartos con luces NOMBRADAS (config.json). Sin cuartos -> uno "Todas" autodescubierto.
+// - Target: TODAS las del cuarto, o una luz puntual (se muestra por nombre).
 import dgram from 'node:dgram';
 import { log } from './log';
 
 const WIZ_PORT = 38899;
 
-export interface Room { name: string; macs: string[]; }
+export interface Light { name: string; mac: string; }
+export interface Room { name: string; lights: Light[]; }
 interface Bulb { ip: string; mac: string; }
 
 export class Wiz {
   private rooms: Room[];
   private auto: boolean;                 // sin cuartos configurados -> "Todas"
   private bulbs: Bulb[] = [];            // descubiertos (energizados): ip + mac
-  private sel = 0;                       // cuarto seleccionado
-  private target = -1;                   // -1 = todas las del cuarto; >=0 = una luz puntual
+  private sel = 0;                       // cuarto
+  private target = -1;                   // -1 = todas; >=0 = indice de luz en el cuarto
   private st = { on: true, dimming: 70, temp: 3500 };
 
   constructor(rooms: Room[]) {
     this.auto = rooms.length === 0;
-    this.rooms = this.auto ? [{ name: 'Todas', macs: [] }] : rooms;
+    this.rooms = this.auto ? [{ name: 'Todas', lights: [] }] : rooms;
   }
 
-  // {room, target ("Todas" o "n/N"), on, bright, lights} para el feedback al pad.
+  private lights(): Light[] {            // luces del cuarto actual (en auto = las descubiertas)
+    if (this.auto) return this.bulbs.map((b) => ({ name: b.ip, mac: b.mac }));
+    return this.rooms[this.sel]?.lights ?? [];
+  }
+  private macToIp(mac: string): string | undefined {
+    const m = (mac || '').toLowerCase();
+    if (!m) return undefined;
+    return this.bulbs.find((b) => b.mac && b.mac.toLowerCase() === m)?.ip;
+  }
+  private targetIps(): string[] {        // IPs a las que mandar (todas o la luz apuntada)
+    const ls = this.lights();
+    const pick = this.target < 0 ? ls : (ls[this.target] ? [ls[this.target]] : []);
+    return pick.map((l) => this.macToIp(l.mac)).filter((x): x is string => !!x);
+  }
+  private targetName(): string {
+    if (this.target < 0) return 'Todas';
+    return this.lights()[this.target]?.name ?? 'Todas';
+  }
+
   status(): { room: string; target: string; on: boolean; bright: number; lights: number } {
-    const n = this.roomIps().length;
     return {
       room: this.rooms[this.sel]?.name ?? 'Todas',
-      target: this.target < 0 ? 'Todas' : `${this.target + 1}/${n}`,
-      on: this.st.on, bright: this.st.dimming, lights: n,
+      target: this.targetName(),
+      on: this.st.on, bright: this.st.dimming, lights: this.lights().length,
     };
-  }
-
-  private roomIps(): string[] {
-    const room = this.rooms[this.sel];
-    if (!room) return [];
-    if (this.auto || room.macs.length === 0) return this.bulbs.map((b) => b.ip);
-    const want = new Set(room.macs.map((m) => m.toLowerCase()));
-    return this.bulbs.filter((b) => b.mac && want.has(b.mac.toLowerCase())).map((b) => b.ip);
-  }
-  // IPs a las que mandar: todas las del cuarto, o solo la luz apuntada.
-  private targetIps(): string[] {
-    const ips = this.roomIps();
-    if (this.target < 0 || this.target >= ips.length) return ips;
-    return [ips[this.target]];
   }
 
   discover(timeoutMs = 1200): Promise<number> {
@@ -74,7 +77,7 @@ export class Wiz {
   private send(params: Record<string, unknown>): void {
     const ips = this.targetIps();
     if (!ips.length) {
-      log.warn(`WiZ: cuarto "${this.rooms[this.sel]?.name}" sin IPs (¿MACs no descubiertas / no energizadas?)`);
+      log.warn(`WiZ: "${this.status().room} / ${this.targetName()}" sin IPs (¿luz apagada / MAC no descubierta?)`);
       return;
     }
     log.info(`WiZ -> setPilot ${JSON.stringify(params)} a [${ips.join(', ')}]`);
@@ -85,8 +88,7 @@ export class Wiz {
     for (const ip of ips) sock.send(msg, WIZ_PORT, ip, done);
   }
 
-  // Lee el estado real de la luz apuntada (sincroniza on/brillo/temp con la realidad).
-  sync(): Promise<void> {
+  sync(): Promise<void> {                // lee estado real (getPilot) de la luz apuntada
     return new Promise((resolve) => {
       const ips = this.targetIps();
       if (!ips.length) return resolve();
@@ -111,7 +113,7 @@ export class Wiz {
   }
 
   async roomNext(): Promise<void> { if (this.rooms.length) { this.sel = (this.sel + 1) % this.rooms.length; this.target = -1; await this.sync(); } }
-  async lightNext(): Promise<void> { const n = this.roomIps().length; this.target = this.target + 1 >= n ? -1 : this.target + 1; await this.sync(); }
+  async lightNext(): Promise<void> { const n = this.lights().length; this.target = this.target + 1 >= n ? -1 : this.target + 1; await this.sync(); }
   toggle(): void { this.st.on = !this.st.on; this.send({ state: this.st.on }); }
   brighter(): void { this.st.dimming = Math.min(100, this.st.dimming + 15); this.st.on = true; this.send({ state: true, dimming: this.st.dimming }); }
   dimmer(): void { this.st.dimming = Math.max(10, this.st.dimming - 15); this.send({ state: true, dimming: this.st.dimming }); }
