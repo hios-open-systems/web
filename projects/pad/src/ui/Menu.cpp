@@ -28,15 +28,17 @@ struct Page     { const char* name; uint16_t color; const PageItem* items; int c
 static const PageItem PI_TRABAJO[]    = { {"Edicion",-1},{"Dev",-1},{"Apps",-1},{"Navegador",-1} };
 static const PageItem PI_MULTIMEDIA[] = { {"Multimedia",-1},{"YouTube",-1},{"Netflix",-1} };
 static const PageItem PI_LLAMADAS[]   = { {"Meet",-1},{"Slack",-1},{"Zoom",-1},{"Teams",-1} };
-static const PageItem PI_APARIENCIA[] = { {nullptr,S_BRIGHT},{nullptr,S_THEME},{nullptr,S_ACCENT},{nullptr,S_SKIN},{"RGB",-1} };
+static const PageItem PI_APARIENCIA[] = { {nullptr,S_BRIGHT},{nullptr,S_THEME},{nullptr,S_ACCENT},{nullptr,S_SKIN} };
 static const PageItem PI_SISTEMA[]    = { {nullptr,S_CLOCK},{nullptr,S_WIFI},{nullptr,S_CAL},{nullptr,S_PREC},{nullptr,S_DIM} };
+static const PageItem PI_LUCES[]      = { {"RGB",-1},{"WiZ",-1} };
 
 static const Page PAGES[] = {
   { "Trabajo",    theme::CYAN,    PI_TRABAJO,    4 },
   { "Multimedia", theme::MAGENTA, PI_MULTIMEDIA, 3 },
   { "Llamadas",   theme::ROSE,    PI_LLAMADAS,   4 },
-  { "Apariencia", theme::VIOLET,  PI_APARIENCIA, 5 },   // Brillo,Tema,Color,Skin,RGB(capa)
+  { "Apariencia", theme::VIOLET,  PI_APARIENCIA, 4 },   // Brillo,Tema,Color,Skin
   { "Sistema",    theme::GREEN,   PI_SISTEMA,    5 },   // Hora,WiFi,Calibrar,Precision,Dimmer
+  { "Luces",      theme::YELLOW,  PI_LUCES,      2 },   // RGB + WiZ (iluminacion)
 };
 
 static KeyMap* s_km = nullptr;
