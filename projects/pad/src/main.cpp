@@ -187,7 +187,10 @@ static void renderUI(const UiSnapshot& s) {
 
   // Modo mouse cambio -> full (poco frecuente). Solo movimiento del stick y el
   // skin con cursor en vivo -> redibujo solo el cursor.
-  if (s.mouseOn != prev.mouseOn || s.encMode != prev.encMode) {
+  // Actividad del encoder: girar (encPos) o presionar/soltar el SW (bit 5) -> redibuja
+  // la franja para que la aguja del dial gire y pinte en vivo (feedback fisico).
+  const bool encActivity = (s.encPos != prev.encPos) || (((s.buttons ^ prev.buttons) >> 5) & 1);
+  if (s.mouseOn != prev.mouseOn || s.encMode != prev.encMode || encActivity) {
     if (sk.encoder) sk.encoder(ctx, s);   // redibuja SOLO la franja del encoder (sin flash)
     else sk.full(ctx, s);
   } else if (s.mouseOn && sk.stick) {

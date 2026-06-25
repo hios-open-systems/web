@@ -172,7 +172,19 @@ static void cardsEncStrip(const SkinContext& ctx, const UiSnapshot& s) {
   const bool ovr = (s.encMode != 0 && s.encMode < 5);
   const char* encLab  = ovr ? ENC_MODE[s.encMode] : km.label(s.activeLayer, InputId::ENC_ROT);
   const uint16_t encC = ovr ? theme::CYAN : L.color;
-  iconkit::icon(g, Glyph::DIAL, ENC_S1_X + 18, ENC_Y + ENC_H / 2, encC);
+  // Dial con feedback fisico: la aguja gira con encPos y el dial se PINTA al presionar
+  // el SW. Confirma que HAY lectura sin mirar los textos (si no reacciona al girar/apretar
+  // -> algo pasa: cable suelto, detente muerto). 12 posiciones precalculadas (sin floats).
+  static const int8_t DIAL_DX[12] = { 7, 6, 4, 0, -4, -6, -7, -6, -4, 0, 4, 6 };
+  static const int8_t DIAL_DY[12] = { 0, 4, 6, 7, 6, 4, 0, -4, -6, -7, -6, -4 };
+  const int dcx = ENC_S1_X + 18, dcy = ENC_Y + ENC_H / 2, dr = 9;
+  const bool encDown = (s.buttons >> 5) & 1;                 // bit 5 = SW del encoder
+  const int di = (int)(((s.encPos % 12) + 12) % 12);
+  if (encDown) g.fillCircle(dcx, dcy, dr, encC);             // pintado al presionar
+  else         g.drawCircle(dcx, dcy, dr, encC);
+  const uint16_t mark = encDown ? theme::BG : encC;          // contraste sobre el relleno
+  g.drawLine(dcx, dcy, dcx + DIAL_DX[di], dcy + DIAL_DY[di], mark);
+  g.fillCircle(dcx + DIAL_DX[di], dcy + DIAL_DY[di], 2, mark);
   g.setTextDatum(TL_DATUM);
   g.setTextColor(theme::DIM, theme::PANEL);
   g.drawString(ovr ? "ENCODER 2x" : "ENCODER", ENC_S1_X + 36, ENC_Y + 6, 1);
