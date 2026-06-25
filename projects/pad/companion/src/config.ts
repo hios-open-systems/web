@@ -1,13 +1,14 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { log } from './log';
+import type { Room } from './wiz';
 
 export interface Config {
   host: string;                     // "hiospad.local" o una IP (ej "192.168.1.43")
   token: string;                    // "" = sin token; si no, va en el header X-Pad-Token
   pollMs: number;                   // periodo del loop
   send: Record<string, boolean>;    // que campos mandar
-  wiz: { ips: string[] };           // luces WiZ: ips fijas (vacio = autodescubrir por broadcast)
+  wiz: { rooms: Room[] };           // cuartos WiZ por MAC (vacio = un cuarto "Todas" autodescubierto)
 }
 
 const DEFAULTS: Config = {
@@ -16,7 +17,7 @@ const DEFAULTS: Config = {
   pollMs: 1000,
   send: { mic: true, cam: false, media: false, vol: true,
           cpuTemp: true, gpuTemp: true, cpuLoad: true, gpuLoad: true, clock: true },
-  wiz: { ips: [] },
+  wiz: { rooms: [] },
 };
 
 // Carga config.json (o --config <path>). Sin archivo -> defaults.

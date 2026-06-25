@@ -13,9 +13,10 @@ async function main(): Promise<void> {
   const providers = await pickProviders();
   const device = new Device(cfg.host, cfg.token);
 
-  const wiz = new Wiz(cfg.wiz.ips);
+  const wiz = new Wiz(cfg.wiz.rooms);
   const nWiz = await wiz.discover();
-  log.info(`WiZ: ${nWiz} luz(ces) ${nWiz ? '✓' : '(ninguna; revisa la red o pone ips en config.json)'}`);
+  log.info(`WiZ: ${nWiz} luz(ces) energizada(s) ${nWiz ? '✓' : '(ninguna; ver red/firewall o config.json)'}`);
+  setInterval(() => { void wiz.discover(); }, 30000);   // re-descubre: IPs DHCP, bombitas que prenden/apagan
 
   let stop = false;
   const quit = () => { stop = true; log.info('saliendo...'); };
@@ -46,6 +47,8 @@ async function main(): Promise<void> {
       const d = new Date();
       state.clockMin = d.getHours() * 60 + d.getMinutes();
     }
+    const w = wiz.status();                          // feedback WiZ -> la capa muestra que controla
+    state.wizRoom = w.room; state.wizTarget = w.target; state.wizOn = w.on; state.wizBright = w.bright;
 
     // Siempre POSTeamos (aunque el state este vacio): la respuesta trae los
     // comandos que el pad encolo (mute global, etc.) y asi se entregan en ~pollMs.
@@ -63,6 +66,8 @@ async function main(): Promise<void> {
       } else if (cmd === 'wizBrightDown'){ wiz.dimmer();   log.info('WiZ -brillo');
       } else if (cmd === 'wizWarmer')    { wiz.warmer();   log.info('WiZ +calido');
       } else if (cmd === 'wizCooler')    { wiz.cooler();   log.info('WiZ +frio');
+      } else if (cmd === 'wizRoomNext')  { await wiz.roomNext();  log.info(`WiZ cuarto -> ${wiz.status().room}`);
+      } else if (cmd === 'wizLightNext') { await wiz.lightNext(); log.info(`WiZ luz -> ${wiz.status().target}`);
       } else {
         log.info(`comando desconocido: ${cmd}`);
       }
