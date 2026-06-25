@@ -128,6 +128,11 @@ static void handlePostState() {
     JsonArray arr = res["cmds"].to<JsonArray>();
     if (pend & 0x01) arr.add("micToggle");
     if (pend & 0x02) arr.add("camToggle");
+    if (pend & 0x04) arr.add("wizToggle");
+    if (pend & 0x08) arr.add("wizBrightUp");
+    if (pend & 0x10) arr.add("wizBrightDown");
+    if (pend & 0x20) arr.add("wizWarmer");
+    if (pend & 0x40) arr.add("wizCooler");
     String out; serializeJson(res, out);
     s_web.send(200, "application/json", out);
   } else {
@@ -292,8 +297,13 @@ bool hasFreshState(uint32_t now) {
 const RealState& realState() { return s_real; }
 
 void queueCommand(CompanionCmd cmd) {
-  uint8_t bit = cmd == CompanionCmd::MIC_TOGGLE ? 0x01
-              : cmd == CompanionCmd::CAM_TOGGLE ? 0x02 : 0;
+  uint8_t bit = cmd == CompanionCmd::MIC_TOGGLE      ? 0x01
+              : cmd == CompanionCmd::CAM_TOGGLE      ? 0x02
+              : cmd == CompanionCmd::WIZ_TOGGLE      ? 0x04
+              : cmd == CompanionCmd::WIZ_BRIGHT_UP   ? 0x08
+              : cmd == CompanionCmd::WIZ_BRIGHT_DOWN ? 0x10
+              : cmd == CompanionCmd::WIZ_WARMER      ? 0x20
+              : cmd == CompanionCmd::WIZ_COOLER      ? 0x40 : 0;
   if (!bit) return;
   portENTER_CRITICAL(&s_cmdMux);
   s_pendingCmds |= bit;

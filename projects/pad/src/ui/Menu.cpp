@@ -340,6 +340,12 @@ static bool drawLayerIcon(TFT_eSPI& g, const char* nm, int cx, int cy, uint16_t 
     g.fillCircle(cx + 6, cy + 4, 6, theme::BLUE);
     return true;
   }
+  if (is("WiZ")) {                                      // lampara
+    g.fillCircle(cx, cy - 3, 9, col);
+    g.fillRect(cx - 5, cy + 5, 10, 5, col);
+    g.drawFastHLine(cx - 4, cy + 11, 8, col);
+    return true;
+  }
   return false;
 }
 
