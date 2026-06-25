@@ -265,8 +265,8 @@
             ]
         },
         "pad": {
-            "moment": "La primera vez que moví el puntero desde el stick por Bluetooth — sin cable, sin dongle, sin drivers — y la PC respondió. Después de días peleándome con el BLE en Linux, ver el mouse moverse fue impagable.",
-            "struggle": "El mismo hardware andaba en Windows pero en Linux ni aparecía en el scan. Era una mezcla fina: el adaptador no reportaba el advertising legacy, así que hubo que pasar a advertising extendido de BLE 5, y arriba de eso un bug de NimBLE que crasheaba el ESP en cada conexión y lo disfrazaba de 'no conecta'. Días de btmon hasta entenderlo.",
+            "moment": "La primera vez que el puntero se movió desde el stick por Bluetooth — sin cable, sin dongle, sin drivers — y la PC respondió. Después de varias horas afinando el BLE en Linux entre documentación, IA, pruebas y builds, verlo andar cerró el círculo.",
+            "struggle": "El mismo hardware funcionaba en Windows pero en Linux no aparecía en el escaneo. Resultó una combinación fina: el adaptador no tomaba el advertising legacy, así que hubo que pasar a advertising extendido de BLE 5; y encima, un bug conocido de NimBLE que reiniciaba el ESP en cada conexión y lo hacía parecer un 'no conecta'. Un buen rato de btmon y lectura para aislarlo.",
             "whatWorks": [
                 "HID por USB y BLE en simultáneo, con auto-switch",
                 "Capas por contexto navegables desde la pantalla",
