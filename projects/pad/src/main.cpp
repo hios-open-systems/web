@@ -192,12 +192,16 @@ static void renderUI(const UiSnapshot& s) {
 
   // Modo mouse cambio -> full (poco frecuente). Solo movimiento del stick y el
   // skin con cursor en vivo -> redibujo solo el cursor.
-  // Actividad del encoder: girar (encPos) o presionar/soltar el SW (bit 5) -> redibuja
-  // la franja para que la aguja del dial gire y pinte en vivo (feedback fisico).
+  // Encoder: girar (encPos) o presionar/soltar el SW (bit 5).
   const bool encActivity = (s.encPos != prev.encPos) || (((s.buttons ^ prev.buttons) >> 5) & 1);
-  if (s.mouseOn != prev.mouseOn || s.encMode != prev.encMode || encActivity || s.live != prev.live) {
-    if (sk.encoder) sk.encoder(ctx, s);   // redibuja SOLO la franja del encoder (sin flash)
+  // Cambios que SI tocan toda la franja (mouse on/off, modo del encoder, enlace companion).
+  const bool fullStrip   = s.mouseOn != prev.mouseOn || s.encMode != prev.encMode || s.live != prev.live;
+  if (fullStrip) {
+    if (sk.encoder) sk.encoder(ctx, s);
     else sk.full(ctx, s);
+  } else if (encActivity) {
+    if (sk.encDial) sk.encDial(ctx, s);   // SOLO el dial -> no flashea los boxes de companion/mouse
+    else if (sk.encoder) sk.encoder(ctx, s);
   } else if (s.mouseOn && sk.stick) {
     bool stickMoved = (abs((int)s.stickX - (int)prev.stickX) > cfg::STICK_DISPLAY_DELTA) ||
                       (abs((int)s.stickY - (int)prev.stickY) > cfg::STICK_DISPLAY_DELTA);

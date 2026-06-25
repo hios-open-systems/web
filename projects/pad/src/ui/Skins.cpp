@@ -161,6 +161,35 @@ static void cardsStick(const SkinContext& ctx, const UiSnapshot& s) {
   g.setTextDatum(TL_DATUM);
 }
 
+// Dibuja SOLO el dial del encoder (aguja que gira con encPos + relleno al presionar el SW).
+// Reutilizado por la franja completa y por el redibujo parcial. 12 posiciones (sin floats).
+static void drawEncDial(TFT_eSPI& g, const UiSnapshot& s, uint16_t encC) {
+  using namespace layout;
+  static const int8_t DIAL_DX[12] = { 7, 6, 4, 0, -4, -6, -7, -6, -4, 0, 4, 6 };
+  static const int8_t DIAL_DY[12] = { 0, 4, 6, 7, 6, 4, 0, -4, -6, -7, -6, -4 };
+  const int dcx = ENC_S1_X + 18, dcy = ENC_Y + ENC_H / 2, dr = 9;
+  const bool encDown = (s.buttons >> 5) & 1;
+  const int di = (int)(((s.encPos % 12) + 12) % 12);
+  if (encDown) g.fillCircle(dcx, dcy, dr, encC);
+  else         g.drawCircle(dcx, dcy, dr, encC);
+  const uint16_t mark = encDown ? theme::BG : encC;
+  g.drawLine(dcx, dcy, dcx + DIAL_DX[di], dcy + DIAL_DY[di], mark);
+  g.fillCircle(dcx + DIAL_DX[di], dcy + DIAL_DY[di], 2, mark);
+}
+
+// Redibujo PARCIAL: limpia solo el area del dial y lo repinta. Girar/apretar el encoder
+// no debe flashear los boxes de companion/mouse -> esto toca solo el dial.
+static void cardsEncDial(const SkinContext& ctx, const UiSnapshot& s) {
+  TFT_eSPI& g = *ctx.tft; KeyMap& km = *ctx.km;
+  using namespace layout;
+  const Layer& L = km.layer(s.activeLayer);
+  const bool ovr = (s.encMode != 0 && s.encMode < 5);
+  const uint16_t encC = ovr ? theme::CYAN : L.color;
+  const int dcx = ENC_S1_X + 18, dcy = ENC_Y + ENC_H / 2, dr = 9;
+  g.fillRect(dcx - dr - 1, dcy - dr - 1, 2 * dr + 3, 2 * dr + 3, theme::PANEL);   // limpia solo el dial
+  drawEncDial(g, s, encC);
+}
+
 static void cardsEncStrip(const SkinContext& ctx, const UiSnapshot& s) {
   TFT_eSPI& g = *ctx.tft; KeyMap& km = *ctx.km;
   using namespace layout;
@@ -172,19 +201,7 @@ static void cardsEncStrip(const SkinContext& ctx, const UiSnapshot& s) {
   const bool ovr = (s.encMode != 0 && s.encMode < 5);
   const char* encLab  = ovr ? ENC_MODE[s.encMode] : km.label(s.activeLayer, InputId::ENC_ROT);
   const uint16_t encC = ovr ? theme::CYAN : L.color;
-  // Dial con feedback fisico: la aguja gira con encPos y el dial se PINTA al presionar
-  // el SW. Confirma que HAY lectura sin mirar los textos (si no reacciona al girar/apretar
-  // -> algo pasa: cable suelto, detente muerto). 12 posiciones precalculadas (sin floats).
-  static const int8_t DIAL_DX[12] = { 7, 6, 4, 0, -4, -6, -7, -6, -4, 0, 4, 6 };
-  static const int8_t DIAL_DY[12] = { 0, 4, 6, 7, 6, 4, 0, -4, -6, -7, -6, -4 };
-  const int dcx = ENC_S1_X + 18, dcy = ENC_Y + ENC_H / 2, dr = 9;
-  const bool encDown = (s.buttons >> 5) & 1;                 // bit 5 = SW del encoder
-  const int di = (int)(((s.encPos % 12) + 12) % 12);
-  if (encDown) g.fillCircle(dcx, dcy, dr, encC);             // pintado al presionar
-  else         g.drawCircle(dcx, dcy, dr, encC);
-  const uint16_t mark = encDown ? theme::BG : encC;          // contraste sobre el relleno
-  g.drawLine(dcx, dcy, dcx + DIAL_DX[di], dcy + DIAL_DY[di], mark);
-  g.fillCircle(dcx + DIAL_DX[di], dcy + DIAL_DY[di], 2, mark);
+  drawEncDial(g, s, encC);   // dial: aguja gira con encPos + pinta al presionar el SW
   g.setTextDatum(TL_DATUM);
   g.setTextColor(theme::DIM, theme::PANEL);
   g.drawString(ovr ? "ENCODER 2x" : "ENCODER", ENC_S1_X + 36, ENC_Y + 6, 1);
@@ -466,7 +483,7 @@ static void sensoresClock(const SkinContext& ctx) {
 //  Registro
 // ============================================================================
 static const Skin SKINS[] = {
-  { "Cards",    cardsFull,    cardsKeycap,    cardsStatus,    cardsStick, cardsClock,    cardsEncStrip },
+  { "Cards",    cardsFull,    cardsKeycap,    cardsStatus,    cardsStick, cardsClock,    cardsEncStrip, cardsEncDial },
   { "Minimal",  minFull,      minKeycap,      minStatus,      nullptr,    minClock,      noEncoder },
   { "Watch",    watchFull,    watchKeycap,    watchStatus,    nullptr,    watchClock,    noEncoder },
   { "Sensores", sensoresFull, sensoresKeycap, sensoresStatus, nullptr,    sensoresClock, noEncoder },
