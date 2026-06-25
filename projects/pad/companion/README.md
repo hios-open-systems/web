@@ -33,6 +33,40 @@ npm start          # node dist/index.js   (o: node dist/index.js --config /ruta/
 - **token:** si en el firmware definís `cfg::API_TOKEN`, ponelo acá (va en el header `X-Pad-Token`).
 - **send:** qué campos mandar; lo que no esté/no se pueda leer se omite.
 
+## Autostart (que arranque solo con la PC)
+
+**Windows** — Tarea Programada al iniciar sesión, sin dependencias ni admin:
+```powershell
+cd projects\pad\companion
+powershell -ExecutionPolicy Bypass -File .\install-windows.ps1   # registra + arranca
+powershell -ExecutionPolicy Bypass -File .\uninstall-windows.ps1 # quitar
+```
+- Corre Node bajo el nombre **`pad-companion.exe`** → se identifica claro en el
+  Administrador de tareas > Detalles. Tarea: **`HIOS-Pad-Companion`**.
+- Arranca **al iniciar sesión** (no al boot crudo) a propósito: lee tu audio (mic/volumen
+  por Core Audio), que solo existe dentro de la sesión de usuario.
+- Reintenta 3× si se cae. Reconfigurar: editá `config.json` y reiniciá la tarea.
+
+**Linux (systemd)** — unit de usuario equivalente (`~/.config/systemd/user/pad-companion.service`):
+```ini
+[Unit]
+Description=HIOS pad-companion
+After=network-online.target
+
+[Service]
+ExecStart=/usr/bin/node %h/ruta/a/projects/pad/companion/dist/index.js
+WorkingDirectory=%h/ruta/a/projects/pad/companion
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
+```
+```bash
+systemctl --user daemon-reload && systemctl --user enable --now pad-companion
+```
+El proceso se ve como **`pad-companion`** en `ps/top/htop` (lo fija `process.title`).
+
 ## Contrato (POST /api/state) — FUENTE DE VERDAD compartida con el firmware
 
 Debe coincidir con `handlePostState()` en `../src/net/Net.cpp` (firmware del pad) y con
