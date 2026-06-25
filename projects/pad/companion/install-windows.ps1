@@ -1,44 +1,55 @@
 # ============================================================================
-#  install-windows.ps1 — Autostart del pad-companion en Windows.
-#  Registra una Tarea Programada que arranca el daemon al iniciar sesion, y
-#  corre Node bajo el nombre "pad-companion.exe" para identificarlo claro en el
-#  Administrador de tareas. Equivalente al unit de systemd que se usa en Ubuntu.
+#  install-windows.ps1 — Autostart NATIVO del pad-companion en Windows.
 #
-#  Uso (PowerShell, NO requiere admin):
-#     cd projects\pad\companion
+#  Copia el build (dist/ + config.json) desde esta carpeta (puede estar en la
+#  share \\wsl.localhost) a una carpeta nativa de Windows, y registra una Tarea
+#  Programada que lo arranca al iniciar sesion. Asi NO depende de WSL ni de
+#  node_modules (el companion en runtime solo usa APIs nativas de Node + fetch).
+#  Corre Node como "pad-companion.exe" -> nombre de proceso claro.
+#
+#  Requisitos: Node para Windows instalado (nodejs.org) y el build hecho
+#  (en WSL: `npm run build`).
+#
+#  Uso (PowerShell, sin admin):
+#     cd \\wsl.localhost\Ubuntu-20.04\home\juanparedez\projects\hios\web\projects\pad\companion
 #     powershell -ExecutionPolicy Bypass -File .\install-windows.ps1
 #
-#  Para desinstalar:  .\uninstall-windows.ps1
+#  Desinstalar:  .\uninstall-windows.ps1
 # ============================================================================
 #Requires -Version 5
 $ErrorActionPreference = 'Stop'
 
 $TaskName = 'HIOS-Pad-Companion'
-$Here     = Split-Path -Parent $MyInvocation.MyCommand.Path      # carpeta companion
-$NodeExe  = (Get-Command node -ErrorAction Stop).Source          # node.exe en el PATH
-$PadExe   = Join-Path $Here 'pad-companion.exe'                  # copia de node con nombre claro
-$Entry    = Join-Path $Here 'dist\index.js'
-$Config   = Join-Path $Here 'config.json'
+$Source   = Split-Path -Parent $MyInvocation.MyCommand.Path       # carpeta companion (puede ser \\wsl$)
+$Dest     = Join-Path $env:LOCALAPPDATA 'pad-companion'           # carpeta nativa de Windows
+$PadExe   = Join-Path $Dest 'pad-companion.exe'
+$Entry    = Join-Path $Dest 'dist\index.js'
 
-Write-Host "[1/5] config.json..." -ForegroundColor Cyan
-if (-not (Test-Path $Config)) {
-  Copy-Item (Join-Path $Here 'config.example.json') $Config
-  Write-Warning "Cree config.json desde el ejemplo. Edita 'host' (hiospad.local o la IP del pad) antes de confiar en el."
+Write-Host "[1/5] Verificando Node para Windows..." -ForegroundColor Cyan
+$NodeExe = (Get-Command node -ErrorAction Stop).Source
+Write-Host "      node: $NodeExe"
+
+Write-Host "[2/5] Verificando el build (dist/)..." -ForegroundColor Cyan
+$SrcDist = Join-Path $Source 'dist'
+if (-not (Test-Path (Join-Path $SrcDist 'index.js'))) {
+  throw "No existe dist\index.js en $Source. Construilo primero en WSL: 'npm run build'."
 }
 
-Write-Host "[2/5] Build del companion (npm install + tsc)..." -ForegroundColor Cyan
-Push-Location $Here
-try {
-  if (-not (Test-Path (Join-Path $Here 'node_modules'))) { npm install }
-  npm run build
-} finally { Pop-Location }
-if (-not (Test-Path $Entry)) { throw "No se genero $Entry (fallo el build)." }
-
-Write-Host "[3/5] Copiando node.exe -> pad-companion.exe (nombre de proceso claro)..." -ForegroundColor Cyan
-Copy-Item $NodeExe $PadExe -Force
+Write-Host "[3/5] Copiando a carpeta nativa: $Dest" -ForegroundColor Cyan
+New-Item -ItemType Directory -Force -Path $Dest | Out-Null
+if (Test-Path (Join-Path $Dest 'dist')) { Remove-Item (Join-Path $Dest 'dist') -Recurse -Force }
+Copy-Item $SrcDist (Join-Path $Dest 'dist') -Recurse -Force
+# config.json: NO pisar uno ya editado en Windows; si no hay, traer el de origen o el ejemplo.
+if (-not (Test-Path (Join-Path $Dest 'config.json'))) {
+  $srcCfg = Join-Path $Source 'config.json'
+  if (-not (Test-Path $srcCfg)) { $srcCfg = Join-Path $Source 'config.example.json' }
+  Copy-Item $srcCfg (Join-Path $Dest 'config.json')
+  Write-Warning "config.json copiado a $Dest. Edita 'host' = IP del pad (o hiospad.local) antes de confiar."
+}
+Copy-Item $NodeExe $PadExe -Force                                  # node con nombre claro
 
 Write-Host "[4/5] Registrando la Tarea Programada '$TaskName'..." -ForegroundColor Cyan
-$action    = New-ScheduledTaskAction -Execute $PadExe -Argument "`"$Entry`"" -WorkingDirectory $Here
+$action    = New-ScheduledTaskAction -Execute $PadExe -Argument "`"$Entry`"" -WorkingDirectory $Dest
 $trigger   = New-ScheduledTaskTrigger -AtLogOn
 $settings  = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries `
                                           -StartWhenAvailable -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1)
@@ -50,7 +61,8 @@ Write-Host "[5/5] Arrancando ahora..." -ForegroundColor Cyan
 Start-ScheduledTask -TaskName $TaskName
 
 Write-Host ""
-Write-Host "OK -> '$TaskName' corriendo y configurado para iniciar al login." -ForegroundColor Green
-Write-Host "  - Administrador de tareas > Detalles: vas a ver 'pad-companion.exe'"
-Write-Host "  - Programador de tareas: tarea '$TaskName'"
-Write-Host "  - Reconfigurar: edita config.json y reinicia con  Stop/Start-ScheduledTask -TaskName $TaskName"
+Write-Host "OK -> '$TaskName' corriendo desde $Dest (nativo, sin WSL)." -ForegroundColor Green
+Write-Host "  - Administrador de tareas > Detalles: 'pad-companion.exe'"
+Write-Host "  - Reconfigurar: edita $Dest\config.json y reinicia:"
+Write-Host "      Stop-ScheduledTask -TaskName $TaskName ; Start-ScheduledTask -TaskName $TaskName"
+Write-Host "  - Al actualizar el firmware/companion: re-corre este script (recopia dist/)."
