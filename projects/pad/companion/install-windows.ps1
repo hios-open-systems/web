@@ -25,6 +25,11 @@ $Dest     = Join-Path $env:LOCALAPPDATA 'pad-companion'           # carpeta nati
 $PadExe   = Join-Path $Dest 'pad-companion.exe'
 $Entry    = Join-Path $Dest 'dist\index.js'
 
+Write-Host "[0/5] Frenando instancia en curso (si hay)..." -ForegroundColor Cyan
+Stop-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue
+Get-Process -Name 'pad-companion' -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+Start-Sleep -Milliseconds 500   # soltar el lock del exe antes de copiarlo
+
 Write-Host "[1/5] Verificando Node para Windows..." -ForegroundColor Cyan
 $NodeExe = (Get-Command node -ErrorAction Stop).Source
 Write-Host "      node: $NodeExe"
