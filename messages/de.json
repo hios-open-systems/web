@@ -462,8 +462,13 @@
             "html": "HTML"
         }
     },
+    "ProjectsPage": {
+        "title": "Projekte",
+        "subtitle": "Offene Hardware, die ich entworfen, kaputtgemacht und dokumentiert habe. Code, Schaltpläne und Anleitungen — alles da, damit du deine eigene baust."
+    },
     "Header": {
         "home": "Start",
+        "projects": "Projekte",
         "tools": "Tools",
         "workbench": "Workbench",
         "pinouts": "Pinouts",
