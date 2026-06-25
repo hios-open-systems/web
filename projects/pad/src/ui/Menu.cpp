@@ -68,12 +68,22 @@ static int groupIndexOf(LayerGroup g) {
   return 0;
 }
 
-// Paginas del picker = grupos de capas + 1 pagina "Ajustes" al final (visible
-// girando el encoder; se abre con press). s_groupSel == G_COUNT => Ajustes.
-static int  pageCount()  { return G_COUNT + 1; }
-static bool ajustesPage(){ return s_groupSel == G_COUNT; }
-static const char* pageName()  { return ajustesPage() ? "Ajustes" : GROUPS[s_groupSel].name; }
-static uint16_t    pageColor() { return ajustesPage() ? theme::GREEN : GROUPS[s_groupSel].color; }
+// Paginas del picker = grupos de capas + paginas de settings al final. Los settings
+// se parten en Apariencia (personalizacion) y Sistema (config). s_groupSel >= G_COUNT
+// => pagina de settings (indice = settingsPageIdx()). start/count en indices relativos
+// a idxBright() (los 8 items ya estan ordenados: 0-4 apariencia, 5-7 sistema).
+struct SettingsPage { const char* name; uint16_t color; int start; int count; const char* items; };
+static const SettingsPage SET_PAGES[] = {
+  { "Apariencia", theme::MAGENTA, 0, 5, "Brillo  Tema  Color  Skin  Dimmer" },
+  { "Sistema",    theme::GREEN,   5, 3, "Hora   WiFi   Calibrar" },
+};
+static const int SET_PAGE_COUNT = sizeof(SET_PAGES) / sizeof(SET_PAGES[0]);
+
+static int  pageCount()       { return G_COUNT + SET_PAGE_COUNT; }
+static bool settingsPage()    { return s_groupSel >= G_COUNT; }
+static int  settingsPageIdx() { return s_groupSel - G_COUNT; }      // valido solo si settingsPage()
+static const char* pageName()  { return settingsPage() ? SET_PAGES[settingsPageIdx()].name  : GROUPS[s_groupSel].name; }
+static uint16_t    pageColor() { return settingsPage() ? SET_PAGES[settingsPageIdx()].color : GROUPS[s_groupSel].color; }
 
 void init(KeyMap* km) { s_km = km; }
 
@@ -93,7 +103,7 @@ void close() {
 }
 bool isOpen() { return s_open; }
 
-bool inLayerPicker() { return s_open && s_mode == MODE_PICKER && !ajustesPage(); }
+bool inLayerPicker() { return s_open && s_mode == MODE_PICKER && !settingsPage(); }
 
 MenuResult pickButton(uint8_t i) {
   if (!inLayerPicker()) return MenuResult::NONE;
@@ -145,17 +155,22 @@ void turn(int delta) {
     s_dirty = true;
     return;
   }
-  // Ajustes
+  // Pagina de settings: cicla dentro del rango de la pagina actual (no salta a la otra).
   if (s_editItem) { editSelected(delta); s_dirty = true; return; }
-  s_setCur = (s_setCur + delta + N_SETTINGS) % N_SETTINGS;
+  const SettingsPage& sp = SET_PAGES[settingsPageIdx()];
+  int rel = (s_setCur - sp.start + delta + sp.count) % sp.count;
+  s_setCur = sp.start + rel;
   s_sel = settingsItem(s_setCur);
   s_dirty = true;
 }
 
 MenuResult press() {
   if (!s_open) return MenuResult::NONE;
-  if (s_mode == MODE_PICKER) {                     // press = abrir Ajustes
-    s_mode = MODE_SETTINGS; s_setCur = 0; s_sel = settingsItem(0);
+  if (s_mode == MODE_PICKER) {                     // press en pagina de settings = abrirla
+    if (!settingsPage()) return MenuResult::NONE;  // en paginas de capas se usan los botones
+    s_mode = MODE_SETTINGS;
+    s_setCur = SET_PAGES[settingsPageIdx()].start; // primer item de la pagina
+    s_sel = settingsItem(s_setCur);
     s_editItem = false; s_needFull = true; s_dirty = true;
     return MenuResult::NONE;
   }
@@ -320,7 +335,8 @@ static void drawCard(int sx, int i, bool seld) {
 
 static void renderSettingsCarousel() {
   s_spr->fillSprite(theme::BG);
-  for (int c = 0; c < N_SETTINGS; c++) {
+  const SettingsPage& sp = SET_PAGES[settingsPageIdx()];   // solo los items de esta pagina
+  for (int c = sp.start; c < sp.start + sp.count; c++) {
     int sx = CARW / 2 + (c - s_setCur) * STEP;
     if (sx < -100 || sx > CARW + 100) continue;
     drawCard(sx, settingsItem(c), c == s_setCur);
@@ -375,15 +391,15 @@ static void renderPicker(TFT_eSPI& tft) {
 static void renderAjustesPage(TFT_eSPI& tft) {
   tft.fillRect(0, 74, 480, 142, theme::BG);
   const int x = 54, y = 82, w = 372, h = 120;
+  const SettingsPage& sp = SET_PAGES[settingsPageIdx()];
   tft.fillRoundRect(x, y, w, h, 12, theme::CARD);
-  tft.drawRoundRect(x, y, w, h, 12, theme::GREEN);
-  tft.drawRoundRect(x + 1, y + 1, w - 2, h - 2, 11, theme::blend(theme::GREEN, theme::FG, 50));
+  tft.drawRoundRect(x, y, w, h, 12, sp.color);
+  tft.drawRoundRect(x + 1, y + 1, w - 2, h - 2, 11, theme::blend(sp.color, theme::FG, 50));
   tft.setTextDatum(MC_DATUM);
   tft.setTextColor(theme::FG, theme::CARD);
-  tft.drawString("Ajustes", 240, y + 26, 4);
+  tft.drawString(sp.name, 240, y + 30, 4);
   tft.setTextColor(theme::SOFT, theme::CARD);
-  tft.drawString("Brillo  Tema  Color  Skin  Dimmer", 240, y + 56, 2);
-  tft.drawString("Hora   WiFi   Calibrar", 240, y + 78, 2);
+  tft.drawString(sp.items, 240, y + 64, 2);
   tft.setTextColor(theme::DIM, theme::CARD);
   tft.drawString("apreta el encoder para abrir", 240, y + 102, 1);
 }
@@ -401,7 +417,7 @@ static void drawHeader(TFT_eSPI& tft) {
     tft.setTextColor(pageColor(), theme::PANEL);
     tft.drawString(p, 470, 14, 2);
   } else {
-    tft.drawString("Ajustes", 240, 44, 4);
+    tft.drawString(pageName(), 240, 44, 4);
   }
 }
 
@@ -414,7 +430,7 @@ static void drawHint(TFT_eSPI& tft) {
   tft.setTextDatum(MC_DATUM);
   tft.setTextColor(theme::SOFT, bg);
   const char *a, *b, *c;
-  if (s_mode == MODE_PICKER) { a = "grupo"; b = ajustesPage() ? "abrir" : "ajustes"; c = "salir"; }
+  if (s_mode == MODE_PICKER) { a = "grupo"; b = settingsPage() ? "abrir" : "ajustes"; c = "salir"; }
   else { a = s_editItem ? "ajustar" : "mover"; b = s_editItem ? "guardar" : "elegir"; c = "volver"; }
   tft.drawString(a, 124, 231, 1);
   tft.drawString(b, 240, 231, 1);
@@ -441,8 +457,8 @@ static void drawEditor(TFT_eSPI& tft) {
 
 static void renderBody(TFT_eSPI& tft) {
   if (s_mode == MODE_SETTINGS) { renderSettingsCarousel(); return; }
-  if (ajustesPage()) renderAjustesPage(tft);
-  else               renderPicker(tft);
+  if (settingsPage()) renderAjustesPage(tft);
+  else                renderPicker(tft);
 }
 
 void render(TFT_eSPI& tft) {
