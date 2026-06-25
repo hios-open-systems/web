@@ -114,7 +114,7 @@ static void handlePostState() {
     s_web.send(401, "text/plain", "unauthorized"); return;
   }
   const String& body = s_web.arg("plain");
-  if (body.length() == 0 || body.length() > 512) { s_web.send(400, "text/plain", "bad body"); return; }
+  if (body.length() == 0 || body.length() > 1024) { s_web.send(400, "text/plain", "bad body"); return; }
   JsonDocument doc;
   if (deserializeJson(doc, body)) { s_web.send(400, "text/plain", "bad json"); return; }
   if (doc["mic"].is<bool>())      s_real.micMuted  = doc["mic"].as<bool>();
@@ -125,6 +125,18 @@ static void handlePostState() {
   if (doc["gpuTemp"].is<float>()) s_real.gpuTemp   = (int16_t)doc["gpuTemp"].as<float>();
   if (doc["cpuLoad"].is<int>())   s_real.cpuLoad   = constrain(doc["cpuLoad"].as<int>(), 0, 100);
   if (doc["gpuLoad"].is<int>())   s_real.gpuLoad   = constrain(doc["gpuLoad"].as<int>(), 0, 100);
+  if (doc["cpuFan"].is<int>())    s_real.cpuFan    = (int16_t)doc["cpuFan"].as<int>();
+  if (doc["gpuFan"].is<int>())    s_real.gpuFan    = (uint8_t)constrain(doc["gpuFan"].as<int>(), 0, 100);
+  if (doc["ram"].is<int>())       s_real.ram       = (uint8_t)constrain(doc["ram"].as<int>(), 0, 100);
+  if (doc["netDown"].is<int>())   s_real.netDown   = (uint32_t)(doc["netDown"].as<int>() < 0 ? 0 : doc["netDown"].as<int>());
+  if (doc["netUp"].is<int>())     s_real.netUp     = (uint32_t)(doc["netUp"].as<int>() < 0 ? 0 : doc["netUp"].as<int>());
+  if (doc["ip"].is<const char*>()) strlcpy(s_real.ip, doc["ip"].as<const char*>(), sizeof(s_real.ip));
+  if (doc["cores"].is<JsonArray>()) {
+    JsonArray a = doc["cores"].as<JsonArray>();
+    uint8_t n = 0;
+    for (JsonVariant v : a) { if (n >= 24) break; s_real.cores[n++] = (uint8_t)constrain(v.as<int>(), 0, 100); }
+    s_real.coreCount = n;
+  }
   if (doc["wizRoom"].is<const char*>())   strlcpy(s_real.wizRoom,   doc["wizRoom"].as<const char*>(),   sizeof(s_real.wizRoom));
   if (doc["wizTarget"].is<const char*>()) strlcpy(s_real.wizTarget, doc["wizTarget"].as<const char*>(), sizeof(s_real.wizTarget));
   if (doc["wizOn"].is<bool>())            s_real.wizOn     = doc["wizOn"].as<bool>();

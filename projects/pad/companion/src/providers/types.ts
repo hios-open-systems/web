@@ -12,11 +12,18 @@ export interface AudioProvider {
 export interface SensorProvider {
   getCpuTempC(): Promise<number | null>;
   getGpuTempC(): Promise<number | null>;
-  getCpuLoadPct(): Promise<number | null>; // best-effort
   getGpuLoadPct(): Promise<number | null>;
+  getCpuFanRpm(): Promise<number | null>;  // cooler de CPU/gabinete (best-effort)
+  getGpuFanPct(): Promise<number | null>;  // cooler de GPU 0..100 (nvidia-smi)
+}
+
+// Throughput de red en bytes/s (down/up). null si no se pudo leer.
+export interface NetProvider {
+  getThroughput(): Promise<{ down: number; up: number } | null>;
 }
 
 export interface PlatformProviders {
   audio: AudioProvider;
   sensors: SensorProvider;
+  net: NetProvider;
 }

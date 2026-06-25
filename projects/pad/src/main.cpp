@@ -130,9 +130,13 @@ static void updateClock(uint32_t now) {
 static bool s_uiForce = false;
 static void uiForceRedraw() { s_uiForce = true; }
 
-static uint8_t activeSkinIndex() {
+static uint8_t activeSkinIndex(const UiSnapshot& s) {
+  // Las capas del Monitor (General/Red/Nucleos) fuerzan su vista, sin importar el
+  // skin de dashboard elegido en Apariencia. Al salir de la capa, vuelve el skin.
+  int mi = skins::monitorIndex(keymap.layer(s.activeLayer).name);
+  if (mi >= 0) return (uint8_t)mi;
   uint8_t i = appstate::prefs.skinIndex;
-  return i < skins::count() ? i : 0;
+  return i < skins::dashboardCount() ? i : 0;
 }
 
 // Dirty-check generico (el skin pone el COMO):
@@ -148,7 +152,7 @@ static void renderUI(const UiSnapshot& s) {
 
   if (s_uiForce) { first = true; s_uiForce = false; }
 
-  const uint8_t skinIdx = activeSkinIndex();
+  const uint8_t skinIdx = activeSkinIndex(s);
   const Skin&   sk = skins::get(skinIdx);
   SkinContext   ctx{ &tft, &keymap, g_clock };
 
@@ -298,6 +302,11 @@ static void inputTask(void*) {
       s.mediaPlay = r.mediaPlay; s.volume  = r.volume;
       s.cpuTemp = r.cpuTemp;     s.gpuTemp = r.gpuTemp;
       s.cpuLoad = r.cpuLoad;     s.gpuLoad = r.gpuLoad;
+      s.cpuFan = r.cpuFan;       s.gpuFan = r.gpuFan;       s.ram = r.ram;
+      s.netDown = r.netDown;     s.netUp = r.netUp;
+      strlcpy(s.ip, r.ip, sizeof(s.ip));
+      s.coreCount = r.coreCount > 24 ? 24 : r.coreCount;
+      memcpy(s.cores, r.cores, sizeof(s.cores));
       strlcpy(s.wizRoom, r.wizRoom, sizeof(s.wizRoom));
       strlcpy(s.wizTarget, r.wizTarget, sizeof(s.wizTarget));
       s.wizOn = r.wizOn;         s.wizBright = r.wizBright;
@@ -306,6 +315,8 @@ static void inputTask(void*) {
       s.mediaPlay = st.mediaPlay; s.volume  = st.volume;
       s.cpuTemp = s.gpuTemp = -1000;           // sin dato
       s.cpuLoad = s.gpuLoad = 255;
+      s.cpuFan = -1; s.gpuFan = s.ram = 255;
+      s.netDown = s.netUp = 0xFFFFFFFF; s.ip[0] = 0; s.coreCount = 0;
       s.wizRoom[0] = 0; s.wizTarget[0] = 0; s.wizOn = false; s.wizBright = 0;
     }
     s.live        = live;
@@ -505,7 +516,7 @@ void setup() {
   if (appstate::prefs.themeMode > theme::MODE_LIGHT) appstate::prefs.themeMode = theme::MODE_DARK;
   if (appstate::prefs.accentIndex > 6) appstate::prefs.accentIndex = 0;
   if (appstate::prefs.dimTimeout > 4) appstate::prefs.dimTimeout = 2;
-  if (appstate::prefs.skinIndex >= skins::count()) appstate::prefs.skinIndex = 0;
+  if (appstate::prefs.skinIndex >= skins::dashboardCount()) appstate::prefs.skinIndex = 0;
   if (appstate::prefs.brightness < 10 || appstate::prefs.brightness > 100) appstate::prefs.brightness = 100;
   if (appstate::prefs.clockMinute >= 24 * 60) appstate::prefs.clockMinute = 12 * 60;
   appstate::brightness = appstate::prefs.brightness;

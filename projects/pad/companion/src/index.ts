@@ -1,6 +1,7 @@
 import { loadConfig } from './config';
 import { Device } from './device';
 import { pickProviders } from './providers';
+import { SystemMetrics } from './providers/system';
 import { Wiz } from './wiz';
 import type { PadState } from './state';
 import { log } from './log';
@@ -8,6 +9,7 @@ import { log } from './log';
 async function main(): Promise<void> {
   process.title = 'pad-companion';                  // se ve asi en top/ps/htop (no como "node")
   const cfg = loadConfig(process.argv);
+  const sys = new SystemMetrics();                  // CPU carga/nucleos + RAM + IP (universal, modulo os)
   log.info(`pad-companion -> http://${cfg.host}/api/state  cada ${cfg.pollMs}ms  (${process.platform})`);
 
   const providers = await pickProviders();
@@ -27,14 +29,19 @@ async function main(): Promise<void> {
 
   const tick = async (): Promise<void> => {
     const s = cfg.send;
-    const [vol, mic, cpuT, gpuT, cpuL, gpuL] = await Promise.all([
+    const cores = s.cores || s.cpuLoad ? sys.coreLoadsPct() : null;   // os.cpus() una sola vez
+    const [vol, mic, cpuT, gpuT, gpuL, cpuFan, gpuFan, ram, net] = await Promise.all([
       s.vol     ? providers.audio.getVolume()      : Promise.resolve(null),
       s.mic     ? providers.audio.getMicMuted()     : Promise.resolve(null),
       s.cpuTemp ? providers.sensors.getCpuTempC()   : Promise.resolve(null),
       s.gpuTemp ? providers.sensors.getGpuTempC()   : Promise.resolve(null),
-      s.cpuLoad ? providers.sensors.getCpuLoadPct() : Promise.resolve(null),
       s.gpuLoad ? providers.sensors.getGpuLoadPct() : Promise.resolve(null),
+      s.cpuFan  ? providers.sensors.getCpuFanRpm()  : Promise.resolve(null),
+      s.gpuFan  ? providers.sensors.getGpuFanPct()  : Promise.resolve(null),
+      s.ram     ? sys.ramPct()                      : Promise.resolve(null),
+      s.net     ? providers.net.getThroughput()     : Promise.resolve(null),
     ]);
+    const cpuL = s.cpuLoad ? SystemMetrics.avg(cores) : null;
 
     const state: PadState = {};
     if (vol  != null) state.vol = vol;
@@ -43,6 +50,16 @@ async function main(): Promise<void> {
     if (gpuT != null) state.gpuTemp = gpuT;
     if (cpuL != null) state.cpuLoad = cpuL;
     if (gpuL != null) state.gpuLoad = gpuL;
+    if (cpuFan != null) state.cpuFan = cpuFan;
+    if (gpuFan != null) state.gpuFan = gpuFan;
+    if (ram  != null) state.ram = ram;
+    if (s.cores && cores) state.cores = cores.slice(0, 24);   // el pad muestra hasta 24
+    if (net != null) {                              // bytes/s -> KB/s (entero) para el pad
+      state.netDown = Math.round(net.down / 1024);
+      state.netUp = Math.round(net.up / 1024);
+      const ip = SystemMetrics.ip();
+      if (ip) state.ip = ip;
+    }
     if (s.clock) {                                  // hora local del PC -> reloj del pad (sin drift)
       const d = new Date();
       state.clockMin = d.getHours() * 60 + d.getMinutes();
