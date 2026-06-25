@@ -35,17 +35,27 @@ npm start          # node dist/index.js   (o: node dist/index.js --config /ruta/
 
 ## Autostart (que arranque solo con la PC)
 
-**Windows** — Tarea Programada al iniciar sesión, sin dependencias ni admin:
-```powershell
-cd projects\pad\companion
-powershell -ExecutionPolicy Bypass -File .\install-windows.ps1   # registra + arranca
-powershell -ExecutionPolicy Bypass -File .\uninstall-windows.ps1 # quitar
+**Windows** — Tarea Programada al iniciar sesión, **nativa** (no depende de WSL).
+Requiere Node para Windows (nodejs.org). Si el repo vive en WSL, buildeá ahí y
+corré el instalador desde PowerShell apuntando a la share:
+```bash
+# 1) en WSL: construir el dist
+cd projects/pad/companion && npm run build
 ```
-- Corre Node bajo el nombre **`pad-companion.exe`** → se identifica claro en el
-  Administrador de tareas > Detalles. Tarea: **`HIOS-Pad-Companion`**.
+```powershell
+# 2) en PowerShell (sin admin): copia dist/ + config.json a %LOCALAPPDATA%\pad-companion y registra la tarea
+cd \\wsl.localhost\Ubuntu-20.04\home\<user>\...\projects\pad\companion   # o la ruta que dé `wslpath -w $(pwd)`
+powershell -ExecutionPolicy Bypass -File .\install-windows.ps1
+powershell -ExecutionPolicy Bypass -File .\uninstall-windows.ps1         # quitar
+```
+- El daemon corre desde **`%LOCALAPPDATA%\pad-companion`** (copia nativa) → no depende
+  de que WSL esté levantado. En runtime no usa `node_modules` (solo APIs nativas + fetch).
+- Corre Node como **`pad-companion.exe`** → claro en Administrador de tareas > Detalles.
+  Tarea: **`HIOS-Pad-Companion`**.
 - Arranca **al iniciar sesión** (no al boot crudo) a propósito: lee tu audio (mic/volumen
   por Core Audio), que solo existe dentro de la sesión de usuario.
-- Reintenta 3× si se cae. Reconfigurar: editá `config.json` y reiniciá la tarea.
+- Reintenta 3× si se cae. Reconfigurar: editá `%LOCALAPPDATA%\pad-companion\config.json`
+  y reiniciá la tarea. Al actualizar el companion, re-corré el instalador (recopia `dist/`).
 
 **Linux (systemd)** — unit de usuario equivalente (`~/.config/systemd/user/pad-companion.service`):
 ```ini
