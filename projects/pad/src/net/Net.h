@@ -24,7 +24,8 @@ namespace net {
 void begin();              // arranca STA (si hay creds); si no, queda OFFLINE (no portal)
 void tick();               // servicia la maquina de estados (netTask)
 
-void requestPortal();      // pide levantar el portal de config (lo atiende netTask)
+void requestPortal();      // pide levantar el portal de config (re-registro explicito)
+void openWifi();           // abrir WiFi desde el menu: reconecta/muestra estado; portal solo si no hay creds
 void stopPortal();         // baja el portal/AP y vuelve a OFFLINE
 
 void toggleWifi();         // prende/apaga el radio WiFi (lo atiende netTask). Ahorra energia.
@@ -45,4 +46,5 @@ void queueCommand(CompanionCmd cmd);
 
 const char* ip();          // IP actual (STA o AP)
 const char* apName();      // SSID del portal de config
+const char* ssid();        // SSID de la red guardada/conectada (para la pantalla de estado)
 }  // namespace net
