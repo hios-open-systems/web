@@ -195,7 +195,7 @@ static void renderUI(const UiSnapshot& s) {
   // Actividad del encoder: girar (encPos) o presionar/soltar el SW (bit 5) -> redibuja
   // la franja para que la aguja del dial gire y pinte en vivo (feedback fisico).
   const bool encActivity = (s.encPos != prev.encPos) || (((s.buttons ^ prev.buttons) >> 5) & 1);
-  if (s.mouseOn != prev.mouseOn || s.encMode != prev.encMode || encActivity) {
+  if (s.mouseOn != prev.mouseOn || s.encMode != prev.encMode || encActivity || s.live != prev.live) {
     if (sk.encoder) sk.encoder(ctx, s);   // redibuja SOLO la franja del encoder (sin flash)
     else sk.full(ctx, s);
   } else if (s.mouseOn && sk.stick) {

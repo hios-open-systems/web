@@ -192,10 +192,15 @@ static void cardsEncStrip(const SkinContext& ctx, const UiSnapshot& s) {
 
   uint16_t f2 = theme::blend(theme::BG, L.color, 42);
   g.fillRoundRect(ENC_S2_X, ENC_Y, ENC_S2_W, ENC_H, 8, f2);
-  iconkit::icon(g, Glyph::COMMAND, ENC_S2_X + 20, ENC_Y + ENC_H / 2, theme::SOFT);
+  // Estado del companion (¿esta reportando?) en vez del indicador estatico de 'menu'
+  // (el press=menu se ve en otras pantallas). Punto lleno verde = enlace vivo.
+  const uint16_t cdot = s.live ? theme::GREEN : theme::DIM;
+  g.fillCircle(ENC_S2_X + 16, ENC_Y + ENC_H / 2, 4, cdot);
   g.setTextDatum(ML_DATUM);
   g.setTextColor(theme::SOFT, f2);
-  g.drawString("menu", ENC_S2_X + 38, ENC_Y + ENC_H / 2 + 1, 2);
+  g.drawString("companion", ENC_S2_X + 28, ENC_Y + 11, 1);
+  g.setTextColor(s.live ? theme::GREEN : theme::DIM, f2);
+  g.drawString(s.live ? "reportando" : "sin enlace", ENC_S2_X + 28, ENC_Y + 22, 1);
 
   bool mo = s.mouseOn;
   uint16_t f3 = mo ? theme::blend(theme::BG, theme::GREEN, 40) : theme::PANEL;
