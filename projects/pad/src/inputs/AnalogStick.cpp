@@ -56,15 +56,41 @@ void AnalogStick::update(uint32_t now, InputSink& sink) {
   m_x = (uint16_t)m_fx;   // filtrados, para el display
   m_y = (uint16_t)m_fy;
 
+  // Centro de referencia segun el path (calibrado o centro de boot).
+  int refX = appstate::stickCal.valid ? (int)appstate::stickCal.x.center : (int)m_centerX;
+  int refY = appstate::stickCal.valid ? (int)appstate::stickCal.y.center : (int)m_centerY;
+
+  // Auto-recentrado: el reposo REAL del stick rara vez cae exacto en el centro de
+  // referencia (offset por ADC/temperatura/mecanica). m_drift lleva la lectura al marco
+  // de la referencia para que el reposo de SIEMPRE 0 -> sin drift del puntero, con zona
+  // muerta chica. El snap inicial espera a que el EMA se asiente (warmup): si snapeas en
+  // el primer sample, m_f* todavia vale el centro de boot y el reposo EMA lo supera mas
+  // rapido de lo que el seguimiento lento puede alcanzar -> el gate de banda se cierra y
+  // el drift queda clavado. Tras el snap, seguimiento lento +-1 dentro de una banda (drift
+  // termico). Fuera de la banda = empuje real -> no adapta, no roba movimiento intencional.
+  if (!m_driftInit) {
+    if (++m_driftWarmup >= cfg::STICK_RECENTER_WARMUP) {
+      m_driftX = m_fx - refX; m_driftY = m_fy - refY; m_driftInit = true;
+    }
+  } else if (now - m_tRecenter >= cfg::STICK_RECENTER_MS) {
+    m_tRecenter = now;
+    if (abs((int)(m_fx - m_driftX) - refX) < cfg::STICK_REST_BAND) {
+      int o = (int)(m_fx - refX) - m_driftX; m_driftX += (o > 0) - (o < 0);
+    }
+    if (abs((int)(m_fy - m_driftY) - refY) < cfg::STICK_REST_BAND) {
+      int o = (int)(m_fy - refY) - m_driftY; m_driftY += (o > 0) - (o < 0);
+    }
+  }
+
   // Con calibracion: escala asimetrica por direccion. Sin ella: fallback al
   // centro de boot con rango simetrico (sigue usable hasta que calibres).
   int16_t nx, ny;
   if (appstate::stickCal.valid) {
-    nx = normAxisCal(m_fx, appstate::stickCal.x);
-    ny = normAxisCal(m_fy, appstate::stickCal.y);
+    nx = normAxisCal(m_fx - m_driftX, appstate::stickCal.x);
+    ny = normAxisCal(m_fy - m_driftY, appstate::stickCal.y);
   } else {
-    nx = normAxis(m_fx, m_centerX);
-    ny = normAxis(m_fy, m_centerY);
+    nx = normAxis(m_fx - m_driftX, m_centerX);
+    ny = normAxis(m_fy - m_driftY, m_centerY);
   }
   // Nivel de precision del stick (1..7, 4=default): escala la sensibilidad en pasos de
   // 20% (nivel 1=40% ... nivel 7=160%). Es una pre-escala del valor antes del HID.
