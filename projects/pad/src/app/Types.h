@@ -70,6 +70,11 @@ struct UiSnapshot {
   int16_t  gpuTemp;     // C, -1000 = sin dato
   uint8_t  cpuLoad;     // 0..100, 255 = sin dato
   uint8_t  gpuLoad;     // 0..100, 255 = sin dato
+  // --- feedback WiZ (para la capa WiZ): cuarto/luz/on/brillo ---
+  char     wizRoom[16];
+  char     wizTarget[8];
+  bool     wizOn;
+  uint8_t  wizBright;   // 0..100
 };
 
 // Nombre legible de un input (para Serial / UI).
