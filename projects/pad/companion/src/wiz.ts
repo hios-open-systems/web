@@ -5,6 +5,7 @@
 // - Cuartos = grupos de MACs (config.json). Sin cuartos -> uno "Todas" con lo descubierto.
 // - Target: dentro del cuarto se puede apuntar a TODAS (-1) o a una luz puntual (indice).
 import dgram from 'node:dgram';
+import { log } from './log';
 
 const WIZ_PORT = 38899;
 
@@ -72,7 +73,11 @@ export class Wiz {
 
   private send(params: Record<string, unknown>): void {
     const ips = this.targetIps();
-    if (!ips.length) return;
+    if (!ips.length) {
+      log.warn(`WiZ: cuarto "${this.rooms[this.sel]?.name}" sin IPs (¿MACs no descubiertas / no energizadas?)`);
+      return;
+    }
+    log.info(`WiZ -> setPilot ${JSON.stringify(params)} a [${ips.join(', ')}]`);
     const sock = dgram.createSocket('udp4');
     const msg = Buffer.from(JSON.stringify({ method: 'setPilot', params }));
     let pending = ips.length;
