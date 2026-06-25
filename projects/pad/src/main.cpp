@@ -187,7 +187,9 @@ static void renderUI(const UiSnapshot& s) {
                        s.transports != prev.transports || s.live != prev.live ||
                        s.cpuTemp != prev.cpuTemp || s.gpuTemp != prev.gpuTemp ||
                        s.cpuLoad != prev.cpuLoad || s.gpuLoad != prev.gpuLoad ||
-                       s.wifiOff != prev.wifiOff;
+                       s.wifiOff != prev.wifiOff ||
+                       s.wizOn != prev.wizOn || s.wizBright != prev.wizBright ||
+                       strcmp(s.wizRoom, prev.wizRoom) != 0 || strcmp(s.wizTarget, prev.wizTarget) != 0;
   if (statusChanged) sk.status(ctx, s);
 
   // Modo mouse cambio -> full (poco frecuente). Solo movimiento del stick y el
@@ -296,11 +298,15 @@ static void inputTask(void*) {
       s.mediaPlay = r.mediaPlay; s.volume  = r.volume;
       s.cpuTemp = r.cpuTemp;     s.gpuTemp = r.gpuTemp;
       s.cpuLoad = r.cpuLoad;     s.gpuLoad = r.gpuLoad;
+      strlcpy(s.wizRoom, r.wizRoom, sizeof(s.wizRoom));
+      strlcpy(s.wizTarget, r.wizTarget, sizeof(s.wizTarget));
+      s.wizOn = r.wizOn;         s.wizBright = r.wizBright;
     } else {
       s.micMuted = st.micMuted;   s.camOff  = st.camOff;
       s.mediaPlay = st.mediaPlay; s.volume  = st.volume;
       s.cpuTemp = s.gpuTemp = -1000;           // sin dato
       s.cpuLoad = s.gpuLoad = 255;
+      s.wizRoom[0] = 0; s.wizTarget[0] = 0; s.wizOn = false; s.wizBright = 0;
     }
     s.live        = live;
     uint8_t tp = 0;                                  // transporte HID activo + WiFi
