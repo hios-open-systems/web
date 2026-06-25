@@ -26,6 +26,8 @@
         "in_development": "In development",
         "tagline_btdac": "When it finally sounded, I screamed at 2am.",
         "tagline_speaker": "WiFi + I2S = wireless audio, zero noise.",
+        "tagline_pad": "Physical layers for everything I do. No drivers, no cables.",
+        "view_all": "View all projects",
         "tutorials": "tutorials",
         "files": "files",
         "btdac": {
@@ -262,6 +264,69 @@
                 "Web equalizer",
                 "OTA updates"
             ]
+        },
+        "pad": {
+            "moment": "The first time I moved the cursor from the stick over Bluetooth — no cable, no dongle, no drivers — and the PC just responded. After days fighting BLE on Linux, watching the mouse move was priceless.",
+            "struggle": "The same hardware worked on Windows but on Linux it didn't even show up in the scan. It was a subtle mix: the adapter wasn't reporting legacy advertising, so I had to switch to BLE 5 extended advertising, and on top of that a NimBLE bug that crashed the ESP on every connection and disguised it all as 'won't connect'. Days of btmon to figure it out.",
+            "whatWorks": [
+                "HID over USB and BLE at once, with auto-switch",
+                "Context layers navigable from the screen",
+                "Analog stick as mouse, with adjustable acceleration",
+                "WiFi + captive portal + NTP + OTA",
+                "Real PC feedback via the companion daemon",
+                "OS-level global mic mute"
+            ],
+            "whatDoesnt": [
+                "Stick click doesn't act in X11 apps (under review)",
+                "Battery sensing ready but off by default",
+                "JSON config still pending (compile-time today)"
+            ],
+            "specs": [
+                {
+                    "label": "MCU",
+                    "value": "ESP32-S3 (N16, 16MB)"
+                },
+                {
+                    "label": "Display",
+                    "value": "ILI9488 480×320 SPI"
+                },
+                {
+                    "label": "Inputs",
+                    "value": "Encoder + joystick + 5 keys"
+                },
+                {
+                    "label": "Transports",
+                    "value": "USB HID · BLE HID · WiFi"
+                },
+                {
+                    "label": "Power",
+                    "value": "2S Li-Ion battery"
+                },
+                {
+                    "label": "Firmware",
+                    "value": "Arduino + FreeRTOS dual-core"
+                }
+            ],
+            "futureFeatures": [
+                "JSON configuration",
+                "Phone control (PWA)",
+                "Remote screen / mirror",
+                "More layer maps"
+            ],
+            "resources": [
+                {
+                    "name": "Printed stick cap (Thingiverse)",
+                    "url": "https://www.thingiverse.com/thing:6189483"
+                },
+                {
+                    "name": "NimBLE-Arduino",
+                    "url": "https://github.com/h2zero/NimBLE-Arduino"
+                },
+                {
+                    "name": "TFT_eSPI",
+                    "url": "https://github.com/Bodmer/TFT_eSPI"
+                }
+            ]
         }
     },
     "Documentation": {
@@ -472,8 +537,13 @@
             "html": "HTML"
         }
     },
+    "ProjectsPage": {
+        "title": "Projects",
+        "subtitle": "Open hardware I designed, broke and documented. All the code, schematics and instructions, ready for you to build your own."
+    },
     "Header": {
         "home": "Home",
+        "projects": "Projects",
         "tools": "Tools",
         "workbench": "Workbench",
         "pinouts": "Pinouts",

@@ -462,8 +462,13 @@
             "html": "HTML"
         }
     },
+    "ProjectsPage": {
+        "title": "Progetti",
+        "subtitle": "Hardware aperto che ho progettato, rotto e documentato. Tutto il codice, gli schemi e le istruzioni, pronti per costruire il tuo."
+    },
     "Header": {
         "home": "Home",
+        "projects": "Progetti",
         "tools": "Strumenti",
         "workbench": "Workbench",
         "pinouts": "Pinouts",

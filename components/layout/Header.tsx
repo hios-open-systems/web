@@ -21,7 +21,7 @@ import styles from './header.module.css';
 const { Header: AntHeader } = Layout;
 
 type NavKind = 'primary' | 'secondary';
-type HeaderKey = 'home' | 'tools' | 'workbench' | 'pinouts' | 'calculators';
+type HeaderKey = 'home' | 'projects' | 'tools' | 'workbench' | 'pinouts' | 'calculators';
 type NavItem = { href: string; label: string; kind: NavKind };
 
 export function Header() {
@@ -38,6 +38,7 @@ export function Header() {
 
   const navItems: NavItem[] = [
     { href: `/${locale}`, label: resolveLabel('home', 'Inicio'), kind: 'primary' },
+    { href: `/${locale}/projects`, label: resolveLabel('projects', 'Proyectos'), kind: 'secondary' },
     { href: `/${locale}/tools`, label: resolveLabel('tools', 'Herramientas'), kind: 'secondary' },
     { href: `/${locale}/workbench`, label: resolveLabel('workbench', 'Workbench'), kind: 'secondary' },
     { href: `/${locale}/pinouts`, label: resolveLabel('pinouts', 'Pinouts'), kind: 'secondary' },
