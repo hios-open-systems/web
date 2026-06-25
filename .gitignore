@@ -55,3 +55,6 @@ next-env.d.ts
 # external integration credentials / non-project work files — never commit
 external.integrations.md
 *.integrations.md
+
+# pending-topics tracker (privado, local — puede mencionar temas sensibles)
+PENDING.md
