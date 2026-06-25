@@ -292,6 +292,51 @@ static void drawMenuIcon(TFT_eSPI& g, int cx, int cy, int i, uint16_t col, uint1
   g.drawFastVLine(cx, cy - 16, 32, col);
 }
 
+// Icono representativo de una capa (por nombre). false si no hay match -> el caller cae
+// al chip + inicial. Dibuja centrado en (cx,cy) con el color de la capa.
+static bool drawLayerIcon(TFT_eSPI& g, const char* nm, int cx, int cy, uint16_t col, uint16_t bg) {
+  (void)bg;
+  auto is = [&](const char* s) { return strcmp(nm, s) == 0; };
+  if (is("Edicion")) {                                  // lapiz
+    g.drawLine(cx - 9, cy + 9, cx + 7, cy - 7, col);
+    g.drawLine(cx - 8, cy + 10, cx + 8, cy - 6, col);
+    g.fillTriangle(cx - 10, cy + 10, cx - 4, cy + 10, cx - 10, cy + 4, col);
+    return true;
+  }
+  if (is("Dev")) {                                      // < >
+    g.drawLine(cx - 4, cy - 8, cx - 12, cy, col); g.drawLine(cx - 12, cy, cx - 4, cy + 8, col);
+    g.drawLine(cx + 4, cy - 8, cx + 12, cy, col); g.drawLine(cx + 12, cy, cx + 4, cy + 8, col);
+    return true;
+  }
+  if (is("Apps")) {                                     // grilla 2x2
+    for (int r = 0; r < 2; r++) for (int c = 0; c < 2; c++)
+      g.fillRoundRect(cx - 11 + c * 13, cy - 11 + r * 13, 9, 9, 2, col);
+    return true;
+  }
+  if (is("Multimedia") || is("YouTube") || is("Netflix")) {  // play
+    g.fillTriangle(cx - 6, cy - 9, cx - 6, cy + 9, cx + 10, cy, col);
+    return true;
+  }
+  if (is("Navegador")) {                                // globo
+    g.drawCircle(cx, cy, 12, col);
+    g.drawEllipse(cx, cy, 5, 12, col);
+    g.drawFastHLine(cx - 12, cy, 24, col);
+    return true;
+  }
+  if (is("Meet") || is("Zoom") || is("Teams") || is("Slack")) {  // camara de video
+    g.fillRoundRect(cx - 12, cy - 7, 16, 14, 3, col);
+    g.fillTriangle(cx + 5, cy, cx + 12, cy - 6, cx + 12, cy + 6, col);
+    return true;
+  }
+  if (is("RGB")) {                                      // tres circulos R/G/B
+    g.fillCircle(cx, cy - 5, 6, theme::RED);
+    g.fillCircle(cx - 6, cy + 4, 6, theme::GREEN);
+    g.fillCircle(cx + 6, cy + 4, 6, theme::BLUE);
+    return true;
+  }
+  return false;
+}
+
 // Picker unificado: 5 cards = 5 botones fisicos. En pagina de capas cada card es una
 // capa; en pagina de settings cada card es un item con su valor (el que se ajusta queda
 // resaltado). Los botones eligen en ambos casos -> mismo componente, sin carrusel/caratula.
@@ -321,8 +366,8 @@ static void renderPicker(TFT_eSPI& tft) {
       const int icx = x + cw / 2, icy = y + 30;
       if (settings) {
         drawMenuIcon(tft, icx, icy, item, accent, fill);          // icono vectorial del setting
-      } else {
-        const int ir = 17;                                        // capa: chip + inicial (por ahora)
+      } else if (!drawLayerIcon(tft, nm, icx, icy, accent, fill)) {
+        const int ir = 17;                                        // capa sin icono: chip + inicial
         const uint16_t chip = theme::blend(fill, accent, 32);
         tft.fillCircle(icx, icy, ir, chip);
         tft.drawCircle(icx, icy, ir, accent);
