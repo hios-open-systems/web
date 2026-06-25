@@ -44,6 +44,7 @@ static bool    s_open     = false;
 static int     s_groupSel = 0;     // grupo/pagina actual (0..pageCount()-1)
 static int     s_sel      = 0;     // indice REAL: capa elegida o item de ajuste
 static bool    s_editItem = false; // ajustando un setting (el encoder cambia el valor)
+static bool    s_overview = false; // vista de TODAS las paginas (botones 1-5 saltan a una)
 static bool    s_dirty    = true;
 static bool    s_needFull = true;
 
@@ -81,7 +82,7 @@ static uint16_t    pageColor() { return PAGES[s_groupSel].color; }
 void init(KeyMap* km) { s_km = km; }
 
 void open(uint8_t currentLayer) {
-  s_open = true; s_editItem = false;
+  s_open = true; s_editItem = false; s_overview = false;
   s_sel = currentLayer;
   s_groupSel = pageOfLayer(currentLayer);
   s_dirty = true; s_needFull = true;
@@ -98,6 +99,10 @@ bool inLayerPicker() { return s_open; }
 // entra en ajuste (el encoder cambia el valor); WiFi/Calibrar -> accion directa.
 MenuResult pickButton(uint8_t i) {
   if (!s_open) return MenuResult::NONE;
+  if (s_overview) {                                // overview: el boton i salta a esa pagina
+    if ((int)i < pageCount()) { s_groupSel = i; s_overview = false; s_needFull = true; s_dirty = true; }
+    return MenuResult::NONE;
+  }
   const Page& pg = PAGES[s_groupSel];
   if ((int)i >= pg.count) return MenuResult::NONE;
   const PageItem& it = pg.items[i];
@@ -163,9 +168,11 @@ void turn(int delta) {
   s_dirty = true;
 }
 
-MenuResult press() {                               // encoder press: solo cierra el ajuste en curso
+MenuResult press() {                               // encoder press: cierra el ajuste, o abre/cierra el overview
   if (!s_open) return MenuResult::NONE;
-  if (s_editItem) { s_editItem = false; s_dirty = true; }
+  if (s_editItem) s_editItem = false;
+  else            s_overview = !s_overview;         // ver TODAS las paginas (botones 1-5 saltan)
+  s_needFull = true; s_dirty = true;
   return MenuResult::NONE;
 }
 
@@ -395,13 +402,45 @@ static void renderPicker(TFT_eSPI& tft) {
   tft.drawString("apreta un boton para elegir", 240, 208, 1);
 }
 
+// Overview: las 5 paginas como cards numeradas (1-5); la actual resaltada. Boton i = ir alli.
+static void renderOverview(TFT_eSPI& tft) {
+  tft.fillRect(0, 74, 480, 142, theme::BG);
+  const int N = 5, gap = 8;
+  const int cw = (480 - gap * (N + 1)) / N;
+  const int y = 82, ch = 118;
+  for (int i = 0; i < N; i++) {
+    int x = gap + i * (cw + gap);
+    bool occ = i < pageCount();
+    bool cur = occ && i == s_groupSel;
+    uint16_t accent = occ ? PAGES[i].color : theme::EDGE;
+    uint16_t fill   = (occ && cur) ? theme::CARD : theme::DARK;
+    tft.fillRoundRect(x, y, cw, ch, 10, fill);
+    tft.drawRoundRect(x, y, cw, ch, 10, accent);
+    if (cur) tft.drawRoundRect(x + 1, y + 1, cw - 2, ch - 2, 9, theme::blend(accent, theme::FG, 90));
+    tft.setTextDatum(MC_DATUM);
+    if (occ) {
+      tft.setTextColor(accent, fill);
+      tft.drawNumber(i + 1, x + cw / 2, y + 34, 6);                          // numero grande de pagina
+      uikit::fitText(tft, PAGES[i].name, x + cw / 2, y + ch - 26, cw - 8,
+                     cur ? theme::FG : theme::SOFT, fill, 2);
+      tft.fillRoundRect(x + 10, y + ch - 12, cw - 20, 4, 2, accent);
+    } else {
+      tft.setTextColor(theme::DIM, fill);
+      tft.drawString("--", x + cw / 2, y + ch / 2, 4);
+    }
+  }
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(theme::SOFT, theme::BG);
+  tft.drawString("apreta 1-5 para ir a la pagina   (encoder: volver)", 240, 208, 1);
+}
+
 static void drawHeader(TFT_eSPI& tft) {
   tft.fillRect(0, 0, 480, 70, theme::PANEL);
   tft.setTextDatum(MC_DATUM);
   tft.setTextColor(theme::SOFT, theme::PANEL);
   tft.drawString("CONTROL CENTER", 240, 16, 1);
   tft.setTextColor(theme::FG, theme::PANEL);
-  tft.drawString(pageName(), 240, 44, 4);
+  tft.drawString(s_overview ? "Paginas" : pageName(), 240, 44, 4);
   char p[8]; snprintf(p, sizeof(p), "%d/%d", s_groupSel + 1, pageCount());
   tft.setTextDatum(MR_DATUM);
   tft.setTextColor(pageColor(), theme::PANEL);
@@ -417,8 +456,9 @@ static void drawHint(TFT_eSPI& tft) {
   tft.setTextDatum(MC_DATUM);
   tft.setTextColor(theme::SOFT, bg);
   const char *a, *b, *c;
-  if (s_editItem) { a = "ajustar"; b = "listo"; c = "salir"; }   // encoder ajusta el valor
-  else            { a = "grupo";   b = "boton"; c = "salir"; }   // encoder cambia pagina; botones eligen
+  if (s_editItem)      { a = "ajustar"; b = "listo";    c = "salir"; }   // encoder ajusta el valor
+  else if (s_overview) { a = "pagina";  b = "volver";   c = "salir"; }   // boton 1-5 salta
+  else                 { a = "pagina";  b = "ver todo"; c = "salir"; }   // press = overview
   tft.drawString(a, 124, 231, 1);
   tft.drawString(b, 240, 231, 1);
   tft.drawString(c, 356, 231, 1);
@@ -444,7 +484,8 @@ static void drawEditor(TFT_eSPI& tft) {
 }
 
 static void renderBody(TFT_eSPI& tft) {
-  renderPicker(tft);   // capas y settings comparten el mismo render de cards
+  if (s_overview) renderOverview(tft);   // vista de todas las paginas (botones saltan)
+  else            renderPicker(tft);     // items de la pagina actual
 }
 
 void render(TFT_eSPI& tft) {
