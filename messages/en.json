@@ -266,8 +266,8 @@
             ]
         },
         "pad": {
-            "moment": "The first time I moved the cursor from the stick over Bluetooth — no cable, no dongle, no drivers — and the PC just responded. After days fighting BLE on Linux, watching the mouse move was priceless.",
-            "struggle": "The same hardware worked on Windows but on Linux it didn't even show up in the scan. It was a subtle mix: the adapter wasn't reporting legacy advertising, so I had to switch to BLE 5 extended advertising, and on top of that a NimBLE bug that crashed the ESP on every connection and disguised it all as 'won't connect'. Days of btmon to figure it out.",
+            "moment": "The first time the cursor moved from the stick over Bluetooth — no cable, no dongle, no drivers — and the PC just responded. After a few hours tuning BLE on Linux across docs, AI, tests and builds, seeing it work closed the loop.",
+            "struggle": "The same hardware worked on Windows but on Linux it didn't show up in the scan. It turned out to be a subtle combination: the adapter wasn't picking up legacy advertising, so I switched to BLE 5 extended advertising; and on top of that, a known NimBLE bug that reset the ESP on every connection and made it look like a 'won't connect'. A good stretch of btmon and reading to pin it down.",
             "whatWorks": [
                 "HID over USB and BLE at once, with auto-switch",
                 "Context layers navigable from the screen",

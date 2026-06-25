@@ -139,99 +139,17 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                 </motion.div>
             </section>
 
-            {/* Project Toolbox */}
-            <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 48px' }}>
-                <Card
-                    style={{
-                        background: mode === 'dark' ? '#141414' : '#fafafa',
-                        border: cardBorder,
-                        borderRadius: '14px',
-                    }}
-                    styles={{ body: { padding: '20px' } }}
+            {/* Gallery — los visuales primero */}
+            {project.gallery && project.gallery.length > 0 && (
+                <motion.section
+                    style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 48px' }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
                 >
-                    <Space direction="vertical" size={16} style={{ width: '100%' }}>
-                        <div>
-                            <Title level={4} style={{ color: textColor, marginBottom: 6 }}>
-                                Project Toolbox
-                            </Title>
-                            <Text style={{ color: secondaryColor }}>
-                                Archivos técnicos listos para flujo embebido diario: abrir, descargar o visualizar por tipo.
-                            </Text>
-                        </div>
-
-                        {Object.keys(groupedAssets).length === 0 ? (
-                            <Empty
-                                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                                description={<span style={{ color: secondaryColor }}>No hay assets técnicos detectados</span>}
-                            />
-                        ) : (
-                            <Space direction="vertical" size={12} style={{ width: '100%' }}>
-                                {Object.entries(groupedAssets).map(([kind, assets]) => (
-                                    <Card
-                                        key={kind}
-                                        size="small"
-                                        title={<span style={{ color: textColor }}>{kindLabel[kind] || kind.toUpperCase()}</span>}
-                                        style={{
-                                            background: mode === 'dark' ? '#101010' : '#fff',
-                                            border: cardBorder,
-                                            borderRadius: '10px',
-                                        }}
-                                        styles={{ body: { padding: '10px 12px' } }}
-                                    >
-                                        <Space direction="vertical" size={8} style={{ width: '100%' }}>
-                                            {assets.map((asset) => (
-                                                <div
-                                                    key={`${asset.source}-${asset.name}`}
-                                                    style={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'space-between',
-                                                        gap: '10px',
-                                                        padding: '8px 6px',
-                                                        borderBottom: mode === 'dark' ? '1px solid #1f1f1f' : '1px solid #f0f0f0',
-                                                    }}
-                                                >
-                                                    <Space size={8} style={{ minWidth: 0 }}>
-                                                        <FileOutlined style={{ color: accentColor }} />
-                                                        <Text style={{ color: textColor }} ellipsis={{ tooltip: asset.name }}>
-                                                            {asset.name}
-                                                        </Text>
-                                                        <Tag style={{ border: 'none', fontSize: 10 }}>
-                                                            {asset.source === 'download' ? 'public' : 'source'}
-                                                        </Tag>
-                                                    </Space>
-
-                                                    <Space size={6} wrap>
-                                                        {asset.path && (
-                                                            <Button size="small" icon={<LinkOutlined />} href={asset.path} target="_blank">
-                                                                Abrir
-                                                            </Button>
-                                                        )}
-                                                        {asset.path && viewerByKind[asset.kind] && (
-                                                            <Button
-                                                                size="small"
-                                                                icon={<EyeOutlined />}
-                                                                onClick={() => window.open(viewerByKind[asset.kind](asset.path as string), '_blank', 'noopener,noreferrer')}
-                                                            >
-                                                                Viewer
-                                                            </Button>
-                                                        )}
-                                                        {asset.path && (
-                                                            <Button size="small" icon={<DownloadOutlined />} href={asset.path} target="_blank">
-                                                                Descargar
-                                                            </Button>
-                                                        )}
-                                                    </Space>
-                                                </div>
-                                            ))}
-                                        </Space>
-                                    </Card>
-                                ))}
-                            </Space>
-                        )}
-                    </Space>
-                </Card>
-            </section>
+                    <ImageCarousel images={project.gallery} alt={project.name} />
+                </motion.section>
+            )}
 
             {/* Story / Breakthrough - THE MAGIC */}
             {story && (
@@ -644,23 +562,99 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                 </Space>
             </motion.section>
 
-            {project.gallery && project.gallery.length > 0 && (
-                <motion.section
-                    style={{ maxWidth: 900, margin: '80px auto 0', padding: '0 24px' }}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.8 }}
+            {/* Project Toolbox — archivos técnicos al final (de apéndice, no manda la página) */}
+            <section style={{ maxWidth: 900, margin: '60px auto 0', padding: '0 24px 48px' }}>
+                <Card
+                    style={{
+                        background: mode === 'dark' ? '#141414' : '#fafafa',
+                        border: cardBorder,
+                        borderRadius: '14px',
+                    }}
+                    styles={{ body: { padding: '20px' } }}
                 >
-                    <Title level={3} style={{
-                        color: textColor,
-                        marginBottom: '24px',
-                        textAlign: 'center',
-                    }}>
-                        {t('gallery')}
-                    </Title>
-                    <ImageCarousel images={project.gallery} alt={project.name} />
-                </motion.section>
-            )}
+                    <Space direction="vertical" size={16} style={{ width: '100%' }}>
+                        <div>
+                            <Title level={4} style={{ color: textColor, marginBottom: 6 }}>
+                                Project Toolbox
+                            </Title>
+                            <Text style={{ color: secondaryColor }}>
+                                Archivos técnicos listos para flujo embebido diario: abrir, descargar o visualizar por tipo.
+                            </Text>
+                        </div>
+
+                        {Object.keys(groupedAssets).length === 0 ? (
+                            <Empty
+                                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                                description={<span style={{ color: secondaryColor }}>No hay assets técnicos detectados</span>}
+                            />
+                        ) : (
+                            <Space direction="vertical" size={12} style={{ width: '100%' }}>
+                                {Object.entries(groupedAssets).map(([kind, assets]) => (
+                                    <Card
+                                        key={kind}
+                                        size="small"
+                                        title={<span style={{ color: textColor }}>{kindLabel[kind] || kind.toUpperCase()}</span>}
+                                        style={{
+                                            background: mode === 'dark' ? '#101010' : '#fff',
+                                            border: cardBorder,
+                                            borderRadius: '10px',
+                                        }}
+                                        styles={{ body: { padding: '10px 12px' } }}
+                                    >
+                                        <Space direction="vertical" size={8} style={{ width: '100%' }}>
+                                            {assets.map((asset) => (
+                                                <div
+                                                    key={`${asset.source}-${asset.name}`}
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'space-between',
+                                                        gap: '10px',
+                                                        padding: '8px 6px',
+                                                        borderBottom: mode === 'dark' ? '1px solid #1f1f1f' : '1px solid #f0f0f0',
+                                                    }}
+                                                >
+                                                    <Space size={8} style={{ minWidth: 0 }}>
+                                                        <FileOutlined style={{ color: accentColor }} />
+                                                        <Text style={{ color: textColor }} ellipsis={{ tooltip: asset.name }}>
+                                                            {asset.name}
+                                                        </Text>
+                                                        <Tag style={{ border: 'none', fontSize: 10 }}>
+                                                            {asset.source === 'download' ? 'public' : 'source'}
+                                                        </Tag>
+                                                    </Space>
+
+                                                    <Space size={6} wrap>
+                                                        {asset.path && (
+                                                            <Button size="small" icon={<LinkOutlined />} href={asset.path} target="_blank">
+                                                                Abrir
+                                                            </Button>
+                                                        )}
+                                                        {asset.path && viewerByKind[asset.kind] && (
+                                                            <Button
+                                                                size="small"
+                                                                icon={<EyeOutlined />}
+                                                                onClick={() => window.open(viewerByKind[asset.kind](asset.path as string), '_blank', 'noopener,noreferrer')}
+                                                            >
+                                                                Viewer
+                                                            </Button>
+                                                        )}
+                                                        {asset.path && (
+                                                            <Button size="small" icon={<DownloadOutlined />} href={asset.path} target="_blank">
+                                                                Descargar
+                                                            </Button>
+                                                        )}
+                                                    </Space>
+                                                </div>
+                                            ))}
+                                        </Space>
+                                    </Card>
+                                ))}
+                            </Space>
+                        )}
+                    </Space>
+                </Card>
+            </section>
 
             {/* Footer note */}
             <section style={{
