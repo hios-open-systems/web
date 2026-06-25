@@ -71,12 +71,13 @@ void Dispatcher::fireResolved(const InputEvent& e) {
     Serial.printf("[mouse] %s\n", m_mouseOn ? "ON" : "OFF");
     return;
   }
-  if (a.type == ActionType::NET_CMD) {              // comando al companion (mute global, etc.)
+  if (a.type == ActionType::NET_CMD) {              // comando al companion (mute global, WiZ, etc.)
     if (m_state && e.edge == Edge::PRESS) {
       StateToggle st = m_km->stateToggleFor(m_activeLayer, e.id);
       if (st != StateToggle::NONE) m_state->applyToggle(st);
     }
-    if (e.edge == Edge::PRESS) net::queueCommand(a.p.cmd.cmd);
+    // PRESS (botones) o ROTATE (encoder, ej. WiZ brillo +/-): ambos encolan el comando.
+    if (e.edge == Edge::PRESS || e.edge == Edge::ROTATE) net::queueCommand(a.p.cmd.cmd);
     return;
   }
   if (m_state && e.edge == Edge::PRESS) {
