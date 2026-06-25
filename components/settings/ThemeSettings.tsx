@@ -1,8 +1,10 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import Link from 'next/link';
+import { useTranslations, useLocale } from 'next-intl';
 import { Alert } from 'antd';
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import { CheckOutlined } from '@ant-design/icons';
 import { useTheme } from '@/lib/ThemeContext';
 import { DEFAULT_ACCENT, isValidHex, THEME_PRESETS, findPresetByAccent } from '@/lib/themes/config';
@@ -17,6 +19,7 @@ import styles from './themeSettings.module.css';
 
 export function ThemeSettings() {
     const t = useTranslations('Settings');
+    const locale = useLocale();
     const { accent, mode, toggleTheme, setAccent, applyPreset, isAuthenticated, isSyncing, syncState, syncError, syncCurrentAccent } = useTheme();
     const [hexDraft, setHexDraft] = useState(accent);
     const [savedThemes, setSavedThemes] = useState<SavedTheme[]>([]);
@@ -89,6 +92,12 @@ export function ThemeSettings() {
     return (
         <section className={styles.page}>
             <header className={styles.head}>
+                <Link
+                    href={`/${locale}/workbench`}
+                    style={{ color: '#f59e0b', fontSize: 13, fontWeight: 500, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6, marginBottom: 10 }}
+                >
+                    <ArrowLeftOutlined /> Workbench
+                </Link>
                 <h1 className={styles.title}>{t('title')}</h1>
                 <p className={styles.subtitle}>{t('subtitle')}</p>
             </header>
