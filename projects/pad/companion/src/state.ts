@@ -14,4 +14,9 @@ export interface PadState {
   cpuLoad?: number;  // 0..100
   gpuLoad?: number;  // 0..100
   clockMin?: number; // hora local en minutos desde 00:00 (0..1439) -> sincroniza el reloj del pad
+  // --- feedback WiZ (para que la capa WiZ muestre que se esta controlando) ---
+  wizRoom?: string;    // cuarto activo
+  wizTarget?: string;  // "Todas" o "n/N" (luz puntual)
+  wizOn?: boolean;     // estado on/off (real, via getPilot)
+  wizBright?: number;  // brillo 0..100
 }
