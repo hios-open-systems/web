@@ -5,5 +5,13 @@
   "send": {
     "mic": true, "cam": false, "media": false, "vol": true,
     "cpuTemp": true, "gpuTemp": true, "cpuLoad": true, "gpuLoad": true, "clock": true
+  },
+  "wiz": {
+    "rooms": [
+      { "name": "Living", "lights": [
+        { "name": "Escritorio", "mac": "aabbccddeeff" },
+        { "name": "Sillon",     "mac": "112233445566" }
+      ]}
+    ]
   }
 }

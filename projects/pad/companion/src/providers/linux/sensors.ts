@@ -5,8 +5,6 @@ import { run } from '../index';
 // Linux: CPU temp via `sensors -j` (lm-sensors) o /sys/class/hwmon; GPU via nvidia-smi;
 // CPU load por deltas de /proc/stat entre polls.
 export class LinuxSensors implements SensorProvider {
-  private prevCpu: { idle: number; total: number } | null = null;
-
   async getCpuTempC(): Promise<number | null> {
     const j = await run('sensors', ['-j']);
     if (j) {
@@ -43,26 +41,36 @@ export class LinuxSensors implements SensorProvider {
     return this.nvidia('utilization.gpu');
   }
 
+  async getGpuFanPct(): Promise<number | null> {
+    return this.nvidia('fan.speed');
+  }
+
+  // Cooler de CPU/gabinete via lm-sensors: el fan*_input mas alto (RPM).
+  async getCpuFanRpm(): Promise<number | null> {
+    const j = await run('sensors', ['-j']);
+    if (!j) return null;
+    try {
+      const data = JSON.parse(j) as Record<string, Record<string, Record<string, number>>>;
+      let max = 0;
+      for (const chip of Object.values(data)) {
+        if (typeof chip !== 'object') continue;
+        for (const sub of Object.values(chip)) {
+          if (typeof sub !== 'object') continue;
+          for (const [k, v] of Object.entries(sub)) {
+            if (/fan\d*_input/i.test(k) && typeof v === 'number' && v > max) max = v;
+          }
+        }
+      }
+      return max > 0 ? Math.round(max) : null;
+    } catch {
+      return null;
+    }
+  }
+
   private async nvidia(query: string): Promise<number | null> {
     const o = await run('nvidia-smi', [`--query-gpu=${query}`, '--format=csv,noheader,nounits']);
     if (!o) return null;
     const n = parseInt(o.trim().split('\n')[0], 10);
     return isNaN(n) ? null : n;
-  }
-
-  async getCpuLoadPct(): Promise<number | null> {
-    const s = await readFile('/proc/stat', 'utf8').catch(() => null);
-    if (!s) return null;
-    const cols = s.split('\n')[0].trim().split(/\s+/).slice(1).map(Number); // user nice system idle iowait irq ...
-    if (cols.length < 4) return null;
-    const idle = cols[3] + (cols[4] || 0);
-    const total = cols.reduce((a, b) => a + b, 0);
-    const prev = this.prevCpu;
-    this.prevCpu = { idle, total };
-    if (!prev) return null; // primera muestra: hace falta un delta
-    const dIdle = idle - prev.idle;
-    const dTotal = total - prev.total;
-    if (dTotal <= 0) return null;
-    return Math.max(0, Math.min(100, Math.round((1 - dIdle / dTotal) * 100)));
   }
 }

@@ -99,7 +99,7 @@ static void cardsHeader(const SkinContext& ctx, const UiSnapshot& s) {
   g.setTextColor(theme::DIM, theme::PANEL);
   g.drawString("HIOS PAD", 12, 6, 1);
   clip(g, L.name, 12, 15, 168, 4, theme::FG, theme::PANEL);
-  pips(g, km, s.activeLayer, 21, theme::PANEL);
+  if (strcmp(L.name, "WiZ") != 0) pips(g, km, s.activeLayer, 21, theme::PANEL);   // en WiZ, el centro es para el estado
   g.setTextDatum(TR_DATUM);
   g.setTextColor(theme::SOFT, theme::PANEL);
   g.drawString("USB / listo", 468, 6, 1);
@@ -377,13 +377,18 @@ static void watchFull(const SkinContext& ctx, const UiSnapshot& s) {
 }
 
 // ============================================================================
-//  SKIN 3 - SENSORES (telemetria real del companion: temps + carga CPU/GPU)
-//  Con companion conectado muestra valores reales; sin el, "s/d" + pill "sin PC".
+//  SECCION MONITOR - 3 vistas de telemetria real del companion, cada una es la
+//  capa homonima: General (temps+coolers+RAM), Red (throughput+IP), Nucleos
+//  (carga por core). Sin companion: "s/d" + pill "sin PC". Datos universales
+//  (carga/nucleos/RAM/red/IP) por modulo os de Node; temps/fans best-effort.
 // ============================================================================
-// Historial para los sparklines de performance (~1 muestra por update del companion).
+// Historial para los sparklines (~1 muestra por update del companion).
 static const int HN = 56;
-static uint8_t s_hist[4][HN];   // 0=cpuT 1=gpuT 2=cpuL 3=gpuL (0..100 normalizado, 255=s/d)
-static int     s_histHead = 0, s_histCount = 0;
+static uint8_t  s_hist[4][HN];  // 0=cpuT 1=gpuT 2=cpuL 3=gpuL (0..100, 255=s/d)
+static int      s_histHead = 0, s_histCount = 0;
+static uint16_t s_net[2][HN];   // 0=down 1=up (KB/s, cap 65535 para el spark)
+static int      s_netHead = 0, s_netCount = 0;
+
 static uint8_t normTempPct(int16_t t) {            // 30..95C -> 0..100 (clamp); 255 = s/d
   if (t <= -1000) return 255;
   int v = (int)(t - 30) * 100 / (95 - 30);
@@ -397,7 +402,13 @@ static void pushSensorHist(const UiSnapshot& s) {
   s_histHead = (s_histHead + 1) % HN;
   if (s_histCount < HN) s_histCount++;
 }
-// Sparkline del metric en (spx,spy,spw,sph). Mas nuevo a la derecha; corta la linea en s/d.
+static void pushNetHist(const UiSnapshot& s) {
+  s_net[0][s_netHead] = s.netDown == 0xFFFFFFFF ? 0 : (uint16_t)(s.netDown > 65535 ? 65535 : s.netDown);
+  s_net[1][s_netHead] = s.netUp   == 0xFFFFFFFF ? 0 : (uint16_t)(s.netUp   > 65535 ? 65535 : s.netUp);
+  s_netHead = (s_netHead + 1) % HN;
+  if (s_netCount < HN) s_netCount++;
+}
+// Sparkline 0..100 (temps/cargas). Mas nuevo a la derecha; corta la linea en s/d.
 static void drawSpark(TFT_eSPI& g, int metric, int spx, int spy, int spw, int sph, uint16_t col) {
   int n = s_histCount;
   if (n < 2) return;
@@ -414,86 +425,177 @@ static void drawSpark(TFT_eSPI& g, int metric, int spx, int spy, int spw, int sp
     px = sx; py = sy;
   }
 }
+// Sparkline de red: auto-escala al maximo de la ventana (KB/s sin tope fijo).
+static void drawNetSpark(TFT_eSPI& g, int idx, int spx, int spy, int spw, int sph, uint16_t col) {
+  int n = s_netCount;
+  g.drawFastHLine(spx, spy + sph, spw, theme::EDGE);
+  if (n < 2) return;
+  uint16_t mx = 1;
+  for (int k = 0; k < n; k++) { int i = (s_netHead - n + k + HN * 2) % HN; if (s_net[idx][i] > mx) mx = s_net[idx][i]; }
+  int px = -1, py = -1;
+  for (int k = 0; k < n; k++) {
+    int i = (s_netHead - n + k + HN * 2) % HN;
+    int sx = spx + spw - (n - 1 - k) * spw / (HN - 1);
+    int sy = spy + sph - (int)s_net[idx][i] * sph / mx;
+    if (px >= 0) g.drawLine(px, py, sx, sy, col);
+    px = sx; py = sy;
+  }
+}
 
-static void sensorTile(TFT_eSPI& g, int x, int y, int w, int h, int metric,
-                       const char* label, bool isTemp, int16_t tempC, uint8_t load) {
-  g.fillRoundRect(x, y, w, h, 10, theme::CARD);
-  g.drawRoundRect(x, y, w, h, 10, theme::EDGE);
+// --- cabecera comun de las vistas de monitor ---
+static void monitorTitle(TFT_eSPI& g, const SkinContext& ctx, const char* title, uint16_t col) {
+  g.setTextDatum(TL_DATUM); g.setTextColor(col, theme::BG);     g.drawString(title, 16, 14, 4);
+  g.setTextDatum(TR_DATUM); g.setTextColor(theme::FG, theme::BG); g.drawString(ctx.clock, 464, 14, 4);
   g.setTextDatum(TL_DATUM);
-  g.setTextColor(theme::DIM, theme::CARD);
-  g.drawString(label, x + 14, y + 8, 2);
-
-  bool noData = isTemp ? (tempC <= -1000) : (load == 255);
-  char buf[8];
-  uint16_t col = theme::DIM;
-  if (!noData && isTemp) {
-    snprintf(buf, sizeof(buf), "%d", tempC);
-    col = tempC >= 80 ? theme::RED : (tempC >= 65 ? theme::YELLOW : theme::GREEN);
-  } else if (!noData) {
-    snprintf(buf, sizeof(buf), "%u", load);
-    col = load >= 90 ? theme::RED : (load >= 70 ? theme::YELLOW : theme::CYAN);
-  }
-  g.setTextDatum(ML_DATUM);
-  if (noData) {
-    g.setTextColor(theme::DIM, theme::CARD);
-    g.drawString("s/d", x + 14, y + 50, 4);
-  } else {
-    g.setTextColor(col, theme::CARD);
-    g.drawString(buf, x + 14, y + 48, 6);                 // numero grande (font6)
-    g.setTextColor(theme::SOFT, theme::CARD);
-    g.drawString(isTemp ? "C" : "%", x + 14 + g.textWidth(buf, 6) + 6, y + 50, 4);
-  }
-  if (!isTemp && !noData) {                                // barra de carga
-    int bx = x + 14, bw = w - 28, by = y + h - 13, bh = 6;
-    g.fillRoundRect(bx, by, bw, bh, 3, theme::DARK);
-    g.fillRoundRect(bx, by, (int)load * bw / 100, bh, 3, col);
-  }
-  if (!noData) drawSpark(g, metric, x + w - 108, y + 22, 94, h - 42, col);   // tendencia
 }
-
-static void sensorPanel(const SkinContext& ctx, const UiSnapshot& s) {
-  TFT_eSPI& g = *ctx.tft;
-  const int m = 8, gap = 12, cw = (layout::W - 2 * m - gap) / 2, ch = 88;
-  const int x2 = m + cw + gap, y1 = 52, y2 = y1 + ch + gap;
-  if (s.live) pushSensorHist(s);   // acumula tendencia solo con datos reales
-  sensorTile(g, m,  y1, cw, ch, 0, "CPU  temp",  true,  s.cpuTemp, 0);
-  sensorTile(g, x2, y1, cw, ch, 1, "GPU  temp",  true,  s.gpuTemp, 0);
-  sensorTile(g, m,  y2, cw, ch, 2, "CPU  carga", false, 0, s.cpuLoad);
-  sensorTile(g, x2, y2, cw, ch, 3, "GPU  carga", false, 0, s.gpuLoad);
-  uint16_t pc = s.live ? theme::GREEN : theme::DIM;        // pill LIVE / sin PC
-  g.fillRoundRect(196, 14, 88, 22, 11, theme::blend(theme::BG, pc, 50));
-  g.drawRoundRect(196, 14, 88, 22, 11, pc);
-  g.setTextDatum(MC_DATUM);
-  g.setTextColor(pc, theme::blend(theme::BG, pc, 50));
-  g.drawString(s.live ? "LIVE" : "sin PC", 240, 25, 2);
+static void livePill(TFT_eSPI& g, const UiSnapshot& s) {        // LIVE / sin PC (se redibuja en cada update)
+  uint16_t pc = s.live ? theme::GREEN : theme::DIM;
+  const int px = 232, pw = 84;
+  g.fillRoundRect(px, 16, pw, 22, 11, theme::blend(theme::BG, pc, 50));
+  g.drawRoundRect(px, 16, pw, 22, 11, pc);
+  g.setTextDatum(MC_DATUM); g.setTextColor(pc, theme::blend(theme::BG, pc, 50));
+  g.drawString(s.live ? "LIVE" : "sin PC", px + pw / 2, 27, 2);
+  g.setTextDatum(TL_DATUM);
 }
-
-static void sensorStrip(const SkinContext& ctx, const UiSnapshot& s) {
-  TFT_eSPI& g = *ctx.tft;
-  g.fillRect(0, 248, layout::W, layout::H - 248, theme::BG);
+static void monitorStrip(TFT_eSPI& g, const UiSnapshot& s) {
+  g.fillRect(0, 250, layout::W, layout::H - 250, theme::BG);
   statusStrip(g, s, 272);
 }
 
-static void sensoresKeycap(const SkinContext&, const UiSnapshot&, uint8_t, bool) {}  // vista sin teclas
-
-static void sensoresStatus(const SkinContext& ctx, const UiSnapshot& s) {
-  sensorPanel(ctx, s);
-  sensorStrip(ctx, s);
+// --- VISTA GENERAL: tarjeta por dispositivo (temp+carga+cooler) + barra RAM ---
+static void deviceCard(TFT_eSPI& g, int x, int y, int w, int h, const char* name, int sparkMetric,
+                       int16_t tempC, uint8_t load, int fan, bool fanRpm) {
+  g.fillRoundRect(x, y, w, h, 12, theme::CARD);
+  g.drawRoundRect(x, y, w, h, 12, theme::EDGE);
+  g.setTextDatum(TL_DATUM); g.setTextColor(theme::SOFT, theme::CARD);
+  g.drawString(name, x + 14, y + 10, 4);                       // CPU / GPU
+  bool noT = tempC <= -1000;
+  uint16_t tc = noT ? theme::DIM : (tempC >= 80 ? theme::RED : (tempC >= 65 ? theme::YELLOW : theme::GREEN));
+  g.setTextDatum(ML_DATUM);
+  if (noT) { g.setTextColor(theme::DIM, theme::CARD); g.drawString("s/d", x + 14, y + 60, 4); }
+  else {
+    char b[8]; snprintf(b, sizeof(b), "%d", tempC);
+    g.setTextColor(tc, theme::CARD); g.drawString(b, x + 14, y + 60, 6);
+    g.setTextColor(theme::SOFT, theme::CARD); g.drawString("C", x + 14 + g.textWidth(b, 6) + 4, y + 60, 4);
+    drawSpark(g, sparkMetric, x + w - 92, y + 16, 80, 38, tc);
+  }
+  // carga: etiqueta + % + barra
+  int by = y + 98;
+  bool noL = load == 255;
+  uint16_t lc = noL ? theme::DIM : (load >= 90 ? theme::RED : (load >= 70 ? theme::YELLOW : theme::CYAN));
+  char lb[8]; if (noL) strcpy(lb, "s/d"); else snprintf(lb, sizeof(lb), "%u%%", load);
+  g.setTextDatum(TL_DATUM); g.setTextColor(theme::DIM, theme::CARD); g.drawString("carga", x + 14, by, 2);
+  g.setTextDatum(TR_DATUM); g.setTextColor(lc, theme::CARD);         g.drawString(lb, x + w - 14, by, 2);
+  g.setTextDatum(TL_DATUM);
+  int bx = x + 14, bw = w - 28, byy = by + 20, bh = 8;
+  g.fillRoundRect(bx, byy, bw, bh, 4, theme::DARK);
+  if (!noL) g.fillRoundRect(bx, byy, (int)load * bw / 100, bh, 4, lc);
+  // cooler
+  int fy = y + h - 26;
+  bool noF = fanRpm ? (fan < 0) : (fan == 255);
+  char fb[14];
+  if (noF) strcpy(fb, "s/d");
+  else if (fanRpm) snprintf(fb, sizeof(fb), "%d rpm", fan);
+  else snprintf(fb, sizeof(fb), "%d%%", fan);
+  g.setTextColor(theme::DIM, theme::CARD); g.drawString("cooler", x + 14, fy, 2);
+  g.setTextDatum(TR_DATUM); g.setTextColor(noF ? theme::DIM : theme::SOFT, theme::CARD);
+  g.drawString(fb, x + w - 14, fy, 2); g.setTextDatum(TL_DATUM);
 }
-
-static void sensoresFull(const SkinContext& ctx, const UiSnapshot& s) {
+static void ramBar(TFT_eSPI& g, int x, int y, int w, int h, uint8_t ram) {
+  g.fillRoundRect(x, y, w, h, 8, theme::CARD);
+  g.drawRoundRect(x, y, w, h, 8, theme::EDGE);
+  g.setTextDatum(ML_DATUM); g.setTextColor(theme::SOFT, theme::CARD);
+  g.drawString("RAM", x + 14, y + h / 2, 4);
+  bool no = ram == 255;
+  uint16_t rc = no ? theme::DIM : (ram >= 90 ? theme::RED : (ram >= 75 ? theme::YELLOW : theme::MAGENTA));
+  int bx = x + 78, bw = w - 78 - 78, by = y + (h - 12) / 2, bh = 12;
+  g.fillRoundRect(bx, by, bw, bh, 6, theme::DARK);
+  if (!no) g.fillRoundRect(bx, by, (int)ram * bw / 100, bh, 6, rc);
+  char b[8]; if (no) strcpy(b, "s/d"); else snprintf(b, sizeof(b), "%u%%", ram);
+  g.setTextDatum(MR_DATUM); g.setTextColor(no ? theme::DIM : rc, theme::CARD);
+  g.drawString(b, x + w - 14, y + h / 2, 4); g.setTextDatum(TL_DATUM);
+}
+static void monGeneral(const SkinContext& ctx, const UiSnapshot& s, bool full) {
   TFT_eSPI& g = *ctx.tft;
-  g.fillScreen(theme::BG);
-  g.setTextDatum(TL_DATUM);
-  g.setTextColor(theme::CYAN, theme::BG);
-  g.drawString("SENSORES", 16, 14, 4);
-  g.setTextDatum(TR_DATUM);
-  g.setTextColor(theme::FG, theme::BG);
-  g.drawString(ctx.clock, 464, 14, 4);
-  g.setTextDatum(TL_DATUM);
-  sensorPanel(ctx, s);
-  sensorStrip(ctx, s);
+  if (full) { g.fillScreen(theme::BG); monitorTitle(g, ctx, "GENERAL", theme::CYAN); }
+  livePill(g, s);
+  if (s.live) pushSensorHist(s);
+  const int m = 8, gap = 12, cw = (layout::W - 2 * m - gap) / 2, cy = 50, ch = 158, x2 = m + cw + gap;
+  deviceCard(g, m,  cy, cw, ch, "CPU", 0, s.cpuTemp, s.cpuLoad, s.cpuFan, true);
+  deviceCard(g, x2, cy, cw, ch, "GPU", 1, s.gpuTemp, s.gpuLoad, s.gpuFan, false);
+  ramBar(g, m, cy + ch + 10, layout::W - 2 * m, 28, s.ram);
+  monitorStrip(g, s);
 }
+
+// --- VISTA RED: descarga/subida (auto-escala) + IP local ---
+static void netStat(TFT_eSPI& g, int x, int y, int w, int h, const char* label, uint16_t col, uint32_t kbs, int idx) {
+  g.fillRoundRect(x, y, w, h, 12, theme::CARD);
+  g.drawRoundRect(x, y, w, h, 12, theme::EDGE);
+  g.setTextDatum(TL_DATUM); g.setTextColor(theme::DIM, theme::CARD); g.drawString(label, x + 14, y + 10, 2);
+  bool no = kbs == 0xFFFFFFFF;
+  char b[16]; const char* unit;
+  if (no) { strcpy(b, "s/d"); unit = ""; }
+  else if (kbs >= 1024) { unsigned long t = (kbs * 10UL) / 1024; snprintf(b, sizeof(b), "%lu.%lu", t / 10, t % 10); unit = "MB/s"; }
+  else { snprintf(b, sizeof(b), "%lu", (unsigned long)kbs); unit = "KB/s"; }
+  g.setTextDatum(ML_DATUM); g.setTextColor(no ? theme::DIM : col, theme::CARD); g.drawString(b, x + 14, y + 50, 6);
+  g.setTextColor(theme::SOFT, theme::CARD); g.drawString(unit, x + 14 + g.textWidth(b, 6) + 6, y + 56, 2);
+  g.setTextDatum(TL_DATUM);
+  drawNetSpark(g, idx, x + 14, y + h - 40, w - 28, 30, col);
+}
+static void monRed(const SkinContext& ctx, const UiSnapshot& s, bool full) {
+  TFT_eSPI& g = *ctx.tft;
+  if (full) { g.fillScreen(theme::BG); monitorTitle(g, ctx, "RED", theme::GREEN); }
+  livePill(g, s);
+  if (s.live) pushNetHist(s);
+  const int m = 8, gap = 12, cw = (layout::W - 2 * m - gap) / 2, cy = 50, ch = 128, x2 = m + cw + gap;
+  netStat(g, m,  cy, cw, ch, "DESCARGA", theme::CYAN,    s.netDown, 0);
+  netStat(g, x2, cy, cw, ch, "SUBIDA",   theme::MAGENTA, s.netUp,   1);
+  int iy = cy + ch + 12;
+  g.fillRoundRect(m, iy, layout::W - 2 * m, 44, 10, theme::CARD);
+  g.drawRoundRect(m, iy, layout::W - 2 * m, 44, 10, theme::EDGE);
+  g.setTextDatum(ML_DATUM); g.setTextColor(theme::DIM, theme::CARD); g.drawString("IP local", m + 16, iy + 22, 2);
+  g.setTextDatum(MR_DATUM); g.setTextColor(s.ip[0] ? theme::FG : theme::DIM, theme::CARD);
+  g.drawString(s.ip[0] ? s.ip : "s/d", layout::W - m - 16, iy + 22, 4);
+  g.setTextDatum(TL_DATUM);
+  monitorStrip(g, s);
+}
+
+// --- VISTA NUCLEOS: una barra vertical por core (universal, os.cpus) ---
+static void monCores(const SkinContext& ctx, const UiSnapshot& s, bool full) {
+  TFT_eSPI& g = *ctx.tft;
+  if (full) { g.fillScreen(theme::BG); monitorTitle(g, ctx, "NUCLEOS", theme::VIOLET); }
+  livePill(g, s);
+  int n = s.coreCount; if (n > 24) n = 24;
+  int avg = 0, cnt = 0;
+  for (int i = 0; i < n; i++) if (s.cores[i] <= 100) { avg += s.cores[i]; cnt++; }
+  avg = cnt ? avg / cnt : 0;
+  g.fillRect(0, 44, layout::W, 18, theme::BG);
+  g.setTextDatum(TL_DATUM); g.setTextColor(theme::SOFT, theme::BG);
+  char sub[28]; if (!n) strcpy(sub, "sin datos por nucleo"); else snprintf(sub, sizeof(sub), "%d nucleos    prom %d%%", n, avg);
+  g.drawString(sub, 16, 46, 2);
+  const int gx = 12, gw = layout::W - 2 * gx, top = 68, bot = 246, bh = bot - top;
+  g.fillRect(0, top, layout::W, bh + 2, theme::BG);
+  if (n) {
+    int slot = gw / n, bw = slot - 4; if (bw < 4) bw = 4;
+    for (int i = 0; i < n; i++) {
+      int x = gx + i * slot;
+      uint8_t v = s.cores[i] > 100 ? 0 : s.cores[i];
+      uint16_t c = v >= 90 ? theme::RED : (v >= 70 ? theme::YELLOW : theme::GREEN);
+      g.fillRoundRect(x, top, bw, bh, 3, theme::DARK);
+      int fh = v * bh / 100;
+      if (fh > 0) g.fillRoundRect(x, top + bh - fh, bw, fh, 3, c);
+    }
+  }
+  monitorStrip(g, s);
+}
+
+static void monKeycap(const SkinContext&, const UiSnapshot&, uint8_t, bool) {}  // vistas sin teclas
+static void monGeneralFull  (const SkinContext& c, const UiSnapshot& s) { monGeneral(c, s, true); }
+static void monGeneralStatus(const SkinContext& c, const UiSnapshot& s) { monGeneral(c, s, false); }
+static void monRedFull      (const SkinContext& c, const UiSnapshot& s) { monRed(c, s, true); }
+static void monRedStatus    (const SkinContext& c, const UiSnapshot& s) { monRed(c, s, false); }
+static void monCoresFull    (const SkinContext& c, const UiSnapshot& s) { monCores(c, s, true); }
+static void monCoresStatus  (const SkinContext& c, const UiSnapshot& s) { monCores(c, s, false); }
 
 // ============================================================================
 //  clock() por skin: redibuja SOLO el area del reloj (opaco) -> sin el flash
@@ -522,7 +624,7 @@ static void watchClock(const SkinContext& ctx) {
   g.setTextColor(theme::FG, theme::BG);
   g.drawString(ctx.clock, 240, 78, 6);
 }
-static void sensoresClock(const SkinContext& ctx) {
+static void monClock(const SkinContext& ctx) {
   TFT_eSPI& g = *ctx.tft;
   g.fillRect(386, 12, 82, 30, theme::BG);
   g.setTextDatum(TR_DATUM);
@@ -535,14 +637,25 @@ static void sensoresClock(const SkinContext& ctx) {
 //  Registro
 // ============================================================================
 static const Skin SKINS[] = {
+  // --- dashboards (elegibles en Apariencia) ---
   { "Cards",    cardsFull,    cardsKeycap,    cardsStatus,    cardsStick, cardsClock,    cardsEncStrip, cardsEncDial },
   { "Minimal",  minFull,      minKeycap,      minStatus,      nullptr,    minClock,      noEncoder },
   { "Watch",    watchFull,    watchKeycap,    watchStatus,    nullptr,    watchClock,    noEncoder },
-  { "Sensores", sensoresFull, sensoresKeycap, sensoresStatus, nullptr,    sensoresClock, noEncoder },
+  // --- vistas de Monitor (forzadas por la capa homonima, NO en el ciclo de Apariencia) ---
+  { "General",  monGeneralFull, monKeycap, monGeneralStatus, nullptr,    monClock,      noEncoder },
+  { "Red",      monRedFull,     monKeycap, monRedStatus,     nullptr,    monClock,      noEncoder },
+  { "Nucleos",  monCoresFull,   monKeycap, monCoresStatus,   nullptr,    monClock,      noEncoder },
 };
+static const uint8_t MONITOR_SKINS = 3;   // las 3 ultimas son vistas de monitor
 
 namespace skins {
 uint8_t count() { return sizeof(SKINS) / sizeof(SKINS[0]); }
+uint8_t dashboardCount() { return count() - MONITOR_SKINS; }
 const Skin& get(uint8_t i) { return SKINS[i < count() ? i : 0]; }
 const char* name(uint8_t i) { return get(i).name; }
+int monitorIndex(const char* layerName) {                  // capa de monitor -> su skin homonimo
+  for (uint8_t i = dashboardCount(); i < count(); i++)
+    if (strcmp(SKINS[i].name, layerName) == 0) return (int)i;
+  return -1;
+}
 }  // namespace skins
