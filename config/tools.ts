@@ -155,6 +155,33 @@ export const tools: Tool[] = [
         url: 'https://thelastoutpostworkshop.github.io/ESPConnect/',
         recommended: true,
     },
+    {
+        name: 'UltiMaker Cura',
+        description: 'Laminador (slicer) open source para preparar modelos 3D para impresion FDM.',
+        category: 'software',
+        usedFor: 'Laminado para impresion 3D',
+        projectsUsing: 0,
+        url: 'https://ultimaker.com/software/ultimaker-cura/',
+        recommended: true,
+    },
+    {
+        name: 'PrusaSlicer',
+        description: 'Slicer potente y configurable (base de muchos forks) para FDM y resina.',
+        category: 'software',
+        usedFor: 'Laminado para impresion 3D',
+        projectsUsing: 0,
+        url: 'https://www.prusa3d.com/page/prusaslicer_424/',
+        recommended: true,
+    },
+    {
+        name: 'OrcaSlicer',
+        description: 'Fork de PrusaSlicer con calibracion afinada y perfiles para impresoras modernas.',
+        category: 'software',
+        usedFor: 'Laminado y calibracion 3D',
+        projectsUsing: 0,
+        url: 'https://github.com/SoftFever/OrcaSlicer',
+        recommended: true,
+    },
 ];
 
 export type FilterType = 'all' | 'software' | 'hardware';
