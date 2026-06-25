@@ -35,6 +35,11 @@ const ProjectsGrid = dynamic(
   { ssr: true },
 );
 
+const HomeQuickAccess = dynamic(
+  () => import('@/components/landing/HomeQuickAccess').then((mod) => ({ default: mod.HomeQuickAccess })),
+  { ssr: true },
+);
+
 export default function Home({ params: { locale } }: { params: { locale: string } }) {
   setRequestLocale(locale);
   return (
@@ -42,8 +47,12 @@ export default function Home({ params: { locale } }: { params: { locale: string 
       <HomeToolDeepLink />
       <HeroSection />
       <HeroRandomTool />
-      <ToolShowcase />
+      {/* Proyectos con más prioridad (arriba de las tools). */}
       <ProjectsGrid />
+      {/* Pantallazo de 8 herramientas + "ver todas". */}
+      <ToolShowcase />
+      {/* Accesos: calculadoras, pinouts, Maker, Devlog. */}
+      <HomeQuickAccess />
     </main>
   );
 }
