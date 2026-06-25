@@ -24,8 +24,8 @@ static const GroupDef GROUPS[] = {
   {"Multimedia", LayerGroup::MULTIMEDIA, theme::MAGENTA},
   {"Web",        LayerGroup::WEB,        theme::BLUE},
   {"Llamadas",   LayerGroup::LLAMADAS,   theme::ROSE},
-  {"Sistema",    LayerGroup::SISTEMA,    theme::GREEN},
-};
+  {"Luces",      LayerGroup::SISTEMA,    theme::VIOLET},   // RGB (iluminacion); el nombre "Sistema"
+};                                                          // choca con la pagina de settings Sistema
 static const int G_COUNT = sizeof(GROUPS) / sizeof(GROUPS[0]);
 
 static KeyMap* s_km = nullptr;
@@ -234,6 +234,64 @@ static const char* itemMeta(int i, char* buf, size_t len) {
   return buf;
 }
 
+// Iconos vectoriales de los items de ajuste (sobre el TFT). El fondo (bg) es conocido.
+static void drawMenuIcon(TFT_eSPI& g, int cx, int cy, int i, uint16_t col, uint16_t bg) {
+  if (i == idxBright()) {                         // brillo: sol
+    g.fillCircle(cx, cy, 6, col);
+    for (uint8_t a = 0; a < 8; a++) {
+      float t = a * 0.785398f;
+      int x0 = cx + (int)(9 * cosf(t)),  y0 = cy + (int)(9 * sinf(t));
+      int x1 = cx + (int)(13 * cosf(t)), y1 = cy + (int)(13 * sinf(t));
+      g.drawLine(x0, y0, x1, y1, col);
+      g.drawLine(x0, y0 + 1, x1, y1 + 1, col);
+    }
+    return;
+  }
+  if (i == idxTheme()) {                          // tema: sol / luna
+    if (appstate::prefs.themeMode == theme::MODE_LIGHT) g.fillCircle(cx, cy, 11, col);
+    else { g.fillCircle(cx - 3, cy, 12, col); g.fillCircle(cx + 4, cy - 3, 12, bg); }
+    return;
+  }
+  if (i == idxAccent()) {                         // color: muestras de acento
+    for (uint8_t a = 0; a < 7; a++) g.fillCircle(cx - 18 + a * 6, cy, 3, theme::accentByIndex(a));
+    g.drawRoundRect(cx - 24, cy - 9, 48, 18, 9, col);
+    return;
+  }
+  if (i == idxSkin()) {                           // skin: dos paneles
+    g.drawRoundRect(cx - 12, cy - 8, 18, 15, 3, col);
+    g.fillRoundRect(cx - 6, cy - 2, 18, 15, 3, theme::blend(bg, col, 90));
+    g.drawRoundRect(cx - 6, cy - 2, 18, 15, 3, col);
+    return;
+  }
+  if (i == idxDim()) {                            // dimmer
+    g.drawRoundRect(cx - 18, cy - 10, 36, 20, 5, col);
+    g.fillRoundRect(cx - 14, cy - 5, 22, 10, 5, theme::blend(bg, col, 90));
+    return;
+  }
+  if (i == idxClock()) {                          // hora
+    g.drawCircle(cx, cy, 13, col); g.drawCircle(cx, cy, 12, col);
+    g.drawFastVLine(cx, cy - 9, 10, col); g.drawLine(cx, cy, cx + 7, cy + 5, col);
+    return;
+  }
+  if (i == idxWifi()) {                           // wifi: arcos + punto
+    int by = cy + 11; g.fillCircle(cx, by, 2, col);
+    for (int r = 6; r <= 16; r += 5)
+      for (int a = -140; a <= -40; a += 5) {
+        float t = a * 0.0174533f;
+        g.drawPixel(cx + (int)(r * cosf(t)), by + (int)(r * sinf(t)), col);
+      }
+    return;
+  }
+  if (i == idxPrec()) {                           // precision: barras crecientes
+    for (int b = 0; b < 4; b++) { int bh = 5 + b * 5; g.fillRect(cx - 15 + b * 9, cy + 9 - bh, 6, bh, col); }
+    return;
+  }
+  g.drawCircle(cx, cy, 13, col);                  // calibrar: target
+  g.drawCircle(cx, cy, 6, col);
+  g.drawFastHLine(cx - 16, cy, 32, col);
+  g.drawFastVLine(cx, cy - 16, 32, col);
+}
+
 // Picker unificado: 5 cards = 5 botones fisicos. En pagina de capas cada card es una
 // capa; en pagina de settings cada card es un item con su valor (el que se ajusta queda
 // resaltado). Los botones eligen en ambos casos -> mismo componente, sin carrusel/caratula.
@@ -260,14 +318,18 @@ static void renderPicker(TFT_eSPI& tft) {
     tft.setTextDatum(MC_DATUM);
     if (occ) {
       const char* nm = settings ? itemTitle(item) : s_km->layer(lys[i]).name;
-      // chip-icono con la inicial (color del item/capa). #2 cambiara la inicial por iconos.
-      const int icx = x + cw / 2, icy = y + 30, ir = 17;
-      const uint16_t chip = theme::blend(fill, accent, editing ? 60 : 32);
-      tft.fillCircle(icx, icy, ir, chip);
-      tft.drawCircle(icx, icy, ir, accent);
-      char ini[2] = { nm[0], 0 };
-      tft.setTextColor(accent, chip);
-      tft.drawString(ini, icx, icy + 1, 4);
+      const int icx = x + cw / 2, icy = y + 30;
+      if (settings) {
+        drawMenuIcon(tft, icx, icy, item, accent, fill);          // icono vectorial del setting
+      } else {
+        const int ir = 17;                                        // capa: chip + inicial (por ahora)
+        const uint16_t chip = theme::blend(fill, accent, 32);
+        tft.fillCircle(icx, icy, ir, chip);
+        tft.drawCircle(icx, icy, ir, accent);
+        char ini[2] = { nm[0], 0 };
+        tft.setTextColor(accent, chip);
+        tft.drawString(ini, icx, icy + 1, 4);
+      }
       uikit::fitText(tft, nm, x + cw / 2, y + 64, cw - 8, theme::FG, fill, 2);   // leyenda
       if (settings) {                                                            // valor del setting
         uikit::fitText(tft, itemMeta(item, buf, sizeof(buf)), x + cw / 2, y + ch - 18, cw - 8,
