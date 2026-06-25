@@ -103,6 +103,16 @@ void loadDefaults(KeyMap& km) {
   km.bind(r, InputId::ENC_SW, Action{}, "Menu");
   km.bind(r, InputId::STICK_SW, mouseToggleAction(), "Mouse");
 
+  // --- Capa: WiZ (amarillo) -> control de luces WiZ por UDP via companion ---
+  int wz = km.addLayer("WiZ", theme::YELLOW, LayerGroup::SISTEMA);
+  km.bind(wz, InputId::BTN_1, netCmdAction(CompanionCmd::WIZ_TOGGLE),      "On/Off");
+  km.bind(wz, InputId::BTN_2, netCmdAction(CompanionCmd::WIZ_BRIGHT_UP),   "Brillo +");
+  km.bind(wz, InputId::BTN_3, netCmdAction(CompanionCmd::WIZ_BRIGHT_DOWN), "Brillo -");
+  km.bind(wz, InputId::BTN_4, netCmdAction(CompanionCmd::WIZ_WARMER),      "Calido");
+  km.bind(wz, InputId::BTN_5, netCmdAction(CompanionCmd::WIZ_COOLER),      "Frio");
+  km.bind(wz, InputId::ENC_SW, Action{}, "Menu");
+  km.bind(wz, InputId::STICK_SW, mouseToggleAction(), "Mouse");
+
   // === Grupo Llamadas: una capa por app. En TODAS, el long-press del boton de
   //     mic (hold) hace MUTE GLOBAL via companion (Core Audio, app-independiente);
   //     el tap usa el atajo de la app. La camara se togglea con el atajo de la app.
