@@ -23,11 +23,12 @@ static St           s_state = St::IDLE;
 static volatile bool s_portalReq = false;   // pedido de levantar portal (desde otra task)
 static volatile bool s_stopReq   = false;   // pedido de bajar el portal
 static RealState     s_real;                // ultimo estado real del companion (lo escribe handlePostState)
-// Comandos pendientes pad->companion (bitmask: bit0=mic toggle, bit1=cam toggle).
-// Se setean desde el inputTask (core1) y se leen/limpian en handlePostState
-// (netTask, core0) -> seccion critica para no perder ni duplicar.
-static volatile uint8_t s_pendingCmds = 0;
-static portMUX_TYPE     s_cmdMux = portMUX_INITIALIZER_UNLOCKED;
+// Cola de comandos pad->companion (ring buffer; reemplaza el bitmask que se quedaba sin
+// bits y coalescia repeticiones). Se llena desde inputTask (core1) y se vacia en
+// handlePostState (netTask, core0) -> seccion critica para no perder ni duplicar.
+static volatile CompanionCmd s_cmdQ[16];
+static volatile uint8_t      s_cmdHead = 0, s_cmdTail = 0;   // head=proximo a leer, tail=proximo a escribir
+static portMUX_TYPE          s_cmdMux = portMUX_INITIALIZER_UNLOCKED;
 static char          s_ssid[33] = {0};      // creds guardadas (para reintentar STA sin recargar de NVS)
 static char          s_pass[65] = {0};
 static bool          s_haveCreds = false;
@@ -92,6 +93,22 @@ static void handleSave() {
 
 // POST /api/state: el companion (PC) empuja el estado REAL. Cuerpo JSON; todos
 // los campos opcionales -> solo se pisa lo presente. Responde 204 (sin body).
+// CompanionCmd -> string del contrato (lo entiende el companion en index.ts).
+static const char* cmdName(CompanionCmd c) {
+  switch (c) {
+    case CompanionCmd::MIC_TOGGLE:      return "micToggle";
+    case CompanionCmd::CAM_TOGGLE:      return "camToggle";
+    case CompanionCmd::WIZ_TOGGLE:      return "wizToggle";
+    case CompanionCmd::WIZ_BRIGHT_UP:   return "wizBrightUp";
+    case CompanionCmd::WIZ_BRIGHT_DOWN: return "wizBrightDown";
+    case CompanionCmd::WIZ_WARMER:      return "wizWarmer";
+    case CompanionCmd::WIZ_COOLER:      return "wizCooler";
+    case CompanionCmd::WIZ_ROOM_NEXT:   return "wizRoomNext";
+    case CompanionCmd::WIZ_LIGHT_NEXT:  return "wizLightNext";
+    default:                            return nullptr;
+  }
+}
+
 static void handlePostState() {
   if (cfg::API_TOKEN[0] && s_web.header("X-Pad-Token") != cfg::API_TOKEN) {
     s_web.send(401, "text/plain", "unauthorized"); return;
@@ -108,6 +125,10 @@ static void handlePostState() {
   if (doc["gpuTemp"].is<float>()) s_real.gpuTemp   = (int16_t)doc["gpuTemp"].as<float>();
   if (doc["cpuLoad"].is<int>())   s_real.cpuLoad   = constrain(doc["cpuLoad"].as<int>(), 0, 100);
   if (doc["gpuLoad"].is<int>())   s_real.gpuLoad   = constrain(doc["gpuLoad"].as<int>(), 0, 100);
+  if (doc["wizRoom"].is<const char*>())   strlcpy(s_real.wizRoom,   doc["wizRoom"].as<const char*>(),   sizeof(s_real.wizRoom));
+  if (doc["wizTarget"].is<const char*>()) strlcpy(s_real.wizTarget, doc["wizTarget"].as<const char*>(), sizeof(s_real.wizTarget));
+  if (doc["wizOn"].is<bool>())            s_real.wizOn     = doc["wizOn"].as<bool>();
+  if (doc["wizBright"].is<int>())         s_real.wizBright = (uint8_t)constrain(doc["wizBright"].as<int>(), 0, 100);
   if (doc["clockMin"].is<int>()) {                 // hora real desde el companion (min desde 00:00)
     int cm = doc["clockMin"].as<int>();
     if (cm >= 0 && cm < 24 * 60) {
@@ -119,20 +140,17 @@ static void handlePostState() {
 
   // Respuesta: si hay comandos pendientes para el companion, se los devolvemos
   // en el cuerpo (y los limpiamos); si no, 204 sin body (igual que antes).
-  uint8_t pend;
+  CompanionCmd batch[16]; int nb = 0;
   portENTER_CRITICAL(&s_cmdMux);
-  pend = s_pendingCmds; s_pendingCmds = 0;
+  while (s_cmdHead != s_cmdTail && nb < 16) {
+    batch[nb++] = (CompanionCmd)s_cmdQ[s_cmdHead];
+    s_cmdHead = (uint8_t)((s_cmdHead + 1) % 16);
+  }
   portEXIT_CRITICAL(&s_cmdMux);
-  if (pend) {
+  if (nb > 0) {
     JsonDocument res;
     JsonArray arr = res["cmds"].to<JsonArray>();
-    if (pend & 0x01) arr.add("micToggle");
-    if (pend & 0x02) arr.add("camToggle");
-    if (pend & 0x04) arr.add("wizToggle");
-    if (pend & 0x08) arr.add("wizBrightUp");
-    if (pend & 0x10) arr.add("wizBrightDown");
-    if (pend & 0x20) arr.add("wizWarmer");
-    if (pend & 0x40) arr.add("wizCooler");
+    for (int i = 0; i < nb; i++) { const char* n = cmdName(batch[i]); if (n) arr.add(n); }
     String out; serializeJson(res, out);
     s_web.send(200, "application/json", out);
   } else {
@@ -297,16 +315,10 @@ bool hasFreshState(uint32_t now) {
 const RealState& realState() { return s_real; }
 
 void queueCommand(CompanionCmd cmd) {
-  uint8_t bit = cmd == CompanionCmd::MIC_TOGGLE      ? 0x01
-              : cmd == CompanionCmd::CAM_TOGGLE      ? 0x02
-              : cmd == CompanionCmd::WIZ_TOGGLE      ? 0x04
-              : cmd == CompanionCmd::WIZ_BRIGHT_UP   ? 0x08
-              : cmd == CompanionCmd::WIZ_BRIGHT_DOWN ? 0x10
-              : cmd == CompanionCmd::WIZ_WARMER      ? 0x20
-              : cmd == CompanionCmd::WIZ_COOLER      ? 0x40 : 0;
-  if (!bit) return;
+  if (cmd == CompanionCmd::NONE) return;
   portENTER_CRITICAL(&s_cmdMux);
-  s_pendingCmds |= bit;
+  uint8_t next = (uint8_t)((s_cmdTail + 1) % 16);
+  if (next != s_cmdHead) { s_cmdQ[s_cmdTail] = cmd; s_cmdTail = next; }   // si esta llena, descarta el nuevo
   portEXIT_CRITICAL(&s_cmdMux);
 }
 const char* ip()    { return s_ip; }

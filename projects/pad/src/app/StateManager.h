@@ -28,6 +28,11 @@ struct RealState {
   int16_t  gpuTemp     = -1000;
   uint8_t  cpuLoad     = 255;     // 0..100, 255 = sin dato
   uint8_t  gpuLoad     = 255;
+  // --- feedback WiZ (lo manda el companion para que la capa WiZ muestre que controla) ---
+  char     wizRoom[16] = {0};     // cuarto activo
+  char     wizTarget[8] = {0};    // "Todas" o "n/N"
+  bool     wizOn       = false;
+  uint8_t  wizBright   = 0;       // 0..100
   uint32_t updatedAtMs = 0;       // millis() del ultimo POST aceptado (0 = nunca)
 };
 
