@@ -33,6 +33,7 @@ static char          s_pass[65] = {0};
 static bool          s_haveCreds = false;
 static bool          s_wifiEnabled = true;   // el usuario puede apagar el WiFi (ahorro de energia)
 static volatile bool s_wifiToggleReq = false;
+static volatile bool s_wifiViewReq = false;  // abrir WiFi desde el menu (mostrar estado / reconectar; portal solo si hace falta)
 static WebServer  s_web(80);
 static DNSServer  s_dns;
 static uint32_t   s_connectStart = 0;
@@ -203,8 +204,10 @@ void begin() {
 
 void requestPortal() { s_portalReq = true; }
 void stopPortal()    { s_stopReq = true; }
+void openWifi()      { s_wifiViewReq = true; }   // abrir WiFi "inteligente" (estado/reconexion, no portal forzado)
 void toggleWifi()    { s_wifiToggleReq = true; }
 bool isWifiEnabled() { return s_wifiEnabled; }
+const char* ssid()   { return s_ssid; }
 
 // Baja el AP/portal y deja la radio en STA idle (sin reconectar).
 static void teardownPortal() {
@@ -221,6 +224,18 @@ void tick() {
   // Pedidos cross-task (los atiende SIEMPRE netTask, dueno de la radio).
   if (s_portalReq) { s_portalReq = false; if (s_state != St::PORTAL) startPortal(); }
   if (s_stopReq)   { s_stopReq = false;   if (s_state == St::PORTAL) teardownPortal(); }
+  // Abrir WiFi desde el menu: NO forzar el portal. Si hay creds, reconectar (o ya estar
+  // conectado) y mostrar el estado; el portal de re-registro solo si no hay creds.
+  if (s_wifiViewReq) {
+    s_wifiViewReq = false;
+    s_wifiEnabled = true;
+    if (!s_haveCreds) {
+      if (s_state != St::PORTAL) startPortal();                 // primera vez -> setup con QR
+    } else if (s_state != St::CONNECTED && s_state != St::CONNECTING) {
+      begin();                                                  // tiene creds -> reconectar (sin portal)
+    }
+    // CONNECTING/CONNECTED: no tocar, la UI muestra el estado.
+  }
   if (s_wifiToggleReq) {
     s_wifiToggleReq = false;
     if (s_wifiEnabled) {                          // apagar el radio (ahorro de energia)

@@ -88,18 +88,23 @@ private:
   void applyResult(MenuResult r) {
     if (r == MenuResult::SWITCH_LAYER) { dispatcher.setLayer(menu::selectedLayer()); menu::close(); appstate::mode = AppMode::NORMAL; uiForceRedraw(); }
     else if (r == MenuResult::CALIBRATE) { menu::close(); appstate::mode = AppMode::CALIBRATING; }
-    else if (r == MenuResult::WIFI_SETUP) { menu::close(); net::requestPortal(); appstate::mode = AppMode::WIFI; }
+    else if (r == MenuResult::WIFI_SETUP) { menu::close(); net::openWifi(); appstate::mode = AppMode::WIFI; }
   }
 };
 
-// Sink en modo WIFI: el portal es dueno de la pantalla; el long-press del
-// encoder lo cierra y vuelve al dashboard.
+// Sink en modo WIFI: long-press del encoder = salir; tap = reconfigurar (portal).
 class WifiSink : public InputSink {
 public:
   bool exit = false;
+  bool reconfigure = false;
   void emit(const InputEvent& e) override {
-    if (e.id == InputId::ENC_SW && e.edge == Edge::LONG_PRESS) exit = true;
+    if (e.id != InputId::ENC_SW) return;
+    if      (e.edge == Edge::LONG_PRESS) { exit = true; m_long = true; }
+    else if (e.edge == Edge::PRESS)      { m_long = false; }
+    else if (e.edge == Edge::RELEASE)    { if (!m_long) reconfigure = true; }
   }
+private:
+  bool m_long = false;
 };
 
 // ----------------------------------------------------------------------------
@@ -245,11 +250,12 @@ static void inputTask(void*) {
     }
     menuEntered = false;
 
-    // En modo WiFi el portal manda; solo escuchamos el long-press para salir.
+    // En modo WiFi: long-press del encoder = salir; tap = reconfigurar (levantar portal).
     if (appstate::mode == AppMode::WIFI) {
       WifiSink wsink;
       inputs.update(now, wsink);
       if (wsink.exit) { net::stopPortal(); appstate::mode = AppMode::NORMAL; uiForceRedraw(); }
+      else if (wsink.reconfigure && !net::portalActive()) { net::requestPortal(); uiForceRedraw(); }
       vTaskDelay(pdMS_TO_TICKS(10));
       continue;
     }
@@ -378,28 +384,54 @@ static void drawWifiSetup() {
   tft.drawString("Manten el encoder para salir", 22, 252, 1);
 }
 
+// Pantalla de ESTADO de WiFi (cuando ya hay creds): red, IP, mDNS. NO re-registra.
+// Tap del encoder = reconfigurar (portal); long-press = salir.
+static void drawWifiStatus() {
+  tft.fillScreen(theme::BG);
+  tft.setTextDatum(TL_DATUM);
+  tft.setTextColor(theme::CYAN, theme::BG);
+  tft.drawString("WiFi", 22, 34, 4);
+
+  const bool conn = net::isConnected();
+  tft.setTextColor(conn ? theme::GREEN : theme::SOFT, theme::BG);
+  tft.drawString(conn ? "Conectado" : "Conectando...", 22, 88, 4);
+
+  tft.setTextColor(theme::SOFT, theme::BG);
+  tft.drawString("Red", 22, 142, 2);
+  tft.setTextColor(theme::FG, theme::BG);
+  tft.drawString(net::ssid(), 22, 160, 4);
+
+  if (conn) {
+    tft.setTextColor(theme::SOFT, theme::BG);
+    tft.drawString("IP", 22, 206, 2);
+    tft.setTextColor(theme::FG, theme::BG);
+    char ipl[48]; snprintf(ipl, sizeof(ipl), "%s   http://%s.local", net::ip(), cfg::MDNS_HOST);
+    tft.drawString(ipl, 22, 224, 2);
+  }
+
+  tft.setTextColor(theme::DIM, theme::BG);
+  tft.drawString("Tap encoder = reconfigurar    Manten = salir", 22, 282, 1);
+}
+
 static void uiTask(void*) {
   Serial.printf("[uiTask] core %d\n", xPortGetCoreID());
   UiSnapshot snap{};
   snap.stickX = snap.stickY = 2048;
-  bool portalShown = false;
-  bool startingShown = false;
+  int  wifiView = 0;        // 0=ninguna, 1=portal(setup), 2=estado
+  bool wifiConn = false;    // ultimo isConnected dibujado (refresca al conectar)
   for (;;) {
-    // Modo WiFi: el portal es dueno exclusivo del TFT mientras este activo.
+    // Modo WiFi: el portal (setup con QR) o la pantalla de estado son duenos del TFT.
     if (appstate::mode == AppMode::WIFI) {
       if (net::portalActive()) {
-        if (!portalShown) { drawWifiSetup(); portalShown = true; }
-      } else if (!startingShown) {               // AP levantando (<1s)
-        tft.fillScreen(theme::BG);
-        tft.setTextDatum(MC_DATUM);
-        tft.setTextColor(theme::CYAN, theme::BG);
-        tft.drawString("Iniciando WiFi...", 240, 160, 4);
-        startingShown = true;
+        if (wifiView != 1) { drawWifiSetup(); wifiView = 1; }
+      } else {
+        bool conn = net::isConnected();
+        if (wifiView != 2 || conn != wifiConn) { drawWifiStatus(); wifiView = 2; wifiConn = conn; }
       }
       vTaskDelay(pdMS_TO_TICKS(150));
       continue;
     }
-    if (portalShown || startingShown) { portalShown = startingShown = false; uiForceRedraw(); }
+    if (wifiView != 0) { wifiView = 0; uiForceRedraw(); }
 
     if (appstate::mode == AppMode::CALIBRATING) {
       runStickCalibration(tft);   // modal; vuelve a NORMAL al terminar
