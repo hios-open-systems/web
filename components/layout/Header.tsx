@@ -43,6 +43,8 @@ export function Header() {
     { href: `/${locale}/workbench`, label: resolveLabel('workbench', 'Workbench'), kind: 'secondary' },
     { href: `/${locale}/pinouts`, label: resolveLabel('pinouts', 'Pinouts'), kind: 'secondary' },
     { href: `/${locale}/calculators`, label: resolveLabel('calculators', 'Calculadoras'), kind: 'secondary' },
+    { href: `/${locale}/prints`, label: 'Maker', kind: 'secondary' },
+    { href: `/${locale}/blog`, label: 'Devlog', kind: 'secondary' },
   ];
 
   const isActive = (href: string) => {

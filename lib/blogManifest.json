@@ -1,0 +1,26 @@
+[
+  {
+    "slug": "2026-06-25-ble-legacy-vs-extendido",
+    "title": "BLE que no aparecía: legacy vs extendido",
+    "date": "2026-06-25",
+    "summary": "Por qué el macropad se veía en Windows pero no en Linux, y cómo el advertising extendido de BLE 5 — más un bug de NimBLE — lo explicaba.",
+    "tags": [
+      "esp32",
+      "ble",
+      "firmware"
+    ],
+    "lang": "es"
+  },
+  {
+    "slug": "2026-06-24-companion-local-first",
+    "title": "Feedback real sin romper lo local-first",
+    "date": "2026-06-24",
+    "summary": "Cómo un daemon liviano le da al macropad el estado real de la PC (volumen, mic, temperaturas) sin que el device dependa de él para funcionar.",
+    "tags": [
+      "companion",
+      "arquitectura",
+      "local-first"
+    ],
+    "lang": "es"
+  }
+]
