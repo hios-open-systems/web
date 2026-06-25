@@ -39,10 +39,10 @@ export const projects: Project[] = [
     {
         slug: 'pad',
         name: 'HIOS PAD',
-        description: 'Macropad ESP32-S3 con pantalla, encoder y joystick: teclado/mouse/multimedia HID por USB, BLE y WiFi, con capas por contexto navegables desde la pantalla.',
+        description: 'Macropad ESP32-S3 con pantalla, encoder y joystick: teclado/mouse/multimedia HID por USB, BLE y WiFi (auto-switch), con capas por contexto navegables desde la pantalla. Flasheo OTA y feedback real de la PC vía un daemon companion local-first.',
         status: 'prototype',
         image: '/images/pad/pad-1-overview.jpg',
-        learnings: ['BLE HID (NimBLE)', 'TinyUSB HID', 'FreeRTOS dual-core', 'UI con TFT_eSprite'],
+        learnings: ['HID multi-transporte (USB + BLE)', 'OTA wireless', 'Companion local-first', 'FreeRTOS dual-core', 'NimBLE / TinyUSB', 'UI con TFT_eSprite'],
     },
     {
         slug: 'speaker',
