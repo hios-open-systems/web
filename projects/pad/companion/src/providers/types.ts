@@ -15,6 +15,7 @@ export interface SensorProvider {
   getGpuLoadPct(): Promise<number | null>;
   getCpuFanRpm(): Promise<number | null>;  // cooler de CPU/gabinete (best-effort)
   getGpuFanPct(): Promise<number | null>;  // cooler de GPU 0..100 (nvidia-smi)
+  getGpuMemMb(): Promise<{ used: number; total: number } | null>;  // VRAM (nvidia-smi)
 }
 
 // Throughput de red en bytes/s (down/up). null si no se pudo leer.
@@ -22,8 +23,16 @@ export interface NetProvider {
   getThroughput(): Promise<{ down: number; up: number } | null>;
 }
 
+// Uso del volumen principal (0..100) y throughput de disco en bytes/s (lectura/
+// escritura). null si no se pudo leer.
+export interface DiskProvider {
+  getUsagePct(): Promise<number | null>;
+  getIo(): Promise<{ rd: number; wr: number } | null>;
+}
+
 export interface PlatformProviders {
   audio: AudioProvider;
   sensors: SensorProvider;
   net: NetProvider;
+  disk: DiskProvider;
 }

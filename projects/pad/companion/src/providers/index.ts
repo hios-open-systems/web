@@ -14,21 +14,24 @@ export async function pickProviders(): Promise<PlatformProviders> {
     const { WindowsAudio } = await import('./windows/audio');
     const { WindowsSensors } = await import('./windows/sensors');
     const { WindowsNet } = await import('./windows/net');
-    return { audio: new WindowsAudio(), sensors: new WindowsSensors(), net: new WindowsNet() };
+    const { WindowsDisk } = await import('./windows/disk');
+    return { audio: new WindowsAudio(), sensors: new WindowsSensors(), net: new WindowsNet(), disk: new WindowsDisk() };
   }
   if (isWSL()) {
-    // WSL leyendo el host: audio de Windows (powershell.exe) + sensores/red Linux
-    // (nvidia-smi anda en WSL; CPU temp del host no se ve -> null; red = la de WSL).
+    // WSL leyendo el host: audio de Windows (powershell.exe) + sensores/red/disco Linux
+    // (nvidia-smi anda en WSL; CPU temp del host no se ve -> null; red/disco = los de WSL).
     const { WindowsAudio } = await import('./windows/audio');
     const { LinuxSensors } = await import('./linux/sensors');
     const { LinuxNet } = await import('./linux/net');
-    return { audio: new WindowsAudio(), sensors: new LinuxSensors(), net: new LinuxNet() };
+    const { LinuxDisk } = await import('./linux/disk');
+    return { audio: new WindowsAudio(), sensors: new LinuxSensors(), net: new LinuxNet(), disk: new LinuxDisk() };
   }
   if (process.platform === 'linux') {
     const { LinuxAudio } = await import('./linux/audio');
     const { LinuxSensors } = await import('./linux/sensors');
     const { LinuxNet } = await import('./linux/net');
-    return { audio: new LinuxAudio(), sensors: new LinuxSensors(), net: new LinuxNet() };
+    const { LinuxDisk } = await import('./linux/disk');
+    return { audio: new LinuxAudio(), sensors: new LinuxSensors(), net: new LinuxNet(), disk: new LinuxDisk() };
   }
   throw new Error(`Plataforma no soportada aun: ${process.platform}`);
 }

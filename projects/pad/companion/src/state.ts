@@ -20,6 +20,13 @@ export interface PadState {
   netDown?: number;  // KB/s de bajada
   netUp?: number;    // KB/s de subida
   ip?: string;       // IP local (capa Red)
+  vramUsed?: number; // MB de VRAM usada (capa General, GPU)
+  vramTotal?: number;// MB de VRAM total
+  disk?: number;     // 0..100 uso del volumen principal (capa Disco)
+  diskRd?: number;   // KB/s de lectura de disco
+  diskWr?: number;   // KB/s de escritura de disco
+  uptime?: number;   // segundos encendido (capa General)
+  procs?: number;    // nº de procesos
   clockMin?: number; // hora local en minutos desde 00:00 (0..1439) -> sincroniza el reloj del pad
   // --- feedback WiZ (para que la capa WiZ muestre que se esta controlando) ---
   wizRoom?: string;    // cuarto activo

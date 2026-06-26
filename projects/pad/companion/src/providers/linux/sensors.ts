@@ -67,6 +67,14 @@ export class LinuxSensors implements SensorProvider {
     }
   }
 
+  // VRAM usada/total en MB (nvidia-smi). null sin GPU Nvidia.
+  async getGpuMemMb(): Promise<{ used: number; total: number } | null> {
+    const o = await run('nvidia-smi', ['--query-gpu=memory.used,memory.total', '--format=csv,noheader,nounits']);
+    if (!o) return null;
+    const [u, t] = o.trim().split('\n')[0].split(',').map((x) => parseInt(x, 10));
+    return isNaN(u) || isNaN(t) || t <= 0 ? null : { used: u, total: t };
+  }
+
   private async nvidia(query: string): Promise<number | null> {
     const o = await run('nvidia-smi', [`--query-gpu=${query}`, '--format=csv,noheader,nounits']);
     if (!o) return null;

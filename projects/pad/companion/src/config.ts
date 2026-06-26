@@ -17,7 +17,8 @@ const DEFAULTS: Config = {
   pollMs: 1000,
   send: { mic: true, cam: false, media: false, vol: true,
           cpuTemp: true, gpuTemp: true, cpuLoad: true, gpuLoad: true, clock: true,
-          cpuFan: true, gpuFan: true, ram: true, cores: true, net: true },
+          cpuFan: true, gpuFan: true, ram: true, cores: true, net: true,
+          vram: true, disk: true, uptime: true, procs: true },
   wiz: { rooms: [] },
 };
 

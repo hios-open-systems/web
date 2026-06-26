@@ -11,6 +11,14 @@ export class WindowsSensors implements SensorProvider {
   async getGpuLoadPct(): Promise<number | null> { return this.nvidia('utilization.gpu'); }
   async getGpuFanPct(): Promise<number | null> { return this.nvidia('fan.speed'); }
 
+  // VRAM usada/total en MB (nvidia-smi, en PATH con el driver). null sin GPU Nvidia.
+  async getGpuMemMb(): Promise<{ used: number; total: number } | null> {
+    const o = await run('nvidia-smi', ['--query-gpu=memory.used,memory.total', '--format=csv,noheader,nounits']);
+    if (!o) return null;
+    const [u, t] = o.trim().split('\n')[0].split(',').map((x) => parseInt(x, 10));
+    return isNaN(u) || isNaN(t) || t <= 0 ? null : { used: u, total: t };
+  }
+
   // Cooler de CPU/gabinete via LibreHardwareMonitor (sensor tipo 'Fan'). Sin LHM
   // abierto -> null -> el pad muestra "s/d". Tomamos el ventilador mas rapido.
   async getCpuFanRpm(): Promise<number | null> {

@@ -114,7 +114,7 @@ static void handlePostState() {
     s_web.send(401, "text/plain", "unauthorized"); return;
   }
   const String& body = s_web.arg("plain");
-  if (body.length() == 0 || body.length() > 1024) { s_web.send(400, "text/plain", "bad body"); return; }
+  if (body.length() == 0 || body.length() > 2048) { s_web.send(400, "text/plain", "bad body"); return; }
   JsonDocument doc;
   if (deserializeJson(doc, body)) { s_web.send(400, "text/plain", "bad json"); return; }
   if (doc["mic"].is<bool>())      s_real.micMuted  = doc["mic"].as<bool>();
@@ -137,6 +137,13 @@ static void handlePostState() {
     for (JsonVariant v : a) { if (n >= 24) break; s_real.cores[n++] = (uint8_t)constrain(v.as<int>(), 0, 100); }
     s_real.coreCount = n;
   }
+  if (doc["vramUsed"].is<int>())  s_real.vramUsed  = (uint16_t)constrain(doc["vramUsed"].as<int>(), 0, 65534);
+  if (doc["vramTotal"].is<int>()) s_real.vramTotal = (uint16_t)constrain(doc["vramTotal"].as<int>(), 0, 65535);
+  if (doc["uptime"].is<long>())   s_real.uptimeSec = (uint32_t)(doc["uptime"].as<long>() < 0 ? 0 : doc["uptime"].as<long>());
+  if (doc["procs"].is<int>())     s_real.procs     = (uint16_t)constrain(doc["procs"].as<int>(), 0, 65534);
+  if (doc["disk"].is<int>())      s_real.diskPct   = (uint8_t)constrain(doc["disk"].as<int>(), 0, 100);
+  if (doc["diskRd"].is<long>())   s_real.diskRd    = (uint32_t)(doc["diskRd"].as<long>() < 0 ? 0 : doc["diskRd"].as<long>());
+  if (doc["diskWr"].is<long>())   s_real.diskWr    = (uint32_t)(doc["diskWr"].as<long>() < 0 ? 0 : doc["diskWr"].as<long>());
   if (doc["wizRoom"].is<const char*>())   strlcpy(s_real.wizRoom,   doc["wizRoom"].as<const char*>(),   sizeof(s_real.wizRoom));
   if (doc["wizTarget"].is<const char*>()) strlcpy(s_real.wizTarget, doc["wizTarget"].as<const char*>(), sizeof(s_real.wizTarget));
   if (doc["wizOn"].is<bool>())            s_real.wizOn     = doc["wizOn"].as<bool>();

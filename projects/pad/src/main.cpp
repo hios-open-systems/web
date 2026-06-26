@@ -191,6 +191,7 @@ static void renderUI(const UiSnapshot& s) {
                        s.transports != prev.transports || s.live != prev.live ||
                        s.cpuTemp != prev.cpuTemp || s.gpuTemp != prev.gpuTemp ||
                        s.cpuLoad != prev.cpuLoad || s.gpuLoad != prev.gpuLoad ||
+                       s.uptimeSec != prev.uptimeSec ||   // heartbeat 1Hz del companion -> refresca el monitor
                        s.wifiOff != prev.wifiOff ||
                        s.wizOn != prev.wizOn || s.wizBright != prev.wizBright ||
                        strcmp(s.wizRoom, prev.wizRoom) != 0 || strcmp(s.wizTarget, prev.wizTarget) != 0;
@@ -307,6 +308,9 @@ static void inputTask(void*) {
       strlcpy(s.ip, r.ip, sizeof(s.ip));
       s.coreCount = r.coreCount > 24 ? 24 : r.coreCount;
       memcpy(s.cores, r.cores, sizeof(s.cores));
+      s.vramUsed = r.vramUsed;   s.vramTotal = r.vramTotal;
+      s.uptimeSec = r.uptimeSec; s.procs = r.procs;
+      s.diskPct = r.diskPct;     s.diskRd = r.diskRd;       s.diskWr = r.diskWr;
       strlcpy(s.wizRoom, r.wizRoom, sizeof(s.wizRoom));
       strlcpy(s.wizTarget, r.wizTarget, sizeof(s.wizTarget));
       s.wizOn = r.wizOn;         s.wizBright = r.wizBright;
@@ -317,6 +321,8 @@ static void inputTask(void*) {
       s.cpuLoad = s.gpuLoad = 255;
       s.cpuFan = -1; s.gpuFan = s.ram = 255;
       s.netDown = s.netUp = 0xFFFFFFFF; s.ip[0] = 0; s.coreCount = 0;
+      s.vramUsed = 0xFFFF; s.vramTotal = 0; s.uptimeSec = 0xFFFFFFFF; s.procs = 0xFFFF;
+      s.diskPct = 255; s.diskRd = s.diskWr = 0xFFFFFFFF;
       s.wizRoom[0] = 0; s.wizTarget[0] = 0; s.wizOn = false; s.wizBright = 0;
     }
     s.live        = live;
