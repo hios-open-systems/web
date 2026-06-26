@@ -130,6 +130,10 @@ void loadDefaults(KeyMap& km) {
   km.bind(nc, InputId::ENC_SW, Action{}, "Menu");
   km.bind(nc, InputId::STICK_SW, mouseToggleAction(), "Mouse");
 
+  int dk = km.addLayer("Disco", theme::YELLOW, LayerGroup::SISTEMA);
+  km.bind(dk, InputId::ENC_SW, Action{}, "Menu");
+  km.bind(dk, InputId::STICK_SW, mouseToggleAction(), "Mouse");
+
   // === Grupo Llamadas: una capa por app. En TODAS, el long-press del boton de
   //     mic (hold) hace MUTE GLOBAL via companion (Core Audio, app-independiente);
   //     el tap usa el atajo de la app. La camara se togglea con el atajo de la app.

@@ -31,7 +31,7 @@ static const PageItem PI_LLAMADAS[]   = { {"Meet",-1},{"Slack",-1},{"Zoom",-1},{
 static const PageItem PI_APARIENCIA[] = { {nullptr,S_BRIGHT},{nullptr,S_THEME},{nullptr,S_ACCENT},{nullptr,S_SKIN} };
 static const PageItem PI_SISTEMA[]    = { {nullptr,S_CLOCK},{nullptr,S_WIFI},{nullptr,S_CAL},{nullptr,S_PREC},{nullptr,S_DIM} };
 static const PageItem PI_LUCES[]      = { {"RGB",-1},{"WiZ",-1} };
-static const PageItem PI_MONITOR[]    = { {"General",-1},{"Red",-1},{"Nucleos",-1} };
+static const PageItem PI_MONITOR[]    = { {"General",-1},{"Red",-1},{"Nucleos",-1},{"Disco",-1} };
 
 static const Page PAGES[] = {
   { "Trabajo",    theme::CYAN,    PI_TRABAJO,    4 },
@@ -40,7 +40,7 @@ static const Page PAGES[] = {
   { "Apariencia", theme::VIOLET,  PI_APARIENCIA, 4 },   // Brillo,Tema,Color,Skin
   { "Sistema",    theme::GREEN,   PI_SISTEMA,    5 },   // Hora,WiFi,Calibrar,Precision,Dimmer
   { "Luces",      theme::YELLOW,  PI_LUCES,      2 },   // RGB + WiZ (iluminacion)
-  { "Monitor",    theme::CYAN,    PI_MONITOR,    3 },   // General/Red/Nucleos (telemetria companion)
+  { "Monitor",    theme::CYAN,    PI_MONITOR,    4 },   // General/Red/Nucleos/Disco (telemetria companion)
 };
 
 static KeyMap* s_km = nullptr;

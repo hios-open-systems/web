@@ -3,7 +3,8 @@
 // carga por nucleo y RAM andan parejo en ambos (a diferencia de temps/fans, que
 // necesitan helpers). La IP local tambien sale de aca.
 import os from 'node:os';
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
+import { run } from './index';
 
 export class SystemMetrics {
   private prev: { idle: number; total: number }[] | null = null;
@@ -48,6 +49,28 @@ export class SystemMetrics {
     const total = os.totalmem();
     if (total <= 0) return null;
     return Math.round((1 - os.freemem() / total) * 100);
+  }
+
+  // Tiempo encendido en segundos (universal, os.uptime).
+  static uptimeSec(): number {
+    return Math.round(os.uptime());
+  }
+
+  // Nº de procesos. Linux: cuenta /proc/[pid] (sin herramientas). Windows: tasklist
+  // (nativo, sin powershell). null si no se pudo.
+  async procCount(): Promise<number | null> {
+    if (process.platform === 'linux') {
+      try {
+        const ents = await readdir('/proc');
+        return ents.reduce((n, e) => (/^\d+$/.test(e) ? n + 1 : n), 0);
+      } catch {
+        return null;
+      }
+    }
+    const o = await run('tasklist', ['/fo', 'csv', '/nh'], 3000);
+    if (!o) return null;
+    const n = o.split('\n').filter((l) => l.trim().length > 0).length;
+    return n > 0 ? n : null;
   }
 
   // Primera IPv4 no interna (la de la LAN). Universal.
