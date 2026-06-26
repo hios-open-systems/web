@@ -79,6 +79,13 @@ struct UiSnapshot {
   char     ip[16];      // IP local ("" = sin dato)
   uint8_t  cores[24];   // carga por nucleo 0..100, 255 = sin dato
   uint8_t  coreCount;   // nucleos validos en cores[] (0 = sin dato)
+  uint16_t vramUsed;    // MB de VRAM usada, 0xFFFF = sin dato
+  uint16_t vramTotal;   // MB de VRAM total, 0 = sin dato
+  uint32_t uptimeSec;   // s encendido, 0xFFFFFFFF = sin dato
+  uint16_t procs;       // nº de procesos, 0xFFFF = sin dato
+  uint8_t  diskPct;     // 0..100 uso del volumen principal, 255 = sin dato
+  uint32_t diskRd;      // KB/s lectura de disco, 0xFFFFFFFF = sin dato
+  uint32_t diskWr;      // KB/s escritura de disco, 0xFFFFFFFF = sin dato
   // --- feedback WiZ (para la capa WiZ): cuarto/luz/on/brillo ---
   char     wizRoom[16];
   char     wizTarget[16];   // "Todas" o el nombre de la luz

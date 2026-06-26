@@ -37,6 +37,13 @@ struct RealState {
   char     ip[16]      = {0};     // IP local
   uint8_t  cores[24]   = {0};     // carga por nucleo 0..100
   uint8_t  coreCount   = 0;       // nucleos validos (0 = sin dato)
+  uint16_t vramUsed    = 0xFFFF;  // MB de VRAM usada, 0xFFFF = sin dato
+  uint16_t vramTotal   = 0;       // MB de VRAM total, 0 = sin dato
+  uint32_t uptimeSec   = 0xFFFFFFFF;  // s encendido, 0xFFFFFFFF = sin dato
+  uint16_t procs       = 0xFFFF;  // nº de procesos, 0xFFFF = sin dato
+  uint8_t  diskPct     = 255;     // 0..100 uso del volumen principal, 255 = sin dato
+  uint32_t diskRd      = 0xFFFFFFFF;  // KB/s lectura, 0xFFFFFFFF = sin dato
+  uint32_t diskWr      = 0xFFFFFFFF;  // KB/s escritura
   // --- feedback WiZ (lo manda el companion para que la capa WiZ muestre que controla) ---
   char     wizRoom[16] = {0};     // cuarto activo
   char     wizTarget[16] = {0};   // "Todas" o el nombre de la luz

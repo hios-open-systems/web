@@ -30,7 +30,7 @@ async function main(): Promise<void> {
   const tick = async (): Promise<void> => {
     const s = cfg.send;
     const cores = s.cores || s.cpuLoad ? sys.coreLoadsPct() : null;   // os.cpus() una sola vez
-    const [vol, mic, cpuT, gpuT, gpuL, cpuFan, gpuFan, ram, net] = await Promise.all([
+    const [vol, mic, cpuT, gpuT, gpuL, cpuFan, gpuFan, ram, net, vram, disk, diskIo, procs] = await Promise.all([
       s.vol     ? providers.audio.getVolume()      : Promise.resolve(null),
       s.mic     ? providers.audio.getMicMuted()     : Promise.resolve(null),
       s.cpuTemp ? providers.sensors.getCpuTempC()   : Promise.resolve(null),
@@ -40,6 +40,10 @@ async function main(): Promise<void> {
       s.gpuFan  ? providers.sensors.getGpuFanPct()  : Promise.resolve(null),
       s.ram     ? sys.ramPct()                      : Promise.resolve(null),
       s.net     ? providers.net.getThroughput()     : Promise.resolve(null),
+      s.vram    ? providers.sensors.getGpuMemMb()   : Promise.resolve(null),
+      s.disk    ? providers.disk.getUsagePct()      : Promise.resolve(null),
+      s.disk    ? providers.disk.getIo()            : Promise.resolve(null),
+      s.procs   ? sys.procCount()                   : Promise.resolve(null),
     ]);
     const cpuL = s.cpuLoad ? SystemMetrics.avg(cores) : null;
 
@@ -60,6 +64,14 @@ async function main(): Promise<void> {
       const ip = SystemMetrics.ip();
       if (ip) state.ip = ip;
     }
+    if (vram != null) { state.vramUsed = vram.used; state.vramTotal = vram.total; }
+    if (disk != null) state.disk = disk;
+    if (diskIo != null) {                           // bytes/s -> KB/s (entero)
+      state.diskRd = Math.round(diskIo.rd / 1024);
+      state.diskWr = Math.round(diskIo.wr / 1024);
+    }
+    if (procs != null) state.procs = procs;
+    if (s.uptime) state.uptime = SystemMetrics.uptimeSec();
     if (s.clock) {                                  // hora local del PC -> reloj del pad (sin drift)
       const d = new Date();
       state.clockMin = d.getHours() * 60 + d.getMinutes();
