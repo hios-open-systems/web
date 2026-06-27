@@ -1,5 +1,6 @@
 #include "DefaultConfig.h"
 #include "../app/Theme.h"
+#include "../app/Config.h"    // defaults de ALT (ALT1_LAYER/ALT2_LAYER/ALT_LINGER_MS)
 #include <USBHIDKeyboard.h>   // constantes KEY_* (F-keys, flechas, etc.)
 #include <USBHIDMouse.h>      // constante MOUSE_LEFT
 
@@ -51,6 +52,20 @@ const MacroStep* macroSteps(uint16_t id, uint8_t& count) {
   count = 0; return nullptr;
 }
 
+// --- ALT momentaneos (que capa abre cada uno + linger) ---
+static char     s_alt1[LABEL_LEN] = "";
+static char     s_alt2[LABEL_LEN] = "";
+static uint32_t s_altLinger = 600;
+void setAltConfig(const char* a1, const char* a2, uint32_t lingerMs) {
+  strncpy(s_alt1, a1 ? a1 : "", LABEL_LEN - 1); s_alt1[LABEL_LEN - 1] = '\0';
+  strncpy(s_alt2, a2 ? a2 : "", LABEL_LEN - 1); s_alt2[LABEL_LEN - 1] = '\0';
+  s_altLinger = lingerMs;
+}
+void        seedDefaultAlt() { setAltConfig(cfg::ALT1_LAYER, cfg::ALT2_LAYER, cfg::ALT_LINGER_MS); }
+const char* altLayer1() { return s_alt1; }
+const char* altLayer2() { return s_alt2; }
+uint32_t    altLinger() { return s_altLinger; }
+
 // Defaults compilados (fallback / seed para la primera vez).
 void seedDefaultMacrosTexts() {
   clearMacrosTexts();
@@ -70,6 +85,7 @@ void seedDefaultMacrosTexts() {
 void loadDefaults(KeyMap& km) {
   km.clear();
   seedDefaultMacrosTexts();          // textos/macros default (macro 0 = Build, textos 0-3)
+  seedDefaultAlt();                  // ALT1->Launcher, ALT2->Macros, linger default
 
   // --- Capa 0: Edicion (cyan) ---
   int e = km.addLayer("Edicion", theme::CYAN, LayerGroup::TRABAJO);
