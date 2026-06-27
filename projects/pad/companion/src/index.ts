@@ -8,6 +8,21 @@ import { log } from './log';
 import { MirrorHub } from './web/mirrorHub';
 import { startWebServer } from './web/server';
 import { discoverPad, scanBaseFrom } from './discover';
+import { spawn } from 'node:child_process';
+
+// Lanza una app (comando del config, ya resuelto por OS). detached + unref: corre
+// independiente, el companion no espera. El comando viene del config del USUARIO
+// (no de input externo) -> no es inyeccion arbitraria.
+function launchApp(label: string, cmd: string): void {
+  try {
+    const child = spawn(cmd, { shell: true, detached: true, stdio: 'ignore', windowsHide: true });
+    child.on('error', (e) => log.warn(`launch ${label} fallo: ${e.message}`));
+    child.unref();
+    log.info(`lanzando ${label}: ${cmd}`);
+  } catch (e) {
+    log.warn(`launch ${label} fallo: ${String(e)}`);
+  }
+}
 
 async function main(): Promise<void> {
   process.title = 'pad-companion';                  // se ve asi en top/ps/htop (no como "node")
@@ -149,6 +164,13 @@ async function main(): Promise<void> {
       } else {
         log.info(`comando desconocido: ${cmd}`);
       }
+    }
+
+    for (const id of res.launch ?? []) {            // capa Launcher -> lanzar app por OS
+      const app = cfg.apps[id];
+      if (!app) { log.info(`launch id ${id}: sin app configurada`); continue; }
+      const cmd = os === 'Linux' ? app.linux : app.win;
+      if (cmd) launchApp(app.label, cmd); else log.info(`launch ${app.label}: sin comando para ${os}`);
     }
 
     // pollMs dinamico: 250ms si hay un browser mirando (se siente live), idle al normal.

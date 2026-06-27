@@ -21,6 +21,7 @@ enum class ActionType : uint8_t {
   NET_HTTP,   // disparar request HTTP (indexa NetActionTable)
   NET_MQTT,   // publicar MQTT (indexa NetActionTable)
   NET_CMD,    // comando al companion (mute global mic/cam via Core Audio, etc.)
+  NET_LAUNCH, // lanzar una app via el companion (id -> comando por OS, ver index.ts)
   GAMEPAD     // RESERVADO (post-v1); el tag existe para no romper enum/JSON
 };
 
@@ -52,6 +53,7 @@ struct NetRef      { uint16_t id; };
 struct MacroRef    { uint16_t id; };
 struct TextRef     { uint16_t id; };
 struct CmdRef      { CompanionCmd cmd; };
+struct LaunchRef   { uint16_t id; };   // app a lanzar (id -> tabla de apps del companion)
 
 struct Action {
   ActionType type = ActionType::NONE;
@@ -64,6 +66,7 @@ struct Action {
     MacroRef    macro;
     TextRef     text;
     CmdRef      cmd;
+    LaunchRef   launch;
     Payload() : key{0, {0, 0, 0, 0, 0, 0}} {}
   } p;
 };
@@ -103,6 +106,9 @@ inline Action mouseToggleAction() {
 inline Action netCmdAction(CompanionCmd c) {
   Action a; a.type = ActionType::NET_CMD; a.p.cmd = {c}; return a;
 }
+inline Action launchAction(uint16_t id) {
+  Action a; a.type = ActionType::NET_LAUNCH; a.p.launch = {id}; return a;
+}
 
 // Descripcion legible para logging (M1).
 inline String describeAction(const Action& a) {
@@ -129,6 +135,7 @@ inline String describeAction(const Action& a) {
     case ActionType::NET_HTTP: return "NET_HTTP #" + String(a.p.net.id);
     case ActionType::NET_MQTT: return "NET_MQTT #" + String(a.p.net.id);
     case ActionType::NET_CMD:  return "NET_CMD " + String((uint8_t)a.p.cmd.cmd);
+    case ActionType::NET_LAUNCH: return "NET_LAUNCH #" + String(a.p.launch.id);
     case ActionType::GAMEPAD:  return "GAMEPAD";
     default: return "?";
   }

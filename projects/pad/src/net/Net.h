@@ -47,6 +47,10 @@ const RealState& realState();
 // proximo POST /api/state; el companion los ejecuta (mute global, etc.).
 void queueCommand(CompanionCmd cmd);
 
+// Lanzar una app: el pad encola un appId que viaja en la respuesta al POST
+// (res["launch"]); el companion lo mapea a un comando por OS y lo ejecuta.
+void queueLaunch(uint16_t appId);
+
 const char* ip();          // IP actual (STA o AP)
 const char* apName();      // SSID del portal de config
 const char* ssid();        // SSID de la red guardada/conectada (para la pantalla de estado)
