@@ -404,19 +404,29 @@ static bool drawSectionIcon(TFT_eSPI& g, const char* nm, int cx, int cy, uint16_
   return false;
 }
 
-// Picker unificado: hasta 5 cards = 5 botones. Cada card es un item de la pagina actual
-// (capa o setting, mezclados). Los settings muestran su valor; el que se ajusta queda
-// resaltado. Las capas muestran su icono + numero de boton. Los botones eligen.
+// Layout de hasta 10 cards en 1 fila (<=5 items) o 2 filas de 5 (6..10 items).
+// Devuelve x,y,w,h de la card i. Con 10 botones, el picker/overview usan ambas filas.
+static void cardRect(int i, int total, int& x, int& y, int& w, int& h) {
+  const int cols = 5, gap = 8;
+  w = (480 - gap * (cols + 1)) / cols;             // ~83px
+  if (total > 5) { h = 62; y = 80 + (i / cols) * (h + 8); }   // 2 filas: 80..142, 150..212
+  else           { h = 118; y = 82; }                          // 1 fila
+  x = gap + (i % cols) * (w + gap);
+}
+
+// Picker unificado: hasta 10 cards = 10 botones (doble fila si >5). Cada card es un item
+// de la pagina actual (capa o setting). Settings muestran su valor; el que se ajusta queda
+// resaltado. Las capas muestran su icono + numero de boton. Los botones 1-10 eligen.
 static void renderPicker(TFT_eSPI& tft) {
   tft.fillRect(0, 74, 480, 142, theme::BG);
   const Page& pg = PAGES[s_groupSel];
-  const int N = 5, gap = 8;
-  const int cw = (480 - gap * (N + 1)) / N;        // ~83px
-  const int y = 82, ch = 118;
+  const int total = pg.count;
+  const bool two = total > 5;
+  const int slots = two ? 10 : 5;
   char buf[16];
-  for (int i = 0; i < N; i++) {
-    int x = gap + i * (cw + gap);
-    bool occ = i < pg.count;
+  for (int i = 0; i < slots; i++) {
+    int x, y, w, h; cardRect(i, total, x, y, w, h);
+    bool occ = i < total;
     const PageItem* it = occ ? &pg.items[i] : nullptr;
     bool isSetting = occ && it->layer == nullptr;
     int sIdx = isSetting ? idxBright() + it->setting : -1;
@@ -426,80 +436,85 @@ static void renderPicker(TFT_eSPI& tft) {
                     : isSetting ? itemAccent(sIdx)
                     : (lIdx >= 0 ? s_km->layer(lIdx).color : pg.color);
     uint16_t fill = occ ? theme::CARD : theme::DARK;
-    tft.fillRoundRect(x, y, cw, ch, 10, fill);
-    tft.drawRoundRect(x, y, cw, ch, 10, accent);
-    if (occ) tft.drawRoundRect(x + 1, y + 1, cw - 2, ch - 2, 9, theme::blend(accent, theme::FG, editing ? 90 : 50));
+    tft.fillRoundRect(x, y, w, h, 10, fill);
+    tft.drawRoundRect(x, y, w, h, 10, accent);
+    if (occ) tft.drawRoundRect(x + 1, y + 1, w - 2, h - 2, 9, theme::blend(accent, theme::FG, editing ? 90 : 50));
     tft.setTextDatum(MC_DATUM);
     if (occ) {
       const char* nm = isSetting ? itemTitle(sIdx) : it->layer;
-      const int icx = x + cw / 2, icy = y + 30;
+      const int icx = x + w / 2, icy = y + (two ? 18 : 30);
       if (isSetting) {
-        drawMenuIcon(tft, icx, icy, sIdx, accent, fill);          // icono vectorial del setting
+        drawMenuIcon(tft, icx, icy, sIdx, accent, fill);
       } else if (!drawLayerIcon(tft, nm, icx, icy, accent, fill)) {
-        const int ir = 17;                                        // capa sin icono: chip + inicial
+        const int ir = two ? 13 : 17;                             // capa sin icono: chip + inicial
         const uint16_t chip = theme::blend(fill, accent, 32);
         tft.fillCircle(icx, icy, ir, chip);
         tft.drawCircle(icx, icy, ir, accent);
         char ini[2] = { nm[0], 0 };
         tft.setTextColor(accent, chip);
-        tft.drawString(ini, icx,     icy + 1, 4);       // faux-bold: doble trazo +1px
-        tft.drawString(ini, icx + 1, icy + 1, 4);       // (la inicial fina se veia muy skinny)
+        tft.drawString(ini, icx, icy + 1, two ? 2 : 4);
+        if (!two) tft.drawString(ini, icx + 1, icy + 1, 4);       // faux-bold solo en 1 fila
       }
-      uikit::fitText(tft, nm, x + cw / 2, y + 64, cw - 8, theme::FG, fill, 2);   // leyenda
-      if (isSetting) {                                                           // valor del setting
-        uikit::fitText(tft, itemMeta(sIdx, buf, sizeof(buf)), x + cw / 2, y + ch - 18, cw - 8,
+      uikit::fitText(tft, nm, icx, y + (two ? 40 : 64), w - 8, theme::FG, fill, 2);
+      if (isSetting) {
+        uikit::fitText(tft, itemMeta(sIdx, buf, sizeof(buf)), icx, y + h - (two ? 13 : 18), w - 8,
                        editing ? accent : theme::SOFT, fill, 2);
-      } else {                                                                   // numero de boton
+      } else {
         tft.setTextColor(theme::DIM, fill);
-        tft.drawNumber(i + 1, x + cw / 2, y + ch - 18, 2);
+        tft.drawNumber(i + 1, icx, y + h - (two ? 13 : 18), 2);
       }
-      tft.fillRoundRect(x + 10, y + ch - 8, cw - 20, 4, 2, accent);
+      tft.fillRoundRect(x + 10, y + h - (two ? 6 : 8), w - 20, two ? 3 : 4, 2, accent);
     } else {
       tft.setTextColor(theme::DIM, fill);
-      tft.drawString("--", x + cw / 2, y + ch / 2, 4);
+      tft.drawString("--", x + w / 2, y + h / 2, two ? 2 : 4);
     }
   }
-  tft.setTextDatum(MC_DATUM);                       // caption
-  tft.setTextColor(theme::SOFT, theme::BG);
-  tft.drawString("apreta un boton para elegir", 240, 208, 1);
+  if (!two) {                                       // caption solo en 1 fila (en 2 no hay lugar)
+    tft.setTextDatum(MC_DATUM);
+    tft.setTextColor(theme::SOFT, theme::BG);
+    tft.drawString("apreta un boton para elegir", 240, 208, 1);
+  }
 }
 
-// Overview: las 5 paginas como cards numeradas (1-5); la actual resaltada. Boton i = ir alli.
+// Overview: TODAS las secciones como cards numeradas (doble fila si >5); la actual
+// resaltada. Boton i = ir a esa seccion. Con 10 botones entran las 7 secciones.
 static void renderOverview(TFT_eSPI& tft) {
   tft.fillRect(0, 74, 480, 142, theme::BG);
-  const int N = 5, gap = 8;
-  const int cw = (480 - gap * (N + 1)) / N;
-  const int y = 82, ch = 118;
-  for (int i = 0; i < N; i++) {
-    int x = gap + i * (cw + gap);
-    bool occ = i < pageCount();
+  const int total = pageCount();
+  const bool two = total > 5;
+  const int slots = two ? 10 : 5;
+  for (int i = 0; i < slots; i++) {
+    int x, y, w, h; cardRect(i, total, x, y, w, h);
+    bool occ = i < total;
     bool cur = occ && i == s_groupSel;
     uint16_t accent = occ ? PAGES[i].color : theme::EDGE;
     uint16_t fill   = (occ && cur) ? theme::CARD : theme::DARK;
-    tft.fillRoundRect(x, y, cw, ch, 10, fill);
-    tft.drawRoundRect(x, y, cw, ch, 10, accent);
-    if (cur) tft.drawRoundRect(x + 1, y + 1, cw - 2, ch - 2, 9, theme::blend(accent, theme::FG, 90));
+    tft.fillRoundRect(x, y, w, h, 10, fill);
+    tft.drawRoundRect(x, y, w, h, 10, accent);
+    if (cur) tft.drawRoundRect(x + 1, y + 1, w - 2, h - 2, 9, theme::blend(accent, theme::FG, 90));
     tft.setTextDatum(MC_DATUM);
     if (occ) {
-      const int icx = x + cw / 2, icy = y + 42;
-      if (!drawSectionIcon(tft, PAGES[i].name, icx, icy, accent)) {          // icono de seccion manda
+      const int icx = x + w / 2, icy = y + (two ? 20 : 42);
+      if (!drawSectionIcon(tft, PAGES[i].name, icx, icy, accent)) {
         tft.setTextColor(accent, fill);
-        tft.drawNumber(i + 1, icx, icy, 6);                                  // fallback: numero
+        tft.drawNumber(i + 1, icx, icy, two ? 4 : 6);
       }
       char nb[3]; snprintf(nb, sizeof(nb), "%d", i + 1);                     // numero -> badge chico
-      uikit::badge(tft, {x + 8, y + 8, 18, 16}, nb, theme::blend(fill, accent, 60),
-                   cur ? theme::FG : accent, 5, 2);
-      uikit::fitText(tft, PAGES[i].name, x + cw / 2, y + ch - 26, cw - 8,
+      uikit::badge(tft, {x + 6, y + 5, two ? 15 : 18, two ? 13 : 16}, nb,
+                   theme::blend(fill, accent, 60), cur ? theme::FG : accent, 4, two ? 1 : 2);
+      uikit::fitText(tft, PAGES[i].name, icx, y + h - (two ? 12 : 26), w - 8,
                      cur ? theme::FG : theme::SOFT, fill, 2);
-      tft.fillRoundRect(x + 10, y + ch - 12, cw - 20, 4, 2, accent);
+      tft.fillRoundRect(x + 10, y + h - (two ? 6 : 12), w - 20, two ? 3 : 4, 2, accent);
     } else {
       tft.setTextColor(theme::DIM, fill);
-      tft.drawString("--", x + cw / 2, y + ch / 2, 4);
+      tft.drawString("--", x + w / 2, y + h / 2, two ? 2 : 4);
     }
   }
-  tft.setTextDatum(MC_DATUM);
-  tft.setTextColor(theme::SOFT, theme::BG);
-  tft.drawString("apreta 1-5 para ir a la pagina   (encoder: volver)", 240, 208, 1);
+  if (!two) {
+    tft.setTextDatum(MC_DATUM);
+    tft.setTextColor(theme::SOFT, theme::BG);
+    tft.drawString("apreta el boton de la seccion   (encoder: volver)", 240, 208, 1);
+  }
 }
 
 static void drawHeader(TFT_eSPI& tft) {
