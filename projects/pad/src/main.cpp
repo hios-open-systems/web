@@ -85,7 +85,7 @@ public:
         applyResult(menu::press());
       }
     } else if (e.edge == Edge::PRESS && menu::inLayerPicker() &&
-               (int)e.id <= (int)InputId::BTN_5) {  // BTN_1..BTN_5 -> elegir capa
+               (int)e.id <= (int)InputId::BTN_10) {  // BTN_1..BTN_10 -> elegir capa/seccion
       applyResult(menu::pickButton((uint8_t)e.id - (uint8_t)InputId::BTN_1));
     }
   }

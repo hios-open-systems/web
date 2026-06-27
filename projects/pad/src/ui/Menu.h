@@ -25,9 +25,9 @@ MenuResult press();             // entrar/elegir (ver MenuResult)
 void       back();              // subir un nivel; en nivel 1 cierra (long-press)
 uint8_t    selectedLayer();     // capa elegida cuando se devuelve SWITCH_LAYER
 
-// Nivel 2 "picker": las capas del grupo estan mapeadas a los 5 botones.
+// Nivel 2 "picker": las capas/secciones estan mapeadas a los botones (hasta 10).
 bool       inLayerPicker();         // true si los botones fisicos eligen capa
-MenuResult pickButton(uint8_t i);   // i=0..4 -> SWITCH_LAYER si hay capa ahi
+MenuResult pickButton(uint8_t i);   // i=0..9 -> SWITCH_LAYER si hay capa ahi
 
 void render(TFT_eSPI& tft);
 }  // namespace menu
