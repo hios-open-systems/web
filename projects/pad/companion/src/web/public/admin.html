@@ -48,6 +48,13 @@
   .step{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:6px 0;border-top:1px solid #21262d}
   .txtrow{display:flex;gap:8px;align-items:center;margin-bottom:7px}
   .txtrow .idx{font-size:11px;color:var(--mut);min-width:24px}
+  .navsec{background:var(--panel);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;margin-bottom:10px}
+  .navtitle{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-weight:700;color:#c9d1d9}
+  .navviews{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px}
+  .navview{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:8px}
+  .navview h3{font-size:13px;margin:0 0 6px;color:var(--tx)}
+  .slots{display:flex;gap:4px;flex-wrap:wrap}
+  .slot{font-size:11px;color:var(--mut);border:1px solid #27313d;border-radius:6px;padding:2px 5px;background:#111722}
 </style>
 </head>
 <body>
@@ -60,11 +67,13 @@
   <button id="save" class="primary" disabled>💾 Guardar + reiniciar</button>
 </header>
 <div class="tabs">
+  <div class="tab" data-t="navigation">🧭 Navegación</div>
   <div class="tab on" data-t="shortcuts">⌨️ Shortcuts</div>
   <div class="tab" data-t="macros">⚙️ Macros</div>
   <div class="tab" data-t="texts">📝 Textos</div>
 </div>
 <main>
+  <div id="view-navigation" style="display:none"></div>
   <div id="view-shortcuts"></div>
   <div id="view-macros" style="display:none"></div>
   <div id="view-texts" style="display:none"></div>
@@ -83,12 +92,39 @@ INPUTS.push({id:10,name:"ALT 1"},{id:11,name:"ALT 2"},{id:12,name:"Encoder SW"},
 let cfg=null, detOs="win", cur=0, dirty=false, tab="shortcuts";
 const $=id=>document.getElementById(id);
 const el=(t,c,h)=>{const e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e;};
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[m]));
 const rgb565=c=>{const r=(c>>11)&31,g=(c>>5)&63,b=c&31;return "#"+[(r*255/31)|0,(g*255/63)|0,(b*255/31)|0].map(x=>x.toString(16).padStart(2,"0")).join("");};
 const keyToStr=c=>(c>=32&&c<127)?String.fromCharCode(c):("0x"+c.toString(16).toUpperCase());
 const strToKey=s=>{s=(s||"").trim();if(!s)return 0;if(/^0x[0-9a-f]+$/i.test(s))return parseInt(s,16);if(s.length===1)return s.charCodeAt(0);const n=parseInt(s,10);return isNaN(n)?s.charCodeAt(0):n;};
 const setStatus=(t,c)=>{$("status").textContent=t;$("status").style.color=c||"var(--mut)";};
 const markDirty=()=>{dirty=true;$("save").disabled=false;};
 const isVar=v=>v&&typeof v==="object"&&!Array.isArray(v)&&!("t"in v)&&("win"in v||"linux"in v);
+
+  // ============================ NAVEGACION ============================
+  function renderNavigation() {
+    const host = $("view-navigation"); host.innerHTML = "";
+    const nav = cfg.navigation || {}, views = cfg.views || [], byId = new Map(views.map(v => [v.id, v]));
+    const mode = nav.generated ? "generado desde el keymap actual" : "editable";
+    host.appendChild(el("div", "hint", `Modelo de navegación (${mode}). Próximo paso: editar secciones, Views, Cards y gestures desde esta pantalla.`));
+    const meta = el("div", "bind");
+    meta.innerHTML = `<div class="bhead"><span class="bname">Resumen</span><span class="bnum">v${esc(nav.version || "?")}</span></div>
+    <div class="actrow"><span class="k">Home</span><span>${esc(nav.homeView || "-")}</span><span class="k">ALT1</span><span>${esc(nav.alt?.alt1View || "-")}</span><span class="k">ALT2</span><span>${esc(nav.alt?.alt2View || "-")}</span><span class="k">linger</span><span>${esc(nav.alt?.lingerMs || 0)}ms</span></div>`;
+    host.appendChild(meta);
+    const sections = nav.sections || [];
+    if (!sections.length) { host.appendChild(el("div", "empty", "Sin secciones de navegación.")); return; }
+    sections.forEach(sec => {
+      const box = el("section", "navsec");
+      box.appendChild(el("div", "navtitle", `<span>${esc(sec.icon || "section")}</span><span>${esc(sec.label || sec.id)}</span><span class="bnum">${(sec.views || []).length} views</span>`));
+      const grid = el("div", "navviews");
+      (sec.views || []).forEach(id => {
+        const v = byId.get(id) || { id, label: id, cards: [] };
+        const slots = (v.cards || []).map(c => `<span class="slot">${Number(c.slot) + 1}. ${esc(c.label || "-")}</span>`).join("") || "<span class=\"slot\">sin cards</span>";
+        const card = el("div", "navview", `<h3>${esc(v.label || v.id)} <span class="bnum">${esc(v.kind || "cards")}</span></h3><div class="slots">${slots}</div>`);
+        grid.appendChild(card);
+      });
+      box.appendChild(grid); host.appendChild(box);
+    });
+  }
 
 // ---- editor de UNA accion plana (key/media/text/macro/layer/ncmd/mtog/none) ----
 function singleAction(box, getA, setA){
@@ -253,9 +289,10 @@ function renderTexts(){
   const add=el("button","primary","+ Nuevo texto");add.onclick=()=>{cfg.texts.push("");markDirty();renderTexts();};host.appendChild(add);
 }
 
-function renderAll(){ renderShortcuts(); renderMacros(); renderTexts(); }
+  function renderAll() { renderNavigation(); renderShortcuts(); renderMacros(); renderTexts(); }
 function showTab(t){ tab=t; document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x.dataset.t===t));
-  ["shortcuts","macros","texts"].forEach(v=>$("view-"+v).style.display=(v===t)?"block":"none"); }
+  ["navigation", "shortcuts", "macros", "texts"].forEach(v => $("view-" + v).style.display = (v === t) ? "block" : "none");
+}
 
 // ============================ I/O ============================
 async function load(){
