@@ -11,7 +11,11 @@ export interface Config {
   wiz: { rooms: Room[] };           // cuartos WiZ por MAC (vacio = un cuarto "Todas" autodescubierto)
   web: { enabled: boolean; port: number };  // UI-mirror local (http://localhost:port)
   discover: boolean;                // auto-discovery del pad en la LAN si la IP no responde
+  apps: AppEntry[];                 // launcher: la capa Launcher manda launch:<id> = indice aca
 }
+
+// App del launcher: comando por OS. El companion ejecuta el del OS detectado.
+export interface AppEntry { label: string; win: string; linux: string }
 
 const DEFAULTS: Config = {
   host: 'hiospad.local',
@@ -24,6 +28,14 @@ const DEFAULTS: Config = {
   wiz: { rooms: [] },
   web: { enabled: true, port: 8787 },
   discover: true,
+  apps: [   // ids 0..5 = los botones de la capa Launcher. Ajustá los comandos a tu PC.
+    { label: 'VS Code',  win: 'code',                      linux: 'code' },
+    { label: 'Slack',    win: 'slack',                     linux: 'slack' },
+    { label: 'Chrome',   win: 'start chrome',              linux: 'google-chrome' },
+    { label: 'YouTube',  win: 'start https://youtube.com', linux: 'xdg-open https://youtube.com' },
+    { label: 'Terminal', win: 'wt',                        linux: 'x-terminal-emulator' },
+    { label: 'Archivos', win: 'explorer',                  linux: 'xdg-open .' },
+  ],
 };
 
 // Carga config.json (o --config <path>). Sin archivo -> defaults.
@@ -42,5 +54,6 @@ export function loadConfig(argv: string[]): Config {
     send: { ...DEFAULTS.send, ...(fromFile.send ?? {}) },
     wiz: { ...DEFAULTS.wiz, ...(fromFile.wiz ?? {}) },
     web: { ...DEFAULTS.web, ...(fromFile.web ?? {}) },
+    apps: fromFile.apps ?? DEFAULTS.apps,
   };
 }

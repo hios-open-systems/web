@@ -38,6 +38,8 @@ static uint8_t       s_lastUiLayer = 0xFF;  // ultima capa serializada (manda de
 static volatile CompanionCmd s_cmdQ[16];
 static volatile uint8_t      s_cmdHead = 0, s_cmdTail = 0;   // head=proximo a leer, tail=proximo a escribir
 static portMUX_TYPE          s_cmdMux = portMUX_INITIALIZER_UNLOCKED;
+static volatile uint16_t     s_launchQ[8];                  // appIds a lanzar (mismo patron que cmdQ)
+static volatile uint8_t      s_launchHead = 0, s_launchTail = 0;
 static char          s_ssid[33] = {0};      // creds guardadas (para reintentar STA sin recargar de NVS)
 static char          s_pass[65] = {0};
 static bool          s_haveCreds = false;
@@ -191,18 +193,27 @@ static void handlePostState() {
   // Respuesta: comandos pendientes para el companion (los limpiamos) y/o el blob
   // de UI-mirror. Si no hay ni uno ni otro -> 204 sin body (igual que antes).
   CompanionCmd batch[16]; int nb = 0;
+  uint16_t lbatch[8]; int nl = 0;
   portENTER_CRITICAL(&s_cmdMux);
   while (s_cmdHead != s_cmdTail && nb < 16) {
     batch[nb++] = (CompanionCmd)s_cmdQ[s_cmdHead];
     s_cmdHead = (uint8_t)((s_cmdHead + 1) % 16);
   }
+  while (s_launchHead != s_launchTail && nl < 8) {
+    lbatch[nl++] = s_launchQ[s_launchHead];
+    s_launchHead = (uint8_t)((s_launchHead + 1) % 8);
+  }
   portEXIT_CRITICAL(&s_cmdMux);
 
-  if (wantUi || nb > 0) {
+  if (wantUi || nb > 0 || nl > 0) {
     JsonDocument res;
     if (nb > 0) {
       JsonArray arr = res["cmds"].to<JsonArray>();
       for (int i = 0; i < nb; i++) { const char* n = cmdName(batch[i]); if (n) arr.add(n); }
+    }
+    if (nl > 0) {
+      JsonArray la = res["launch"].to<JsonArray>();
+      for (int i = 0; i < nl; i++) la.add(lbatch[i]);
     }
     if (wantUi) {
       UiSnapshot snap{};
@@ -420,6 +431,13 @@ void queueCommand(CompanionCmd cmd) {
   portENTER_CRITICAL(&s_cmdMux);
   uint8_t next = (uint8_t)((s_cmdTail + 1) % 16);
   if (next != s_cmdHead) { s_cmdQ[s_cmdTail] = cmd; s_cmdTail = next; }   // si esta llena, descarta el nuevo
+  portEXIT_CRITICAL(&s_cmdMux);
+}
+
+void queueLaunch(uint16_t appId) {
+  portENTER_CRITICAL(&s_cmdMux);
+  uint8_t next = (uint8_t)((s_launchTail + 1) % 8);
+  if (next != s_launchHead) { s_launchQ[s_launchTail] = appId; s_launchTail = next; }
   portEXIT_CRITICAL(&s_cmdMux);
 }
 const char* ip()    { return s_ip; }

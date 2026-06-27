@@ -6,7 +6,8 @@ import type { PadState } from './state';
 export interface PushResult {
   ok: boolean;
   cmds: string[];
-  ui?: unknown;     // blob del UI-mirror (solo si se pidio wantUi y el pad lo adjunto)
+  ui?: unknown;       // blob del UI-mirror (solo si se pidio wantUi y el pad lo adjunto)
+  launch?: number[];  // appIds que el pad pide lanzar (capa Launcher)
 }
 
 // Cliente del pad: POST /api/state. Usa fetch global (Node 18+); el host puede ser
@@ -38,9 +39,10 @@ export class Device {
       });
       if (res.status === 204) return { ok: true, cmds: [] };
       if (res.status === 200) {
-        const b = (await res.json().catch(() => null)) as { cmds?: unknown; ui?: unknown } | null;
+        const b = (await res.json().catch(() => null)) as { cmds?: unknown; ui?: unknown; launch?: unknown } | null;
         const cmds = Array.isArray(b?.cmds) ? b!.cmds.filter((c): c is string => typeof c === 'string') : [];
-        return { ok: true, cmds, ui: b?.ui };
+        const launch = Array.isArray(b?.launch) ? b!.launch.filter((x): x is number => typeof x === 'number') : undefined;
+        return { ok: true, cmds, ui: b?.ui, launch };
       }
       return { ok: false, cmds: [] };
     } catch {

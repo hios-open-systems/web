@@ -89,6 +89,10 @@ void Dispatcher::fireResolved(const InputEvent& e) {
     if (e.edge == Edge::PRESS || e.edge == Edge::ROTATE) net::queueCommand(a.p.cmd.cmd);
     return;
   }
+  if (a.type == ActionType::NET_LAUNCH) {            // lanzar app via companion (id -> comando por OS)
+    if (e.edge == Edge::PRESS) net::queueLaunch(a.p.launch.id);
+    return;
+  }
   if (m_state && e.edge == Edge::PRESS) {
     StateToggle st = m_km->stateToggleFor(m_activeLayer, e.id);
     if (st != StateToggle::NONE) m_state->applyToggle(st);

@@ -32,6 +32,7 @@ static void actToJson(JsonObject o, const Action& a) {
     case ActionType::NET_HTTP: o["t"] = "nhttp"; o["id"] = a.p.net.id; break;
     case ActionType::NET_MQTT: o["t"] = "nmqtt"; o["id"] = a.p.net.id; break;
     case ActionType::NET_CMD:  o["t"] = "ncmd";  o["cmd"] = (uint8_t)a.p.cmd.cmd; break;
+    case ActionType::NET_LAUNCH: o["t"] = "launch"; o["id"] = a.p.launch.id; break;
     case ActionType::GAMEPAD:  o["t"] = "gpad"; break;
     default:                   o["t"] = "none"; break;
   }
@@ -72,6 +73,8 @@ static Action actFromJson(JsonVariantConst v) {
     a.type = ActionType::NET_MQTT; a.p.net.id = (uint16_t)(v["id"] | 0);
   } else if (!strcmp(t, "ncmd")) {
     a.type = ActionType::NET_CMD;  a.p.cmd.cmd = (CompanionCmd)(uint8_t)(v["cmd"] | 0);
+  } else if (!strcmp(t, "launch")) {
+    a.type = ActionType::NET_LAUNCH; a.p.launch.id = (uint16_t)(v["id"] | 0);
   } else if (!strcmp(t, "gpad")) {
     a.type = ActionType::GAMEPAD;
   }
