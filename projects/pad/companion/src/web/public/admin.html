@@ -203,11 +203,10 @@ function stepEditor(step, onDel, onUp, onDn){
   const fields=el("span","actrow");row.appendChild(fields);
   function build(){
     const k=+ks.value; fields.innerHTML="";
-    if(k===0||k===1||k===2){ // KEY/MEDIA/MOUSE -> editor de accion (plano)
-      const box=el("div"); fields.appendChild(box);
+    if(k===0||k===1||k===2){ // KEY/MEDIA/MOUSE -> editor de accion (con toggle per-OS)
       const forceT=k===0?"key":k===1?"media":"mouse";
-      if(!step.action||step.action.t!==forceT) step.action={t:forceT,...(forceT==="key"?{mods:0,k:[]}:forceT==="media"?{u:0}:{mode:0,dx:0,dy:0,wheel:0,btn:0})};
-      singleAction(box,()=>step.action,x=>{step.action=x;markDirty();});
+      if(!isVar(step.action) && (!step.action||step.action.t!==forceT)) step.action={t:forceT,...(forceT==="key"?{mods:0,k:[]}:forceT==="media"?{u:0}:{mode:0,dx:0,dy:0,wheel:0,btn:0})};
+      fields.appendChild(perOsField("Acción",()=>step.action,x=>{step.action=x;markDirty();}));
     } else if(k===3){ // TEXT -> id
       const s=el("select");(cfg.texts||[]).forEach((x,i)=>{const o=el("option");o.value=i;o.textContent=i+" · "+String(x).slice(0,20);if((step.arg||0)===i)o.selected=true;s.appendChild(o);});s.onchange=()=>{step.arg=+s.value;markDirty();};fields.appendChild(el("span","k","texto"));fields.appendChild(s);
     } else if(k===4){ // DELAY -> ms
