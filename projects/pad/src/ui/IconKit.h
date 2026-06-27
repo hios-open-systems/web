@@ -26,7 +26,7 @@ enum class Glyph : uint8_t {
   SWATCH_R, SWATCH_G, SWATCH_B, SWATCH_W, POWER,
   MIC, CAMERA, SCREEN, HAND, SPEAKER,
   DIAL, POINTER, LINK,
-  RELOAD, PLUS, BOOKMARK
+  RELOAD, PLUS, BOOKMARK, WIFI
 };
 
 // --- helpers de trazo (2px) ---
@@ -277,6 +277,12 @@ void icon(G& g, Glyph gl, int cx, int cy, uint16_t col) {
       hln(g, cx - 7, cy - 10, 15, col);
       ln(g, cx - 7, cy + 8, cx, cy + 2, col);
       ln(g, cx + 7, cy + 8, cx, cy + 2, col);
+      break;
+    case Glyph::WIFI:                              // barritas de señal (4, ascendentes)
+      for (int b = 0; b < 4; b++) {
+        int bh = 4 + b * 4;                        // 4,8,12,16
+        g.fillRect(cx - 9 + b * 5, cy + 8 - bh, 3, bh, col);
+      }
       break;
     default:
       g.drawCircle(cx, cy, 9, col);

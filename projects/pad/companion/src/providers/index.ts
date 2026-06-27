@@ -3,9 +3,18 @@ import type { PlatformProviders } from './types';
 
 // WSL: corre como 'linux' pero el usuario quiere el estado del HOST Windows.
 // Detectamos WSL para leer audio de Windows (via powershell.exe).
-function isWSL(): boolean {
+export function isWSL(): boolean {
   if (process.env.WSL_DISTRO_NAME) return true;
   try { return /microsoft|wsl/i.test(readFileSync('/proc/version', 'utf8')); } catch { return false; }
+}
+
+// Nombre legible del SO para reportar al pad (resolucion per-OS de atajos/macros).
+export function osName(): string {
+  if (process.platform === 'win32') return 'Windows';
+  if (isWSL()) return 'WSL';
+  if (process.platform === 'linux') return 'Linux';
+  if (process.platform === 'darwin') return 'macOS';
+  return process.platform;
 }
 
 // Selecciona los adaptadores. macOS queda para mas adelante (interfaz lista).

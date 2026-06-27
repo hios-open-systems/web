@@ -31,9 +31,17 @@ uint8_t Dispatcher::layerEncMode() const {
   return 0;
 }
 
+void Dispatcher::begin(KeyMap* km) {
+  m_km = km;
+  m_altLayer[0] = km ? km->indexOf(cfg::ALT1_LAYER) : -1;   // resuelve por nombre (robusto al orden)
+  m_altLayer[1] = km ? km->indexOf(cfg::ALT2_LAYER) : -1;
+}
+
 void Dispatcher::dispatch(const InputEvent& e) {
   if (!m_km) return;
 
+  // ALT_1/ALT_2: capa momentanea (hold + linger). Se intercepta antes que todo.
+  if (e.id == InputId::ALT_1 || e.id == InputId::ALT_2) { handleAlt(e); return; }
   // SW del stick: gestos (tap/doble/largo).
   if (e.id == InputId::STICK_SW) { handleStickSw(e); return; }
   // SW del encoder: NAVEGACION (abre el menu); no dispara acciones de la capa.
@@ -50,8 +58,9 @@ void Dispatcher::dispatch(const InputEvent& e) {
     return;
   }
 
-  // Botones de cara (1-5): tap = accion de capa (al SOLTAR); hold = toggle del card.
-  if ((int)e.id <= (int)InputId::BTN_5) { handleFaceButton(e); return; }
+  // Botones de cara (1-10): tap = accion de capa (al SOLTAR); hold = toggle del card.
+  // Los ALT_1/ALT_2 caen a fireResolved (binding vacio por ahora -> no-op).
+  if ((int)e.id <= (int)InputId::BTN_10) { handleFaceButton(e); return; }
 
   // El stick mueve el mouse SOLO si el modo mouse esta activo.
   if (e.id == InputId::STICK_AXIS && !m_mouseOn) return;
@@ -94,7 +103,7 @@ void Dispatcher::fireResolved(const InputEvent& e) {
 // Botones de cara: tap corto (al soltar) dispara la accion de la capa; mantener
 // (long-press) togglea el estado del card que esta abajo de ese boton.
 void Dispatcher::handleFaceButton(const InputEvent& e) {
-  int i = (int)e.id;   // 0..4
+  int i = (int)e.id;   // 0..9 (BTN_1..BTN_10)
   switch (e.edge) {
     case Edge::PRESS:      m_btnConsumed[i] = false; break;
     case Edge::LONG_PRESS: m_btnConsumed[i] = true; m_longFlashMs[i] = e.t_ms; statusToggle(i); break;
@@ -126,6 +135,24 @@ void Dispatcher::statusToggle(int i) {
     default: return;
   }
   xQueueSend(bus::actionQueue, &a, 0);
+}
+
+// --- ALT momentaneo: mantener ALT1/ALT2 -> capa Launcher/Macros; al soltar, queda
+// ALT_LINGER_MS mas (seguro anti-ripple). La reversion ocurre en tick(). ---
+void Dispatcher::handleAlt(const InputEvent& e) {
+  const uint8_t which = (e.id == InputId::ALT_1) ? 1 : 2;
+  const int8_t  target = m_altLayer[which - 1];
+  if (target < 0) return;                         // la capa no existe -> ALT sin efecto
+  if (e.edge == Edge::PRESS) {
+    if (m_momentaryAlt == 0) m_prevLayer = m_activeLayer;   // guarda a donde volver (solo el 1er ALT)
+    m_momentaryAlt = which;
+    m_altHeld = true;
+    setLayer((uint8_t)target);                    // salta a la capa (resetea encOverride)
+  } else if (e.edge == Edge::RELEASE && m_momentaryAlt == which) {
+    m_altHeld = false;
+    m_altLingerEnd = e.t_ms + cfg::ALT_LINGER_MS; // arranca la ventana de gracia
+  }
+  // LONG_PRESS: ignorar (el hold ya esta activo desde el PRESS).
 }
 
 // --- Navegacion: el SW del encoder abre el menu (tap). Sin acciones de capa. ---
@@ -194,6 +221,11 @@ void Dispatcher::handleStickSw(const InputEvent& e) {
 }
 
 void Dispatcher::tick(uint32_t now) {
+  // ALT momentaneo: terminado el hold y la ventana de gracia -> vuelve a la capa previa.
+  if (m_momentaryAlt != 0 && !m_altHeld && (int32_t)(now - m_altLingerEnd) >= 0) {
+    m_momentaryAlt = 0;
+    setLayer(m_prevLayer);
+  }
   // Encoder: el tap simple expira (no hubo 2do) -> abrir menu.
   if (m_encTapPending && (now - m_encTapMs) > cfg::DOUBLE_TAP_MS) {
     m_encTapPending = false;
@@ -207,10 +239,10 @@ void Dispatcher::tick(uint32_t now) {
   }
 }
 
-// Bits de los botones cuyo long-press disparo hace < 160ms (flash de confirmacion).
-uint8_t Dispatcher::longFlashMask(uint32_t now) const {
-  uint8_t m = 0;
-  for (int i = 0; i < 5; i++)
+// Bits de los botones (BTN_1..10) cuyo long-press disparo hace < 400ms (flash de confirmacion).
+uint16_t Dispatcher::longFlashMask(uint32_t now) const {
+  uint16_t m = 0;
+  for (int i = 0; i < 10; i++)
     if (m_longFlashMs[i] && (now - m_longFlashMs[i]) < 400) m |= (1 << i);   // flash visible ~400ms
   return m;
 }

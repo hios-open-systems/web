@@ -19,10 +19,13 @@
 #include "../actions/Action.h"   // CompanionCmd
 
 struct RealState;          // definido en app/StateManager.h
+class  KeyMap;             // definido en mapping/KeyMap.h
 
 namespace net {
 void begin();              // arranca STA (si hay creds); si no, queda OFFLINE (no portal)
 void tick();               // servicia la maquina de estados (netTask)
+
+void setKeyMap(const KeyMap* km);   // descriptor de capa para el blob de UI-mirror
 
 void requestPortal();      // pide levantar el portal de config (re-registro explicito)
 void openWifi();           // abrir WiFi desde el menu: reconecta/muestra estado; portal solo si no hay creds

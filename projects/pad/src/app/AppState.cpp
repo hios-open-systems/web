@@ -16,7 +16,7 @@ void resetPrefs() {
   prefs.accentIndex = 0;
   prefs.brightness = 100;
   prefs.dimTimeout = 2;   // 30s
-  prefs.skinIndex = 0;    // Cards
+  prefs._reserved0 = 0;   // ex skinIndex
   prefs.stickPrecision = 4; // nivel medio (1..7)
   prefs.clockMinute = 12 * 60;
   prefs.clockSetAtMs = 0;

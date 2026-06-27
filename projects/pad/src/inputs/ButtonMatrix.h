@@ -8,7 +8,7 @@
 
 class ButtonMatrix {
 public:
-  static constexpr uint8_t N = 7;  // 0..4 botones, 5 enc SW, 6 stick SW
+  static constexpr uint8_t N = 14;  // 0..9 = BTN_1..10, 10..11 = ALT_1/2, 12 = enc SW, 13 = stick SW
 
   void begin();
   // Lee el estado inicial real (evita eventos fantasma al arrancar).

@@ -8,7 +8,7 @@
 #include "../app/Types.h"
 #include "../actions/Action.h"
 
-static constexpr uint8_t MAX_LAYERS = 20;   // margen para capas nuevas (apps de llamada, monitor, etc.)
+static constexpr uint8_t MAX_LAYERS = 28;   // margen para capas nuevas (apps, monitor, Launcher/Macros, etc.)
 static constexpr uint8_t LABEL_LEN  = 14;
 
 // Grupo tematico de la capa: lo usa el menu para agrupar (las muestra de a <=5
@@ -43,6 +43,7 @@ public:
 
   // --- Consulta ---
   uint8_t      count() const { return m_count; }
+  int8_t       indexOf(const char* name) const;   // indice de la capa por nombre, o -1
   const Layer& layer(uint8_t i) const { return m_layers[i < m_count ? i : 0]; }
   Action       resolve(uint8_t layer, const InputEvent& e) const;
   const char*  label(uint8_t layer, InputId id) const;
