@@ -6,9 +6,11 @@ import type { Room } from './wiz';
 export interface Config {
   host: string;                     // "hiospad.local" o una IP (ej "192.168.1.43")
   token: string;                    // "" = sin token; si no, va en el header X-Pad-Token
-  pollMs: number;                   // periodo del loop
+  pollMs: number;                   // periodo del loop (idle, sin browser mirando el espejo)
   send: Record<string, boolean>;    // que campos mandar
   wiz: { rooms: Room[] };           // cuartos WiZ por MAC (vacio = un cuarto "Todas" autodescubierto)
+  web: { enabled: boolean; port: number };  // UI-mirror local (http://localhost:port)
+  discover: boolean;                // auto-discovery del pad en la LAN si la IP no responde
 }
 
 const DEFAULTS: Config = {
@@ -20,6 +22,8 @@ const DEFAULTS: Config = {
           cpuFan: true, gpuFan: true, ram: true, cores: true, net: true,
           vram: true, disk: true, uptime: true, procs: true },
   wiz: { rooms: [] },
+  web: { enabled: true, port: 8787 },
+  discover: true,
 };
 
 // Carga config.json (o --config <path>). Sin archivo -> defaults.
@@ -37,5 +41,6 @@ export function loadConfig(argv: string[]): Config {
     ...fromFile,
     send: { ...DEFAULTS.send, ...(fromFile.send ?? {}) },
     wiz: { ...DEFAULTS.wiz, ...(fromFile.wiz ?? {}) },
+    web: { ...DEFAULTS.web, ...(fromFile.web ?? {}) },
   };
 }

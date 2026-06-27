@@ -4,12 +4,17 @@
 #include "../app/Config.h"
 
 void ButtonMatrix::begin() {
-  // Indices 0..4 = botones; 5 = SW encoder; 6 = SW stick.
+  // Orden = InputId: 0..9 = BTN_1..10, 10..11 = ALT_1/2, 12 = enc SW, 13 = stick SW.
+  // Asi el indice del ButtonMatrix (= bit del bitmask) coincide con el valor de InputId.
   const uint8_t pinsArr[N] = {
     pins::BOTON[0], pins::BOTON[1], pins::BOTON[2], pins::BOTON[3], pins::BOTON[4],
+    pins::BOTON[5], pins::BOTON[6], pins::BOTON[7], pins::BOTON[8], pins::BOTON[9],
+    pins::BOTON[10], pins::BOTON[11],
     pins::ENC_SW, pins::STICK_SW};
   const InputId ids[N] = {
     InputId::BTN_1, InputId::BTN_2, InputId::BTN_3, InputId::BTN_4, InputId::BTN_5,
+    InputId::BTN_6, InputId::BTN_7, InputId::BTN_8, InputId::BTN_9, InputId::BTN_10,
+    InputId::ALT_1, InputId::ALT_2,
     InputId::ENC_SW, InputId::STICK_SW};
 
   for (uint8_t i = 0; i < N; i++) {

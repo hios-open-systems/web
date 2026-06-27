@@ -27,10 +27,17 @@ export interface PadState {
   diskWr?: number;   // KB/s de escritura de disco
   uptime?: number;   // segundos encendido (capa General)
   procs?: number;    // nº de procesos
+  // Ventana reciente de throughput (KB/s) para pre-cargar los sparklines del pad
+  // (Red/Disco). El firmware la seedea solo la 1ra vez (si su buffer esta vacio).
+  hist?: { nd?: number[]; nu?: number[]; dr?: number[]; dw?: number[] };
   clockMin?: number; // hora local en minutos desde 00:00 (0..1439) -> sincroniza el reloj del pad
   // --- feedback WiZ (para que la capa WiZ muestre que se esta controlando) ---
   wizRoom?: string;    // cuarto activo
   wizTarget?: string;  // "Todas" o "n/N" (luz puntual)
   wizOn?: boolean;     // estado on/off (real, via getPilot)
   wizBright?: number;  // brillo 0..100
+  os?: string;         // SO del companion ("Windows"/"Linux"/"WSL"/"macOS") -> el pad lo muestra y resuelve per-OS
+  // --- control del UI-mirror (no son estado; el firmware los lee del mismo body) ---
+  wantUi?: boolean;    // true cuando hay un browser mirando -> el pad adjunta el blob `ui` en la respuesta
+  uiFull?: boolean;    // pide el descriptor de capa completo (al conectar un browser nuevo)
 }

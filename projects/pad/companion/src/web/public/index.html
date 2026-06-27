@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HIOS PAD · Espejo</title>
+<style>
+  :root{--bg:#0d1117;--panel:#161b22;--bd:#30363d;--tx:#e6edf3;--mut:#8b949e;--cy:#1fe0e0;--gn:#3ddc84}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;gap:14px;padding:18px}
+  h1{font-size:16px;margin:0;font-weight:700;display:flex;gap:8px;align-items:center}
+  h1 .tag{font-size:11px;background:#1f6feb;color:#fff;padding:2px 7px;border-radius:20px}
+  #conn{font-size:12px;color:var(--mut)}
+  #conn.on{color:var(--gn)} #conn.off{color:#f85149}
+  /* La pantalla del pad: 480x320 escalada */
+  .wrap{--s:1.15;width:calc(480px*var(--s));height:calc(320px*var(--s))}
+  @media(max-width:580px){.wrap{--s:.74}}
+  .pad{width:480px;height:320px;transform:scale(var(--s));transform-origin:top left;
+    background:#0a0d12;border:1px solid var(--bd);border-radius:14px;overflow:hidden;position:relative;font-family:ui-monospace,Menlo,monospace}
+  .hdr{height:50px;display:flex;align-items:center;gap:10px;padding:0 14px;border-bottom:2px solid var(--accent,#1fe0e0)}
+  .ldot{width:14px;height:14px;border-radius:50%;background:var(--accent,#1fe0e0);box-shadow:0 0 8px var(--accent,#1fe0e0)}
+  .lname{font-size:18px;font-weight:700}
+  .lgrp{font-size:11px;color:var(--mut)}
+  .altbadge{display:none;font-size:11px;font-weight:800;padding:2px 7px;border-radius:6px;color:#04121a;margin-left:4px}
+  .altbadge.on{display:inline-block}
+  .hsp{flex:1}
+  .badge{font-size:11px;padding:3px 8px;border-radius:7px;border:1px solid var(--bd);color:var(--mut)}
+  .badge.on{color:var(--gn);border-color:var(--gn)} .badge.warn{color:#f0a020;border-color:#f0a020} .badge.bad{color:#f85149;border-color:#f85149}
+  .keys{position:absolute;top:54px;left:9px;display:flex;flex-wrap:wrap;width:462px;gap:8px}
+  .key{width:86px;height:98px;border-radius:12px;background:var(--panel);border:1px solid var(--bd);
+    display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:7px 6px;position:relative;transition:.06s}
+  .key .num{position:absolute;top:6px;left:8px;font-size:11px;color:var(--mut);font-weight:700}
+  .key .well{width:38px;height:38px;border-radius:50%;background:#0e1319;border:1px solid var(--bd);margin-top:6px}
+  .key .lbl{font-size:12px;font-weight:600;text-align:center;line-height:1.1;word-break:break-word}
+  .key.down{background:var(--accent,#1fe0e0);color:#04121a;border-color:var(--accent)}
+  .key.down .num{color:#04121a} .key.down .well{background:rgba(0,0,0,.18);border-color:rgba(0,0,0,.25)}
+  .key.flash{box-shadow:0 0 0 3px var(--accent,#1fe0e0)}
+  .strip{position:absolute;left:9px;right:9px;bottom:8px;height:46px;display:flex;gap:8px}
+  .seg{background:var(--panel);border:1px solid var(--bd);border-radius:10px;display:flex;align-items:center;gap:8px;padding:0 12px;font-size:13px}
+  .seg .k{color:var(--mut);font-size:11px}
+  .vol{flex:1;display:flex;align-items:center;gap:8px}
+  .volbar{flex:1;height:8px;border-radius:5px;background:#0e1319;border:1px solid var(--bd);overflow:hidden}
+  .volfill{height:100%;background:var(--accent,#1fe0e0);width:0%}
+  .empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:14px;text-align:center;padding:20px}
+  .note{font-size:11.5px;color:var(--mut);max-width:480px;text-align:center}
+</style>
+</head>
+<body>
+  <h1>🪞 HIOS PAD <span class="tag">espejo</span> · <a href="/admin.html" style="color:#1fe0e0;font-size:13px;text-decoration:none">🛠️ Config</a></h1>
+  <div id="conn">conectando…</div>
+  <div class="wrap"><div class="pad" id="pad">
+    <div class="empty" id="empty">Esperando al pad…<br><small>(abrí esto con el companion corriendo y el pad encendido)</small></div>
+    <div class="hdr" id="hdr" style="display:none">
+      <span class="ldot" id="ldot"></span>
+      <span><span class="lname" id="lname">—</span> <span class="lgrp" id="lgrp"></span> <span class="altbadge" id="altbadge"></span></span>
+      <span class="hsp"></span>
+      <span class="badge" id="bMic">mic</span>
+      <span class="badge" id="bLink">—</span>
+      <span class="badge" id="bBat">bat</span>
+      <span class="badge" id="bOs">os</span>
+    </div>
+    <div class="keys" id="keys"></div>
+    <div class="strip" id="strip" style="display:none">
+      <div class="seg" id="encSeg"><span class="k">ENC</span> <span id="encMode">capa</span></div>
+      <div class="seg vol"><span class="k">VOL</span><div class="volbar"><div class="volfill" id="volfill"></div></div><span id="volnum">—</span></div>
+    </div>
+  </div></div>
+  <div class="note">Espejo en vivo de la pantalla del pad (Fase 1, funcional). El render fiel en Canvas (mismo Layout/iconos/colores que el firmware) viene en el próximo paso.</div>
+
+<script>
+  const ENC_MODES = ["capa","Volumen","Scroll","Zoom","Pestañas"];
+  // RGB565 -> #rrggbb
+  function rgb565(c){
+    const r=(c>>11)&0x1F,g=(c>>5)&0x3F,b=c&0x1F;
+    const R=Math.round(r*255/31),G=Math.round(g*255/63),B=Math.round(b*255/31);
+    return "#"+[R,G,B].map(x=>x.toString(16).padStart(2,"0")).join("");
+  }
+  let layer = null;   // cache del descriptor de capa (llega solo al cambiar)
+  const $=id=>document.getElementById(id);
+  const keysEl=$("keys");
+  const NKEYS=10;                 // 10 acciones en doble fila (2x5), igual que el pad
+  for(let i=0;i<NKEYS;i++){
+    const k=document.createElement("div"); k.className="key";
+    k.innerHTML=`<span class="num">${i+1}</span><div class="well"></div><span class="lbl" id="lbl${i}"></span>`;
+    keysEl.appendChild(k);
+  }
+
+  function render(ui){
+    $("empty").style.display="none";
+    $("hdr").style.display="flex";
+    $("strip").style.display="flex";
+    if(ui.layer) layer = ui.layer;          // actualizar cache solo si vino el descriptor
+    const accent = layer ? rgb565(layer.color) : "#1fe0e0";
+    $("pad").style.setProperty("--accent", accent);
+    $("hdr").style.borderBottomColor = accent;
+    $("ldot").style.background = accent;
+    $("lname").textContent = layer ? layer.n : "—";
+    $("lgrp").textContent = layer ? `capa ${ (ui.lay??0)+1 }/${layer.count||"?"}` : "";
+    const ab=$("altbadge");
+    if(ui.alt){ ab.textContent="ALT"+ui.alt; ab.style.background=accent; ab.classList.add("on"); }
+    else ab.classList.remove("on");
+
+    // keycaps (10, doble fila)
+    const labels = layer ? (layer.labels||[]) : [];
+    for(let i=0;i<NKEYS;i++){
+      $("lbl"+i).textContent = labels[i] || "";
+      const k=keysEl.children[i];
+      k.classList.toggle("down", !!(ui.b & (1<<i)));
+      k.classList.toggle("flash", !!(ui.lf & (1<<i)));
+    }
+    // status badges
+    setBadge("bMic", ui.mic?"MIC OFF":"mic", ui.mic?"bad":"");
+    const tp=ui.tp||0, link = (tp&1)?"USB":(tp&2)?"BLE":"—";
+    setBadge("bLink", link + ((tp&4)?" · wifi":""), (tp&3)?"on":"");
+    const bat = ui.bat;
+    setBadge("bBat", (bat===255||bat==null)?"bat —":bat+"%", bat===255?"":(bat<20?"bad":bat<40?"warn":"on"));
+    setBadge("bOs", ui.os||"—", ui.os?"on":"");
+    // strip
+    $("encMode").textContent = ENC_MODES[ui.em||0] || "capa";
+    const v = ui.vol==null?0:ui.vol;
+    $("volfill").style.width = v+"%";
+    $("volnum").textContent = (ui.vol==null?"—":v);
+  }
+  function setBadge(id,txt,cls){ const e=$(id); e.textContent=txt; e.className="badge"+(cls?" "+cls:""); }
+
+  // SSE
+  const conn=$("conn");
+  function connect(){
+    const es=new EventSource("/events");
+    es.onopen=()=>{conn.textContent="conectado al companion ✓";conn.className="on";};
+    es.onerror=()=>{conn.textContent="sin conexión al companion (reintentando)…";conn.className="off";};
+    es.onmessage=e=>{ try{ render(JSON.parse(e.data)); }catch(err){} };
+  }
+  connect();
+</script>
+</body>
+</html>

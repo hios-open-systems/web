@@ -5,7 +5,6 @@
 #include "../app/Theme.h"
 #include "../app/AppState.h"
 #include "UiKit.h"
-#include "Skin.h"
 
 namespace menu {
 
@@ -21,23 +20,23 @@ namespace menu {
 // Un item del menu es una CAPA (por nombre -> robusto a reordenar DefaultConfig) o un
 // SETTING (offset 0..8 respecto de idxBright()). Cada pagina lista hasta 5 items y los
 // mezcla libremente: asi RGB (capa) puede vivir en Apariencia junto a settings, etc.
-enum { S_BRIGHT, S_THEME, S_ACCENT, S_SKIN, S_DIM, S_CLOCK, S_WIFI, S_CAL, S_PREC };
+enum { S_BRIGHT, S_THEME, S_ACCENT, S_DIM, S_CLOCK, S_WIFI, S_CAL, S_PREC };  // (sin S_SKIN: ya no hay skins)
 struct PageItem { const char* layer; int8_t setting; };   // layer!=nullptr => capa; si no => setting
 struct Page     { const char* name; uint16_t color; const PageItem* items; int count; };
 
 static const PageItem PI_TRABAJO[]    = { {"Edicion",-1},{"Dev",-1},{"Apps",-1},{"Navegador",-1} };
-static const PageItem PI_MULTIMEDIA[] = { {"Multimedia",-1},{"YouTube",-1},{"Netflix",-1} };
+static const PageItem PI_MULTIMEDIA[] = { {"Multimedia",-1},{"YouTube",-1},{"Netflix",-1},{"Spotify",-1},{"Disney+",-1} };
 static const PageItem PI_LLAMADAS[]   = { {"Meet",-1},{"Slack",-1},{"Zoom",-1},{"Teams",-1} };
-static const PageItem PI_APARIENCIA[] = { {nullptr,S_BRIGHT},{nullptr,S_THEME},{nullptr,S_ACCENT},{nullptr,S_SKIN} };
+static const PageItem PI_APARIENCIA[] = { {nullptr,S_BRIGHT},{nullptr,S_THEME},{nullptr,S_ACCENT} };
 static const PageItem PI_SISTEMA[]    = { {nullptr,S_CLOCK},{nullptr,S_WIFI},{nullptr,S_CAL},{nullptr,S_PREC},{nullptr,S_DIM} };
 static const PageItem PI_LUCES[]      = { {"RGB",-1},{"WiZ",-1} };
 static const PageItem PI_MONITOR[]    = { {"General",-1},{"Red",-1},{"Nucleos",-1},{"Disco",-1} };
 
 static const Page PAGES[] = {
   { "Trabajo",    theme::CYAN,    PI_TRABAJO,    4 },
-  { "Multimedia", theme::MAGENTA, PI_MULTIMEDIA, 3 },
+  { "Multimedia", theme::MAGENTA, PI_MULTIMEDIA, 5 },
   { "Llamadas",   theme::ROSE,    PI_LLAMADAS,   4 },
-  { "Apariencia", theme::VIOLET,  PI_APARIENCIA, 4 },   // Brillo,Tema,Color,Skin
+  { "Apariencia", theme::VIOLET,  PI_APARIENCIA, 3 },   // Brillo,Tema,Color
   { "Sistema",    theme::GREEN,   PI_SISTEMA,    5 },   // Hora,WiFi,Calibrar,Precision,Dimmer
   { "Luces",      theme::YELLOW,  PI_LUCES,      2 },   // RGB + WiZ (iluminacion)
   { "Monitor",    theme::CYAN,    PI_MONITOR,    4 },   // General/Red/Nucleos/Disco (telemetria companion)
@@ -56,12 +55,11 @@ static bool    s_needFull = true;
 static int idxBright() { return s_km ? s_km->count() : 0; }
 static int idxTheme()  { return idxBright() + 1; }
 static int idxAccent() { return idxBright() + 2; }
-static int idxSkin()   { return idxBright() + 3; }
-static int idxDim()    { return idxBright() + 4; }
-static int idxClock()  { return idxBright() + 5; }
-static int idxWifi()   { return idxBright() + 6; }
-static int idxCal()    { return idxBright() + 7; }
-static int idxPrec()   { return idxBright() + 8; }
+static int idxDim()    { return idxBright() + 3; }
+static int idxClock()  { return idxBright() + 4; }
+static int idxWifi()   { return idxBright() + 5; }
+static int idxCal()    { return idxBright() + 6; }
+static int idxPrec()   { return idxBright() + 7; }
 
 // Indice de una capa por nombre (-1 si no esta). Robusto a reordenar DefaultConfig.
 static int layerIndexByName(const char* name) {
@@ -140,12 +138,6 @@ static void editSelected(int delta) {
     if (a < 0) a = 6;
     if (a > 6) a = 0;
     appstate::prefs.accentIndex = (uint8_t)a;
-  } else if (s_sel == idxSkin()) {
-    int n = skins::count();
-    int v = (int)appstate::prefs.skinIndex + delta;
-    if (v < 0) v = n - 1;
-    if (v >= n) v = 0;
-    appstate::prefs.skinIndex = (uint8_t)v;
   } else if (s_sel == idxDim()) {
     int d = (int)appstate::prefs.dimTimeout + delta;
     if (d < 0) d = 4;
@@ -189,7 +181,6 @@ static uint16_t itemAccent(int i) {
   if (i == idxBright()) return theme::YELLOW;
   if (i == idxTheme()) return theme::accentByIndex(appstate::prefs.accentIndex);
   if (i == idxAccent()) return theme::accentByIndex(appstate::prefs.accentIndex);
-  if (i == idxSkin()) return theme::VIOLET;
   if (i == idxDim()) return theme::CYAN;
   if (i == idxClock()) return theme::ORANGE;
   if (i == idxWifi()) return theme::CYAN;
@@ -205,7 +196,6 @@ static const char* itemTitle(int i) {
   if (i == idxBright()) return "Brillo";
   if (i == idxTheme()) return "Tema";
   if (i == idxAccent()) return "Color";
-  if (i == idxSkin()) return "Skin";
   if (i == idxDim()) return "Dimmer";
   if (i == idxClock()) return "Hora";
   if (i == idxWifi()) return "WiFi";
@@ -228,8 +218,6 @@ static const char* itemMeta(int i, char* buf, size_t len) {
     snprintf(buf, len, "%s", appstate::prefs.themeMode == theme::MODE_LIGHT ? "claro" : "oscuro");
   } else if (i == idxAccent()) {
     snprintf(buf, len, "%s", theme::accentName(appstate::prefs.accentIndex));
-  } else if (i == idxSkin()) {
-    snprintf(buf, len, "%s", skins::name(appstate::prefs.skinIndex));
   } else if (i == idxDim()) {
     snprintf(buf, len, "%s", dimLabel(appstate::prefs.dimTimeout));
   } else if (i == idxClock()) {
@@ -265,12 +253,6 @@ static void drawMenuIcon(TFT_eSPI& g, int cx, int cy, int i, uint16_t col, uint1
   if (i == idxAccent()) {                         // color: muestras de acento
     for (uint8_t a = 0; a < 7; a++) g.fillCircle(cx - 18 + a * 6, cy, 3, theme::accentByIndex(a));
     g.drawRoundRect(cx - 24, cy - 9, 48, 18, 9, col);
-    return;
-  }
-  if (i == idxSkin()) {                           // skin: dos paneles
-    g.drawRoundRect(cx - 12, cy - 8, 18, 15, 3, col);
-    g.fillRoundRect(cx - 6, cy - 2, 18, 15, 3, theme::blend(bg, col, 90));
-    g.drawRoundRect(cx - 6, cy - 2, 18, 15, 3, col);
     return;
   }
   if (i == idxDim()) {                            // dimmer
@@ -323,7 +305,7 @@ static bool drawLayerIcon(TFT_eSPI& g, const char* nm, int cx, int cy, uint16_t 
       g.fillRoundRect(cx - 11 + c * 13, cy - 11 + r * 13, 9, 9, 2, col);
     return true;
   }
-  if (is("Multimedia") || is("YouTube") || is("Netflix")) {  // play
+  if (is("Multimedia")) {                               // play (solo la capa generica)
     g.fillTriangle(cx - 6, cy - 9, cx - 6, cy + 9, cx + 10, cy, col);
     return true;
   }
@@ -333,11 +315,8 @@ static bool drawLayerIcon(TFT_eSPI& g, const char* nm, int cx, int cy, uint16_t 
     g.drawFastHLine(cx - 12, cy, 24, col);
     return true;
   }
-  if (is("Meet") || is("Zoom") || is("Teams") || is("Slack")) {  // camara de video
-    g.fillRoundRect(cx - 12, cy - 7, 16, 14, 3, col);
-    g.fillTriangle(cx + 5, cy, cx + 12, cy - 6, cx + 12, cy + 6, col);
-    return true;
-  }
+  // Apps de streaming/llamadas (YouTube/Netflix/Meet/Zoom/Teams/Slack/Spotify/Disney+/...)
+  // NO comparten un icono de categoria: caen a la inicial BOLD -> cada una distinguible.
   if (is("RGB")) {                                      // tres circulos R/G/B
     g.fillCircle(cx, cy - 5, 6, theme::RED);
     g.fillCircle(cx - 6, cy + 4, 6, theme::GREEN);
@@ -373,6 +352,53 @@ static bool drawLayerIcon(TFT_eSPI& g, const char* nm, int cx, int cy, uint16_t 
       g.drawFastHLine(cx - 13, cy + k, 4, col);
       g.drawFastHLine(cx + 10, cy + k, 4, col);
     }
+    return true;
+  }
+  return false;
+}
+
+// Icono representativo de una SECCION (los 7 grupos del menu). Centrado en (cx,cy).
+// Da identidad visual a cada seccion en el overview (mas que el numero). false = sin match.
+static bool drawSectionIcon(TFT_eSPI& g, const char* nm, int cx, int cy, uint16_t col) {
+  auto is = [&](const char* s) { return strcmp(nm, s) == 0; };
+  if (is("Trabajo")) {                                  // portafolio
+    g.drawRoundRect(cx - 12, cy - 5, 24, 16, 3, col);
+    g.drawRoundRect(cx - 5, cy - 10, 10, 6, 2, col);
+    g.drawFastHLine(cx - 12, cy + 2, 24, col);
+    return true;
+  }
+  if (is("Multimedia")) { g.fillTriangle(cx - 7, cy - 10, cx - 7, cy + 10, cx + 9, cy, col); return true; }
+  if (is("Llamadas")) {                                 // telefono
+    g.drawRoundRect(cx - 7, cy - 12, 14, 24, 3, col);
+    g.fillCircle(cx, cy + 8, 1, col);
+    g.drawFastHLine(cx - 4, cy - 8, 8, col);
+    return true;
+  }
+  if (is("Apariencia")) {                               // paleta (3 dots)
+    g.drawCircle(cx, cy, 11, col);
+    g.fillCircle(cx - 4, cy - 3, 2, theme::RED);
+    g.fillCircle(cx + 4, cy - 3, 2, theme::GREEN);
+    g.fillCircle(cx, cy + 4, 2, theme::BLUE);
+    return true;
+  }
+  if (is("Sistema")) {                                  // engranaje aproximado
+    g.drawCircle(cx, cy, 7, col);
+    g.drawCircle(cx, cy, 3, col);
+    g.drawFastVLine(cx, cy - 11, 4, col);  g.drawFastVLine(cx, cy + 7, 4, col);
+    g.drawFastHLine(cx - 11, cy, 4, col);  g.drawFastHLine(cx + 7, cy, 4, col);
+    return true;
+  }
+  if (is("Luces")) {                                    // bombilla
+    g.drawCircle(cx, cy - 3, 8, col);
+    g.drawFastHLine(cx - 4, cy + 6, 8, col);
+    g.drawFastHLine(cx - 3, cy + 9, 6, col);
+    return true;
+  }
+  if (is("Monitor")) {                                  // pantallita con grafico
+    g.drawRoundRect(cx - 12, cy - 9, 24, 18, 3, col);
+    g.drawLine(cx - 8, cy + 3, cx - 3, cy - 3, col);
+    g.drawLine(cx - 3, cy - 3, cx + 2, cy + 1, col);
+    g.drawLine(cx + 2, cy + 1, cx + 8, cy - 5, col);
     return true;
   }
   return false;
@@ -416,7 +442,8 @@ static void renderPicker(TFT_eSPI& tft) {
         tft.drawCircle(icx, icy, ir, accent);
         char ini[2] = { nm[0], 0 };
         tft.setTextColor(accent, chip);
-        tft.drawString(ini, icx, icy + 1, 4);
+        tft.drawString(ini, icx,     icy + 1, 4);       // faux-bold: doble trazo +1px
+        tft.drawString(ini, icx + 1, icy + 1, 4);       // (la inicial fina se veia muy skinny)
       }
       uikit::fitText(tft, nm, x + cw / 2, y + 64, cw - 8, theme::FG, fill, 2);   // leyenda
       if (isSetting) {                                                           // valor del setting
@@ -454,8 +481,14 @@ static void renderOverview(TFT_eSPI& tft) {
     if (cur) tft.drawRoundRect(x + 1, y + 1, cw - 2, ch - 2, 9, theme::blend(accent, theme::FG, 90));
     tft.setTextDatum(MC_DATUM);
     if (occ) {
-      tft.setTextColor(accent, fill);
-      tft.drawNumber(i + 1, x + cw / 2, y + 34, 6);                          // numero grande de pagina
+      const int icx = x + cw / 2, icy = y + 42;
+      if (!drawSectionIcon(tft, PAGES[i].name, icx, icy, accent)) {          // icono de seccion manda
+        tft.setTextColor(accent, fill);
+        tft.drawNumber(i + 1, icx, icy, 6);                                  // fallback: numero
+      }
+      char nb[3]; snprintf(nb, sizeof(nb), "%d", i + 1);                     // numero -> badge chico
+      uikit::badge(tft, {x + 8, y + 8, 18, 16}, nb, theme::blend(fill, accent, 60),
+                   cur ? theme::FG : accent, 5, 2);
       uikit::fitText(tft, PAGES[i].name, x + cw / 2, y + ch - 26, cw - 8,
                      cur ? theme::FG : theme::SOFT, fill, 2);
       tft.fillRoundRect(x + 10, y + ch - 12, cw - 20, 4, 2, accent);
@@ -475,7 +508,12 @@ static void drawHeader(TFT_eSPI& tft) {
   tft.setTextColor(theme::SOFT, theme::PANEL);
   tft.drawString("CONTROL CENTER", 240, 16, 1);
   tft.setTextColor(theme::FG, theme::PANEL);
-  tft.drawString(s_overview ? "Paginas" : pageName(), 240, 44, 4);
+  const char* hn = s_overview ? "Paginas" : pageName();
+  tft.drawString(hn, 240, 44, 4);
+  if (!s_overview) {                                  // icono de la seccion a la izq del nombre
+    int tw = tft.textWidth(hn, 4);
+    drawSectionIcon(tft, hn, 240 - tw / 2 - 20, 44, pageColor());
+  }
   char p[8]; snprintf(p, sizeof(p), "%d/%d", s_groupSel + 1, pageCount());
   tft.setTextDatum(MR_DATUM);
   tft.setTextColor(pageColor(), theme::PANEL);
@@ -527,7 +565,12 @@ void render(TFT_eSPI& tft) {
   if (!s_km) return;
 
   if (s_needFull) {
-    tft.fillScreen(theme::BG);
+    // Sin fillScreen (evita el parpadeo negro al abrir). Los componentes rellenan sus
+    // zonas; solo limpiamos los gaps entre ellos para no dejar restos del dashboard.
+    tft.fillRect(0, 72,  480, 2,  theme::BG);   // header/accent .. body
+    tft.fillRect(0, 216, 480, 2,  theme::BG);   // body .. hint
+    tft.fillRect(0, 248, 480, 4,  theme::BG);   // hint .. editor
+    tft.fillRect(0, 294, 480, 26, theme::BG);   // editor .. fondo
     drawHeader(tft);
     tft.fillRect(0, 68, 480, 4, uiAccent());
     renderBody(tft);

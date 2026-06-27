@@ -29,7 +29,10 @@
 #include "actions/Action.h"
 #include "actions/MacroEngine.h"
 #include "storage/DefaultConfig.h"
+#include "storage/ConfigStore.h"
+#include "storage/ConfigCodec.h"
 #include "storage/Nvs.h"
+#include <ArduinoJson.h>
 #include "transport/TransportRouter.h"
 #include "transport/Transports.h"
 #include "app/AppState.h"
@@ -39,6 +42,8 @@
 #include "ui/StatusPanel.h"
 #include "ui/Layout.h"
 #include "ui/Skin.h"
+#include "ui/monitor.h"
+#include "ui/Leds.h"
 #include "net/Net.h"
 
 static TFT_eSPI        tft = TFT_eSPI();
@@ -130,89 +135,97 @@ static void updateClock(uint32_t now) {
 static bool s_uiForce = false;
 static void uiForceRedraw() { s_uiForce = true; }
 
-static uint8_t activeSkinIndex(const UiSnapshot& s) {
-  // Las capas del Monitor (General/Red/Nucleos) fuerzan su vista, sin importar el
-  // skin de dashboard elegido en Apariencia. Al salir de la capa, vuelve el skin.
-  int mi = skins::monitorIndex(keymap.layer(s.activeLayer).name);
-  if (mi >= 0) return (uint8_t)mi;
-  uint8_t i = appstate::prefs.skinIndex;
-  return i < skins::dashboardCount() ? i : 0;
-}
-
-// Dirty-check generico (el skin pone el COMO):
-//   primer frame / cambio de capa / cambio de skin -> limpia y full()
-//   cambio de minuto -> full() (repinta opaco, sin flash)
-//   boton -> keycap() en su lugar; estado -> status(); mouse -> full();
-//   stick (en modo mouse) -> stick() si el skin lo soporta.
+// Dirty-check del render: si la capa activa es una vista de Monitor -> su render
+// parcial propio (monitor::render); si no -> dashboard Cards (dash::*).
+//   cambio de capa -> full()           minuto -> clock()
+//   boton -> keycap()                  estado dock -> status()
+//   encoder -> encStrip()/encDial()    stick (mouse) -> stick()
 static void renderUI(const UiSnapshot& s) {
   static bool       first = true;
   static UiSnapshot prev{};
   static int        prevLayer = -1;
-  static uint8_t    prevSkin = 255;
 
-  if (s_uiForce) { first = true; s_uiForce = false; }
+  if (s_uiForce) {
+    // Tras cambiar de capa el snapshot puede venir aun con la capa vieja (lag entre
+    // tasks). Esperamos el de la capa nueva -> no se ve la capa anterior al entrar.
+    if (s.activeLayer != dispatcher.activeLayer()) return;
+    first = true; s_uiForce = false;
+  }
 
-  const uint8_t skinIdx = activeSkinIndex(s);
-  const Skin&   sk = skins::get(skinIdx);
-  SkinContext   ctx{ &tft, &keymap, g_clock };
+  const char* layerName = keymap.layer(s.activeLayer).name;
+  const bool  isMon = monitor::isLayer(layerName);
+  SkinContext ctx{ &tft, &keymap, g_clock };
 
   bool layerChanged = (s.activeLayer != prevLayer);
-  bool skinChanged  = (skinIdx != prevSkin);
+
+  // Tira NeoPixel: refleja el color de la capa activa (cada Layer tiene su color).
+  if (first || layerChanged) leds::setLayerColor(keymap.layer(s.activeLayer).color);
 
   uint16_t clockMinute = appstate::currentClockMinute(millis());
   static int prevClockMinute = -1;
   bool clockChanged = ((int)clockMinute != prevClockMinute);
   if (clockChanged) { updateClock(millis()); prevClockMinute = clockMinute; }
 
-  if (first || layerChanged || skinChanged) {
-    // Solo limpiar a negro en boot o cambio de skin (layout distinto). En cambio
-    // de CAPA el full() repinta opaco region por region -> sin flash negro.
-    if (first || skinChanged) tft.fillScreen(theme::BG);
-    sk.full(ctx, s);
-    prev = s; prevLayer = s.activeLayer; prevSkin = skinIdx; first = false;
+  // --- Vistas de Monitor: render parcial propio (limpia solo lo que cambia) ---
+  if (isMon) {
+    monitor::View v = monitor::viewFor(layerName);
+    if (first || layerChanged) {
+      monitor::render(tft, s, g_clock, v, true);                           // full (incluye fillScreen)
+    } else {
+      if (clockChanged) monitor::drawClock(tft, g_clock);
+      // Refresca solo cuando llego dato NUEVO (uptime = heartbeat ~1/poll), no en cada
+      // loop de 50ms -> el historial del spark avanza al ritmo del companion, no a 20Hz.
+      bool monChanged = s.uptimeSec != prev.uptimeSec || s.live != prev.live ||
+                        s.cpuLoad != prev.cpuLoad || s.gpuLoad != prev.gpuLoad ||
+                        s.netDown != prev.netDown || s.diskRd != prev.diskRd ||
+                        s.coreCount != prev.coreCount;
+      if (monChanged) monitor::render(tft, s, g_clock, v, false);          // diff parcial
+    }
+    prev = s; prevLayer = s.activeLayer; first = false;
     return;
   }
 
-  if (clockChanged) {
-    if (sk.clock) sk.clock(ctx);                  // redibuja SOLO el reloj (sin flash)
-    else { sk.full(ctx, s); prev = s; return; }   // skins sin clock(): full opaco
+  // --- Dashboard Cards ---
+  if (first || layerChanged) {
+    // Limpia solo en boot / vuelta de menu / vuelta de una vista Monitor (otro layout
+    // que pinta toda la pantalla). Cards->Cards no limpia -> sin parpadeo extra.
+    bool prevMon = (prevLayer >= 0) && monitor::isLayer(keymap.layer(prevLayer).name);
+    if (first || prevMon) tft.fillScreen(theme::BG);
+    dash::full(ctx, s);
+    prev = s; prevLayer = s.activeLayer; first = false;
+    return;
   }
+
+  if (clockChanged) dash::clock(ctx);
 
   // Botones: redibuja el keycap si cambio su estado o su flash de long-press.
   for (uint8_t i = 0; i < layout::KC_COUNT; i++) {
     bool on = s.buttons & (1 << i), prevOn = prev.buttons & (1 << i);
     bool fl = s.longFlash & (1 << i), prevFl = prev.longFlash & (1 << i);
-    if (on != prevOn || fl != prevFl) sk.keycap(ctx, s, i, on);
+    if (on != prevOn || fl != prevFl) dash::keycap(ctx, s, i, on);
   }
 
-  // Estado (mic/cam/media/vol/enlace).
+  // Estado del dock (mic/cam/media/enlace/wiz). El volumen ya NO va aca (esta en la franja).
   bool statusChanged = s.micMuted != prev.micMuted || s.camOff != prev.camOff ||
-                       s.mediaPlay != prev.mediaPlay || s.volume != prev.volume ||
+                       s.mediaPlay != prev.mediaPlay ||
                        s.transports != prev.transports || s.live != prev.live ||
-                       s.cpuTemp != prev.cpuTemp || s.gpuTemp != prev.gpuTemp ||
-                       s.cpuLoad != prev.cpuLoad || s.gpuLoad != prev.gpuLoad ||
-                       s.uptimeSec != prev.uptimeSec ||   // heartbeat 1Hz del companion -> refresca el monitor
                        s.wifiOff != prev.wifiOff ||
                        s.wizOn != prev.wizOn || s.wizBright != prev.wizBright ||
                        strcmp(s.wizRoom, prev.wizRoom) != 0 || strcmp(s.wizTarget, prev.wizTarget) != 0;
-  if (statusChanged) sk.status(ctx, s);
+  if (statusChanged) dash::status(ctx, s);
 
-  // Modo mouse cambio -> full (poco frecuente). Solo movimiento del stick y el
-  // skin con cursor en vivo -> redibujo solo el cursor.
-  // Encoder: girar (encPos) o presionar/soltar el SW (bit 5).
-  const bool encActivity = (s.encPos != prev.encPos) || (((s.buttons ^ prev.buttons) >> 5) & 1);
-  // Cambios que SI tocan toda la franja (mouse on/off, modo del encoder, enlace companion).
-  const bool fullStrip   = s.mouseOn != prev.mouseOn || s.encMode != prev.encMode || s.live != prev.live;
+  // Franja del encoder: mouse on/off, modo del encoder, enlace, y VOLUMEN (vive aca).
+  const bool encActivity = (s.encPos != prev.encPos) || (((s.buttons ^ prev.buttons) >> (int)InputId::ENC_SW) & 1);
+  const bool fullStrip   = s.mouseOn != prev.mouseOn || s.encMode != prev.encMode ||
+                           s.live != prev.live || s.volume != prev.volume;
   if (fullStrip) {
-    if (sk.encoder) sk.encoder(ctx, s);
-    else sk.full(ctx, s);
+    dash::encStrip(ctx, s);
   } else if (encActivity) {
-    if (sk.encDial) sk.encDial(ctx, s);   // SOLO el dial -> no flashea los boxes de companion/mouse
-    else if (sk.encoder) sk.encoder(ctx, s);
-  } else if (s.mouseOn && sk.stick) {
+    dash::encDial(ctx, s);   // SOLO el dial -> no flashea los boxes de companion/mouse
+  } else if (s.mouseOn) {
     bool stickMoved = (abs((int)s.stickX - (int)prev.stickX) > cfg::STICK_DISPLAY_DELTA) ||
                       (abs((int)s.stickY - (int)prev.stickY) > cfg::STICK_DISPLAY_DELTA);
-    if (stickMoved || s.clickFlash != prev.clickFlash) sk.stick(ctx, s);
+    if (stickMoved || s.clickFlash != prev.clickFlash) dash::stick(ctx, s);
   }
 
   prev = s;
@@ -275,16 +288,16 @@ static void inputTask(void*) {
     inputs.update(now, dsink);
     dispatcher.tick(now);   // cierra el tap simple del stick pasada la ventana
 
-    // Combo de calibracion: ENC_SW (5) + STICK_SW (6) mantenidos juntos.
-    if (inputs.buttons().pressed(5) && inputs.buttons().pressed(6)) {
+    // Combo de calibracion: ENC_SW + STICK_SW mantenidos juntos (indice = valor de InputId).
+    if (inputs.buttons().pressed((uint8_t)InputId::ENC_SW) && inputs.buttons().pressed((uint8_t)InputId::STICK_SW)) {
       if (comboStart == 0) comboStart = now;
       else if (now - comboStart >= cfg::CAL_COMBO_MS) appstate::mode = AppMode::CALIBRATING;
     } else comboStart = 0;
 
     const OptState& st = stateManager.get();
     UiSnapshot s{};
-    for (uint8_t i = 0; i < 7; i++)
-      if (inputs.buttons().pressed(i)) s.buttons |= (1 << i);
+    for (uint8_t i = 0; i < ButtonMatrix::N; i++)
+      if (inputs.buttons().pressed(i)) s.buttons |= (uint16_t)(1u << i);
     s.encPos      = inputs.encoder().count() / 4;
     s.stickX      = inputs.stick().x();
     s.stickY      = inputs.stick().y();
@@ -292,6 +305,7 @@ static void inputTask(void*) {
     s.mouseOn     = dispatcher.mouseOn();
     s.clickFlash  = dispatcher.clickFlash(now);       // flash L/R en el box del mouse
     s.encMode     = dispatcher.encMode();
+    s.altActive   = dispatcher.altActive();          // ALT momentaneo activo (feedback UI)
     s.longFlash   = dispatcher.longFlashMask(now);   // flash de confirmacion de long-press
     // Feedback REAL-first: si el companion mando estado fresco, pisa al optimista;
     // si no, fallback al optimista (= comportamiento de siempre, sin companion).
@@ -479,6 +493,9 @@ static void uiTask(void*) {
       targetBrightness = 0;
     }
     applyBacklight(targetBrightness);
+    // NeoPixel sigue al display: escala su brillo por el mismo factor (idle -> 0).
+    if (cfg::NEOPIXEL_ENABLED)
+      leds::setBrightness((uint8_t)((uint32_t)cfg::NEOPIXEL_BRIGHT * targetBrightness / 100));
     renderUI(snap);
     vTaskDelay(pdMS_TO_TICKS(50));
   }
@@ -503,10 +520,29 @@ void setup() {
   Serial.printf("[hw] PSRAM=%u  heap=%u  flash=%u\n",
                 (unsigned)ESP.getPsramSize(), (unsigned)ESP.getFreeHeap(), (unsigned)ESP.getFlashChipSize());
 
-  loadDefaults(keymap);
+  // NeoPixel: inicializa la tira (GPIO9) y la deja apagada (estado conocido).
+  // GPIO9 es pin limpio -> el Serial por UART0 (43/44) sigue funcionando.
+  leds::begin();
+
+  // Config: intenta cargar de LittleFS (editada por la app); si no hay/invalida,
+  // usa los defaults compilados. DEBE quedar antes de dispatcher.begin (resuelve ALT).
+  cfgstore::begin();
+  bool cfgLoaded = false;
+  {
+    String cj;
+    if (cfgstore::load(cj)) {
+      JsonDocument doc;
+      if (!deserializeJson(doc, cj))
+        cfgLoaded = cfgcodec::fromJson(doc.as<JsonObjectConst>(), keymap);
+    }
+  }
+  if (!cfgLoaded) loadDefaults(keymap);
+  Serial.printf("[cfg] keymap: %s\n", cfgLoaded ? "LittleFS (/config.json)" : "defaults compilados");
+
   dispatcher.begin(&keymap);
   dispatcher.setState(&stateManager);
   menu::init(&keymap);
+  net::setKeyMap(&keymap);          // descriptor de capa para el espejo (companion)
 
   nvs::begin();
   // Calibracion del stick desde NVS (si existe). Si no, fallback al centro de boot.
@@ -522,7 +558,6 @@ void setup() {
   if (appstate::prefs.themeMode > theme::MODE_LIGHT) appstate::prefs.themeMode = theme::MODE_DARK;
   if (appstate::prefs.accentIndex > 6) appstate::prefs.accentIndex = 0;
   if (appstate::prefs.dimTimeout > 4) appstate::prefs.dimTimeout = 2;
-  if (appstate::prefs.skinIndex >= skins::dashboardCount()) appstate::prefs.skinIndex = 0;
   if (appstate::prefs.brightness < 10 || appstate::prefs.brightness > 100) appstate::prefs.brightness = 100;
   if (appstate::prefs.clockMinute >= 24 * 60) appstate::prefs.clockMinute = 12 * 60;
   appstate::brightness = appstate::prefs.brightness;
@@ -536,7 +571,7 @@ void setup() {
   applyBacklight(appstate::brightness);
   tft.init();
   tft.setRotation(3);   // landscape 180 (modulo montado al reves)
-  statuspanel::begin(tft);   // crea el sprite del panel de estado (lo usa el skin Cards)
+  // Dock eliminado: el estado (mic/wifi/bateria) vive en el cluster del header (libera ~39KB heap).
 
   bus::begin();
 

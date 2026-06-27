@@ -13,7 +13,14 @@
 #include "../app/Config.h"
 #include "../app/AppState.h"
 #include "../app/StateManager.h"
+#include "../app/EventBus.h"
+#include "../app/Types.h"
+#include "../mapping/KeyMap.h"
 #include "../storage/Nvs.h"
+#include "../storage/ConfigStore.h"
+#include "../storage/ConfigCodec.h"
+#include "../ui/monitor.h"
+#include "UiMirror.h"
 
 namespace net {
 
@@ -23,6 +30,8 @@ static St           s_state = St::IDLE;
 static volatile bool s_portalReq = false;   // pedido de levantar portal (desde otra task)
 static volatile bool s_stopReq   = false;   // pedido de bajar el portal
 static RealState     s_real;                // ultimo estado real del companion (lo escribe handlePostState)
+static const KeyMap* s_keymap = nullptr;    // para el descriptor de capa del UI-mirror
+static uint8_t       s_lastUiLayer = 0xFF;  // ultima capa serializada (manda descriptor al cambiar)
 // Cola de comandos pad->companion (ring buffer; reemplaza el bitmask que se quedaba sin
 // bits y coalescia repeticiones). Se llena desde inputTask (core1) y se vacia en
 // handlePostState (netTask, core0) -> seccion critica para no perder ni duplicar.
@@ -114,7 +123,7 @@ static void handlePostState() {
     s_web.send(401, "text/plain", "unauthorized"); return;
   }
   const String& body = s_web.arg("plain");
-  if (body.length() == 0 || body.length() > 2048) { s_web.send(400, "text/plain", "bad body"); return; }
+  if (body.length() == 0 || body.length() > 3072) { s_web.send(400, "text/plain", "bad body"); return; }
   JsonDocument doc;
   if (deserializeJson(doc, body)) { s_web.send(400, "text/plain", "bad json"); return; }
   if (doc["mic"].is<bool>())      s_real.micMuted  = doc["mic"].as<bool>();
@@ -144,10 +153,26 @@ static void handlePostState() {
   if (doc["disk"].is<int>())      s_real.diskPct   = (uint8_t)constrain(doc["disk"].as<int>(), 0, 100);
   if (doc["diskRd"].is<long>())   s_real.diskRd    = (uint32_t)(doc["diskRd"].as<long>() < 0 ? 0 : doc["diskRd"].as<long>());
   if (doc["diskWr"].is<long>())   s_real.diskWr    = (uint32_t)(doc["diskWr"].as<long>() < 0 ? 0 : doc["diskWr"].as<long>());
+  // Pre-carga de historial de throughput (KB/s) -> el monitor lo seedea si esta vacio.
+  if (doc["hist"].is<JsonObject>()) {
+    JsonObject h = doc["hist"].as<JsonObject>();
+    uint16_t a0[56], a1[56];
+    if (h["nd"].is<JsonArray>() && h["nu"].is<JsonArray>()) {
+      int n = 0; for (JsonVariant v : h["nd"].as<JsonArray>()) { if (n >= 56) break; long x = v.as<long>(); a0[n++] = (uint16_t)(x < 0 ? 0 : (x > 65535 ? 65535 : x)); }
+      int m = 0; for (JsonVariant v : h["nu"].as<JsonArray>()) { if (m >= n) break; long x = v.as<long>(); a1[m++] = (uint16_t)(x < 0 ? 0 : (x > 65535 ? 65535 : x)); }
+      monitor::seedNetHist(a0, a1, n);
+    }
+    if (h["dr"].is<JsonArray>() && h["dw"].is<JsonArray>()) {
+      int n = 0; for (JsonVariant v : h["dr"].as<JsonArray>()) { if (n >= 56) break; long x = v.as<long>(); a0[n++] = (uint16_t)(x < 0 ? 0 : (x > 65535 ? 65535 : x)); }
+      int m = 0; for (JsonVariant v : h["dw"].as<JsonArray>()) { if (m >= n) break; long x = v.as<long>(); a1[m++] = (uint16_t)(x < 0 ? 0 : (x > 65535 ? 65535 : x)); }
+      monitor::seedDiskHist(a0, a1, n);
+    }
+  }
   if (doc["wizRoom"].is<const char*>())   strlcpy(s_real.wizRoom,   doc["wizRoom"].as<const char*>(),   sizeof(s_real.wizRoom));
   if (doc["wizTarget"].is<const char*>()) strlcpy(s_real.wizTarget, doc["wizTarget"].as<const char*>(), sizeof(s_real.wizTarget));
   if (doc["wizOn"].is<bool>())            s_real.wizOn     = doc["wizOn"].as<bool>();
   if (doc["wizBright"].is<int>())         s_real.wizBright = (uint8_t)constrain(doc["wizBright"].as<int>(), 0, 100);
+  if (doc["os"].is<const char*>())        strlcpy(s_real.os, doc["os"].as<const char*>(), sizeof(s_real.os));
   if (doc["clockMin"].is<int>()) {                 // hora real desde el companion (min desde 00:00)
     int cm = doc["clockMin"].as<int>();
     if (cm >= 0 && cm < 24 * 60) {
@@ -157,8 +182,14 @@ static void handlePostState() {
   }
   s_real.updatedAtMs = millis();
 
-  // Respuesta: si hay comandos pendientes para el companion, se los devolvemos
-  // en el cuerpo (y los limpiamos); si no, 204 sin body (igual que antes).
+  // El companion pide el blob de UI-mirror solo cuando hay un browser mirando
+  // (wantUi) -> idle sin espejo mantiene el camino liviano (204). uiFull fuerza
+  // el descriptor de capa (al conectar un browser nuevo).
+  const bool wantUi = doc["wantUi"].as<bool>();
+  const bool uiFull = doc["uiFull"].as<bool>();
+
+  // Respuesta: comandos pendientes para el companion (los limpiamos) y/o el blob
+  // de UI-mirror. Si no hay ni uno ni otro -> 204 sin body (igual que antes).
   CompanionCmd batch[16]; int nb = 0;
   portENTER_CRITICAL(&s_cmdMux);
   while (s_cmdHead != s_cmdTail && nb < 16) {
@@ -166,10 +197,22 @@ static void handlePostState() {
     s_cmdHead = (uint8_t)((s_cmdHead + 1) % 16);
   }
   portEXIT_CRITICAL(&s_cmdMux);
-  if (nb > 0) {
+
+  if (wantUi || nb > 0) {
     JsonDocument res;
-    JsonArray arr = res["cmds"].to<JsonArray>();
-    for (int i = 0; i < nb; i++) { const char* n = cmdName(batch[i]); if (n) arr.add(n); }
+    if (nb > 0) {
+      JsonArray arr = res["cmds"].to<JsonArray>();
+      for (int i = 0; i < nb; i++) { const char* n = cmdName(batch[i]); if (n) arr.add(n); }
+    }
+    if (wantUi) {
+      UiSnapshot snap{};
+      xQueuePeek(bus::uiMailbox, &snap, 0);                       // ultimo frame (no bloquea)
+      bool inclLayer = uiFull || snap.activeLayer != s_lastUiLayer;
+      s_lastUiLayer = snap.activeLayer;
+      JsonObject ui = res["ui"].to<JsonObject>();
+      mirror::serializeUi(ui, snap, s_keymap, inclLayer);
+      ui["os"] = s_real.os;                                       // SO detectado por el companion
+    }
     String out; serializeJson(res, out);
     s_web.send(200, "application/json", out);
   } else {
@@ -177,10 +220,47 @@ static void handlePostState() {
   }
 }
 
+// GET /api/config: serializa el keymap actual (capas/bindings/acciones/labels).
+static void handleGetConfig() {
+  if (cfg::API_TOKEN[0] && s_web.header("X-Pad-Token") != cfg::API_TOKEN) { s_web.send(401, "text/plain", "unauthorized"); return; }
+  if (!s_keymap) { s_web.send(503, "text/plain", "no keymap"); return; }
+  JsonDocument doc;
+  cfgcodec::toJson(*s_keymap, doc.to<JsonObject>());
+  String out; serializeJson(doc, out);
+  s_web.send(200, "application/json", out);
+}
+
+// POST /api/config: valida + guarda en LittleFS + REINICIA (se aplica en el boot).
+// No swap en caliente: mas seguro entre cores (mismo patron que el guardado de WiFi).
+static void handlePostConfig() {
+  if (cfg::API_TOKEN[0] && s_web.header("X-Pad-Token") != cfg::API_TOKEN) { s_web.send(401, "text/plain", "unauthorized"); return; }
+  const String& body = s_web.arg("plain");
+  if (body.length() == 0 || body.length() > 49152) { s_web.send(400, "text/plain", "bad body"); return; }
+  JsonDocument doc;
+  if (deserializeJson(doc, body)) { s_web.send(400, "text/plain", "bad json"); return; }
+  if (!doc["layers"].is<JsonArray>()) { s_web.send(400, "text/plain", "no layers"); return; }
+  if (!cfgstore::save(body.c_str(), body.length())) { s_web.send(500, "text/plain", "save failed"); return; }
+  s_web.send(200, "application/json", "{\"ok\":true,\"reboot\":true}");
+  delay(300);
+  ESP.restart();
+}
+
+// POST /api/config/reset: borra /config.json + reinicia -> vuelve a defaults compilados.
+static void handleResetConfig() {
+  if (cfg::API_TOKEN[0] && s_web.header("X-Pad-Token") != cfg::API_TOKEN) { s_web.send(401, "text/plain", "unauthorized"); return; }
+  cfgstore::remove();
+  s_web.send(200, "application/json", "{\"ok\":true,\"reboot\":true}");
+  delay(300);
+  ESP.restart();
+}
+
 static void setupRoutes() {
   s_web.on("/", handleRoot);
   s_web.on("/save", HTTP_POST, handleSave);
   s_web.on("/api/state", HTTP_POST, handlePostState);
+  s_web.on("/api/config", HTTP_GET, handleGetConfig);
+  s_web.on("/api/config", HTTP_POST, handlePostConfig);
+  s_web.on("/api/config/reset", HTTP_POST, handleResetConfig);
   const char* hdrs[] = {"X-Pad-Token"};         // necesario para leer el header del token
   s_web.collectHeaders(hdrs, 1);
   s_web.onNotFound([]() {                       // captive: redirige todo a "/"
@@ -332,6 +412,8 @@ bool hasFreshState(uint32_t now) {
   return s_real.updatedAtMs != 0 && (now - s_real.updatedAtMs) < cfg::STATE_FRESH_MS;
 }
 const RealState& realState() { return s_real; }
+
+void setKeyMap(const KeyMap* km) { s_keymap = km; }   // para el descriptor de capa del mirror
 
 void queueCommand(CompanionCmd cmd) {
   if (cmd == CompanionCmd::NONE) return;

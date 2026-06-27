@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HIOS PAD · Configuración</title>
+<style>
+  :root{--bg:#0d1117;--panel:#161b22;--card:#1c2230;--bd:#30363d;--tx:#e6edf3;--mut:#8b949e;--acc:#1f6feb;--gn:#3ddc84;--wn:#f0a020}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:15px}
+  header{position:sticky;top:0;z-index:5;background:#0d1117;border-bottom:1px solid var(--bd);padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  h1{font-size:16px;margin:0;font-weight:700}
+  .tag{font-size:11px;background:var(--acc);color:#fff;padding:2px 7px;border-radius:20px}
+  #status{font-size:12.5px;color:var(--mut);flex:1;min-width:120px}
+  button{font:inherit;font-size:14px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:7px 12px;cursor:pointer}
+  button.primary{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}
+  button.sm{font-size:12px;padding:4px 8px}
+  button:disabled{opacity:.5;cursor:default}
+  .tabs{display:flex;gap:6px;padding:8px 16px 0;max-width:960px;margin:0 auto}
+  .tab{font-size:13.5px;padding:8px 14px;border-radius:9px 9px 0 0;border:1px solid var(--bd);border-bottom:none;background:var(--panel);color:var(--mut);cursor:pointer}
+  .tab.on{color:#fff;background:var(--card)}
+  main{max-width:960px;margin:0 auto;padding:12px 16px 70px}
+  .layers{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
+  .ltab{font-size:12.5px;padding:5px 10px;border-radius:8px;border:1px solid var(--bd);background:var(--panel);color:var(--mut);cursor:pointer;display:flex;align-items:center;gap:6px}
+  .ltab.on{color:#fff;border-color:var(--acc)}
+  .ldot{width:10px;height:10px;border-radius:50%}
+  .bind,.macro{background:var(--panel);border:1px solid var(--bd);border-radius:10px;padding:10px 12px;margin-bottom:9px}
+  .bhead{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+  .bname{font-weight:700;font-size:13px;min-width:90px;color:#c9d1d9}
+  .bnum{font-size:11px;color:var(--mut);background:var(--card);border:1px solid var(--bd);border-radius:6px;padding:1px 6px}
+  input,select{font:inherit;font-size:13px;border-radius:7px;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:6px 8px}
+  input[type=text]{width:100%}
+  .lbl-in{flex:1;min-width:110px}
+  .act{padding:6px 0 0;border-top:1px dashed #21262d;margin-top:4px}
+  .actrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .k{font-size:11px;color:var(--mut);min-width:46px}
+  .mods{display:flex;gap:7px;font-size:12px;color:var(--mut)}
+  .mods label{display:flex;gap:3px;align-items:center}
+  .keyin{width:84px}.numin{width:70px}
+  .osbar{display:flex;gap:6px;align-items:center;margin:5px 0}
+  .ospill{font-size:11px;padding:2px 8px;border-radius:12px;border:1px solid var(--bd);color:var(--mut)}
+  .ospill.act{border-color:var(--gn);color:var(--gn)}
+  .osblock{border-left:2px solid var(--bd);padding-left:8px;margin:5px 0}
+  .osblock.active{border-left-color:var(--gn)}
+  .oslabel{font-size:11px;color:var(--mut);margin-bottom:3px}
+  .hint{font-size:12px;color:var(--mut);margin:2px 0 12px}
+  .empty{color:var(--mut);text-align:center;padding:40px 10px}
+  .step{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:6px 0;border-top:1px solid #21262d}
+  .txtrow{display:flex;gap:8px;align-items:center;margin-bottom:7px}
+  .txtrow .idx{font-size:11px;color:var(--mut);min-width:24px}
+</style>
+</head>
+<body>
+<header>
+  <h1>🛠️ HIOS PAD <span class="tag">config</span></h1>
+  <span id="status">cargando…</span>
+  <span class="ospill" id="osPill">OS: —</span>
+  <button id="reset" class="sm" title="Borra la config guardada y vuelve a los defaults">⚠ Defaults</button>
+  <button id="reload" class="sm">↻ Recargar</button>
+  <button id="save" class="primary" disabled>💾 Guardar + reiniciar</button>
+</header>
+<div class="tabs">
+  <div class="tab on" data-t="shortcuts">⌨️ Shortcuts</div>
+  <div class="tab" data-t="macros">⚙️ Macros</div>
+  <div class="tab" data-t="texts">📝 Textos</div>
+</div>
+<main>
+  <div id="view-shortcuts"></div>
+  <div id="view-macros" style="display:none"></div>
+  <div id="view-texts" style="display:none"></div>
+  <div class="empty" id="empty">Conectando con el pad…</div>
+</main>
+
+<script>
+const MEDIA = ["NONE","Vol +","Vol −","Mute","Play/Pausa","Siguiente","Anterior","Stop"];
+const LMODE = ["Ir a (SWITCH)","Alternar","Siguiente","Anterior"];
+const NCMD  = ["NONE","Mic toggle","Cam toggle","WiZ on/off","WiZ +brillo","WiZ −brillo","WiZ cálido","WiZ frío","WiZ cuarto","WiZ luz"];
+const ATYPES= [["none","(nada)"],["key","Teclado"],["media","Multimedia"],["text","Texto"],["macro","Macro"],["layer","Capa"],["ncmd","Companion"],["mtog","Toggle mouse"]];
+const KINDS = ["Tecla","Multimedia","Mouse","Texto","Delay"];   // MacroStep.Kind 0..4
+const INPUTS=[]; for(let i=0;i<10;i++) INPUTS.push({id:i,name:"Botón "+(i+1)});
+INPUTS.push({id:10,name:"ALT 1"},{id:11,name:"ALT 2"},{id:12,name:"Encoder SW"},{id:13,name:"Stick SW"},{id:14,name:"Encoder giro"});
+
+let cfg=null, detOs="win", cur=0, dirty=false, tab="shortcuts";
+const $=id=>document.getElementById(id);
+const el=(t,c,h)=>{const e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e;};
+const rgb565=c=>{const r=(c>>11)&31,g=(c>>5)&63,b=c&31;return "#"+[(r*255/31)|0,(g*255/63)|0,(b*255/31)|0].map(x=>x.toString(16).padStart(2,"0")).join("");};
+const keyToStr=c=>(c>=32&&c<127)?String.fromCharCode(c):("0x"+c.toString(16).toUpperCase());
+const strToKey=s=>{s=(s||"").trim();if(!s)return 0;if(/^0x[0-9a-f]+$/i.test(s))return parseInt(s,16);if(s.length===1)return s.charCodeAt(0);const n=parseInt(s,10);return isNaN(n)?s.charCodeAt(0):n;};
+const setStatus=(t,c)=>{$("status").textContent=t;$("status").style.color=c||"var(--mut)";};
+const markDirty=()=>{dirty=true;$("save").disabled=false;};
+const isVar=v=>v&&typeof v==="object"&&!Array.isArray(v)&&!("t"in v)&&("win"in v||"linux"in v);
+
+// ---- editor de UNA accion plana (key/media/text/macro/layer/ncmd/mtog/none) ----
+function singleAction(box, getA, setA){
+  box.innerHTML="";
+  const a=getA()||{t:"none"};
+  const row=el("div","actrow"); box.appendChild(row);
+  const sel=el("select"); ATYPES.forEach(([v,t])=>{const o=el("option");o.value=v;o.textContent=t;if((a.t||"none")===v)o.selected=true;sel.appendChild(o);}); row.appendChild(sel);
+  const fields=el("span","actrow"); row.appendChild(fields);
+  const commit=()=>{ setA(read()); markDirty(); };
+  function build(){
+    const t=sel.value; fields.innerHTML="";
+    if(t==="key"){
+      const mw=el("span","mods");
+      [["Ctrl",1],["Shift",2],["Alt",4],["Gui",8]].forEach(([n,bit])=>{const l=el("label");const c=el("input");c.type="checkbox";c.checked=!!((a.mods||0)&bit);c.dataset.bit=bit;c.onchange=commit;l.appendChild(c);l.appendChild(document.createTextNode(n));mw.appendChild(l);});
+      fields.appendChild(mw);
+      const ki=el("input","keyin");ki.placeholder="tecla / 0x..";ki.value=(a.k&&a.k.length)?keyToStr(a.k[0]):"";ki.dataset.key="1";ki.oninput=commit;fields.appendChild(ki);
+    } else if(t==="media"){
+      const s=el("select");MEDIA.forEach((m,i)=>{const o=el("option");o.value=i;o.textContent=m;if((a.u||0)===i)o.selected=true;s.appendChild(o);});s.dataset.u="1";s.onchange=commit;fields.appendChild(s);
+    } else if(t==="text"||t==="macro"){
+      const s=el("select");const list=t==="text"?(cfg.texts||[]):(cfg.macros||[]);
+      list.forEach((x,i)=>{const o=el("option");o.value=i;o.textContent=i+" · "+(t==="text"?String(x).slice(0,18):(x.label||"macro"));if((a.id||0)===i)o.selected=true;s.appendChild(o);});
+      s.dataset.id="1";s.onchange=commit;fields.appendChild(s);
+    } else if(t==="layer"){
+      const s=el("select");LMODE.forEach((m,i)=>{const o=el("option");o.value=i;o.textContent=m;if((a.mode||0)===i)o.selected=true;s.appendChild(o);});s.dataset.mode="1";s.onchange=commit;fields.appendChild(s);
+      const sl=el("select");(cfg.layers||[]).forEach((L,i)=>{const o=el("option");o.value=i;o.textContent=i+" "+L.n;if((a.n||0)===i)o.selected=true;sl.appendChild(o);});sl.dataset.n="1";sl.onchange=commit;fields.appendChild(sl);
+    } else if(t==="ncmd"){
+      const s=el("select");NCMD.forEach((m,i)=>{const o=el("option");o.value=i;o.textContent=m;if((a.cmd||0)===i)o.selected=true;s.appendChild(o);});s.dataset.cmd="1";s.onchange=commit;fields.appendChild(s);
+    }
+  }
+  function read(){
+    const t=sel.value,o={t};
+    if(t==="key"){let m=0;fields.querySelectorAll("input[type=checkbox]").forEach(c=>{if(c.checked)m|=+c.dataset.bit;});o.mods=m;const ki=fields.querySelector("[data-key]");const k=strToKey(ki?ki.value:"");o.k=k?[k]:[];}
+    else if(t==="media")o.u=+fields.querySelector("[data-u]").value;
+    else if(t==="text"||t==="macro")o.id=+fields.querySelector("[data-id]").value;
+    else if(t==="layer"){o.mode=+fields.querySelector("[data-mode]").value;o.n=+fields.querySelector("[data-n]").value;}
+    else if(t==="ncmd")o.cmd=+fields.querySelector("[data-cmd]").value;
+    return o;
+  }
+  sel.onchange=()=>{ Object.keys(a).forEach(k=>k!=="t"&&delete a[k]); build(); commit(); };
+  build();
+}
+
+// ---- campo de accion CON toggle per-OS (para bindings) ----
+function perOsField(label, getV, setV){
+  const wrap=el("div","act");
+  const head=el("div","actrow");
+  head.appendChild(el("span","k",label));
+  const tog=el("label",null); const cb=el("input"); cb.type="checkbox"; cb.checked=isVar(getV());
+  tog.style.cssText="font-size:11px;color:var(--mut);display:flex;gap:4px;align-items:center"; tog.appendChild(cb); tog.appendChild(document.createTextNode("por OS"));
+  head.appendChild(tog); wrap.appendChild(head);
+  const body=el("div",null); wrap.appendChild(body);
+  function render(){
+    body.innerHTML="";
+    let v=getV();
+    if(cb.checked){
+      if(!isVar(v)){ v={win:v&&v.t?v:{t:"none"}, linux:JSON.parse(JSON.stringify(v&&v.t?v:{t:"none"}))}; setV(v); }
+      ["win","linux"].forEach(osk=>{
+        const blk=el("div","osblock"+((detOs===osk)?" active":""));
+        blk.appendChild(el("div","oslabel",(osk==="win"?"Windows":"Linux")+(detOs===osk?" · activo":"")));
+        const b=el("div"); blk.appendChild(b);
+        singleAction(b, ()=>v[osk]||{t:"none"}, x=>{v[osk]=x;setV(v);});
+        body.appendChild(blk);
+      });
+    } else {
+      if(isVar(v)){ v=v[detOs]||v.win||v.linux||{t:"none"}; setV(v); }
+      singleAction(body, ()=>getV()||{t:"none"}, x=>setV(x));
+    }
+  }
+  cb.onchange=()=>{ render(); markDirty(); };
+  render();
+  return wrap;
+}
+
+// ============================ SHORTCUTS ============================
+function bindOf(L,id){return (L.binds||(L.binds=[])).find(b=>b.id===id)||null;}
+function ensureBind(L,id){let b=bindOf(L,id);if(!b){b={id};L.binds.push(b);}return b;}
+function renderShortcuts(){
+  const host=$("view-shortcuts"); host.innerHTML="";
+  const lt=el("div","layers"); cfg.layers.forEach((L,i)=>{const t=el("div","ltab"+(i===cur?" on":""));t.innerHTML=`<span class="ldot" style="background:${rgb565(L.color)}"></span>${L.n}`;t.onclick=()=>{cur=i;renderShortcuts();};lt.appendChild(t);}); host.appendChild(lt);
+  const L=cfg.layers[cur];
+  host.appendChild(el("div","hint",`Capa <b style="color:${rgb565(L.color)}">${L.n}</b>. "por OS" guarda Windows/Linux por separado; el companion empuja el del OS detectado (<b>${detOs}</b>). Guardar reinicia el pad.`));
+  INPUTS.forEach(inp=>{
+    const enc=inp.id===14, card=el("div","bind"), head=el("div","bhead");
+    head.innerHTML=`<span class="bname">${inp.name}</span><span class="bnum">id ${inp.id}</span>`;
+    const li=el("input","lbl-in");li.type="text";li.placeholder="etiqueta (pantalla)";const b0=bindOf(L,inp.id);li.value=b0?(b0.label||""):"";
+    li.oninput=()=>{ensureBind(L,inp.id).label=li.value;markDirty();}; head.appendChild(li); card.appendChild(head);
+    const b=ensureBind(L,inp.id);
+    if(enc){ card.appendChild(perOsField("Giro →",()=>b.cw,x=>b.cw=x)); card.appendChild(perOsField("Giro ←",()=>b.ccw,x=>b.ccw=x)); }
+    else  { card.appendChild(perOsField("Acción",()=>b.press,x=>b.press=x)); card.appendChild(perOsField("Mantener",()=>b.long,x=>b.long=x)); }
+    host.appendChild(card);
+  });
+}
+
+// ============================ MACROS ============================
+function stepEditor(step, onDel, onUp, onDn){
+  const row=el("div","step");
+  const ks=el("select");KINDS.forEach((k,i)=>{const o=el("option");o.value=i;o.textContent=k;if((step.kind||0)===i)o.selected=true;ks.appendChild(o);});row.appendChild(ks);
+  const fields=el("span","actrow");row.appendChild(fields);
+  function build(){
+    const k=+ks.value; fields.innerHTML="";
+    if(k===0||k===1||k===2){ // KEY/MEDIA/MOUSE -> editor de accion (plano)
+      const box=el("div"); fields.appendChild(box);
+      const forceT=k===0?"key":k===1?"media":"mouse";
+      if(!step.action||step.action.t!==forceT) step.action={t:forceT,...(forceT==="key"?{mods:0,k:[]}:forceT==="media"?{u:0}:{mode:0,dx:0,dy:0,wheel:0,btn:0})};
+      singleAction(box,()=>step.action,x=>{step.action=x;markDirty();});
+    } else if(k===3){ // TEXT -> id
+      const s=el("select");(cfg.texts||[]).forEach((x,i)=>{const o=el("option");o.value=i;o.textContent=i+" · "+String(x).slice(0,20);if((step.arg||0)===i)o.selected=true;s.appendChild(o);});s.onchange=()=>{step.arg=+s.value;markDirty();};fields.appendChild(el("span","k","texto"));fields.appendChild(s);
+    } else if(k===4){ // DELAY -> ms
+      const n=el("input","numin");n.type="number";n.min=0;n.value=step.arg||0;n.oninput=()=>{step.arg=+n.value;markDirty();};fields.appendChild(n);fields.appendChild(el("span","k","ms"));
+    }
+  }
+  ks.onchange=()=>{const k=+ks.value;step.kind=k;if(k>2){step.action={t:"none"};}build();markDirty();};
+  const ctl=el("span","actrow");ctl.style.marginLeft="auto";
+  const up=el("button","sm","↑");up.onclick=onUp; const dn=el("button","sm","↓");dn.onclick=onDn; const dl=el("button","sm","✕");dl.onclick=onDel;
+  ctl.append(up,dn,dl); row.appendChild(ctl);
+  build(); return row;
+}
+function renderMacros(){
+  const host=$("view-macros"); host.innerHTML="";
+  host.appendChild(el("div","hint","Macros: secuencias de pasos (Tecla/Media/Mouse/Texto/Delay) que el pad ejecuta. Se referencian por id desde una acción 'Macro'."));
+  (cfg.macros||(cfg.macros=[])).forEach((m,mi)=>{
+    const card=el("div","macro"), head=el("div","bhead");
+    head.innerHTML=`<span class="bnum">macro ${mi}</span>`;
+    const nm=el("input","lbl-in");nm.type="text";nm.placeholder="nombre";nm.value=m.label||"";nm.oninput=()=>{m.label=nm.value;markDirty();};head.appendChild(nm);
+    const del=el("button","sm","🗑 borrar");del.onclick=()=>{cfg.macros.splice(mi,1);markDirty();renderMacros();};head.appendChild(del);
+    card.appendChild(head);
+    (m.steps||(m.steps=[])).forEach((s,si)=>{
+      card.appendChild(stepEditor(s,
+        ()=>{m.steps.splice(si,1);markDirty();renderMacros();},
+        ()=>{if(si>0){[m.steps[si-1],m.steps[si]]=[m.steps[si],m.steps[si-1]];markDirty();renderMacros();}},
+        ()=>{if(si<m.steps.length-1){[m.steps[si+1],m.steps[si]]=[m.steps[si],m.steps[si+1]];markDirty();renderMacros();}}));
+    });
+    const add=el("button","sm","+ paso");add.style.marginTop="7px";add.onclick=()=>{m.steps.push({kind:0,action:{t:"key",mods:0,k:[]},arg:0});markDirty();renderMacros();};card.appendChild(add);
+    host.appendChild(card);
+  });
+  const addM=el("button","primary","+ Nueva macro");addM.onclick=()=>{cfg.macros.push({label:"Macro "+cfg.macros.length,steps:[]});markDirty();renderMacros();};host.appendChild(addM);
+}
+
+// ============================ TEXTOS ============================
+function renderTexts(){
+  const host=$("view-texts"); host.innerHTML="";
+  host.appendChild(el("div","hint","Snippets de texto que el pad 'tipea' (acción Texto, o paso Texto de una macro)."));
+  (cfg.texts||(cfg.texts=[])).forEach((t,i)=>{
+    const row=el("div","txtrow");row.appendChild(el("span","idx",i+""));
+    const inp=el("input","lbl-in");inp.type="text";inp.value=t;inp.oninput=()=>{cfg.texts[i]=inp.value;markDirty();};row.appendChild(inp);
+    const del=el("button","sm","✕");del.onclick=()=>{cfg.texts.splice(i,1);markDirty();renderTexts();};row.appendChild(del);
+    host.appendChild(row);
+  });
+  const add=el("button","primary","+ Nuevo texto");add.onclick=()=>{cfg.texts.push("");markDirty();renderTexts();};host.appendChild(add);
+}
+
+function renderAll(){ renderShortcuts(); renderMacros(); renderTexts(); }
+function showTab(t){ tab=t; document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x.dataset.t===t));
+  ["shortcuts","macros","texts"].forEach(v=>$("view-"+v).style.display=(v===t)?"block":"none"); }
+
+// ============================ I/O ============================
+async function load(){
+  setStatus("cargando config…");
+  try{
+    const r=await fetch("/api/config");
+    if(!r.ok){ setStatus("el pad no respondió","#f85149"); $("empty").textContent="No se pudo leer la config. ¿Pad encendido y en la red?"; return; }
+    const data=await r.json(); cfg=data.edit; detOs=data.os||"win"; dirty=false; $("save").disabled=true;
+    $("osPill").textContent="OS: "+(detOs==="win"?"Windows":"Linux"); $("osPill").classList.add("act");
+    if(!cfg||!cfg.layers){ setStatus("config vacía","#f0a020"); return; }
+    setStatus("config cargada · "+cfg.layers.length+" capas, "+(cfg.macros||[]).length+" macros","var(--gn)");
+    $("empty").style.display="none"; renderAll(); showTab(tab);
+  }catch(e){ setStatus("error de red","#f85149"); $("empty").textContent="Sin conexión con el companion."; }
+}
+async function save(){
+  if(!cfg)return;
+  cfg.layers.forEach(L=>{L.binds=(L.binds||[]).filter(b=>(b.label&&b.label.length)||b.press||b.long||b.cw||b.ccw||b.st);});
+  $("save").disabled=true; setStatus("guardando + reiniciando…","#f0a020");
+  try{
+    const r=await fetch("/api/config",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(cfg)});
+    if(r.ok){ setStatus("guardado ✓ — el pad reinicia (~2s). Recargá en unos segundos.","var(--gn)"); dirty=false; }
+    else { setStatus("error al guardar: "+await r.text(),"#f85149"); $("save").disabled=false; }
+  }catch(e){ setStatus("no se pudo guardar (¿pad reiniciándose?)","#f85149"); $("save").disabled=false; }
+}
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>showTab(t.dataset.t));
+$("reload").onclick=()=>{ if(!dirty||confirm("Hay cambios sin guardar. ¿Descartar?")) load(); };
+$("save").onclick=save;
+$("reset").onclick=async()=>{ if(!confirm("¿Borrar la config (editor + pad) y volver a defaults? El pad reinicia.")) return;
+  setStatus("restaurando defaults…","#f0a020");
+  try{ const r=await fetch("/api/config/reset",{method:"POST"}); setStatus(r.ok?"defaults restaurados ✓ — reiniciando. Recargá.":"error","#"+(r.ok?"3ddc84":"f85149")); }catch(e){ setStatus("no se pudo","#f85149"); } };
+window.addEventListener("beforeunload",e=>{ if(dirty){e.preventDefault();e.returnValue="";} });
+load();
+</script>
+</body>
+</html>
