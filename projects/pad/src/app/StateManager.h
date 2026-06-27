@@ -49,6 +49,7 @@ struct RealState {
   char     wizTarget[16] = {0};   // "Todas" o el nombre de la luz
   bool     wizOn       = false;
   uint8_t  wizBright   = 0;       // 0..100
+  char     os[12]      = {0};     // SO del companion ("Windows"/"Linux"/"WSL"); "" = sin dato
   uint32_t updatedAtMs = 0;       // millis() del ultimo POST aceptado (0 = nunca)
 };
 

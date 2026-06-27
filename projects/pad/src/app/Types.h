@@ -8,12 +8,15 @@
 
 // Ids logicos estables, independientes del GPIO fisico.
 enum class InputId : uint8_t {
-  BTN_1, BTN_2, BTN_3, BTN_4, BTN_5,
+  BTN_1, BTN_2, BTN_3, BTN_4, BTN_5, BTN_6, BTN_7, BTN_8, BTN_9, BTN_10,  // 10 de accion
+  ALT_1, ALT_2,   // 2 modificadores (sin rol asignado aun)
   ENC_SW, STICK_SW,
   ENC_ROT,      // rotacion: delta en v1 (con signo)
   STICK_AXIS,   // ejes: x en v1, y en v2
   _COUNT
 };
+// NOTA: el bit i del bitmask `buttons` (UiSnapshot) = valor de InputId i, porque
+// ButtonMatrix construye sus indices en este mismo orden. Asi bit==InputId.
 
 enum class Edge : uint8_t {
   PRESS,        // pulsador: flanco a pulsado
@@ -47,7 +50,7 @@ enum class StateToggle : uint8_t { NONE, MIC, MOUSE, MEDIA, CAMERA };
 namespace tport { enum : uint8_t { USB = 1, BLE = 2, WIFI = 4 }; }
 
 struct UiSnapshot {
-  uint8_t  buttons;     // bitmask: bit i = pulsador i (0..4 botones,5 encSW,6 stickSW)
+  uint16_t buttons;     // bitmask por InputId: bits 0..9 = BTN_1..10, 10..11 = ALT_1/2, 12 = encSW, 13 = stickSW
   long     encPos;      // posicion acumulada del encoder (detentes)
   uint16_t stickX;      // crudo 0..4095
   uint16_t stickY;
@@ -55,7 +58,8 @@ struct UiSnapshot {
   bool     mouseOn;     // modo mouse del stick activo (toggle por SW del stick)
   uint8_t  clickFlash;  // flash de click reciente en el box del mouse: 0=nada, 1=izq, 2=der
   uint8_t  encMode;     // override del encoder por doble-tap: 0=capa,1=Vol,2=Scroll,3=Zoom,4=Pestanas
-  uint8_t  longFlash;   // bitmask: botones cuyo long-press acaba de dispararse (flash de confirmacion)
+  uint8_t  altActive;   // ALT momentaneo activo (held+linger): 0=ninguno, 1=ALT1, 2=ALT2 (feedback UI)
+  uint16_t longFlash;   // bitmask (BTN_1..10): botones cuyo long-press acaba de dispararse (flash)
   // --- estado optimista (lo que el pad cree haber dejado) ---
   bool     micMuted;
   bool     mediaPlay;
@@ -101,6 +105,13 @@ inline const char* inputName(InputId id) {
     case InputId::BTN_3:      return "Boton 3";
     case InputId::BTN_4:      return "Boton 4";
     case InputId::BTN_5:      return "Boton 5";
+    case InputId::BTN_6:      return "Boton 6";
+    case InputId::BTN_7:      return "Boton 7";
+    case InputId::BTN_8:      return "Boton 8";
+    case InputId::BTN_9:      return "Boton 9";
+    case InputId::BTN_10:     return "Boton 10";
+    case InputId::ALT_1:      return "ALT 1";
+    case InputId::ALT_2:      return "ALT 2";
     case InputId::ENC_SW:     return "Encoder SW";
     case InputId::STICK_SW:   return "Stick SW";
     case InputId::ENC_ROT:    return "Encoder";

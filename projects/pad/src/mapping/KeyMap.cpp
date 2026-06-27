@@ -1,4 +1,5 @@
 #include "KeyMap.h"
+#include <Arduino.h>
 #include <string.h>
 #include "../app/Config.h"
 #include "../app/AppState.h"
@@ -9,7 +10,10 @@ static void copyLabel(char* dst, const char* src) {
 }
 
 int KeyMap::addLayer(const char* name, uint16_t color, LayerGroup group) {
-  if (m_count >= MAX_LAYERS) return m_count - 1;
+  if (m_count >= MAX_LAYERS) {
+    Serial.printf("[keymap] OVERFLOW: capa '%s' descartada (tope MAX_LAYERS=%u). Subir el tope.\n", name, MAX_LAYERS);
+    return m_count - 1;
+  }
   Layer& L = m_layers[m_count];
   copyLabel(L.name, name);
   L.color = color;
@@ -29,6 +33,13 @@ void KeyMap::bind(int layer, InputId id, const Action& onPress, const char* labe
   b.onLongPress = onLong;
   b.stateToggle = st;
   copyLabel(b.label, label);
+}
+
+int8_t KeyMap::indexOf(const char* name) const {
+  if (!name) return -1;
+  for (uint8_t i = 0; i < m_count; i++)
+    if (strcmp(m_layers[i].name, name) == 0) return (int8_t)i;
+  return -1;
 }
 
 StateToggle KeyMap::stateToggleFor(uint8_t layer, InputId id) const {

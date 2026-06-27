@@ -1,7 +1,9 @@
 // ============================================================================
 //  StatusPanel - Dock de estado inferior como TFT_eSprite 8-bit (sin parpadeo).
-//  5 tiles de ancho UNIFORME: Mic / Camara / Media / Volumen / Enlace.
-//  (El estado del mouse/stick vive en la franja del encoder, no se duplica.)
+//  Mic (izq) + Enlace/transporte (der). El centro queda LIBRE: reservado para la
+//  segunda fila de botones (gestos tap/long/double) — fase futura.
+//  (Camara/Media salieron: el companion no los reporta. Volumen se mudo a la
+//   franja del encoder. Transporte tambien se ve arriba, pero aca avisa WiFi-off.)
 //  Dirty-check: solo re-renderiza y hace pushSprite cuando cambia algo.
 // ============================================================================
 #include "StatusPanel.h"
@@ -57,9 +59,7 @@ static void slash(int cx, int cy) {
 
 static bool changed(const UiSnapshot& s) {
   if (!s_havePrev) return true;
-  return s.micMuted != s_prev.micMuted || s.mediaPlay != s_prev.mediaPlay ||
-         s.volume != s_prev.volume || s.transports != s_prev.transports ||
-         s.camOff != s_prev.camOff || s.battery != s_prev.battery ||
+  return s.micMuted != s_prev.micMuted || s.transports != s_prev.transports ||
          s.wifiOff != s_prev.wifiOff;
 }
 
@@ -79,34 +79,7 @@ void render(TFT_eSPI& tft, const UiSnapshot& s, uint8_t layerCount) {
   if (s.micMuted) slash(tileCx(0), ICON_CY);
   tileLabel(0, s.micMuted ? "mute" : "abierto", micC, theme::DARK);
 
-  // 1: camara (estado optimista, ahora cableado en la capa Calls)
-  uint16_t camC = s.camOff ? theme::RED : theme::GREEN;
-  tile(1, camC, theme::DARK);
-  iconkit::icon(*sp, iconkit::Glyph::CAMERA, tileCx(1), ICON_CY, camC);
-  if (s.camOff) slash(tileCx(1), ICON_CY);
-  tileLabel(1, s.camOff ? "off" : "on", camC, theme::DARK);
-
-  // 2: media play/pausa
-  uint16_t medC = s.mediaPlay ? theme::GREEN : theme::YELLOW;
-  tile(2, medC, theme::DARK);
-  iconkit::icon(*sp, s.mediaPlay ? iconkit::Glyph::PLAY : iconkit::Glyph::PAUSE, tileCx(2), ICON_CY, medC);
-  tileLabel(2, s.mediaPlay ? "play" : "pausa", medC, theme::DARK);
-
-  // 3: volumen (valor + barra)
-  {
-    int x = tileX(3), w = layout::TILE_W;
-    sp->fillRoundRect(x, TY, w, TH, 10, theme::PANEL);
-    sp->drawRoundRect(x, TY, w, TH, 10, theme::EDGE);
-    sp->setTextDatum(MC_DATUM);
-    sp->setTextColor(theme::DIM, theme::PANEL);
-    sp->drawString("VOL", x + w / 2, TY + 13, 1);
-    char vb[8]; snprintf(vb, sizeof(vb), "%u%%", s.volume);
-    sp->setTextColor(theme::FG, theme::PANEL);
-    sp->drawString(vb, x + w / 2, TY + 33, 2);
-    int bx = x + 12, by = TY + TH - 14, bw = w - 24, bh = 6;
-    sp->fillRoundRect(bx, by, bw, bh, 3, theme::DARK);
-    sp->fillRoundRect(bx + 1, by + 1, (int)s.volume * (bw - 2) / 100, bh - 2, 2, theme::CYAN);
-  }
+  // 1..3: LIBRE (reservado para la 2da fila de botones - fase futura)
 
   // 4: enlace / transporte
   bool wifi = s.transports & tport::WIFI;

@@ -1,6 +1,7 @@
 #include "Encoder.h"
 #include <Arduino.h>
 #include "../app/Pins.h"
+#include "../app/Config.h"
 
 // Estado de cuadratura compartido con la ISR.
 static volatile long    s_count = 0;   // cuenta cruda (4 por detente)
@@ -18,7 +19,7 @@ static void IRAM_ATTR encoderISR() {
   uint8_t leido = (uint8_t)(digitalRead(pins::ENC_CLK) << 1) |
                   (uint8_t)digitalRead(pins::ENC_DT);
   s_state = ((s_state << 2) | leido) & 0x0F;
-  s_count += ENC_TABLA[s_state];
+  s_count += cfg::ENC_INVERT ? -ENC_TABLA[s_state] : ENC_TABLA[s_state];  // invierte sentido si esta montado al reves
 }
 
 void Encoder::begin() {

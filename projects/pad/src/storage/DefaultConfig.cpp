@@ -4,35 +4,64 @@
 #include <USBHIDMouse.h>      // constante MOUSE_LEFT
 
 // ============================================================================
-//  Tabla de textos (snippets que se "tipean")
+//  Tablas RUNTIME de textos + macros (poblables desde JSON via ConfigCodec).
 // ============================================================================
-static const char* const TEXTS[] = {
-  /* 0 */ "juanjparedez@gmail.com",
-  /* 1 */ "-- enviado desde mi control-deck\n",
-  /* 2 */ "npm run build\n",
-  /* 3 */ "console.log()",
-};
-static const uint16_t TEXTS_N = sizeof(TEXTS) / sizeof(TEXTS[0]);
+static constexpr uint16_t MAX_TEXTS = 24, TEXT_LEN = 80;
+static constexpr uint16_t MAX_MACROS = 24, MAX_STEPS = 16;
 
-const char* textById(uint16_t id) {
-  return id < TEXTS_N ? TEXTS[id] : "";
+static char      s_texts[MAX_TEXTS][TEXT_LEN];
+static uint16_t  s_textCount = 0;
+static MacroStep s_steps[MAX_MACROS][MAX_STEPS];
+static uint8_t   s_stepCount[MAX_MACROS] = {0};
+static char      s_macroLbl[MAX_MACROS][LABEL_LEN];
+static uint16_t  s_macroCount = 0;
+
+void clearMacrosTexts() { s_textCount = 0; s_macroCount = 0; }
+
+bool addText(const char* s) {
+  if (s_textCount >= MAX_TEXTS) return false;
+  strncpy(s_texts[s_textCount], s ? s : "", TEXT_LEN - 1);
+  s_texts[s_textCount][TEXT_LEN - 1] = '\0';
+  s_textCount++;
+  return true;
 }
 
-// ============================================================================
-//  Tabla de macros (secuencias)
-// ============================================================================
-// Macro 0: "Build" -> abre terminal (Ctrl+`), espera y tipea "npm run build".
-static const MacroStep MACRO_BUILD[] = {
-  {MacroStep::KEY,   keyAction(kmod::CTRL, '`'), 0},
-  {MacroStep::DELAY, Action{},                   250},
-  {MacroStep::TEXT,  Action{},                   2},
-};
+int addMacro(const char* label) {
+  if (s_macroCount >= MAX_MACROS) return -1;
+  int id = s_macroCount++;
+  s_stepCount[id] = 0;
+  strncpy(s_macroLbl[id], label ? label : "", LABEL_LEN - 1);
+  s_macroLbl[id][LABEL_LEN - 1] = '\0';
+  return id;
+}
+
+bool addMacroStep(uint16_t id, const MacroStep& step) {
+  if (id >= s_macroCount || s_stepCount[id] >= MAX_STEPS) return false;
+  s_steps[id][s_stepCount[id]++] = step;
+  return true;
+}
+
+uint16_t    textCount()           { return s_textCount; }
+uint16_t    macroCount()          { return s_macroCount; }
+const char* macroLabel(uint16_t id) { return id < s_macroCount ? s_macroLbl[id] : ""; }
+const char* textById(uint16_t id)   { return id < s_textCount  ? s_texts[id]    : ""; }
 
 const MacroStep* macroSteps(uint16_t id, uint8_t& count) {
-  switch (id) {
-    case 0: count = sizeof(MACRO_BUILD) / sizeof(MACRO_BUILD[0]); return MACRO_BUILD;
-    default: count = 0; return nullptr;
-  }
+  if (id < s_macroCount) { count = s_stepCount[id]; return s_steps[id]; }
+  count = 0; return nullptr;
+}
+
+// Defaults compilados (fallback / seed para la primera vez).
+void seedDefaultMacrosTexts() {
+  clearMacrosTexts();
+  addText("juanjparedez@gmail.com");
+  addText("-- enviado desde mi control-deck\n");
+  addText("npm run build\n");
+  addText("console.log()");
+  int b = addMacro("Build");                                  // macro 0
+  addMacroStep(b, {MacroStep::KEY,   keyAction(kmod::CTRL, '`'), 0});
+  addMacroStep(b, {MacroStep::DELAY, Action{},                   250});
+  addMacroStep(b, {MacroStep::TEXT,  Action{},                   2});  // "npm run build\n"
 }
 
 // ============================================================================
@@ -40,6 +69,7 @@ const MacroStep* macroSteps(uint16_t id, uint8_t& count) {
 // ============================================================================
 void loadDefaults(KeyMap& km) {
   km.clear();
+  seedDefaultMacrosTexts();          // textos/macros default (macro 0 = Build, textos 0-3)
 
   // --- Capa 0: Edicion (cyan) ---
   int e = km.addLayer("Edicion", theme::CYAN, LayerGroup::TRABAJO);
@@ -52,6 +82,11 @@ void loadDefaults(KeyMap& km) {
                    mouseAction(MouseMode::SCROLL_FROM_ENC, 0, 0, -1), "Scroll");
   km.bind(e, InputId::ENC_SW, Action{}, "Menu");   // encoder press = menu (navegacion)
   km.bind(e, InputId::STICK_SW, mouseToggleAction(), "Mouse");
+  km.bind(e, InputId::BTN_6,  keyAction(kmod::CTRL, 'x'), "Cortar");
+  km.bind(e, InputId::BTN_7,  keyAction(kmod::CTRL, 'a'), "Sel.todo");
+  km.bind(e, InputId::BTN_8,  keyAction(kmod::CTRL, 'f'), "Buscar");
+  km.bind(e, InputId::BTN_9,  keyAction(kmod::CTRL, 's'), "Guardar");
+  km.bind(e, InputId::BTN_10, keyAction(kmod::CTRL, 'h'), "Reemplazar");
 
   // --- Capa 1: Multimedia (magenta) ---
   int m = km.addLayer("Multimedia", theme::MAGENTA, LayerGroup::MULTIMEDIA);
@@ -76,6 +111,11 @@ void loadDefaults(KeyMap& km) {
                    keyAction(kmod::CTRL, '-'), "Zoom");
   km.bind(d, InputId::ENC_SW, Action{}, "Menu");
   km.bind(d, InputId::STICK_SW, mouseToggleAction(), "Mouse");
+  km.bind(d, InputId::BTN_6,  keyAction(kmod::CTRL, 's'), "Guardar");
+  km.bind(d, InputId::BTN_7,  keyAction(kmod::CTRL, 'p'), "Ir a archivo");
+  km.bind(d, InputId::BTN_8,  keyAction(kmod::CTRL | kmod::SHIFT, 'o'), "Simbolo");
+  km.bind(d, InputId::BTN_9,  keyAction(kmod::SHIFT | kmod::ALT, 'f'), "Formatear");
+  km.bind(d, InputId::BTN_10, keyCode(0, KEY_F2), "Renombrar");
 
   // --- Capa 3: Apps / Ventanas (naranja) ---
   int a = km.addLayer("Apps", theme::ORANGE, LayerGroup::TRABAJO);
@@ -88,6 +128,11 @@ void loadDefaults(KeyMap& km) {
                    mouseAction(MouseMode::SCROLL_FROM_ENC, 0, 0, -1), "Scroll");
   km.bind(a, InputId::ENC_SW, Action{}, "Menu");
   km.bind(a, InputId::STICK_SW, mouseToggleAction(), "Mouse");
+  km.bind(a, InputId::BTN_6,  keyCode(kmod::GUI, '3'), "App 3");
+  km.bind(a, InputId::BTN_7,  keyCode(kmod::GUI, '4'), "App 4");
+  km.bind(a, InputId::BTN_8,  keyCode(kmod::ALT, KEY_TAB), "Cambiar");
+  km.bind(a, InputId::BTN_9,  keyCode(kmod::GUI, KEY_UP_ARROW), "Maximizar");
+  km.bind(a, InputId::BTN_10, keyCode(kmod::GUI, KEY_DOWN_ARROW), "Minimizar");
 
   // --- Capa 4: RGB (violeta) -> OpenRGB via atajos (ver host/openrgb-rgb-layer.ahk) ---
   // Cada control manda un atajo Ctrl+Alt+Shift+X que el script de la PC traduce
@@ -102,6 +147,11 @@ void loadDefaults(KeyMap& km) {
   km.bindRotate(r, keyCode(RGBM, KEY_UP_ARROW), keyCode(RGBM, KEY_DOWN_ARROW), "Brillo");
   km.bind(r, InputId::ENC_SW, Action{}, "Menu");
   km.bind(r, InputId::STICK_SW, mouseToggleAction(), "Mouse");
+  km.bind(r, InputId::BTN_6,  keyAction(RGBM, 'c'), "Cian");
+  km.bind(r, InputId::BTN_7,  keyAction(RGBM, 'm'), "Magenta");
+  km.bind(r, InputId::BTN_8,  keyAction(RGBM, 'y'), "Amarillo");
+  km.bind(r, InputId::BTN_9,  keyAction(RGBM, 'e'), "Efecto");
+  km.bind(r, InputId::BTN_10, keyAction(RGBM, 'p'), "Velocidad");
 
   // --- Capa: WiZ (amarillo) -> control de luces WiZ por UDP via companion ---
   int wz = km.addLayer("WiZ", theme::YELLOW, LayerGroup::SISTEMA);
@@ -166,6 +216,10 @@ void loadDefaults(KeyMap& km) {
   km.bindRotate(zm, mediaAction(MediaUsage::VOL_UP), mediaAction(MediaUsage::VOL_DOWN), "Volumen");
   km.bind(zm, InputId::ENC_SW, Action{}, "Menu");
   km.bind(zm, InputId::STICK_SW, mouseToggleAction(), "Mouse");
+  km.bind(zm, InputId::BTN_6,  keyAction(kmod::ALT, 'h'), "Chat");
+  km.bind(zm, InputId::BTN_7,  keyAction(kmod::ALT, 'u'), "Participantes");
+  km.bind(zm, InputId::BTN_8,  keyAction(kmod::ALT, 'r'), "Grabar");
+  km.bind(zm, InputId::BTN_9,  keyCode(kmod::ALT, KEY_F2), "Galeria");
 
   // --- Capa: Teams (naranja) -> atajos de Microsoft Teams ---
   int tm = km.addLayer("Teams", theme::ORANGE, LayerGroup::LLAMADAS);
@@ -177,6 +231,10 @@ void loadDefaults(KeyMap& km) {
   km.bindRotate(tm, mediaAction(MediaUsage::VOL_UP), mediaAction(MediaUsage::VOL_DOWN), "Volumen");
   km.bind(tm, InputId::ENC_SW, Action{}, "Menu");
   km.bind(tm, InputId::STICK_SW, mouseToggleAction(), "Mouse");
+  km.bind(tm, InputId::BTN_6,  keyAction(kmod::CTRL, '2'), "Chat");
+  km.bind(tm, InputId::BTN_7,  keyAction(kmod::CTRL, '3'), "Equipos");
+  km.bind(tm, InputId::BTN_8,  keyAction(kmod::CTRL, '4'), "Calendario");
+  km.bind(tm, InputId::BTN_9,  keyAction(kmod::CTRL, 'e'), "Buscar");
 
   // --- Capa 6: Navegador (azul) -> atajos del navegador (back/forward/tabs/marcadores) ---
   // Atajos estandar de Chrome/Firefox/Edge. El stick (Mouse) sirve para clickear links.
@@ -190,6 +248,11 @@ void loadDefaults(KeyMap& km) {
                    keyCode(kmod::CTRL, KEY_PAGE_UP), "Pestanas");                // cambiar pestana
   km.bind(n, InputId::ENC_SW, Action{}, "Menu");
   km.bind(n, InputId::STICK_SW, mouseToggleAction(), "Mouse");
+  km.bind(n, InputId::BTN_6,  keyAction(kmod::CTRL, 'w'), "Cerrar tab");
+  km.bind(n, InputId::BTN_7,  keyAction(kmod::CTRL | kmod::SHIFT, 't'), "Reabrir");
+  km.bind(n, InputId::BTN_8,  keyAction(kmod::CTRL, 'f'), "Buscar");
+  km.bind(n, InputId::BTN_9,  keyAction(kmod::CTRL, 'h'), "Historial");
+  km.bind(n, InputId::BTN_10, keyAction(kmod::CTRL | kmod::SHIFT, 'n'), "Incognito");
 
   // --- Capa 7: YouTube (rojo) -> atajos del reproductor de YouTube (web) ---
   int yt = km.addLayer("YouTube", theme::RED, LayerGroup::MULTIMEDIA);
@@ -202,6 +265,11 @@ void loadDefaults(KeyMap& km) {
                     mediaAction(MediaUsage::VOL_DOWN), "Volumen");
   km.bind(yt, InputId::ENC_SW, Action{}, "Menu");
   km.bind(yt, InputId::STICK_SW, mouseToggleAction(), "Mouse");
+  km.bind(yt, InputId::BTN_6,  keyAction(0, 'c'), "Subtitulos");
+  km.bind(yt, InputId::BTN_7,  keyAction(kmod::SHIFT, ','), "-Vel");
+  km.bind(yt, InputId::BTN_8,  keyAction(kmod::SHIFT, '.'), "+Vel");
+  km.bind(yt, InputId::BTN_9,  keyAction(kmod::SHIFT, 'p'), "Anterior");
+  km.bind(yt, InputId::BTN_10, keyAction(kmod::SHIFT, 'n'), "Siguiente");
 
   // --- Capa 8: Netflix (purpura) -> atajos del reproductor de Netflix ---
   int nf = km.addLayer("Netflix", theme::PURPLE, LayerGroup::MULTIMEDIA);
@@ -214,4 +282,49 @@ void loadDefaults(KeyMap& km) {
                     mediaAction(MediaUsage::VOL_DOWN), "Volumen");
   km.bind(nf, InputId::ENC_SW, Action{}, "Menu");
   km.bind(nf, InputId::STICK_SW, mouseToggleAction(), "Mouse");
+
+  // --- Capa: Spotify (verde) -> teclas de media globales (anda sin foco en la app) ---
+  int sf = km.addLayer("Spotify", theme::GREEN, LayerGroup::MULTIMEDIA);
+  km.bind(sf, InputId::BTN_1, mediaAction(MediaUsage::PREV), "Anterior");
+  km.bind(sf, InputId::BTN_2, mediaAction(MediaUsage::PLAY_PAUSE), "Play", Action{}, StateToggle::MEDIA);
+  km.bind(sf, InputId::BTN_3, mediaAction(MediaUsage::NEXT), "Siguiente");
+  km.bind(sf, InputId::BTN_4, mediaAction(MediaUsage::MUTE), "Mute");
+  km.bind(sf, InputId::BTN_5, mediaAction(MediaUsage::STOP), "Stop");
+  km.bindRotate(sf, mediaAction(MediaUsage::VOL_UP),
+                    mediaAction(MediaUsage::VOL_DOWN), "Volumen");
+  km.bind(sf, InputId::ENC_SW, Action{}, "Menu");
+  km.bind(sf, InputId::STICK_SW, mouseToggleAction(), "Mouse");
+
+  // --- Capa: Disney+ (azul) -> atajos del reproductor web (igual que Netflix) ---
+  int dp = km.addLayer("Disney+", theme::BLUE, LayerGroup::MULTIMEDIA);
+  km.bind(dp, InputId::BTN_1, keyCode(0, ' '), "Play");                  // espacio = play/pausa
+  km.bind(dp, InputId::BTN_2, keyCode(0, KEY_LEFT_ARROW), "-10s");       // <- atras
+  km.bind(dp, InputId::BTN_3, keyCode(0, KEY_RIGHT_ARROW), "+10s");      // -> adelante
+  km.bind(dp, InputId::BTN_4, keyAction(0, 'f'), "Pantalla");            // f = pantalla completa
+  km.bind(dp, InputId::BTN_5, keyAction(0, 'm'), "Mute");                // m = silenciar
+  km.bindRotate(dp, mediaAction(MediaUsage::VOL_UP),
+                    mediaAction(MediaUsage::VOL_DOWN), "Volumen");
+  km.bind(dp, InputId::ENC_SW, Action{}, "Menu");
+  km.bind(dp, InputId::STICK_SW, mouseToggleAction(), "Mouse");
+
+  // --- Capa: Launcher (ALT1 momentaneo) -> lanzador de apps (azul) ---
+  // Caras "armadas" con labels; las acciones de lanzar se cablean luego (companion
+  // spawn / hotkey, via la pagina de admin). Aprovecha los 10 botones de accion.
+  int lz = km.addLayer("Launcher", theme::BLUE, LayerGroup::TRABAJO);
+  km.bind(lz, InputId::BTN_1,  Action{}, "VS Code");
+  km.bind(lz, InputId::BTN_2,  Action{}, "Slack");
+  km.bind(lz, InputId::BTN_3,  Action{}, "Chrome");
+  km.bind(lz, InputId::BTN_4,  Action{}, "YouTube");
+  km.bind(lz, InputId::BTN_5,  Action{}, "Terminal");
+  km.bind(lz, InputId::BTN_6,  Action{}, "Archivos");
+  km.bind(lz, InputId::ENC_SW, Action{}, "Menu");
+  km.bind(lz, InputId::STICK_SW, mouseToggleAction(), "Mouse");
+
+  // --- Capa: Macros (ALT2 momentaneo) -> macros seleccionables (rosa) ---
+  int mz = km.addLayer("Macros", theme::ROSE, LayerGroup::TRABAJO);
+  km.bind(mz, InputId::BTN_1, macroAction(0), "Build");        // macro existente (Ctrl+`, npm run build)
+  km.bind(mz, InputId::BTN_2, Action{}, "Macro 2");
+  km.bind(mz, InputId::BTN_3, Action{}, "Macro 3");
+  km.bind(mz, InputId::ENC_SW, Action{}, "Menu");
+  km.bind(mz, InputId::STICK_SW, mouseToggleAction(), "Mouse");
 }

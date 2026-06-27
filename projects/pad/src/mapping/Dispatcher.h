@@ -14,23 +14,25 @@ class StateManager;
 
 class Dispatcher {
 public:
-  void begin(KeyMap* km) { m_km = km; }
+  void begin(KeyMap* km);              // resuelve las capas ALT por nombre
   void setState(StateManager* s) { m_state = s; }
   void dispatch(const InputEvent& e);
-  void tick(uint32_t now);             // cierra el tap simple del stick
+  void tick(uint32_t now);             // cierra el tap simple del stick + revierte el ALT momentaneo
 
   uint8_t activeLayer() const { return m_activeLayer; }
   void    setLayer(uint8_t n);
   bool    mouseOn() const { return m_mouseOn; }
   uint8_t encMode() const { return m_encOverride; }     // 0=capa, 1=Vol, 2=Scroll, 3=Zoom, 4=Pestanas
-  uint8_t longFlashMask(uint32_t now) const;            // bits de botones en ventana de flash de confirmacion
+  uint8_t altActive() const { return m_momentaryAlt; }  // 0=ninguno, 1=ALT1, 2=ALT2 (held o en linger) -> feedback UI
+  uint16_t longFlashMask(uint32_t now) const;           // bits de botones en ventana de flash de confirmacion
   uint8_t clickFlash(uint32_t now) const;               // click reciente del mouse: 0=nada, 1=izq, 2=der (ventana de flash)
 
 private:
   void applyLayer(const LayerAction& la);
   void handleStickSw(const InputEvent& e);
   void handleEncSwNav(const InputEvent& e);   // encoder = navegacion (abre menu)
-  void handleFaceButton(const InputEvent& e); // botones 1-5: tap=capa / hold=toggle card
+  void handleAlt(const InputEvent& e);        // ALT_1/ALT_2: capa momentanea (hold + linger)
+  void handleFaceButton(const InputEvent& e); // botones 1-10: tap=accion / hold=toggle card
   void fireResolved(const InputEvent& e);     // resuelve y procesa la accion de la capa
   void statusToggle(int i);                   // long-press boton i -> toggle del card
   void enqueueClick(uint8_t button);
@@ -41,6 +43,13 @@ private:
   uint8_t       m_activeLayer = 0;
   bool          m_mouseOn = false;
 
+  // ALT momentaneo (hold -> capa Launcher/Macros; al soltar, linger anti-falsos-release)
+  int8_t        m_altLayer[2] = {-1, -1};   // indices de ALT1_LAYER/ALT2_LAYER (resueltos en begin)
+  uint8_t       m_momentaryAlt = 0;         // 0=ninguno, 1=ALT1, 2=ALT2
+  uint8_t       m_prevLayer = 0;            // capa a la que volver al terminar
+  bool          m_altHeld = false;          // el ALT sigue presionado
+  uint32_t      m_altLingerEnd = 0;         // millis de fin de la ventana de gracia
+
   // Gestos del SW del stick
   bool     m_stickLongDone = false;
   bool     m_stickDblConsumed = false;   // el press fue el 2do tap de un doble -> su release no encola nada
@@ -49,9 +58,9 @@ private:
   uint8_t  m_lastClickBtn = 0;       // 1=izq, 2=der (para el flash en el box del mouse)
   uint32_t m_lastClickMs = 0;
 
-  // Botones de cara: ¿el long-press ya consumio el press? (para no disparar el tap al soltar)
-  bool     m_btnConsumed[5] = {false, false, false, false, false};
-  uint32_t m_longFlashMs[5] = {0, 0, 0, 0, 0};   // millis del ultimo long-press por boton (flash)
+  // Botones de cara (BTN_1..10): ¿el long-press ya consumio el press? (para no disparar el tap al soltar)
+  bool     m_btnConsumed[10] = {};
+  uint32_t m_longFlashMs[10] = {};   // millis del ultimo long-press por boton (flash)
 
   // Navegacion del SW del encoder (tap=menu, doble=cicla modo del encoder, largo=cicla capa)
   bool     m_encLong = false;

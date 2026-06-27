@@ -9,8 +9,9 @@
 
 namespace pins {
 
-// --- 5 pulsadores mecanicos NA, comun a GND, activos en BAJO (INPUT_PULLUP) ---
-static constexpr uint8_t BOTON[5] = {15, 16, 17, 18, 8};
+// --- 12 pulsadores mecanicos NA, comun a GND, activos en BAJO (INPUT_PULLUP) ---
+// 10 de accion (ACC1..10) + 2 ALT. Orden = InputId BTN_1..BTN_10, ALT_1, ALT_2.
+static constexpr uint8_t BOTON[12] = {15, 16, 17, 18, 8, 38, 39, 40, 41, 42, 47, 48};
 
 // --- Encoder rotativo KY-040 ---
 static constexpr uint8_t ENC_CLK = 4;   // canal A (interrupcion)

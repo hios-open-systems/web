@@ -1,19 +1,28 @@
 import { loadConfig } from './config';
 import { Device } from './device';
-import { pickProviders } from './providers';
+import { pickProviders, osName } from './providers';
 import { SystemMetrics } from './providers/system';
 import { Wiz } from './wiz';
 import type { PadState } from './state';
 import { log } from './log';
+import { MirrorHub } from './web/mirrorHub';
+import { startWebServer } from './web/server';
+import { discoverPad, scanBaseFrom } from './discover';
 
 async function main(): Promise<void> {
   process.title = 'pad-companion';                  // se ve asi en top/ps/htop (no como "node")
   const cfg = loadConfig(process.argv);
   const sys = new SystemMetrics();                  // CPU carga/nucleos + RAM + IP (universal, modulo os)
-  log.info(`pad-companion -> http://${cfg.host}/api/state  cada ${cfg.pollMs}ms  (${process.platform})`);
+  const os = osName();                              // SO -> el pad lo muestra / resuelve per-OS
+  log.info(`pad-companion -> http://${cfg.host}/api/state  cada ${cfg.pollMs}ms  (${os})`);
 
   const providers = await pickProviders();
   const device = new Device(cfg.host, cfg.token);
+
+  // Espejo (UI-mirror): server local + SSE. Si hay un browser mirando, el daemon
+  // pide el blob `ui` al pad y acelera el poll a 250ms para que se sienta live.
+  const hub = new MirrorHub();
+  if (cfg.web.enabled) startWebServer(cfg.web.port, hub, device, cfg.token);
 
   const wiz = new Wiz(cfg.wiz.rooms);
   const nWiz = await wiz.discover();
@@ -26,6 +35,34 @@ async function main(): Promise<void> {
   process.on('SIGTERM', quit);
 
   let lastOk: boolean | null = null;
+
+  // Auto-discovery: si el pad deja de responder (cambio de IP por DHCP), escanea
+  // la LAN y cambia el host en caliente. Cooldown para no escanear de mas.
+  let fails = 0, discovering = false, lastScan = 0;
+  const maybeDiscover = (ok: boolean): void => {
+    if (ok) { fails = 0; return; }
+    if (!cfg.discover || ++fails < 3 || discovering) return;
+    const now = Date.now();
+    if (now - lastScan < 15000) return;          // como mucho un scan cada 15s
+    lastScan = now;
+    const base = scanBaseFrom(device.currentHost);
+    if (!base) return;
+    discovering = true;
+    log.info(`buscando el pad en ${base}0/24 (la IP no responde, DHCP?)...`);
+    void discoverPad(base).then((ip) => {
+      const old = device.currentHost;
+      if (ip && ip !== old) { device.setHost(ip); log.info(`pad encontrado en ${ip} ✓ (antes ${old})`); }
+      else if (ip) log.info(`pad sigue en ${ip}`);
+      else log.info('no encontre el pad en la LAN (¿encendido y en la red?)');
+      fails = 0;
+    }).finally(() => { discovering = false; });
+  };
+
+  // Historial reciente de throughput (KB/s) para pre-cargar los sparklines del pad:
+  // el firmware lo seedea la 1ra vez -> los graficos aparecen poblados al abrir la vista.
+  const HSEND = 48;
+  const hNd: number[] = [], hNu: number[] = [], hDr: number[] = [], hDw: number[] = [];
+  const hpush = (a: number[], v: number): void => { a.push(v); if (a.length > HSEND) a.shift(); };
 
   const tick = async (): Promise<void> => {
     const s = cfg.send;
@@ -61,6 +98,7 @@ async function main(): Promise<void> {
     if (net != null) {                              // bytes/s -> KB/s (entero) para el pad
       state.netDown = Math.round(net.down / 1024);
       state.netUp = Math.round(net.up / 1024);
+      hpush(hNd, state.netDown); hpush(hNu, state.netUp);
       const ip = SystemMetrics.ip();
       if (ip) state.ip = ip;
     }
@@ -69,8 +107,14 @@ async function main(): Promise<void> {
     if (diskIo != null) {                           // bytes/s -> KB/s (entero)
       state.diskRd = Math.round(diskIo.rd / 1024);
       state.diskWr = Math.round(diskIo.wr / 1024);
+      hpush(hDr, state.diskRd); hpush(hDw, state.diskWr);
     }
     if (procs != null) state.procs = procs;
+    if (hNd.length || hDr.length) {                 // ventana reciente -> pre-carga de sparklines
+      state.hist = {};
+      if (hNd.length) { state.hist.nd = hNd.slice(); state.hist.nu = hNu.slice(); }
+      if (hDr.length) { state.hist.dr = hDr.slice(); state.hist.dw = hDw.slice(); }
+    }
     if (s.uptime) state.uptime = SystemMetrics.uptimeSec();
     if (s.clock) {                                  // hora local del PC -> reloj del pad (sin drift)
       const d = new Date();
@@ -78,11 +122,16 @@ async function main(): Promise<void> {
     }
     const w = wiz.status();                          // feedback WiZ -> la capa muestra que controla
     state.wizRoom = w.room; state.wizTarget = w.target; state.wizOn = w.on; state.wizBright = w.bright;
+    state.os = os;                                    // SO -> el pad lo muestra / resuelve per-OS
 
     // Siempre POSTeamos (aunque el state este vacio): la respuesta trae los
     // comandos que el pad encolo (mute global, etc.) y asi se entregan en ~pollMs.
-    const res = await device.push(state);
-    if (res.ok !== lastOk) { log.info(res.ok ? 'conectado al pad ✓' : 'pad no responde (reintentando)'); lastOk = res.ok; }
+    // Si hay un browser en el espejo, pedimos el blob `ui` (uiFull al recien conectar).
+    const watching = hub.hasClients();
+    const res = await device.push(state, { wantUi: watching, uiFull: watching && hub.takeFull() });
+    if (res.ui !== undefined) hub.broadcast(res.ui);
+    if (res.ok !== lastOk) { log.info(res.ok ? `conectado al pad ✓ (${device.currentHost})` : 'pad no responde (reintentando)'); lastOk = res.ok; }
+    maybeDiscover(res.ok);   // si no responde, busca el pad en la LAN (DHCP)
 
     for (const cmd of res.cmds) {
       if (cmd === 'micToggle') {
@@ -102,7 +151,9 @@ async function main(): Promise<void> {
       }
     }
 
-    if (!stop) setTimeout(tick, cfg.pollMs);   // recursivo: nunca solapa un poll lento
+    // pollMs dinamico: 250ms si hay un browser mirando (se siente live), idle al normal.
+    const interval = hub.hasClients() ? Math.min(cfg.pollMs, 250) : cfg.pollMs;
+    if (!stop) setTimeout(tick, interval);   // recursivo: nunca solapa un poll lento
   };
 
   await tick();

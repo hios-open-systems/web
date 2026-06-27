@@ -24,6 +24,15 @@ static constexpr uint16_t STICK_THRESHOLD  = 120;  // movimiento minimo p/ repor
 static constexpr uint32_t ENC_ACCEL_MS   = 35;  // 2 detentes mas rapidos que esto -> acelera
 static constexpr uint8_t  ENC_ACCEL_MULT = 4;   // multiplicador de pasos al girar rapido
 static constexpr uint8_t  ENC_REPS_MAX   = 12;  // tope de repeticiones por evento
+static constexpr bool     ENC_INVERT     = true; // rev0.8: encoder montado al reves -> invertir sentido de giro (afecta cuenta + dial)
+
+// --- ALT momentaneos (hold -> capa referenciada por nombre, con linger) ---
+// Mantener ALT1/ALT2 salta a su capa; al soltar, queda ALT_LINGER_MS mas (el
+// "seguro" anti-ripple / falsos releases de los botones sin tacto). Las capas
+// deben existir en DefaultConfig con estos nombres (si no, el ALT no hace nada).
+static constexpr char     ALT1_LAYER[]   = "Launcher";
+static constexpr char     ALT2_LAYER[]   = "Macros";
+static constexpr uint32_t ALT_LINGER_MS  = 600;   // ventana de gracia tras soltar
 
 // --- Stick como mouse (M2) ---
 static constexpr uint8_t  STICK_SAMPLES      = 4;    // promedio de lecturas ADC por update (anti-ruido)
@@ -37,9 +46,9 @@ static constexpr uint16_t STICK_RECENTER_WARMUP = 32; // updates antes del snap 
 static constexpr int16_t  STICK_HALFRANGE    = 1800; // crudo aprox del centro al tope (p/ normalizar)
 static constexpr uint8_t  MOUSE_SPEED_DIV    = 10;   // divisor base (centro): normalizado(-127..127)/div = px por tick
 static constexpr uint16_t MOUSE_ACCEL        = 3;    // aceleracion no-lineal (default): 0=lineal; mayor = extremos mas rapidos (el centro queda igual). Ajustable en vivo por serial +/-.
-static constexpr bool     MOUSE_SWAP_XY      = true;  // stick montado girado 90 -> intercambia X/Y
-static constexpr bool     MOUSE_INVERT_Y     = false; // invertir eje Y vertical (se aplica DESPUES del swap)
-static constexpr bool     MOUSE_INVERT_X     = true;  // invertir eje X horizontal (se aplica DESPUES del swap). Stick medido: derecha estaba invertida.
+static constexpr bool     MOUSE_SWAP_XY      = false; // rev0.8: stick rotado 90 mas que antes en la carcasa -> SIN swap
+static constexpr bool     MOUSE_INVERT_Y     = true;  // invertir eje Y vertical (se aplica DESPUES del swap)
+static constexpr bool     MOUSE_INVERT_X     = true;  // invertir eje X horizontal (se aplica DESPUES del swap)
 static constexpr uint16_t STICK_DISPLAY_DELTA = 12;  // UI: solo redibujar stick si cambia mas que esto
 
 // Curva de aceleracion del stick: px por tick a partir del eje normalizado (-127..127).
@@ -61,21 +70,31 @@ static constexpr uint32_t WIFI_CONNECT_MS  = 12000;             // timeout de co
 static constexpr uint32_t NTP_RESYNC_MS    = 3600000UL;         // re-sincronizar hora cada 1h
 
 // --- Feedback real (Fase 1: companion -> POST /api/state) ---
-static constexpr uint32_t STATE_FRESH_MS   = 4000;             // POST mas viejo que esto -> "sin companion" (vuelve a optimista)
+static constexpr uint32_t STATE_FRESH_MS   = 5000;             // POST mas viejo que esto -> "sin companion". Con poll 1500ms tolera ~2-3 polls perdidos sin grisar el "live".
 static constexpr char     API_TOKEN[]      = "";               // "" = abierto en LAN; pone un token para exigir el header X-Pad-Token
 
 // --- Bateria (medicion 2S Li-ion por divisor resistivo -> ADC1) ---
-// LISTO PERO APAGADO: poner BATTERY_ENABLED=true cuando cablees el divisor.
-// Cadena: V+ bateria --[R1]--+--[R2]-- GND ; el nodo medio va a BAT_ADC_PIN.
-//   Vadc = Vbat * R2/(R1+R2). Con 100k/47k: 8.4V -> 2.69V (dentro del ADC).
-// Ver WIRING.md. El ADC del S3 es no-lineal: calibra los extremos si hace falta.
-static constexpr bool     BATTERY_ENABLED = false;  // <- encender cuando este el divisor
-static constexpr uint8_t  BAT_ADC_PIN     = 9;      // GPIO9 (ADC1, libre)
+// DESCARTADA en el pad: GPIO9 ahora maneja el NeoPixel y la pantalla de la fuente
+// ya muestra la tension de entrada (= las 2 celdas). NO poner BATTERY_ENABLED=true
+// sin reasignar BAT_ADC_PIN a otro ADC1 libre (chocaria con NEOPIXEL_PIN=9).
+static constexpr bool     BATTERY_ENABLED = false;  // <- descartada (ver NeoPixel)
+static constexpr uint8_t  BAT_ADC_PIN     = 9;      // (en desuso; GPIO9 = NeoPixel)
 static constexpr uint16_t BAT_R1_K        = 100;    // R1 (a V+ bateria), kohm
 static constexpr uint16_t BAT_R2_K        = 47;     // R2 (a GND), kohm
 static constexpr uint16_t BAT_FULL_MV     = 8400;   // 2S lleno (4.2V x2) -> 100%
 static constexpr uint16_t BAT_EMPTY_MV    = 6000;   // 2S vacio (3.0V x2) -> 0%
 static constexpr uint32_t BAT_SAMPLE_MS   = 5000;   // periodo de muestreo
+
+// --- Tira NeoPixel (carcasa transparente) ---
+// Dato en GPIO9 (ex-divisor de bateria): se descarto medir la bateria en el pad
+// (la pantalla de la fuente ya muestra la tension de entrada = las 2 celdas 2S).
+// Ventaja vs GPIO43: GPIO9 es un pin LIMPIO -> UART0 (43/44) queda libre para el
+// Serial y el flasheo por cable con auto-reset (CH343), y sin parpadeo de boot.
+// Muestra el COLOR de la capa activa (cada Layer tiene su uint16_t color).
+static constexpr bool     NEOPIXEL_ENABLED = true;
+static constexpr uint8_t  NEOPIXEL_PIN     = 9;      // GPIO9 (DIN, vía 330Ω). ADC1 usado como digital.
+static constexpr uint16_t NEOPIXEL_COUNT   = 8;      // <- AJUSTAR a los LEDs reales de tu tira
+static constexpr uint8_t  NEOPIXEL_BRIGHT  = 40;     // 0..255 (bajo: ~60mA/LED a tope; cuida el buck)
 
 // --- Backlight TFT (PWM por LEDC, API core 2.x) ---
 static constexpr uint8_t  BL_CANAL  = 0;     // canal LEDC

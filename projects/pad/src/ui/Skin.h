@@ -1,17 +1,16 @@
 // ============================================================================
-//  Skin.h - Sistema de skins del dashboard. Un skin define COMO se muestra la
-//  misma info (capa, teclas, encoder, estado, reloj). Todos componen los mismos
-//  IconKit/UiKit; cambian el layout.
+//  Skin.h - Contexto de render + API del dashboard Cards.
 //
-//  Agregar un skin nuevo = escribir sus funciones en Skins.cpp y sumarlo al
-//  array SKINS. Nada mas. El framework (renderUI) ya sabe usarlo.
+//  Ya NO hay "sistema de skins" (un solo dashboard fijo: Cards). Las vistas de
+//  Monitor son capas con su propio render (ver monitor.h). renderUI() en
+//  main.cpp despacha: capa de monitor -> monitor::render; si no -> dash::*.
 //
-//  Render eficiente sin parpadeo:
-//    full()   -> dibuja TODO. El framework limpia la pantalla antes solo en
-//                cambios de capa/skin; en otros casos full() repinta opaco.
-//    keycap() -> una tecla cambio de estado -> redibuja SOLO esa tecla.
-//    status() -> cambio mic/cam/media/vol/enlace -> redibuja SOLO ese area.
-//    stick()  -> (opcional, puede ser nullptr) cursor del mouse en vivo.
+//  Dirty-check del dashboard:
+//    full()    -> dibuja TODO (entrada / cambio de capa; repinta opaco).
+//    keycap()  -> una tecla cambio -> redibuja SOLO esa tecla.
+//    status()  -> mic/cam/media/vol/enlace -> redibuja SOLO ese area (dock).
+//    clock()   -> cambio de minuto -> redibuja SOLO el reloj.
+//    encStrip()/encDial()/stick() -> franja del encoder / dial / cursor.
 // ============================================================================
 #pragma once
 #include <TFT_eSPI.h>
@@ -25,21 +24,12 @@ struct SkinContext {
   const char* clock;   // "HH:MM" ya formateado
 };
 
-struct Skin {
-  const char* name;
-  void (*full)  (const SkinContext&, const UiSnapshot&);
-  void (*keycap)(const SkinContext&, const UiSnapshot&, uint8_t i, bool on);
-  void (*status)(const SkinContext&, const UiSnapshot&);
-  void (*stick) (const SkinContext&, const UiSnapshot&);  // puede ser nullptr
-  void (*clock) (const SkinContext&);                     // redibuja SOLO el reloj (nullptr -> full)
-  void (*encoder)(const SkinContext&, const UiSnapshot&); // redibuja la franja del encoder (mouse/stick); nullptr -> full
-  void (*encDial)(const SkinContext&, const UiSnapshot&); // redibuja SOLO el dial (girar/apretar el encoder); nullptr -> encoder
-};
-
-namespace skins {
-uint8_t      count();
-uint8_t      dashboardCount();          // skins elegibles en Apariencia (excluye vistas de Monitor)
-int          monitorIndex(const char* layerName);  // skin de la capa de Monitor, o -1 si no lo es
-const Skin&  get(uint8_t i);
-const char*  name(uint8_t i);
-}  // namespace skins
+namespace dash {
+void full    (const SkinContext&, const UiSnapshot&);
+void keycap  (const SkinContext&, const UiSnapshot&, uint8_t i, bool on);
+void status  (const SkinContext&, const UiSnapshot&);
+void clock   (const SkinContext&);
+void encStrip(const SkinContext&, const UiSnapshot&);
+void encDial (const SkinContext&, const UiSnapshot&);
+void stick   (const SkinContext&, const UiSnapshot&);
+}  // namespace dash

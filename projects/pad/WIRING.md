@@ -2,6 +2,8 @@
 
 > Documento de hardware del macropad (ESP32-S3 DevKitC-1 + placa de expansión).
 > Pines: fuente de verdad = `src/app/Pins.h` y los build flags de `platformio.ini`.
+>
+> 🆕 **Prototipo 2** (carcasa, SIN placa de expansión, 3 rieles a mano): ver [`WIRING_v2.md`](WIRING_v2.md).
 
 ## Energía (según el armado actual)
 

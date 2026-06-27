@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d1117">
+<title>HIOS PAD · Pinout v0.8</title>
+<style>
+  :root{
+    --bg:#0d1117; --card:#161b22; --card2:#1c2230; --bd:#30363d; --tx:#e6edf3; --mut:#8b949e;
+    --v5:#ff5c5c; --v33:#ffb454; --gnd:#8b949e; --gpio:#58a6ff; --adc:#3fb950; --pwm:#bc8cff; --neo:#ff79c6; --dim:#6e7681;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;background:var(--bg);color:var(--tx);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.4;padding-bottom:40px}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  header{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,#0d1117 78%,rgba(13,17,23,.85));
+    padding:12px 12px 8px;border-bottom:1px solid var(--bd);backdrop-filter:blur(6px)}
+  h1{font-size:17px;margin:0 0 2px;display:flex;align-items:center;gap:8px}
+  h1 .tag{font-size:11px;background:#1f6feb;color:#fff;padding:2px 7px;border-radius:20px;font-weight:700}
+  .sub{font-size:11.5px;color:var(--mut);margin-bottom:8px}
+  .tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+  .tab{flex:none;font-size:13px;font-weight:600;padding:7px 13px;border-radius:9px;border:1px solid var(--bd);
+    background:var(--card);color:var(--mut);cursor:pointer;white-space:nowrap}
+  .tab.on{background:#1f6feb;border-color:#1f6feb;color:#fff}
+  #q{width:100%;margin-top:8px;padding:10px 12px;font-size:16px;border-radius:9px;border:1px solid var(--bd);
+    background:var(--card);color:var(--tx)}
+  #q::placeholder{color:#6e7681}
+  .legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .chip{font-size:11px;padding:3px 9px;border-radius:20px;font-weight:700;border:1px solid transparent}
+  .c5{background:rgba(255,92,92,.16);color:var(--v5);border-color:rgba(255,92,92,.4)}
+  .c33{background:rgba(255,180,84,.16);color:var(--v33);border-color:rgba(255,180,84,.4)}
+  .cg{background:rgba(139,148,158,.18);color:var(--gnd);border-color:rgba(139,148,158,.4)}
+  .cio{background:rgba(88,166,255,.16);color:var(--gpio);border-color:rgba(88,166,255,.4)}
+  .cadc{background:rgba(63,185,80,.16);color:var(--adc);border-color:rgba(63,185,80,.4)}
+  .cpwm{background:rgba(188,140,255,.16);color:var(--pwm);border-color:rgba(188,140,255,.4)}
+  .cneo{background:rgba(255,121,198,.16);color:var(--neo);border-color:rgba(255,121,198,.4)}
+  main{padding:12px 12px 0;max-width:980px;margin:0 auto}
+  .view{display:none}
+  .view.on{display:block}
+
+  /* --- Diagrama --- */
+  .diagwrap{overflow-x:auto;border:1px solid var(--bd);border-radius:12px;background:#0b0f14;padding:8px}
+  .diaghint{font-size:11.5px;color:var(--mut);padding:6px 2px 10px}
+  svg{display:block;min-width:720px}
+
+  /* --- Lista plana --- */
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  thead th{position:sticky;top:128px;background:#10151c;text-align:left;padding:8px 8px;color:var(--mut);
+    font-size:11px;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--bd);cursor:pointer}
+  tbody td{padding:9px 8px;border-bottom:1px solid #21262d;vertical-align:top}
+  tbody tr:active{background:#161b22}
+  .gp{display:inline-block;min-width:40px;text-align:center;font-weight:800;font-size:13px;padding:3px 5px;border-radius:7px;
+    border:1px solid var(--bd);background:var(--card2)}
+  .gp.io{color:var(--gpio);border-color:rgba(88,166,255,.45)} .gp.adc{color:var(--adc);border-color:rgba(63,185,80,.45)}
+  .gp.pwm{color:var(--pwm);border-color:rgba(188,140,255,.45)} .gp.neo{color:var(--neo);border-color:rgba(255,121,198,.45)}
+  .gp.dim{color:var(--dim)}
+  .railcell{font-weight:700;font-size:11px}
+  .r5{color:var(--v5)} .r33{color:var(--v33)} .rnone{color:var(--dim)}
+  .nm{font-weight:600} .nt{font-size:11.5px;color:#d29922;display:block;margin-top:2px}
+
+  /* --- Grupos --- */
+  details{background:var(--card);border:1px solid var(--bd);border-radius:12px;margin-bottom:10px;overflow:hidden}
+  summary{padding:13px 14px;font-size:16px;font-weight:700;cursor:pointer;list-style:none;display:flex;align-items:center;gap:9px}
+  summary::-webkit-details-marker{display:none}
+  summary .cnt{margin-left:auto;font-size:12px;color:var(--mut);font-weight:500}
+  .rows{padding:2px 8px 10px}
+  .row{display:flex;align-items:center;gap:10px;padding:9px 7px;border-top:1px solid #21262d}
+  .row:first-child{border-top:none}
+  .pin{min-width:52px;text-align:center;font-weight:800;font-size:14px;padding:5px 4px;border-radius:8px;border:1px solid var(--bd);background:var(--card2)}
+  .pin.io{color:var(--gpio);border-color:rgba(88,166,255,.45)} .pin.adc{color:var(--adc);border-color:rgba(63,185,80,.45)}
+  .pin.pwr5{color:var(--v5);border-color:rgba(255,92,92,.45)} .pin.pwr33{color:var(--v33);border-color:rgba(255,180,84,.45)}
+  .pin.gnd{color:var(--gnd)} .pin.neo{color:var(--neo);border-color:rgba(255,121,198,.45)} .pin.pwm{color:var(--pwm);border-color:rgba(188,140,255,.45)}
+  .meat{flex:1;min-width:0}.nmr{font-weight:600;font-size:15px}.to{font-size:12.5px;color:var(--mut)}.to b{color:#c9d1d9}
+  .note{font-size:11.5px;color:#d29922;margin-top:2px}.danger{color:#f85149}
+  .ascii{white-space:pre;overflow-x:auto;font-size:11.5px;line-height:1.35;color:#adbac7;background:#0b0f14;border:1px solid var(--bd);border-radius:10px;padding:11px;margin:4px 7px 10px}
+  .tip{font-size:12.5px;color:var(--mut);padding:4px 14px 12px}.tip b{color:#c9d1d9}
+
+  /* --- Checklist --- */
+  .check label{display:flex;gap:9px;padding:11px 7px;border-bottom:1px solid #21262d;align-items:flex-start;cursor:pointer}
+  .check input{margin-top:3px;width:18px;height:18px;flex:none;accent-color:#3fb950}
+  .hide{display:none!important}
+  .empty{text-align:center;color:var(--mut);padding:30px 10px}
+  footer{text-align:center;color:#6e7681;font-size:11px;padding:18px 10px 0}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎛️ HIOS PAD <span class="tag">v0.8</span></h1>
+  <div class="sub">ESP32-S3 · carcasa sin expansión · verificá los GPIO contra la serigrafía de la placa</div>
+  <div class="tabs">
+    <div class="tab on" data-v="diagram">🔧 Diagrama</div>
+    <div class="tab" data-v="list">📋 Lista pin-a-pin</div>
+    <div class="tab" data-v="groups">🧩 Grupos</div>
+    <div class="tab" data-v="check">✅ Checklist</div>
+  </div>
+  <input id="q" placeholder="🔍 Buscar: 40, ACC8, stick, NeoPixel…" autocomplete="off">
+  <div class="legend">
+    <span class="chip c5">5V</span><span class="chip c33">3V3</span><span class="chip cg">GND</span>
+    <span class="chip cio">GPIO</span><span class="chip cadc">ADC</span><span class="chip cpwm">PWM</span><span class="chip cneo">NeoPixel</span>
+  </div>
+</header>
+<main>
+  <section class="view on" id="v-diagram">
+    <div class="diaghint">Cada pin etiquetado con su <b>GPIO</b> (el número impreso en la placa) y su destino. Color = riel/tipo. Deslizá horizontal si no entra.</div>
+    <div class="diagwrap" id="diag"></div>
+    <div class="diaghint" id="railsTxt"></div>
+  </section>
+  <section class="view" id="v-list"></section>
+  <section class="view" id="v-groups"></section>
+  <section class="view" id="v-check"></section>
+</main>
+<footer>HIOS PAD · fuente de verdad: <span class="mono">Pins.h</span> + <span class="mono">platformio.ini</span> + <span class="mono">WIRING_v2.md</span></footer>
+
+<script>
+// ── FUENTE ÚNICA: un pin = {gpio, kind, name, rail, dest, note} ───────────────
+// kind: io | adc | pwm | neo | dim   (para color)   rail: 5 | 33 | null
+const PINS = [
+  {gpio:1, kind:"adc", name:"Stick VRx",    rail:33, dest:"Stick eje X (ADC1)"},
+  {gpio:2, kind:"adc", name:"Stick VRy",    rail:33, dest:"Stick eje Y (ADC1)"},
+  {gpio:4, kind:"io",  name:"Encoder CLK",  rail:33, dest:"KY-040 canal A"},
+  {gpio:5, kind:"io",  name:"Encoder DT",   rail:33, dest:"KY-040 canal B"},
+  {gpio:6, kind:"io",  name:"Encoder SW",   rail:33, dest:"KY-040 pulsador (PULLUP)"},
+  {gpio:7, kind:"io",  name:"Stick SW",     rail:33, dest:"Stick pulsador (PULLUP)"},
+  {gpio:8, kind:"adc", name:"Botón ACC5",   rail:null, dest:"→ GND (PULLUP). Es ADC1, va como digital"},
+  {gpio:9, kind:"neo", name:"NeoPixel DIN",  rail:5, dest:"datos tira (vía 330Ω). ADC1 usado como digital", note:"3.3→5V: level-shifter o SK6812"},
+  {gpio:10,kind:"io",  name:"TFT CS",        rail:5, dest:"ILI9488 chip-select"},
+  {gpio:11,kind:"io",  name:"TFT MOSI",      rail:5, dest:"ILI9488 SDI"},
+  {gpio:12,kind:"io",  name:"TFT SCLK",      rail:5, dest:"ILI9488 SCK"},
+  {gpio:13,kind:"io",  name:"TFT DC",        rail:5, dest:"ILI9488 DC/RS"},
+  {gpio:14,kind:"io",  name:"TFT RST",       rail:5, dest:"ILI9488 reset"},
+  {gpio:15,kind:"io",  name:"Botón ACC1",    rail:null, dest:"→ GND (PULLUP)"},
+  {gpio:16,kind:"io",  name:"Botón ACC2",    rail:null, dest:"→ GND (PULLUP)"},
+  {gpio:17,kind:"io",  name:"Botón ACC3",    rail:null, dest:"→ GND (PULLUP)"},
+  {gpio:18,kind:"io",  name:"Botón ACC4",    rail:null, dest:"→ GND (PULLUP)"},
+  {gpio:19,kind:"dim", name:"USB D−",        rail:null, dest:"USB nativo (HID) — RESERVADO"},
+  {gpio:20,kind:"dim", name:"USB D+",        rail:null, dest:"USB nativo (HID) — RESERVADO"},
+  {gpio:21,kind:"pwm", name:"TFT backlight", rail:null, dest:"LED de la TFT (PWM por LEDC)"},
+  {gpio:38,kind:"io",  name:"Botón ACC6",    rail:null, dest:"→ GND (PULLUP)", note:"puede ser LED RGB del DevKit s/rev"},
+  {gpio:39,kind:"io",  name:"Botón ACC7",    rail:null, dest:"→ GND (PULLUP)"},
+  {gpio:40,kind:"io",  name:"Botón ACC8",    rail:null, dest:"→ GND (PULLUP)"},
+  {gpio:41,kind:"io",  name:"Botón ACC9",    rail:null, dest:"→ GND (PULLUP)"},
+  {gpio:42,kind:"io",  name:"Botón ACC10",   rail:null, dest:"→ GND (PULLUP)"},
+  {gpio:43,kind:"dim", name:"UART0 TX",      rail:null, dest:"Serial + flasheo por cable (CH343)"},
+  {gpio:44,kind:"dim", name:"UART0 RX",      rail:null, dest:"Serial + flasheo por cable (CH343)"},
+  {gpio:47,kind:"io",  name:"Botón ALT1",    rail:null, dest:"→ GND (PULLUP)"},
+  {gpio:48,kind:"io",  name:"Botón ALT2",    rail:null, dest:"→ GND (PULLUP)", note:"puede ser LED RGB del DevKit s/rev"},
+];
+const RAILS = [
+  {k:"c5",  t:"5V (buck 5.0V)", c:"→ ESP32 pin 5V · TFT VCC (vía SW-PANTALLA) · NeoPixel VCC · cap 470–1000µF"},
+  {k:"c33", t:"3V3 (del S3)",   c:"→ Stick VCC · Encoder + (NO inyectar de afuera)"},
+  {k:"cg",  t:"GND común",      c:"→ batería− · buck · S3 · TFT · stick · encoder · botones · R2 (1 sola masa)"},
+];
+
+const COL = {io:"#58a6ff", adc:"#3fb950", pwm:"#bc8cff", neo:"#ff79c6", dim:"#6e7681"};
+const railClass = r => r===5?"r5":r===33?"r33":"rnone";
+const railTxt   = r => r===5?"5V":r===33?"3V3":"—";
+
+// ── Diagrama SVG (pin-map del S3, 2 columnas, verificable por GPIO) ───────────
+function buildDiagram(){
+  const sorted = [...PINS].sort((a,b)=>a.gpio-b.gpio);
+  const half = Math.ceil(sorted.length/2);
+  const left = sorted.slice(0,half), right = sorted.slice(half);
+  const rowH=30, padTop=14, n=Math.max(left.length,right.length);
+  const H = padTop + n*rowH + 14;
+  const W = 760, mcuX=320, mcuW=120, mcuR=mcuX+mcuW;
+  const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+  let s = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="ui-monospace,Menlo,monospace">`;
+  // MCU body
+  s += `<rect x="${mcuX}" y="${padTop-4}" width="${mcuW}" height="${n*rowH+8}" rx="10" fill="#10151c" stroke="#30363d"/>`;
+  s += `<text x="${mcuX+mcuW/2}" y="${padTop+ n*rowH/2}" fill="#8b949e" font-size="12" font-weight="700" text-anchor="middle" transform="rotate(-90 ${mcuX+mcuW/2} ${padTop+n*rowH/2})">ESP32-S3 DevKitC-1</text>`;
+  const rowSVG = (p, side, i) => {
+    const y = padTop + i*rowH + rowH/2;
+    const c = COL[p.kind];
+    let o = "";
+    if(side==="L"){
+      const bx=308; // badge straddles left edge (x=320)
+      o += `<line x1="262" y1="${y}" x2="${mcuX}" y2="${y}" stroke="${c}" stroke-width="2"/>`;
+      o += `<rect x="6" y="${y-11}" width="252" height="22" rx="5" fill="#161b22" stroke="${c}" stroke-opacity=".5"/>`;
+      o += `<text x="14" y="${y+4}" fill="#c9d1d9" font-size="11">${esc(p.name)}</text>`;
+      o += `<text x="252" y="${y+4}" fill="#6e7681" font-size="9.5" text-anchor="end">${railTxt(p.rail)}</text>`;
+      o += `<rect x="${bx}" y="${y-11}" width="36" height="22" rx="6" fill="#1c2230" stroke="${c}"/>`;
+      o += `<text x="${bx+18}" y="${y+4}" fill="${c}" font-size="12" font-weight="800" text-anchor="middle">${p.gpio}</text>`;
+    } else {
+      const bx=mcuR-16;
+      o += `<line x1="${mcuR}" y1="${y}" x2="${W-262}" y2="${y}" stroke="${c}" stroke-width="2"/>`;
+      o += `<rect x="${W-258}" y="${y-11}" width="252" height="22" rx="5" fill="#161b22" stroke="${c}" stroke-opacity=".5"/>`;
+      o += `<text x="${W-14}" y="${y+4}" fill="#c9d1d9" font-size="11" text-anchor="end">${esc(p.name)}</text>`;
+      o += `<text x="${W-252}" y="${y+4}" fill="#6e7681" font-size="9.5">${railTxt(p.rail)}</text>`;
+      o += `<rect x="${bx}" y="${y-11}" width="36" height="22" rx="6" fill="#1c2230" stroke="${c}"/>`;
+      o += `<text x="${bx+18}" y="${y+4}" fill="${c}" font-size="12" font-weight="800" text-anchor="middle">${p.gpio}</text>`;
+    }
+    return o;
+  };
+  left.forEach((p,i)=> s+=rowSVG(p,"L",i));
+  right.forEach((p,i)=> s+=rowSVG(p,"R",i));
+  s += `</svg>`;
+  return s;
+}
+
+// ── Lista plana detallada ────────────────────────────────────────────────────
+function buildList(){
+  const rows = [...PINS].sort((a,b)=>a.gpio-b.gpio).map(p=>`
+    <tr data-s="${(p.gpio+' '+p.name+' '+p.dest+' '+(p.note||'')+' '+railTxt(p.rail)).toLowerCase()}">
+      <td><span class="gp ${p.kind}">${p.gpio}</span></td>
+      <td><span class="nm">${p.name}</span></td>
+      <td class="railcell ${railClass(p.rail)}">${railTxt(p.rail)}</td>
+      <td>${p.dest}${p.note?`<span class="nt">⚠ ${p.note}</span>`:''}</td>
+    </tr>`).join("");
+  return `<table><thead><tr><th>GPIO</th><th>Función</th><th>Riel</th><th>Destino / detalle</th></tr></thead><tbody>${rows}</tbody></table>
+    <div class="empty hide" id="emptyL">Sin resultados 🤷</div>`;
+}
+
+// ── Grupos (cards) + Rieles + ASCII ──────────────────────────────────────────
+const SECTIONS = [
+  { t:"⚡ Energía — 3 rieles", ascii:
+`Cargador 2S ──┬── 2 celdas (6.0–8.4V)
+              └─[SW-CELDAS]─► Buck 5.0V ─► RIEL 5V
+   RIEL 5V ─► ESP32 pin 5V ─►(AMS1117)─► pin 3V3 ─► RIEL 3V3
+   RIEL 5V ─► cap 470–1000µF ─► GND
+   RIEL 5V ─[SW-PANTALLA]─► Pantalla VCC ; RIEL 5V ─► NeoPixel VCC
+   RIEL 3V3 ─► Stick VCC + Encoder + ; GND común: TODO`,
+    tip:"<b>USB no alimenta nada</b> (wireless). El 3V3 sale del S3, no se inyecta.", rows:[
+      {pin:"5V",kind:"pwr5",nm:"Buck OUT 5.0V",to:"→ RIEL 5V (S3, pantalla, NeoPixel, cap)"},
+      {pin:"3V3",kind:"pwr33",nm:"S3 pin 3V3",to:"→ RIEL 3V3 (stick + encoder)"},
+      {pin:"GND",kind:"gnd",nm:"Masa común",to:"todo junto (1 sola masa)"},
+    ]},
+  { t:"🔌 Switches", cnt:"2 + 1 opc.", rows:[
+      {pin:"SW1",kind:"pwr5",nm:"SW-CELDAS",to:"corta BAT+ → buck (apaga TODO)",note:"≥2A"},
+      {pin:"SW2",kind:"pwr5",nm:"SW-PANTALLA",to:"corta 5V → VCC pantalla (queda teclado)"},
+      {pin:"SW3",kind:"neo",nm:"SW-FLASH (opc.)",to:"corta GPIO43 → NeoPixel",note:"cosmético; pull-down 10k del lado del LED"},
+    ]},
+  { t:"🌈 NeoPixel", cnt:"DIN=9", tip:"Toda la tira = 1 pin (DIN→DOUT encadenado). En GPIO9 (ex-batería) → UART0 libre p/ serial+flasheo.", rows:[
+      {pin:"9",kind:"neo",nm:"DIN",to:"GPIO9 (330Ω en serie)",note:"3.3→5V marginal: 74AHCT125 o SK6812"},
+      {pin:"5V",kind:"pwr5",nm:"VCC",to:"→ RIEL 5V",note:"~60mA/LED a tope; limitá brillo"},
+      {pin:"GND",kind:"gnd",nm:"GND",to:"→ GND común"},
+    ]},
+  { t:"🔋 Batería — descartada en el pad", cnt:"GPIO9→NeoPixel",
+    tip:"No se mide en el pad: la <b>pantalla de la fuente</b> ya muestra la tensión de entrada (= las 2 celdas 2S). GPIO9 quedó libre → ahora maneja el <b>NeoPixel</b>, y UART0 (43/44) sigue para serial/flasheo.", rows:[] },
+];
+function buildGroups(){
+  let html = "";
+  SECTIONS.forEach((s,i)=>{
+    html += `<details ${i<2?'open':''}><summary>${s.t}${s.cnt?`<span class="cnt">${s.cnt}</span>`:''}</summary>`;
+    if(s.ascii) html += `<div class="ascii">${s.ascii}</div>`;
+    if(s.tip)   html += `<div class="tip">${s.tip}</div>`;
+    if(s.rows && s.rows.length){
+      html += `<div class="rows">`;
+      s.rows.forEach(r=>{
+        const txt=(r.pin+' '+r.nm+' '+(r.to||'')+' '+(r.note||'')).toLowerCase().replace(/"/g,'');
+        html += `<div class="row" data-s="${txt}"><div class="pin ${r.kind}">${r.pin}</div>
+          <div class="meat"><div class="nmr">${r.nm}</div>${r.to?`<div class="to">${r.to}</div>`:''}${r.note?`<div class="note">⚠ ${r.note}</div>`:''}</div></div>`;
+      });
+      html += `</div>`;
+    }
+    html += `</details>`;
+  });
+  html += `<div class="empty hide" id="emptyG">Sin resultados 🤷</div>`;
+  return html;
+}
+
+// ── Checklist ────────────────────────────────────────────────────────────────
+const CHECK = [
+  "Buck medido a 5.0V ANTES de conectar el S3",
+  "Masa común con continuidad (batería−, buck, S3, TFT, stick, encoder, botones, R2)",
+  "Cap bulk 470–1000µF en el riel 5V (polaridad OK)",
+  "Stick y encoder al riel 3V3 (NO 5V) — verificado con multímetro",
+  "Divisor 100k/47k → GPIO9: pack lleno ~2.69V (¡no más de 3.3!)",
+  "12 botones a sus GPIO, segunda pata a la regleta de GND",
+  "NeoPixel: 330Ω en serie en DIN(43) + level-shifter/SK6812 + cap en su 5V",
+  "SW-CELDAS corta VBAT_SW · SW-PANTALLA corta VCC de la TFT",
+  "1er flasheo por cable; después OTA (--upload-port hiospad.local)",
+  "BOTON(GPIO0)+USB-C nativo accesibles para recuperación ante OTA fallido",
+  "BATTERY_ENABLED=true en Config.h cuando el divisor esté validado",
+];
+function buildCheck(){
+  let h = `<div class="check">`;
+  CHECK.forEach((c,i)=> h+=`<label><input type="checkbox" id="ck${i}"><span>${c}</span></label>`);
+  return h+`</div>`;
+}
+
+// ── Montaje ──────────────────────────────────────────────────────────────────
+document.getElementById('diag').innerHTML = buildDiagram();
+document.getElementById('railsTxt').innerHTML = RAILS.map(r=>`<span class="chip ${r.k}">${r.t}</span> ${r.c}`).join('<br>');
+document.getElementById('v-list').innerHTML = buildList();
+document.getElementById('v-groups').innerHTML = buildGroups();
+document.getElementById('v-check').innerHTML = buildCheck();
+CHECK.forEach((_,i)=>{ const el=document.getElementById('ck'+i);
+  try{ el.checked=localStorage.getItem('ck'+i)==='1'; }catch(e){}
+  el.addEventListener('change',()=>{ try{localStorage.setItem('ck'+i,el.checked?'1':'0');}catch(e){} }); });
+
+// Tabs
+const q = document.getElementById('q');
+document.querySelectorAll('.tab').forEach(t=> t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+  t.classList.add('on');
+  const v=t.dataset.v;
+  document.querySelectorAll('.view').forEach(s=>s.classList.toggle('on', s.id==='v-'+v));
+  q.style.display = (v==='list'||v==='groups') ? 'block' : 'none';
+  applyFilter();
+}));
+q.style.display='none';
+
+// Buscar (filtra lista + grupos)
+function applyFilter(){
+  const v=q.value.trim().toLowerCase();
+  let nL=0; document.querySelectorAll('#v-list tbody tr').forEach(r=>{const hit=!v||r.dataset.s.includes(v);r.classList.toggle('hide',!hit);if(hit)nL++;});
+  const eL=document.getElementById('emptyL'); if(eL) eL.classList.toggle('hide',nL>0);
+  let nG=0; document.querySelectorAll('#v-groups details').forEach(d=>{
+    let sh=0; d.querySelectorAll('[data-s]').forEach(r=>{const hit=!v||r.dataset.s.includes(v);r.classList.toggle('hide',!hit);if(hit)sh++;});
+    const titleHit=d.querySelector('summary').textContent.toLowerCase().includes(v);
+    const show=!v||sh>0||titleHit; d.classList.toggle('hide',!show); if(show)nG++; if(v) d.open=show;
+  });
+  const eG=document.getElementById('emptyG'); if(eG) eG.classList.toggle('hide',nG>0);
+}
+q.addEventListener('input',applyFilter);
+</script>
+</body>
+</html>
