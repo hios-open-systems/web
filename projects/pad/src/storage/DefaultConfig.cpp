@@ -311,12 +311,12 @@ void loadDefaults(KeyMap& km) {
   // Caras "armadas" con labels; las acciones de lanzar se cablean luego (companion
   // spawn / hotkey, via la pagina de admin). Aprovecha los 10 botones de accion.
   int lz = km.addLayer("Launcher", theme::BLUE, LayerGroup::TRABAJO);
-  km.bind(lz, InputId::BTN_1,  Action{}, "VS Code");
-  km.bind(lz, InputId::BTN_2,  Action{}, "Slack");
-  km.bind(lz, InputId::BTN_3,  Action{}, "Chrome");
-  km.bind(lz, InputId::BTN_4,  Action{}, "YouTube");
-  km.bind(lz, InputId::BTN_5,  Action{}, "Terminal");
-  km.bind(lz, InputId::BTN_6,  Action{}, "Archivos");
+  km.bind(lz, InputId::BTN_1,  launchAction(0), "VS Code");   // ids -> tabla de apps del companion
+  km.bind(lz, InputId::BTN_2,  launchAction(1), "Slack");
+  km.bind(lz, InputId::BTN_3,  launchAction(2), "Chrome");
+  km.bind(lz, InputId::BTN_4,  launchAction(3), "YouTube");
+  km.bind(lz, InputId::BTN_5,  launchAction(4), "Terminal");
+  km.bind(lz, InputId::BTN_6,  launchAction(5), "Archivos");
   km.bind(lz, InputId::ENC_SW, Action{}, "Menu");
   km.bind(lz, InputId::STICK_SW, mouseToggleAction(), "Mouse");
 

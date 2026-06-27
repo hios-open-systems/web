@@ -75,7 +75,7 @@
 const MEDIA = ["NONE","Vol +","Vol −","Mute","Play/Pausa","Siguiente","Anterior","Stop"];
 const LMODE = ["Ir a (SWITCH)","Alternar","Siguiente","Anterior"];
 const NCMD  = ["NONE","Mic toggle","Cam toggle","WiZ on/off","WiZ +brillo","WiZ −brillo","WiZ cálido","WiZ frío","WiZ cuarto","WiZ luz"];
-const ATYPES= [["none","(nada)"],["key","Teclado"],["media","Multimedia"],["text","Texto"],["macro","Macro"],["layer","Capa"],["ncmd","Companion"],["mtog","Toggle mouse"]];
+const ATYPES= [["none","(nada)"],["key","Teclado"],["media","Multimedia"],["text","Texto"],["macro","Macro"],["layer","Capa"],["ncmd","Companion"],["launch","Lanzar app"],["mtog","Toggle mouse"]];
 const KINDS = ["Tecla","Multimedia","Mouse","Texto","Delay"];   // MacroStep.Kind 0..4
 const INPUTS=[]; for(let i=0;i<10;i++) INPUTS.push({id:i,name:"Botón "+(i+1)});
 INPUTS.push({id:10,name:"ALT 1"},{id:11,name:"ALT 2"},{id:12,name:"Encoder SW"},{id:13,name:"Stick SW"},{id:14,name:"Encoder giro"});
@@ -111,6 +111,9 @@ function singleAction(box, getA, setA){
       const s=el("select");const list=t==="text"?(cfg.texts||[]):(cfg.macros||[]);
       list.forEach((x,i)=>{const o=el("option");o.value=i;o.textContent=i+" · "+(t==="text"?String(x).slice(0,18):(x.label||"macro"));if((a.id||0)===i)o.selected=true;s.appendChild(o);});
       s.dataset.id="1";s.onchange=commit;fields.appendChild(s);
+    } else if(t==="launch"){
+      const n=el("input","numin");n.type="number";n.min=0;n.value=a.id||0;n.dataset.id="1";n.oninput=commit;fields.appendChild(n);
+      fields.appendChild(el("span","k","app id (config.json del companion)"));
     } else if(t==="layer"){
       const s=el("select");LMODE.forEach((m,i)=>{const o=el("option");o.value=i;o.textContent=m;if((a.mode||0)===i)o.selected=true;s.appendChild(o);});s.dataset.mode="1";s.onchange=commit;fields.appendChild(s);
       const sl=el("select");(cfg.layers||[]).forEach((L,i)=>{const o=el("option");o.value=i;o.textContent=i+" "+L.n;if((a.n||0)===i)o.selected=true;sl.appendChild(o);});sl.dataset.n="1";sl.onchange=commit;fields.appendChild(sl);
@@ -122,7 +125,7 @@ function singleAction(box, getA, setA){
     const t=sel.value,o={t};
     if(t==="key"){let m=0;fields.querySelectorAll("input[type=checkbox]").forEach(c=>{if(c.checked)m|=+c.dataset.bit;});o.mods=m;const ki=fields.querySelector("[data-key]");const k=strToKey(ki?ki.value:"");o.k=k?[k]:[];}
     else if(t==="media")o.u=+fields.querySelector("[data-u]").value;
-    else if(t==="text"||t==="macro")o.id=+fields.querySelector("[data-id]").value;
+    else if(t==="text"||t==="macro"||t==="launch")o.id=+fields.querySelector("[data-id]").value;
     else if(t==="layer"){o.mode=+fields.querySelector("[data-mode]").value;o.n=+fields.querySelector("[data-n]").value;}
     else if(t==="ncmd")o.cmd=+fields.querySelector("[data-cmd]").value;
     return o;
