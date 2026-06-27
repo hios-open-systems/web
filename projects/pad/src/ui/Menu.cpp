@@ -5,49 +5,26 @@
 #include "../app/Theme.h"
 #include "../app/AppState.h"
 #include "UiKit.h"
+#include "MenuModel.h"
 
 namespace menu {
 
 // ---------------------------------------------------------------------------
-//  Menu de UN nivel: cada pagina (grupos de capas + Apariencia + Sistema) muestra
-//  hasta 5 cards sobre los 5 botones fisicos. Los botones ELIGEN (capa -> salta;
-//  setting editable -> el encoder ajusta el valor en vivo; WiFi/Calibrar -> accion).
-//  El encoder gira = cambiar de pagina; long-press = cerrar. Sin carrusel ni caratula.
-//
-//  Cada pagina (PAGES[]) lista hasta 5 items que MEZCLAN capas y settings libremente
-//  (ej: Apariencia = Brillo/Tema/Color/Skin/RGB). Las capas se referencian por NOMBRE.
+//  Menu de UN nivel: cada seccion muestra cards sobre los botones fisicos.
+//  Los botones ELIGEN (View -> salta; setting editable -> el encoder ajusta el
+//  valor en vivo; WiFi/Calibrar -> accion). El encoder gira = cambiar de seccion;
+//  long-press = cerrar. Sin carrusel ni caratula.
 // ---------------------------------------------------------------------------
-// Un item del menu es una CAPA (por nombre -> robusto a reordenar DefaultConfig) o un
-// SETTING (offset 0..8 respecto de idxBright()). Cada pagina lista hasta 5 items y los
-// mezcla libremente: asi RGB (capa) puede vivir en Apariencia junto a settings, etc.
-enum { S_BRIGHT, S_THEME, S_ACCENT, S_DIM, S_CLOCK, S_WIFI, S_CAL, S_PREC };  // (sin S_SKIN: ya no hay skins)
-struct PageItem { const char* layer; int8_t setting; };   // layer!=nullptr => capa; si no => setting
-struct Page     { const char* name; uint16_t color; const PageItem* items; int count; };
-
-static const PageItem PI_TRABAJO[]    = { {"Edicion",-1},{"Dev",-1},{"Apps",-1},{"Navegador",-1} };
-static const PageItem PI_MULTIMEDIA[] = { {"Multimedia",-1},{"YouTube",-1},{"Netflix",-1},{"Spotify",-1},{"Disney+",-1} };
-static const PageItem PI_LLAMADAS[]   = { {"Meet",-1},{"Slack",-1},{"Zoom",-1},{"Teams",-1} };
-static const PageItem PI_APARIENCIA[] = { {nullptr,S_BRIGHT},{nullptr,S_THEME},{nullptr,S_ACCENT} };
-static const PageItem PI_SISTEMA[]    = { {nullptr,S_CLOCK},{nullptr,S_WIFI},{nullptr,S_CAL},{nullptr,S_PREC},{nullptr,S_DIM} };
-static const PageItem PI_LUCES[]      = { {"RGB",-1},{"WiZ",-1} };
-static const PageItem PI_MONITOR[]    = { {"General",-1},{"Red",-1},{"Nucleos",-1},{"Disco",-1} };
-
-static const Page PAGES[] = {
-  { "Trabajo",    theme::CYAN,    PI_TRABAJO,    4 },
-  { "Multimedia", theme::MAGENTA, PI_MULTIMEDIA, 5 },
-  { "Llamadas",   theme::ROSE,    PI_LLAMADAS,   4 },
-  { "Apariencia", theme::VIOLET,  PI_APARIENCIA, 3 },   // Brillo,Tema,Color
-  { "Sistema",    theme::GREEN,   PI_SISTEMA,    5 },   // Hora,WiFi,Calibrar,Precision,Dimmer
-  { "Luces",      theme::YELLOW,  PI_LUCES,      2 },   // RGB + WiZ (iluminacion)
-  { "Monitor",    theme::CYAN,    PI_MONITOR,    4 },   // General/Red/Nucleos/Disco (telemetria companion)
-};
+// Un item del menu es una View (por nombre -> robusto a reordenar DefaultConfig)
+// o un setting interno. La definicion vive en MenuModel para aislar el render del
+// origen de datos; el siguiente paso es reemplazar ese modelo por config runtime.
 
 static KeyMap* s_km = nullptr;
 static bool    s_open     = false;
-static int     s_groupSel = 0;     // grupo/pagina actual (0..pageCount()-1)
+static int     s_groupSel = 0;     // seccion actual (0..pageCount()-1)
 static int     s_sel      = 0;     // indice REAL: capa elegida o item de ajuste
 static bool    s_editItem = false; // ajustando un setting (el encoder cambia el valor)
-static bool    s_overview = false; // vista de TODAS las paginas (botones 1-5 saltan a una)
+static bool    s_overview = false; // vista de TODAS las secciones (botones 1-10 saltan a una)
 static bool    s_dirty    = true;
 static bool    s_needFull = true;
 
@@ -68,20 +45,15 @@ static int layerIndexByName(const char* name) {
     if (strcmp(s_km->layer(i).name, name) == 0) return (int)i;
   return -1;
 }
-static int pageCount() { return (int)(sizeof(PAGES) / sizeof(PAGES[0])); }
+static int pageCount() { return menumodel::sectionCount(); }
 // Pagina que contiene a la capa actual (para abrir el menu en el lugar correcto).
 static int pageOfLayer(uint8_t layerIdx) {
-  if (!s_km || layerIdx >= s_km->count()) return 0;
-  const char* nm = s_km->layer(layerIdx).name;
-  for (int p = 0; p < pageCount(); p++)
-    for (int i = 0; i < PAGES[p].count; i++)
-      if (PAGES[p].items[i].layer && strcmp(PAGES[p].items[i].layer, nm) == 0) return p;
-  return 0;
+  return s_km ? menumodel::sectionOfLayer(*s_km, layerIdx) : 0;
 }
-static const char* pageName()  { return PAGES[s_groupSel].name; }
-static uint16_t    pageColor() { return PAGES[s_groupSel].color; }
+static const char* pageName()  { return menumodel::section(s_groupSel).name; }
+static uint16_t    pageColor() { return menumodel::section(s_groupSel).color; }
 
-void init(KeyMap* km) { s_km = km; }
+void init(KeyMap* km) { s_km = km; menumodel::begin(km); }
 
 void open(uint8_t currentLayer) {
   s_open = true; s_editItem = false; s_overview = false;
@@ -94,10 +66,10 @@ void close() {
 }
 bool isOpen() { return s_open; }
 
-// Hay botones-card en TODAS las paginas (capas y settings): los botones eligen.
+// Hay botones-card en TODAS las secciones (Views y settings): los botones eligen.
 bool inLayerPicker() { return s_open; }
 
-// Boton i (0..4): elige el item i de la pagina actual. Capa -> salta; setting editable ->
+// Boton i (0..9): elige el item i de la seccion actual. View -> salta; setting editable ->
 // entra en ajuste (el encoder cambia el valor); WiFi/Calibrar -> accion directa.
 MenuResult pickButton(uint8_t i) {
   if (!s_open) return MenuResult::NONE;
@@ -105,9 +77,9 @@ MenuResult pickButton(uint8_t i) {
     if ((int)i < pageCount()) { s_groupSel = i; s_overview = false; s_needFull = true; s_dirty = true; }
     return MenuResult::NONE;
   }
-  const Page& pg = PAGES[s_groupSel];
+  const menumodel::Section& pg = menumodel::section(s_groupSel);
   if ((int)i >= pg.count) return MenuResult::NONE;
-  const PageItem& it = pg.items[i];
+  const menumodel::Item& it = pg.items[i];
   if (it.layer) {                                  // capa -> saltar
     int li = layerIndexByName(it.layer);
     if (li < 0) return MenuResult::NONE;
@@ -167,7 +139,7 @@ void turn(int delta) {
 MenuResult press() {                               // encoder press: cierra el ajuste, o abre/cierra el overview
   if (!s_open) return MenuResult::NONE;
   if (s_editItem) s_editItem = false;
-  else            s_overview = !s_overview;         // ver TODAS las paginas (botones 1-5 saltan)
+  else            s_overview = !s_overview;         // ver TODAS las secciones (botones 1-10 saltan)
   s_needFull = true; s_dirty = true;
   return MenuResult::NONE;
 }
@@ -415,11 +387,11 @@ static void cardRect(int i, int total, int& x, int& y, int& w, int& h) {
 }
 
 // Picker unificado: hasta 10 cards = 10 botones (doble fila si >5). Cada card es un item
-// de la pagina actual (capa o setting). Settings muestran su valor; el que se ajusta queda
+// de la seccion actual (View o setting). Settings muestran su valor; el que se ajusta queda
 // resaltado. Las capas muestran su icono + numero de boton. Los botones 1-10 eligen.
 static void renderPicker(TFT_eSPI& tft) {
   tft.fillRect(0, 74, 480, 142, theme::BG);
-  const Page& pg = PAGES[s_groupSel];
+  const menumodel::Section& pg = menumodel::section(s_groupSel);
   const int total = pg.count;
   const bool two = total > 5;
   const int slots = two ? 10 : 5;
@@ -427,7 +399,7 @@ static void renderPicker(TFT_eSPI& tft) {
   for (int i = 0; i < slots; i++) {
     int x, y, w, h; cardRect(i, total, x, y, w, h);
     bool occ = i < total;
-    const PageItem* it = occ ? &pg.items[i] : nullptr;
+    const menumodel::Item* it = occ ? &pg.items[i] : nullptr;
     bool isSetting = occ && it->layer == nullptr;
     int sIdx = isSetting ? idxBright() + it->setting : -1;
     int lIdx = (occ && !isSetting) ? layerIndexByName(it->layer) : -1;
@@ -487,7 +459,8 @@ static void renderOverview(TFT_eSPI& tft) {
     int x, y, w, h; cardRect(i, total, x, y, w, h);
     bool occ = i < total;
     bool cur = occ && i == s_groupSel;
-    uint16_t accent = occ ? PAGES[i].color : theme::EDGE;
+    const menumodel::Section& sec = menumodel::section(i);
+    uint16_t accent = occ ? sec.color : theme::EDGE;
     uint16_t fill   = (occ && cur) ? theme::CARD : theme::DARK;
     tft.fillRoundRect(x, y, w, h, 10, fill);
     tft.drawRoundRect(x, y, w, h, 10, accent);
@@ -495,14 +468,14 @@ static void renderOverview(TFT_eSPI& tft) {
     tft.setTextDatum(MC_DATUM);
     if (occ) {
       const int icx = x + w / 2, icy = y + (two ? 20 : 42);
-      if (!drawSectionIcon(tft, PAGES[i].name, icx, icy, accent)) {
+      if (!drawSectionIcon(tft, sec.name, icx, icy, accent)) {
         tft.setTextColor(accent, fill);
         tft.drawNumber(i + 1, icx, icy, two ? 4 : 6);
       }
       char nb[3]; snprintf(nb, sizeof(nb), "%d", i + 1);                     // numero -> badge chico
       uikit::badge(tft, {x + 6, y + 5, two ? 15 : 18, two ? 13 : 16}, nb,
                    theme::blend(fill, accent, 60), cur ? theme::FG : accent, 4, two ? 1 : 2);
-      uikit::fitText(tft, PAGES[i].name, icx, y + h - (two ? 12 : 26), w - 8,
+      uikit::fitText(tft, sec.name, icx, y + h - (two ? 12 : 26), w - 8,
                      cur ? theme::FG : theme::SOFT, fill, 2);
       tft.fillRoundRect(x + 10, y + h - (two ? 6 : 12), w - 20, two ? 3 : 4, 2, accent);
     } else {
@@ -523,7 +496,7 @@ static void drawHeader(TFT_eSPI& tft) {
   tft.setTextColor(theme::SOFT, theme::PANEL);
   tft.drawString("CONTROL CENTER", 240, 16, 1);
   tft.setTextColor(theme::FG, theme::PANEL);
-  const char* hn = s_overview ? "Paginas" : pageName();
+  const char* hn = s_overview ? "Secciones" : pageName();
   tft.drawString(hn, 240, 44, 4);
   if (!s_overview) {                                  // icono de la seccion a la izq del nombre
     int tw = tft.textWidth(hn, 4);
@@ -572,8 +545,8 @@ static void drawEditor(TFT_eSPI& tft) {
 }
 
 static void renderBody(TFT_eSPI& tft) {
-  if (s_overview) renderOverview(tft);   // vista de todas las paginas (botones saltan)
-  else            renderPicker(tft);     // items de la pagina actual
+  if (s_overview) renderOverview(tft);   // vista de todas las secciones (botones saltan)
+  else            renderPicker(tft);     // items de la seccion actual
 }
 
 void render(TFT_eSPI& tft) {

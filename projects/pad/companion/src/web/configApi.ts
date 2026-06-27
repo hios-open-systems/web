@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import type { Device } from '../device';
 import { osName } from '../providers';
+import { ensureNavigationMetadata } from '../navigation/schema';
 
 // El companion es la FUENTE DE VERDAD de la config: guarda un formato "rico"
 // (config.edit.json) donde cada accion puede ser per-OS ({win,linux}) y, al
@@ -38,6 +39,12 @@ function resolveConfig(edit: AnyObj, k: 'win' | 'linux'): AnyObj {
     for (const s of (m.steps as AnyObj[]) ?? []) if (s.action !== undefined) s.action = resolveAction(s.action, k);
   return flat;
 }
+function toPadConfig(edit: AnyObj, k: 'win' | 'linux'): AnyObj {
+  const flat = resolveConfig(edit, k);
+  delete flat.navigation;
+  delete flat.views;
+  return flat;
+}
 
 async function padFetch(device: Device, token: string, path: string, method: string, body?: string) {
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
@@ -65,19 +72,19 @@ export async function handleConfig(req: IncomingMessage, res: ServerResponse, de
     }
     if (path === '/api/config' && req.method === 'GET') {
       if (existsSync(EDIT_FILE)) {
-        const edit = JSON.parse(await readFile(EDIT_FILE, 'utf8'));
+        const edit = ensureNavigationMetadata(JSON.parse(await readFile(EDIT_FILE, 'utf8')) as AnyObj);
         send(200, JSON.stringify({ os: osKey(), edit })); return;
       }
       const r = await padFetch(device, token, '/api/config', 'GET');   // seed: config plano actual del pad
       if (r.status !== 200) { send(502, `{"error":"pad no respondio (${device.currentHost})"}`); return; }
-      const flat = JSON.parse(r.text);
+      const flat = ensureNavigationMetadata(JSON.parse(r.text) as AnyObj);
       await writeFile(EDIT_FILE, JSON.stringify(flat), 'utf8');
       send(200, JSON.stringify({ os: osKey(), edit: flat })); return;
     }
     if (path === '/api/config' && req.method === 'POST') {
-      const edit = JSON.parse(await readBody(req));
+      const edit = ensureNavigationMetadata(JSON.parse(await readBody(req)) as AnyObj);
       await writeFile(EDIT_FILE, JSON.stringify(edit), 'utf8');         // persiste el rico
-      const flat = resolveConfig(edit as AnyObj, osKey());              // resuelve per-OS
+      const flat = toPadConfig(edit as AnyObj, osKey());                // resuelve per-OS y quita metadata companion-side
       const r = await padFetch(device, token, '/api/config', 'POST', JSON.stringify(flat));
       send(r.status, r.text); return;
     }
