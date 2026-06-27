@@ -113,6 +113,12 @@ void toJson(const KeyMap& km, JsonObject root) {
     }
   }
 
+  // ALT momentaneos: que capa abre cada uno + linger
+  JsonObject alt = root["alt"].to<JsonObject>();
+  alt["alt1"]   = altLayer1();
+  alt["alt2"]   = altLayer2();
+  alt["linger"] = altLinger();
+
   // textos (snippets) + macros (secuencias de pasos)
   JsonArray texts = root["texts"].to<JsonArray>();
   for (uint16_t i = 0; i < textCount(); i++) texts.add(textById(i));
@@ -153,6 +159,14 @@ bool fromJson(JsonObjectConst root, KeyMap& km) {
         km.bind(li, (InputId)id, actFromJson(e["press"]), label, actFromJson(e["long"]), st);
       }
     }
+  }
+
+  // ALT momentaneos (si viene; si no, defaults compilados)
+  if (root["alt"].is<JsonObjectConst>()) {
+    JsonObjectConst al = root["alt"];
+    setAltConfig(al["alt1"] | "Launcher", al["alt2"] | "Macros", (uint32_t)(al["linger"] | 600));
+  } else {
+    seedDefaultAlt();
   }
 
   // textos + macros (si vienen en el JSON; si no, defaults compilados)

@@ -49,6 +49,7 @@ private:
   uint8_t       m_prevLayer = 0;            // capa a la que volver al terminar
   bool          m_altHeld = false;          // el ALT sigue presionado
   uint32_t      m_altLingerEnd = 0;         // millis de fin de la ventana de gracia
+  uint32_t      m_altLinger = 600;          // ventana de gracia (del config, se resuelve en begin)
 
   // Gestos del SW del stick
   bool     m_stickLongDone = false;

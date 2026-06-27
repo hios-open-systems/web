@@ -21,6 +21,13 @@ uint16_t    textCount();
 uint16_t    macroCount();
 const char* macroLabel(uint16_t id);
 
+// --- ALT momentaneos: que capa abre cada uno + linger (editable; default = Config.h) ---
+void        setAltConfig(const char* alt1, const char* alt2, uint32_t lingerMs);
+void        seedDefaultAlt();
+const char* altLayer1();
+const char* altLayer2();
+uint32_t    altLinger();
+
 // Snippet de texto por id (para acciones TEXT y pasos de macro).
 const char* textById(uint16_t id);
 

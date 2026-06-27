@@ -7,6 +7,7 @@
 #include "../app/StateManager.h"
 #include "../ui/Menu.h"
 #include "../net/Net.h"
+#include "../storage/DefaultConfig.h"   // altLayer1/2/Linger (config runtime de los ALT)
 
 // Accion del encoder segun el modo override (cw = giro horario). 0 = sin override.
 static Action encModeAction(uint8_t mode, bool cw) {
@@ -33,8 +34,9 @@ uint8_t Dispatcher::layerEncMode() const {
 
 void Dispatcher::begin(KeyMap* km) {
   m_km = km;
-  m_altLayer[0] = km ? km->indexOf(cfg::ALT1_LAYER) : -1;   // resuelve por nombre (robusto al orden)
-  m_altLayer[1] = km ? km->indexOf(cfg::ALT2_LAYER) : -1;
+  m_altLayer[0] = km ? km->indexOf(altLayer1()) : -1;   // capas ALT del config (nombre -> indice)
+  m_altLayer[1] = km ? km->indexOf(altLayer2()) : -1;
+  m_altLinger   = altLinger();
 }
 
 void Dispatcher::dispatch(const InputEvent& e) {
@@ -154,7 +156,7 @@ void Dispatcher::handleAlt(const InputEvent& e) {
     setLayer((uint8_t)target);                    // salta a la capa (resetea encOverride)
   } else if (e.edge == Edge::RELEASE && m_momentaryAlt == which) {
     m_altHeld = false;
-    m_altLingerEnd = e.t_ms + cfg::ALT_LINGER_MS; // arranca la ventana de gracia
+    m_altLingerEnd = e.t_ms + m_altLinger;        // arranca la ventana de gracia (del config)
   }
   // LONG_PRESS: ignorar (el hold ya esta activo desde el PRESS).
 }
