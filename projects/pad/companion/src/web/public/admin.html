@@ -168,8 +168,19 @@ function perOsField(label, getV, setV){
 // ============================ SHORTCUTS ============================
 function bindOf(L,id){return (L.binds||(L.binds=[])).find(b=>b.id===id)||null;}
 function ensureBind(L,id){let b=bindOf(L,id);if(!b){b={id};L.binds.push(b);}return b;}
+function altConfigCard(){
+  cfg.alt=cfg.alt||{alt1:"Launcher",alt2:"Macros",linger:600};
+  const c=el("div","bind"); c.appendChild(el("div","bname","Botones ALT (momentáneos)"));
+  const row=el("div","actrow");
+  const sel=(cur,onCh)=>{const s=el("select");(cfg.layers||[]).forEach(L=>{const o=el("option");o.value=L.n;o.textContent=L.n;if(L.n===cur)o.selected=true;s.appendChild(o);});s.onchange=()=>{onCh(s.value);markDirty();};return s;};
+  row.appendChild(el("span","k","ALT1 →")); row.appendChild(sel(cfg.alt.alt1,v=>cfg.alt.alt1=v));
+  row.appendChild(el("span","k","ALT2 →")); row.appendChild(sel(cfg.alt.alt2,v=>cfg.alt.alt2=v));
+  row.appendChild(el("span","k","Linger ms")); const n=el("input","numin");n.type="number";n.min=0;n.step=50;n.value=cfg.alt.linger||600;n.oninput=()=>{cfg.alt.linger=+n.value;markDirty();};row.appendChild(n);
+  c.appendChild(row); return c;
+}
 function renderShortcuts(){
   const host=$("view-shortcuts"); host.innerHTML="";
+  host.appendChild(altConfigCard());
   const lt=el("div","layers"); cfg.layers.forEach((L,i)=>{const t=el("div","ltab"+(i===cur?" on":""));t.innerHTML=`<span class="ldot" style="background:${rgb565(L.color)}"></span>${L.n}`;t.onclick=()=>{cur=i;renderShortcuts();};lt.appendChild(t);}); host.appendChild(lt);
   const L=cfg.layers[cur];
   host.appendChild(el("div","hint",`Capa <b style="color:${rgb565(L.color)}">${L.n}</b>. "por OS" guarda Windows/Linux por separado; el companion empuja el del OS detectado (<b>${detOs}</b>). Guardar reinicia el pad.`));
