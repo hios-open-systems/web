@@ -19,6 +19,27 @@ namespace menu {
 // o un setting interno. La definicion vive en MenuModel para aislar el render del
 // origen de datos; el siguiente paso es reemplazar ese modelo por config runtime.
 
+// ---------------------------------------------------------------------------
+//  Tokens de layout del menu. UNA sola fuente para la geometria de la grilla y
+//  del tile, en vez de numeros magicos sueltos por todo el render. Cambiar la
+//  grilla o el tile = tocar ESTO y nada mas.
+// ---------------------------------------------------------------------------
+namespace mlay {
+constexpr int BODY_Y = 74, BODY_H = 174;                 // zona de grilla (74..248, usa la banda libre)
+constexpr int COLS = 5, GAP = 8;                         // 5 columnas, separacion horiz/vert
+constexpr int TILE_W = (480 - GAP * (COLS + 1)) / COLS;  // ~83px
+constexpr int TILE_H = 80;
+constexpr int GRID_Y = 78;                               // top de la fila 0 (filas en 78 y 166)
+constexpr int RADIUS = 10;                               // radio del tile
+constexpr int INNER = 1,  INNER_RADIUS = RADIUS - INNER; // borde interno sutil: 1px adentro, radio 9
+constexpr int SEL_INNER = 2, SEL_RADIUS = RADIUS - SEL_INNER; // 2do borde de la seccion actual (overview)
+constexpr int BADGE_X = 6, BADGE_Y = 6, BADGE_W = 19, BADGE_H = 14;  // numero (badge arriba-izq)
+constexpr int ICON_DY = 34, LABEL_DY = 62, ICON_R = 15;  // capa: centro icono / centro label / radio del chip
+constexpr int SET_ICON_DY = 30, SET_NAME_DY = 54, SET_VAL_DY = 70;   // setting: icono / nombre / valor
+constexpr int SEC_ICON_DY = 36, SEC_NAME_DY = 64;        // overview: icono / nombre de seccion
+constexpr int TXT_MARGIN = 8;                            // margen lateral del texto (w - TXT_MARGIN)
+}  // namespace mlay
+
 static KeyMap* s_km = nullptr;
 static bool    s_open     = false;
 static int     s_groupSel = 0;     // seccion actual (0..pageCount()-1)
@@ -132,7 +153,8 @@ static void editSelected(int delta) {
 void turn(int delta) {
   if (!s_open) return;
   if (s_editItem) { editSelected(delta); s_dirty = true; return; } // ajustando -> cambia el valor
-  s_groupSel = (s_groupSel + delta + pageCount()) % pageCount();   // si no, cambia de pagina
+  if (s_overview) return;                                          // en overview se elige con botones; el encoder NO navega por atras
+  s_groupSel = (s_groupSel + delta + pageCount()) % pageCount();   // en el picker, cambia de seccion
   s_dirty = true;
 }
 
@@ -376,117 +398,105 @@ static bool drawSectionIcon(TFT_eSPI& g, const char* nm, int cx, int cy, uint16_
   return false;
 }
 
-// Layout de hasta 10 cards en 1 fila (<=5 items) o 2 filas de 5 (6..10 items).
-// Devuelve x,y,w,h de la card i. Con 10 botones, el picker/overview usan ambas filas.
-static void cardRect(int i, int total, int& x, int& y, int& w, int& h) {
-  const int cols = 5, gap = 8;
-  w = (480 - gap * (cols + 1)) / cols;             // ~83px
-  if (total > 5) { h = 62; y = 80 + (i / cols) * (h + 8); }   // 2 filas: 80..142, 150..212
-  else           { h = 118; y = 82; }                          // 1 fila
-  x = gap + (i % cols) * (w + gap);
+// Posicion de la card i en la grilla FIJA de 10 (2 filas x 5). Geometria: mlay.
+static void cardRect(int i, int& x, int& y, int& w, int& h) {
+  w = mlay::TILE_W; h = mlay::TILE_H;
+  x = mlay::GAP    + (i % mlay::COLS) * (w + mlay::GAP);
+  y = mlay::GRID_Y + (i / mlay::COLS) * (h + mlay::GAP);
+}
+
+// --- helpers de dibujo del tile (DRY: los comparten picker y overview) ---
+// Marco: fondo + borde + borde interno sutil (la "doble linea").
+static void drawTileFrame(TFT_eSPI& g, int x, int y, int w, int h, uint16_t fill, uint16_t border, uint16_t inner) {
+  g.fillRoundRect(x, y, w, h, mlay::RADIUS, fill);
+  g.drawRoundRect(x, y, w, h, mlay::RADIUS, border);
+  g.drawRoundRect(x + mlay::INNER, y + mlay::INNER, w - 2 * mlay::INNER, h - 2 * mlay::INNER, mlay::INNER_RADIUS, inner);
+}
+// Numero del boton, como badge chico arriba-izquierda.
+static void drawTileBadge(TFT_eSPI& g, int x, int y, int num, uint16_t bg, uint16_t fg) {
+  char nb[3]; snprintf(nb, sizeof(nb), "%d", num);
+  uikit::badge(g, {x + mlay::BADGE_X, y + mlay::BADGE_Y, mlay::BADGE_W, mlay::BADGE_H}, nb, bg, fg, 4, 1);
+}
+// Slot sin contenido: presente pero apagado (no "--").
+static void drawEmptySlot(TFT_eSPI& g, int x, int y, int w, int h, int num) {
+  g.fillRoundRect(x, y, w, h, mlay::RADIUS, theme::DARK);
+  g.drawRoundRect(x, y, w, h, mlay::RADIUS, theme::EDGE);
+  g.setTextDatum(MC_DATUM); g.setTextColor(theme::DIM, theme::DARK);
+  g.drawNumber(num, x + w / 2, y + h / 2, 2);
 }
 
 // Picker unificado: hasta 10 cards = 10 botones (doble fila si >5). Cada card es un item
 // de la seccion actual (View o setting). Settings muestran su valor; el que se ajusta queda
 // resaltado. Las capas muestran su icono + numero de boton. Los botones 1-10 eligen.
 static void renderPicker(TFT_eSPI& tft) {
-  tft.fillRect(0, 74, 480, 142, theme::BG);
+  tft.fillRect(0, mlay::BODY_Y, 480, mlay::BODY_H, theme::BG);
   const menumodel::Section& pg = menumodel::section(s_groupSel);
   const int total = pg.count;
-  const bool two = total > 5;
-  const int slots = two ? 10 : 5;
   char buf[16];
-  for (int i = 0; i < slots; i++) {
-    int x, y, w, h; cardRect(i, total, x, y, w, h);
-    bool occ = i < total;
-    const menumodel::Item* it = occ ? &pg.items[i] : nullptr;
-    bool isSetting = occ && it->layer == nullptr;
+  for (int i = 0; i < 10; i++) {                    // SIEMPRE los 10 (el pad tiene 10 botones)
+    int x, y, w, h; cardRect(i, x, y, w, h);
+    if (i >= total) { drawEmptySlot(tft, x, y, w, h, i + 1); continue; }
+    const menumodel::Item* it = &pg.items[i];
+    bool isSetting = it->layer == nullptr;
     int sIdx = isSetting ? idxBright() + it->setting : -1;
-    int lIdx = (occ && !isSetting) ? layerIndexByName(it->layer) : -1;
+    int lIdx = !isSetting ? layerIndexByName(it->layer) : -1;
     bool editing = isSetting && s_editItem && s_sel == sIdx;
-    uint16_t accent = !occ ? theme::EDGE
-                    : isSetting ? itemAccent(sIdx)
+    uint16_t accent = isSetting ? itemAccent(sIdx)
                     : (lIdx >= 0 ? s_km->layer(lIdx).color : pg.color);
-    uint16_t fill = occ ? theme::CARD : theme::DARK;
-    tft.fillRoundRect(x, y, w, h, 10, fill);
-    tft.drawRoundRect(x, y, w, h, 10, accent);
-    if (occ) tft.drawRoundRect(x + 1, y + 1, w - 2, h - 2, 9, theme::blend(accent, theme::FG, editing ? 90 : 50));
+    const uint16_t fill = theme::CARD;
+    drawTileFrame(tft, x, y, w, h, fill, accent, theme::blend(accent, theme::FG, editing ? 90 : 50));
+    drawTileBadge(tft, x, y, i + 1, theme::blend(fill, accent, 60), editing ? theme::FG : accent);
     tft.setTextDatum(MC_DATUM);
-    if (occ) {
-      const char* nm = isSetting ? itemTitle(sIdx) : it->layer;
-      const int icx = x + w / 2, icy = y + (two ? 18 : 30);
-      if (isSetting) {
-        drawMenuIcon(tft, icx, icy, sIdx, accent, fill);
-      } else if (!drawLayerIcon(tft, nm, icx, icy, accent, fill)) {
-        const int ir = two ? 13 : 17;                             // capa sin icono: chip + inicial
+    const char* nm = isSetting ? itemTitle(sIdx) : it->layer;
+    const int icx = x + w / 2;
+    if (isSetting) {
+      drawMenuIcon(tft, icx, y + mlay::SET_ICON_DY, sIdx, accent, fill);
+      uikit::fitText(tft, nm, icx, y + mlay::SET_NAME_DY, w - mlay::TXT_MARGIN, theme::FG, fill, 2);
+      uikit::fitText(tft, itemMeta(sIdx, buf, sizeof(buf)), icx, y + mlay::SET_VAL_DY, w - mlay::TXT_MARGIN,
+                     editing ? accent : theme::SOFT, fill, 2);
+    } else {
+      const int icy = y + mlay::ICON_DY;
+      if (!drawLayerIcon(tft, nm, icx, icy, accent, fill)) {       // capa sin icono: chip + inicial
         const uint16_t chip = theme::blend(fill, accent, 32);
-        tft.fillCircle(icx, icy, ir, chip);
-        tft.drawCircle(icx, icy, ir, accent);
+        tft.fillCircle(icx, icy, mlay::ICON_R, chip);
+        tft.drawCircle(icx, icy, mlay::ICON_R, accent);
         char ini[2] = { nm[0], 0 };
         tft.setTextColor(accent, chip);
-        tft.drawString(ini, icx, icy + 1, two ? 2 : 4);
-        if (!two) tft.drawString(ini, icx + 1, icy + 1, 4);       // faux-bold solo en 1 fila
+        tft.drawString(ini, icx, icy + 1, 4);
       }
-      uikit::fitText(tft, nm, icx, y + (two ? 40 : 64), w - 8, theme::FG, fill, 2);
-      if (isSetting) {
-        uikit::fitText(tft, itemMeta(sIdx, buf, sizeof(buf)), icx, y + h - (two ? 13 : 18), w - 8,
-                       editing ? accent : theme::SOFT, fill, 2);
-      } else {
-        tft.setTextColor(theme::DIM, fill);
-        tft.drawNumber(i + 1, icx, y + h - (two ? 13 : 18), 2);
-      }
-      tft.fillRoundRect(x + 10, y + h - (two ? 6 : 8), w - 20, two ? 3 : 4, 2, accent);
-    } else {
-      tft.setTextColor(theme::DIM, fill);
-      tft.drawString("--", x + w / 2, y + h / 2, two ? 2 : 4);
+      uikit::fitText(tft, nm, icx, y + mlay::LABEL_DY, w - mlay::TXT_MARGIN, theme::FG, fill, 2);
     }
-  }
-  if (!two) {                                       // caption solo en 1 fila (en 2 no hay lugar)
-    tft.setTextDatum(MC_DATUM);
-    tft.setTextColor(theme::SOFT, theme::BG);
-    tft.drawString("apreta un boton para elegir", 240, 208, 1);
   }
 }
 
 // Overview: TODAS las secciones como cards numeradas (doble fila si >5); la actual
 // resaltada. Boton i = ir a esa seccion. Con 10 botones entran las 7 secciones.
 static void renderOverview(TFT_eSPI& tft) {
-  tft.fillRect(0, 74, 480, 142, theme::BG);
+  tft.fillRect(0, mlay::BODY_Y, 480, mlay::BODY_H, theme::BG);
   const int total = pageCount();
-  const bool two = total > 5;
-  const int slots = two ? 10 : 5;
-  for (int i = 0; i < slots; i++) {
-    int x, y, w, h; cardRect(i, total, x, y, w, h);
-    bool occ = i < total;
-    bool cur = occ && i == s_groupSel;
+  for (int i = 0; i < 10; i++) {                    // SIEMPRE los 10 (el pad tiene 10 botones)
+    int x, y, w, h; cardRect(i, x, y, w, h);
+    if (i >= total) { drawEmptySlot(tft, x, y, w, h, i + 1); continue; }
+    bool cur = i == s_groupSel;
     const menumodel::Section& sec = menumodel::section(i);
-    uint16_t accent = occ ? sec.color : theme::EDGE;
-    uint16_t fill   = (occ && cur) ? theme::CARD : theme::DARK;
-    tft.fillRoundRect(x, y, w, h, 10, fill);
-    tft.drawRoundRect(x, y, w, h, 10, accent);
-    if (cur) tft.drawRoundRect(x + 1, y + 1, w - 2, h - 2, 9, theme::blend(accent, theme::FG, 90));
-    tft.setTextDatum(MC_DATUM);
-    if (occ) {
-      const int icx = x + w / 2, icy = y + (two ? 20 : 42);
-      if (!drawSectionIcon(tft, sec.name, icx, icy, accent)) {
-        tft.setTextColor(accent, fill);
-        tft.drawNumber(i + 1, icx, icy, two ? 4 : 6);
-      }
-      char nb[3]; snprintf(nb, sizeof(nb), "%d", i + 1);                     // numero -> badge chico
-      uikit::badge(tft, {x + 6, y + 5, two ? 15 : 18, two ? 13 : 16}, nb,
-                   theme::blend(fill, accent, 60), cur ? theme::FG : accent, 4, two ? 1 : 2);
-      uikit::fitText(tft, sec.name, icx, y + h - (two ? 12 : 26), w - 8,
-                     cur ? theme::FG : theme::SOFT, fill, 2);
-      tft.fillRoundRect(x + 10, y + h - (two ? 6 : 12), w - 20, two ? 3 : 4, 2, accent);
-    } else {
-      tft.setTextColor(theme::DIM, fill);
-      tft.drawString("--", x + w / 2, y + h / 2, two ? 2 : 4);
+    uint16_t accent = sec.color;
+    // La seccion actual (de donde venis) queda teñida con su acento para ubicarte.
+    uint16_t fill = cur ? theme::blend(theme::DARK, accent, 55) : theme::DARK;
+    tft.fillRoundRect(x, y, w, h, mlay::RADIUS, fill);
+    tft.drawRoundRect(x, y, w, h, mlay::RADIUS, accent);
+    if (cur) {                                          // doble borde para resaltar la seccion actual
+      tft.drawRoundRect(x + mlay::INNER, y + mlay::INNER, w - 2 * mlay::INNER, h - 2 * mlay::INNER, mlay::INNER_RADIUS, accent);
+      tft.drawRoundRect(x + mlay::SEL_INNER, y + mlay::SEL_INNER, w - 2 * mlay::SEL_INNER, h - 2 * mlay::SEL_INNER, mlay::SEL_RADIUS, theme::blend(accent, theme::FG, 60));
     }
-  }
-  if (!two) {
     tft.setTextDatum(MC_DATUM);
-    tft.setTextColor(theme::SOFT, theme::BG);
-    tft.drawString("apreta el boton de la seccion   (encoder: volver)", 240, 208, 1);
+    const int icx = x + w / 2;
+    const uint16_t iconCol = cur ? theme::FG : accent;   // sobre el fill teñido, la actual va en blanco
+    drawTileBadge(tft, x, y, i + 1, theme::blend(fill, accent, 60), cur ? theme::FG : accent);
+    if (!drawSectionIcon(tft, sec.name, icx, y + mlay::SEC_ICON_DY, iconCol)) {
+      tft.setTextColor(iconCol, fill);
+      tft.drawNumber(i + 1, icx, y + mlay::SEC_ICON_DY, 4);
+    }
+    uikit::fitText(tft, sec.name, icx, y + mlay::SEC_NAME_DY, w - mlay::TXT_MARGIN, cur ? theme::FG : theme::SOFT, fill, 2);
   }
 }
 
@@ -502,27 +512,12 @@ static void drawHeader(TFT_eSPI& tft) {
     int tw = tft.textWidth(hn, 4);
     drawSectionIcon(tft, hn, 240 - tw / 2 - 20, 44, pageColor());
   }
-  char p[8]; snprintf(p, sizeof(p), "%d/%d", s_groupSel + 1, pageCount());
-  tft.setTextDatum(MR_DATUM);
-  tft.setTextColor(pageColor(), theme::PANEL);
-  tft.drawString(p, 470, 14, 2);
-}
-
-static void drawHint(TFT_eSPI& tft) {
-  tft.fillRect(0, 218, 480, 30, theme::BG);
-  uint16_t bg = theme::PANEL;
-  tft.fillRoundRect(78, 220, 92, 22, 11, bg);
-  tft.fillRoundRect(194, 220, 92, 22, 11, bg);
-  tft.fillRoundRect(310, 220, 92, 22, 11, bg);
-  tft.setTextDatum(MC_DATUM);
-  tft.setTextColor(theme::SOFT, bg);
-  const char *a, *b, *c;
-  if (s_editItem)      { a = "ajustar"; b = "listo";    c = "salir"; }   // encoder ajusta el valor
-  else if (s_overview) { a = "pagina";  b = "volver";   c = "salir"; }   // boton 1-5 salta
-  else                 { a = "pagina";  b = "ver todo"; c = "salir"; }   // press = overview
-  tft.drawString(a, 124, 231, 1);
-  tft.drawString(b, 240, 231, 1);
-  tft.drawString(c, 356, 231, 1);
+  if (!s_overview) {                                  // contador de seccion: solo en el picker (en overview no aplica)
+    char p[8]; snprintf(p, sizeof(p), "%d/%d", s_groupSel + 1, pageCount());
+    tft.setTextDatum(MR_DATUM);
+    tft.setTextColor(pageColor(), theme::PANEL);
+    tft.drawString(p, 470, 14, 2);
+  }
 }
 
 static void drawEditor(TFT_eSPI& tft) {
@@ -553,16 +548,14 @@ void render(TFT_eSPI& tft) {
   if (!s_km) return;
 
   if (s_needFull) {
-    // Sin fillScreen (evita el parpadeo negro al abrir). Los componentes rellenan sus
-    // zonas; solo limpiamos los gaps entre ellos para no dejar restos del dashboard.
-    tft.fillRect(0, 72,  480, 2,  theme::BG);   // header/accent .. body
-    tft.fillRect(0, 216, 480, 2,  theme::BG);   // body .. hint
-    tft.fillRect(0, 248, 480, 4,  theme::BG);   // hint .. editor
+    // Sin fillScreen (evita el parpadeo negro al abrir). renderBody rellena la grilla
+    // (74..248) y drawEditor su banda (252..294); solo limpiamos los gaps entre zonas.
+    tft.fillRect(0, 72,  480, 2,  theme::BG);   // header/accent .. grilla
+    tft.fillRect(0, 248, 480, 4,  theme::BG);   // grilla .. editor
     tft.fillRect(0, 294, 480, 26, theme::BG);   // editor .. fondo
     drawHeader(tft);
     tft.fillRect(0, 68, 480, 4, uiAccent());
     renderBody(tft);
-    drawHint(tft);
     drawEditor(tft);
     s_needFull = false; s_dirty = false;
     return;
@@ -572,7 +565,6 @@ void render(TFT_eSPI& tft) {
   drawHeader(tft);
   tft.fillRect(0, 68, 480, 4, uiAccent());
   renderBody(tft);
-  drawHint(tft);
   drawEditor(tft);
 }
 

@@ -27,7 +27,6 @@ El firmware, el admin, el mirror/emulador y la web remota deben compartir el mis
 ## Estado actual relevante
 
 Ya existe una buena base:
-
 - `Action` es una union etiquetada con teclado, media, mouse, texto, macro, layer, companion cmd, launcher y reservas de red/gamepad.
 - `KeyMap` modela bindings por input y labels para UI.
 - `ConfigCodec` serializa/deserializa layers, bindings, ALT, textos y macros.

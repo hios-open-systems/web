@@ -59,7 +59,6 @@ struct UiSnapshot {
   uint8_t  clickFlash;  // flash de click reciente en el box del mouse: 0=nada, 1=izq, 2=der
   uint8_t  encMode;     // override del encoder por doble-tap: 0=capa,1=Vol,2=Scroll,3=Zoom,4=Pestanas
   uint8_t  altActive;   // ALT momentaneo activo (held+linger): 0=ninguno, 1=ALT1, 2=ALT2 (feedback UI)
-  uint16_t longFlash;   // bitmask (BTN_1..10): botones cuyo long-press acaba de dispararse (flash)
   // --- estado optimista (lo que el pad cree haber dejado) ---
   bool     micMuted;
   bool     mediaPlay;

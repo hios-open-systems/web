@@ -4,6 +4,7 @@
 #include "ConfigCodec.h"
 #include "../mapping/KeyMap.h"   // KeyMap, Layer, Binding, LayerGroup (+ Action/Types via includes)
 #include "DefaultConfig.h"       // tablas runtime de textos/macros (builders + accessors) + MacroStep
+#include "../ui/NavModel.h"      // modelo de navegacion v2 (opcional, aditivo)
 #include <string.h>
 
 namespace cfgcodec {
@@ -187,6 +188,11 @@ bool fromJson(JsonObjectConst root, KeyMap& km) {
   } else {
     seedDefaultMacrosTexts();
   }
+
+  // Modelo de navegacion v2 (opcional): si la config trae navigation+views,
+  // queda cargado para que MenuModel lo prefiera. Hoy la companion strippea esa
+  // metadata, asi que normalmente queda invalido y el menu usa las plantillas.
+  navmodel::loadFromJson(root);
 
   return km.count() > 0;
 }

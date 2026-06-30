@@ -84,6 +84,8 @@ public:
       } else if (e.edge == Edge::RELEASE && !longConsumed) {
         applyResult(menu::press());
       }
+    } else if (e.edge == Edge::PRESS && (e.id == InputId::ALT_1 || e.id == InputId::ALT_2)) {
+      menu::turn(e.id == InputId::ALT_1 ? -1 : +1);   // ALT cambia de seccion, igual que girar el encoder
     } else if (e.edge == Edge::PRESS && menu::inLayerPicker() &&
                (int)e.id <= (int)InputId::BTN_10) {  // BTN_1..BTN_10 -> elegir capa/seccion
       applyResult(menu::pickButton((uint8_t)e.id - (uint8_t)InputId::BTN_1));
@@ -198,11 +200,10 @@ static void renderUI(const UiSnapshot& s) {
 
   if (clockChanged) dash::clock(ctx);
 
-  // Botones: redibuja el keycap si cambio su estado o su flash de long-press.
+  // Botones: redibuja el keycap si cambio su estado.
   for (uint8_t i = 0; i < layout::KC_COUNT; i++) {
     bool on = s.buttons & (1 << i), prevOn = prev.buttons & (1 << i);
-    bool fl = s.longFlash & (1 << i), prevFl = prev.longFlash & (1 << i);
-    if (on != prevOn || fl != prevFl) dash::keycap(ctx, s, i, on);
+    if (on != prevOn) dash::keycap(ctx, s, i, on);
   }
 
   // Estado del dock (mic/cam/media/enlace/wiz). El volumen ya NO va aca (esta en la franja).
@@ -306,7 +307,6 @@ static void inputTask(void*) {
     s.clickFlash  = dispatcher.clickFlash(now);       // flash L/R en el box del mouse
     s.encMode     = dispatcher.encMode();
     s.altActive   = dispatcher.altActive();          // ALT momentaneo activo (feedback UI)
-    s.longFlash   = dispatcher.longFlashMask(now);   // flash de confirmacion de long-press
     // Feedback REAL-first: si el companion mando estado fresco, pisa al optimista;
     // si no, fallback al optimista (= comportamiento de siempre, sin companion).
     const bool live = net::hasFreshState(now);

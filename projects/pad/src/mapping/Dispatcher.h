@@ -24,7 +24,6 @@ public:
   bool    mouseOn() const { return m_mouseOn; }
   uint8_t encMode() const { return m_encOverride; }     // 0=capa, 1=Vol, 2=Scroll, 3=Zoom, 4=Pestanas
   uint8_t altActive() const { return m_momentaryAlt; }  // 0=ninguno, 1=ALT1, 2=ALT2 (held o en linger) -> feedback UI
-  uint16_t longFlashMask(uint32_t now) const;           // bits de botones en ventana de flash de confirmacion
   uint8_t clickFlash(uint32_t now) const;               // click reciente del mouse: 0=nada, 1=izq, 2=der (ventana de flash)
 
 private:
@@ -32,9 +31,8 @@ private:
   void handleStickSw(const InputEvent& e);
   void handleEncSwNav(const InputEvent& e);   // encoder = navegacion (abre menu)
   void handleAlt(const InputEvent& e);        // ALT_1/ALT_2: capa momentanea (hold + linger)
-  void handleFaceButton(const InputEvent& e); // botones 1-10: tap=accion / hold=toggle card
+  void handleFaceButton(const InputEvent& e); // botones 1-10: una sola accion (la de la capa)
   void fireResolved(const InputEvent& e);     // resuelve y procesa la accion de la capa
-  void statusToggle(int i);                   // long-press boton i -> toggle del card
   void enqueueClick(uint8_t button);
   uint8_t layerEncMode() const;               // modo de override que la capa ya hace de fabrica (0=ninguno)
 
@@ -58,10 +56,6 @@ private:
   uint32_t m_tapMs = 0;
   uint8_t  m_lastClickBtn = 0;       // 1=izq, 2=der (para el flash en el box del mouse)
   uint32_t m_lastClickMs = 0;
-
-  // Botones de cara (BTN_1..10): ¿el long-press ya consumio el press? (para no disparar el tap al soltar)
-  bool     m_btnConsumed[10] = {};
-  uint32_t m_longFlashMs[10] = {};   // millis del ultimo long-press por boton (flash)
 
   // Navegacion del SW del encoder (tap=menu, doble=cicla modo del encoder, largo=cicla capa)
   bool     m_encLong = false;
