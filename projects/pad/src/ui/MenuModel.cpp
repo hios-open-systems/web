@@ -1,10 +1,12 @@
 #include "MenuModel.h"
 #include <string.h>
 #include "../app/Theme.h"
+#include "../app/SettingsRegistry.h"
+#include "NavModel.h"
 
 namespace menumodel {
 
-static constexpr int MAX_SECTIONS = 7;
+static constexpr int MAX_SECTIONS = 10;   // soporta el modelo v2 (companion puede definir mas secciones)
 static constexpr int MAX_ITEMS_PER_SECTION = 10;
 
 struct TemplateItem { const char* layer; int8_t setting; };
@@ -68,8 +70,9 @@ static int sectionIndexForName(const char* layerName, LayerGroup group) {
   }
 }
 
-void begin(const KeyMap* keymap) {
-  s_keymap = keymap;
+// Fallback historico: secciones desde plantillas + Views extra del KeyMap. Es
+// el comportamiento de siempre, intacto, cuando no hay NavModel cargado.
+static void buildFromTemplates(const KeyMap* keymap) {
   s_sectionCount = (int)(sizeof(TEMPLATE) / sizeof(TEMPLATE[0]));
   for (int s = 0; s < s_sectionCount; s++) {
     s_sections[s] = { TEMPLATE[s].name, TEMPLATE[s].color, s_items[s], 0 };
@@ -78,13 +81,50 @@ void begin(const KeyMap* keymap) {
       if (!item.layer || layerExists(item.layer)) addItem(s, { item.layer, item.setting });
     }
   }
-  if (!s_keymap) return;
-  for (uint8_t i = 0; i < s_keymap->count(); i++) {
-    const Layer& layer = s_keymap->layer(i);
+  if (!keymap) return;
+  for (uint8_t i = 0; i < keymap->count(); i++) {
+    const Layer& layer = keymap->layer(i);
     if (layerIsListed(layer.name)) continue;
     int s = sectionIndexForName(layer.name, layer.group);
     addItem(s, { layer.name, -1 });
   }
+}
+
+// Agrega una seccion de ajustes (Apariencia/Sistema) derivada de SettingsRegistry,
+// para que los settings sigan siendo alcanzables cuando el menu viene del NavModel
+// (el modelo de la companion todavia no representa los settings como Views).
+static void addSettingsSection(const char* name, uint16_t color, settings::Group group) {
+  if (s_sectionCount >= MAX_SECTIONS) return;
+  s_sections[s_sectionCount] = { name, color, s_items[s_sectionCount], 0 };
+  for (int i = 0; i < settings::count(); i++) {
+    const settings::Desc& d = settings::at(i);
+    if (d.group == group) addItem(s_sectionCount, { nullptr, (int8_t)d.id });
+  }
+  if (s_sections[s_sectionCount].count > 0) s_sectionCount++;
+}
+
+// Path v2: secciones/Views vienen del NavModel cargado por config. Solo se
+// listan Views que existan como Layer en el KeyMap (el dispatcher las entiende).
+static void buildFromNav(const KeyMap* keymap) {
+  s_sectionCount = 0;
+  for (int si = 0; si < navmodel::sectionCount() && s_sectionCount < MAX_SECTIONS; si++) {
+    const navmodel::Section& ns = navmodel::section(si);
+    s_sections[s_sectionCount] = { ns.label, ns.color ? ns.color : theme::CYAN, s_items[s_sectionCount], 0 };
+    for (int k = 0; k < ns.viewCount; k++) {
+      const navmodel::View& nv = navmodel::view(ns.viewIdx[k]);
+      if (keymap && keymap->indexOf(nv.label) < 0) continue;   // View sin Layer viva -> se omite
+      addItem(s_sectionCount, { nv.label, -1 });
+    }
+    if (s_sections[s_sectionCount].count > 0) s_sectionCount++;
+  }
+  addSettingsSection("Apariencia", theme::VIOLET, settings::APPEARANCE);
+  addSettingsSection("Sistema",    theme::GREEN,  settings::SYSTEM);
+}
+
+void begin(const KeyMap* keymap) {
+  s_keymap = keymap;
+  if (navmodel::valid()) buildFromNav(keymap);
+  else                   buildFromTemplates(keymap);
 }
 
 int sectionCount() {

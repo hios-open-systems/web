@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import type { Device } from '../device';
 import { osName } from '../providers';
-import { ensureNavigationMetadata } from '../navigation/schema';
+import { ensureNavigationMetadata, validateNavigation, PAD_CONFIG_LIMIT } from '../navigation/schema';
 
 // El companion es la FUENTE DE VERDAD de la config: guarda un formato "rico"
 // (config.edit.json) donde cada accion puede ser per-OS ({win,linux}) y, al
@@ -39,10 +39,20 @@ function resolveConfig(edit: AnyObj, k: 'win' | 'linux'): AnyObj {
     for (const s of (m.steps as AnyObj[]) ?? []) if (s.action !== undefined) s.action = resolveAction(s.action, k);
   return flat;
 }
+// El pad solo necesita la ESTRUCTURA de cada View (id/label/section/kind/color);
+// las acciones de cada slot ya viajan en `layers`, no hay que duplicarlas.
+function slimViews(views: unknown): unknown {
+  if (!Array.isArray(views)) return views;
+  return views.map((v) => {
+    const o = (v ?? {}) as AnyObj;
+    return { id: o.id, label: o.label, section: o.section, kind: o.kind, color: o.color };
+  });
+}
+// Navegacion DATA-DRIVEN: el pad arma el menu desde `navigation` + `views`. Ya no
+// los borramos; mandamos `navigation` tal cual y `views` en version slim.
 function toPadConfig(edit: AnyObj, k: 'win' | 'linux'): AnyObj {
   const flat = resolveConfig(edit, k);
-  delete flat.navigation;
-  delete flat.views;
+  if (flat.views) flat.views = slimViews(flat.views);
   return flat;
 }
 
@@ -83,9 +93,21 @@ export async function handleConfig(req: IncomingMessage, res: ServerResponse, de
     }
     if (path === '/api/config' && req.method === 'POST') {
       const edit = ensureNavigationMetadata(JSON.parse(await readBody(req)) as AnyObj);
-      await writeFile(EDIT_FILE, JSON.stringify(edit), 'utf8');         // persiste el rico
+
+      // Validacion companion-side: frena IDs/slots/refs invalidos ANTES de
+      // tocar disco o empujar al pad. Los warnings no bloquean.
+      const issues = validateNavigation(edit);
+      const errors = issues.filter((i) => i.level === 'error');
+      if (errors.length) { send(400, JSON.stringify({ error: 'config invalida', issues })); return; }
+
       const flat = toPadConfig(edit as AnyObj, osKey());                // resuelve per-OS y quita metadata companion-side
-      const r = await padFetch(device, token, '/api/config', 'POST', JSON.stringify(flat));
+      const flatJson = JSON.stringify(flat);
+      if (Buffer.byteLength(flatJson) > PAD_CONFIG_LIMIT) {             // no entra en el firmware -> no persistir ni empujar
+        send(400, JSON.stringify({ error: `config plana ${Buffer.byteLength(flatJson)}B supera el limite del pad (${PAD_CONFIG_LIMIT}B)`, issues })); return;
+      }
+
+      await writeFile(EDIT_FILE, JSON.stringify(edit), 'utf8');         // persiste el rico (solo si paso validacion)
+      const r = await padFetch(device, token, '/api/config', 'POST', flatJson);
       send(r.status, r.text); return;
     }
     send(404, '{"error":"not found"}');

@@ -55,6 +55,13 @@
   .navview h3{font-size:13px;margin:0 0 6px;color:var(--tx)}
   .slots{display:flex;gap:4px;flex-wrap:wrap}
   .slot{font-size:11px;color:var(--mut);border:1px solid #27313d;border-radius:6px;padding:2px 5px;background:#111722}
+  .navwarn{background:#2d1a16;border:1px solid #7a3322;border-radius:9px;padding:8px 12px;margin-bottom:10px;font-size:12.5px;color:#f0a020;line-height:1.6}
+  .navvh{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+  .navvh h3{flex:1;margin:0}
+  .cardrow{display:flex;gap:6px;align-items:center;margin-top:4px}
+  .slotin{width:54px}
+  .slotlbl{font-size:12px;color:var(--tx)}
+  .navsec .lbl-in{max-width:220px}
 </style>
 </head>
 <body>
@@ -100,26 +107,95 @@ const setStatus=(t,c)=>{$("status").textContent=t;$("status").style.color=c||"va
 const markDirty=()=>{dirty=true;$("save").disabled=false;};
 const isVar=v=>v&&typeof v==="object"&&!Array.isArray(v)&&!("t"in v)&&("win"in v||"linux"in v);
 
-  // ============================ NAVEGACION ============================
-  function renderNavigation() {
-    const host = $("view-navigation"); host.innerHTML = "";
-    const nav = cfg.navigation || {}, views = cfg.views || [], byId = new Map(views.map(v => [v.id, v]));
-    const mode = nav.generated ? "generado desde el keymap actual" : "editable";
-    host.appendChild(el("div", "hint", `Modelo de navegación (${mode}). Próximo paso: editar secciones, Views, Cards y gestures desde esta pantalla.`));
-    const meta = el("div", "bind");
-    meta.innerHTML = `<div class="bhead"><span class="bname">Resumen</span><span class="bnum">v${esc(nav.version || "?")}</span></div>
-    <div class="actrow"><span class="k">Home</span><span>${esc(nav.homeView || "-")}</span><span class="k">ALT1</span><span>${esc(nav.alt?.alt1View || "-")}</span><span class="k">ALT2</span><span>${esc(nav.alt?.alt2View || "-")}</span><span class="k">linger</span><span>${esc(nav.alt?.lingerMs || 0)}ms</span></div>`;
-    host.appendChild(meta);
-    const sections = nav.sections || [];
-    if (!sections.length) { host.appendChild(el("div", "empty", "Sin secciones de navegación.")); return; }
-    sections.forEach(sec => {
-      const box = el("section", "navsec");
-      box.appendChild(el("div", "navtitle", `<span>${esc(sec.icon || "section")}</span><span>${esc(sec.label || sec.id)}</span><span class="bnum">${(sec.views || []).length} views</span>`));
-      const grid = el("div", "navviews");
-      (sec.views || []).forEach(id => {
-        const v = byId.get(id) || { id, label: id, cards: [] };
-        const slots = (v.cards || []).map(c => `<span class="slot">${Number(c.slot) + 1}. ${esc(c.label || "-")}</span>`).join("") || "<span class=\"slot\">sin cards</span>";
-        const card = el("div", "navview", `<h3>${esc(v.label || v.id)} <span class="bnum">${esc(v.kind || "cards")}</span></h3><div class="slots">${slots}</div>`);
+  // ============================ NAVEGACION (editable) ============================
+  // El modelo rico (cfg.navigation + cfg.views) es metadata companion-side: define
+  // secciones, orden de Views y slots de las Cards. El firmware todavia recibe la
+  // config PLANA (el companion strippea navigation/views), asi que editar acá NO
+  // cambia lo que el pad ejecuta — cambia cómo se ORDENA/presenta. Al tocar algo,
+  // marcamos generated:false para que el server deje de regenerarlo desde el keymap.
+  function navModel(){ if(!cfg.navigation) cfg.navigation={version:2,generated:true,homeView:"",alt:{alt1View:"",alt2View:"",lingerMs:600},sections:[]}; if(!cfg.views) cfg.views=[]; return cfg.navigation; }
+  function navTouch(){ navModel().generated=false; markDirty(); }          // cambio de valor inline (sin re-render)
+  function navStruct(){ navTouch(); renderNavigation(); }                  // cambio estructural (re-render)
+  function moveItem(arr,i,d){ const j=i+d; if(j<0||j>=arr.length) return false; [arr[i],arr[j]]=[arr[j],arr[i]]; return true; }
+
+  // Validacion en vivo: espeja las reglas del server (schema.ts validateNavigation)
+  // para avisar antes de Guardar. El server vuelve a validar igual.
+  function navIssues(){
+    const out=[], nav=cfg.navigation||{}, views=cfg.views||[], ids=new Set();
+    views.forEach(v=>{ if(!v.id){out.push("Hay una View sin id."); return;} if(ids.has(v.id))out.push(`View id duplicado: "${v.id}".`); ids.add(v.id);
+      const slots=new Set(); (v.cards||[]).forEach(c=>{const s=Number(c.slot);
+        if(!(Number.isInteger(s)&&s>=0&&s<10)) out.push(`View "${v.id}": slot fuera de rango (0..9): ${c.slot}.`);
+        else if(slots.has(s)) out.push(`View "${v.id}": slot ${s} duplicado.`); slots.add(s);}); });
+    (nav.sections||[]).forEach(sec=>{ (sec.views||[]).forEach(r=>{ if(!ids.has(r)) out.push(`Sección "${sec.id}" referencia una View inexistente: "${r}".`); }); });
+    if(nav.homeView&&!ids.has(nav.homeView)) out.push(`homeView apunta a una View inexistente: "${nav.homeView}".`);
+    return out;
+  }
+
+  // <select> de Views (id+label). cur = id actual; onCh(nuevoId).
+  function viewSelect(curId,onCh,extra){
+    const s=el("select"); (extra||[]).concat((cfg.views||[]).map(v=>[v.id,v.label||v.id])).forEach(([val,txt])=>{
+      const o=el("option");o.value=val;o.textContent=txt;if(val===(curId??""))o.selected=true;s.appendChild(o);});
+    s.onchange=()=>{onCh(s.value);}; return s;
+  }
+
+  function renderNavigation(){
+    const host=$("view-navigation"); host.innerHTML="";
+    const nav=navModel(), views=cfg.views, byId=new Map(views.map(v=>[v.id,v]));
+    const mode=nav.generated?"generado desde el keymap (read-only hasta que edites)":"editable (no se regenera)";
+    host.appendChild(el("div","hint",`Modelo de navegación · <b>${mode}</b>. El pad sigue recibiendo la config plana; acá editás secciones, orden de Views y slots de Cards. Tocar algo lo vuelve editable.`));
+
+    const issues=navIssues();
+    if(issues.length){ const w=el("div","navwarn"); w.innerHTML="⚠ "+issues.map(esc).join("<br>⚠ "); host.appendChild(w); }
+
+    // --- Navegación global: Home / ALT1 / ALT2 / linger ---
+    nav.alt=nav.alt||{alt1View:"",alt2View:"",lingerMs:600};
+    const g=el("div","bind"); g.appendChild(el("div","bname","Navegación global"));
+    const grow=el("div","actrow");
+    grow.append(el("span","k","Home"), viewSelect(nav.homeView,v=>{nav.homeView=v;navStruct();}));
+    grow.append(el("span","k","ALT1"), viewSelect(nav.alt.alt1View,v=>{nav.alt.alt1View=v;navStruct();}));
+    grow.append(el("span","k","ALT2"), viewSelect(nav.alt.alt2View,v=>{nav.alt.alt2View=v;navStruct();}));
+    grow.append(el("span","k","Linger ms"));
+    const ln=el("input","numin");ln.type="number";ln.min=0;ln.step=50;ln.value=nav.alt.lingerMs||600;ln.oninput=()=>{nav.alt.lingerMs=+ln.value;navTouch();};grow.appendChild(ln);
+    g.appendChild(grow); host.appendChild(g);
+
+    const sections=nav.sections||(nav.sections=[]);
+    if(!sections.length){ host.appendChild(el("div","empty","Sin secciones de navegación.")); }
+    sections.forEach((sec,si)=>{
+      const box=el("section","navsec");
+      const title=el("div","navtitle");
+      title.appendChild(el("span",null,esc(sec.icon||"·")));
+      const lbl=el("input","lbl-in");lbl.type="text";lbl.value=sec.label||sec.id||"";lbl.placeholder="nombre de sección";lbl.oninput=()=>{sec.label=lbl.value;navTouch();};title.appendChild(lbl);
+      title.appendChild(el("span","bnum",`${(sec.views||[]).length} views`));
+      const up=el("button","sm","↑");up.disabled=si===0;up.onclick=()=>{if(moveItem(sections,si,-1))navStruct();};
+      const dn=el("button","sm","↓");dn.disabled=si===sections.length-1;dn.onclick=()=>{if(moveItem(sections,si,1))navStruct();};
+      title.append(up,dn); box.appendChild(title);
+
+      const grid=el("div","navviews");
+      (sec.views||(sec.views=[])).forEach((id,vi)=>{
+        const v=byId.get(id)||{id,label:id,cards:[],kind:"cards"};
+        const card=el("div","navview");
+        const h=el("div","navvh");
+        h.appendChild(el("h3",null,`${esc(v.label||v.id)} <span class="bnum">${esc(v.kind||"cards")}</span>`));
+        const vu=el("button","sm","↑");vu.disabled=vi===0;vu.onclick=()=>{if(moveItem(sec.views,vi,-1))navStruct();};
+        const vd=el("button","sm","↓");vd.disabled=vi===sec.views.length-1;vd.onclick=()=>{if(moveItem(sec.views,vi,1))navStruct();};
+        h.append(vu,vd); card.appendChild(h);
+
+        // mover la View a otra sección
+        const mv=el("div","actrow");mv.appendChild(el("span","k","sección"));
+        const secSel=el("select");sections.forEach((s2,sj)=>{const o=el("option");o.value=sj;o.textContent=s2.label||s2.id;if(sj===si)o.selected=true;secSel.appendChild(o);});
+        secSel.onchange=()=>{const dst=+secSel.value; if(dst===si)return; sec.views.splice(vi,1); (sections[dst].views||(sections[dst].views=[])).push(id); if(v.section!==undefined)v.section=sections[dst].id; navStruct();};
+        mv.appendChild(secSel);card.appendChild(mv);
+
+        // Cards: slot editable (mover entre 0..9)
+        const cards=v.cards||[];
+        if(!cards.length) card.appendChild(el("div","slots",'<span class="slot">sin cards</span>'));
+        else cards.forEach(c=>{
+          const row=el("div","cardrow");
+          const sn=el("input","slotin");sn.type="number";sn.min=0;sn.max=9;sn.value=Number(c.slot);
+          sn.onchange=()=>{const n=Math.max(0,Math.min(9,+sn.value));c.slot=n;navStruct();};
+          row.append(el("span","k","slot"),sn,el("span","slotlbl",esc(c.label||"-")));
+          card.appendChild(row);
+        });
         grid.appendChild(card);
       });
       box.appendChild(grid); host.appendChild(box);
@@ -227,7 +303,7 @@ function renderShortcuts(){
     li.oninput=()=>{ensureBind(L,inp.id).label=li.value;markDirty();}; head.appendChild(li); card.appendChild(head);
     const b=ensureBind(L,inp.id);
     if(enc){ card.appendChild(perOsField("Giro →",()=>b.cw,x=>b.cw=x)); card.appendChild(perOsField("Giro ←",()=>b.ccw,x=>b.ccw=x)); }
-    else  { card.appendChild(perOsField("Acción",()=>b.press,x=>b.press=x)); card.appendChild(perOsField("Mantener",()=>b.long,x=>b.long=x)); }
+    else  { card.appendChild(perOsField("Acción",()=>b.press,x=>b.press=x)); }   // una sola acción por botón (sin "Mantener" oculto)
     host.appendChild(card);
   });
 }
@@ -309,12 +385,17 @@ async function load(){
 }
 async function save(){
   if(!cfg)return;
-  cfg.layers.forEach(L=>{L.binds=(L.binds||[]).filter(b=>(b.label&&b.label.length)||b.press||b.long||b.cw||b.ccw||b.st);});
+  cfg.layers.forEach(L=>{(L.binds||[]).forEach(b=>delete b.long);   // el long-press de botones ya no existe -> no persistir acciones secundarias
+    L.binds=(L.binds||[]).filter(b=>(b.label&&b.label.length)||b.press||b.cw||b.ccw||b.st);});
   $("save").disabled=true; setStatus("guardando + reiniciando…","#f0a020");
   try{
     const r=await fetch("/api/config",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(cfg)});
     if(r.ok){ setStatus("guardado ✓ — el pad reinicia (~2s). Recargá en unos segundos.","var(--gn)"); dirty=false; }
-    else { setStatus("error al guardar: "+await r.text(),"#f85149"); $("save").disabled=false; }
+    else {
+      let msg=await r.text();
+      try{ const j=JSON.parse(msg); msg=(j.error||"error")+(j.issues?.length?": "+j.issues.map(i=>i.msg||i).join(" | "):""); }catch(e){}
+      setStatus("no se guardó — "+msg,"#f85149"); $("save").disabled=false;
+    }
   }catch(e){ setStatus("no se pudo guardar (¿pad reiniciándose?)","#f85149"); $("save").disabled=false; }
 }
 document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>showTab(t.dataset.t));

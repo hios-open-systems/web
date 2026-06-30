@@ -282,11 +282,12 @@ static void coresGridGeom(int n, int& cols, int& rows, int& cwid, int& chei) {
 }
 static void coreCell(TFT_eSPI& g, int x, int y, int w2, int chei, int idx, uint8_t v, bool chrome) {
   uint16_t col = loadColor(v);
-  if (chrome) {  // etiqueta Cn (estatica)
+  if (chrome) {  // etiqueta Cn 1-based (estatica). En chrome la grilla ya fue limpiada (no hace falta clear).
     g.setTextDatum(TL_DATUM); g.setTextColor(theme::DIM, theme::BG);
-    char lbl[6]; snprintf(lbl, sizeof(lbl), "C%d", idx); g.drawString(lbl, x, y, 2);
+    char lbl[6]; snprintf(lbl, sizeof(lbl), "C%d", idx + 1); g.drawString(lbl, x, y, 2);
+  } else {
+    g.fillRect(x + w2 - 22, y, 22, 16, theme::BG);            // update parcial: limpia solo el % (no pisa la etiqueta)
   }
-  g.fillRect(x + w2 - 36, y, 36, 16, theme::BG);              // clear %
   char pb[6]; snprintf(pb, sizeof(pb), "%u", v);
   g.setTextDatum(TR_DATUM); g.setTextColor(col, theme::BG); g.drawString(pb, x + w2, y, 2);
   g.setTextDatum(TL_DATUM);
