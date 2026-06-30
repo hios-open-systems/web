@@ -119,11 +119,10 @@ void dash::keycap(const SkinContext& ctx, const UiSnapshot& s, uint8_t i, bool o
   const Layer& L = km.layer(s.activeLayer);
   const char* label = km.label(s.activeLayer, btnId(i));
   const int x = layout::kcX(i), y = layout::kcY(i), w = layout::KC_W, h = layout::KC_H;
-  const bool flash = s.longFlash & (1 << i);            // flash de confirmacion del long-press
-  uint16_t fill   = flash ? theme::FG : (on ? L.color : theme::CARD);
-  uint16_t border = flash ? theme::FG : (on ? theme::FG : theme::blend(L.color, theme::EDGE, 165));
-  uint16_t ic     = flash ? theme::BG : (on ? theme::BG : L.color);
-  uint16_t tc     = flash ? theme::BG : (on ? theme::BG : theme::FG);
+  uint16_t fill   = on ? L.color : theme::CARD;
+  uint16_t border = on ? theme::FG : theme::blend(L.color, theme::EDGE, 165);
+  uint16_t ic     = on ? theme::BG : L.color;
+  uint16_t tc     = on ? theme::BG : theme::FG;
   g.fillRoundRect(x + 3, y + 5, w, h, 10, theme::BG);
   g.fillRoundRect(x, y, w, h, 10, fill);
   g.drawRoundRect(x, y, w, h, 10, border);

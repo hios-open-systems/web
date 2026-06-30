@@ -106,41 +106,12 @@ void Dispatcher::fireResolved(const InputEvent& e) {
   xQueueSend(bus::actionQueue, &a, 0);
 }
 
-// Botones de cara: tap corto (al soltar) dispara la accion de la capa; mantener
-// (long-press) togglea el estado del card que esta abajo de ese boton.
+// Botones de cara (1-10): disparan la accion de la capa al APRETAR. Como ya no hay
+// long-press, no queda tap-vs-hold que distinguir -> se actua en el PRESS, sin estado.
+// Esto ademas mata el "fantasma": si el PRESS lo consumio el menu (eleccion de capa),
+// el RELEASE cae en NORMAL pero ya no dispara nada porque solo miramos el PRESS.
 void Dispatcher::handleFaceButton(const InputEvent& e) {
-  int i = (int)e.id;   // 0..9 (BTN_1..BTN_10)
-  switch (e.edge) {
-    case Edge::PRESS:      m_btnConsumed[i] = false; break;
-    case Edge::LONG_PRESS: m_btnConsumed[i] = true; m_longFlashMs[i] = e.t_ms; statusToggle(i); break;
-    case Edge::RELEASE:
-      if (!m_btnConsumed[i]) {                       // fue tap corto -> accion de capa
-        InputEvent pe = e; pe.edge = Edge::PRESS;
-        fireResolved(pe);
-      }
-      break;
-    default: break;
-  }
-}
-
-// Toggle del card por long-press del boton N (universal, en cualquier capa):
-//   1 mic     -> MUTE GLOBAL via companion (Core Audio, app-independiente)
-//   2 camara  -> solo optimista (no hay mute de camara a nivel OS; la app lo hace en el tap)
-//   3 media   -> play/pausa (HID universal)
-//   4 volumen -> mute (HID universal)
-//   5 enlace  -> WiFi on/off (no es HID; ahorro de energia)
-void Dispatcher::statusToggle(int i) {
-  Action a{};
-  switch (i) {
-    case 0: net::queueCommand(CompanionCmd::MIC_TOGGLE);
-            if (m_state) m_state->applyToggle(StateToggle::MIC); return;     // mute global
-    case 1: if (m_state) m_state->applyToggle(StateToggle::CAMERA); return;  // optimista
-    case 2: a = mediaAction(MediaUsage::PLAY_PAUSE); if (m_state) m_state->applyToggle(StateToggle::MEDIA); break;
-    case 3: a = mediaAction(MediaUsage::MUTE); break;
-    case 4: net::toggleWifi(); return;
-    default: return;
-  }
-  xQueueSend(bus::actionQueue, &a, 0);
+  if (e.edge == Edge::PRESS) fireResolved(e);
 }
 
 // --- ALT momentaneo: mantener ALT1/ALT2 -> capa Launcher/Macros; al soltar, queda
@@ -245,13 +216,6 @@ void Dispatcher::tick(uint32_t now) {
   }
 }
 
-// Bits de los botones (BTN_1..10) cuyo long-press disparo hace < 400ms (flash de confirmacion).
-uint16_t Dispatcher::longFlashMask(uint32_t now) const {
-  uint16_t m = 0;
-  for (int i = 0; i < 10; i++)
-    if (m_longFlashMs[i] && (now - m_longFlashMs[i]) < 400) m |= (1 << i);   // flash visible ~400ms
-  return m;
-}
 
 void Dispatcher::enqueueClick(uint8_t button) {
   m_lastClickBtn = (button == 0x02) ? 2 : 1;   // para el flash L/R del box del mouse

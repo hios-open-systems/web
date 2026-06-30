@@ -18,7 +18,6 @@ void serializeUi(JsonObject ui, const UiSnapshot& s, const KeyMap* km, bool incl
   ui["cf"]   = s.clickFlash;
   ui["em"]   = s.encMode;
   ui["alt"]  = s.altActive;     // 0=ninguno, 1=ALT1, 2=ALT2 (held+linger)
-  ui["lf"]   = s.longFlash;
   ui["mic"]  = s.micMuted;
   ui["cam"]  = s.camOff;
   ui["med"]  = s.mediaPlay;
