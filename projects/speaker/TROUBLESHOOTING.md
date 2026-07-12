@@ -28,7 +28,7 @@ Problemas comunes y como solucionarlos.
 // Verificar estos valores en el codigo
 #define I2S_DOUT 25  // DIN del MAX98357
 #define I2S_BCLK 26  // BCLK
-#define I2S_LRC  22  // LRC (Word Select)
+#define I2S_LRC  27  // LRC (Word Select)
 ```
 
 ### Verificar parlante

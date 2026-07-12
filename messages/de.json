@@ -349,12 +349,29 @@
         "total_approx": "Ungefährer Gesamtbetrag",
         "no_shipping": "Ohne Versand",
         "gallery": "Galerie",
-        "print_pinout": "Pinout drucken"
+        "print_pinout": "Pinout drucken",
+        "wiring_guide": "Verdrahtungsanleitung"
     },
     "Pinouts": {
         "eyebrow": "Hardware-Referenz",
         "title": "Interaktive Pinouts",
         "subtitle": "Erkunde die Pin-Diagramme der Module, die in unseren Projekten verwendet werden",
+        "padCallout": "🎛️ HIOS PAD — komplette Verdrahtungsanleitung",
+        "padCalloutHint": "GPIO-Karte · 2×5-Matrix · I2S-Verstärker · Checkliste →",
+        "builds_title": "Builds (reale Verdrahtung)",
+        "builds_hint": "GPIO-Karte · Verdrahtung · Checkliste →",
+        "usedIn": "Verwendet in:",
+        "Kinds": {
+            "mcu": "Mikrocontroller",
+            "amp": "Verstärker",
+            "dac": "DAC",
+            "display": "Display",
+            "input": "Eingabe",
+            "led": "LED",
+            "power": "Stromversorgung",
+            "battery": "Batterie",
+            "connector": "Steckverbinder"
+        },
         "available_modules": "Verfügbare Module",
         "all": "Alle",
         "search_placeholder": "Modul, Schnittstelle oder Familie suchen...",
@@ -462,6 +479,17 @@
             "html": "HTML"
         }
     },
+    "WiringGuide": {
+        "eyebrow": "Hardware-Referenz",
+        "backToPinouts": "Zurück zu Pinouts",
+        "tabs": {
+            "pines": "Pins",
+            "botones": "Tasten",
+            "parlantes": "Lautsprecher",
+            "conexiones": "Verbindungen",
+            "check": "Checkliste"
+        }
+    },
     "ProjectsPage": {
         "title": "Projekte",
         "subtitle": "Offene Hardware, die ich entworfen, kaputtgemacht und dokumentiert habe. Code, Schaltpläne und Anleitungen — alles da, damit du deine eigene baust."
@@ -488,6 +516,9 @@
             "workbench": "Workbench",
             "calculators": "Rechner",
             "pinouts": "Pinouts",
+            "padWiring": "PAD-Verdrahtungsanleitung",
+      "btdacWiring": "BTDAC-Verdrahtungsanleitung",
+      "speakerWiring": "Speaker-Verdrahtungsanleitung",
             "snippets": "Snippets",
             "settings": "Einstellungen",
             "feedback": "Feedback",

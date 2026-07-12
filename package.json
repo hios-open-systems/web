@@ -22,6 +22,8 @@
     "test:patterns": "node --experimental-strip-types scripts/patterns-selftest.ts",
     "test:themes": "node --experimental-strip-types scripts/themes-selftest.ts",
     "test:usage": "node --experimental-strip-types scripts/usage-selftest.ts",
+    "test:wiring": "node --experimental-strip-types scripts/wiringguide-selftest.ts",
+    "test:breakouts": "node --experimental-strip-types scripts/breakouts-selftest.ts",
     "test:resistor": "node --experimental-strip-types scripts/resistor-selftest.ts",
     "test:ohms": "node --experimental-strip-types scripts/ohms-selftest.ts",
     "test:httpstatus": "node --experimental-strip-types scripts/httpstatus-selftest.ts",

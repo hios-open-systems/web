@@ -6,10 +6,11 @@ import { ArrowLeftOutlined, DownloadOutlined, GithubOutlined, DoubleRightOutline
 import { motion } from 'framer-motion';
 import { useTheme } from '@/lib/ThemeContext';
 import { ProjectMeta } from '@/lib/projects';
+import { WIRING_GUIDE_SLUGS } from '@/config/pinouts/guides';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { ImageCarousel } from '@/components/common/ImageCarousel';
 
 const { Title, Paragraph, Text } = Typography;
@@ -23,6 +24,7 @@ interface ProjectDetailClientProps {
 
 export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps) {
     const { mode } = useTheme();
+    const locale = useLocale();
     const t = useTranslations('ProjectDetail');
     const accentColor = '#f59e0b';
     const bgColor = mode === 'dark' ? '#0d0d0d' : '#ffffff';
@@ -135,6 +137,13 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                                 {t('print_pinout')}
                             </Button>
                         </Link>
+                        {WIRING_GUIDE_SLUGS.includes(slug) && (
+                            <Link href={`/${locale}/pinouts/${slug}`}>
+                                <Button icon={<LinkOutlined />} style={{ borderColor: accentColor, color: accentColor }}>
+                                    {t('wiring_guide')}
+                                </Button>
+                            </Link>
+                        )}
                     </Space>
                 </motion.div>
             </section>

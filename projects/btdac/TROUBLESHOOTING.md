@@ -37,9 +37,9 @@ Con multímetro en modo continuidad:
 
 | ESP32 GPIO | PCM5102 Pin | Debe dar |
 |------------|-------------|----------|
-| 26         | BCK         | ~0Ω      |
-| 25         | LRCK        | ~0Ω      |
-| 22         | DIN         | ~0Ω      |
+| 27         | BCK         | ~0Ω      |
+| 14         | LRCK        | ~0Ω      |
+| 13         | DIN         | ~0Ω      |
 | GND        | GND         | ~0Ω      |
 | GND        | SCK         | ~0Ω      |
 
@@ -74,9 +74,9 @@ Si nada funciona, agregá esto al setup() para ver si I2S está activo:
 ```cpp
 // Después de a2dp_sink.start()
 Serial.println("Verificando I2S...");
-Serial.printf("BCK pin: %d\n", 26);
-Serial.printf("LRCK pin: %d\n", 25);
-Serial.printf("DOUT pin: %d\n", 22);
+Serial.printf("BCK pin: %d\n", 27);
+Serial.printf("LRCK pin: %d\n", 14);
+Serial.printf("DOUT pin: %d\n", 13);
 ```
 
 ## Links Útiles

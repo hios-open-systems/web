@@ -30,6 +30,23 @@
   --hios-transition-fast: 0.15s ease;
   --hios-transition: 0.3s ease;
   --hios-transition-slow: 0.5s ease;
+
+  /* Pinout role colors (light — darkened for contrast on white) */
+  --pw-role-io: #1d4ed8;
+  --pw-role-adc: #15803d;
+  --pw-role-pwm: #7c3aed;
+  --pw-role-i2s: #0d9488;
+  --pw-role-i2c: #6d28d9;
+  --pw-role-spi: #0e7490;
+  --pw-role-dac: #a21caf;
+  --pw-role-neo: #be185d;
+  --pw-role-mtx: #c2410c;
+  --pw-role-pwr5: #dc2626;
+  --pw-role-pwr33: #b45309;
+  --pw-role-pwr: #c2410c;
+  --pw-role-gnd: #475569;
+  --pw-role-nc: #64748b;
+  --pw-role-dim: #64748b;
 }
 
 /* Dark mode overrides */
@@ -45,6 +62,23 @@
   --hios-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
   --hios-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
   --hios-shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.4);
+
+  /* Pinout role colors (dark) */
+  --pw-role-io: #58a6ff;
+  --pw-role-adc: #3fb950;
+  --pw-role-pwm: #bc8cff;
+  --pw-role-i2s: #2dd4bf;
+  --pw-role-i2c: #a78bfa;
+  --pw-role-spi: #22d3ee;
+  --pw-role-dac: #f0abfc;
+  --pw-role-neo: #ff79c6;
+  --pw-role-mtx: #f0883e;
+  --pw-role-pwr5: #ff5c5c;
+  --pw-role-pwr33: #ffb454;
+  --pw-role-pwr: #fb923c;
+  --pw-role-gnd: #8b949e;
+  --pw-role-nc: #6e7681;
+  --pw-role-dim: #6e7681;
 }
 
 * {

@@ -56,7 +56,7 @@ Instrucciones paso a paso para armar el proyecto.
 7. **Conectar I2S**
    - DIN → GPIO25 del ESP32
    - BCLK → GPIO26 del ESP32
-   - LRC → GPIO22 del ESP32
+   - LRC → GPIO27 del ESP32
 
 8. **Conectar parlante**
    - Speaker+ → salida + del MAX98357
@@ -88,7 +88,7 @@ BATERIAS          CARGADOR           LM2596            ESP32
                                               │
                                               │  GPIO25────(DIN)
                                               │  GPIO26────(BCLK)
-                                              │  GPIO22────(LRC)
+                                              │  GPIO27────(LRC)
                                               │
                                               │         (+)────PARLANTE────(-)
                                               │         │                   │

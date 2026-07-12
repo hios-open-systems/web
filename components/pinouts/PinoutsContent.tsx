@@ -1,59 +1,51 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
-import { useTranslations } from 'next-intl';
-import { filterModules, getModuleCategoryCounts, MODULES, PINOUTS_ATTRIBUTION, type ModuleCategoryFilter } from '@/config/modules';
-import { ModuleList } from '@/components/pinouts/ModuleList';
-import { ModuleViewer } from '@/components/pinouts/ModuleViewer';
-import styles from './pinouts.module.css';
+import { useState } from 'react';
+import Link from 'next/link';
+import { useLocale, useTranslations } from 'next-intl';
+import { BREAKOUTS, getBreakout, PINOUTS_ATTRIBUTION } from '@/config/pinouts/modules';
+import { BreakoutList } from './breakout/BreakoutList';
+import { BreakoutViewer } from './breakout/BreakoutViewer';
+import styles from './breakout/breakout.module.css';
+
+const BUILDS = [
+  { slug: 'pad', label: 'HIOS PAD' },
+  { slug: 'btdac', label: 'BTDAC' },
+  { slug: 'speaker', label: 'WiFi Speaker' },
+];
 
 export function PinoutsContent() {
   const t = useTranslations('Pinouts');
-  const [query, setQuery] = useState('');
-  const [category, setCategory] = useState<ModuleCategoryFilter>('all');
-  const [selectedModuleId, setSelectedModuleId] = useState<string | undefined>(
-    MODULES[0]?.id
-  );
-
-  const modules = useMemo(() => filterModules(MODULES, query, category), [category, query]);
-  const selectedModule = useMemo(
-    () => modules.find((m) => m.id === selectedModuleId) ?? modules[0],
-    [modules, selectedModuleId]
-  );
-  const counts = getModuleCategoryCounts();
+  const locale = useLocale();
+  const [selectedId, setSelectedId] = useState(BREAKOUTS[0].id);
+  const selected = getBreakout(selectedId) ?? BREAKOUTS[0];
 
   return (
-    <main className={styles.pinoutsPage}>
-      <div className={styles.pinoutsHeader}>
-        <span className={styles.pinoutsEyebrow}>{t('eyebrow')}</span>
-        <div className={styles.pinoutsHeaderRow}>
-          <div>
-            <h1 className={styles.pageTitle}>{t('title')}</h1>
-            <p className={styles.pageSubtitle}>{t('subtitle')}</p>
-          </div>
-          <div className={styles.pinoutsStats}>
-            <span><strong>{counts.all}</strong>{t('stats_modules')}</span>
-            <span><strong>{counts.microcontroller}</strong>{t('stats_microcontrollers')}</span>
-            <span><strong>{counts.audio + counts.amplifier}</strong>{t('stats_audio')}</span>
-          </div>
+    <main className={styles.page}>
+      <header className={styles.pageHead}>
+        <span className={styles.eyebrow}>{t('eyebrow')}</span>
+        <h1 className={styles.pageTitle}>{t('title')}</h1>
+        <p className={styles.pageSubtitle}>{t('subtitle')}</p>
+      </header>
+
+      <section className={styles.builds}>
+        <div className={styles.buildsTitle}>{t('builds_title')}</div>
+        <div className={styles.buildsGrid}>
+          {BUILDS.map((build) => (
+            <Link key={build.slug} href={`/${locale}/pinouts/${build.slug}`} className={styles.buildCard}>
+              <span className={styles.buildName}>{build.label}</span>
+              <span className={styles.buildHint}>{t('builds_hint')}</span>
+            </Link>
+          ))}
         </div>
-      </div>
+      </section>
 
-      <div className={styles.pinoutsLayout}>
+      <div className={styles.layout}>
         <aside className={styles.sidebar}>
-          <ModuleList
-            modules={modules}
-            selectedModuleId={selectedModule?.id ?? selectedModuleId}
-            query={query}
-            category={category}
-            onSelect={setSelectedModuleId}
-            onQueryChange={setQuery}
-            onCategoryChange={setCategory}
-          />
+          <BreakoutList selectedId={selected.id} onSelect={setSelectedId} />
         </aside>
-
-        <div className={styles.viewerColumn}>
-          <ModuleViewer module={selectedModule} loading={false} />
+        <div className={styles.viewerCol}>
+          <BreakoutViewer breakout={selected} />
         </div>
       </div>
 

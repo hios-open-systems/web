@@ -10,6 +10,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/workbench',
     '/calculators',
     '/pinouts',
+    '/pinouts/pad',
+    '/pinouts/btdac',
+    '/pinouts/speaker',
     ...workbenchTools.filter((tool) => !tool.external).map((tool) => tool.href),
   ];
   const now = new Date();

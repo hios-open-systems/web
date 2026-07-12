@@ -3,8 +3,8 @@
 //  activa: cada Layer tiene su uint16_t color (RGB565) y aca lo expandimos a
 //  RGB888 y pintamos toda la tira.
 //
-//  Pin: GPIO43 (ex-UART0 TX). Al tomarlo el RMT del NeoPixel, el Serial deja de
-//  salir por hardware (no crashea). Se controla por cfg::NEOPIXEL_ENABLED.
+//  Pin: GPIO9 (ex-divisor de batería, cfg::NEOPIXEL_PIN). Pin limpio -> UART0
+//  (43/44) queda libre para el Serial y el flasheo. Se controla por cfg::NEOPIXEL_ENABLED.
 // ============================================================================
 #pragma once
 #include <stdint.h>
