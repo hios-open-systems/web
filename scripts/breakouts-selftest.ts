@@ -1,0 +1,79 @@
+import { KIND_ORDER, ROLE_LABEL, matchesBreakout } from '../config/pinouts/modules/breakout.ts';
+import { MCU_BREAKOUTS } from '../config/pinouts/modules/mcu.ts';
+import { AUDIO_BREAKOUTS } from '../config/pinouts/modules/audio.ts';
+import { DISPLAY_BREAKOUTS } from '../config/pinouts/modules/display.ts';
+import { INPUT_BREAKOUTS } from '../config/pinouts/modules/input.ts';
+import { LED_BREAKOUTS } from '../config/pinouts/modules/led.ts';
+import { POWER_BREAKOUTS } from '../config/pinouts/modules/power.ts';
+import { BATTERY_BREAKOUTS } from '../config/pinouts/modules/battery.ts';
+import { CONNECTOR_BREAKOUTS } from '../config/pinouts/modules/connector.ts';
+
+const BREAKOUTS = [
+  ...MCU_BREAKOUTS,
+  ...AUDIO_BREAKOUTS,
+  ...DISPLAY_BREAKOUTS,
+  ...INPUT_BREAKOUTS,
+  ...LED_BREAKOUTS,
+  ...POWER_BREAKOUTS,
+  ...BATTERY_BREAKOUTS,
+  ...CONNECTOR_BREAKOUTS,
+];
+const get = (id: string) => BREAKOUTS.find((b) => b.id === id);
+
+let failures = 0;
+function ok(name: string, cond: boolean) {
+  if (!cond) {
+    failures += 1;
+    console.error(`✗ ${name}`);
+  } else {
+    console.log(`✓ ${name}`);
+  }
+}
+
+const roleKeys = new Set(Object.keys(ROLE_LABEL));
+const kindKeys = new Set(KIND_ORDER);
+const builds = new Set(['pad', 'btdac', 'speaker']);
+
+const ids = BREAKOUTS.map((b) => b.id);
+ok('unique ids', new Set(ids).size === ids.length);
+ok('every pin role is known', BREAKOUTS.every((b) => b.pins.every((p) => roleKeys.has(p.role))));
+ok('every kind is known', BREAKOUTS.every((b) => kindKeys.has(b.kind)));
+ok('every breakout has pins', BREAKOUTS.every((b) => b.pins.length > 0));
+ok('every pin has a name', BREAKOUTS.every((b) => b.pins.every((p) => p.name.length > 0)));
+ok('usedBy resolves to known builds', BREAKOUTS.every((b) => (b.usedBy ?? []).every((s) => builds.has(s))));
+ok('search empty returns all', matchesBreakout(BREAKOUTS[0], '') && BREAKOUTS.every((b) => matchesBreakout(b, '')));
+ok('covers 15 modules', BREAKOUTS.length === 15);
+
+const max = get('max98357a')!;
+const gainRows = max.gain!.rows;
+const vinRow = gainRows.find((r) => r[0].includes('a Vin'));
+ok('MAX98357 GAIN Vin = 6 dB', vinRow?.[1] === '6 dB');
+ok('MAX98357 GAIN 100k→GND = 15 dB', gainRows.some((r) => r[0].includes('100k a GND') && r[1] === '15 dB'));
+ok('MAX98357 GAIN has no Vin=15dB error', !gainRows.some((r) => r[0].includes('Vin') && r[1] === '15 dB'));
+ok('MAX98357 SD Left is the high band', max.channel!.rows.some((r) => r[0].includes('1,4') && r[1] === 'Left'));
+
+const pcm = get('pcm5102')!;
+ok('PCM5102 has jumpers', !!pcm.jumpers);
+ok(
+  'PCM5102 is the breakout (no raw IC pins)',
+  !pcm.pins.some((p) => ['XO', 'XI', 'AVDD', 'DVDD', 'VREF'].includes(p.name)),
+);
+ok('PCM5102 SCK goes to GND', pcm.pins.some((p) => p.name === 'SCK' && (p.to ?? '').includes('GND')));
+
+const ili = get('ili9488')!;
+ok('ILI9488 MISO is NC', ili.pins.some((p) => (p.alt === 'MISO' || p.name === 'SDO') && p.role === 'nc'));
+
+const hw = get('hw-504')!;
+ok('HW-504 supply is 3V3 (pwr33, not pwr5)', hw.pins.some((p) => p.name.includes('5V') && p.role === 'pwr33'));
+
+const neo = get('ws2812')!;
+ok('NeoPixel DIN is neo role', neo.pins.some((p) => p.name === 'DIN' && p.role === 'neo'));
+
+const ky009 = get('ky-009')!;
+ok('KY-009 R/G/B are PWM', ['R', 'G', 'B'].every((n) => ky009.pins.some((p) => p.name === n && p.role === 'pwm')));
+
+if (failures > 0) {
+  console.error(`\n${failures} check(s) failed`);
+  process.exit(1);
+}
+console.log('\nAll breakout self-tests passed');

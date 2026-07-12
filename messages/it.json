@@ -349,12 +349,29 @@
         "total_approx": "Totale Approssimativo",
         "no_shipping": "Spedizione esclusa",
         "gallery": "Galleria",
-        "print_pinout": "Stampa Pinout"
+        "print_pinout": "Stampa Pinout",
+        "wiring_guide": "Guida al cablaggio"
     },
     "Pinouts": {
         "eyebrow": "Riferimento hardware",
         "title": "Pinout Interattivi",
         "subtitle": "Esplora i diagrammi dei pin dei moduli utilizzati nei nostri progetti",
+        "padCallout": "🎛️ HIOS PAD — guida al cablaggio completa",
+        "padCalloutHint": "Mappa GPIO · matrice 2×5 · ampli I2S · checklist →",
+        "builds_title": "Build (cablaggio reale)",
+        "builds_hint": "mappa GPIO · cablaggio · checklist →",
+        "usedIn": "Usato in:",
+        "Kinds": {
+            "mcu": "Microcontrollore",
+            "amp": "Amplificatore",
+            "dac": "DAC",
+            "display": "Display",
+            "input": "Ingresso",
+            "led": "LED",
+            "power": "Alimentazione",
+            "battery": "Batteria",
+            "connector": "Connettore"
+        },
         "available_modules": "Moduli Disponibili",
         "all": "Tutti",
         "search_placeholder": "Cerca modulo, interfaccia o famiglia...",
@@ -462,6 +479,17 @@
             "html": "HTML"
         }
     },
+    "WiringGuide": {
+        "eyebrow": "Riferimento hardware",
+        "backToPinouts": "Torna ai Pinout",
+        "tabs": {
+            "pines": "Pin",
+            "botones": "Pulsanti",
+            "parlantes": "Altoparlanti",
+            "conexiones": "Connessioni",
+            "check": "Checklist"
+        }
+    },
     "ProjectsPage": {
         "title": "Progetti",
         "subtitle": "Hardware aperto che ho progettato, rotto e documentato. Tutto il codice, gli schemi e le istruzioni, pronti per costruire il tuo."
@@ -488,6 +516,9 @@
             "workbench": "Workbench",
             "calculators": "Calcolatrici",
             "pinouts": "Pinouts",
+            "padWiring": "PAD · guida al cablaggio",
+      "btdacWiring": "BTDAC · guida al cablaggio",
+      "speakerWiring": "Speaker · guida al cablaggio",
             "snippets": "Snippet",
             "settings": "Impostazioni",
             "feedback": "Feedback",
