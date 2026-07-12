@@ -423,12 +423,29 @@
         "total_approx": "Total Aproximado",
         "no_shipping": "Sin envío",
         "gallery": "Galería",
-        "print_pinout": "Imprimir Pinout"
+        "print_pinout": "Imprimir Pinout",
+        "wiring_guide": "Guía de cableado"
     },
     "Pinouts": {
         "eyebrow": "Referencia de hardware",
         "title": "Pinouts Interactivos",
         "subtitle": "Explora los diagramas de pines de los módulos utilizados en nuestros proyectos",
+        "padCallout": "🎛️ HIOS PAD — guía de cableado completa",
+        "padCalloutHint": "Mapa de GPIO · matriz 2×5 · amplis I2S · checklist →",
+        "builds_title": "Builds (cableado real)",
+        "builds_hint": "mapa GPIO · cableado · checklist →",
+        "usedIn": "Se usa en:",
+        "Kinds": {
+            "mcu": "Microcontrolador",
+            "amp": "Amplificador",
+            "dac": "DAC",
+            "display": "Pantalla",
+            "input": "Entrada",
+            "led": "LED",
+            "power": "Alimentación",
+            "battery": "Batería",
+            "connector": "Conector"
+        },
         "available_modules": "Módulos Disponibles",
         "all": "Todos",
         "search_placeholder": "Buscar módulo, interfaz o familia...",
@@ -534,6 +551,17 @@
             "view": "Ver",
             "selected": "Seleccionado",
             "html": "HTML"
+        }
+    },
+    "WiringGuide": {
+        "eyebrow": "Referencia de hardware",
+        "backToPinouts": "Volver a Pinouts",
+        "tabs": {
+            "pines": "Pines",
+            "botones": "Botones",
+            "parlantes": "Parlantes",
+            "conexiones": "Conexiones",
+            "check": "Checklist"
         }
     },
     "ProjectsPage": {
@@ -695,6 +723,9 @@
             "workbench": "Workbench",
             "calculators": "Calculadoras",
             "pinouts": "Pinouts",
+            "padWiring": "PAD · guía de cableado",
+      "btdacWiring": "BTDAC · guía de cableado",
+      "speakerWiring": "Speaker · guía de cableado",
             "snippets": "Snippets",
             "settings": "Ajustes",
             "feedback": "Feedback",

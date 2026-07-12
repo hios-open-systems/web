@@ -424,12 +424,29 @@
         "total_approx": "Approximate Total",
         "no_shipping": "Shipping not included",
         "gallery": "Gallery",
-        "print_pinout": "Print Pinout"
+        "print_pinout": "Print Pinout",
+        "wiring_guide": "Wiring guide"
     },
     "Pinouts": {
         "eyebrow": "Hardware reference",
         "title": "Interactive Pinouts",
         "subtitle": "Explore the pin diagrams of modules used in our projects",
+        "padCallout": "🎛️ HIOS PAD — complete wiring guide",
+        "padCalloutHint": "GPIO map · 2×5 matrix · I2S amps · checklist →",
+        "builds_title": "Builds (as-wired)",
+        "builds_hint": "GPIO map · wiring · checklist →",
+        "usedIn": "Used in:",
+        "Kinds": {
+            "mcu": "Microcontroller",
+            "amp": "Amplifier",
+            "dac": "DAC",
+            "display": "Display",
+            "input": "Input",
+            "led": "LED",
+            "power": "Power",
+            "battery": "Battery",
+            "connector": "Connector"
+        },
         "available_modules": "Available Modules",
         "all": "All",
         "search_placeholder": "Search module, interface, or family...",
@@ -535,6 +552,17 @@
             "view": "View",
             "selected": "Selected",
             "html": "HTML"
+        }
+    },
+    "WiringGuide": {
+        "eyebrow": "Hardware reference",
+        "backToPinouts": "Back to Pinouts",
+        "tabs": {
+            "pines": "Pins",
+            "botones": "Buttons",
+            "parlantes": "Speakers",
+            "conexiones": "Connections",
+            "check": "Checklist"
         }
     },
     "ProjectsPage": {
@@ -696,6 +724,9 @@
             "workbench": "Workbench",
             "calculators": "Calculators",
             "pinouts": "Pinouts",
+            "padWiring": "PAD wiring guide",
+      "btdacWiring": "BTDAC wiring guide",
+      "speakerWiring": "Speaker wiring guide",
             "snippets": "Snippets",
             "settings": "Settings",
             "feedback": "Feedback",

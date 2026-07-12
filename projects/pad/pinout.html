@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0d1117">
-<title>HIOS PAD · Pinout v0.8</title>
+<title>HIOS PAD · Pinout v0.9</title>
 <style>
   :root{
     --bg:#0d1117; --card:#161b22; --card2:#1c2230; --bd:#30363d; --tx:#e6edf3; --mut:#8b949e;
-    --v5:#ff5c5c; --v33:#ffb454; --gnd:#8b949e; --gpio:#58a6ff; --adc:#3fb950; --pwm:#bc8cff; --neo:#ff79c6; --dim:#6e7681;
+    --v5:#ff5c5c; --v33:#ffb454; --gnd:#8b949e; --gpio:#58a6ff; --adc:#3fb950; --pwm:#bc8cff; --neo:#ff79c6; --mtx:#f0883e; --i2s:#2dd4bf; --dim:#6e7681;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;background:var(--bg);color:var(--tx);
@@ -35,6 +35,8 @@
   .cadc{background:rgba(63,185,80,.16);color:var(--adc);border-color:rgba(63,185,80,.4)}
   .cpwm{background:rgba(188,140,255,.16);color:var(--pwm);border-color:rgba(188,140,255,.4)}
   .cneo{background:rgba(255,121,198,.16);color:var(--neo);border-color:rgba(255,121,198,.4)}
+  .cmtx{background:rgba(240,136,62,.16);color:var(--mtx);border-color:rgba(240,136,62,.4)}
+  .ci2s{background:rgba(45,212,191,.16);color:var(--i2s);border-color:rgba(45,212,191,.4)}
   main{padding:12px 12px 0;max-width:980px;margin:0 auto}
   .view{display:none}
   .view.on{display:block}
@@ -43,6 +45,23 @@
   .diagwrap{overflow-x:auto;border:1px solid var(--bd);border-radius:12px;background:#0b0f14;padding:8px}
   .diaghint{font-size:11.5px;color:var(--mut);padding:6px 2px 10px}
   svg{display:block;min-width:720px}
+
+  /* --- Mapa de teclas --- */
+  .kc-title{font-size:12px;font-weight:700;color:#c9d1d9;margin:4px 2px 7px}
+  .kc-title:not(:first-child){margin-top:16px}
+  .kcnav{display:flex;gap:7px;flex-wrap:wrap;min-width:330px;margin-bottom:2px}
+  .kcnav .kc{flex:1;min-width:74px}
+  .kc.aux{border-color:#30363d;opacity:.7}
+  .kc.aux .kc-n{color:var(--mut);font-size:12px}
+  .kcgrid{display:grid;grid-template-columns:repeat(5,minmax(58px,1fr));gap:7px;min-width:330px}
+  .kc-colh{font-size:10px;text-align:center;color:var(--mut);padding:3px 0;line-height:1.25}
+  .kc-band{grid-column:1/-1;font-weight:700;font-size:12px;color:#c9d1d9;padding:9px 2px 1px;border-top:1px solid #21262d;margin-top:3px}
+  .kc{background:var(--card2);border:1px solid rgba(240,136,62,.5);border-radius:9px;padding:9px 3px;text-align:center;min-height:50px;display:flex;flex-direction:column;justify-content:center;gap:3px}
+  .kc.alt{border-color:rgba(188,140,255,.6)}
+  .kc.empty{border:1px dashed #30363d;background:transparent;min-height:0}
+  .kc-n{font-weight:800;font-size:14px;color:var(--mtx)}
+  .kc.alt .kc-n{color:var(--pwm)}
+  .kc-p{font-size:9px;color:var(--mut);font-family:ui-monospace,monospace}
 
   /* --- Lista plana --- */
   table{width:100%;border-collapse:collapse;font-size:13.5px}
@@ -54,6 +73,7 @@
     border:1px solid var(--bd);background:var(--card2)}
   .gp.io{color:var(--gpio);border-color:rgba(88,166,255,.45)} .gp.adc{color:var(--adc);border-color:rgba(63,185,80,.45)}
   .gp.pwm{color:var(--pwm);border-color:rgba(188,140,255,.45)} .gp.neo{color:var(--neo);border-color:rgba(255,121,198,.45)}
+  .gp.mtx{color:var(--mtx);border-color:rgba(240,136,62,.45)} .gp.i2s{color:var(--i2s);border-color:rgba(45,212,191,.45)}
   .gp.dim{color:var(--dim)}
   .railcell{font-weight:700;font-size:11px}
   .r5{color:var(--v5)} .r33{color:var(--v33)} .rnone{color:var(--dim)}
@@ -71,6 +91,7 @@
   .pin.io{color:var(--gpio);border-color:rgba(88,166,255,.45)} .pin.adc{color:var(--adc);border-color:rgba(63,185,80,.45)}
   .pin.pwr5{color:var(--v5);border-color:rgba(255,92,92,.45)} .pin.pwr33{color:var(--v33);border-color:rgba(255,180,84,.45)}
   .pin.gnd{color:var(--gnd)} .pin.neo{color:var(--neo);border-color:rgba(255,121,198,.45)} .pin.pwm{color:var(--pwm);border-color:rgba(188,140,255,.45)}
+  .pin.mtx{color:var(--mtx);border-color:rgba(240,136,62,.45)} .pin.i2s{color:var(--i2s);border-color:rgba(45,212,191,.45)}
   .meat{flex:1;min-width:0}.nmr{font-weight:600;font-size:15px}.to{font-size:12.5px;color:var(--mut)}.to b{color:#c9d1d9}
   .note{font-size:11.5px;color:#d29922;margin-top:2px}.danger{color:#f85149}
   .ascii{white-space:pre;overflow-x:auto;font-size:11.5px;line-height:1.35;color:#adbac7;background:#0b0f14;border:1px solid var(--bd);border-radius:10px;padding:11px;margin:4px 7px 10px}
@@ -86,10 +107,13 @@
 </head>
 <body>
 <header>
-  <h1>🎛️ HIOS PAD <span class="tag">v0.8</span></h1>
-  <div class="sub">ESP32-S3 · carcasa sin expansión · verificá los GPIO contra la serigrafía de la placa</div>
+  <h1>🎛️ HIOS PAD <span class="tag">v0.9</span></h1>
+  <div class="sub">ESP32-S3 · 10 acciones en matriz 2×5 + 2 ALT directos · 2 parlantes I2S · verificá los GPIO contra la serigrafía</div>
   <div class="tabs">
     <div class="tab on" data-v="diagram">🔧 Diagrama</div>
+    <div class="tab" data-v="map">🗺️ Mapa teclas</div>
+    <div class="tab" data-v="wiring">🔌 Cableado</div>
+    <div class="tab" data-v="audio">🔊 Amplis</div>
     <div class="tab" data-v="list">📋 Lista pin-a-pin</div>
     <div class="tab" data-v="groups">🧩 Grupos</div>
     <div class="tab" data-v="check">✅ Checklist</div>
@@ -97,62 +121,30 @@
   <input id="q" placeholder="🔍 Buscar: 40, ACC8, stick, NeoPixel…" autocomplete="off">
   <div class="legend">
     <span class="chip c5">5V</span><span class="chip c33">3V3</span><span class="chip cg">GND</span>
-    <span class="chip cio">GPIO</span><span class="chip cadc">ADC</span><span class="chip cpwm">PWM</span><span class="chip cneo">NeoPixel</span>
+    <span class="chip cio">GPIO</span><span class="chip cadc">ADC</span><span class="chip cpwm">PWM</span><span class="chip cneo">NeoPixel</span><span class="chip cmtx">Matriz</span><span class="chip ci2s">I2S</span>
   </div>
 </header>
 <main>
   <section class="view on" id="v-diagram">
-    <div class="diaghint">Cada pin etiquetado con su <b>GPIO</b> (el número impreso en la placa) y su destino. Color = riel/tipo. Deslizá horizontal si no entra.</div>
+    <div class="diaghint">El número es el <b>GPIO</b> = la serigrafía <b>IOxx</b> del DevKitC-1 (ej. <span class="mono">IO40</span>), <b>NO</b> la posición física del pin. Emparejá por el <span class="mono">IOxx</span> impreso; si ves un diagrama que numera pines 1–44 por posición, ignoralo. Color = riel/tipo. Deslizá horizontal si no entra.</div>
     <div class="diagwrap" id="diag"></div>
     <div class="diaghint" id="railsTxt"></div>
   </section>
+  <section class="view" id="v-map"></section>
+  <section class="view" id="v-wiring"></section>
+  <section class="view" id="v-audio"></section>
   <section class="view" id="v-list"></section>
   <section class="view" id="v-groups"></section>
   <section class="view" id="v-check"></section>
 </main>
-<footer>HIOS PAD · fuente de verdad: <span class="mono">Pins.h</span> + <span class="mono">platformio.ini</span> + <span class="mono">WIRING_v2.md</span></footer>
+<footer>HIOS PAD · datos en <span class="mono">pinout.data.js</span> · autoridad firmware: <span class="mono">Pins.h</span> + <span class="mono">Config.h</span> + <span class="mono">platformio.ini</span></footer>
 
+<script src="pinout.data.js"></script>
 <script>
-// ── FUENTE ÚNICA: un pin = {gpio, kind, name, rail, dest, note} ───────────────
-// kind: io | adc | pwm | neo | dim   (para color)   rail: 5 | 33 | null
-const PINS = [
-  {gpio:1, kind:"adc", name:"Stick VRx",    rail:33, dest:"Stick eje X (ADC1)"},
-  {gpio:2, kind:"adc", name:"Stick VRy",    rail:33, dest:"Stick eje Y (ADC1)"},
-  {gpio:4, kind:"io",  name:"Encoder CLK",  rail:33, dest:"KY-040 canal A"},
-  {gpio:5, kind:"io",  name:"Encoder DT",   rail:33, dest:"KY-040 canal B"},
-  {gpio:6, kind:"io",  name:"Encoder SW",   rail:33, dest:"KY-040 pulsador (PULLUP)"},
-  {gpio:7, kind:"io",  name:"Stick SW",     rail:33, dest:"Stick pulsador (PULLUP)"},
-  {gpio:8, kind:"adc", name:"Botón ACC5",   rail:null, dest:"→ GND (PULLUP). Es ADC1, va como digital"},
-  {gpio:9, kind:"neo", name:"NeoPixel DIN",  rail:5, dest:"datos tira (vía 330Ω). ADC1 usado como digital", note:"3.3→5V: level-shifter o SK6812"},
-  {gpio:10,kind:"io",  name:"TFT CS",        rail:5, dest:"ILI9488 chip-select"},
-  {gpio:11,kind:"io",  name:"TFT MOSI",      rail:5, dest:"ILI9488 SDI"},
-  {gpio:12,kind:"io",  name:"TFT SCLK",      rail:5, dest:"ILI9488 SCK"},
-  {gpio:13,kind:"io",  name:"TFT DC",        rail:5, dest:"ILI9488 DC/RS"},
-  {gpio:14,kind:"io",  name:"TFT RST",       rail:5, dest:"ILI9488 reset"},
-  {gpio:15,kind:"io",  name:"Botón ACC1",    rail:null, dest:"→ GND (PULLUP)"},
-  {gpio:16,kind:"io",  name:"Botón ACC2",    rail:null, dest:"→ GND (PULLUP)"},
-  {gpio:17,kind:"io",  name:"Botón ACC3",    rail:null, dest:"→ GND (PULLUP)"},
-  {gpio:18,kind:"io",  name:"Botón ACC4",    rail:null, dest:"→ GND (PULLUP)"},
-  {gpio:19,kind:"dim", name:"USB D−",        rail:null, dest:"USB nativo (HID) — RESERVADO"},
-  {gpio:20,kind:"dim", name:"USB D+",        rail:null, dest:"USB nativo (HID) — RESERVADO"},
-  {gpio:21,kind:"pwm", name:"TFT backlight", rail:null, dest:"LED de la TFT (PWM por LEDC)"},
-  {gpio:38,kind:"io",  name:"Botón ACC6",    rail:null, dest:"→ GND (PULLUP)", note:"puede ser LED RGB del DevKit s/rev"},
-  {gpio:39,kind:"io",  name:"Botón ACC7",    rail:null, dest:"→ GND (PULLUP)"},
-  {gpio:40,kind:"io",  name:"Botón ACC8",    rail:null, dest:"→ GND (PULLUP)"},
-  {gpio:41,kind:"io",  name:"Botón ACC9",    rail:null, dest:"→ GND (PULLUP)"},
-  {gpio:42,kind:"io",  name:"Botón ACC10",   rail:null, dest:"→ GND (PULLUP)"},
-  {gpio:43,kind:"dim", name:"UART0 TX",      rail:null, dest:"Serial + flasheo por cable (CH343)"},
-  {gpio:44,kind:"dim", name:"UART0 RX",      rail:null, dest:"Serial + flasheo por cable (CH343)"},
-  {gpio:47,kind:"io",  name:"Botón ALT1",    rail:null, dest:"→ GND (PULLUP)"},
-  {gpio:48,kind:"io",  name:"Botón ALT2",    rail:null, dest:"→ GND (PULLUP)", note:"puede ser LED RGB del DevKit s/rev"},
-];
-const RAILS = [
-  {k:"c5",  t:"5V (buck 5.0V)", c:"→ ESP32 pin 5V · TFT VCC (vía SW-PANTALLA) · NeoPixel VCC · cap 470–1000µF"},
-  {k:"c33", t:"3V3 (del S3)",   c:"→ Stick VCC · Encoder + (NO inyectar de afuera)"},
-  {k:"cg",  t:"GND común",      c:"→ batería− · buck · S3 · TFT · stick · encoder · botones · R2 (1 sola masa)"},
-];
-
-const COL = {io:"#58a6ff", adc:"#3fb950", pwm:"#bc8cff", neo:"#ff79c6", dim:"#6e7681"};
+// ── FUENTE ÚNICA: pinout.data.js (cargado antes de este script) ───────────────
+// Espejo humano de src/app/Pins.h + Config.h + flags TFT de platformio.ini.
+// Un pin = {gpio, kind, name, rail, dest, note}. kind: io|adc|pwm|neo|mtx|i2s|dim.
+const { pins: PINS, rails: RAILS, sections: SECTIONS, check: CHECK, colors: COL } = window.PINOUT;
 const railClass = r => r===5?"r5":r===33?"r33":"rnone";
 const railTxt   = r => r===5?"5V":r===33?"3V3":"—";
 
@@ -211,33 +203,7 @@ function buildList(){
     <div class="empty hide" id="emptyL">Sin resultados 🤷</div>`;
 }
 
-// ── Grupos (cards) + Rieles + ASCII ──────────────────────────────────────────
-const SECTIONS = [
-  { t:"⚡ Energía — 3 rieles", ascii:
-`Cargador 2S ──┬── 2 celdas (6.0–8.4V)
-              └─[SW-CELDAS]─► Buck 5.0V ─► RIEL 5V
-   RIEL 5V ─► ESP32 pin 5V ─►(AMS1117)─► pin 3V3 ─► RIEL 3V3
-   RIEL 5V ─► cap 470–1000µF ─► GND
-   RIEL 5V ─[SW-PANTALLA]─► Pantalla VCC ; RIEL 5V ─► NeoPixel VCC
-   RIEL 3V3 ─► Stick VCC + Encoder + ; GND común: TODO`,
-    tip:"<b>USB no alimenta nada</b> (wireless). El 3V3 sale del S3, no se inyecta.", rows:[
-      {pin:"5V",kind:"pwr5",nm:"Buck OUT 5.0V",to:"→ RIEL 5V (S3, pantalla, NeoPixel, cap)"},
-      {pin:"3V3",kind:"pwr33",nm:"S3 pin 3V3",to:"→ RIEL 3V3 (stick + encoder)"},
-      {pin:"GND",kind:"gnd",nm:"Masa común",to:"todo junto (1 sola masa)"},
-    ]},
-  { t:"🔌 Switches", cnt:"2 + 1 opc.", rows:[
-      {pin:"SW1",kind:"pwr5",nm:"SW-CELDAS",to:"corta BAT+ → buck (apaga TODO)",note:"≥2A"},
-      {pin:"SW2",kind:"pwr5",nm:"SW-PANTALLA",to:"corta 5V → VCC pantalla (queda teclado)"},
-      {pin:"SW3",kind:"neo",nm:"SW-FLASH (opc.)",to:"corta GPIO43 → NeoPixel",note:"cosmético; pull-down 10k del lado del LED"},
-    ]},
-  { t:"🌈 NeoPixel", cnt:"DIN=9", tip:"Toda la tira = 1 pin (DIN→DOUT encadenado). En GPIO9 (ex-batería) → UART0 libre p/ serial+flasheo.", rows:[
-      {pin:"9",kind:"neo",nm:"DIN",to:"GPIO9 (330Ω en serie)",note:"3.3→5V marginal: 74AHCT125 o SK6812"},
-      {pin:"5V",kind:"pwr5",nm:"VCC",to:"→ RIEL 5V",note:"~60mA/LED a tope; limitá brillo"},
-      {pin:"GND",kind:"gnd",nm:"GND",to:"→ GND común"},
-    ]},
-  { t:"🔋 Batería — descartada en el pad", cnt:"GPIO9→NeoPixel",
-    tip:"No se mide en el pad: la <b>pantalla de la fuente</b> ya muestra la tensión de entrada (= las 2 celdas 2S). GPIO9 quedó libre → ahora maneja el <b>NeoPixel</b>, y UART0 (43/44) sigue para serial/flasheo.", rows:[] },
-];
+// ── Grupos (cards) + Rieles + ASCII (SECTIONS viene de pinout.data.js) ────────
 function buildGroups(){
   let html = "";
   SECTIONS.forEach((s,i)=>{
@@ -259,27 +225,189 @@ function buildGroups(){
   return html;
 }
 
-// ── Checklist ────────────────────────────────────────────────────────────────
-const CHECK = [
-  "Buck medido a 5.0V ANTES de conectar el S3",
-  "Masa común con continuidad (batería−, buck, S3, TFT, stick, encoder, botones, R2)",
-  "Cap bulk 470–1000µF en el riel 5V (polaridad OK)",
-  "Stick y encoder al riel 3V3 (NO 5V) — verificado con multímetro",
-  "Divisor 100k/47k → GPIO9: pack lleno ~2.69V (¡no más de 3.3!)",
-  "12 botones a sus GPIO, segunda pata a la regleta de GND",
-  "NeoPixel: 330Ω en serie en DIN(43) + level-shifter/SK6812 + cap en su 5V",
-  "SW-CELDAS corta VBAT_SW · SW-PANTALLA corta VCC de la TFT",
-  "1er flasheo por cable; después OTA (--upload-port hiospad.local)",
-  "BOTON(GPIO0)+USB-C nativo accesibles para recuperación ante OTA fallido",
-  "BATTERY_ENABLED=true en Config.h cuando el divisor esté validado",
-];
+// ── Checklist (CHECK viene de pinout.data.js) ─────────────────────────────────
 function buildCheck(){
   let h = `<div class="check">`;
   CHECK.forEach((c,i)=> h+=`<label><input type="checkbox" id="ck${i}"><span>${c}</span></label>`);
   return h+`</div>`;
 }
 
+// ── Mapa de teclas (layout físico ↔ matriz ↔ GPIO) ───────────────────────────
+function buildMap(){
+  const km = window.PINOUT.keymap;
+  const cap = (logic, rGpio, cGpio) =>
+    `<div class="kc"><div class="kc-n">${logic}</div><div class="kc-p">F·${rGpio} × C·${cGpio}</div></div>`;
+  // fila navegación (directos), arriba, como el aparato
+  const nav = km.navRow.map(n => n.kind==="aux"
+    ? `<div class="kc aux"><div class="kc-n">${n.label}</div><div class="kc-p">GPIO ${n.gpio}</div></div>`
+    : `<div class="kc alt"><div class="kc-n">${n.logic}</div><div class="kc-p">GPIO ${n.gpio} · directo</div></div>`
+  ).join("");
+  // grilla de acción (matriz)
+  let grid = km.cols.map(c=>`<div class="kc-colh">COL ${c.c}<br>GPIO ${c.gpio}</div>`).join("");
+  km.rows.forEach(r=>{
+    grid += `<div class="kc-band">FILA ${r.r} · GPIO ${r.gpio} — ${r.name}</div>`;
+    grid += r.keys.map((logic,i)=> cap(logic, r.gpio, km.cols[i].gpio)).join("");
+  });
+  return `<div class="diaghint">Tu <b>layout físico</b> (arriba la pantalla, después nav, después las 2 filas de acción). Cada tecla muestra su nombre <b>lógico</b> y de dónde sale: los de <b>nav</b> son <b>directos</b> (1 GPIO c/u); los de <b>acción</b> son <b>F·gpio × C·gpio</b> = qué GPIO de FILA y de COLUMNA los forman (columna vía diodo, cátodo → FILA).</div>
+    <div class="diagwrap">
+      <div class="kc-title">🧭 Fila NAVEGACIÓN — directos (sin matriz)</div>
+      <div class="kcnav">${nav}</div>
+      <div class="kc-title">🎹 Filas de ACCIÓN — matriz 2×5</div>
+      <div class="kcgrid">${grid}</div>
+    </div>`;
+}
+
+// ── Cableado: esquema pulsador + diodo + matriz ──────────────────────────────
+function buildWiring(){
+  const km = window.PINOUT.keymap, C = window.PINOUT.colors;
+  const rowCol = C.mtx, colCol = C.io, wire = "#adbac7", di = "#e6edf3";
+
+  // (A) detalle de UNA tecla de acción
+  const detail =
+  `<svg viewBox="0 0 500 175" xmlns="http://www.w3.org/2000/svg" font-family="ui-monospace,Menlo,monospace" font-size="12">
+    <rect x="205" y="58" width="90" height="60" rx="9" fill="#161b22" stroke="${wire}"/>
+    <text x="250" y="93" fill="${di}" font-size="12" font-weight="700" text-anchor="middle">PULSADOR</text>
+    <line x1="205" y1="88" x2="55" y2="88" stroke="${colCol}" stroke-width="2.5"/>
+    <circle cx="205" cy="88" r="3.5" fill="${colCol}"/>
+    <text x="52" y="78" fill="${colCol}" font-weight="700">◄ a su COLUMNA</text>
+    <text x="52" y="110" fill="#8b949e">COLx → GPIO (INPUT_PULLUP)</text>
+    <line x1="295" y1="88" x2="330" y2="88" stroke="${wire}" stroke-width="2.5"/>
+    <polygon points="330,79 330,97 348,88" fill="${di}"/>
+    <line x1="348" y1="77" x2="348" y2="99" stroke="${di}" stroke-width="3"/>
+    <line x1="348" y1="88" x2="452" y2="88" stroke="${rowCol}" stroke-width="2.5"/>
+    <circle cx="452" cy="88" r="3.5" fill="${rowCol}"/>
+    <text x="452" y="78" fill="${rowCol}" font-weight="700" text-anchor="end">a su FILA ►</text>
+    <text x="452" y="110" fill="#8b949e" text-anchor="end">FILAy → GPIO (OUTPUT)</text>
+    <text x="339" y="128" fill="${rowCol}" text-anchor="middle" font-size="11">▲ diodo 1N4148 — raya/cátodo hacia la FILA</text>
+  </svg>`;
+
+  // (B) matriz 2x5 completa
+  const cols = km.cols, rows = km.rows;
+  const x0=118, dx=150, yTop=46, swY=[120,260], busY=[184,324];
+  const colX = i => x0 + i*dx;
+  const W = x0 + (cols.length-1)*dx + 96, H = 360;
+  let s = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="ui-monospace,Menlo,monospace" font-size="11">`;
+  rows.forEach((r,j)=>{
+    s += `<line x1="66" y1="${busY[j]}" x2="${W-16}" y2="${busY[j]}" stroke="${rowCol}" stroke-width="2.5"/>`;
+    s += `<text x="60" y="${busY[j]-5}" fill="${rowCol}" font-weight="800" text-anchor="end">FILA ${r.r}</text>`;
+    s += `<text x="60" y="${busY[j]+10}" fill="#8b949e" text-anchor="end">GPIO ${r.gpio}</text>`;
+  });
+  cols.forEach((c,i)=>{
+    const x = colX(i);
+    s += `<text x="${x}" y="${yTop-17}" fill="${colCol}" font-weight="800" text-anchor="middle">COL ${c.c}</text>`;
+    s += `<text x="${x}" y="${yTop-4}" fill="#8b949e" text-anchor="middle">GPIO ${c.gpio}</text>`;
+    // vertical con un "hop" (salto sin conexión) donde cruza la FILA 0
+    s += `<path d="M ${x} ${yTop} L ${x} ${busY[0]-6} A 6 6 0 0 1 ${x} ${busY[0]+6} L ${x} ${swY[1]}" fill="none" stroke="${colCol}" stroke-width="2.5"/>`;
+  });
+  rows.forEach((r,j)=> cols.forEach((c,i)=>{
+    const x = colX(i), y = swY[j], xd = x+30, yb = busY[j];
+    s += `<text x="${x-6}" y="${y-11}" fill="${rowCol}" font-weight="800" font-size="12">${r.keys[i]}</text>`;
+    s += `<circle cx="${x}" cy="${y}" r="3.5" fill="${colCol}"/>`;                 // tap en columna
+    s += `<line x1="${x}" y1="${y}" x2="${x+9}" y2="${y}" stroke="${wire}" stroke-width="2.5"/>`;
+    s += `<line x1="${x+9}" y1="${y}" x2="${xd}" y2="${y-11}" stroke="${wire}" stroke-width="2.5"/>`; // palanca (switch abierto)
+    s += `<circle cx="${xd}" cy="${y}" r="3" fill="none" stroke="${wire}"/>`;
+    s += `<line x1="${xd}" y1="${y}" x2="${xd}" y2="${y+13}" stroke="${wire}" stroke-width="2.5"/>`;
+    s += `<polygon points="${xd-7},${y+13} ${xd+7},${y+13} ${xd},${y+27}" fill="${di}"/>`;           // diodo (cátodo abajo)
+    s += `<line x1="${xd-7}" y1="${y+27}" x2="${xd+7}" y2="${y+27}" stroke="${di}" stroke-width="3"/>`;
+    s += `<line x1="${xd}" y1="${y+27}" x2="${xd}" y2="${yb}" stroke="${rowCol}" stroke-width="2.5"/>`;
+    s += `<circle cx="${xd}" cy="${yb}" r="3.5" fill="${rowCol}"/>`;               // conexión a la FILA
+  }));
+  s += `</svg>`;
+
+  return `<div class="diaghint">Cómo se suelda cada tecla y cómo se arma la matriz. <b style="color:${colCol}">●</b> azul = tap a la COLUMNA · <b style="color:${rowCol}">●</b> naranja = unión a la FILA · <b>⌒</b> = cruce SIN conexión (la columna salta la fila) · el triángulo con barra es el <b>diodo</b> (barra/cátodo → FILA). Los <b>ALT no entran acá</b> (son directos).</div>
+    <div class="kc-title">🔩 Una tecla de acción (repetís lo mismo ×10)</div>
+    <div class="diagwrap">${detail}</div>
+    <div class="kc-title">🕸️ Matriz 2×5 completa — 10 diodos</div>
+    <div class="diagwrap">${s}</div>
+    <div class="tip"><b>Buses (cables compartidos):</b> cada <b style="color:${rowCol}">FILA</b> es 1 cable que une los cátodos de sus 5 diodos → su GPIO (OUTPUT). Cada <b style="color:${colCol}">COLUMNA</b> es 1 cable que une la pata libre de sus 5 switches → su GPIO (INPUT_PULLUP). Donde una columna cruza una fila y NO hay tecla, <b>no se tocan</b> (el hop). Si una tecla no registra, tenés el diodo al revés → dalo vuelta.</div>`;
+}
+
+// ── Amplis I2S: pinout MAX98357A + resistencia de canal (SD) ──────────────────
+function buildAudio(){
+  const P = window.PINOUT, C = P.colors;
+  const i2s = P.pins.filter(p=>p.kind==='i2s');
+  const g = n => { const p=i2s.find(x=>x.name.includes(n)); return p?p.gpio:'?'; };
+  const bclk=g('BCLK'), lrc=g('LRC'), din=g('DIN');
+  const teal=C.i2s, wire="#adbac7", di="#e6edf3", pwr5="#ff5c5c", gnd="#8b949e", res="#ffb454";
+
+  // (A) pinout de UN módulo + resistencia de SD
+  const lp = (y,name,dest,col)=>
+    `<text x="216" y="${y+4}" fill="${di}" font-size="11" font-weight="700">${name}</text>
+     <circle cx="210" cy="${y}" r="3" fill="${wire}"/>
+     <line x1="210" y1="${y}" x2="188" y2="${y}" stroke="${wire}" stroke-width="2"/>
+     <text x="184" y="${y+4}" fill="${col}" font-size="11" text-anchor="end">${dest}</text>`;
+  const A =
+  `<svg viewBox="0 0 560 300" xmlns="http://www.w3.org/2000/svg" font-family="ui-monospace,Menlo,monospace" font-size="12">
+    <text x="280" y="28" fill="${teal}" font-size="13" font-weight="800" text-anchor="middle">MAX98357A — pinout de cada módulo</text>
+    <rect x="210" y="56" width="140" height="196" rx="10" fill="#161b22" stroke="${wire}"/>
+    ${lp(84,'LRC',  'GPIO'+lrc+' (LRC/WS)', teal)}
+    ${lp(110,'BCLK','GPIO'+bclk, teal)}
+    ${lp(136,'DIN', 'GPIO'+din, teal)}
+    <text x="216" y="166" fill="${di}" font-size="11" font-weight="700">GAIN</text>
+    <line x1="210" y1="162" x2="196" y2="162" stroke="${wire}" stroke-width="2"/>
+    <text x="192" y="166" fill="${gnd}" font-size="11" text-anchor="end">flotante = 9 dB</text>
+    <text x="216" y="192" fill="${di}" font-size="11" font-weight="700">SD</text>
+    <line x1="210" y1="188" x2="150" y2="188" stroke="${wire}" stroke-width="2"/>
+    <rect x="108" y="181" width="42" height="14" rx="2" fill="#0b0f14" stroke="${res}" stroke-width="2"/>
+    <line x1="108" y1="188" x2="88" y2="188" stroke="${res}" stroke-width="2"/>
+    <line x1="88" y1="188" x2="88" y2="240" stroke="${res}" stroke-width="2"/>
+    <text x="82" y="212" fill="${res}" font-size="10" text-anchor="end">R canal</text>
+    ${lp(214,'GND','GND común', gnd)}
+    <text x="216" y="244" fill="${di}" font-size="11" font-weight="700">Vin</text>
+    <line x1="210" y1="240" x2="88" y2="240" stroke="${pwr5}" stroke-width="2"/>
+    <line x1="88" y1="240" x2="52" y2="240" stroke="${pwr5}" stroke-width="2"/>
+    <text x="48" y="244" fill="${pwr5}" font-size="11" font-weight="700" text-anchor="end">5V</text>
+    <text x="344" y="114" fill="${di}" font-size="11" font-weight="700" text-anchor="end">SPK+</text>
+    <line x1="350" y1="110" x2="400" y2="110" stroke="${wire}" stroke-width="2"/>
+    <text x="344" y="204" fill="${di}" font-size="11" font-weight="700" text-anchor="end">SPK−</text>
+    <line x1="350" y1="200" x2="400" y2="200" stroke="${wire}" stroke-width="2"/>
+    <line x1="400" y1="110" x2="400" y2="141" stroke="${wire}" stroke-width="2"/>
+    <line x1="400" y1="200" x2="400" y2="169" stroke="${wire}" stroke-width="2"/>
+    <rect x="400" y="141" width="18" height="28" fill="#161b22" stroke="${wire}"/>
+    <polygon points="418,145 448,127 448,183 418,165" fill="#161b22" stroke="${wire}"/>
+    <text x="432" y="200" fill="${gnd}" font-size="10" text-anchor="middle">parlante 4–8Ω</text>
+    <text x="60" y="284" fill="${res}" font-size="11" font-weight="700">Medí SD–GND:</text>
+    <text x="152" y="284" fill="${gnd}" font-size="11">&gt;1.4V = Left · 0.77–1.4V = Right · &lt;0.16V = mudo</text>
+  </svg>`;
+
+  // (B) los 2 módulos en el bus compartido (qué R en cada uno)
+  const boxTxt = (x,y,title,badge,bcol,l3) =>
+    `<rect x="${x}" y="${y}" width="298" height="92" rx="9" fill="#161b22" stroke="${bcol}"/>
+     <text x="${x+14}" y="${y+24}" fill="${bcol}" font-size="12" font-weight="800">${title}</text>
+     <rect x="${x+206}" y="${y+10}" width="80" height="19" rx="9" fill="none" stroke="${bcol}"/>
+     <text x="${x+246}" y="${y+24}" fill="${bcol}" font-size="10" font-weight="700" text-anchor="middle">${badge}</text>
+     <text x="${x+14}" y="${y+46}" fill="${gnd}" font-size="10.5">BCLK·LRC·DIN ← bus · Vin→5V · GND→GND</text>
+     <text x="${x+14}" y="${y+64}" fill="${di}" font-size="11" font-weight="700">${l3}</text>
+     <text x="${x+14}" y="${y+82}" fill="${gnd}" font-size="10.5">SPK+/− → parlante 4–8Ω (directo)</text>`;
+  const B =
+  `<svg viewBox="0 0 670 300" xmlns="http://www.w3.org/2000/svg" font-family="ui-monospace,Menlo,monospace" font-size="11">
+    <rect x="12" y="112" width="92" height="90" rx="9" fill="#10151c" stroke="${wire}"/>
+    <text x="58" y="142" fill="${gnd}" font-size="11" font-weight="700" text-anchor="middle">ESP32</text>
+    <text x="58" y="157" fill="${gnd}" font-size="11" font-weight="700" text-anchor="middle">-S3</text>
+    <text x="58" y="182" fill="${teal}" font-size="9" text-anchor="middle">${bclk}/${lrc}/${din}</text>
+    <text x="200" y="136" fill="${teal}" font-size="10.5" font-weight="700" text-anchor="middle">bus I2S · GPIO ${bclk}/${lrc}/${din}</text>
+    <text x="200" y="150" fill="${gnd}" font-size="10" text-anchor="middle">(mismas 3 líneas a ambos)</text>
+    <line x1="104" y1="160" x2="300" y2="160" stroke="${teal}" stroke-width="3"/>
+    <line x1="300" y1="160" x2="300" y2="92"  stroke="${teal}" stroke-width="3"/>
+    <line x1="300" y1="160" x2="300" y2="226" stroke="${teal}" stroke-width="3"/>
+    <line x1="300" y1="92"  x2="360" y2="92"  stroke="${teal}" stroke-width="3"/>
+    <line x1="300" y1="226" x2="360" y2="226" stroke="${teal}" stroke-width="3"/>
+    ${boxTxt(360,46,'AMPLI L','LEFT',teal,'SD → Vin (medí &gt;1,4V)')}
+    ${boxTxt(360,180,'AMPLI R','RIGHT',teal,'SD → [220–330k]→Vin (medí 0,77–1,4V)')}
+  </svg>`;
+
+  return `<div class="diaghint">Pinout de cada <b>MAX98357A</b> y la <b>resistencia de SD</b> que fija el canal. Los 2 amplis comparten las 3 líneas I2S; sólo cambia la R de SD (L vs R). GAIN flotante = 9 dB. Parlante 4–8Ω directo (sin filtro).</div>
+    <div class="kc-title">🔩 Un módulo — pinout + resistencia de SD</div>
+    <div class="diagwrap">${A}</div>
+    <div class="kc-title">🔊 Stereo — 2 módulos en el mismo bus</div>
+    <div class="diagwrap">${B}</div>
+    <div class="tip"><b>Canal por SD</b> (100k interno a GND en el módulo): poné la R de SD→Vin y <b>medí SD–GND</b> → &gt;1,4V = <b>Left</b>, 0,77–1,4V = <b>Right</b>. Left: SD directo a Vin (o R alta). Right: ~220–330k (ajustá midiendo). <b>GAIN:</b> flotante 9dB · a GND 12dB · a Vin 6dB. <b>Potencia:</b> 2 amplis ~1,3A pico → buck ≥2–3A + cap 1000µF cerca.</div>`;
+}
+
 // ── Montaje ──────────────────────────────────────────────────────────────────
+document.getElementById('v-map').innerHTML = buildMap();
+document.getElementById('v-wiring').innerHTML = buildWiring();
+document.getElementById('v-audio').innerHTML = buildAudio();
 document.getElementById('diag').innerHTML = buildDiagram();
 document.getElementById('railsTxt').innerHTML = RAILS.map(r=>`<span class="chip ${r.k}">${r.t}</span> ${r.c}`).join('<br>');
 document.getElementById('v-list').innerHTML = buildList();
