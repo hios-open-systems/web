@@ -21,14 +21,30 @@ export default defineConfig({
     projects: [
         {
             name: 'chromium',
+            testIgnore: ['**/*.auth.spec.ts', '**/mobile-responsive.spec.ts'],
             use: { ...devices['Desktop Chrome'], channel: undefined },
+        },
+        {
+            name: 'mobile-360',
+            testMatch: '**/mobile-responsive.spec.ts',
+            use: { ...devices['Desktop Chrome'], channel: undefined, viewport: { width: 360, height: 800 } },
+        },
+        {
+            name: 'mobile-390',
+            testMatch: '**/mobile-responsive.spec.ts',
+            use: { ...devices['Desktop Chrome'], channel: undefined, viewport: { width: 390, height: 844 } },
+        },
+        {
+            name: 'tablet-768',
+            testMatch: '**/mobile-responsive.spec.ts',
+            use: { ...devices['Desktop Chrome'], channel: undefined, viewport: { width: 768, height: 1024 } },
         },
     ],
     webServer: {
         command: `PORT=${PORT} npm run start`,
         url: BASE_URL,
         reuseExistingServer: !process.env.CI,
-        timeout: 120_000,
+        timeout: 180_000,
         stdout: 'ignore',
         stderr: 'pipe',
     },

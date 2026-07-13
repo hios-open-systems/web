@@ -43,6 +43,8 @@ export function Header() {
   const locale = useLocale();
   const pathname = usePathname();
   const t = useTranslations('Header');
+  const tFeedback = useTranslations('Feedback');
+  const tSettings = useTranslations('Settings');
   const { unreadCount } = useFeedback();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -106,12 +108,12 @@ export function Header() {
             size="small"
             icon={mode === 'dark' ? <SunOutlined /> : <MoonOutlined />}
             onClick={toggleTheme}
-            className={styles.iconButton}
+            className={`${styles.iconButton} ${styles.desktopOnlyControl}`}
             aria-label="Toggle theme"
           />
           <Link
             href={`/${locale}/workbench/feedback`}
-            className={`${styles.iconLink} ${unreadCount > 0 ? styles.iconLinkDot : ''}`}
+            className={`${styles.iconLink} ${styles.desktopOnlyControl} ${unreadCount > 0 ? styles.iconLinkDot : ''}`}
             aria-label={`Feedback${unreadCount > 0 ? ` (${unreadCount})` : ''}`}
             data-unread={unreadCount}
           >
@@ -119,7 +121,7 @@ export function Header() {
           </Link>
           <Link
             href={`/${locale}/workbench/settings`}
-            className={styles.iconLink}
+            className={`${styles.iconLink} ${styles.desktopOnlyControl}`}
             aria-label="Settings"
           >
             <SettingOutlined />
@@ -130,7 +132,7 @@ export function Header() {
             icon={<GithubOutlined />}
             href="https://github.com/hios-open-systems/web"
             target="_blank"
-            className={styles.iconButton}
+            className={`${styles.iconButton} ${styles.desktopOnlyControl}`}
             aria-label="GitHub"
           />
           <UserMenu />
@@ -152,6 +154,7 @@ export function Header() {
         width={272}
         title={resolveLabel('menu', 'Menú')}
         classNames={{ body: styles.drawerBody }}
+        rootClassName={styles.mobileDrawer}
       >
         <nav className={styles.drawerNav} aria-label="Mobile">
           {navItems.map((item) => (
@@ -169,7 +172,23 @@ export function Header() {
         </nav>
 
         <div className={styles.drawerFooter}>
-          <LocaleSwitcher />
+          <div className={styles.drawerActions}>
+            <Button
+              type="text"
+              icon={mode === 'dark' ? <SunOutlined /> : <MoonOutlined />}
+              onClick={toggleTheme}
+              className={styles.drawerAction}
+            >
+              {tSettings(mode === 'dark' ? 'savedModeLight' : 'savedModeDark')}
+            </Button>
+            <Link href={`/${locale}/workbench/feedback`} className={styles.drawerAction} onClick={() => setMenuOpen(false)}>
+              <BellOutlined /> {tFeedback('title')}{unreadCount > 0 ? ` (${unreadCount})` : ''}
+            </Link>
+            <Link href={`/${locale}/workbench/settings`} className={styles.drawerAction} onClick={() => setMenuOpen(false)}>
+              <SettingOutlined /> {tSettings('title')}
+            </Link>
+          </div>
+          <LocaleSwitcher className={styles.drawerLocale} />
         </div>
       </Drawer>
     </AntHeader>
