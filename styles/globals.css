@@ -55,6 +55,23 @@
   --pw-role-gnd: #475569;
   --pw-role-nc: #64748b;
   --pw-role-dim: #64748b;
+
+  /* Pin functions del pinout físico de placas (light) */
+  --pw-func-power: #dc2626;
+  --pw-func-gnd: #475569;
+  --pw-func-gpio: #15803d;
+  --pw-func-adc: #be185d;
+  --pw-func-touch: #7c3aed;
+  --pw-func-spi: #0e7490;
+  --pw-func-i2c: #6d28d9;
+  --pw-func-i2s: #1d4ed8;
+  --pw-func-uart: #a16207;
+  --pw-func-dac: #b45309;
+  --pw-func-usb: #c2410c;
+  --pw-func-strap: #ea580c;
+  --pw-func-rgb: #0f766e;
+  --pw-func-in: #64748b;
+  --pw-func-nc: #94a3b8;
 }
 
 /* Dark mode overrides */
@@ -87,6 +104,23 @@
   --pw-role-gnd: #8b949e;
   --pw-role-nc: #6e7681;
   --pw-role-dim: #6e7681;
+
+  /* Pin functions del pinout físico de placas (dark) */
+  --pw-func-power: #ff5c5c;
+  --pw-func-gnd: #8b949e;
+  --pw-func-gpio: #3fb950;
+  --pw-func-adc: #ff79c6;
+  --pw-func-touch: #bc8cff;
+  --pw-func-spi: #22d3ee;
+  --pw-func-i2c: #a78bfa;
+  --pw-func-i2s: #58a6ff;
+  --pw-func-uart: #e3b341;
+  --pw-func-dac: #ffb454;
+  --pw-func-usb: #f0883e;
+  --pw-func-strap: #fb923c;
+  --pw-func-rgb: #2dd4bf;
+  --pw-func-in: #8b949e;
+  --pw-func-nc: #6e7681;
 }
 
 * {
