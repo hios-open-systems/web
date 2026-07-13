@@ -376,6 +376,16 @@
   font-family: ui-monospace, monospace;
 }
 
+.docLink {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.docLink:hover {
+  text-decoration: underline;
+}
+
 .svgScroll {
   overflow-x: auto;
   border: 1px solid var(--pw-border);

@@ -64,13 +64,14 @@
   margin-bottom: 26px;
 }
 
+/* los builds son entidades de primer nivel (tienen página propia): no pueden
+   empatar en jerarquía con una categoría de la lista de módulos */
 .buildsTitle {
-  font-size: 11px;
+  font-size: 15px;
   font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--bk-muted);
-  margin-bottom: 10px;
+  letter-spacing: -0.01em;
+  color: var(--bk-title);
+  margin-bottom: 12px;
 }
 
 .buildsGrid {
@@ -131,17 +132,82 @@
   margin-bottom: 12px;
 }
 
-.listGroup {
-  margin-bottom: 12px;
+.chipScroll {
+  margin: 18px 0 6px;
+  padding: 8px;
+  border: 1px solid var(--bk-border);
+  border-radius: 14px;
+  background: var(--bk-surface-muted);
+  overflow-x: auto;
 }
 
+.chipScroll svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+.listGroup {
+  margin-bottom: 4px;
+  padding-top: 10px;
+  border-top: 1px solid var(--bk-border);
+}
+
+.listGroup:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+/* el header de categoría tiene que leerse como PADRE del item, no como una nota
+   al pie: antes era 11px/muted contra items de 14px/title */
 .listGroupTitle {
-  margin: 4px 6px 6px;
-  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 4px 4px;
+  padding: 2px 0;
+}
+
+.listGroupLabel {
+  font-size: 12px;
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
+  color: var(--bk-title);
+}
+
+.listGroupCount {
+  min-width: 18px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  text-align: center;
   color: var(--bk-muted);
+  background: var(--bk-surface-muted);
+  border: 1px solid var(--bk-border);
+}
+
+/* los items cuelgan de la categoría: guía vertical + indentación */
+.listGroupItems {
+  margin-left: 6px;
+  padding-left: 8px;
+  border-left: 1px solid var(--bk-border);
+}
+
+.listItemUsed {
+  margin-left: auto;
+  min-width: 16px;
+  padding: 0 5px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
 }
 
 .listItem {
@@ -173,8 +239,13 @@
 }
 
 .listItemName {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--bk-text);
+}
+
+.listItemActive .listItemName {
+  font-weight: 700;
   color: var(--bk-title);
 }
 

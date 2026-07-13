@@ -10,6 +10,7 @@ export const LED_BREAKOUTS: Breakout[] = [
     iface: '1-wire (800 kHz)',
     voltage: '5V',
     usedBy: ['pad'],
+    datasheetUrl: 'https://cdn-shop.adafruit.com/datasheets/WS2812B.pdf',
     pins: [
       { name: 'DIN', role: 'neo', to: 'datos del MCU, vía **330Ω** en serie', side: 'left' },
       { name: '5V', role: 'pwr5', alt: 'VCC', to: '5V (≈60 mA/LED a blanco pleno)', side: 'left' },

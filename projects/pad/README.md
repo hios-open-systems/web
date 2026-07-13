@@ -63,7 +63,7 @@ Directorios: `actions/` (modelo de `Action`), `mapping/` (`KeyMap`/`Dispatcher`)
 
 ## Hardware
 
-- **ESP32-S3-DevKitC-1** (N16, 16MB flash, sin PSRAM).
+- **ESP32-S3-DevKitC-1** (**N16R8**: 16MB flash + 8MB PSRAM octal, AP Memory 3.3V — confirmado por chip dump). La PSRAM octal ocupa los GPIO 33–37 (y la flash los 26–32): no están disponibles.
 - **Display ILI9488** 480×320 SPI (HSPI, 27MHz). *No es ST7796.*
 - **Encoder** KY-040 · **Joystick** HW-504 (alimentado a **3V3**, no 5V) · **5 pulsadores** NA a GND.
 - Pines en [`src/app/Pins.h`](src/app/Pins.h); cableado y alimentación (batería 2S) en [WIRING.md](WIRING.md).

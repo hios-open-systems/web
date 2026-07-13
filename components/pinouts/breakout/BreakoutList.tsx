@@ -30,17 +30,25 @@ export function BreakoutList({ selectedId, onSelect }: BreakoutListProps) {
       {groups.length === 0 ? <div className={styles.listEmpty}>{t('empty_filtered')}</div> : null}
       {groups.map((group) => (
         <div key={group.kind} className={styles.listGroup}>
-          <div className={styles.listGroupTitle}>{t(`Kinds.${group.kind}`)}</div>
-          {group.items.map((breakout) => (
-            <button
-              key={breakout.id}
-              type="button"
-              onClick={() => onSelect(breakout.id)}
-              className={`${styles.listItem} ${breakout.id === selectedId ? styles.listItemActive : ''}`}
-            >
-              <span className={styles.listItemName}>{breakout.name}</span>
-            </button>
-          ))}
+          <div className={styles.listGroupTitle}>
+            <span className={styles.listGroupLabel}>{t(`Kinds.${group.kind}`)}</span>
+            <span className={styles.listGroupCount}>{group.items.length}</span>
+          </div>
+          <div className={styles.listGroupItems}>
+            {group.items.map((breakout) => (
+              <button
+                key={breakout.id}
+                type="button"
+                onClick={() => onSelect(breakout.id)}
+                className={`${styles.listItem} ${breakout.id === selectedId ? styles.listItemActive : ''}`}
+              >
+                <span className={styles.listItemName}>{breakout.name}</span>
+                {breakout.usedBy && breakout.usedBy.length > 0 ? (
+                  <span className={styles.listItemUsed}>{breakout.usedBy.length}</span>
+                ) : null}
+              </button>
+            ))}
+          </div>
         </div>
       ))}
     </nav>

@@ -73,7 +73,7 @@ El firmware ya tiene el lector (`cfg::BATTERY_ENABLED`, hoy `false`). Para activ
 
 ## Gotchas de hardware (no re-pisar)
 - **Stick HW-504 → alimentar a `3V3`, NO a 5 V.** A 5 V el wiper sobre-volta los pines ADC del S3 en el extremo alto → conduce el diodo de protección → **acopla los dos ejes** (diagonal). Mapeo correcto por el montaje: `MOUSE_SWAP_XY=true`, `MOUSE_INVERT_X=true`.
-- **Módulo SIN PSRAM** (N16). Sin framebuffer completo → algo de barrido en redibujos completos (mitigado: redibujo por componente + SPI 27MHz). Un WROOM con sufijo **R** (ej. N16R8) tendría PSRAM → framebuffer posible.
+- **Módulo N16R8: SÍ tiene PSRAM** (8MB octal, AP Memory 3.3V — confirmado por chip dump). `platformio.ini` la habilita con `board_build.arduino.memory_type = qio_opi`; si ese flag estuviera mal, habría boot loop. La usa el monitor para sprites grandes / doble-buffer. **Costo:** la PSRAM octal se queda con los **GPIO 33–37**, y la flash con los **26–32** → ninguno de esos es usable, aunque el datasheet genérico del S3 los liste.
 - **USB:** el nativo (303a) es HID; el UART (CH343) es serial/flasheo. Son puertos distintos. Auto-switch HID: si el nativo está enumerado por un host → USB; si no → BLE.
 
 ## Transportes / radios

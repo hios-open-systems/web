@@ -20,6 +20,8 @@ export interface ProjectMeta {
         kind: '3d' | 'cad' | 'pcb' | 'doc' | 'firmware' | 'data' | 'other';
         source: 'project' | 'download';
     }[];
+    /** Docs .md del proyecto (sin extensión, sin README) — los que renderiza /print/[slug]/[doc] */
+    docs: string[];
 }
 
 const projectsDir = path.join(process.cwd(), 'projects');
@@ -176,6 +178,11 @@ export function getProjectBySlug(slug: string): ProjectMeta | null {
     const descLine = lines.find(l => l.trim() && !l.startsWith('#'));
     const description = descLine?.trim() || '';
 
+    const docs = fs
+        .readdirSync(projectPath)
+        .filter((file) => file.endsWith('.md') && file !== 'README.md')
+        .map((file) => file.replace(/\.md$/, ''));
+
     return {
         slug,
         name,
@@ -185,6 +192,7 @@ export function getProjectBySlug(slug: string): ProjectMeta | null {
         readme,
         files,
         technicalAssets,
+        docs,
     };
 }
 

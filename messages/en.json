@@ -528,7 +528,8 @@
             "parlantes": "Speakers",
             "conexiones": "Connections",
             "check": "Checklist"
-        }
+        },
+        "pinoutDoc": "View PINOUT.md"
     },
     "ProjectsPage": {
         "title": "Projects",

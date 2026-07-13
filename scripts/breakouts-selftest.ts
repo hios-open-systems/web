@@ -106,6 +106,30 @@ for (const locale of ['en', 'es', 'de', 'it']) {
   );
 }
 
+// ── estándar de contenido: todo board cumple lo mismo ────────────────────────
+// Codificado como test para que no vuelva a degradarse en silencio. `datasheetUrl`
+// queda fuera a propósito: un portaceldas o un jack 3.5mm no tienen datasheet, y
+// exigirlo empujaría a inventar URLs.
+for (const breakout of BREAKOUTS) {
+  const id = breakout.id;
+  ok(`[${id}] tiene summary`, breakout.summary.trim().length > 0);
+  ok(`[${id}] tiene form`, !!breakout.form?.trim());
+  ok(`[${id}] tiene iface`, !!breakout.iface?.trim());
+  ok(`[${id}] tiene voltage`, !!breakout.voltage?.trim());
+  ok(`[${id}] tiene al menos 1 pin`, breakout.pins.length > 0);
+  ok(`[${id}] tiene al menos 1 nota`, (breakout.notes?.length ?? 0) > 0);
+  ok(`[${id}] declara en qué build se usa`, (breakout.usedBy?.length ?? 0) > 0);
+  ok(
+    `[${id}] todo pin tiene nombre y rol`,
+    breakout.pins.every((pin) => pin.name.trim().length > 0 && !!pin.role),
+  );
+}
+
+ok(
+  'los usedBy apuntan a builds reales',
+  BREAKOUTS.every((b) => (b.usedBy ?? []).every((slug) => ['pad', 'btdac', 'speaker'].includes(slug))),
+);
+
 if (failures > 0) {
   console.error(`\n${failures} check(s) failed`);
   process.exit(1);

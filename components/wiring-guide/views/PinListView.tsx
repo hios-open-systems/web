@@ -8,6 +8,7 @@ import type { RailInfo } from '@/config/pinouts/wiring';
 import { useWiringGuide } from '../WiringGuideContext';
 import { PinBadge } from '../PinBadge';
 import { RichText } from '../RichText';
+import { BoardPinMapSvg } from './BoardPinMapSvg';
 import styles from '../wiring-guide.module.css';
 
 const RAIL_TAG: Record<RailInfo['k'], string> = {
@@ -24,6 +25,8 @@ export function PinListView() {
 
   return (
     <section>
+      <BoardPinMapSvg />
+
       <div className={styles.search}>
         <Input
           prefix={<SearchOutlined />}
