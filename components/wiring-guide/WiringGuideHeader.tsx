@@ -43,7 +43,10 @@ export function WiringGuideHeader() {
       </div>
       <p className={styles.subtitle}>{meta.subtitle}</p>
       <p className={styles.source}>
-        {meta.mcu} · <code className={styles.mono}>{meta.source}</code>
+        {meta.mcu} · <code className={styles.mono}>{meta.source}</code> ·{' '}
+        <Link href={`/${locale}/print/${meta.id}/PINOUT`} className={styles.docLink}>
+          {t('pinoutDoc')}
+        </Link>
       </p>
       <div className={styles.legend}>
         {legend.map((item) => (

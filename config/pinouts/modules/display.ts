@@ -10,6 +10,7 @@ export const DISPLAY_BREAKOUTS: Breakout[] = [
     iface: 'SPI',
     voltage: '5V (VCC) / lógica 3.3V',
     usedBy: ['pad'],
+    datasheetUrl: 'https://www.buydisplay.com/download/ic/ILI9488.pdf',
     pins: [
       { name: 'VCC', role: 'pwr5', to: '5V (regulador + level-shifter a bordo)', side: 'left' },
       { name: 'GND', role: 'gnd', to: 'masa común', side: 'left' },
@@ -41,6 +42,7 @@ export const DISPLAY_BREAKOUTS: Breakout[] = [
     iface: 'I2C',
     voltage: '5V',
     usedBy: ['speaker'],
+    datasheetUrl: 'https://www.sparkfun.com/datasheets/LCD/HD44780.pdf',
     pins: [
       { name: 'VCC', role: 'pwr5', to: '5V', side: 'left' },
       { name: 'GND', role: 'gnd', to: 'masa común', side: 'left' },

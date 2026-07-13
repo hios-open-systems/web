@@ -453,7 +453,8 @@
             "parlantes": "Altoparlanti",
             "conexiones": "Connessioni",
             "check": "Checklist"
-        }
+        },
+        "pinoutDoc": "Vedi PINOUT.md"
     },
     "ProjectsPage": {
         "title": "Progetti",

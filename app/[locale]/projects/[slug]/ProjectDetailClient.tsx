@@ -132,11 +132,13 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                                 {file.name}
                             </Button>
                         ))}
-                        <Link href={`/print/${slug}/PINOUT`}>
-                            <Button icon={<PrinterOutlined />} style={{ borderColor: accentColor, color: accentColor }}>
-                                {t('print_pinout')}
-                            </Button>
-                        </Link>
+                        {project.docs.includes('PINOUT') && (
+                            <Link href={`/${locale}/print/${slug}/PINOUT`}>
+                                <Button icon={<PrinterOutlined />} style={{ borderColor: accentColor, color: accentColor }}>
+                                    {t('print_pinout')}
+                                </Button>
+                            </Link>
+                        )}
                         {WIRING_GUIDE_SLUGS.includes(slug) && (
                             <Link href={`/${locale}/pinouts/${slug}`}>
                                 <Button icon={<LinkOutlined />} style={{ borderColor: accentColor, color: accentColor }}>
