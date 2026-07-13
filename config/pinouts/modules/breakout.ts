@@ -35,6 +35,68 @@ export interface BreakoutPin {
   req?: boolean;
 }
 
+/**
+ * Pinout FÍSICO de una placa: los pines tal como salen del header, en orden, con
+ * la etiqueta de la serigrafía. Es lo que necesitás con la placa en la mano para
+ * contar hasta el pin correcto — no un resumen por rangos.
+ */
+export type PinFunc =
+  | 'power'
+  | 'gnd'
+  | 'gpio'
+  | 'adc'
+  | 'touch'
+  | 'spi'
+  | 'i2c'
+  | 'i2s'
+  | 'uart'
+  | 'dac'
+  | 'usb'
+  | 'strap'
+  | 'rgb'
+  | 'in'
+  | 'nc';
+
+export interface BoardLabel {
+  text: string;
+  func: PinFunc;
+  /** la etiqueta de la serigrafía (la que va pegada a la placa) */
+  primary?: boolean;
+}
+
+export interface BoardPin {
+  /** posición física en el header, contando desde arriba */
+  pos: number;
+  labels: BoardLabel[];
+}
+
+export interface BoardPinout {
+  /** lo que dice el conector de arriba (USB-C, micro-USB…) */
+  usb?: string;
+  left: BoardPin[];
+  right: BoardPin[];
+}
+
+export const FUNC_LABEL: Record<PinFunc, string> = {
+  power: 'Power',
+  gnd: 'GND',
+  gpio: 'GPIO',
+  adc: 'ADC',
+  touch: 'Touch',
+  spi: 'SPI',
+  i2c: 'I2C',
+  i2s: 'I2S',
+  uart: 'UART',
+  dac: 'DAC',
+  usb: 'USB',
+  strap: 'Strapping',
+  rgb: 'RGB',
+  in: 'Solo entrada',
+  nc: 'No usable',
+};
+
+export const funcVar = (func: PinFunc): string => `var(--pw-func-${func})`;
+
 export interface BreakoutNote {
   title: string;
   body: string;
@@ -55,6 +117,8 @@ export interface Breakout {
   iface?: string;
   voltage?: string;
   pins: BreakoutPin[];
+  /** solo para placas (MCU): el pinout físico del header, pin por pin */
+  board?: BoardPinout;
   notes?: BreakoutNote[];
   gain?: BreakoutTable;
   channel?: BreakoutTable;
