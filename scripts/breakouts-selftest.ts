@@ -130,6 +130,40 @@ ok(
   BREAKOUTS.every((b) => (b.usedBy ?? []).every((slug) => ['pad', 'btdac', 'speaker'].includes(slug))),
 );
 
+// ── pinout FÍSICO de las placas ──────────────────────────────────────────────
+// Una MCU sin `board` degrada a un resumen por rangos ("IO1–IO10", "demás IOxx"),
+// que no sirve para soldar. El pinout tiene que ser pin a pin y en orden.
+const MCUS = BREAKOUTS.filter((b) => b.kind === 'mcu');
+ok('toda MCU tiene pinout físico (board)', MCUS.every((b) => !!b.board));
+
+for (const mcu of MCUS) {
+  const board = mcu.board!;
+  const all = [...board.left, ...board.right];
+
+  ok(`[${mcu.id}] cada pin del header tiene al menos una etiqueta`, all.every((p) => p.labels.length > 0));
+  ok(
+    `[${mcu.id}] cada pin tiene exactamente una etiqueta de serigrafía`,
+    all.every((p) => p.labels.filter((l) => l.primary).length === 1),
+  );
+  for (const [name, side] of [['left', board.left], ['right', board.right]] as const) {
+    ok(
+      `[${mcu.id}] header ${name}: posiciones consecutivas 1..${side.length} (sin huecos)`,
+      side.every((pin, index) => pin.pos === index + 1),
+    );
+  }
+}
+
+const s3 = BREAKOUTS.find((b) => b.id === 'esp32-s3-devkitc-1')!;
+const wroom = BREAKOUTS.find((b) => b.id === 'esp32-wroom-32')!;
+ok('ESP32-S3 DevKitC-1 tiene los 44 pines', s3.board!.left.length + s3.board!.right.length === 44);
+ok('ESP32-WROOM-32 DevKit tiene los 38 pines', wroom.board!.left.length + wroom.board!.right.length === 38);
+ok(
+  'el S3 marca IO35/36/37 como no usables (PSRAM octal del N16R8)',
+  ['IO35', 'IO36', 'IO37'].every((io) =>
+    s3.board!.right.some((p) => p.labels.some((l) => l.text === io && l.func === 'nc')),
+  ),
+);
+
 if (failures > 0) {
   console.error(`\n${failures} check(s) failed`);
   process.exit(1);

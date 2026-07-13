@@ -1,0 +1,10 @@
+import { chromium } from 'playwright';
+const browser = await chromium.launch();
+const page = await browser.newPage({ viewport: { width: 1500, height: 1200 } });
+await page.goto('http://localhost:3042/es/pinouts', { waitUntil: 'networkidle', timeout: 90000 });
+await page.waitForTimeout(1500);
+await page.getByRole('button', { name: 'ESP32-WROOM-32', exact: false }).first().click();
+await page.waitForTimeout(1000);
+await page.locator('svg[aria-label*="Pinout físico"]').first().screenshot({ path: '/tmp/board-wroom.png' });
+console.log('wroom ok');
+await browser.close();

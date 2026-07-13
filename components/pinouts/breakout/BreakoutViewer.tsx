@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 import type { Breakout, BreakoutTable } from '@/config/pinouts/modules';
+import { BoardPinoutSvg } from './BoardPinoutSvg';
 import { BreakoutChipSvg } from './BreakoutChipSvg';
 import { BreakoutPinList } from './BreakoutPinList';
 import { BreakoutTables } from './BreakoutTables';
@@ -55,7 +56,11 @@ export function BreakoutViewer({ breakout }: { breakout: Breakout }) {
         ) : null}
       </div>
 
-      <BreakoutChipSvg breakout={breakout} />
+      {breakout.board ? (
+        <BoardPinoutSvg board={breakout.board} name={breakout.name} />
+      ) : (
+        <BreakoutChipSvg breakout={breakout} />
+      )}
       <BreakoutPinList breakout={breakout} />
       {tables.length > 0 ? <BreakoutTables tables={tables} /> : null}
       {breakout.notes && breakout.notes.length > 0 ? <BreakoutNotes notes={breakout.notes} /> : null}
