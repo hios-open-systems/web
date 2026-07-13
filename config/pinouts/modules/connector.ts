@@ -9,6 +9,7 @@ export const CONNECTOR_BREAKOUTS: Breakout[] = [
     form: 'jack hembra 3.5mm',
     iface: 'audio analógico',
     voltage: 'pasivo',
+    usedBy: ['btdac'],
     pins: [
       { name: 'Tip', role: 'dac', alt: 'T', to: 'canal izquierdo (L)', side: 'left' },
       { name: 'Ring', role: 'dac', alt: 'R', to: 'canal derecho (R)', side: 'left' },
@@ -27,6 +28,7 @@ export const CONNECTOR_BREAKOUTS: Breakout[] = [
     form: 'plug macho 3.5mm',
     iface: 'audio analógico',
     voltage: 'pasivo',
+    usedBy: ['btdac'],
     pins: [
       { name: 'Tip', role: 'dac', alt: 'T', to: 'canal izquierdo (L)', side: 'left' },
       { name: 'Ring 1', role: 'dac', alt: 'R1', to: 'canal derecho (R)', side: 'left' },

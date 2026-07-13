@@ -7,7 +7,7 @@ export const BTDAC_WIRING: WiringGuide = {
     subtitle: 'Receptor Bluetooth con DAC PCM5102 y ESP32: A2DP → I2S → línea analógica, con LED RGB de estado.',
     rev: '2.0',
     mcu: 'ESP32-WROOM-32',
-    note: 'as-wired desde el firmware. ⚠️ el PINOUT.md del repo tiene el I2S viejo (26/25/22) — manda el firmware (27/14/13).',
+    note: 'as-wired desde el firmware (BCK=27, LRCK=14, DOUT=13). El PINOUT.md del repo ya está sincronizado con estos pines; el firmware-mirror del self-test los verifica en cada build.',
     source: 'src/HIOS_BTDAC.ino',
   },
 
@@ -61,9 +61,12 @@ export const BTDAC_WIRING: WiringGuide = {
 
   check: [
     'LM2596 medido a 5.0V ANTES de conectar el ESP32/PCM5102',
-    'I2S: BCK=27, LRCK=14, DOUT=13 → PCM5102 (NO 26/25/22 del PINOUT.md viejo)',
-    'PCM5102: SCK → GND · jumpers FLT/DEMP=L, XSMT=H, FMT=L',
+    'Cap de desacople en el riel 5V (100µF + 100nF cerca del ESP32 y del PCM5102)',
+    'I2S: BCK=27, LRCK=14, DOUT=13 → PCM5102',
+    'PCM5102: SCK → GND (genera su clock por PLL, no recibe master clock)',
+    'PCM5102: jumpers FLT=L, DEMP=L, XSMT=H, FMT=L',
     'LED KY-009: R=4 / G=16 / B=17 cada uno por 330Ω; cátodo común a GND',
     'Masa común: ESP32, PCM5102, KY-009, LM2596, BMS',
+    'Sin cortocircuito entre 5V y GND antes de energizar',
   ],
 };

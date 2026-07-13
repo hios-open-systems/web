@@ -29,8 +29,10 @@ function PinRow({ pin }: { pin: BreakoutPin }) {
 }
 
 export function BreakoutPinList({ breakout }: { breakout: Breakout }) {
-  const hasSides = breakout.pins.some((pin) => pin.side);
-  const [left, right] = hasSides
+  // solo respetamos los lados si de verdad hay pines a la derecha; si están todos
+  // declarados 'left' (hw-504, lcd1602) la columna derecha quedaba vacía
+  const hasRight = breakout.pins.some((pin) => pin.side === 'right');
+  const [left, right] = hasRight
     ? [
         breakout.pins.filter((pin) => pin.side !== 'right'),
         breakout.pins.filter((pin) => pin.side === 'right'),

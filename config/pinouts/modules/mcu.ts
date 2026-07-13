@@ -40,7 +40,7 @@ export const MCU_BREAKOUTS: Breakout[] = [
     notes: [
       {
         title: 'PSRAM / flash no usables',
-        body: 'En el N16R8 los GPIO **26–32 (flash)** y **33–37 (PSRAM octal)** NO están disponibles, aunque el datasheet genérico los liste. Muchos pinouts de internet no aclaran esto.',
+        body: 'En el **N16R8** la flash se queda con los GPIO **26–32** y la PSRAM octal con los **33–37**: no son usables. El datasheet genérico del S3 igual los lista.',
         warn: true,
       },
       {
