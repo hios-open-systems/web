@@ -5,6 +5,7 @@ import { ConfigProvider, Layout } from 'antd';
 import { VersionWatcher } from '@/components/common/VersionWatcher';
 import { CommandPalette } from '@/components/common/CommandPalette';
 import { ServiceWorkerRegister } from '@/components/common/ServiceWorkerRegister';
+import { DynamicFavicon } from '@/components/common/DynamicFavicon';
 import { UsageEventTracker } from '@/components/common/UsageEventTracker';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
@@ -22,6 +23,7 @@ function ThemedLayout({ children, currentVersion }: { children: React.ReactNode;
             <FeedbackProvider>
                 <VersionWatcher currentVersion={currentVersion} />
                 <ServiceWorkerRegister />
+                <DynamicFavicon />
                 <UsageEventTracker />
                 <CommandPalette />
                 <Layout style={{ minHeight: '100vh', background: bgColor }}>

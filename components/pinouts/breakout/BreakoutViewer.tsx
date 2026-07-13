@@ -12,10 +12,17 @@ export function BreakoutViewer({ breakout }: { breakout: Breakout }) {
   const t = useTranslations('Pinouts');
   const locale = useLocale();
 
+  const translate = (key: string, fallback: string) => {
+    const value = t(key);
+    return value === key || value === `Pinouts.${key}` ? fallback : value;
+  };
+
+  const summary = translate(`Modules.${breakout.id}.description`, breakout.summary);
+
   const tables: { title: string; table: BreakoutTable }[] = [];
-  if (breakout.gain) tables.push({ title: 'Ganancia (pin GAIN)', table: breakout.gain });
-  if (breakout.channel) tables.push({ title: 'Canal (pin SD)', table: breakout.channel });
-  if (breakout.jumpers) tables.push({ title: 'Jumpers', table: breakout.jumpers });
+  if (breakout.gain) tables.push({ title: t('tables.gain'), table: breakout.gain });
+  if (breakout.channel) tables.push({ title: t('tables.channel'), table: breakout.channel });
+  if (breakout.jumpers) tables.push({ title: t('tables.jumpers'), table: breakout.jumpers });
 
   return (
     <div className={styles.viewer}>
@@ -24,7 +31,7 @@ export function BreakoutViewer({ breakout }: { breakout: Breakout }) {
           <h2 className={styles.viewerTitle}>{breakout.name}</h2>
           <span className={styles.kindChip}>{t(`Kinds.${breakout.kind}`)}</span>
         </div>
-        <p className={styles.viewerSummary}>{breakout.summary}</p>
+        <p className={styles.viewerSummary}>{summary}</p>
         <div className={styles.viewerMeta}>
           {breakout.form ? <span>{breakout.form}</span> : null}
           {breakout.iface ? <span>{breakout.iface}</span> : null}

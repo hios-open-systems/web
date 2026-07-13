@@ -430,8 +430,6 @@
         "eyebrow": "Referencia de hardware",
         "title": "Pinouts Interactivos",
         "subtitle": "Explora los diagramas de pines de los módulos utilizados en nuestros proyectos",
-        "padCallout": "🎛️ HIOS PAD — guía de cableado completa",
-        "padCalloutHint": "Mapa de GPIO · matriz 2×5 · amplis I2S · checklist →",
         "builds_title": "Builds (cableado real)",
         "builds_hint": "mapa GPIO · cableado · checklist →",
         "usedIn": "Se usa en:",
@@ -446,111 +444,78 @@
             "battery": "Batería",
             "connector": "Conector"
         },
-        "available_modules": "Módulos Disponibles",
-        "all": "Todos",
         "search_placeholder": "Buscar módulo, interfaz o familia...",
         "empty_filtered": "No hay módulos que coincidan con este filtro.",
-        "stats_modules": "módulos",
-        "stats_microcontrollers": "MCUs",
-        "stats_audio": "audio",
-        "select_module": "Selecciona un módulo para ver sus pinouts",
-        "print": "Imprimir",
-        "print_tooltip": "Imprimir pinout",
-        "expand": "Expandir",
-        "expand_tooltip": "Abrir en nueva pestaña",
-        "interactive_view": "Vista Interactiva",
-        "specifications": "Especificaciones",
-        "technical_info": "Información Técnica",
-        "name": "Nombre",
-        "category": "Categoría",
-        "voltage": "Voltaje",
-        "resolution": "Resolución",
-        "interface": "Interfaz",
-        "package": "Encapsulado",
-        "features": "Características",
         "datasheet": "Datasheet",
-        "view_datasheet": "Ver datasheet oficial",
-        "Categories": {
-            "microcontroller": "Microcontrolador",
-            "audio": "Audio DAC",
-            "amplifier": "Amplificador",
-            "power": "Alimentación",
-            "connector": "Conectores"
-        },
         "Modules": {
             "esp32-wroom-32": {
-                "description": "Microcontrolador 38 pines con WiFi, Bluetooth, ADC, DAC y Touch",
-                "features": [
-                    "WiFi 802.11 b/g/n",
-                    "Bluetooth 4.2 BLE",
-                    "Dual-core 240MHz",
-                    "520KB SRAM",
-                    "10 Touch",
-                    "18 ADC",
-                    "2 DAC"
-                ]
+                "description": "MCU WiFi + BT 4.2, header 2×19 (38 pines). Referencia rápida + gotchas."
             },
-            "esp32s3": {
-                "description": "Microcontrolador con USB OTG nativo, WiFi 6, BLE 5 y aceleración AI",
-                "features": [
-                    "WiFi 6",
-                    "Bluetooth 5 BLE",
-                    "USB OTG nativo",
-                    "Dual-core 240MHz",
-                    "Vector AI",
-                    "14 Touch"
-                ]
+            "esp32-s3-devkitc-1": {
+                "description": "MCU con USB OTG nativo, WiFi 6, BLE 5. Header 2×22. Referencia rápida + gotchas."
+            },
+            "max98357a": {
+                "description": "Amplificador Class-D I2S mono 3.2W (breakout). 2 en paralelo = stereo."
             },
             "pcm5102": {
-                "description": "Convertidor Digital a Analógico de 32-bit/192kHz para audio de alta calidad",
-                "features": [
-                    "SNR 112dB",
-                    "THD -93dB",
-                    "Filtro digital integrado",
-                    "Bajo consumo"
-                ]
-            },
-            "max98357": {
-                "description": "Amplificador I2S monofónico 3.2W con eficiencia >90%",
-                "features": [
-                    "3.2W @ 4Ω",
-                    "Eficiencia >90%",
-                    "Sin componentes externos",
-                    "Protección térmica"
-                ]
+                "description": "DAC I2S 32-bit/384kHz (breakout GY-PCM5102). Salida de línea L/R."
             },
             "lm2596": {
-                "description": "Regulador de voltaje step-down ajustable 3A",
-                "features": [
-                    "3A continuo",
-                    "Eficiencia 73%",
-                    "Frecuencia 150kHz",
-                    "Protección térmica"
-                ]
+                "description": "Regulador DC-DC reductor ajustable 3A. Suele traer display de tensión."
             },
-            "audio-jack-trs": {
-                "description": "Conector hembra estéreo Tip/Ring/Sleeve para línea o auriculares",
-                "features": [
-                    "Tip = canal izquierdo",
-                    "Ring = canal derecho",
-                    "Sleeve = masa",
-                    "Switch de detección opcional"
-                ]
+            "jack-trs": {
+                "description": "Conector hembra estéreo: Tip=L, Ring=R, Sleeve=GND."
             },
-            "audio-plug-trrs": {
-                "description": "Conector macho TRRS para auriculares con micrófono en estándar CTIA",
-                "features": [
-                    "Tip = canal izquierdo",
-                    "Ring 1 = canal derecho",
-                    "Ring 2 = masa",
-                    "Sleeve = micrófono"
-                ]
+            "plug-trrs": {
+                "description": "Conector macho con micrófono, estándar CTIA (celulares modernos)."
+            },
+            "ili9488": {
+                "description": "Pantalla 480×320 18-bit por SPI. Trae regulador y level-shifter (VCC a 5V)."
+            },
+            "lcd1602-i2c": {
+                "description": "Display de caracteres 16×2 con backpack I2C: solo 2 pines de datos."
+            },
+            "ky-040": {
+                "description": "Encoder incremental con pulsador. Pull-ups a bordo."
+            },
+            "hw-504": {
+                "description": "Joystick tipo PlayStation: 2 ejes analógicos + pulsador."
+            },
+            "ws2812": {
+                "description": "LEDs RGB direccionables encadenados: toda la tira usa 1 pin de datos."
+            },
+            "ky-009": {
+                "description": "LED RGB de cátodo común. SIN resistencias a bordo."
+            },
+            "charger-2s": {
+                "description": "Carga 2 celdas en serie por USB-C con balanceo y protección; pass-through a la carga."
+            },
+            "holder-2s": {
+                "description": "Dos 18650 en serie (2S). Ojo: el holder correcto es en SERIE, no en paralelo."
             }
         },
-        "Buttons": {
-            "view": "Ver",
-            "selected": "Seleccionado",
-            "html": "HTML"
+        "tables": {
+            "gain": "Ganancia (pin GAIN)",
+            "channel": "Canal (pin SD)",
+            "jumpers": "Jumpers"
+        },
+        "meta": {
+            "index": {
+                "title": "Pinouts Interactivos | HIOS Platform",
+                "description": "Explora los diagramas de pines de los módulos utilizados en nuestros proyectos de electrónica."
+            },
+            "pad": {
+                "title": "HIOS PAD · Guía de cableado | HIOS Platform",
+                "description": "Guía de cableado del macropad ESP32-S3: mapa de GPIO, matriz de botones, amplificadores I2S MAX98357A y checklist de armado."
+            },
+            "btdac": {
+                "title": "BTDAC · Guía de cableado | HIOS Platform",
+                "description": "Guía de cableado del receptor Bluetooth BTDAC: I2S del ESP32 al DAC PCM5102, LED RGB KY-009 y fuente 2S, con checklist de armado."
+            },
+            "speaker": {
+                "title": "WiFi Speaker · Guía de cableado | HIOS Platform",
+                "description": "Guía de cableado del parlante WiFi: I2S del ESP32 a 2× MAX98357 en stereo, LCD 16×2 I2C, medición del canal por SD y fuente 2S."
+            }
         }
     },
     "WiringGuide": {
@@ -575,7 +540,9 @@
         "workbench": "Workbench",
         "pinouts": "Pinouts",
         "calculators": "Calculadoras",
-        "rcl": "RCL"
+        "rcl": "RCL",
+        "menu": "Menú",
+        "search": "Buscar"
     },
     "Auth": {
         "signIn": "Iniciar sesión",
@@ -724,8 +691,8 @@
             "calculators": "Calculadoras",
             "pinouts": "Pinouts",
             "padWiring": "PAD · guía de cableado",
-      "btdacWiring": "BTDAC · guía de cableado",
-      "speakerWiring": "Speaker · guía de cableado",
+            "btdacWiring": "BTDAC · guía de cableado",
+            "speakerWiring": "Speaker · guía de cableado",
             "snippets": "Snippets",
             "settings": "Ajustes",
             "feedback": "Feedback",

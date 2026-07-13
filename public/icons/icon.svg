@@ -1,6 +1,34 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="HIOS">
-  <rect width="512" height="512" rx="96" fill="#0b1220"/>
-  <rect x="96" y="96" width="320" height="320" rx="64" fill="#f59e0b"/>
-  <text x="256" y="256" font-family="system-ui, sans-serif" font-size="220" font-weight="800"
-        fill="#0b1220" text-anchor="middle" dominant-baseline="central">H</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#050816"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <radialGradient id="glowCyan" cx="0.18" cy="0.16" r="0.62">
+      <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowAccent" cx="0.84" cy="0.86" r="0.66">
+      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.42"/>
+      <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="halo" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="16"/>
+    </filter>
+  </defs>
+
+  <rect width="512" height="512" rx="114" fill="url(#bg)"/>
+  <rect width="512" height="512" rx="114" fill="url(#glowCyan)"/>
+  <rect width="512" height="512" rx="114" fill="url(#glowAccent)"/>
+
+  <g filter="url(#halo)" opacity="0.5">
+    <rect x="158" y="142" width="38" height="228" rx="9" fill="#f59e0b"/>
+    <rect x="316" y="142" width="38" height="228" rx="9" fill="#f59e0b"/>
+    <rect x="196" y="232" width="120" height="36" rx="9" fill="#f59e0b"/>
+  </g>
+  <g>
+    <rect x="158" y="142" width="38" height="228" rx="9" fill="#f59e0b"/>
+    <rect x="316" y="142" width="38" height="228" rx="9" fill="#f59e0b"/>
+    <rect x="196" y="232" width="120" height="36" rx="9" fill="#f59e0b"/>
+  </g>
 </svg>

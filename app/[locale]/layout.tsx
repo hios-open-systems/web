@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Metadata, Viewport } from 'next';
-// import { Inter } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import { ThemeLayout } from '@/components/ThemeLayout';
 import AntdRegistry from '@/lib/AntdRegistry';
 import { getCurrentDeployVersion } from '@/lib/appVersion';
@@ -10,7 +10,7 @@ import '@excalidraw/excalidraw/index.css';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
 
-// const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ['latin'], display: 'swap' });
 
 export const viewport: Viewport = {
   themeColor: '#0b1220',
@@ -49,7 +49,13 @@ export async function generateMetadata({
     },
     twitter: { card: 'summary_large_image', title, description },
     robots: { index: true, follow: true },
-    icons: { icon: '/favicon.ico' },
+    icons: {
+      icon: [
+        { url: '/icons/icon-32.png', sizes: '32x32', type: 'image/png' },
+        { url: '/icons/icon.svg', type: 'image/svg+xml' },
+      ],
+      apple: [{ url: '/icons/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
+    },
   };
 }
 
@@ -76,8 +82,7 @@ export default async function RootLayout({ children, params }: Props) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP_SCRIPT }} />
       </head>
-      {/* <body className={inter.className}> */}
-      <body style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+      <body className={inter.className}>
         <NextIntlClientProvider messages={messages}>
           <AntdRegistry>
             <ThemeLayout currentVersion={getCurrentDeployVersion()}>

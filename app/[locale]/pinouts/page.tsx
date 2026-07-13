@@ -1,12 +1,17 @@
+import type { Metadata } from 'next';
 import { PinoutsContent } from '@/components/pinouts/PinoutsContent';
-import { setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 export const runtime = 'edge';
 
-export const metadata = {
-  title: 'Pinouts Interactivos | HIOS Platform',
-  description: 'Explora los diagramas de pines de los módulos utilizados en nuestros proyectos de electrónica',
-};
+export async function generateMetadata({
+  params: { locale },
+}: {
+  params: { locale: string };
+}): Promise<Metadata> {
+  const t = await getTranslations({ locale, namespace: 'Pinouts.meta.index' });
+  return { title: t('title'), description: t('description') };
+}
 
 const locales = ['en', 'es', 'de', 'it'];
 

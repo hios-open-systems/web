@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { KIND_ORDER, ROLE_LABEL, matchesBreakout } from '../config/pinouts/modules/breakout.ts';
 import { MCU_BREAKOUTS } from '../config/pinouts/modules/mcu.ts';
 import { AUDIO_BREAKOUTS } from '../config/pinouts/modules/audio.ts';
@@ -71,6 +72,39 @@ ok('NeoPixel DIN is neo role', neo.pins.some((p) => p.name === 'DIN' && p.role =
 
 const ky009 = get('ky-009')!;
 ok('KY-009 R/G/B are PWM', ['R', 'G', 'B'].every((n) => ky009.pins.some((p) => p.name === n && p.role === 'pwm')));
+
+interface PinoutsMessages {
+  Pinouts: {
+    Modules: Record<string, { description?: string }>;
+    Kinds: Record<string, string>;
+    tables: Record<string, string>;
+    meta: Record<string, { title?: string; description?: string }>;
+  };
+}
+const readMessages = (locale: string): PinoutsMessages =>
+  JSON.parse(readFileSync(new URL(`../messages/${locale}.json`, import.meta.url), 'utf8'));
+
+for (const locale of ['en', 'es', 'de', 'it']) {
+  const { Pinouts } = readMessages(locale);
+  ok(
+    `[${locale}] every breakout has a translated description`,
+    BREAKOUTS.every((b) => typeof Pinouts.Modules[b.id]?.description === 'string'),
+  );
+  ok(
+    `[${locale}] every breakout kind has a label`,
+    BREAKOUTS.every((b) => typeof Pinouts.Kinds[b.kind] === 'string'),
+  );
+  ok(
+    `[${locale}] table titles exist`,
+    ['gain', 'channel', 'jumpers'].every((k) => typeof Pinouts.tables[k] === 'string'),
+  );
+  ok(
+    `[${locale}] wiring-guide metadata exists`,
+    ['index', 'pad', 'btdac', 'speaker'].every(
+      (k) => !!Pinouts.meta[k]?.title && !!Pinouts.meta[k]?.description,
+    ),
+  );
+}
 
 if (failures > 0) {
   console.error(`\n${failures} check(s) failed`);

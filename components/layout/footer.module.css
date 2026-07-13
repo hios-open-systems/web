@@ -1,0 +1,28 @@
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 22px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.navLink {
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  color: #64748b;
+  transition: color 0.18s ease;
+}
+
+.navLink:hover {
+  color: var(--accent);
+}
+
+:global([data-theme='dark']) .navLink {
+  color: #64748b;
+}
+
+:global([data-theme='dark']) .navLink:hover {
+  color: var(--accent);
+}
