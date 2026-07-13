@@ -356,8 +356,6 @@
         "eyebrow": "Hardware-Referenz",
         "title": "Interaktive Pinouts",
         "subtitle": "Erkunde die Pin-Diagramme der Module, die in unseren Projekten verwendet werden",
-        "padCallout": "🎛️ HIOS PAD — komplette Verdrahtungsanleitung",
-        "padCalloutHint": "GPIO-Karte · 2×5-Matrix · I2S-Verstärker · Checkliste →",
         "builds_title": "Builds (reale Verdrahtung)",
         "builds_hint": "GPIO-Karte · Verdrahtung · Checkliste →",
         "usedIn": "Verwendet in:",
@@ -372,111 +370,78 @@
             "battery": "Batterie",
             "connector": "Steckverbinder"
         },
-        "available_modules": "Verfügbare Module",
-        "all": "Alle",
         "search_placeholder": "Modul, Schnittstelle oder Familie suchen...",
         "empty_filtered": "Keine Module passen zu diesem Filter.",
-        "stats_modules": "Module",
-        "stats_microcontrollers": "MCUs",
-        "stats_audio": "Audio",
-        "select_module": "Wähle ein Modul, um seine Pinouts zu sehen",
-        "print": "Drucken",
-        "print_tooltip": "Pinout drucken",
-        "expand": "Erweitern",
-        "expand_tooltip": "In neuem Tab öffnen",
-        "interactive_view": "Interaktive Ansicht",
-        "specifications": "Spezifikationen",
-        "technical_info": "Technische Informationen",
-        "name": "Name",
-        "category": "Kategorie",
-        "voltage": "Spannung",
-        "resolution": "Auflösung",
-        "interface": "Schnittstelle",
-        "package": "Gehäuse",
-        "features": "Eigenschaften",
         "datasheet": "Datenblatt",
-        "view_datasheet": "Offizielles Datenblatt anzeigen",
-        "Categories": {
-            "microcontroller": "Mikrocontroller",
-            "audio": "Audio-DAC",
-            "amplifier": "Verstärker",
-            "power": "Stromversorgung",
-            "connector": "Anschlüsse"
-        },
         "Modules": {
             "esp32-wroom-32": {
-                "description": "38-Pin Mikrocontroller mit WiFi, Bluetooth, ADC, DAC und Touch",
-                "features": [
-                    "WiFi 802.11 b/g/n",
-                    "Bluetooth 4.2 BLE",
-                    "Dual-Core 240MHz",
-                    "520KB SRAM",
-                    "10 Touch",
-                    "18 ADC",
-                    "2 DAC"
-                ]
+                "description": "WiFi + BT 4.2 MCU, 2×19-Header (38 Pins). Kurzreferenz + Fallstricke."
             },
-            "esp32s3": {
-                "description": "Mikrocontroller mit nativem USB-OTG, WiFi 6, BLE 5 und KI-Beschleunigung",
-                "features": [
-                    "WiFi 6",
-                    "Bluetooth 5 BLE",
-                    "Natives USB-OTG",
-                    "Dual-Core 240MHz",
-                    "KI-Vektor",
-                    "14 Touch"
-                ]
+            "esp32-s3-devkitc-1": {
+                "description": "MCU mit nativem USB OTG, WiFi 6, BLE 5. 2×22-Header. Kurzreferenz + Fallstricke."
+            },
+            "max98357a": {
+                "description": "Mono-3,2W-I2S-Class-D-Verstärker (Breakout). 2 parallel = Stereo."
             },
             "pcm5102": {
-                "description": "32-Bit/192kHz Digital-Analog-Wandler für hochwertige Audioqualität",
-                "features": [
-                    "SNR 112dB",
-                    "THD -93dB",
-                    "Integrierter Digitalfilter",
-                    "Geringer Stromverbrauch"
-                ]
-            },
-            "max98357": {
-                "description": "3,2W Mono I2S Verstärker mit >90% Effizienz",
-                "features": [
-                    "3,2W @ 4Ω",
-                    "Effizienz >90%",
-                    "Keine externen Komponenten",
-                    "Überhitzungsschutz"
-                ]
+                "description": "32-Bit/384kHz-I2S-DAC (GY-PCM5102 Breakout). L/R-Line-Ausgang."
             },
             "lm2596": {
-                "description": "Einstellbarer 3A Step-Down Spannungsregler",
-                "features": [
-                    "3A dauerhaft",
-                    "Effizienz 73%",
-                    "Frequenz 150kHz",
-                    "Überhitzungsschutz"
-                ]
+                "description": "Einstellbarer 3A-DC-DC-Abwärtsregler. Oft mit Spannungsanzeige."
             },
-            "audio-jack-trs": {
-                "description": "Stereo Tip/Ring/Sleeve Buchse für Line-Audio oder Kopfhörer",
-                "features": [
-                    "Tip = linker Kanal",
-                    "Ring = rechter Kanal",
-                    "Sleeve = Masse",
-                    "Optionaler Erkennungsschalter"
-                ]
+            "jack-trs": {
+                "description": "Stereo-Buchse: Tip=L, Ring=R, Sleeve=GND."
             },
-            "audio-plug-trrs": {
-                "description": "TRRS Stecker für Kopfhörer mit Mikrofon nach CTIA-Standard",
-                "features": [
-                    "Tip = linker Kanal",
-                    "Ring 1 = rechter Kanal",
-                    "Ring 2 = Masse",
-                    "Sleeve = Mikrofon"
-                ]
+            "plug-trrs": {
+                "description": "Stecker mit Mikrofon, CTIA-Standard (moderne Handys)."
+            },
+            "ili9488": {
+                "description": "480×320-18-Bit-SPI-Display. Mit Regler und Pegelwandler (VCC an 5V)."
+            },
+            "lcd1602-i2c": {
+                "description": "16×2-Zeichendisplay mit I2C-Backpack: nur 2 Datenpins."
+            },
+            "ky-040": {
+                "description": "Inkrementaler Encoder mit Taster. Pull-ups an Bord."
+            },
+            "hw-504": {
+                "description": "Joystick im PlayStation-Stil: 2 analoge Achsen + Taster."
+            },
+            "ws2812": {
+                "description": "Verkettete adressierbare RGB-LEDs: der ganze Streifen nutzt 1 Datenpin."
+            },
+            "ky-009": {
+                "description": "RGB-LED mit gemeinsamer Kathode. KEINE Widerstände an Bord."
+            },
+            "charger-2s": {
+                "description": "Lädt 2 Zellen in Serie über USB-C mit Balancing und Schutz; Pass-through zur Last."
+            },
+            "holder-2s": {
+                "description": "Zwei 18650-Zellen in Serie (2S). Achtung: der richtige Halter ist SERIELL, nicht parallel."
             }
         },
-        "Buttons": {
-            "view": "Ansehen",
-            "selected": "Ausgewählt",
-            "html": "HTML"
+        "tables": {
+            "gain": "Verstärkung (GAIN-Pin)",
+            "channel": "Kanal (SD-Pin)",
+            "jumpers": "Jumper"
+        },
+        "meta": {
+            "index": {
+                "title": "Interaktive Pinouts | HIOS Platform",
+                "description": "Erkunde die Pin-Diagramme der Module, die in unseren Elektronikprojekten verwendet werden."
+            },
+            "pad": {
+                "title": "HIOS PAD · Verdrahtungsanleitung | HIOS Platform",
+                "description": "Verdrahtungsanleitung für das ESP32-S3-Macropad: GPIO-Karte, Tastenmatrix, MAX98357A-I2S-Verstärker und Bau-Checkliste."
+            },
+            "btdac": {
+                "title": "BTDAC · Verdrahtungsanleitung | HIOS Platform",
+                "description": "Verdrahtungsanleitung für den BTDAC-Bluetooth-Empfänger: I2S vom ESP32 zum PCM5102-DAC, KY-009-RGB-LED und 2S-Stromversorgung, mit Bau-Checkliste."
+            },
+            "speaker": {
+                "title": "WiFi Speaker · Verdrahtungsanleitung | HIOS Platform",
+                "description": "Verdrahtungsanleitung für den WiFi-Lautsprecher: I2S vom ESP32 zu 2× MAX98357 in Stereo, 16×2-I2C-LCD, Kanalwahl per SD-Messung und 2S-Stromversorgung."
+            }
         }
     },
     "WiringGuide": {
@@ -501,7 +466,9 @@
         "workbench": "Workbench",
         "pinouts": "Pinouts",
         "calculators": "Rechner",
-        "rcl": "RCL"
+        "rcl": "RCL",
+        "menu": "Menü",
+        "search": "Suchen"
     },
     "CommandPalette": {
         "placeholder": "Tools und Seiten suchen…",
@@ -517,8 +484,8 @@
             "calculators": "Rechner",
             "pinouts": "Pinouts",
             "padWiring": "PAD-Verdrahtungsanleitung",
-      "btdacWiring": "BTDAC-Verdrahtungsanleitung",
-      "speakerWiring": "Speaker-Verdrahtungsanleitung",
+            "btdacWiring": "BTDAC-Verdrahtungsanleitung",
+            "speakerWiring": "Speaker-Verdrahtungsanleitung",
             "snippets": "Snippets",
             "settings": "Einstellungen",
             "feedback": "Feedback",

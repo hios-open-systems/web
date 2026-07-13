@@ -2,15 +2,35 @@
 
 import React from 'react';
 import { Layout, Typography, Space } from 'antd';
-import { GithubOutlined, MailOutlined, FileTextOutlined } from '@ant-design/icons';
+import { GithubOutlined, MailOutlined } from '@ant-design/icons';
 import { motion } from 'framer-motion';
+import NextLink from 'next/link';
+import { useLocale, useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
+import styles from './footer.module.css';
 
 const { Footer: AntFooter } = Layout;
 const { Text, Link } = Typography;
 
 export function Footer() {
     const { mode } = useTheme();
+    const locale = useLocale();
+    const t = useTranslations('Header');
+
+    const label = (key: string, fallback: string) => {
+        const value = t(key);
+        return value === key || value === `Header.${key}` ? fallback : value;
+    };
+
+    const navLinks = [
+        { href: `/${locale}/projects`, label: label('projects', 'Proyectos') },
+        { href: `/${locale}/tools`, label: label('tools', 'Herramientas') },
+        { href: `/${locale}/workbench`, label: label('workbench', 'Workbench') },
+        { href: `/${locale}/pinouts`, label: label('pinouts', 'Pinouts') },
+        { href: `/${locale}/calculators`, label: label('calculators', 'Calculadoras') },
+        { href: `/${locale}/prints`, label: 'Maker' },
+        { href: `/${locale}/blog`, label: 'Devlog' },
+    ];
 
     const socialLinks = [
         {
@@ -22,11 +42,6 @@ export function Footer() {
             icon: <MailOutlined />,
             href: 'mailto:devsolutionsar@gmail.com',
             label: 'Email',
-        },
-        {
-            icon: <FileTextOutlined />,
-            href: '#documentation',
-            label: 'Docs',
         },
     ];
 
@@ -48,6 +63,14 @@ export function Footer() {
                 transition={{ duration: 0.5 }}
             >
                 <Space direction="vertical" size="large">
+                    <nav className={styles.nav} aria-label="Footer">
+                        {navLinks.map((link) => (
+                            <NextLink key={link.href} href={link.href} className={styles.navLink}>
+                                {link.label}
+                            </NextLink>
+                        ))}
+                    </nav>
+
                     <Space size="large">
                         {socialLinks.map((link, index) => (
                             <motion.div
