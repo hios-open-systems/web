@@ -1,6 +1,14 @@
 @import './animations.css';
 
 :root {
+  /* Responsive layout system */
+  --layout-gutter: clamp(16px, 4vw, 32px);
+  --layout-section-space: clamp(40px, 8vw, 88px);
+  --layout-content: 1180px;
+  --layout-reading: 760px;
+  --layout-header-height: 64px;
+  --touch-target: 44px;
+  --surface-radius: clamp(14px, 2vw, 20px);
   /* HIOS Color Palette */
   --hios-primary: #0066cc;
   --hios-primary-light: #4096ff;
@@ -85,6 +93,13 @@
   box-sizing: border-box;
 }
 
+html {
+  min-width: 320px;
+  overflow-x: clip;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -93,6 +108,67 @@ body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-width: 320px;
+  overflow-x: clip;
+}
+
+img, svg, video, canvas { max-width: 100%; }
+button, input, select, textarea { font: inherit; }
+
+.page-container {
+  width: min(100%, calc(var(--layout-content) + (2 * var(--layout-gutter))));
+  margin-inline: auto;
+  padding-inline: var(--layout-gutter);
+}
+
+.reading-container {
+  width: min(100%, calc(var(--layout-reading) + (2 * var(--layout-gutter))));
+  margin-inline: auto;
+  padding-inline: var(--layout-gutter);
+}
+
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: clamp(16px, 3vw, 28px);
+}
+
+.overflow-surface, .markdown-content pre, .markdown-content table {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.markdown-content { min-width: 0; overflow-wrap: anywhere; }
+.markdown-content img { display: block; height: auto; margin-inline: auto; border-radius: 12px; }
+
+@media (max-width: 767px) {
+  :root { --layout-gutter: 16px; --layout-section-space: 48px; }
+  .ant-layout-content, .ant-row { min-width: 0; }
+  .ant-card-body { padding: 18px; }
+  .ant-modal {
+    width: calc(100vw - 32px) !important;
+    max-width: calc(100vw - 32px);
+    margin: 16px auto;
+  }
+  .ant-drawer-content-wrapper { max-width: calc(100vw - 24px); }
+  .ant-form-item-control, .ant-form-item-control-input, .ant-form-item-control-input-content { min-width: 0; }
+  .ant-space:not(.ant-space-vertical) { max-width: 100%; }
+
+  .no-print {
+    align-items: stretch !important;
+    padding: 12px 16px !important;
+  }
+
+  .no-print > * {
+    justify-content: space-between;
+  }
+
+  .print-content {
+    padding: 24px 16px !important;
+    box-shadow: none !important;
+  }
 }
 
 a {

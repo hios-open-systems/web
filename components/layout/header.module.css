@@ -3,8 +3,9 @@
   top: 0;
   z-index: 1000;
   width: 100%;
-  height: 56px;
-  padding: 0 20px;
+  height: var(--layout-header-height) !important;
+  min-height: var(--layout-header-height);
+  padding: 0 max(20px, env(safe-area-inset-right)) 0 max(20px, env(safe-area-inset-left)) !important;
   line-height: normal;
   background: rgba(2, 6, 23, 0.82);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
@@ -230,30 +231,16 @@
 
 @media (max-width: 640px) {
   .header {
-    padding: 0 12px;
+    padding: 0 max(12px, env(safe-area-inset-right)) 0 max(12px, env(safe-area-inset-left)) !important;
   }
   .shell {
-    gap: 8px;
+    gap: 12px;
   }
   .nav {
-    gap: 0;
-    flex: 0 1 auto;
-    margin-right: 8px;
-  }
-  .navLink {
-    padding: 0 8px;
-  }
-  .navLinkPrimary:not(.navLinkActive) {
     display: none;
-  }
-  .navLinkSecondary {
-    display: none;
-  }
-  .navLinkSecondary.navLinkActive {
-    display: inline-flex;
   }
   .controls {
-    gap: 4px;
+    gap: 2px;
     margin-left: auto;
   }
   .localeSelect {
@@ -262,6 +249,18 @@
   .controls [aria-label='GitHub'] {
     display: none;
   }
+  .desktopOnlyControl {
+    display: none !important;
+  }
+  .iconButton,
+  .iconLink,
+  .hamburger {
+    width: var(--touch-target) !important;
+    height: var(--touch-target) !important;
+    min-width: var(--touch-target) !important;
+  }
+  .brandLink { min-height: var(--touch-target); }
+  .brand { font-size: 17px; }
 }
 
 .hamburger {
@@ -307,6 +306,45 @@
   border-top: 1px solid rgba(0, 0, 0, 0.08);
 }
 
+.drawerActions {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.drawerAction {
+  display: flex !important;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  width: 100%;
+  min-height: var(--touch-target);
+  padding: 0 12px !important;
+  border-radius: 10px;
+  color: #334155;
+  font-size: 14px;
+}
+
+.drawerAction:hover {
+  color: var(--accent) !important;
+  background: color-mix(in srgb, var(--accent) 8%, transparent) !important;
+}
+
+.drawerLocale {
+  width: 100% !important;
+  min-height: var(--touch-target);
+}
+
+.drawerLocale :global(.ant-select-selector),
+.drawerLocale :global(.ant-select-selection-wrap),
+.drawerLocale :global(.ant-select-selection-search-input) {
+  height: var(--touch-target) !important;
+  min-height: var(--touch-target) !important;
+  align-items: center;
+}
+
+:global([data-theme='dark']) .drawerAction { color: #cbd5e1; }
+
 :global([data-theme='dark']) .drawerLink {
   color: #cbd5e1;
 }
@@ -328,4 +366,18 @@
   .hamburger {
     display: inline-flex !important;
   }
+}
+
+:global(.ant-drawer).mobileDrawer :global(.ant-drawer-content) {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+:global(.ant-drawer).mobileDrawer :global(.ant-drawer-header) {
+  min-height: var(--layout-header-height);
+}
+
+:global(.ant-drawer).mobileDrawer :global(.ant-drawer-close) {
+  width: var(--touch-target);
+  height: var(--touch-target);
+  margin-inline-end: 4px;
 }
