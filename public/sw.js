@@ -6,9 +6,9 @@
  * Versioned cache + skipWaiting/clientsClaim so deploys roll out fast
  * (the site deploys on every push, SW must not pin stale content).
  */
-const VERSION = 'hios-v2';
+const VERSION = 'hios-v3';
 const CACHE = `hios-cache-${VERSION}`;
-const PRECACHE = ['/offline.html', '/icons/icon.svg'];
+const PRECACHE = ['/offline.html', '/icons/icon.svg', '/icons/icon-192.png'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting()));

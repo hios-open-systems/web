@@ -1,11 +1,13 @@
 'use client';
 
-import React from 'react';
-import { Button, Layout } from 'antd';
+import React, { useState } from 'react';
+import { Button, Drawer, Layout } from 'antd';
 import {
   BellOutlined,
   GithubOutlined,
+  MenuOutlined,
   MoonOutlined,
+  SearchOutlined,
   SettingOutlined,
   SunOutlined,
 } from '@ant-design/icons';
@@ -21,8 +23,20 @@ import styles from './header.module.css';
 const { Header: AntHeader } = Layout;
 
 type NavKind = 'primary' | 'secondary';
-type HeaderKey = 'home' | 'projects' | 'tools' | 'workbench' | 'pinouts' | 'calculators';
+type HeaderKey =
+  | 'home'
+  | 'projects'
+  | 'tools'
+  | 'workbench'
+  | 'pinouts'
+  | 'calculators'
+  | 'menu'
+  | 'search';
 type NavItem = { href: string; label: string; kind: NavKind };
+
+const openCommandPalette = () => {
+  window.dispatchEvent(new CustomEvent('hios:command-palette'));
+};
 
 export function Header() {
   const { mode, toggleTheme } = useTheme();
@@ -30,6 +44,7 @@ export function Header() {
   const pathname = usePathname();
   const t = useTranslations('Header');
   const { unreadCount } = useFeedback();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const resolveLabel = (key: HeaderKey, fallback: string) => {
     const value = t(key);
@@ -81,6 +96,14 @@ export function Header() {
           <Button
             type="text"
             size="small"
+            icon={<SearchOutlined />}
+            onClick={openCommandPalette}
+            className={styles.iconButton}
+            aria-label={resolveLabel('search', 'Buscar')}
+          />
+          <Button
+            type="text"
+            size="small"
             icon={mode === 'dark' ? <SunOutlined /> : <MoonOutlined />}
             onClick={toggleTheme}
             className={styles.iconButton}
@@ -111,8 +134,44 @@ export function Header() {
             aria-label="GitHub"
           />
           <UserMenu />
+          <Button
+            type="text"
+            size="small"
+            icon={<MenuOutlined />}
+            onClick={() => setMenuOpen(true)}
+            className={`${styles.iconButton} ${styles.hamburger}`}
+            aria-label={resolveLabel('menu', 'Menú')}
+          />
         </div>
       </div>
+
+      <Drawer
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        placement="right"
+        width={272}
+        title={resolveLabel('menu', 'Menú')}
+        classNames={{ body: styles.drawerBody }}
+      >
+        <nav className={styles.drawerNav} aria-label="Mobile">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setMenuOpen(false)}
+              className={[styles.drawerLink, isActive(item.href) ? styles.drawerLinkActive : '']
+                .filter(Boolean)
+                .join(' ')}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className={styles.drawerFooter}>
+          <LocaleSwitcher />
+        </div>
+      </Drawer>
     </AntHeader>
   );
 }
