@@ -1,0 +1,68 @@
+/*
+ * Tokens propios: el diagrama se usa en dos lugares (librería de módulos y guía de
+ * cableado) y antes dependía de variables scopeadas a `.page` de la librería. Al
+ * meterlo en la guía se quedaba sin colores. Autocontenido = se puede mover.
+ */
+.wrap {
+  --bk-surface: #ffffff;
+  --bk-surface-muted: #f1f5f9;
+  --bk-border: rgba(15, 23, 42, 0.14);
+  --bk-muted: #64748b;
+  --bk-title: #0f172a;
+  --bk-pcb: #14532d;
+  --bk-shield: #cbd5e1;
+
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+
+:global([data-theme='dark']) .wrap {
+  --bk-surface: #0f172a;
+  --bk-surface-muted: rgba(255, 255, 255, 0.06);
+  --bk-border: rgba(255, 255, 255, 0.16);
+  --bk-muted: #94a3b8;
+  --bk-title: #f8fafc;
+  --bk-pcb: #0d2818;
+  --bk-shield: #94a3b8;
+}
+
+.wrap svg {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border: 1px solid;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+/* leyenda del modo guía: qué significa que un pin esté apagado */
+.hint {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--bk-muted);
+}
