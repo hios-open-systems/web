@@ -11,13 +11,41 @@ export const BTDAC_WIRING: WiringGuide = {
     source: 'src/HIOS_BTDAC.ino',
   },
 
+  modules: [
+    {
+      id: 'power',
+      name: 'Energía',
+      icon: '⚡',
+      rail: null,
+      power: 'pack 2S → BMS → LM2596 a 5.0V → riel 5V',
+      step: 1,
+      tip: 'Medí el buck a 5.0V antes de conectar nada.',
+    },
+    {
+      id: 'dac',
+      name: 'DAC PCM5102',
+      icon: '🎵',
+      rail: 5,
+      power: 'VIN → 5V · GND → GND',
+      step: 2,
+    },
+    {
+      id: 'led',
+      name: 'LED RGB KY-009',
+      icon: '🌈',
+      rail: null,
+      power: 'cátodo común → GND (cada color entra por su 330Ω)',
+      step: 3,
+    },
+  ],
+
   pins: [
-    { gpio: 27, kind: 'i2s', name: 'I2S BCK', rail: null, dest: '→ BCK del PCM5102' },
-    { gpio: 14, kind: 'i2s', name: 'I2S LRCK', rail: null, dest: '→ LRCK del PCM5102' },
-    { gpio: 13, kind: 'i2s', name: 'I2S DOUT', rail: null, dest: '→ DIN del PCM5102' },
-    { gpio: 4, kind: 'pwm', name: 'LED R', rail: null, dest: '→ 330Ω → R del KY-009' },
-    { gpio: 16, kind: 'pwm', name: 'LED G', rail: null, dest: '→ 330Ω → G del KY-009' },
-    { gpio: 17, kind: 'pwm', name: 'LED B', rail: null, dest: '→ 330Ω → B del KY-009' },
+    { gpio: 27, kind: 'i2s', name: 'I2S BCK', mod: 'dac', dest: '→ BCK del PCM5102' },
+    { gpio: 14, kind: 'i2s', name: 'I2S LRCK', mod: 'dac', dest: '→ LRCK del PCM5102' },
+    { gpio: 13, kind: 'i2s', name: 'I2S DOUT', mod: 'dac', dest: '→ DIN del PCM5102' },
+    { gpio: 4, kind: 'pwm', name: 'LED R', mod: 'led', dest: '→ 330Ω → R del KY-009' },
+    { gpio: 16, kind: 'pwm', name: 'LED G', mod: 'led', dest: '→ 330Ω → G del KY-009' },
+    { gpio: 17, kind: 'pwm', name: 'LED B', mod: 'led', dest: '→ 330Ω → B del KY-009' },
   ],
 
   rails: [

@@ -1,9 +1,22 @@
-# HIOS PAD — Cableado y energía
+# HIOS PAD — Cableado y energía (PROTOTIPO 1 — SUPERADO)
 
-> Documento de hardware del macropad (ESP32-S3 DevKitC-1 + placa de expansión).
-> Pines: fuente de verdad = `src/app/Pins.h` y los build flags de `platformio.ini`.
+> # ⛔ NO SOLDES CON ESTE DOCUMENTO
 >
-> 🆕 **Prototipo 2** (carcasa, SIN placa de expansión, 3 rieles a mano): ver [`WIRING_v2.md`](WIRING_v2.md).
+> Describe el **prototipo 1** (con placa de expansión), que ya no se arma. Se conserva
+> como historia. Tenía **dos errores capaces de arruinarte hardware**, corregidos abajo
+> pero mencionados acá para que nadie los repita de memoria:
+>
+> 1. La tabla de pines se leía como **TFT CS = 13**. El CS es el **10** (`platformio.ini`
+>    manda). Soldarlo al 13 lo choca contra el DC → pantalla muerta.
+> 2. Mandaba a cablear un **divisor de batería al GPIO9**. El GPIO9 hoy es el **DIN del
+>    NeoPixel**: ese divisor le mete ~2,7 V DC permanentes a la línea de datos.
+>
+> **Para soldar, usá:**
+> - **/pinouts/pad** en el sitio — es data-driven y un self-test la compara contra
+>   `Pins.h` y `platformio.ini` en cada corrida.
+> - [`WIRING_v2.md`](WIRING_v2.md) — el prototipo 2 (carcasa, sin expansión).
+>
+> Fuente de verdad de pines: `src/app/Pins.h` + build flags de `platformio.ini`.
 
 ## Energía (según el armado actual)
 
@@ -35,9 +48,18 @@ A la **placa de expansión** se conecta todo: **encoder, botones, stick, pantall
   4. (Software) bajar `WiFi.setTxPower` → picos más chicos.
 - ⛔ **Nunca** alimentar el pin `3V3` directo (saltea el regulador → puede dañar el S3). Usar la ficha (6.5–9 V) o USB (5 V).
 
-## Medición de batería (2S) — listo pero apagado
+## Medición de batería (2S) — ⛔ DESCARTADA, NO LA CABLEES
 
-El firmware ya tiene el lector (`cfg::BATTERY_ENABLED`, hoy `false`). Para activarlo:
+> **El GPIO9 ya NO está libre: hoy es el DIN del NeoPixel** (`cfg::NEOPIXEL_PIN = 9`).
+> Cablear este divisor le clava ~2,7 V DC permanentes, vía 47k, a la línea de datos que
+> el S3 intenta manejar. `Config.h` todavía tiene `BAT_ADC_PIN = 9` y sólo se salva
+> porque `BATTERY_ENABLED = false`: **no lo pongas en `true`** sin reasignar el ADC.
+>
+> La medición se descartó a propósito: la **pantalla de la fuente** ya muestra la tensión
+> de entrada (= las 2 celdas). Los pasos de abajo quedan sólo como registro histórico.
+
+<details>
+<summary>Procedimiento viejo (no seguir)</summary>
 
 1. **Cablear un divisor resistivo** de V+ de la batería (2S, hasta 8.4 V) al pin **GPIO9** (ADC1, libre):
 
@@ -56,6 +78,8 @@ El firmware ya tiene el lector (`cfg::BATTERY_ENABLED`, hoy `false`). Para activ
 
 > ⚠️ El valor llega a `UiSnapshot.battery` (0..100; 255 = sin dato), pero **falta el tile en la UI** (el dock tiene 5 tiles llenos): agregar el indicador cuando se valide la lectura en hardware.
 
+</details>
+
 ## Mapa de pines (ESP32-S3)
 
 | Función | GPIO | Notas |
@@ -64,7 +88,7 @@ El firmware ya tiene el lector (`cfg::BATTERY_ENABLED`, hoy `false`). Para activ
 | Encoder CLK / DT / SW | 4 / 5 / 6 | KY-040; SW `INPUT_PULLUP` |
 | Stick X / Y / SW | 1 / 2 / 7 | X/Y en **ADC1**; SW `INPUT_PULLUP` |
 | Batería (divisor) | 9 | ADC1, opcional; `BATTERY_ENABLED` |
-| TFT MOSI / SCLK / CS / DC / RST | 11 / 12 / 13(*) / 14(*) | ILI9488, HSPI. (Ver platformio.ini: CS=10, DC=13, RST=14, MISO=-1) |
+| TFT MOSI / SCLK / **CS** / DC / RST | 11 / 12 / **10** / 13 / 14 | ILI9488, HSPI. MISO=-1. ⚠️ Esta fila decía `13(*)` para el CS y se leía como CS=13: **está mal**, el CS es el **10** (`platformio.ini` es la autoridad). |
 | TFT backlight | 21 | PWM por software (LEDC) |
 | USB nativo (HID) | 19 / 20 | `ARDUINO_USB_MODE=0` (TinyUSB OTG = HID) |
 | UART/CH343 (debug+flasheo) | UART0 | `/dev/ttyACM0` vía usbipd en WSL |
