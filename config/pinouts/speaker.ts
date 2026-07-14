@@ -11,13 +11,51 @@ export const SPEAKER_WIRING: WiringGuide = {
     source: 'src/main.ino',
   },
 
+  modules: [
+    {
+      id: 'power',
+      name: 'Energía',
+      icon: '⚡',
+      rail: null,
+      power: 'pack 2S → BMS → LM2596 a 5.0V → riel 5V',
+      step: 1,
+      tip: 'Buck ≥2–3A: los dos amplis a full pican fuerte.',
+    },
+    {
+      id: 'audio',
+      name: '2× MAX98357 (I2S)',
+      icon: '🔊',
+      rail: 5,
+      power: 'Vin → 5V · GND → GND',
+      step: 2,
+      tip: 'Bus I2S compartido: los 3 pines van a los dos amplis. El canal lo elige el pin SD de cada uno — **medilo**, no lo asumas.',
+    },
+    {
+      id: 'lcd',
+      name: 'LCD 16×2 (I2C)',
+      icon: '🖥️',
+      rail: 5,
+      power: 'VCC → 5V · GND → GND',
+      step: 3,
+      tip: 'Backpack PCF8574 en 0x27.',
+    },
+    {
+      id: 'battery',
+      name: 'Medición de batería',
+      icon: '🔋',
+      rail: null,
+      power: 'divisor 100k/100k desde el pack → GPIO34',
+      step: 4,
+    },
+  ],
+
   pins: [
-    { gpio: 25, kind: 'i2s', name: 'I2S DOUT', rail: null, dest: '→ DIN de AMBOS MAX98357 (bus)' },
-    { gpio: 26, kind: 'i2s', name: 'I2S BCLK', rail: null, dest: '→ BCLK de ambos amplis' },
-    { gpio: 27, kind: 'i2s', name: 'I2S LRC', rail: null, dest: '→ LRC de ambos amplis' },
-    { gpio: 21, kind: 'i2c', name: 'I2C SDA', rail: null, dest: '→ SDA del LCD 16×2 (0x27)' },
-    { gpio: 22, kind: 'i2c', name: 'I2C SCL', rail: null, dest: '→ SCL del LCD' },
-    { gpio: 34, kind: 'adc', name: 'VBAT ADC', rail: null, dest: 'divisor 100k/100k del pack (×2) — solo lectura', note: 'IO34 es input-only' },
+    { gpio: 25, kind: 'i2s', name: 'I2S DOUT', mod: 'audio', dest: '→ DIN de AMBOS MAX98357 (bus)' },
+    { gpio: 26, kind: 'i2s', name: 'I2S BCLK', mod: 'audio', dest: '→ BCLK de ambos amplis' },
+    { gpio: 27, kind: 'i2s', name: 'I2S LRC', mod: 'audio', dest: '→ LRC de ambos amplis' },
+    { gpio: 21, kind: 'i2c', name: 'I2C SDA', mod: 'lcd', dest: '→ SDA del LCD 16×2 (0x27)' },
+    { gpio: 22, kind: 'i2c', name: 'I2C SCL', mod: 'lcd', dest: '→ SCL del LCD' },
+    { gpio: 34, kind: 'adc', name: 'VBAT ADC', mod: 'battery', dest: 'divisor 100k/100k del pack (×2) — solo lectura', note: 'IO34 es input-only' },
   ],
 
   rails: [

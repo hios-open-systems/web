@@ -4,8 +4,20 @@ const L = (text: string, func: PinFunc, primary = false) => ({ text, func, prima
 const P = (pos: number, ...labels: ReturnType<typeof L>[]): BoardPin => ({ pos, labels });
 
 /**
- * ESP32-S3 DevKitC-1 — 44 pines (2 headers de 22).
- * Orden físico del header, contando desde el borde del USB.
+ * ESP32-S3 DevKitC-1 — 44 pines (2 headers de 22: J1 izquierda, J3 derecha).
+ *
+ * Orden físico REAL del header, contando desde el borde del USB. Verificado contra
+ * la tabla oficial de Espressif (esp-dev-kits, user_guide_v1.1, "Pin Layout").
+ *
+ * ⚠️ NO reordenar de memoria. Los GPIO no salen en orden numérico y la tentación de
+ * "ordenarlos" rompe el único uso real de esta tabla: contar pines con la placa en
+ * la mano. Si tocás esto, `npm run test:breakouts` compara contra la tabla oficial.
+ *
+ * Trampas que ya nos comimos una vez:
+ *   · IO19/IO20 (USB) van en J3 abajo, NO en J1 — dibujarlos en J1 corre todo +2.
+ *   · J1 termina en 5V + GND. J3 termina en GND + GND (no hay 5V en J3).
+ *   · ADC1 = GPIO1–10 y NADA MÁS (es el único ADC usable con WiFi/BLE prendido).
+ *     GPIO15–18 son ADC2, no ADC1.
  */
 export const ESP32_S3_BOARD: BoardPinout = {
   usb: 'USB-C ×2 (UART + OTG nativo)',
@@ -17,21 +29,21 @@ export const ESP32_S3_BOARD: BoardPinout = {
     P(5, L('IO5', 'gpio', true), L('ADC1_4', 'adc'), L('T5', 'touch')),
     P(6, L('IO6', 'gpio', true), L('ADC1_5', 'adc'), L('T6', 'touch')),
     P(7, L('IO7', 'gpio', true), L('ADC1_6', 'adc'), L('T7', 'touch')),
-    P(8, L('IO15', 'gpio', true), L('ADC1_7', 'adc')),
+    P(8, L('IO15', 'gpio', true), L('ADC2_4', 'adc')),
     P(9, L('IO16', 'gpio', true), L('ADC2_5', 'adc')),
     P(10, L('IO17', 'gpio', true), L('ADC2_6', 'adc')),
     P(11, L('IO18', 'gpio', true), L('ADC2_7', 'adc')),
-    P(12, L('IO8', 'gpio', true), L('T8', 'touch')),
-    P(13, L('IO19', 'gpio', true), L('USB D−', 'usb')),
-    P(14, L('IO20', 'gpio', true), L('USB D+', 'usb')),
-    P(15, L('IO3', 'gpio', true), L('T3', 'touch'), L('STRAP', 'strap')),
-    P(16, L('IO46', 'gpio', true), L('STRAP', 'strap')),
-    P(17, L('IO9', 'gpio', true), L('T9', 'touch')),
-    P(18, L('IO10', 'gpio', true), L('T10', 'touch')),
-    P(19, L('IO11', 'gpio', true), L('T11', 'touch')),
-    P(20, L('IO12', 'gpio', true), L('T12', 'touch')),
-    P(21, L('IO13', 'gpio', true), L('T13', 'touch')),
-    P(22, L('IO14', 'gpio', true), L('ADC2_3', 'adc'), L('T14', 'touch')),
+    P(12, L('IO8', 'gpio', true), L('ADC1_7', 'adc'), L('T8', 'touch')),
+    P(13, L('IO3', 'gpio', true), L('ADC1_2', 'adc'), L('T3', 'touch'), L('STRAP', 'strap')),
+    P(14, L('IO46', 'gpio', true), L('STRAP', 'strap')),
+    P(15, L('IO9', 'gpio', true), L('ADC1_8', 'adc'), L('T9', 'touch')),
+    P(16, L('IO10', 'gpio', true), L('ADC1_9', 'adc'), L('T10', 'touch')),
+    P(17, L('IO11', 'gpio', true), L('ADC2_0', 'adc'), L('T11', 'touch')),
+    P(18, L('IO12', 'gpio', true), L('ADC2_1', 'adc'), L('T12', 'touch')),
+    P(19, L('IO13', 'gpio', true), L('ADC2_2', 'adc'), L('T13', 'touch')),
+    P(20, L('IO14', 'gpio', true), L('ADC2_3', 'adc'), L('T14', 'touch')),
+    P(21, L('5V', 'power', true)),
+    P(22, L('GND', 'gnd', true)),
   ],
   right: [
     P(1, L('GND', 'gnd', true)),
@@ -43,19 +55,19 @@ export const ESP32_S3_BOARD: BoardPinout = {
     P(7, L('IO41', 'gpio', true)),
     P(8, L('IO40', 'gpio', true)),
     P(9, L('IO39', 'gpio', true)),
-    P(10, L('IO38', 'gpio', true)),
+    P(10, L('IO38', 'gpio', true), L('RGB v1.1', 'rgb')),
     P(11, L('IO37', 'nc', true), L('PSRAM', 'nc')),
     P(12, L('IO36', 'nc', true), L('PSRAM', 'nc')),
     P(13, L('IO35', 'nc', true), L('PSRAM', 'nc')),
     P(14, L('IO0', 'gpio', true), L('BOOT', 'strap')),
     P(15, L('IO45', 'gpio', true), L('STRAP', 'strap')),
-    P(16, L('IO48', 'gpio', true), L('RGB', 'rgb')),
+    P(16, L('IO48', 'gpio', true), L('RGB v1.0', 'rgb')),
     P(17, L('IO47', 'gpio', true)),
     P(18, L('IO21', 'gpio', true)),
-    P(19, L('GND', 'gnd', true)),
-    P(20, L('5V', 'power', true)),
+    P(19, L('IO20', 'gpio', true), L('USB D+', 'usb')),
+    P(20, L('IO19', 'gpio', true), L('USB D−', 'usb')),
     P(21, L('GND', 'gnd', true)),
-    P(22, L('5V', 'power', true)),
+    P(22, L('GND', 'gnd', true)),
   ],
 };
 
@@ -123,11 +135,17 @@ export const MCU_BREAKOUTS: Breakout[] = [
     datasheetUrl:
       'https://www.espressif.com/sites/default/files/documentation/esp32-s3_datasheet_en.pdf',
     pins: [
-      { name: '3V3', role: 'pwr33', to: 'salida del regulador a bordo (NO inyectar de afuera)', side: 'left' },
-      { name: '5V', role: 'pwr5', to: 'entrada de alimentación (VBUS interno → AMS1117)', side: 'left' },
+      { name: '3V3', role: 'pwr33', to: 'salida del LDO a bordo (SGM2212-3.3, 800mA) — NO inyectar de afuera', side: 'left' },
+      { name: '5V', role: 'pwr5', to: 'entrada de alimentación (VBUS o buck externo) → LDO → 3V3', side: 'left' },
       { name: 'GND', role: 'gnd', to: 'masa común', side: 'left' },
       { name: 'IO1–IO10', role: 'adc', to: 'ADC1 — el único ADC usable con WiFi/BLE encendido', side: 'left' },
-      { name: 'IO48', role: 'neo', to: 'LED RGB WS2812 integrado del DevKit', side: 'left' },
+      {
+        name: 'IO38 o IO48',
+        role: 'neo',
+        to: 'LED RGB WS2812 integrado — **depende de la revisión**',
+        side: 'left',
+        note: 'v1.1 → IO38 · v1.0 → IO48. NUNCA es el IO39. Mirá la serigrafía de tu placa antes de usar cualquiera de los dos.',
+      },
       {
         name: 'IO26–IO32',
         role: 'nc',
