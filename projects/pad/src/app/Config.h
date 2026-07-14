@@ -102,4 +102,20 @@ static constexpr uint32_t BL_FREQ   = 5000;  // Hz
 static constexpr uint8_t  BL_RES    = 8;     // bits -> duty 0..255
 static constexpr uint8_t  BL_BRILLO = 255;   // brillo inicial (0..255)
 
+// --- Matriz de accion 2x5 (rev 0.9) ---
+// Espera despues de manejar una fila a LOW, antes de leer las columnas. La
+// columna vuelve a HIGH por el pullup INTERNO (~45k), que es debil: sin este
+// settle, una tecla de la fila anterior deja la columna baja y se lee como
+// pulsada la de esta fila. 30us es ~10x el RC tipico; el escaneo entero cuesta
+// 2 filas x 30us = 60us por vuelta, o sea nada.
+static constexpr uint32_t MTX_SETTLE_US = 30;
+
+// --- Audio I2S (2x MAX98357A, bus compartido) ---
+// Poner en false si todavia no soldaste los amplis: sin ellos el driver instala
+// igual y no molesta, pero asi te ahorras la task y el DMA.
+static constexpr bool     AUDIO_ENABLED  = true;
+static constexpr uint8_t  AUDIO_VOL      = 90;    // 0..255. Ojo con el buck (dos amplis pican).
+static constexpr uint16_t AUDIO_CLICK_HZ = 2200;  // feedback de tecla: corto y agudo
+static constexpr uint16_t AUDIO_CLICK_MS = 18;
+
 }  // namespace cfg

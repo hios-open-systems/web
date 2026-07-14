@@ -28,6 +28,7 @@
 #include "mapping/Dispatcher.h"
 #include "actions/Action.h"
 #include "actions/MacroEngine.h"
+#include "audio/Audio.h"
 #include "storage/DefaultConfig.h"
 #include "storage/ConfigStore.h"
 #include "storage/ConfigCodec.h"
@@ -61,6 +62,10 @@ class DispatchSink : public InputSink {
 public:
   void emit(const InputEvent& e) override {
     appstate::lastInputMs = e.t_ms;
+    // Feedback audible al APRETAR (no al soltar: se sentiria tarde). Solo en el
+    // flanco de PRESS, y solo de pulsadores: el giro del encoder emitiria un
+    // click por detente y seria insoportable. audio::click() no bloquea.
+    if (e.edge == Edge::PRESS) audio::click();
     dispatcher.dispatch(e);
   }
 };
@@ -574,6 +579,7 @@ void setup() {
   // Dock eliminado: el estado (mic/wifi/bateria) vive en el cluster del header (libera ~39KB heap).
 
   bus::begin();
+  audio::begin();   // I2S a los 2x MAX98357A. Si no estan soldados, no molesta.
 
   xTaskCreatePinnedToCore(inputTask,     "input",     4096, nullptr, 5, nullptr, 1);
   xTaskCreatePinnedToCore(transportTask, "transport", 4096, nullptr, 4, nullptr, 1);
