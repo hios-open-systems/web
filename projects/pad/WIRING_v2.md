@@ -3,7 +3,9 @@
 > Build del **prototipo 2 / rev 0.8**: todo en carcasa, sin placa de expansión (por tamaño).
 > Componentes: **12 botones (10 acción + 2 alt)**, **1 encoder**, **1 stick**, **tira NeoPixel** (carcasa transparente). La tensión de batería la muestra la pantalla de la fuente (no se mide en el pad).
 > Los 3 rieles (5V / 3V3 / GND) se arman **a mano**.
-> ⚠️ El firmware HOY está cableado a **5 botones** (bitmask en `uint8_t`); pasar a 12 es un refactor aparte (ver final del doc).
+> ⚠️ Este doc es el cableado **rev 0.8** (12 botones DIRECTOS, un GPIO cada uno). Quedó **superado por la rev 0.9**, que pasa las 10 teclas de acción a una **matriz 2×5 con diodos** para liberar 3 GPIO y meter los parlantes I2S.
+>
+> Para soldar, usá **/pinouts/pad** en el sitio (o [`PINOUT.md`](PINOUT.md)): están verificados contra el firmware por self-test. Este archivo se conserva como historia del prototipo 2.
 > Para el prototipo 1 (con expansión) ver [`WIRING.md`](WIRING.md).
 
 ## Resumen de la decisión
@@ -201,21 +203,12 @@ El NeoPixel entró en **GPIO9** (el pin que iba a medir batería; se descartó e
 8. [ ] 1er flasheo por cable (UART0/CH343) o por **OTA** (`pio run -t upload --upload-port hiospad.local`).
 9. [ ] (Opcional) sense de `SW-PANTALLA` en GPIO3.
 
-## Pendiente de firmware (refactor, independiente del cableado)
+## Firmware: HECHO (jul 2026)
 
-El cableado v0.8 lleva **12 botones + NeoPixel**, pero el firmware HOY soporta 5 botones y no maneja NeoPixel. Lo que hay que tocar:
+Este doc listaba acá un refactor pendiente de "5 botones → 12". **Ya está hecho, y quedó atrás por partida doble:**
 
-**Botones 5 → 12:**
-- [`src/app/Pins.h`](src/app/Pins.h): `BOTON[5]` → `BOTON[12]` con `{15,16,17,18,8,38,39,40,41,42,47,48}`.
-- [`src/app/Types.h`](src/app/Types.h): bitmask `buttons` y `longFlash` `uint8_t` → **`uint16_t`** (12 + encSW + stickSW = 14 bits); enum `InputId::BTN_*` + `inputName()`.
-- [`src/main.cpp`](src/main.cpp): loop de lectura (`s.buttons |= (1<<i)`), índices fijos (encSW/stickSW se corren a 12/13), combo de calibración `pressed(5)&&pressed(6)`, `encActivity` (`>>5`), redibujo de keycaps.
-- [`src/inputs/ButtonMatrix.h`](src/inputs/ButtonMatrix.h): `N` pasa a 12.
-- [`src/ui/Menu.cpp`](src/ui/Menu.cpp) + [`Layout.h`](src/ui/Layout.h): el picker/keycaps asumen 5; rever para 10/12 en pantalla.
+- El paso a **12 botones directos** (rev 0.8) se hizo: `BOTON[12]`, bitmask a `uint16_t`, `ButtonMatrix::N = 14`, picker de 10 teclas.
+- Y después la **rev 0.9** reemplazó eso por la **matriz 2×5 escaneada** (`MTX_FILA[2]` + `MTX_COL[5]` + `ALT[2]` en [`Pins.h`](src/app/Pins.h)) y sumó el **bus I2S** para los dos MAX98357A ([`src/audio/`](src/audio/)).
 
-**NeoPixel:** lib (`Adafruit NeoPixel` o `FastLED`) en `platformio.ini`, módulo driver, init en `setup()` (pixeles a estado conocido = 1ª acción, tapa el parpadeo de boot), y qué muestran (¿capa activa? ¿batería? ¿ambient?).
+O sea: los 12 GPIO directos que describe este archivo ya no existen en el firmware. Ver [`PINOUT.md`](PINOUT.md).
 
-**🟡 2 decisiones de UX tuyas (las necesito antes de codear):**
-1. ¿Qué hacen los **2 ALT**? (shift de capa / Fn de combos / momentáneo) — define el modelo de input.
-2. ¿Qué muestra el **NeoPixel**? (color por capa / nivel de batería / efecto decorativo / mix).
-
-> El firmware se puede **compilar y verificar** acá (PlatformIO instalado), pero no testear sin la placa armada. Por eso se hace como pasada aparte, post-soldadura, cuando puedas flashear y validar.

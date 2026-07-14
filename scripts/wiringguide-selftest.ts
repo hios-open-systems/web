@@ -140,27 +140,53 @@ ok('pinout.data.js está al día con pad.ts (si falla: npm run gen:pinout)', onD
 // alguien a soldar el pin equivocado.
 const padPins = readFirmware('projects/pad/src/app/Pins.h');
 
-const BOTON = padPins.match(/BOTON\[12\]\s*=\s*\{([^}]+)\}/);
-ok('Pins.h expone BOTON[12]', !!BOTON);
-const botonGpios = (BOTON?.[1] ?? '').split(',').map((s) => Number(s.trim()));
-ok('BOTON[12] tiene 12 gpios', botonGpios.length === 12 && botonGpios.every(Number.isFinite));
+/** lee un array `constexpr uint8_t NOMBRE[n] = {a, b, ...}` de Pins.h */
+const arrConst = (code: string, name: string): number[] => {
+  const m = code.match(new RegExp(`\\b${name}\\[\\d+\\]\\s*=\\s*\\{([^}]+)\\}`));
+  return m ? m[1].split(',').map((s) => Number(s.trim())) : [];
+};
 
-// Pins.h:13 fija el orden: BTN_1..BTN_10, ALT_1, ALT_2
-const FW_BTN_LABEL = [
-  'BTN_1', 'BTN_2', 'BTN_3', 'BTN_4', 'BTN_5', 'BTN_6', 'BTN_7', 'BTN_8', 'BTN_9', 'BTN_10',
-  'ALT_1', 'ALT_2',
-];
+/**
+ * Qué pin de la guía DEBERÍA corresponder a cada cosa que el firmware declara.
+ *
+ * La correspondencia se escribe una vez, acá, en vez de adivinarla comparando
+ * strings: el firmware dice `I2S_DOUT` y la guía dice "I2S DOUT" pero el firmware
+ * dice `MTX_COL[2]` y la guía dice "Matriz COL 2". Lo que el test verifica de
+ * verdad son los NÚMEROS de GPIO; esta tabla es el contrato de qué es cada uno.
+ */
 const firmwareUse = new Map<number, string>();
-botonGpios.forEach((g, i) => firmwareUse.set(g, FW_BTN_LABEL[i]));
+
+const filas = arrConst(padPins, 'MTX_FILA');
+const cols = arrConst(padPins, 'MTX_COL');
+const alts = arrConst(padPins, 'ALT');
+ok('Pins.h expone la matriz 2×5 (MTX_FILA[2] + MTX_COL[5])', filas.length === 2 && cols.length === 5);
+ok('Pins.h expone los 2 ALT directos', alts.length === 2);
+ok('Pins.h ya NO tiene el BOTON[12] de rev 0.8', !/BOTON\[12\]/.test(padPins));
+
+filas.forEach((g, f) => firmwareUse.set(g, `Matriz FILA ${f}`));
+cols.forEach((g, c) => firmwareUse.set(g, `Matriz COL ${c}`));
+alts.forEach((g, i) => firmwareUse.set(g, `Botón ALT${i + 1}`));
+
 for (const [name, label] of [
   ['ENC_CLK', 'Encoder CLK'], ['ENC_DT', 'Encoder DT'], ['ENC_SW', 'Encoder SW'],
   ['STICK_X', 'Stick VRx'], ['STICK_Y', 'Stick VRy'], ['STICK_SW', 'Stick SW'],
+  ['I2S_BCLK', 'I2S BCLK'], ['I2S_LRC', 'I2S LRC'], ['I2S_DOUT', 'I2S DOUT'],
   ['TFT_BL', 'TFT backlight'],
 ] as const) {
   const g = intConst(padPins, name);
   ok(`Pins.h expone ${name}`, g !== null);
   if (g !== null) firmwareUse.set(g, label);
 }
+
+// La matriz no puede pisarse con nada: 7 GPIO distintos, y ninguno repetido con
+// los ALT ni con el I2S. Un choque acá se manifiesta como una tecla que dispara dos
+// cosas, que es de las cosas más molestas de debuggear con la placa armada.
+const mtxAll = [...filas, ...cols];
+ok('los 7 GPIO de la matriz son distintos entre sí', new Set(mtxAll).size === 7);
+ok(
+  'la matriz no pisa a los ALT ni al bus I2S',
+  new Set([...mtxAll, ...alts, intConst(padPins, 'I2S_BCLK'), intConst(padPins, 'I2S_LRC'), intConst(padPins, 'I2S_DOUT')]).size === 12,
+);
 
 const declared = new Map((PAD_WIRING.divergence ?? []).map((d) => [d.gpio, d]));
 const guideByGpio = new Map(PAD_WIRING.pins.map((p) => [p.gpio, p]));
@@ -213,6 +239,30 @@ const wrongClaim = (PAD_WIRING.divergence ?? []).filter(
 ok(
   `cada divergencia describe bien al firmware${wrongClaim.length ? ` (mal: ${wrongClaim.map((d) => d.gpio).join(',')})` : ''}`,
   wrongClaim.length === 0,
+);
+
+// ─── el keymap: qué tecla FÍSICA es ACC1 ────────────────────────────────────
+// Si esto se desalinea del firmware, apretás una tecla y dispara otra. El orden de
+// las filas/columnas de la guía tiene que ser el MISMO array que el de Pins.h, no
+// "los mismos GPIO en cualquier orden": ButtonMatrix mapea el índice de tecla como
+// fila = i/5, columna = i%5, así que el orden ES el mapeo.
+ok(
+  'keymap: las filas de la guía son MTX_FILA en el mismo orden',
+  JSON.stringify(KEYMAP.rows.map((r) => r.gpio)) === JSON.stringify(filas),
+);
+ok(
+  'keymap: las columnas de la guía son MTX_COL en el mismo orden',
+  JSON.stringify(KEYMAP.cols.map((c) => c.gpio)) === JSON.stringify(cols),
+);
+const navBtns = KEYMAP.navRow.filter((n) => n.kind === 'btn') as Array<{ logic: string; gpio: number }>;
+ok(
+  'keymap: ALT1/ALT2 de la guía son ALT[] del firmware, en orden',
+  JSON.stringify(navBtns.map((n) => n.gpio)) === JSON.stringify(alts),
+);
+ok(
+  'keymap: la fila 0 son ACC1–5 y la fila 1 ACC6–10 (= índice de tecla i → fila i/5)',
+  JSON.stringify(KEYMAP.rows[0].keys) === JSON.stringify(['ACC1', 'ACC2', 'ACC3', 'ACC4', 'ACC5']) &&
+    JSON.stringify(KEYMAP.rows[1].keys) === JSON.stringify(['ACC6', 'ACC7', 'ACC8', 'ACC9', 'ACC10']),
 );
 
 // ─── la pantalla vive en platformio.ini, no en Pins.h ────────────────────────

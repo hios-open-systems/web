@@ -6,7 +6,9 @@
 
 > ⚠️ Todos los números son **GPIO** (lo que dice la serigrafía: `IO15`, `IO40`…), **no** la posición física del pin en el header. Emparejá siempre por el `IOxx` impreso en la placa.
 
-> ⚠️ Este doc describe el **cableado objetivo** (rev 0.9, para soldar en la carcasa nueva). El firmware de hoy todavía lee 5 botones directos y no tiene driver de matriz ni de I2S. El refactor de firmware es una pasada aparte.
+> ✅ **as-wired**: el firmware del repo YA es rev 0.9 (escaneo de matriz 2×5 + bus I2S). Soldás esto, flasheás lo commiteado y anda.
+>
+> La autoridad de los pines es [`src/app/Pins.h`](src/app/Pins.h) (+ los build flags de `platformio.ini` para la TFT). El self-test del sitio (`npm run test:wiring`) compara la guía publicada contra esos dos archivos en cada corrida: si divergen y la diferencia no está declarada, falla.
 
 ---
 
