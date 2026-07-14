@@ -15,7 +15,7 @@ window.PINOUT = {
   "meta": {
     "rev": "0.9",
     "mcu": "ESP32-S3 DevKitC-1 (N16R8)",
-    "note": "Cableado OBJETIVO rev 0.9. El firmware de hoy todavía lee 12 botones DIRECTOS y no tiene I2S: si soldás esto y flasheás lo que hay en el repo, los botones de acción NO se leen. Las diferencias están declaradas una por una abajo."
+    "note": "as-wired: el firmware del repo YA es rev 0.9 (matriz 2×5 escaneada + bus I2S). Soldás esto, flasheás lo que está commiteado y anda. El self-test compara esta guía contra Pins.h y platformio.ini en cada corrida."
   },
   "colors": {
     "io": "#58a6ff",
@@ -279,16 +279,16 @@ window.PINOUT = {
     {
       "gpio": 41,
       "kind": "i2s",
-      "name": "I2S LRC / WS",
+      "name": "I2S LRC",
       "mod": "audio",
       "dest": "→ LRC de AMBOS MAX98357A (word-select L/R)"
     },
     {
       "gpio": 42,
       "kind": "i2s",
-      "name": "I2S DIN",
+      "name": "I2S DOUT",
       "mod": "audio",
-      "dest": "→ DIN de AMBOS MAX98357A (dato serial)"
+      "dest": "→ DIN de AMBOS MAX98357A (dato serial). Sale del S3, entra al ampli: por eso acá es DOUT y allá DIN"
     },
     {
       "gpio": 43,
@@ -559,72 +559,5 @@ window.PINOUT = {
     "⚠️ Si tu módulo ya trae una R de SD a Vin de fábrica (la de Adafruit trae 1M), la tuya queda en **paralelo** y el cálculo cambia: por eso se mide, no se asume. Con 1M a bordo vas a necesitar ~620–680k externos.",
     "⚠️ NO uses 220k: da 1,56V, que cae en la banda de **Left**. Los dos amplis te sacarían el mismo canal y vas a culpar al I2S."
   ],
-  "divergence": [
-    {
-      "gpio": 15,
-      "guide": "Matriz FILA 0 (OUTPUT)",
-      "firmware": "BTN_1 (INPUT_PULLUP)",
-      "why": "la fila no se maneja: el firmware la lee como un botón más"
-    },
-    {
-      "gpio": 16,
-      "guide": "Matriz FILA 1 (OUTPUT)",
-      "firmware": "BTN_2 (INPUT_PULLUP)",
-      "why": "ídem fila 0"
-    },
-    {
-      "gpio": 17,
-      "guide": "Botón ALT1",
-      "firmware": "BTN_3",
-      "why": "ALT1 se mudó del 47 al 17 en rev 0.9 para liberar el 47 como columna"
-    },
-    {
-      "gpio": 18,
-      "guide": "Matriz COL 0",
-      "firmware": "BTN_4",
-      "why": "columna vs botón directo"
-    },
-    {
-      "gpio": 8,
-      "guide": "Matriz COL 1",
-      "firmware": "BTN_5",
-      "why": "columna vs botón directo"
-    },
-    {
-      "gpio": 38,
-      "guide": "Matriz COL 2",
-      "firmware": "BTN_6",
-      "why": "columna vs botón directo"
-    },
-    {
-      "gpio": 39,
-      "guide": "Matriz COL 3",
-      "firmware": "BTN_7",
-      "why": "columna vs botón directo"
-    },
-    {
-      "gpio": 40,
-      "guide": "I2S BCLK",
-      "firmware": "BTN_8",
-      "why": "rev 0.9 libera los botones 8/9/10 para el bus I2S de los parlantes"
-    },
-    {
-      "gpio": 41,
-      "guide": "I2S LRC / WS",
-      "firmware": "BTN_9",
-      "why": "ídem I2S"
-    },
-    {
-      "gpio": 42,
-      "guide": "I2S DIN",
-      "firmware": "BTN_10",
-      "why": "ídem I2S"
-    },
-    {
-      "gpio": 47,
-      "guide": "Matriz COL 4",
-      "firmware": "ALT_1",
-      "why": "el 47 era ALT1 en rev 0.8; ahora es columna. ⚠️ Con el firmware de hoy, apretar ACC5 o ACC10 dispara ALT_1"
-    }
-  ]
+  "divergence": []
 };

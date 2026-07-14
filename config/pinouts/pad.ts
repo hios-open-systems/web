@@ -8,7 +8,7 @@ export const PAD_WIRING: WiringGuide = {
     rev: '0.9',
     mcu: 'ESP32-S3 DevKitC-1 (N16R8)',
     boardId: 'esp32-s3-devkitc-1',
-    note: 'Cableado OBJETIVO rev 0.9. El firmware de hoy todavía lee 12 botones DIRECTOS y no tiene I2S: si soldás esto y flasheás lo que hay en el repo, los botones de acción NO se leen. Las diferencias están declaradas una por una abajo.',
+    note: 'as-wired: el firmware del repo YA es rev 0.9 (matriz 2×5 escaneada + bus I2S). Soldás esto, flasheás lo que está commiteado y anda. El self-test compara esta guía contra Pins.h y platformio.ini en cada corrida.',
     source: 'src/app/Pins.h + Config.h + platformio.ini',
   },
 
@@ -124,8 +124,8 @@ export const PAD_WIRING: WiringGuide = {
     { gpio: 38, kind: 'mtx', name: 'Matriz COL 2', mod: 'matrix', dest: 'INPUT_PULLUP · lee ACC3 / ACC8', note: 'en DevKitC-1 **v1.1** este pin maneja el LED RGB de la placa. No rompe nada (el DIN del LED es alta impedancia) pero el pixel va a parpadear con el escaneo' },
     { gpio: 39, kind: 'mtx', name: 'Matriz COL 3', mod: 'matrix', dest: 'INPUT_PULLUP · lee ACC4 / ACC9' },
     { gpio: 40, kind: 'i2s', name: 'I2S BCLK', mod: 'audio', dest: '→ BCLK de AMBOS MAX98357A (bus compartido)' },
-    { gpio: 41, kind: 'i2s', name: 'I2S LRC / WS', mod: 'audio', dest: '→ LRC de AMBOS MAX98357A (word-select L/R)' },
-    { gpio: 42, kind: 'i2s', name: 'I2S DIN', mod: 'audio', dest: '→ DIN de AMBOS MAX98357A (dato serial)' },
+    { gpio: 41, kind: 'i2s', name: 'I2S LRC', mod: 'audio', dest: '→ LRC de AMBOS MAX98357A (word-select L/R)' },
+    { gpio: 42, kind: 'i2s', name: 'I2S DOUT', mod: 'audio', dest: '→ DIN de AMBOS MAX98357A (dato serial). Sale del S3, entra al ampli: por eso acá es DOUT y allá DIN' },
     { gpio: 43, kind: 'dim', name: 'UART0 TX', mod: 'system', dest: 'Serial + flasheo por cable (CH343)' },
     { gpio: 44, kind: 'dim', name: 'UART0 RX', mod: 'system', dest: 'Serial + flasheo por cable (CH343)' },
     { gpio: 47, kind: 'mtx', name: 'Matriz COL 4', mod: 'matrix', dest: 'INPUT_PULLUP · lee ACC5 / ACC10' },
@@ -133,23 +133,14 @@ export const PAD_WIRING: WiringGuide = {
   ],
 
   /**
-   * Cada línea de acá es una diferencia REAL entre lo que vas a soldar (rev 0.9) y
-   * lo que el firmware del repo lee HOY (rev 0.8, botones directos). El self-test
-   * las compara contra `Pins.h` y falla si aparece una que no esté declarada.
+   * Vacío: el firmware ya alcanzó a la guía (rev 0.9 en ambos).
+   *
+   * NO borrar el campo. Existe para que una divergencia guía↔firmware nunca vuelva
+   * a ser CALLADA: el self-test compara contra `Pins.h` y, si encuentra una que no
+   * esté declarada acá con su motivo, falla. La vez que faltó, alguien se enteró de
+   * que ALT1 se había mudado de pin con el soldador prendido.
    */
-  divergence: [
-    { gpio: 15, guide: 'Matriz FILA 0 (OUTPUT)', firmware: 'BTN_1 (INPUT_PULLUP)', why: 'la fila no se maneja: el firmware la lee como un botón más' },
-    { gpio: 16, guide: 'Matriz FILA 1 (OUTPUT)', firmware: 'BTN_2 (INPUT_PULLUP)', why: 'ídem fila 0' },
-    { gpio: 17, guide: 'Botón ALT1', firmware: 'BTN_3', why: 'ALT1 se mudó del 47 al 17 en rev 0.9 para liberar el 47 como columna' },
-    { gpio: 18, guide: 'Matriz COL 0', firmware: 'BTN_4', why: 'columna vs botón directo' },
-    { gpio: 8, guide: 'Matriz COL 1', firmware: 'BTN_5', why: 'columna vs botón directo' },
-    { gpio: 38, guide: 'Matriz COL 2', firmware: 'BTN_6', why: 'columna vs botón directo' },
-    { gpio: 39, guide: 'Matriz COL 3', firmware: 'BTN_7', why: 'columna vs botón directo' },
-    { gpio: 40, guide: 'I2S BCLK', firmware: 'BTN_8', why: 'rev 0.9 libera los botones 8/9/10 para el bus I2S de los parlantes' },
-    { gpio: 41, guide: 'I2S LRC / WS', firmware: 'BTN_9', why: 'ídem I2S' },
-    { gpio: 42, guide: 'I2S DIN', firmware: 'BTN_10', why: 'ídem I2S' },
-    { gpio: 47, guide: 'Matriz COL 4', firmware: 'ALT_1', why: 'el 47 era ALT1 en rev 0.8; ahora es columna. ⚠️ Con el firmware de hoy, apretar ACC5 o ACC10 dispara ALT_1' },
-  ],
+  divergence: [],
 
   rails: [
     { k: 'c5', t: '5V (buck 5.0V)', c: '→ ESP32 pin 5V · TFT VCC · NeoPixel VCC · 2× MAX98357A Vin · cap de bulk · buck **≥3A**' },

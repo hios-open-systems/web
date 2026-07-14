@@ -18,7 +18,7 @@ pio device monitor -b 115200
 
 ## ¿Qué es?
 
-Un control-deck que reemplaza atajos y controles dispersos por **capas** físicas. Cada capa mapea los 5 botones + encoder + stick a acciones (atajos de teclado, multimedia, mouse, macros). Es **HID nativo** (la PC lo ve como teclado/mouse), así que funciona sin drivers.
+Un control-deck que reemplaza atajos y controles dispersos por **capas** físicas. Cada capa mapea las **10 teclas de acción** + los 2 ALT + encoder + stick a acciones (atajos de teclado, multimedia, mouse, macros). Es **HID nativo** (la PC lo ve como teclado/mouse), así que funciona sin drivers.
 
 - **Multi-transporte:** USB (TinyUSB) y BLE (NimBLE, HID compuesto teclado+mouse+consumer) en simultáneo; auto-switch (enchufado → USB, desenchufado → BLE). WiFi para feedback/control mediado (no es HID).
 - **Local-first:** todo funciona sin red ni companion. El WiFi y el daemon son una capa opcional que **mejora** (feedback real, mute global), nunca bloquea.
@@ -27,7 +27,7 @@ Un control-deck que reemplaza atajos y controles dispersos por **capas** física
 
 ## Capas y menú
 
-Las capas se agrupan por tipo. El menú (encoder-press) es un **picker de un nivel**: muestra las capas del grupo sobre los **5 botones físicos** y girás el encoder para pasar de grupo. Apretás un botón → saltás a esa capa.
+Las capas se agrupan por tipo. El menú (encoder-press) es un **picker de un nivel**: muestra las capas del grupo sobre las **10 teclas físicas** y girás el encoder para pasar de grupo. Apretás un botón → saltás a esa capa.
 
 | Grupo | Capas |
 |-------|-------|
@@ -38,7 +38,7 @@ Las capas se agrupan por tipo. El menú (encoder-press) es un **picker de un niv
 | **Sistema** | RGB |
 | **Ajustes** *(página final)* | Brillo, Tema, Color, Skin, Dimmer, Hora, WiFi, Calibrar |
 
-- **Girar** = cambiar de grupo/página · **Botón 1-5** = saltar a la capa · **Encoder-press** = abrir Ajustes · **Long-press** = volver/cerrar.
+- **Girar** = cambiar de grupo/página · **Teclas 1-10** = saltar a la capa · **Encoder-press** = abrir Ajustes · **Long-press** = volver/cerrar.
 
 ### Videollamadas (grupo Llamadas)
 
@@ -65,7 +65,8 @@ Directorios: `actions/` (modelo de `Action`), `mapping/` (`KeyMap`/`Dispatcher`)
 
 - **ESP32-S3-DevKitC-1** (**N16R8**: 16MB flash + 8MB PSRAM octal, AP Memory 3.3V — confirmado por chip dump). La PSRAM octal ocupa los GPIO 33–37 (y la flash los 26–32): no están disponibles.
 - **Display ILI9488** 480×320 SPI (HSPI, 27MHz). *No es ST7796.*
-- **Encoder** KY-040 · **Joystick** HW-504 (alimentado a **3V3**, no 5V) · **5 pulsadores** NA a GND.
+- **Encoder** KY-040 · **Joystick** HW-504 (alimentado a **3V3**, no 5V) · **12 pulsadores** NA a GND: 10 de acción en **matriz 2×5 con diodos** (cátodo hacia la fila) + 2 ALT directos.
+- **2× MAX98357A** (I2S, bus compartido; el canal lo elige el pin SD de cada uno: L = SD a Vin, R = SD por **390k** a Vin).
 - Pines en [`src/app/Pins.h`](src/app/Pins.h); cableado y alimentación (batería 2S) en [WIRING.md](WIRING.md).
 
 ## Gotchas (aprendidos a los golpes)
