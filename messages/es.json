@@ -522,6 +522,7 @@
         "eyebrow": "Referencia de hardware",
         "backToPinouts": "Volver a Pinouts",
         "tabs": {
+            "diagrama": "Diagrama",
             "pines": "Pines",
             "botones": "Botones",
             "parlantes": "Parlantes",
