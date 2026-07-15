@@ -523,6 +523,7 @@
         "eyebrow": "Hardware reference",
         "backToPinouts": "Back to Pinouts",
         "tabs": {
+            "diagrama": "Diagram",
             "pines": "Pins",
             "botones": "Buttons",
             "parlantes": "Speakers",

@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import type { WiringGuide } from '@/config/pinouts/wiring';
 import { WiringGuideProvider } from './WiringGuideContext';
 import { WiringGuideHeader } from './WiringGuideHeader';
+import { SystemDiagram } from './views/SystemDiagram';
 import { PinListView } from './views/PinListView';
 import { KeymapView } from './views/KeymapView';
 import { WiringView } from './views/WiringView';
@@ -18,6 +19,7 @@ export function WiringGuideView({ guide }: { guide: WiringGuide }) {
   const t = useTranslations('WiringGuide');
 
   const items: { key: string; label: string; children: ReactNode }[] = [
+    { key: 'diagrama', label: t('tabs.diagrama'), children: <SystemDiagram /> },
     { key: 'pines', label: t('tabs.pines'), children: <PinListView /> },
   ];
   if (guide.keymap) {

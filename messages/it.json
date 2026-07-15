@@ -448,6 +448,7 @@
         "eyebrow": "Riferimento hardware",
         "backToPinouts": "Torna ai Pinout",
         "tabs": {
+            "diagrama": "Diagramma",
             "pines": "Pin",
             "botones": "Pulsanti",
             "parlantes": "Altoparlanti",
