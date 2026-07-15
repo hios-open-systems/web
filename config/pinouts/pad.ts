@@ -202,7 +202,7 @@ export const PAD_WIRING: WiringGuide = {
       t: '🔋 Batería — descartada en el pad',
       group: 'misc',
       cnt: 'GPIO9→NeoPixel',
-      tip: 'No se mide en el pad: la **pantalla de la fuente** ya muestra la tensión de entrada (= las 2 celdas 2S). GPIO9 (ex-divisor) ahora maneja el NeoPixel. En firmware: `BATTERY_ENABLED=false` — **NO lo actives**: `BAT_ADC_PIN` sigue apuntando al 9 y le meterías 2.7V DC a la línea de datos del NeoPixel. Ignorá el paso del divisor que quedó en el WIRING.md viejo.',
+      tip: 'No se mide en el pad: la **pantalla de la fuente** ya muestra la tensión de entrada (= las 2 celdas 2S). GPIO9 (ex-divisor) ahora maneja el NeoPixel. En firmware: `BATTERY_ENABLED=false` — **NO lo actives**: `BAT_ADC_PIN` sigue apuntando al 9 y le meterías 2.7V DC a la línea de datos del NeoPixel.',
       rows: [],
     },
     {
@@ -222,7 +222,7 @@ export const PAD_WIRING: WiringGuide = {
     'Stick y encoder al riel 3V3 (NO 5V) — verificado con multímetro',
     'Pantalla: si tiene buffer 74HC245 junto al header, su VCC va a 3V3 (si no, pantalla en blanco)',
     'SW-PANTALLA en la línea LED/BL, NUNCA cortando el VCC de la pantalla (abs-max del ILI9488)',
-    'TFT: CS=10, MOSI=11, SCLK=12, DC=13, RST=14, BL=21 (el WIRING.md viejo dice CS=13: está MAL)',
+    'TFT: CS=10, MOSI=11, SCLK=12, DC=13, RST=14, BL=21 (verificado contra platformio.ini)',
     'Matriz acción: 2 filas (15/16 = OUTPUT) + 5 columnas (18/8/38/39/47 = INPUT_PULLUP)',
     '10 diodos (uno por botón de acción), cátodo (raya) hacia la FILA → evita ghosting (si no registra, dalos vuelta)',
     'Diodos: 1N4148 (chico) o cualquier silicio: 1N400x/1N540x sirven igual (más grandes). LEDs NO',
