@@ -689,6 +689,16 @@
             "empty": "Keine Daten in diesem Zeitraum"
         },
         "guides": {
+            "calculators": {
+                "intro": "Eine Sammlung von Rechnern für Elektronik, Bau, Klima und Alltag. Alles läuft lokal; nichts verlässt deinen Browser.",
+                "steps": [
+                    "Wähle links einen Rechner aus der Liste (nach Kategorie gruppiert).",
+                    "Passe Werte mit den Slidern oder durch Eingabe an; das Ergebnis aktualisiert sich sofort.",
+                    "Vorlagen = fertige eingebaute Konfigurationen. Preset speichern = speichert DIESE Konfiguration unter einem Namen, in diesem Browser; die Schaltfläche Presets listet sie auf.",
+                    "Zusammenfassung kopieren = die Ergebnisse als Text · Link kopieren = die URL mit deiner Konfiguration zum Teilen."
+                ],
+                "tip": "In den Widerstands-Rechnern (LED, RC-Filter, ADC-Teiler) rundet die 'E-Reihe' den Wert auf den nächsten handelsüblichen (E12/E24)."
+            },
             "patterns": {
                 "intro": "Lerne moderne JS-Patterns durch Bearbeiten und Ausführen echten Codes — sandboxed im Browser, kein Netz, kein Zugriff auf die Seite.",
                 "steps": [
@@ -1364,10 +1374,14 @@
         }
     },
     "Calculators": {
-        "title": "Embedded-Rechner",
-        "subtitle": "Praktische Tools für Elektronikdesign, Validierung und schnelle Entscheidungen.",
+        "title": "Rechner",
+        "subtitle": "Rechnen für Elektronik, Bau, Klima und den Alltag. Läuft lokal im Browser.",
         "presets_label": "Globale Presets",
-        "eseries_label": "Norm",
+        "eseries_label": "E-Reihe",
+        "eseries_help": "E12 (±10%) und E24 (±5%) sind die real erhältlichen Widerstandswerte. Das Ergebnis wird auf den nächstgelegenen kaufbaren Wert gerundet.",
+        "categories": { "electronica": "Elektronik", "obra": "Bau", "clima": "Klima", "cotidianas": "Alltag" },
+        "copy_summary_help": "Kopiert die Rechnerergebnisse als Klartext.",
+        "copy_link_help": "Kopiert die URL mit dieser Konfiguration zum Teilen oder Speichern.",
         "go_rcl": "RCL-Seite öffnen",
         "copy_summary": "Zusammenfassung kopieren",
         "copy_link": "Link kopieren",

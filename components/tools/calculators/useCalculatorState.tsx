@@ -8,6 +8,7 @@ import { useTheme } from '@/lib/ThemeContext';
 import type { ResistorPackageType } from '../ResistorVisualizer';
 import { calc, clamp, formatOhm } from './calc';
 import { type ESeries, isESeries } from './eseries';
+import { ALL_FIELDS, CALC_IDS, DEFAULTS, DEFAULT_CALC_ID, isStringField } from './registry';
 
 export type PresetId =
   | 'custom'
@@ -18,20 +19,9 @@ export type PresetId =
   | 'rgb-led'
   | 'buck-3v3';
 
-export type TabKey =
-  | 'led'
-  | 'cap'
-  | 'thermal'
-  | 'runtime'
-  | 'resistorLab'
-  | 'adc'
-  | 'rc'
-  | 'rl'
-  | 'rcl'
-  | 'gain'
-  | 'i2s';
+/** El tab activo es el id de una calc del registry. */
+export type TabKey = string;
 
-const ALLOWED_TABS: TabKey[] = ['led', 'cap', 'thermal', 'runtime', 'resistorLab', 'adc', 'rc', 'rl', 'rcl', 'gain', 'i2s'];
 const ALLOWED_PACKAGES: ResistorPackageType[] = [
   'axial-carbon',
   'axial-metal',
@@ -43,6 +33,16 @@ const ALLOWED_PACKAGES: ResistorPackageType[] = [
   'smd-1206',
 ];
 
+/** Parches de valores por preset built-in (Plantillas). Un solo merge por preset. */
+const PRESET_PATCHES: Record<string, Record<string, number | string>> = {
+  'rgb-led': { supply: 5, ledVf: 3.2, ledCurrent: 20 },
+  'buck-3v3': { powerV: 3.3, powerI: 0.5, thetaJa: 40, ambient: 30, vinMax: 5, vadcMax: 3, rBottomK: 10 },
+  'esp32-adc': { vinMax: 12, vadcMax: 3.1, rBottomK: 10, rcR: 10000, rcC: 100 },
+  'audio-44k': { sampleRate: 44100, bitDepth: 16, channels: 2, mclkMult: 256, rcR: 10000, rcC: 100, targetFc: 160 },
+  'audio-48k': { sampleRate: 48000, bitDepth: 24, channels: 2, mclkMult: 256, rcR: 6800, rcC: 100, targetFc: 234 },
+  'low-power': { batteryMah: 2500, avgCurrent: 80, efficiency: 90, powerV: 3.3, powerI: 0.08 },
+};
+
 export function useCalculatorState() {
   const t = useTranslations('Calculators');
   const { mode } = useTheme();
@@ -52,56 +52,16 @@ export function useCalculatorState() {
   const hydratedFromUrl = useRef(false);
   const [messageApi, contextHolder] = message.useMessage();
 
-  const [supply, setSupply] = useState(5);
-  const [ledVf, setLedVf] = useState(2);
-  const [ledCurrent, setLedCurrent] = useState(10);
-
-  const [rippleCurrent, setRippleCurrent] = useState(300);
-  const [rippleDeltaV, setRippleDeltaV] = useState(0.2);
-  const [rippleFreq, setRippleFreq] = useState(100000);
-
-  const [powerV, setPowerV] = useState(5);
-  const [powerI, setPowerI] = useState(0.4);
-  const [thetaJa, setThetaJa] = useState(35);
-  const [ambient, setAmbient] = useState(30);
-
-  const [batteryMah, setBatteryMah] = useState(2500);
-  const [avgCurrent, setAvgCurrent] = useState(180);
-  const [efficiency, setEfficiency] = useState(85);
-
-  const [vinMax, setVinMax] = useState(12);
-  const [vadcMax, setVadcMax] = useState(3.1);
-  const [rBottomK, setRBottomK] = useState(10);
-
-  const [rcR, setRcR] = useState(10000);
-  const [rcC, setRcC] = useState(100);
-  const [targetFc, setTargetFc] = useState(160);
-
-  const [rlR, setRlR] = useState(1000);
-  const [rlL, setRlL] = useState(100);
-  const [rlTargetFc, setRlTargetFc] = useState(1000);
-
-  const [rclR, setRclR] = useState(10);
-  const [rclL, setRclL] = useState(10);
-  const [rclC, setRclC] = useState(1);
-  const [rclF, setRclF] = useState(1000);
-
-  const [rf, setRf] = useState(10000);
-  const [rg, setRg] = useState(1000);
-
-  const [sampleRate, setSampleRate] = useState(44100);
-  const [bitDepth, setBitDepth] = useState(16);
-  const [channels, setChannels] = useState(2);
-  const [mclkMult, setMclkMult] = useState(256);
-  const [activeTab, setActiveTab] = useState<TabKey>('led');
+  // --- estado central: un solo mapa de valores derivado del registry ---------
+  const [values, setValues] = useState<Record<string, number | string>>(() => ({ ...DEFAULTS }));
+  const [activeTab, setActiveTab] = useState<TabKey>(DEFAULT_CALC_ID);
   const [eSeries, setESeries] = useState<ESeries>('E24');
 
-  const [band1, setBand1] = useState('2');
-  const [band2, setBand2] = useState('2');
-  const [multiplierBand, setMultiplierBand] = useState('100');
-  const [toleranceBand, setToleranceBand] = useState('5');
-  const [packageType, setPackageType] = useState<ResistorPackageType>('axial-carbon');
-  const [wattage, setWattage] = useState(0.25);
+  const num = (key: string) => Number(values[key]);
+  const str = (key: string) => String(values[key]);
+  /** setter genérico — lo usan tanto los accessors de compat como las calcs nuevas */
+  const set = (key: string, value: number | string) =>
+    setValues((prev) => ({ ...prev, [key]: value }));
 
   const palette = {
     page: mode === 'dark' ? '#1a1a1a' : '#f7f7f8',
@@ -125,44 +85,48 @@ export function useCalculatorState() {
     border: `1px solid ${palette.borderSoft}`,
   };
 
-  const led = useMemo(() => calc.ledResistor(supply, ledVf, ledCurrent), [supply, ledVf, ledCurrent]);
+  // --- resultados computados (matemática pura de calc.ts) ---------------------
+  const led = useMemo(() => calc.ledResistor(num('supply'), num('ledVf'), num('ledCurrent')), [values.supply, values.ledVf, values.ledCurrent]);
   const capacitor = useMemo(
-    () => calc.capacitorForRipple(rippleCurrent, rippleDeltaV, rippleFreq),
-    [rippleCurrent, rippleDeltaV, rippleFreq]
+    () => calc.capacitorForRipple(num('rippleCurrent'), num('rippleDeltaV'), num('rippleFreq')),
+    [values.rippleCurrent, values.rippleDeltaV, values.rippleFreq]
   );
-  const thermal = useMemo(() => calc.powerAndTemp(powerV, powerI, thetaJa, ambient), [powerV, powerI, thetaJa, ambient]);
-  const runtime = useMemo(() => calc.runtimeHours(batteryMah, avgCurrent, efficiency), [batteryMah, avgCurrent, efficiency]);
-  const divider = useMemo(() => calc.adcDivider(vinMax, vadcMax, rBottomK), [vinMax, vadcMax, rBottomK]);
-  const cutoff = useMemo(() => calc.rcCutoff(rcR, rcC), [rcR, rcC]);
-  const requiredR = useMemo(() => calc.rcRequiredR(targetFc, rcC), [targetFc, rcC]);
-  const cutoffValid = rcR > 0 && rcC > 0;
-  const requiredRValid = targetFc > 0 && rcC > 0;
-  const rlFilter = useMemo(() => calc.rlFilter(rlR, rlL), [rlR, rlL]);
-  const rlRequiredL = useMemo(() => calc.rlRequiredL(rlTargetFc, rlR), [rlTargetFc, rlR]);
-  const rlRequiredValid = rlTargetFc > 0 && rlR > 0;
-  const rcl = useMemo(() => calc.rclSeries(rclR, rclL, rclC, rclF), [rclR, rclL, rclC, rclF]);
-  const gain = useMemo(() => calc.ampGain(rf, rg), [rf, rg]);
-  const i2s = useMemo(() => calc.i2sClocks(sampleRate, bitDepth, channels, mclkMult), [sampleRate, bitDepth, channels, mclkMult]);
+  const thermal = useMemo(() => calc.powerAndTemp(num('powerV'), num('powerI'), num('thetaJa'), num('ambient')), [values.powerV, values.powerI, values.thetaJa, values.ambient]);
+  const runtime = useMemo(() => calc.runtimeHours(num('batteryMah'), num('avgCurrent'), num('efficiency')), [values.batteryMah, values.avgCurrent, values.efficiency]);
+  const divider = useMemo(() => calc.adcDivider(num('vinMax'), num('vadcMax'), num('rBottomK')), [values.vinMax, values.vadcMax, values.rBottomK]);
+  const cutoff = useMemo(() => calc.rcCutoff(num('rcR'), num('rcC')), [values.rcR, values.rcC]);
+  const requiredR = useMemo(() => calc.rcRequiredR(num('targetFc'), num('rcC')), [values.targetFc, values.rcC]);
+  const cutoffValid = num('rcR') > 0 && num('rcC') > 0;
+  const requiredRValid = num('targetFc') > 0 && num('rcC') > 0;
+  const rlFilter = useMemo(() => calc.rlFilter(num('rlR'), num('rlL')), [values.rlR, values.rlL]);
+  const rlRequiredL = useMemo(() => calc.rlRequiredL(num('rlTargetFc'), num('rlR')), [values.rlTargetFc, values.rlR]);
+  const rlRequiredValid = num('rlTargetFc') > 0 && num('rlR') > 0;
+  const rcl = useMemo(() => calc.rclSeries(num('rclR'), num('rclL'), num('rclC'), num('rclF')), [values.rclR, values.rclL, values.rclC, values.rclF]);
+  const gain = useMemo(() => calc.ampGain(num('rf'), num('rg')), [values.rf, values.rg]);
+  const i2s = useMemo(() => calc.i2sClocks(num('sampleRate'), num('bitDepth'), num('channels'), num('mclkMult')), [values.sampleRate, values.bitDepth, values.channels, values.mclkMult]);
 
   const resistorValue = useMemo(
-    () => (Number(band1) * 10 + Number(band2)) * Number(multiplierBand),
-    [band1, band2, multiplierBand]
+    () => (Number(str('band1')) * 10 + Number(str('band2'))) * Number(str('multiplierBand')),
+    [values.band1, values.band2, values.multiplierBand]
   );
 
-  // Inverse mode: type a resistance and back-solve the two significant
-  // digits + decade multiplier so the band colors update automatically.
+  // Inverse mode: type a resistance and back-solve the two significant digits +
+  // decade multiplier so the band colors update automatically.
   const applyTargetValue = (raw: number) => {
     const value = Number(raw);
     if (!Number.isFinite(value) || value <= 0) return;
     const exponent = clamp(Math.floor(Math.log10(value)) - 1, -2, 7);
     const decade = Math.pow(10, exponent);
     const sig = clamp(Math.round(value / decade), 10, 99);
-    setBand1(String(Math.floor(sig / 10)));
-    setBand2(String(sig % 10));
-    setMultiplierBand(String(decade));
+    setValues((prev) => ({
+      ...prev,
+      band1: String(Math.floor(sig / 10)),
+      band2: String(sig % 10),
+      multiplierBand: String(decade),
+    }));
   };
 
-  const resistorTolerance = Number(toleranceBand);
+  const resistorTolerance = Number(str('toleranceBand'));
   const resistorMin = resistorValue * (1 - resistorTolerance / 100);
   const resistorMax = resistorValue * (1 + resistorTolerance / 100);
 
@@ -184,156 +148,57 @@ export function useCalculatorState() {
     return `${sig}${multiplier}`;
   }, [resistorValue, resistorTolerance]);
 
+  // --- hidratación desde URL (one-shot). Solo lee las keys que están; el resto
+  //     queda en su default. Por eso la URL puede ser corta. -------------------
   useEffect(() => {
     if (hydratedFromUrl.current) return;
 
-    const parseNumber = (key: string, fallback: number) => {
-      const raw = searchParams.get(key);
-      if (raw === null) return fallback;
-      const parsed = Number(raw);
-      return Number.isFinite(parsed) ? parsed : fallback;
-    };
-    const parseString = (key: string, fallback: string) => searchParams.get(key) ?? fallback;
-    const tabParam = parseString('tab', 'led');
-
-    const seriesParam = parseString('eseries', 'E24');
-    if (isESeries(seriesParam)) setESeries(seriesParam);
-
-    if ((ALLOWED_TABS as string[]).includes(tabParam)) {
-      setActiveTab(tabParam as TabKey);
+    const next = { ...DEFAULTS };
+    for (const f of ALL_FIELDS) {
+      const raw = searchParams.get(f.key);
+      if (raw === null) continue;
+      if (isStringField(f.key)) {
+        next[f.key] = raw;
+      } else {
+        const parsed = Number(raw);
+        if (Number.isFinite(parsed)) next[f.key] = parsed;
+      }
     }
-
-    setSupply(parseNumber('supply', 5));
-    setLedVf(parseNumber('ledVf', 2));
-    setLedCurrent(parseNumber('ledCurrent', 10));
-    setRippleCurrent(parseNumber('rippleCurrent', 300));
-    setRippleDeltaV(parseNumber('rippleDeltaV', 0.2));
-    setRippleFreq(parseNumber('rippleFreq', 100000));
-    setPowerV(parseNumber('powerV', 5));
-    setPowerI(parseNumber('powerI', 0.4));
-    setThetaJa(parseNumber('thetaJa', 35));
-    setAmbient(parseNumber('ambient', 30));
-    setBatteryMah(parseNumber('batteryMah', 2500));
-    setAvgCurrent(parseNumber('avgCurrent', 180));
-    setEfficiency(parseNumber('efficiency', 85));
-    setVinMax(parseNumber('vinMax', 12));
-    setVadcMax(parseNumber('vadcMax', 3.1));
-    setRBottomK(parseNumber('rBottomK', 10));
-    setRcR(parseNumber('rcR', 10000));
-    setRcC(parseNumber('rcC', 100));
-    setTargetFc(parseNumber('targetFc', 160));
-    setRlR(parseNumber('rlR', 1000));
-    setRlL(parseNumber('rlL', 100));
-    setRlTargetFc(parseNumber('rlTargetFc', 1000));
-    setRclR(parseNumber('rclR', 10));
-    setRclL(parseNumber('rclL', 10));
-    setRclC(parseNumber('rclC', 1));
-    setRclF(parseNumber('rclF', 1000));
-    setRf(parseNumber('rf', 10000));
-    setRg(parseNumber('rg', 1000));
-    setSampleRate(parseNumber('sampleRate', 44100));
-    setBitDepth(parseNumber('bitDepth', 16));
-    setChannels(parseNumber('channels', 2));
-    setMclkMult(parseNumber('mclkMult', 256));
-
-    setBand1(parseString('band1', '2'));
-    setBand2(parseString('band2', '2'));
-    setMultiplierBand(parseString('multiplierBand', '100'));
-    setToleranceBand(parseString('toleranceBand', '5'));
-    const packageParam = parseString('packageType', 'axial-carbon');
-    if ((ALLOWED_PACKAGES as string[]).includes(packageParam)) {
-      setPackageType(packageParam as ResistorPackageType);
+    if (!(ALLOWED_PACKAGES as string[]).includes(String(next.packageType))) {
+      next.packageType = DEFAULTS.packageType;
     }
-    setWattage(parseNumber('wattage', 0.25));
+    setValues(next);
+
+    const tabParam = searchParams.get('tab');
+    if (tabParam && CALC_IDS.includes(tabParam)) setActiveTab(tabParam);
+
+    const seriesParam = searchParams.get('eseries');
+    if (seriesParam && isESeries(seriesParam)) setESeries(seriesParam);
 
     hydratedFromUrl.current = true;
   }, [searchParams]);
 
+  // --- serialización a URL: escribe SOLO lo que difiere del default -----------
   useEffect(() => {
     if (!hydratedFromUrl.current) return;
 
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams();
     params.set('tab', activeTab);
-    params.set('eseries', eSeries);
-    params.set('supply', String(supply));
-    params.set('ledVf', String(ledVf));
-    params.set('ledCurrent', String(ledCurrent));
-    params.set('rippleCurrent', String(rippleCurrent));
-    params.set('rippleDeltaV', String(rippleDeltaV));
-    params.set('rippleFreq', String(rippleFreq));
-    params.set('powerV', String(powerV));
-    params.set('powerI', String(powerI));
-    params.set('thetaJa', String(thetaJa));
-    params.set('ambient', String(ambient));
-    params.set('batteryMah', String(batteryMah));
-    params.set('avgCurrent', String(avgCurrent));
-    params.set('efficiency', String(efficiency));
-    params.set('vinMax', String(vinMax));
-    params.set('vadcMax', String(vadcMax));
-    params.set('rBottomK', String(rBottomK));
-    params.set('rcR', String(rcR));
-    params.set('rcC', String(rcC));
-    params.set('targetFc', String(targetFc));
-    params.set('rlR', String(rlR));
-    params.set('rlL', String(rlL));
-    params.set('rlTargetFc', String(rlTargetFc));
-    params.set('rclR', String(rclR));
-    params.set('rclL', String(rclL));
-    params.set('rclC', String(rclC));
-    params.set('rclF', String(rclF));
-    params.set('rf', String(rf));
-    params.set('rg', String(rg));
-    params.set('sampleRate', String(sampleRate));
-    params.set('bitDepth', String(bitDepth));
-    params.set('channels', String(channels));
-    params.set('mclkMult', String(mclkMult));
-    params.set('band1', band1);
-    params.set('band2', band2);
-    params.set('multiplierBand', multiplierBand);
-    params.set('toleranceBand', toleranceBand);
-    params.set('packageType', packageType);
-    params.set('wattage', String(wattage));
+    if (eSeries !== 'E24') params.set('eseries', eSeries);
+    for (const f of ALL_FIELDS) {
+      const v = values[f.key];
+      if (String(v) !== String(f.default)) params.set(f.key, String(v));
+    }
 
     const nextQuery = params.toString();
     if (nextQuery !== searchParams.toString()) {
       router.replace(`${pathname}?${nextQuery}`, { scroll: false });
     }
-  }, [
-    searchParams, router, pathname, activeTab, eSeries, supply, ledVf, ledCurrent,
-    rippleCurrent, rippleDeltaV, rippleFreq, powerV, powerI, thetaJa, ambient,
-    batteryMah, avgCurrent, efficiency, vinMax, vadcMax, rBottomK, rcR, rcC,
-    targetFc, rlR, rlL, rlTargetFc, rclR, rclL, rclC, rclF, rf, rg, sampleRate, bitDepth, channels, mclkMult, band1, band2,
-    multiplierBand, toleranceBand, packageType, wattage,
-  ]);
+  }, [searchParams, router, pathname, activeTab, eSeries, values]);
 
   const applyPreset = (value: PresetId) => {
-    if (value === 'rgb-led') {
-      setSupply(5); setLedVf(3.2); setLedCurrent(20);
-      return;
-    }
-    if (value === 'buck-3v3') {
-      setPowerV(3.3); setPowerI(0.5); setThetaJa(40); setAmbient(30);
-      setVinMax(5); setVadcMax(3); setRBottomK(10);
-      return;
-    }
-    if (value === 'esp32-adc') {
-      setVinMax(12); setVadcMax(3.1); setRBottomK(10); setRcR(10000); setRcC(100);
-      return;
-    }
-    if (value === 'audio-44k') {
-      setSampleRate(44100); setBitDepth(16); setChannels(2); setMclkMult(256);
-      setRcR(10000); setRcC(100); setTargetFc(160);
-      return;
-    }
-    if (value === 'audio-48k') {
-      setSampleRate(48000); setBitDepth(24); setChannels(2); setMclkMult(256);
-      setRcR(6800); setRcC(100); setTargetFc(234);
-      return;
-    }
-    if (value === 'low-power') {
-      setBatteryMah(2500); setAvgCurrent(80); setEfficiency(90);
-      setPowerV(3.3); setPowerI(0.08);
-    }
+    const patch = PRESET_PATCHES[value];
+    if (patch) setValues((prev) => ({ ...prev, ...patch }));
   };
 
   const summary = useMemo(() => {
@@ -374,42 +239,69 @@ export function useCalculatorState() {
     }
   };
 
+  // Setters tipados por campo (capa de compat: los *Tab.tsx siguen usando estos).
+  const setter = (key: string) => (n: number) => set(key, n);
+
   return {
     t, palette, contextHolder,
     calcCardStyle, calcCardBodyStyle, inputStyle,
     applyPreset, activeTab, setActiveTab, eSeries, setESeries,
     copySummary, copyShareLink,
+    // acceso genérico para calcs nuevas (Fase 2)
+    get: (key: string) => values[key], set,
     // led
-    supply, setSupply, ledVf, setLedVf, ledCurrent, setLedCurrent, led,
+    supply: num('supply'), setSupply: setter('supply'),
+    ledVf: num('ledVf'), setLedVf: setter('ledVf'),
+    ledCurrent: num('ledCurrent'), setLedCurrent: setter('ledCurrent'), led,
     // cap
-    rippleCurrent, setRippleCurrent, rippleDeltaV, setRippleDeltaV,
-    rippleFreq, setRippleFreq, capacitor,
+    rippleCurrent: num('rippleCurrent'), setRippleCurrent: setter('rippleCurrent'),
+    rippleDeltaV: num('rippleDeltaV'), setRippleDeltaV: setter('rippleDeltaV'),
+    rippleFreq: num('rippleFreq'), setRippleFreq: setter('rippleFreq'), capacitor,
     // thermal
-    powerV, setPowerV, powerI, setPowerI, thetaJa, setThetaJa,
-    ambient, setAmbient, thermal,
+    powerV: num('powerV'), setPowerV: setter('powerV'),
+    powerI: num('powerI'), setPowerI: setter('powerI'),
+    thetaJa: num('thetaJa'), setThetaJa: setter('thetaJa'),
+    ambient: num('ambient'), setAmbient: setter('ambient'), thermal,
     // runtime
-    batteryMah, setBatteryMah, avgCurrent, setAvgCurrent,
-    efficiency, setEfficiency, runtime,
+    batteryMah: num('batteryMah'), setBatteryMah: setter('batteryMah'),
+    avgCurrent: num('avgCurrent'), setAvgCurrent: setter('avgCurrent'),
+    efficiency: num('efficiency'), setEfficiency: setter('efficiency'), runtime,
     // adc
-    vinMax, setVinMax, vadcMax, setVadcMax, rBottomK, setRBottomK, divider,
+    vinMax: num('vinMax'), setVinMax: setter('vinMax'),
+    vadcMax: num('vadcMax'), setVadcMax: setter('vadcMax'),
+    rBottomK: num('rBottomK'), setRBottomK: setter('rBottomK'), divider,
     // rc
-    rcR, setRcR, rcC, setRcC, targetFc, setTargetFc,
+    rcR: num('rcR'), setRcR: setter('rcR'),
+    rcC: num('rcC'), setRcC: setter('rcC'),
+    targetFc: num('targetFc'), setTargetFc: setter('targetFc'),
     cutoff, requiredR, cutoffValid, requiredRValid,
     // rl
-    rlR, setRlR, rlL, setRlL, rlTargetFc, setRlTargetFc,
+    rlR: num('rlR'), setRlR: setter('rlR'),
+    rlL: num('rlL'), setRlL: setter('rlL'),
+    rlTargetFc: num('rlTargetFc'), setRlTargetFc: setter('rlTargetFc'),
     rlFilter, rlRequiredL, rlRequiredValid,
     // rcl
-    rclR, setRclR, rclL, setRclL, rclC, setRclC, rclF, setRclF, rcl,
+    rclR: num('rclR'), setRclR: setter('rclR'),
+    rclL: num('rclL'), setRclL: setter('rclL'),
+    rclC: num('rclC'), setRclC: setter('rclC'),
+    rclF: num('rclF'), setRclF: setter('rclF'), rcl,
     // gain
-    rf, setRf, rg, setRg, gain,
+    rf: num('rf'), setRf: setter('rf'),
+    rg: num('rg'), setRg: setter('rg'), gain,
     // i2s
-    sampleRate, setSampleRate, bitDepth, setBitDepth,
-    channels, setChannels, mclkMult, setMclkMult, i2s,
+    sampleRate: num('sampleRate'), setSampleRate: setter('sampleRate'),
+    bitDepth: num('bitDepth'), setBitDepth: setter('bitDepth'),
+    channels: num('channels'), setChannels: setter('channels'),
+    mclkMult: num('mclkMult'), setMclkMult: setter('mclkMult'), i2s,
     // resistor lab
-    band1, setBand1, band2, setBand2, multiplierBand, setMultiplierBand,
-    toleranceBand, setToleranceBand, packageType, setPackageType,
-    wattage, setWattage, resistorValue, resistorTolerance,
-    resistorMin, resistorMax, smdCode, applyTargetValue,
+    band1: str('band1'), setBand1: (s: string) => set('band1', s),
+    band2: str('band2'), setBand2: (s: string) => set('band2', s),
+    multiplierBand: str('multiplierBand'), setMultiplierBand: (s: string) => set('multiplierBand', s),
+    toleranceBand: str('toleranceBand'), setToleranceBand: (s: string) => set('toleranceBand', s),
+    packageType: str('packageType') as ResistorPackageType,
+    setPackageType: (p: ResistorPackageType) => set('packageType', p),
+    wattage: num('wattage'), setWattage: setter('wattage'),
+    resistorValue, resistorTolerance, resistorMin, resistorMax, smdCode, applyTargetValue,
   };
 }
 

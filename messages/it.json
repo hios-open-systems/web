@@ -689,6 +689,16 @@
             "empty": "Nessun dato in questo intervallo"
         },
         "guides": {
+            "calculators": {
+                "intro": "Un set di calcolatori per elettronica, edilizia, clima e conti di tutti i giorni. Tutto gira in locale; niente esce dal tuo browser.",
+                "steps": [
+                    "Scegli un calcolatore dalla lista a sinistra (raggruppati per categoria).",
+                    "Regola i valori con gli slider o digitando un numero; il risultato si aggiorna in tempo reale.",
+                    "Modelli = configurazioni pronte integrate. Salva preset = salva QUESTA configurazione con un nome, in questo browser; il pulsante Preset li elenca.",
+                    "Copia riepilogo = i risultati come testo · Copia link = l'URL con la tua configurazione da condividere."
+                ],
+                "tip": "Nei calcolatori di resistenze (LED, filtro RC, partitore ADC) il controllo 'Serie E' arrotonda al valore commerciale più vicino (E12/E24)."
+            },
             "patterns": {
                 "intro": "Impara pattern JS moderni modificando ed eseguendo codice reale — sandbox nel browser, niente rete, nessun accesso al sito.",
                 "steps": [
@@ -1364,10 +1374,14 @@
         }
     },
     "Calculators": {
-        "title": "Calcolatori Embedded",
-        "subtitle": "Strumenti pratici per progettazione elettronica, validazione e decisioni rapide.",
+        "title": "Calcolatori",
+        "subtitle": "Calcoli per elettronica, edilizia, clima e vita quotidiana. Gira in locale, nel browser.",
         "presets_label": "Preset Globali",
-        "eseries_label": "Norma",
+        "eseries_label": "Serie E",
+        "eseries_help": "E12 (±10%) ed E24 (±5%) sono i valori di resistenza che esistono davvero in commercio. Il risultato viene arrotondato al più vicino acquistabile.",
+        "categories": { "electronica": "Elettronica", "obra": "Edilizia", "clima": "Clima", "cotidianas": "Quotidiane" },
+        "copy_summary_help": "Copia i risultati dei calcolatori come testo semplice.",
+        "copy_link_help": "Copia l'URL con questa configurazione per condividerla o salvarla.",
         "go_rcl": "Apri pagina RCL",
         "copy_summary": "Copia riepilogo",
         "copy_link": "Copia link",

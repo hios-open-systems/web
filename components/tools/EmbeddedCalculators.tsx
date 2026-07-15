@@ -1,10 +1,13 @@
 'use client';
 
-import { Button, Segmented, Space, Tabs } from 'antd';
+import type { ReactNode } from 'react';
+import { Button, Space, Tabs, Tooltip } from 'antd';
 import { ToolHeader } from '@/components/workbench/ToolHeader';
+import { ToolGuide } from '@/components/workbench/ToolGuide';
 import { UrlPresets } from '@/components/common/UrlPresets';
 import styles from './embeddedCalculators.module.css';
-import { PresetId, TabKey, useCalculatorState } from './calculators/useCalculatorState';
+import { PresetId, useCalculatorState } from './calculators/useCalculatorState';
+import { CALCULATORS_BY_CATEGORY } from './calculators/registry';
 import { LedTab } from './calculators/LedTab';
 import { CapTab } from './calculators/CapTab';
 import { ThermalTab } from './calculators/ThermalTab';
@@ -27,25 +30,46 @@ const PRESET_I18N: Record<(typeof BASE_PRESET_IDS)[number], string> = {
   'buck-3v3': 'presets.buck3v3',
 };
 
+const catHeaderStyle = { fontSize: 11, textTransform: 'uppercase' as const, letterSpacing: 0.5, opacity: 0.55 };
+
 export function EmbeddedCalculators() {
   const c = useCalculatorState();
   const { t } = c;
 
   const tabLabel = (key: string) => <span style={{ whiteSpace: 'nowrap' }}>{t(`cards.${key}.title`)}</span>;
 
-  const items = [
-    { key: 'led', label: tabLabel('led'), children: <LedTab c={c} /> },
-    { key: 'cap', label: tabLabel('cap'), children: <CapTab c={c} /> },
-    { key: 'thermal', label: tabLabel('thermal'), children: <ThermalTab c={c} /> },
-    { key: 'runtime', label: tabLabel('runtime'), children: <RuntimeTab c={c} /> },
-    { key: 'resistorLab', label: tabLabel('resistorLab'), children: <ResistorLabTab c={c} /> },
-    { key: 'adc', label: tabLabel('adc'), children: <AdcTab c={c} /> },
-    { key: 'rc', label: tabLabel('rc'), children: <RcTab c={c} /> },
-    { key: 'rl', label: tabLabel('rl'), children: <RlTab c={c} /> },
-    { key: 'rcl', label: tabLabel('rcl'), children: <RclTab c={c} /> },
-    { key: 'gain', label: tabLabel('gain'), children: <GainTab c={c} /> },
-    { key: 'i2s', label: tabLabel('i2s'), children: <I2sTab c={c} /> },
-  ];
+  // El render de cada calc vive en su *Tab.tsx; el registry solo decide orden/categoría.
+  const render: Record<string, ReactNode> = {
+    resistorLab: <ResistorLabTab c={c} />,
+    led: <LedTab c={c} />,
+    cap: <CapTab c={c} />,
+    thermal: <ThermalTab c={c} />,
+    runtime: <RuntimeTab c={c} />,
+    adc: <AdcTab c={c} />,
+    rc: <RcTab c={c} />,
+    rl: <RlTab c={c} />,
+    rcl: <RclTab c={c} />,
+    gain: <GainTab c={c} />,
+    i2s: <I2sTab c={c} />,
+  };
+
+  // Sidebar agrupado por categoría (los headers solo aparecen cuando hay >1 categoría).
+  const showCatHeaders = CALCULATORS_BY_CATEGORY.length > 1;
+  const items = CALCULATORS_BY_CATEGORY.flatMap((group) => {
+    const calcItems = group.calcs
+      .filter((def) => render[def.id])
+      .map((def) => ({ key: def.id, label: tabLabel(def.id), children: render[def.id] }));
+    if (!showCatHeaders) return calcItems;
+    return [
+      {
+        key: `__cat_${group.category}`,
+        label: <span style={catHeaderStyle}>{t(`categories.${group.category}`)}</span>,
+        disabled: true,
+        children: null,
+      },
+      ...calcItems,
+    ];
+  });
 
   return (
     <Space direction="vertical" size={24} style={{ width: '100%', background: c.palette.page, padding: '4px 2px' }}>
@@ -57,32 +81,27 @@ export function EmbeddedCalculators() {
         locality="local"
       />
 
+      <ToolGuide guideId="calculators" />
+
       <Space wrap className={styles.toolbar}>
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontSize: 12, color: c.palette.textSecondary, textTransform: 'uppercase', letterSpacing: 0.35 }}>
-            {t('eseries_label')}
-          </span>
-          <Segmented
-            size="small"
-            value={c.eSeries}
-            onChange={(v) => c.setESeries(v as typeof c.eSeries)}
-            options={['E12', 'E24']}
-          />
-        </span>
         <UrlPresets
           storageKey="calculators"
           basePresets={BASE_PRESET_IDS.map((id) => ({ id, name: t(PRESET_I18N[id]) }))}
           onSelectBase={(id) => c.applyPreset(id as PresetId)}
         />
-        <Button onClick={c.copySummary} style={{ borderRadius: 10 }}>{t('copy_summary')}</Button>
-        <Button onClick={c.copyShareLink} style={{ borderRadius: 10 }}>{t('copy_link')}</Button>
+        <Tooltip title={t('copy_summary_help')}>
+          <Button onClick={c.copySummary} style={{ borderRadius: 10 }}>{t('copy_summary')}</Button>
+        </Tooltip>
+        <Tooltip title={t('copy_link_help')}>
+          <Button onClick={c.copyShareLink} style={{ borderRadius: 10 }}>{t('copy_link')}</Button>
+        </Tooltip>
       </Space>
 
       <div className={styles.tabsShell}>
         <Tabs
           tabPosition="left"
           activeKey={c.activeTab}
-          onChange={(key) => c.setActiveTab(key as TabKey)}
+          onChange={(key) => c.setActiveTab(key)}
           className={styles.calcTabs}
           style={{ width: '100%' }}
           items={items}
