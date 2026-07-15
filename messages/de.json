@@ -1405,6 +1405,10 @@
             "buck3v3": "Buck 5V→3V3"
         },
         "cards": {
+            "paint": { "title": "Farbe", "paintArea": "Fläche", "paintCoats": "Anstriche", "paintCoverage": "Ergiebigkeit", "r_liters": "Benötigte Farbe", "r_cans": "Dosen" },
+            "cooling": { "title": "Kühllast (BTU)", "coolArea": "Grundfläche", "coolFactor": "Faktor", "coolPeople": "Personen", "coolAppliances": "Geräte (Wärme)", "r_frig": "Leistung", "r_split": "Empfohlene Größe", "r_split_hint": "kleinste handelsübliche Größe, die reicht" },
+            "ohm": { "title": "Ohmsches Gesetz", "ohmV": "Spannung", "ohmI": "Strom", "r_r": "Widerstand", "r_p": "Leistung" },
+            "rule": { "title": "Dreisatz", "ruleA": "Wenn A…", "ruleB": "…ist B", "ruleC": "…wie viel ist C?", "r_x": "Ergebnis (X)", "r_hint": "A → B, also C → X" },
             "rl": {
                 "title": "RL-Filter",
                 "r": "R (Ω)",
