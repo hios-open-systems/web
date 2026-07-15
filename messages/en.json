@@ -2054,6 +2054,10 @@
             "buck3v3": "Buck 5V→3V3"
         },
         "cards": {
+            "paint": { "title": "Paint", "paintArea": "Area to paint", "paintCoats": "Coats", "paintCoverage": "Coverage", "r_liters": "Paint needed", "r_cans": "Cans" },
+            "cooling": { "title": "Cooling (BTU)", "coolArea": "Floor area", "coolFactor": "Factor", "coolPeople": "People", "coolAppliances": "Appliances (heat)", "r_frig": "Capacity", "r_split": "Suggested unit", "r_split_hint": "smallest commercial size that covers it" },
+            "ohm": { "title": "Ohm's Law", "ohmV": "Voltage", "ohmI": "Current", "r_r": "Resistance", "r_p": "Power" },
+            "rule": { "title": "Rule of three", "ruleA": "If A…", "ruleB": "…is B", "ruleC": "…what is C?", "r_x": "Result (X)", "r_hint": "A → B, so C → X" },
             "rl": {
                 "title": "RL Filter",
                 "r": "R (Ω)",

@@ -1405,6 +1405,10 @@
             "buck3v3": "Buck 5V→3V3"
         },
         "cards": {
+            "paint": { "title": "Vernice", "paintArea": "Area da dipingere", "paintCoats": "Mani", "paintCoverage": "Resa", "r_liters": "Vernice necessaria", "r_cans": "Latte" },
+            "cooling": { "title": "Raffrescamento (BTU)", "coolArea": "Superficie", "coolFactor": "Fattore", "coolPeople": "Persone", "coolAppliances": "Apparecchi (calore)", "r_frig": "Capacità", "r_split": "Split consigliato", "r_split_hint": "la taglia commerciale più piccola che basta" },
+            "ohm": { "title": "Legge di Ohm", "ohmV": "Tensione", "ohmI": "Corrente", "r_r": "Resistenza", "r_p": "Potenza" },
+            "rule": { "title": "Proporzione", "ruleA": "Se A…", "ruleB": "…è B", "ruleC": "…quanto è C?", "r_x": "Risultato (X)", "r_hint": "A → B, quindi C → X" },
             "rl": {
                 "title": "Filtro RL",
                 "r": "R (Ω)",

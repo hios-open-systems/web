@@ -7,7 +7,8 @@ import { ToolGuide } from '@/components/workbench/ToolGuide';
 import { UrlPresets } from '@/components/common/UrlPresets';
 import styles from './embeddedCalculators.module.css';
 import { PresetId, useCalculatorState } from './calculators/useCalculatorState';
-import { CALCULATORS_BY_CATEGORY } from './calculators/registry';
+import { CALCULATORS_BY_CATEGORY, type CalcDef } from './calculators/registry';
+import { GenericCalcTab } from './calculators/GenericCalcTab';
 import { LedTab } from './calculators/LedTab';
 import { CapTab } from './calculators/CapTab';
 import { ThermalTab } from './calculators/ThermalTab';
@@ -53,12 +54,18 @@ export function EmbeddedCalculators() {
     i2s: <I2sTab c={c} />,
   };
 
+  // Las calcs con *Tab.tsx propio usan `render`; las declaradas en el registry
+  // (obra/clima/cotidianas + Ohm) se renderizan genéricas desde su descriptor.
+  const childFor = (def: CalcDef): ReactNode =>
+    render[def.id] ?? (def.generic ? <GenericCalcTab c={c} def={def} /> : null);
+
   // Sidebar agrupado por categoría (los headers solo aparecen cuando hay >1 categoría).
   const showCatHeaders = CALCULATORS_BY_CATEGORY.length > 1;
   const items = CALCULATORS_BY_CATEGORY.flatMap((group) => {
     const calcItems = group.calcs
-      .filter((def) => render[def.id])
-      .map((def) => ({ key: def.id, label: tabLabel(def.id), children: render[def.id] }));
+      .map((def) => ({ def, child: childFor(def) }))
+      .filter((x) => x.child !== null)
+      .map(({ def, child }) => ({ key: def.id, label: tabLabel(def.id), children: child }));
     if (!showCatHeaders) return calcItems;
     return [
       {
