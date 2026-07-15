@@ -7,7 +7,7 @@ export const SPEAKER_WIRING: WiringGuide = {
     subtitle: 'Parlante ESP32 con 2× MAX98357 I2S en stereo, LCD 16×2 I2C y batería 2S.',
     rev: '1.0',
     mcu: 'ESP32-WROOM-32',
-    note: 'as-wired desde el firmware. ⚠️ la convención SD del PINOUT.md (1MΩ→GND=Left) es datasheet-dudosa; acá el método confiable es MEDIR SD.',
+    note: 'as-wired desde el firmware. ⚠️ La convención SD tipo "1MΩ→GND=Left" es datasheet-dudosa; el método confiable es MEDIR SD (ver ampSdSteps).',
     source: 'src/main.ino',
   },
 
@@ -102,6 +102,6 @@ export const SPEAKER_WIRING: WiringGuide = {
     'Ampli RIGHT: SD → Vin por ~220–330k (medí SD 0,77–1,4V).',
     'Encendé el 5V (LM2596 ya medido a 5.0V).',
     'Multímetro en DC, SD a GND. Bandas: <0,16V mudo · 0,16–0,77V (L+R)/2 · 0,77–1,4V Right · >1,4V Left.',
-    'Fijá la R y repetí en el otro módulo. (El PINOUT.md dice 1MΩ→GND=Left; preferí este método medido.)',
+    'Fijá la R y repetí en el otro módulo. (Ignorá cualquier "1MΩ→GND=Left" que ande dando vueltas: es datasheet-dudoso, preferí este método medido.)',
   ],
 };
