@@ -13,6 +13,12 @@ import {
   ampFlat,
 } from '../components/tools/calculators/viz/responses.ts';
 import { nearestStandard } from '../components/tools/calculators/eseries.ts';
+import {
+  paintLiters,
+  coolingLoad,
+  ohmsLaw,
+  ruleOfThree,
+} from '../components/tools/calculators/calc-extra.ts';
 
 let failures = 0;
 
@@ -100,6 +106,25 @@ approx('rcl |Z| min ≈ R at f0', zc.mag[70][1], 10, 5e-2);
 
 const af = ampFlat(20.83);
 assert('amp flat constant', af.mag.every((p) => p[1] === 20.83));
+
+// --- calc-extra.ts (obra / clima / cotidianas + Ley de Ohm) ----------------
+const paint = paintLiters(20, 2, 10);
+approx('paint liters', paint.liters, 4);
+assert('paint cans (ceil 4/4=1)', paint.cans4L === 1);
+assert('paint invalid on 0 coverage', paintLiters(20, 2, 0).valid === false);
+
+const cool = coolingLoad(20, 100, 2, 400);
+approx('cooling frig (20*100 + 2*100 + 400*0.86)', cool.frigorias, 2544);
+approx('cooling BTU (frig*3.968)', cool.btu, 10094.59);
+assert('cooling suggests 3000 split', cool.splitFrig === 3000);
+
+const ohm = ohmsLaw(5, 20);
+approx('ohm R (5/0.02)', ohm.rOhm, 250);
+approx('ohm P (5*0.02)', ohm.watts, 0.1);
+assert('ohm invalid on 0 current', ohmsLaw(5, 0).valid === false);
+
+approx('rule of three (100*12/3)', ruleOfThree(3, 100, 12).x, 400);
+assert('rule invalid on a=0', ruleOfThree(0, 100, 12).valid === false);
 
 // ---------------------------------------------------------------------------
 if (failures > 0) {

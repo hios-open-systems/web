@@ -14,6 +14,9 @@
  * acá + su bloque i18n `cards.<id>.*` + su Tab.
  */
 
+import { formatOhm } from './calc';
+import { coolingLoad, ohmsLaw, paintLiters, ruleOfThree } from './calc-extra';
+
 export type CalcCategory = 'electronica' | 'obra' | 'clima' | 'cotidianas';
 
 /** El orden en que se muestran las categorías en el sidebar. */
@@ -24,6 +27,27 @@ export interface CalcField {
   key: string;
   /** valor por defecto. Su tipo (number|string) define cómo se hidrata/serializa */
   default: number | string;
+  // --- metadata para el render genérico (los calcs con *Tab.tsx propio la ignoran) ---
+  min?: number;
+  step?: number;
+  sliderMin?: number;
+  sliderMax?: number;
+  sliderStep?: number;
+  /** sufijo (addonAfter): "m²", "V", "frig/m²"… */
+  unit?: string;
+}
+
+/** Getter/traductor que recibe `result()` — evita acoplar el registry a React. */
+export type Getter = (key: string) => number | string;
+export type Translate = (key: string) => string;
+
+/** Una línea de resultado a mostrar por el render genérico. */
+export interface CalcResultLine {
+  label: string;
+  value: string;
+  hint?: string;
+  invalid?: boolean;
+  invalidText?: string;
 }
 
 export interface CalcDef {
@@ -33,6 +57,10 @@ export interface CalcDef {
   /** muestra el control de serie E (E12/E24) dentro de esta calc */
   usesESeries?: boolean;
   fields: CalcField[];
+  /** true → se renderiza con GenericCalcTab (calc declarada 100% acá) */
+  generic?: boolean;
+  /** solo genéricas: produce las líneas de resultado desde los valores actuales */
+  result?: (get: Getter, t: Translate) => CalcResultLine[];
 }
 
 /**
@@ -146,6 +174,74 @@ export const CALCULATORS: CalcDef[] = [
       { key: 'channels', default: 2 },
       { key: 'mclkMult', default: 256 },
     ],
+  },
+
+  // --- Fase 2: calcs no-electrónicas + Ley de Ohm (render genérico) -----------
+  {
+    id: 'ohm',
+    category: 'electronica',
+    generic: true,
+    fields: [
+      { key: 'ohmV', default: 5, min: 0, step: 0.1, sliderMin: 0, sliderMax: 48, sliderStep: 0.1, unit: 'V' },
+      { key: 'ohmI', default: 20, min: 0, step: 1, sliderMin: 0, sliderMax: 2000, sliderStep: 1, unit: 'mA' },
+    ],
+    result: (get, t) => {
+      const r = ohmsLaw(Number(get('ohmV')), Number(get('ohmI')));
+      const p = r.watts >= 1 ? `${r.watts.toFixed(2)} W` : `${(r.watts * 1000).toFixed(0)} mW`;
+      return [
+        { label: t('cards.ohm.r_r'), value: formatOhm(r.rOhm), hint: `${t('cards.ohm.r_p')}: ${p}`, invalid: !r.valid, invalidText: t('cards.invalid') },
+      ];
+    },
+  },
+  {
+    id: 'paint',
+    category: 'obra',
+    generic: true,
+    fields: [
+      { key: 'paintArea', default: 20, min: 0, step: 1, sliderMin: 0, sliderMax: 300, sliderStep: 1, unit: 'm²' },
+      { key: 'paintCoats', default: 2, min: 1, step: 1, sliderMin: 1, sliderMax: 4, sliderStep: 1 },
+      { key: 'paintCoverage', default: 10, min: 1, step: 0.5, sliderMin: 4, sliderMax: 16, sliderStep: 0.5, unit: 'm²/L' },
+    ],
+    result: (get, t) => {
+      const r = paintLiters(Number(get('paintArea')), Number(get('paintCoats')), Number(get('paintCoverage')));
+      return [
+        { label: t('cards.paint.r_liters'), value: `${r.liters.toFixed(2)} L`, hint: `${t('cards.paint.r_cans')}: ${r.cans4L} × 4L`, invalid: !r.valid, invalidText: t('cards.invalid') },
+      ];
+    },
+  },
+  {
+    id: 'cooling',
+    category: 'clima',
+    generic: true,
+    fields: [
+      { key: 'coolArea', default: 20, min: 0, step: 1, sliderMin: 0, sliderMax: 120, sliderStep: 1, unit: 'm²' },
+      { key: 'coolFactor', default: 100, min: 0, step: 5, sliderMin: 60, sliderMax: 180, sliderStep: 5, unit: 'frig/m²' },
+      { key: 'coolPeople', default: 2, min: 0, step: 1, sliderMin: 0, sliderMax: 12, sliderStep: 1 },
+      { key: 'coolAppliances', default: 400, min: 0, step: 50, sliderMin: 0, sliderMax: 3000, sliderStep: 50, unit: 'W' },
+    ],
+    result: (get, t) => {
+      const r = coolingLoad(Number(get('coolArea')), Number(get('coolFactor')), Number(get('coolPeople')), Number(get('coolAppliances')));
+      return [
+        { label: t('cards.cooling.r_frig'), value: `${Math.round(r.frigorias)} frig/h`, hint: `${Math.round(r.btu)} BTU/h`, invalid: !r.valid, invalidText: t('cards.invalid') },
+        { label: t('cards.cooling.r_split'), value: `${r.splitFrig} frig`, hint: t('cards.cooling.r_split_hint') },
+      ];
+    },
+  },
+  {
+    id: 'rule',
+    category: 'cotidianas',
+    generic: true,
+    fields: [
+      { key: 'ruleA', default: 3, min: 0, step: 1, sliderMin: 1, sliderMax: 100, sliderStep: 1 },
+      { key: 'ruleB', default: 100, min: 0, step: 1, sliderMin: 0, sliderMax: 1000, sliderStep: 1 },
+      { key: 'ruleC', default: 12, min: 0, step: 1, sliderMin: 0, sliderMax: 1000, sliderStep: 1 },
+    ],
+    result: (get, t) => {
+      const r = ruleOfThree(Number(get('ruleA')), Number(get('ruleB')), Number(get('ruleC')));
+      return [
+        { label: t('cards.rule.r_x'), value: r.valid ? r.x.toFixed(2) : '—', hint: t('cards.rule.r_hint'), invalid: !r.valid, invalidText: t('cards.invalid') },
+      ];
+    },
   },
 ];
 
