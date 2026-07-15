@@ -12,7 +12,6 @@ import { PAD_WIRING } from '../config/pinouts/pad.ts';
 import { BTDAC_WIRING } from '../config/pinouts/btdac.ts';
 import { SPEAKER_WIRING } from '../config/pinouts/speaker.ts';
 import { ESP32_S3_BOARD } from '../config/pinouts/modules/mcu.ts';
-import { renderPinoutData } from './gen-pad-pinout.ts';
 import { EMPTY_CHECKLIST, isDone, parse, serialize, toggle } from '../lib/padWiring/checklist.ts';
 
 const WIRING_GUIDES: Record<string, WiringGuide> = {
@@ -124,14 +123,6 @@ ok('parse garbage is empty', parse('{nope').done.length === 0);
 ok('parse wrong version is empty', parse(JSON.stringify({ version: 9, done: [1] })).done.length === 0);
 ok('parse non-number is empty', parse(JSON.stringify({ version: 1, done: ['x'] })).done.length === 0);
 ok('toggle is immutable', toggle(EMPTY_CHECKLIST, 0) !== EMPTY_CHECKLIST);
-
-// ─── el visor offline se GENERA desde pad.ts, no se mantiene a mano ──────────
-// El test viejo comparaba pad.ts contra pinout.data.js: dos espejos del mismo
-// objetivo, mirándose entre sí. Daba verde mientras los DOS mentían respecto del
-// firmware. Ahora pinout.data.js es un artefacto y esto sólo verifica que no quedó
-// viejo; la verdad se chequea contra Pins.h, más abajo.
-const onDisk = readFileSync(new URL('../projects/pad/pinout.data.js', import.meta.url), 'utf8');
-ok('pinout.data.js está al día con pad.ts (si falla: npm run gen:pinout)', onDisk === renderPinoutData());
 
 // ─── el pinout publicado contra EL FIRMWARE QUE HAY ─────────────────────────
 // Éste es el chequeo que faltaba. La guía del pad describe el objetivo rev 0.9 y el

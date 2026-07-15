@@ -1,6 +1,6 @@
 # HIOS PAD — Macropad / Control-Deck ESP32-S3
 
-Macropad de escritorio con pantalla a color, encoder, joystick analógico y 5 teclas, que actúa como **teclado/mouse/multimedia HID** por **USB, Bluetooth (BLE) y WiFi**. Capas por contexto (edición, dev, multimedia, navegador, videollamadas) navegables desde la propia pantalla, con feedback real del estado de la PC vía un daemon companion.
+Macropad de escritorio con pantalla a color, encoder, joystick analógico, 10 teclas de acción (+ 2 ALT) y 2 parlantes, que actúa como **teclado/mouse/multimedia HID** por **USB, Bluetooth (BLE) y WiFi**. Capas por contexto (edición, dev, multimedia, navegador, videollamadas) navegables desde la propia pantalla, con feedback real del estado de la PC vía un daemon companion.
 
 ## Quick Start
 
@@ -15,6 +15,16 @@ pio device monitor -b 115200
 ```
 
 > **Flasheo en WSL:** el puerto serie del DevKit (CH343, UART) no aparece solo en WSL. Desde PowerShell (Windows): `usbipd list` → `usbipd attach --wsl --busid <id>` (al reconectar el cable hay que re-attachear). Recién ahí aparece `/dev/ttyACM0`. El USB **nativo** del S3 (303a:1001) es el HID; el CH343 es para flashear/serial.
+
+## Flujo de trabajo
+
+Del cero a la placa andando:
+
+1. **Soldar** — seguí la guía verificada **[/pinouts/pad](https://openhios.dev/pinouts/pad)**: ordena los módulos por paso, trae el checklist de armado y las mediciones (buck a 5.0V, SD de los amplis, diodos de la matriz). Es la **única** hoja de cableado y se auto-verifica contra [`src/app/Pins.h`](src/app/Pins.h) + [`platformio.ini`](platformio.ini) en cada `npm run test:wiring` (desde la raíz del repo web).
+2. **Primer flasheo (por cable)** — `pio run -t upload` (ver *Quick Start*). En WSL, attachá el CH343 con `usbipd` primero.
+   > ⚠️ **Eléctrico:** con el pack 2S conectado, **no enchufes el USB sin abrir antes `SW-CELDAS`** — el VBUS del USB y la salida del buck pelearían en el pin `5V`. Flasheá con el pack apagado, o subí por OTA sin tocar cables.
+3. **Updates (OTA)** — ya con WiFi: `pio run -t upload --upload-port hiospad.local`, sin cable. El USB-C nativo + el botón BOOT quedan accesibles por si un OTA sale mal.
+4. **Companion (opcional)** — arrancá el daemon para feedback real y mute global (ver *Apps companion*). El pad es **local-first**: anda perfecto sin nada de esto.
 
 ## ¿Qué es?
 
@@ -46,9 +56,13 @@ Una capa por app con sus atajos. El **mic** tiene doble vía: **tap** = atajo de
 
 > Zoom requiere activar *global shortcuts* (Settings → Keyboard Shortcuts) para mutear sin foco en la ventana.
 
-## Feedback real (companion)
+## Apps companion (opcionales)
 
-El display muestra mic/volumen/temps **reales** cuando corre el daemon [`pad-companion`](companion) (en `companion/`), que lee el estado de la PC (Windows Core Audio / Linux PipeWire) y lo empuja por `POST /api/state`. Sin companion, el display cae a estado **optimista** (lo que el pad cree haber dejado). El canal también lleva comandos pad→companion (mute global) en la respuesta del POST.
+Todo esto es **local-first**: el pad funciona solo. Las apps lo *potencian*; si se caen, el pad sigue.
+
+- **[`pad-companion`](companion) — daemon (headless).** Lee el estado real de la PC (volumen, mic muteado, temps y carga de CPU/GPU en Windows Core Audio / Linux PipeWire) y lo empuja por `POST /api/state`: el display pasa de estado **optimista** (lo que el pad cree haber dejado) a datos reales. El mismo canal lleva comandos **pad→OS** en la respuesta del POST — el más usado es el **mute global de mic** a nivel sistema, que funciona en cualquier app (Slack, Meet, etc.). Si el daemon se cae, el pad vuelve al estado optimista en ~4s. Contrato de la API, dependencias por OS y autostart (systemd en Linux / Tarea Programada en Windows) en [`companion/README.md`](companion/README.md).
+- **Admin + mirror — web (dentro del companion).** Servidor liviano ([`companion/src/web`](companion/src/web)) con UI para editar mapeos/capas/textos y un **mirror/emulador** del pad: editás el mismo modelo de datos que corre el firmware y se lo mandás, sin recompilar.
+- **[`host/openrgb-rgb-layer.ahk`](host/openrgb-rgb-layer.ahk) — helper.** Script AutoHotkey que enlaza la capa RGB del pad con **OpenRGB** en la PC (ilumina periféricos según la capa activa).
 
 ## Arquitectura
 
@@ -67,7 +81,7 @@ Directorios: `actions/` (modelo de `Action`), `mapping/` (`KeyMap`/`Dispatcher`)
 - **Display ILI9488** 480×320 SPI (HSPI, 27MHz). *No es ST7796.*
 - **Encoder** KY-040 · **Joystick** HW-504 (alimentado a **3V3**, no 5V) · **12 pulsadores** NA a GND: 10 de acción en **matriz 2×5 con diodos** (cátodo hacia la fila) + 2 ALT directos.
 - **2× MAX98357A** (I2S, bus compartido; el canal lo elige el pin SD de cada uno: L = SD a Vin, R = SD por **390k** a Vin).
-- Pines en [`src/app/Pins.h`](src/app/Pins.h); cableado y alimentación (batería 2S) en [WIRING.md](WIRING.md).
+- Pines en [`src/app/Pins.h`](src/app/Pins.h) (fuente de verdad). **Cableado y alimentación paso a paso: la guía [/pinouts/pad](https://openhios.dev/pinouts/pad)**, verificada contra el firmware por self-test.
 
 ## Gotchas (aprendidos a los golpes)
 
@@ -79,7 +93,7 @@ Directorios: `actions/` (modelo de `Action`), `mapping/` (`KeyMap`/`Dispatcher`)
 
 ## Estado
 
-USB + BLE HID, WiFi+portal+NTP, stick→mouse, capas+menú, feedback real y mute global por companion: **funcionando**. Batería (medición 2S por divisor→GPIO9) **lista pero apagada** (`cfg::BATTERY_ENABLED`, ver WIRING.md). Pendiente/futuro: config por JSON, control desde el celu (PWA), pantalla remota.
+USB + BLE HID, WiFi+portal+NTP, stick→mouse, capas+menú, feedback real y mute global por companion: **funcionando**. La medición de batería en el pad se **descartó**: la pantalla de la fuente ya muestra la tensión del pack 2S, y GPIO9 (ex-divisor) hoy maneja el NeoPixel — `cfg::BATTERY_ENABLED=false` y **no reactivar** sin reasignar el ADC (si no, le metés 2.7V DC a la línea de datos del NeoPixel). Pendiente/futuro: config por JSON, control desde el celu (PWA), pantalla remota.
 
 ## Créditos
 
