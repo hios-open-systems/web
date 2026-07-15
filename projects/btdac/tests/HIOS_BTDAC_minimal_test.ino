@@ -4,10 +4,10 @@
  * Si esta versión funciona, el problema está en la configuración I2S.
  * Si NO funciona, el problema es de hardware/cableado.
  * 
- * Pinout:
- *   GPIO 26 -> PCM5102 BCK
- *   GPIO 25 -> PCM5102 LRCK  
- *   GPIO 22 -> PCM5102 DIN
+ * Pinout (IDÉNTICO al firmware real — src/HIOS_BTDAC.ino):
+ *   GPIO 27 -> PCM5102 BCK
+ *   GPIO 14 -> PCM5102 LRCK
+ *   GPIO 13 -> PCM5102 DIN
  *   PCM5102 SCK -> GND
  */
 
@@ -22,9 +22,9 @@ void setup() {
     
     // Configurar pines I2S
     i2s_pin_config_t pin_config = {
-        .bck_io_num = 26,
-        .ws_io_num = 25,
-        .data_out_num = 22,
+        .bck_io_num = 27,
+        .ws_io_num = 14,
+        .data_out_num = 13,
         .data_in_num = I2S_PIN_NO_CHANGE
     };
     a2dp_sink.set_pin_config(pin_config);
