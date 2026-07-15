@@ -5,6 +5,7 @@ import { NumberField } from './NumberField';
 import { formatOhm } from './calc';
 import { nearestStandard } from './eseries';
 import { AdcSchematic } from './viz/circuits';
+import { ESeriesControl } from './ESeriesControl';
 import type { CalculatorState } from './useCalculatorState';
 
 export function AdcTab({ c }: { c: CalculatorState }) {
@@ -12,6 +13,7 @@ export function AdcTab({ c }: { c: CalculatorState }) {
   const std = c.divider.valid ? nearestStandard(c.divider.rTopK * 1000, c.eSeries) : null;
   return (
     <Card title={t('cards.adc.title')} style={c.calcCardStyle} styles={{ body: c.calcCardBodyStyle }}>
+      <ESeriesControl c={c} />
       <ResultBar
         label={t('cards.adc.rtop')}
         value={`${c.divider.rTopK.toFixed(1)} kΩ`}

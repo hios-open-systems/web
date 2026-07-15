@@ -1045,6 +1045,16 @@
             "empty": "Sin datos en este rango"
         },
         "guides": {
+            "calculators": {
+                "intro": "Un set de calculadoras para electrónica, obra, clima y cuentas del día a día. Todo corre local; nada sale de tu navegador.",
+                "steps": [
+                    "Elegí una calculadora en la lista de la izquierda (van agrupadas por categoría).",
+                    "Ajustá los valores con los sliders o escribiendo el número; el resultado se actualiza solo.",
+                    "Plantillas = configuraciones listas (built-in). Guardar preset = guarda ESTA configuración con un nombre, en este navegador; el botón Presets las lista.",
+                    "Copiar resumen = los resultados en texto · Copiar enlace = la URL con tu configuración para compartir."
+                ],
+                "tip": "En las calcs de resistencias (LED, Filtro RC, Divisor ADC) el control 'Serie E' ajusta el valor al comercial más cercano (E12/E24)."
+            },
             "guitarTuner": {
                 "intro": "Afiná guitarra, bajo, ukelele o cuerdas de arco a oído o por micrófono — todo local, el audio no sale de tu navegador.",
                 "steps": [
@@ -2012,10 +2022,14 @@
         "later": "Más tarde"
     },
     "Calculators": {
-        "title": "Calculadoras Embebidas",
-        "subtitle": "Herramientas prácticas para diseño electrónico, validación y decisiones rápidas.",
+        "title": "Calculadoras",
+        "subtitle": "Cálculo para electrónica, obra, clima y el día a día. Corre local, en el navegador.",
         "presets_label": "Perfiles del Sistema",
-        "eseries_label": "Norma",
+        "eseries_label": "Serie E",
+        "eseries_help": "E12 (±10%) y E24 (±5%) son los valores de resistencia que realmente se venden. El resultado se ajusta al más cercano que podés comprar.",
+        "categories": { "electronica": "Electrónica", "obra": "Obra", "clima": "Clima", "cotidianas": "Cotidianas" },
+        "copy_summary_help": "Copia los resultados de las calculadoras en texto plano.",
+        "copy_link_help": "Copia la URL con esta configuración para compartirla o guardarla.",
         "go_rcl": "Abrir página RCL",
         "copy_summary": "Copiar resumen",
         "copy_link": "Copiar enlace",

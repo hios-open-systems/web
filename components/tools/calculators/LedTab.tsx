@@ -5,6 +5,7 @@ import { NumberField } from './NumberField';
 import { formatOhm } from './calc';
 import { nearestStandard } from './eseries';
 import { LedSchematic } from './viz/circuits';
+import { ESeriesControl } from './ESeriesControl';
 import type { CalculatorState } from './useCalculatorState';
 
 export function LedTab({ c }: { c: CalculatorState }) {
@@ -12,6 +13,7 @@ export function LedTab({ c }: { c: CalculatorState }) {
   const std = nearestStandard(c.led.resistance, c.eSeries);
   return (
     <Card title={t('cards.led.title')} style={c.calcCardStyle} styles={{ body: c.calcCardBodyStyle }}>
+      <ESeriesControl c={c} />
       <ResultBar
         label={t('cards.led.r')}
         value={formatOhm(c.led.resistance)}
