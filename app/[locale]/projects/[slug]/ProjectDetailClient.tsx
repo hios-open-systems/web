@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Typography, Tag, Row, Col, Card, Button, Space, Empty } from 'antd';
-import { ArrowLeftOutlined, DownloadOutlined, GithubOutlined, DoubleRightOutlined, PrinterOutlined, EyeOutlined, LinkOutlined, FileOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, DownloadOutlined, GithubOutlined, DoubleRightOutlined, EyeOutlined, LinkOutlined, FileOutlined } from '@ant-design/icons';
 import { motion } from 'framer-motion';
 import { useTheme } from '@/lib/ThemeContext';
 import { ProjectMeta } from '@/lib/projects';
@@ -132,13 +132,6 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                                 {file.name}
                             </Button>
                         ))}
-                        {project.docs.includes('PINOUT') && (
-                            <Link href={`/${locale}/print/${slug}/PINOUT`}>
-                                <Button icon={<PrinterOutlined />} style={{ borderColor: accentColor, color: accentColor }}>
-                                    {t('print_pinout')}
-                                </Button>
-                            </Link>
-                        )}
                         {WIRING_GUIDE_SLUGS.includes(slug) && (
                             <Link href={`/${locale}/pinouts/${slug}`}>
                                 <Button icon={<LinkOutlined />} style={{ borderColor: accentColor, color: accentColor }}>
