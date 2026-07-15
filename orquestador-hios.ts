@@ -6,7 +6,7 @@ const client = new LMStudioClient();
 
 async function generarPantallaConfig() {
   // 1. Leer contexto local de btdac
-  const pinout = fs.readFileSync('./projects/btdac/PINOUT.md', 'utf8');
+  const pinout = fs.readFileSync('./projects/btdac/README.md', 'utf8');
   // Ruta corregida a la estructura real del proyecto Android
   const existingCode = fs.readFileSync('./projects/btdac/android/app/src/main/java/dev/hios/btdac/MainActivity.kt', 'utf8');
 

@@ -7,7 +7,7 @@ export const BTDAC_WIRING: WiringGuide = {
     subtitle: 'Receptor Bluetooth con DAC PCM5102 y ESP32: A2DP → I2S → línea analógica, con LED RGB de estado.',
     rev: '2.0',
     mcu: 'ESP32-WROOM-32',
-    note: 'as-wired desde el firmware (BCK=27, LRCK=14, DOUT=13). El PINOUT.md del repo ya está sincronizado con estos pines; el firmware-mirror del self-test los verifica en cada build.',
+    note: 'as-wired desde el firmware (BCK=27, LRCK=14, DOUT=13). El firmware-mirror del self-test los verifica contra src/HIOS_BTDAC.ino en cada build.',
     source: 'src/HIOS_BTDAC.ino',
   },
 
