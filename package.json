@@ -39,8 +39,7 @@
     "db:migrate:local": "npx --yes wrangler d1 migrations apply hios-playground --local",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "test:e2e:auth": "playwright test -c playwright.cloudflare.config.ts",
-    "gen:pinout": "node --experimental-strip-types scripts/gen-pad-pinout.ts"
+    "test:e2e:auth": "playwright test -c playwright.cloudflare.config.ts"
   },
   "dependencies": {
     "@ant-design/cssinjs": "^1.18.0",
