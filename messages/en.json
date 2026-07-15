@@ -1046,6 +1046,16 @@
             "empty": "No data for this range"
         },
         "guides": {
+            "calculators": {
+                "intro": "A set of calculators for electronics, construction, climate, and everyday math. Everything runs locally; nothing leaves your browser.",
+                "steps": [
+                    "Pick a calculator from the list on the left (grouped by category).",
+                    "Adjust values with the sliders or by typing a number; the result updates live.",
+                    "Templates = ready-made built-in configs. Save preset = stores THIS configuration under a name, in this browser; the Presets button lists them.",
+                    "Copy Summary = the results as text · Copy Link = the URL with your configuration to share."
+                ],
+                "tip": "In the resistor calcs (LED, RC filter, ADC divider), the 'E-series' control snaps the value to the nearest commercial one (E12/E24)."
+            },
             "guitarTuner": {
                 "intro": "Tune guitar, bass, ukulele or bowed strings by ear or by mic — fully local, no audio leaves your browser.",
                 "steps": [
@@ -2013,10 +2023,14 @@
         "later": "Later"
     },
     "Calculators": {
-        "title": "Embedded Calculators",
-        "subtitle": "Practical tools for electronics design, validation, and quick decision making.",
+        "title": "Calculators",
+        "subtitle": "Number-crunching for electronics, construction, climate, and everyday math. Runs locally, in your browser.",
         "presets_label": "Global Presets",
-        "eseries_label": "Standard",
+        "eseries_label": "E-series",
+        "eseries_help": "E12 (±10%) and E24 (±5%) are the resistor values that actually exist to buy. The result snaps to the nearest one you can source.",
+        "categories": { "electronica": "Electronics", "obra": "Construction", "clima": "Climate", "cotidianas": "Everyday" },
+        "copy_summary_help": "Copies the calculator results as plain text.",
+        "copy_link_help": "Copies the URL with this configuration to share or save it.",
         "go_rcl": "Open RCL Page",
         "copy_summary": "Copy Summary",
         "copy_link": "Copy Link",

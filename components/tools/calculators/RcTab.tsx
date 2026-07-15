@@ -7,6 +7,7 @@ import { nearestStandard } from './eseries';
 import { RcSchematic } from './viz/circuits';
 import { Plot } from './viz/Plot';
 import { rcLowpass } from './viz/responses';
+import { ESeriesControl } from './ESeriesControl';
 import type { CalculatorState } from './useCalculatorState';
 
 export function RcTab({ c }: { c: CalculatorState }) {
@@ -18,6 +19,7 @@ export function RcTab({ c }: { c: CalculatorState }) {
     : `${t('cards.rc.required')}: —`;
   return (
     <Card title={t('cards.rc.title')} style={c.calcCardStyle} styles={{ body: c.calcCardBodyStyle }}>
+      <ESeriesControl c={c} />
       <ResultBar
         label={t('cards.rc.fc')}
         value={`${c.cutoff.toFixed(1)} Hz`}
