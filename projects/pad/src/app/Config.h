@@ -92,8 +92,17 @@ static constexpr uint32_t BAT_SAMPLE_MS   = 5000;   // periodo de muestreo
 // Muestra el COLOR de la capa activa (cada Layer tiene su uint16_t color).
 static constexpr bool     NEOPIXEL_ENABLED = true;
 static constexpr uint8_t  NEOPIXEL_PIN     = 9;      // GPIO9 (DIN, vía 330Ω). ADC1 usado como digital.
-static constexpr uint16_t NEOPIXEL_COUNT   = 8;      // <- AJUSTAR a los LEDs reales de tu tira
+static constexpr uint16_t NEOPIXEL_COUNT   = 8;      // 2 placas de 4 LEDs encadenadas (DOUT de la A -> DIN de la B)
 static constexpr uint8_t  NEOPIXEL_BRIGHT  = 40;     // 0..255 (bajo: ~60mA/LED a tope; cuida el buck)
+
+// ZONAS: en cuantos tramos direccionables por separado se parte la tira.
+// Encadenar las 2 placas en un pin NO las hace dependientes: cada WS2812B tiene
+// su propio controlador y se come los primeros 24 bits que le llegan, asi que los
+// 8 pixeles se pintan de a uno. Un segundo GPIO de datos no compraria nada (y el
+// unico pin libre es el 3, strapping).
+// 8 px / 2 zonas = 4 px por zona = una zona por placa. Si algun dia encadenas mas
+// LEDs, subi COUNT y ZONES juntos: la zona z va de z*COUNT/ZONES a (z+1)*COUNT/ZONES.
+static constexpr uint8_t  NEOPIXEL_ZONES   = 2;      // 1 = tira entera de un color (comportamiento viejo)
 
 // --- Backlight TFT (PWM por LEDC, API core 2.x) ---
 static constexpr uint8_t  BL_CANAL  = 0;     // canal LEDC

@@ -4,7 +4,7 @@ export const PAD_WIRING: WiringGuide = {
   meta: {
     id: 'pad',
     title: 'HIOS PAD',
-    subtitle: 'Macropad ESP32-S3: nav directa (ALT×2 + encoder + stick), 10 acciones en matriz 2×5 y 2 parlantes I2S.',
+    subtitle: 'Macropad ESP32-S3: pantalla ILI9488 3.5", nav directa (ALT×2 + encoder + stick), 10 acciones en matriz 2×5, 8 NeoPixel y 2 parlantes I2S.',
     rev: '0.9',
     mcu: 'ESP32-S3 DevKitC-1 (N16R8)',
     boardId: 'esp32-s3-devkitc-1',
@@ -78,16 +78,17 @@ export const PAD_WIRING: WiringGuide = {
       rail: 5,
       power: 'Vin → 5V · GND → GND · 1000µF cerca de los amplis',
       step: 7,
+      load: '2× parlante 4–8Ω',
       tip: 'Bus I2S compartido: los 3 pines van a **los dos** amplis. Lo único distinto entre ellos es el pin **SD**, que elige el canal. Class-D filterless: el parlante de 4–8Ω va directo, sin filtro.',
     },
     {
       id: 'led',
-      name: 'Tira NeoPixel',
+      name: '2× NeoPixel 4 LEDs (8 px)',
       icon: '🌈',
       rail: 5,
       power: 'VCC → 5V (o 1N400x en serie, ver tip) · GND → GND',
       step: 8,
-      tip: 'Toda la tira es **un solo pin** (DIN→DOUT encadenado). El WS2812B pide V_IH = 0.7×VDD = **3.5V** y tu GPIO da 3.3V: está **fuera de spec**. Fix sin chips: meté un **1N400x** (silicio, ~0.65V) en serie con el VCC de la tira → la tira queda a ~4.35V → el umbral baja a 3.05V y tu 3.3V entra cómodo. La otra opción es un 74AHCT125. El SK6812 **no** es un fix garantizado: su umbral típico sigue siendo 3.4V.',
+      tip: 'Las **2 placas de 4 LEDs van encadenadas en un solo pin**: DOUT de la primera → DIN de la segunda. Eso NO las vuelve dependientes — cada WS2812B tiene su propio controlador, así que los 8 píxeles se direccionan de a uno (`NEOPIXEL_COUNT=8`). El WS2812B pide V_IH = 0.7×VDD = **3.5V** y tu GPIO da 3.3V: está **fuera de spec**. Fix sin chips: meté un **1N400x** (silicio, ~0.65V) en serie con el VCC de la tira → la tira queda a ~4.35V → el umbral baja a 3.05V y tu 3.3V entra cómodo. La otra opción es un 74AHCT125. El SK6812 **no** es un fix garantizado: su umbral típico sigue siendo 3.4V.',
     },
     {
       id: 'system',
@@ -177,6 +178,110 @@ export const PAD_WIRING: WiringGuide = {
       ],
     },
     {
+      t: '🖥️ Pantalla ILI9488 3.5"',
+      group: 'display',
+      cnt: '6 pines',
+      tip: 'SPI por **HSPI** a 27MHz. El **MISO no se cablea** (`TFT_MISO=-1`): solo escribimos. Los 5 pines de señal salen de `platformio.ini`, no de `Pins.h` — el backlight sí está en `Pins.h` porque lo maneja el LEDC a mano. ⚠️ El **CS es 10**: un doc viejo decía 13, y soldarlo ahí lo cortocircuita contra el DC.',
+      rows: [
+        { pin: '10', kind: 'spi', nm: 'CS', to: '→ CS (a veces serigrafiado "CD")' },
+        { pin: '11', kind: 'spi', nm: 'MOSI', to: '→ SDI del módulo' },
+        { pin: '12', kind: 'spi', nm: 'SCLK', to: '→ SCK / SCL del módulo' },
+        { pin: '13', kind: 'spi', nm: 'DC', to: '→ DC / RS' },
+        { pin: '14', kind: 'spi', nm: 'RST', to: '→ RESET' },
+        { pin: '21', kind: 'pwm', nm: 'Backlight', to: '→ [SW-PANTALLA] → LED', note: 'el switch va acá, NUNCA cortando el VCC' },
+        { pin: 'VCC', kind: 'pwr5', nm: 'Alimentación', to: '→ RIEL 5V', note: 'si el módulo trae buffer 74HC245 junto al header, VCC va a 3V3 o ves pantalla en blanco' },
+        { pin: 'GND', kind: 'gnd', nm: 'Masa', to: '→ GND común' },
+        { pin: '—', kind: 'dim', nm: 'MISO / SDO', to: 'NO se conecta (TFT_MISO=-1)' },
+      ],
+    },
+    {
+      t: '⌨️ Matriz de acción 2×5',
+      group: 'matrix',
+      cnt: '10 teclas · 7 pines',
+      ascii: `        COL0    COL1    COL2    COL3    COL4
+        GPIO18  GPIO8   GPIO38  GPIO39  GPIO47
+          │       │       │       │       │
+FILA0 ────┼─ACC1──┼─ACC2──┼─ACC3──┼─ACC4──┼─ACC5
+GPIO15    │       │       │       │       │
+          │       │       │       │       │
+FILA1 ────┼─ACC6──┼─ACC7──┼─ACC8──┼─ACC9──┼─ACC10
+GPIO16
+
+  cada tecla:  COLUMNA ──[switch]──|◄|── FILA
+                                  diodo
+                          (la RAYA mira a la FILA)`,
+      tip: '2 filas **OUTPUT** (en reposo HIGH, se bajan de a una) + 5 columnas **INPUT_PULLUP**. Un diodo por tecla, **cátodo (la raya) hacia la FILA**. Sin diodos, apretar 3 teclas en L inventa una cuarta (ghosting). Si una tecla no registra, el diodo está al revés: dalo vuelta. Sirve 1N4148 o cualquier silicio (1N400x/1N540x); **LEDs no**.',
+      rows: [
+        { pin: '15', kind: 'mtx', nm: 'FILA 0 — arriba', to: 'OUTPUT · ACC1 a ACC5' },
+        { pin: '16', kind: 'mtx', nm: 'FILA 1 — abajo', to: 'OUTPUT · ACC6 a ACC10' },
+        { pin: '18', kind: 'mtx', nm: 'COL 0', to: 'INPUT_PULLUP · ACC1 / ACC6' },
+        { pin: '8', kind: 'mtx', nm: 'COL 1', to: 'INPUT_PULLUP · ACC2 / ACC7', note: 'es ADC1_7, acá va como digital' },
+        { pin: '38', kind: 'mtx', nm: 'COL 2', to: 'INPUT_PULLUP · ACC3 / ACC8', note: 'en DevKitC-1 v1.1 maneja el LED RGB de la placa: va a parpadear con el escaneo (cosmético)' },
+        { pin: '39', kind: 'mtx', nm: 'COL 3', to: 'INPUT_PULLUP · ACC4 / ACC9' },
+        { pin: '47', kind: 'mtx', nm: 'COL 4', to: 'INPUT_PULLUP · ACC5 / ACC10' },
+      ],
+    },
+    {
+      t: '🔀 Botones ALT (navegación)',
+      group: 'nav',
+      cnt: '2 · directos',
+      tip: 'Van **fuera de la matriz y sin diodo**, a propósito: son los que abren capa/menú y tienen que leerse **siempre**, sin depender de qué fila está escaneando. Pulsador NA directo a GND, el pull-up es interno.',
+      rows: [
+        { pin: '17', kind: 'io', nm: 'ALT 1', to: 'pulsador → GND (INPUT_PULLUP)' },
+        { pin: '48', kind: 'io', nm: 'ALT 2', to: 'pulsador → GND (INPUT_PULLUP)', note: 'en DevKitC-1 v1.0 este pin maneja el LED RGB de la placa; el pulsador anda igual' },
+      ],
+    },
+    {
+      t: '🎛️ Encoder KY-040',
+      group: 'encoder',
+      cnt: '3 pines',
+      tip: 'CLK y DT van por **interrupción** (cuadratura: el orden de flancos da el sentido). El SW es el pulsador del eje: **press abre el menú**. Si gira al revés, permutá CLK y DT. El módulo KY-040 ya trae sus pull-ups a bordo.',
+      rows: [
+        { pin: '4', kind: 'io', nm: 'CLK — canal A', to: '→ CLK del módulo (interrupción)' },
+        { pin: '5', kind: 'io', nm: 'DT — canal B', to: '→ DT del módulo (interrupción)' },
+        { pin: '6', kind: 'io', nm: 'SW — pulsador', to: '→ SW (INPUT_PULLUP)' },
+        { pin: '+', kind: 'pwr33', nm: 'Alimentación', to: '→ RIEL 3V3' },
+        { pin: 'GND', kind: 'gnd', nm: 'Masa', to: '→ GND común' },
+      ],
+    },
+    {
+      t: '🕹️ Stick analógico HW-504',
+      group: 'stick',
+      cnt: '3 pines',
+      tip: '⚠️ El pin del módulo dice **"+5V" pero va al riel 3V3**. A 5V sobre-volta el ADC del S3 y los ejes se **acoplan en el extremo alto** (diagonales fantasma que vas a culpar al firmware). Los dos ejes van a GPIO1/GPIO2 = **ADC1**, el único ADC que sigue funcionando con WiFi/BLE encendido. El pulsador del stick es el click.',
+      rows: [
+        { pin: '1', kind: 'adc', nm: 'VRx — eje X', to: '→ VRx (ADC1_0)' },
+        { pin: '2', kind: 'adc', nm: 'VRy — eje Y', to: '→ VRy (ADC1_1)' },
+        { pin: '7', kind: 'io', nm: 'SW — pulsador', to: '→ SW (INPUT_PULLUP)' },
+        { pin: '+5V', kind: 'pwr33', nm: 'Alimentación', to: '→ RIEL **3V3** (NO 5V)', note: 'el silk miente: verificá con multímetro antes de encender' },
+        { pin: 'GND', kind: 'gnd', nm: 'Masa', to: '→ GND común' },
+      ],
+    },
+    {
+      t: '🔊 Bus I2S — a los DOS amplis',
+      group: 'audio',
+      cnt: '3 pines',
+      ascii: `                 ┌────────────────┐
+  GPIO40 BCLK ──┬─►│ MAX98357A  L   │──► parlante L (4–8Ω)
+  GPIO41 LRC  ──┼─►│ SD → Vin       │
+  GPIO42 DOUT ──┼─►│ (DIN)          │
+                │  └────────────────┘
+                │  ┌────────────────┐
+                └─►│ MAX98357A  R   │──► parlante R (4–8Ω)
+                   │ SD → 390k → Vin│
+                   │ (DIN)          │
+                   └────────────────┘
+       mismas 3 líneas a los dos · sólo cambia la R de SD`,
+      tip: 'Las **3 líneas van en paralelo a los dos amplis**: no hay un bus por canal. Lo único distinto entre ellos es el pin **SD**, que elige el canal (ver el bloque de abajo). Ojo con el nombre: sale del S3 como **DOUT** y entra al ampli como **DIN** — es el mismo cable.',
+      rows: [
+        { pin: '40', kind: 'i2s', nm: 'BCLK — bit clock', to: '→ BCLK de AMBOS amplis' },
+        { pin: '41', kind: 'i2s', nm: 'LRC — word select', to: '→ LRC de AMBOS amplis (elige L/R en el tiempo)' },
+        { pin: '42', kind: 'i2s', nm: 'DOUT — dato serial', to: '→ DIN de AMBOS amplis' },
+        { pin: 'Vin', kind: 'pwr5', nm: 'Alimentación', to: '→ RIEL 5V + **1000µF** cerca de los amplis' },
+        { pin: 'GND', kind: 'gnd', nm: 'Masa', to: '→ GND común' },
+      ],
+    },
+    {
       t: '🔊 Canal de cada ampli (pin SD)',
       group: 'audio',
       cnt: 'L / R',
@@ -188,14 +293,48 @@ export const PAD_WIRING: WiringGuide = {
       ],
     },
     {
-      t: '🌈 NeoPixel',
-      group: 'misc',
-      cnt: 'DIN=9',
-      tip: 'Toda la tira = 1 pin (DIN→DOUT encadenado). En GPIO9 (ex-batería) → UART0 (43/44) libre p/ serial+flasheo, sin parpadeo de boot. **Feedback por botón:** encadená 1 SK6812 por tecla en el MISMO GPIO9 (subí `NEOPIXEL_COUNT`) → RGB por tecla sin gastar pines. Los diodos de la matriz NO pueden hacer esto.',
+      t: '🔈 Parlantes',
+      group: 'audio',
+      cnt: '2 × 4–8Ω',
+      tip: 'No tienen GPIO — cuelgan de la salida de cada ampli, pero igual hay que soldarlos. El MAX98357A es **class-D filterless**: el parlante va **directo** a sus bornes, sin filtro ni cap de acople. ⚠️ **No lo pruebes con una resistencia** como carga falsa: la salida es un puente PWM sin filtrar y necesita la inductancia de la bobina — una carga resistiva la disipa como calor. Y **ningún borne va a GND**: la salida es diferencial (puenteada); masar uno mata el ampli.',
       rows: [
-        { pin: '9', kind: 'neo', nm: 'DIN', to: 'GPIO9 (330Ω en serie)', note: '3.3V está bajo el umbral: 1N400x en serie con el VCC de la tira, o 74AHCT125' },
-        { pin: '5V', kind: 'pwr5', nm: 'VCC', to: '→ RIEL 5V (o vía 1N400x → 4.35V)', note: '~60mA/LED a tope; limitá brillo' },
-        { pin: 'GND', kind: 'gnd', nm: 'GND', to: '→ GND común' },
+        { pin: '+', kind: 'pwr5', nm: 'Parlante IZQUIERDO', to: '→ borne + del ampli con SD → Vin' },
+        { pin: '−', kind: 'gnd', nm: 'Parlante IZQUIERDO', to: '→ borne − del MISMO ampli (NO a GND común)' },
+        { pin: '+', kind: 'pwr5', nm: 'Parlante DERECHO', to: '→ borne + del ampli con SD → 390k' },
+        { pin: '−', kind: 'gnd', nm: 'Parlante DERECHO', to: '→ borne − del MISMO ampli (NO a GND común)' },
+      ],
+    },
+    {
+      t: '🌈 NeoPixel — 2 placas, 8 píxeles',
+      group: 'led',
+      cnt: 'DIN=9',
+      ascii: `  GPIO9 ──[330Ω]──► DIN ┌─placa A─┐ DOUT ──► DIN ┌─placa B─┐
+                        │ 0  1    │              │ 4  5    │
+                        │ 2  3    │              │ 6  7    │
+                        └─────────┘              └─────────┘
+   RIEL 5V ──[1N400x]──► VCC de las dos (~4.35V)
+   GND ─────────────────► GND de las dos
+
+   1 solo cable de datos = 8 píxeles direccionables de a uno`,
+      tip: 'Las 2 placas están **encadenadas en un solo pin** (DOUT de A → DIN de B) y eso **no** les quita independencia: cada WS2812B tiene su propio controlador y se come los primeros 24 bits que le llegan, así que los 8 píxeles se direccionan por separado (`NEOPIXEL_COUNT=8`). Efectos por zona = **software, no cableado**: pintás 0–3 con un color y 4–7 con otro. Un segundo GPIO de datos no compraría nada. En GPIO9 (ex-batería) → UART0 (43/44) queda libre p/ serial+flasheo, sin parpadeo de boot. **Feedback por botón:** encadená 1 LED por tecla en el MISMO GPIO9 (subí `NEOPIXEL_COUNT`) → RGB por tecla sin gastar pines.',
+      rows: [
+        { pin: '9', kind: 'neo', nm: 'DIN — placa A', to: 'GPIO9 → 330Ω en serie → DIN de la primera placa', note: '3.3V está bajo el umbral: 1N400x en serie con el VCC, o 74AHCT125' },
+        { pin: '—', kind: 'neo', nm: 'DOUT A → DIN B', to: 'encadenado: la placa B sigue a la A (píxeles 4–7)', note: 'sentido único: DIN→DOUT. Al revés, la B queda muerta' },
+        { pin: '5V', kind: 'pwr5', nm: 'VCC — las dos', to: '→ RIEL 5V vía 1N400x (→ ~4.35V)', note: '~60mA/LED a tope: 8 LEDs en blanco ≈ 0,5A. Limitá brillo' },
+        { pin: 'GND', kind: 'gnd', nm: 'GND — las dos', to: '→ GND común' },
+      ],
+    },
+    {
+      t: '🔒 Sistema — USB / UART',
+      group: 'system',
+      cnt: 'no soldar',
+      tip: 'Reservados: **no les sueldes nada**. GPIO19/20 son el USB nativo (el HID: si los tocás, el pad deja de gobernar la PC). GPIO43/44 son UART0 → CH343 → serial y flasheo por cable. El **BOOT (GPIO0)** y el USB-C tienen que quedar accesibles con la carcasa cerrada: es tu red si un OTA sale mal.',
+      rows: [
+        { pin: '19', kind: 'dim', nm: 'USB D−', to: 'USB nativo (HID) — RESERVADO' },
+        { pin: '20', kind: 'dim', nm: 'USB D+', to: 'USB nativo (HID) — RESERVADO' },
+        { pin: '43', kind: 'dim', nm: 'UART0 TX', to: 'serial + flasheo (CH343) — RESERVADO' },
+        { pin: '44', kind: 'dim', nm: 'UART0 RX', to: 'serial + flasheo (CH343) — RESERVADO' },
+        { pin: '0', kind: 'dim', nm: 'BOOT', to: 'recuperación ante OTA fallido — dejalo accesible' },
       ],
     },
     {
@@ -209,7 +348,18 @@ export const PAD_WIRING: WiringGuide = {
       t: '🧮 Presupuesto de pines',
       group: 'misc',
       cnt: 'libre: GPIO3',
-      tip: 'Matriz acción 7 (2 filas + 5 cols) + 2 ALT directos + 3 I2S = 12 → usan todos los GPIO que quedaron. Sobra **exactamente un pin: el GPIO3** (y es strapping, así que con cuidado). No usables: 26–32 (flash), 35–37 (PSRAM octal), 19/20 (USB), 43/44 (UART0), **0/3/45/46 (strapping)** — el 0 además queda reservado para el BOOT de recuperación.',
+      tip: 'Matriz acción 7 (2 filas + 5 cols) + 2 ALT directos + 3 I2S = 12 → usan todos los GPIO que quedaron. Sobra **exactamente un pin: el GPIO3**, y es strapping (JTAG_SEL), así que con cuidado. No usables: **26–32** (flash) y **33–37** (PSRAM octal del R8 — el DevKitC-1 ni siquiera saca 26–34 al header, y 35/36/37 están ahí pero se los come la PSRAM), 19/20 (USB nativo), 43/44 (UART0), **0/45/46** (strapping; el 0 además es el BOOT de recuperación).',
+      rows: [
+        { pin: '3', kind: 'io', nm: 'ÚNICO pin libre', to: 'strapping (JTAG_SEL): usable como salida, sin nada colgado al bootear' },
+        { pin: '35', kind: 'dim', nm: '35 / 36 / 37', to: 'están en el header pero los usa la PSRAM octal — tocarlos = boot loop' },
+        { pin: '45', kind: 'dim', nm: '0 / 45 / 46', to: 'strapping: deciden el modo de boot. 0 = BOOT, reservado' },
+      ],
+    },
+    {
+      t: '💡 ¿Un segundo pin de datos para los LEDs?',
+      group: 'led',
+      cnt: 'no hace falta',
+      tip: 'No, y **no lo necesitás**. Las 2 placas de 4 LEDs ya son **8 píxeles direccionables de a uno** sobre GPIO9: encadenarlas no las hace dependientes, cada WS2812B tiene su propio controlador. Lo que hoy las pinta iguales es el **firmware**, no el cable — `leds::setLayerColor()` recorre `NEOPIXEL_COUNT` pintando el MISMO color en todos. Efectos por zona (placa A ≠ placa B) salen **cambiando ese loop**, sin tocar el soldador. Si igual quisieras un bus separado, el único pin libre es el **GPIO3** (strapping): gastarías tu último pin de reserva a cambio de nada.',
       rows: [],
     },
   ],
@@ -223,14 +373,19 @@ export const PAD_WIRING: WiringGuide = {
     'Pantalla: si tiene buffer 74HC245 junto al header, su VCC va a 3V3 (si no, pantalla en blanco)',
     'SW-PANTALLA en la línea LED/BL, NUNCA cortando el VCC de la pantalla (abs-max del ILI9488)',
     'TFT: CS=10, MOSI=11, SCLK=12, DC=13, RST=14, BL=21 (verificado contra platformio.ini)',
+    'TFT: el MISO/SDO NO se cablea (TFT_MISO=-1, sólo escribimos)',
     'Matriz acción: 2 filas (15/16 = OUTPUT) + 5 columnas (18/8/38/39/47 = INPUT_PULLUP)',
     '10 diodos (uno por botón de acción), cátodo (raya) hacia la FILA → evita ghosting (si no registra, dalos vuelta)',
     'Diodos: 1N4148 (chico) o cualquier silicio: 1N400x/1N540x sirven igual (más grandes). LEDs NO',
     'ALT1→GPIO17, ALT2→GPIO48 DIRECTOS a GND (INPUT_PULLUP), SIN diodo (fila nav)',
+    'Encoder KY-040: CLK=GPIO4, DT=GPIO5, SW=GPIO6, + a 3V3 (si gira al revés, permutá CLK y DT)',
+    'Stick HW-504: VRx=GPIO1, VRy=GPIO2, SW=GPIO7 — los ejes en ADC1, el único que anda con la radio prendida',
     'NeoPixel: 330Ω en serie en DIN (GPIO9) + 1N400x en el VCC de la tira (o 74AHCT125) + cap en su 5V',
+    'NeoPixel: las 2 placas ENCADENADAS (DOUT de la A → DIN de la B) = 8 píxeles en un solo pin; NEOPIXEL_COUNT=8',
     'I2S: BCLK=40, LRC=41, DIN=42 cableados a AMBOS amplis (bus compartido)',
     'Ampli-L: SD→Vin, medí SD > 1,4V · Ampli-R: SD→390k a Vin, medí SD ~1,0V (ventana segura 0,83–1,24V)',
     'GAIN de cada ampli sin conectar (=9dB) · parlante 4–8Ω directo (filterless, NO lo pruebes con carga resistiva)',
+    'Parlantes: cada uno a los DOS bornes de SU ampli — ningún borne va a GND (la salida es diferencial)',
     'SW-CELDAS corta BAT+ → buck',
     '1er flasheo por cable; después OTA (--upload-port hiospad.local)',
     'BOOT (GPIO0) + USB-C nativo accesibles para recuperación ante OTA fallido',

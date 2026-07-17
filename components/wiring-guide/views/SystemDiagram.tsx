@@ -46,18 +46,32 @@ const dominantKind = (pins: Pin[]): PinKind => {
 };
 
 // --- layout (coordenadas del viewBox) --------------------------------------
-const W = 660;
+// La caja de la carga se suma al ANCHO; no se le roba al módulo. La fila de la
+// matriz ya usa sus 394px enteros con 7 chips de GPIO: achicar MOD_W le tira el
+// último chip afuera del recuadro.
+const LOAD_W = 96; // caja de la carga (parlantes): a la derecha del módulo
+const W = 756;
 const PAD = 16;
 const BOARD_X = PAD;
 const BOARD_W = 150;
 const MOD_X = 250;
-const MOD_W = W - MOD_X - PAD; // 394
+const MOD_W = W - MOD_X - PAD - LOAD_W; // 394
 const ROW_H = 56;
 const ROW_GAP = 12;
 const TOP = 16;
 const RAIL_GAP = 26;
 
 const railColor = (rail: Rail) => roleVar(rail === 5 ? 'pwr5' : rail === 33 ? 'pwr33' : 'gnd');
+
+/** parte el rótulo de la carga en líneas que entren en LOAD_W (SVG no hace wrap solo) */
+const LOAD_CPL = 13; // caracteres por línea a fontSize 8.5 en LOAD_W
+const wrapLoad = (text: string): string[] =>
+  text.split(' ').reduce<string[]>((lines, word) => {
+    const last = lines[lines.length - 1];
+    if (last && `${last} ${word}`.length <= LOAD_CPL) lines[lines.length - 1] = `${last} ${word}`;
+    else lines.push(word);
+    return lines;
+  }, []);
 
 export function SystemDiagram() {
   const guide = useWiringGuide();
@@ -97,9 +111,10 @@ export function SystemDiagram() {
   return (
     <section>
       <p className={styles.hint}>
-        El device de un vistazo: la placa al centro, cada módulo con sus GPIO y de qué riel come.
-        Se genera desde los mismos datos que la lista de pines (verificados contra el firmware), así
-        que <strong>no puede quedar desincronizado</strong> del cableado real.
+        El device de un vistazo: la placa al centro, cada módulo con sus GPIO y de qué riel come. La
+        caja punteada de la derecha es lo que cuelga del módulo <strong>sin GPIO propio</strong> (los
+        parlantes de los amplis). Se genera desde los mismos datos que la lista de pines (verificados
+        contra el firmware), así que <strong>no puede quedar desincronizado</strong> del cableado real.
       </p>
       <div className={styles.svgScroll}>
         <svg
@@ -217,6 +232,44 @@ export function SystemDiagram() {
                     </text>
                   </Fragment>
                 ))}
+                {/* carga sin GPIO (parlantes): cuelga del módulo, no de la placa */}
+                {r.mod.load ? (
+                  <Fragment>
+                    <line
+                      x1={MOD_X + MOD_W}
+                      y1={cy}
+                      x2={MOD_X + MOD_W + 12}
+                      y2={cy}
+                      stroke={color}
+                      strokeWidth={2}
+                      strokeDasharray="3 2"
+                    />
+                    <rect
+                      x={MOD_X + MOD_W + 12}
+                      y={my + 8}
+                      width={LOAD_W - 12}
+                      height={ROW_H - 16}
+                      rx={8}
+                      fill="var(--pw-schem-bg)"
+                      stroke={color}
+                      strokeWidth={1.5}
+                      strokeDasharray="4 3"
+                    />
+                    {wrapLoad(r.mod.load).map((ln, li, all) => (
+                      <text
+                        key={li}
+                        x={MOD_X + MOD_W + 12 + (LOAD_W - 12) / 2}
+                        y={cy + 3 - (all.length - 1) * 5 + li * 10}
+                        fill="var(--pw-schem-ink)"
+                        fontSize={8.5}
+                        fontWeight={700}
+                        textAnchor="middle"
+                      >
+                        {ln}
+                      </text>
+                    ))}
+                  </Fragment>
+                ) : null}
               </Fragment>
             );
           })}
