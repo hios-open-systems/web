@@ -4,7 +4,9 @@
 //  Los pines SPI de la TFT viven en platformio.ini (build flags de TFT_eSPI),
 //  no aca. Restricciones: GPIO19/20 LIBRES (USB nativo); UART0 43/44 libres
 //  (serial + flasheo); evitar strapping (0,3,45,46); stick en ADC1 (GPIO1-10).
-//  No usables en el N16R8: 26-32 (flash) y 35-37 (PSRAM octal).
+//  No usables en el N16R8: 26-32 (flash) y 33-37 (PSRAM octal). De esos, el
+//  DevKitC-1 solo saca 35/36/37 al header: estan a la vista pero los usa la
+//  PSRAM, y tocarlos es boot loop. 26-34 ni siquiera salen.
 //
 //  rev 0.9 vs 0.8: los 12 pulsadores directos (un GPIO cada uno) no entraban
 //  junto con los parlantes. Las 10 teclas de ACCION pasan a una MATRIZ 2x5 con

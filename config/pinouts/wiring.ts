@@ -22,6 +22,12 @@ export interface ModuleInfo {
   /** orden sugerido a la hora de soldar (1 = primero) */
   step: number;
   tip?: string;
+  /**
+   * Lo que cuelga del módulo y NO tiene GPIO propio: los parlantes del ampli, el
+   * pack de celdas del buck. Sin esto el diagrama los borraba: se dibuja desde
+   * `pins`, y un parlante no tiene pin. Son piezas que igual hay que soldar.
+   */
+  load?: string;
 }
 
 export interface Pin {
@@ -61,7 +67,21 @@ export interface SectionRow {
   note?: string;
 }
 
-export type SectionGroup = 'power' | 'buttons' | 'audio' | 'misc';
+/**
+ * A qué módulo pertenece el bloque. Es el `id` de un ModuleInfo salvo `misc` (lo que
+ * no es un módulo: presupuesto de pines, decisiones descartadas).
+ */
+export type SectionGroup =
+  | 'power'
+  | 'display'
+  | 'matrix'
+  | 'nav'
+  | 'encoder'
+  | 'stick'
+  | 'audio'
+  | 'led'
+  | 'system'
+  | 'misc';
 
 export interface PinoutSection {
   t: string;
