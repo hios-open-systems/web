@@ -22,4 +22,6 @@ void saveUiPrefs(const UiPrefs& prefs);
 // Credenciales WiFi (M1). loadWifi devuelve true si hay un SSID guardado.
 bool loadWifi(char* ssid, size_t ssidLen, char* pass, size_t passLen);
 void saveWifi(const char* ssid, const char* pass);
+
+bool loadOrCreateApiToken(char* token, size_t tokenLen);
 }  // namespace nvs

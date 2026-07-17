@@ -25,6 +25,7 @@
     "gen:icons": "node --experimental-strip-types scripts/gen-icons.ts",
     "test:wiring": "node --experimental-strip-types scripts/wiringguide-selftest.ts",
     "test:breakouts": "node --experimental-strip-types scripts/breakouts-selftest.ts",
+    "test:padwebui": "node projects/pad/test/webui-selftest.cjs",
     "test:resistor": "node --experimental-strip-types scripts/resistor-selftest.ts",
     "test:ohms": "node --experimental-strip-types scripts/ohms-selftest.ts",
     "test:httpstatus": "node --experimental-strip-types scripts/httpstatus-selftest.ts",

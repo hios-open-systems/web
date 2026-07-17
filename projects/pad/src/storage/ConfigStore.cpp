@@ -9,6 +9,7 @@ namespace cfgstore {
 
 static bool        s_ok   = false;
 static const char* PATH   = "/config.json";
+static const char* TMP    = "/config.tmp";
 
 void begin() {
   s_ok = LittleFS.begin(true);   // formatOnFail=true: formatea la 1ra vez si hace falta
@@ -26,11 +27,16 @@ bool load(String& out) {
 
 bool save(const char* json, size_t len) {
   if (!s_ok) return false;
-  File f = LittleFS.open(PATH, "w");
+  // Escritura atomica: temp + rename. Si un brownout corta el write, /config.json (el
+  // bueno) queda intacto y solo se pierde el temp; sin esto, abrir PATH en "w" lo
+  // truncaba antes de escribir -> un corte dejaba JSON parcial y el boot revertia a
+  // defaults en silencio. lfs_rename reemplaza el destino de forma atomica.
+  File f = LittleFS.open(TMP, "w");
   if (!f) return false;
   size_t w = f.write((const uint8_t*)json, len);
   f.close();
-  return w == len;
+  if (w != len) { LittleFS.remove(TMP); return false; }   // write incompleto: no toco el bueno
+  return LittleFS.rename(TMP, PATH);
 }
 
 void remove() {

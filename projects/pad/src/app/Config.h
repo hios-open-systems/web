@@ -71,7 +71,6 @@ static constexpr uint32_t NTP_RESYNC_MS    = 3600000UL;         // re-sincroniza
 
 // --- Feedback real (Fase 1: companion -> POST /api/state) ---
 static constexpr uint32_t STATE_FRESH_MS   = 5000;             // POST mas viejo que esto -> "sin companion". Con poll 1500ms tolera ~2-3 polls perdidos sin grisar el "live".
-static constexpr char     API_TOKEN[]      = "";               // "" = abierto en LAN; pone un token para exigir el header X-Pad-Token
 
 // --- Bateria (medicion 2S Li-ion por divisor resistivo -> ADC1) ---
 // DESCARTADA en el pad: GPIO9 ahora maneja el NeoPixel y la pantalla de la fuente

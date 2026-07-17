@@ -36,7 +36,6 @@ export function startWebServer(port: number, hub: MirrorHub, device: Device, tok
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache, no-transform',
         Connection: 'keep-alive',
-        'Access-Control-Allow-Origin': '*',
       });
       res.write('retry: 2000\n\n');                // reconexion del navegador
       hub.add(res);
@@ -56,5 +55,5 @@ export function startWebServer(port: number, hub: MirrorHub, device: Device, tok
     }
   });
   server.on('error', (e) => log.error(`web server (${port}): ${String(e)}`));
-  server.listen(port, () => log.info(`espejo (UI-mirror) -> http://localhost:${port}`));
+  server.listen(port, '127.0.0.1', () => log.info(`espejo (UI-mirror) -> http://localhost:${port}`));
 }

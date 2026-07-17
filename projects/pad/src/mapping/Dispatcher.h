@@ -21,6 +21,7 @@ public:
 
   uint8_t activeLayer() const { return m_activeLayer; }
   void    setLayer(uint8_t n);
+  void    setComboSuppress(bool s) { m_comboSuppress = s; }   // ENC+Stick juntos: no dispares su long-press (combo de calibracion)
   bool    mouseOn() const { return m_mouseOn; }
   uint8_t encMode() const { return m_encOverride; }     // 0=capa, 1=Vol, 2=Scroll, 3=Zoom, 4=Pestanas
   uint8_t altActive() const { return m_momentaryAlt; }  // 0=ninguno, 1=ALT1, 2=ALT2 (held o en linger) -> feedback UI
@@ -40,6 +41,7 @@ private:
   StateManager* m_state = nullptr;
   uint8_t       m_activeLayer = 0;
   bool          m_mouseOn = false;
+  bool          m_comboSuppress = false;    // ENC+Stick juntos (combo de calibracion): traga sus long-press
 
   // ALT momentaneo (hold -> capa Launcher/Macros; al soltar, linger anti-falsos-release)
   int8_t        m_altLayer[2] = {-1, -1};   // indices de ALT1_LAYER/ALT2_LAYER (resueltos en begin)
