@@ -21,6 +21,7 @@
 #include "../storage/ConfigCodec.h"
 #include "../ui/monitor.h"
 #include "UiMirror.h"
+#include "WebUi.h"
 
 namespace net {
 
@@ -40,6 +41,10 @@ static volatile uint8_t      s_cmdHead = 0, s_cmdTail = 0;   // head=proximo a l
 static portMUX_TYPE          s_cmdMux = portMUX_INITIALIZER_UNLOCKED;
 static volatile uint16_t     s_launchQ[8];                  // appIds a lanzar (mismo patron que cmdQ)
 static volatile uint8_t      s_launchHead = 0, s_launchTail = 0;
+// Cola de input web->pad (PWA): la escribe handlePostCmd (netTask/core0) y la
+// drena inputTask (core1). Mismo patron/mux que las de arriba.
+static volatile WebInput     s_webQ[8];
+static volatile uint8_t      s_webHead = 0, s_webTail = 0;
 static char          s_ssid[33] = {0};      // creds guardadas (para reintentar STA sin recargar de NVS)
 static char          s_pass[65] = {0};
 static bool          s_haveCreds = false;
@@ -52,10 +57,12 @@ static uint32_t   s_connectStart = 0;
 static uint32_t   s_lastSync = 0;
 static bool       s_synced = false;
 static char       s_ip[20] = "0.0.0.0";
+static char          s_apiToken[33] = {0};
 static const byte DNS_PORT = 53;
 
 // ---------------------------------------------------------------------------
 static void setIp(IPAddress ip) { snprintf(s_ip, sizeof(s_ip), "%s", ip.toString().c_str()); }
+static bool isAuthorized() { return s_apiToken[0] && s_web.header("X-Pad-Token") == s_apiToken; }
 
 static String htmlConfig() {
   String h = F("<!doctype html><meta charset=utf-8>"
@@ -74,23 +81,18 @@ static String htmlConfig() {
   return h;
 }
 
-static String htmlStatus() {
-  String h = F("<!doctype html><meta charset=utf-8>"
-               "<meta name=viewport content='width=device-width,initial-scale=1'>"
-               "<body style='font-family:system-ui,sans-serif;max-width:420px;margin:24px auto;padding:0 16px;background:#0c0f14;color:#eef'>"
-               "<h2 style='color:#3ddc84'>HIOS PAD &middot; online</h2>");
-  h += "<p>IP: <b>" + String(s_ip) + "</b></p>";
-  h += "<p>mDNS: <b>http://" + String(cfg::MDNS_HOST) + ".local</b></p>";
-  h += "<p>Hora: <b>" + String(s_synced ? "sincronizada (NTP)" : "pendiente") + "</b></p>";
-  h += F("<p style='color:#8a93a0'>Control web: proximamente (M4).</p></body>");
-  return h;
-}
-
 static void handleRoot() {
-  s_web.send(200, "text/html", s_state == St::PORTAL ? htmlConfig() : htmlStatus());
+  // PORTAL -> setup de WiFi (formulario). CONNECTED -> la PWA de control.
+  if (s_state == St::PORTAL) { s_web.send(200, "text/html", htmlConfig()); return; }
+  s_web.send_P(200, "text/html", webui::PAGE);
 }
 
 static void handleSave() {
+  // Solo desde el portal de setup (AP): en modo conectado no hay razon legitima para
+  // reescribir las creds, y dejarlo abierto permitia que cualquiera en la LAN (o un
+  // CSRF) reiniciara el pad con creds basura y lo dejara fuera de red. El form del
+  // portal no manda token, asi que la barrera es el estado, no el header.
+  if (s_state != St::PORTAL) { s_web.send(403, "text/plain", "solo en modo portal"); return; }
   String ssid = s_web.arg("ssid");
   String pass = s_web.arg("pass");
   if (ssid.length() == 0) { s_web.sendHeader("Location", "/"); s_web.send(302, "text/plain", ""); return; }
@@ -121,7 +123,7 @@ static const char* cmdName(CompanionCmd c) {
 }
 
 static void handlePostState() {
-  if (cfg::API_TOKEN[0] && s_web.header("X-Pad-Token") != cfg::API_TOKEN) {
+  if (!isAuthorized()) {
     s_web.send(401, "text/plain", "unauthorized"); return;
   }
   const String& body = s_web.arg("plain");
@@ -233,7 +235,7 @@ static void handlePostState() {
 
 // GET /api/config: serializa el keymap actual (capas/bindings/acciones/labels).
 static void handleGetConfig() {
-  if (cfg::API_TOKEN[0] && s_web.header("X-Pad-Token") != cfg::API_TOKEN) { s_web.send(401, "text/plain", "unauthorized"); return; }
+  if (!isAuthorized()) { s_web.send(401, "text/plain", "unauthorized"); return; }
   if (!s_keymap) { s_web.send(503, "text/plain", "no keymap"); return; }
   JsonDocument doc;
   cfgcodec::toJson(*s_keymap, doc.to<JsonObject>());
@@ -244,7 +246,7 @@ static void handleGetConfig() {
 // POST /api/config: valida + guarda en LittleFS + REINICIA (se aplica en el boot).
 // No swap en caliente: mas seguro entre cores (mismo patron que el guardado de WiFi).
 static void handlePostConfig() {
-  if (cfg::API_TOKEN[0] && s_web.header("X-Pad-Token") != cfg::API_TOKEN) { s_web.send(401, "text/plain", "unauthorized"); return; }
+  if (!isAuthorized()) { s_web.send(401, "text/plain", "unauthorized"); return; }
   const String& body = s_web.arg("plain");
   if (body.length() == 0 || body.length() > 49152) { s_web.send(400, "text/plain", "bad body"); return; }
   JsonDocument doc;
@@ -258,11 +260,58 @@ static void handlePostConfig() {
 
 // POST /api/config/reset: borra /config.json + reinicia -> vuelve a defaults compilados.
 static void handleResetConfig() {
-  if (cfg::API_TOKEN[0] && s_web.header("X-Pad-Token") != cfg::API_TOKEN) { s_web.send(401, "text/plain", "unauthorized"); return; }
+  if (!isAuthorized()) { s_web.send(401, "text/plain", "unauthorized"); return; }
   cfgstore::remove();
   s_web.send(200, "application/json", "{\"ok\":true,\"reboot\":true}");
   delay(300);
   ESP.restart();
+}
+
+// GET /api/ui: snapshot del mirror para la PWA (mismo blob que el companion, pero
+// pull en vez de piggy-back). Incluye siempre el descriptor de capa (poll stateless).
+static void handleGetUi() {
+  if (!isAuthorized()) { s_web.send(401, "text/plain", "unauthorized"); return; }
+  UiSnapshot snap{};
+  xQueuePeek(bus::uiMailbox, &snap, 0);                     // ultimo frame (no bloquea)
+  JsonDocument doc;
+  mirror::serializeUi(doc.to<JsonObject>(), snap, s_keymap, true);
+  String out; serializeJson(doc, out);
+  s_web.send(200, "application/json", out);
+}
+
+// Encola input web para que lo aplique inputTask (core1). Cross-core via s_cmdMux.
+static void enqueueWebInput(const WebInput& wi) {
+  portENTER_CRITICAL(&s_cmdMux);
+  uint8_t next = (uint8_t)((s_webTail + 1) % 8);
+  if (next != s_webHead) { s_webQ[s_webTail].kind = wi.kind; s_webQ[s_webTail].a = wi.a; s_webTail = next; }
+  portEXIT_CRITICAL(&s_cmdMux);
+}
+
+// POST /api/cmd: control desde la PWA. Una accion por request:
+//   {"layer":N} -> salta de capa · {"btn":0..9} -> dispara la tecla de la capa
+//   (mismo efecto que apretarla) · {"enc":±1} -> un detente del encoder.
+static void handlePostCmd() {
+  if (!isAuthorized()) { s_web.send(401, "text/plain", "unauthorized"); return; }
+  const String& body = s_web.arg("plain");
+  if (body.length() == 0 || body.length() > 256) { s_web.send(400, "text/plain", "bad body"); return; }
+  JsonDocument doc;
+  if (deserializeJson(doc, body)) { s_web.send(400, "text/plain", "bad json"); return; }
+  bool ok = false;
+  if (doc["layer"].is<int>()) {
+    int n = doc["layer"].as<int>();
+    if (n >= 0 && n < 255) { enqueueWebInput(WebInput{WebInput::LAYER, (int16_t)n}); ok = true; }
+  } else if (doc["btn"].is<int>()) {
+    int n = doc["btn"].as<int>();
+    if (n >= 0 && n <= 9) { enqueueWebInput(WebInput{WebInput::BTN, (int16_t)n}); ok = true; }
+  } else if (doc["enc"].is<int>()) {
+    int d = doc["enc"].as<int>();
+    if (d != 0) { enqueueWebInput(WebInput{WebInput::ENC, (int16_t)(d > 0 ? 1 : -1)}); ok = true; }
+  }
+  s_web.send(ok ? 200 : 400, "application/json", ok ? "{\"ok\":true}" : "{\"ok\":false}");
+}
+
+static void handleManifest() {
+  s_web.send_P(200, "application/manifest+json", webui::MANIFEST);
 }
 
 static void setupRoutes() {
@@ -272,6 +321,9 @@ static void setupRoutes() {
   s_web.on("/api/config", HTTP_GET, handleGetConfig);
   s_web.on("/api/config", HTTP_POST, handlePostConfig);
   s_web.on("/api/config/reset", HTTP_POST, handleResetConfig);
+  s_web.on("/api/ui", HTTP_GET, handleGetUi);
+  s_web.on("/api/cmd", HTTP_POST, handlePostCmd);
+  s_web.on("/manifest.webmanifest", HTTP_GET, handleManifest);
   const char* hdrs[] = {"X-Pad-Token"};         // necesario para leer el header del token
   s_web.collectHeaders(hdrs, 1);
   s_web.onNotFound([]() {                       // captive: redirige todo a "/"
@@ -297,6 +349,7 @@ static void onConnected() {
   MDNS.begin(cfg::MDNS_HOST);
   MDNS.addService("http", "tcp", 80);
   ArduinoOTA.setHostname(cfg::MDNS_HOST);          // flasheo wireless: pio run -t upload --upload-port hiospad.local
+  ArduinoOTA.setPassword(s_apiToken);
   ArduinoOTA.begin();
   configTzTime(cfg::NTP_TZ, cfg::NTP_SERVER);
   setupRoutes();
@@ -317,6 +370,11 @@ static void trySyncClock() {
 
 // ---------------------------------------------------------------------------
 void begin() {
+  if (!nvs::loadOrCreateApiToken(s_apiToken, sizeof(s_apiToken))) {
+    Serial.println("[net] ERROR: no se pudo leer el token API");
+    return;
+  }
+  Serial.printf("[net] token API/OTA: %s\n", s_apiToken);
   WiFi.persistent(false);
   WiFi.mode(WIFI_STA);
   WiFi.setSleep(true);                           // modem-sleep: ahorro de bateria
@@ -439,6 +497,20 @@ void queueLaunch(uint16_t appId) {
   uint8_t next = (uint8_t)((s_launchTail + 1) % 8);
   if (next != s_launchHead) { s_launchQ[s_launchTail] = appId; s_launchTail = next; }
   portEXIT_CRITICAL(&s_cmdMux);
+}
+
+// Drena un input web (lo llama inputTask/core1). true si habia uno.
+bool popWebInput(WebInput& out) {
+  bool got = false;
+  portENTER_CRITICAL(&s_cmdMux);
+  if (s_webHead != s_webTail) {
+    out.kind  = s_webQ[s_webHead].kind;
+    out.a     = s_webQ[s_webHead].a;
+    s_webHead = (uint8_t)((s_webHead + 1) % 8);
+    got = true;
+  }
+  portEXIT_CRITICAL(&s_cmdMux);
+  return got;
 }
 const char* ip()    { return s_ip; }
 const char* apName(){ return cfg::WIFI_AP_NAME; }

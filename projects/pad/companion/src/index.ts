@@ -29,6 +29,7 @@ async function main(): Promise<void> {
   const cfg = loadConfig(process.argv);
   const sys = new SystemMetrics();                  // CPU carga/nucleos + RAM + IP (universal, modulo os)
   const os = osName();                              // SO -> el pad lo muestra / resuelve per-OS
+  if (!cfg.token) log.warn('token vacio: copia el token API/OTA que el pad muestra por serial en config.json');
   log.info(`pad-companion -> http://${cfg.host}/api/state  cada ${cfg.pollMs}ms  (${os})`);
 
   const providers = await pickProviders();

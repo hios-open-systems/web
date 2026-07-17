@@ -1,4 +1,4 @@
-import { readFile, writeFile, rm } from 'node:fs/promises';
+import { readFile, writeFile, rename, rm } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import type { IncomingMessage, ServerResponse } from 'node:http';
@@ -13,8 +13,14 @@ import { ensureNavigationMetadata, validateNavigation, PAD_CONFIG_LIMIT } from '
 // resolver el solo; por eso vive aca.
 
 const EDIT_FILE = join(process.cwd(), 'config.edit.json');
+const EDIT_TMP_FILE = `${EDIT_FILE}.tmp`;
 
 type AnyObj = Record<string, unknown>;
+async function writeEdit(edit: AnyObj): Promise<void> {
+  await writeFile(EDIT_TMP_FILE, JSON.stringify(edit), 'utf8');
+  await rename(EDIT_TMP_FILE, EDIT_FILE);
+}
+
 function osKey(): 'win' | 'linux' {
   const o = osName();
   return o === 'Linux' ? 'linux' : 'win';   // Windows/WSL/mac -> atajos "win" por defecto
@@ -71,7 +77,7 @@ async function readBody(req: IncomingMessage): Promise<string> {
 // /api/config (GET -> {os, edit}), /api/config (POST <- edit) , /api/config/reset (POST)
 export async function handleConfig(req: IncomingMessage, res: ServerResponse, device: Device, token: string, path: string): Promise<void> {
   const send = (status: number, text: string): void => {
-    res.writeHead(status, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+    res.writeHead(status, { 'Content-Type': 'application/json' });
     res.end(text);
   };
   try {
@@ -88,7 +94,7 @@ export async function handleConfig(req: IncomingMessage, res: ServerResponse, de
       const r = await padFetch(device, token, '/api/config', 'GET');   // seed: config plano actual del pad
       if (r.status !== 200) { send(502, `{"error":"pad no respondio (${device.currentHost})"}`); return; }
       const flat = ensureNavigationMetadata(JSON.parse(r.text) as AnyObj);
-      await writeFile(EDIT_FILE, JSON.stringify(flat), 'utf8');
+      await writeEdit(flat);
       send(200, JSON.stringify({ os: osKey(), edit: flat })); return;
     }
     if (path === '/api/config' && req.method === 'POST') {
@@ -106,7 +112,7 @@ export async function handleConfig(req: IncomingMessage, res: ServerResponse, de
         send(400, JSON.stringify({ error: `config plana ${Buffer.byteLength(flatJson)}B supera el limite del pad (${PAD_CONFIG_LIMIT}B)`, issues })); return;
       }
 
-      await writeFile(EDIT_FILE, JSON.stringify(edit), 'utf8');         // persiste el rico (solo si paso validacion)
+      await writeEdit(edit);                                             // persiste el rico (solo si paso validacion)
       const r = await padFetch(device, token, '/api/config', 'POST', flatJson);
       send(r.status, r.text); return;
     }

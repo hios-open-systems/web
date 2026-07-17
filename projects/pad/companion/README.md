@@ -26,11 +26,12 @@ npm start          # node dist/index.js   (o: node dist/index.js --config /ruta/
 
 `config.json`:
 ```json
-{ "host": "hiospad.local", "token": "", "pollMs": 1000,
+{ "host": "hiospad.local", "token": "<token API/OTA del monitor serial>", "pollMs": 1000,
   "send": { "mic": true, "vol": true, "cpuTemp": true, "gpuTemp": true, "cpuLoad": true, "gpuLoad": true } }
 ```
 - **host:** `hiospad.local` (mDNS, si tu OS lo resuelve) o la IP directa (ej `192.168.1.43`).
-- **token:** si en el firmware definís `cfg::API_TOKEN`, ponelo acá (va en el header `X-Pad-Token`).
+- **token:** copiá el valor `token API/OTA` que imprime el pad por serial al
+  arrancar. Se guarda en NVS y viaja en el header `X-Pad-Token`.
 - **send:** qué campos mandar; lo que no esté/no se pueda leer se omite.
 
 ## Autostart (que arranque solo con la PC)

@@ -137,6 +137,7 @@ void Dispatcher::handleEncSwNav(const InputEvent& e) {
   switch (e.edge) {
     case Edge::PRESS:      m_encLong = false; m_encDown = true; break;
     case Edge::LONG_PRESS: {                            // mantener -> ciclar capa
+      if (m_comboSuppress) { m_encLong = true; break; }  // combo ENC+Stick (calibracion): no ciclar capa
       m_encLong = true;
       m_encTapPending = false;
       LayerAction la; la.layer = 0; la.mode = LayerMode::NEXT;
@@ -181,6 +182,7 @@ void Dispatcher::handleStickSw(const InputEvent& e) {
       }
       break;
     case Edge::LONG_PRESS:
+      if (m_comboSuppress) { m_stickLongDone = true; break; }  // combo ENC+Stick (calibracion): no togglear mouse
       m_mouseOn = !m_mouseOn;
       if (m_state) m_state->setMouse(m_mouseOn);
       m_stickLongDone = true;
@@ -198,10 +200,13 @@ void Dispatcher::handleStickSw(const InputEvent& e) {
 }
 
 void Dispatcher::tick(uint32_t now) {
-  // ALT momentaneo: terminado el hold y la ventana de gracia -> vuelve a la capa previa.
+  // ALT momentaneo: terminado el hold y la ventana de gracia -> vuelve a la capa previa,
+  // PERO solo si seguimos en la capa ALT. Si durante el linger saltaste a otra capa a
+  // proposito (menu, o un {layer:N} por la PWA), ese salto manda: no lo revertimos.
   if (m_momentaryAlt != 0 && !m_altHeld && (int32_t)(now - m_altLingerEnd) >= 0) {
+    const int8_t altL = m_altLayer[m_momentaryAlt - 1];
     m_momentaryAlt = 0;
-    setLayer(m_prevLayer);
+    if (altL >= 0 && m_activeLayer == (uint8_t)altL) setLayer(m_prevLayer);
   }
   // Encoder: el tap simple expira (no hubo 2do) -> abrir menu.
   if (m_encTapPending && (now - m_encTapMs) > cfg::DOUBLE_TAP_MS) {

@@ -1,5 +1,6 @@
 #include "Nvs.h"
 #include <Preferences.h>
+#include <esp_system.h>
 
 namespace nvs {
 
@@ -51,6 +52,25 @@ bool loadWifi(char* ssid, size_t ssidLen, char* pass, size_t passLen) {
 void saveWifi(const char* ssid, const char* pass) {
   prefs.putString("wssid", ssid);
   prefs.putString("wpass", pass ? pass : "");
+}
+
+bool loadOrCreateApiToken(char* token, size_t tokenLen) {
+  constexpr size_t TOKEN_LEN = 32;
+  if (tokenLen < TOKEN_LEN + 1) return false;
+
+  String stored = prefs.getString("apiToken", "");
+  if (stored.length() != TOKEN_LEN) {
+    char generated[TOKEN_LEN + 1];
+    snprintf(generated, sizeof(generated), "%08lx%08lx%08lx%08lx",
+             (unsigned long)esp_random(), (unsigned long)esp_random(),
+             (unsigned long)esp_random(), (unsigned long)esp_random());
+    if (prefs.putString("apiToken", generated) == 0) return false;
+    stored = generated;
+  }
+
+  strncpy(token, stored.c_str(), tokenLen - 1);
+  token[tokenLen - 1] = '\0';
+  return true;
 }
 
 }  // namespace nvs

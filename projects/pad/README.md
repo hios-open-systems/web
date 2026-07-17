@@ -14,6 +14,11 @@ pio run -t upload
 pio device monitor -b 115200
 ```
 
+Al arrancar, el monitor muestra `token API/OTA`. Copialo en
+`companion/config.json` antes de iniciar el daemon o abrir la PWA desde otra
+máquina. El token se genera una única vez, queda guardado en NVS y protege la
+API web y OTA.
+
 > **Flasheo en WSL:** el puerto serie del DevKit (CH343, UART) no aparece solo en WSL. Desde PowerShell (Windows): `usbipd list` → `usbipd attach --wsl --busid <id>` (al reconectar el cable hay que re-attachear). Recién ahí aparece `/dev/ttyACM0`. El USB **nativo** del S3 (303a:1001) es el HID; el CH343 es para flashear/serial.
 
 ## Flujo de trabajo
@@ -23,7 +28,10 @@ Del cero a la placa andando:
 1. **Soldar** — seguí la guía verificada **[/pinouts/pad](https://openhios.dev/pinouts/pad)**: ordena los módulos por paso, trae el checklist de armado y las mediciones (buck a 5.0V, SD de los amplis, diodos de la matriz). Es la **única** hoja de cableado y se auto-verifica contra [`src/app/Pins.h`](src/app/Pins.h) + [`platformio.ini`](platformio.ini) en cada `npm run test:wiring` (desde la raíz del repo web).
 2. **Primer flasheo (por cable)** — `pio run -t upload` (ver *Quick Start*). En WSL, attachá el CH343 con `usbipd` primero.
    > ⚠️ **Eléctrico:** con el pack 2S conectado, **no enchufes el USB sin abrir antes `SW-CELDAS`** — el VBUS del USB y la salida del buck pelearían en el pin `5V`. Flasheá con el pack apagado, o subí por OTA sin tocar cables.
-3. **Updates (OTA)** — ya con WiFi: `pio run -t upload --upload-port hiospad.local`, sin cable. El USB-C nativo + el botón BOOT quedan accesibles por si un OTA sale mal.
+3. **Updates (OTA)** — ya con WiFi: en `platformio.ini`, agregá
+   `--auth=<token API/OTA>` a `upload_flags` de `[env:ota]`, luego ejecutá
+   `pio run -e ota -t upload --upload-port hiospad.local`. El USB-C nativo + el
+   botón BOOT quedan accesibles por si un OTA sale mal.
 4. **Companion (opcional)** — arrancá el daemon para feedback real y mute global (ver *Apps companion*). El pad es **local-first**: anda perfecto sin nada de esto.
 
 ## ¿Qué es?
@@ -93,7 +101,15 @@ Directorios: `actions/` (modelo de `Action`), `mapping/` (`KeyMap`/`Dispatcher`)
 
 ## Estado
 
-USB + BLE HID, WiFi+portal+NTP, stick→mouse, capas+menú, feedback real y mute global por companion: **funcionando**. La medición de batería en el pad se **descartó**: la pantalla de la fuente ya muestra la tensión del pack 2S, y GPIO9 (ex-divisor) hoy maneja el NeoPixel — `cfg::BATTERY_ENABLED=false` y **no reactivar** sin reasignar el ADC (si no, le metés 2.7V DC a la línea de datos del NeoPixel). Pendiente/futuro: config por JSON, control desde el celu (PWA), pantalla remota.
+**Funcionando:** USB + BLE HID (auto-switch), WiFi + portal + NTP, stick→mouse, capas + menú, feedback real y mute global por companion, **config editable por JSON** (`GET/POST /api/config` en LittleFS, se edita y empuja desde el companion sin recompilar) y **espejo de pantalla** (el companion sirve un mirror live del display por SSE).
+
+La medición de batería en el pad se **descartó**: la pantalla de la fuente ya muestra la tensión del pack 2S, y GPIO9 (ex-divisor) hoy maneja el NeoPixel — `cfg::BATTERY_ENABLED=false` y **no reactivar** sin reasignar el ADC (si no, le metés 2.7V DC a la línea de datos del NeoPixel).
+
+### Roadmap
+
+- [x] **PWA directa al pad** — servida por el propio pad ([`net/WebUi.cpp`](src/net/WebUi.cpp), sin PC): ver estado live, saltar de capa, **pad virtual 2×5** que dispara las teclas/encoder, y **editor de config** (nombre/color/labels, preservando acciones). Endpoints `GET /api/ui` + `POST /api/cmd` + `/api/config`. Frontend verificado headless por **`npm run test:padwebui`** (Playwright + mock del contrato, extrae la página real del firmware). *Falta confirmar el apply on-device (flasheo pendiente).*
+- [ ] **Gestures editables** — el long-press hardcodeado se quitó a propósito; re-agregar acciones secundarias como gestos *editables* (no hardcode) es rediseño, despriorizado.
+- [ ] **Pad2 (reinicio limpio)** — bifurcación mayor: pad virtual primero, data-driven, stack JS+JSDoc zero-build. Pensado, sin arrancar.
 
 ## Créditos
 

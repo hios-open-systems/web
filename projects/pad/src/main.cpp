@@ -291,6 +291,34 @@ static void inputTask(void*) {
     }
 
     // NORMAL
+    // Control remoto (PWA): aplica el input web encolado por netTask (core0). Corre
+    // en el MISMO core que el dispatcher, asi que inyectar un InputEvent sintetico es
+    // idistinguible de una tecla fisica (misma accion HID). setLayer valida el rango.
+    net::WebInput wi;
+    while (net::popWebInput(wi)) {
+      switch (wi.kind) {
+        case net::WebInput::LAYER:
+          dispatcher.setLayer((uint8_t)wi.a); uiForceRedraw();
+          break;
+        case net::WebInput::BTN:
+          if (wi.a >= 0 && wi.a <= 9) {
+            InputEvent ve{ (InputId)((int)InputId::BTN_1 + wi.a), Edge::PRESS, 0, 0, now };
+            dispatcher.dispatch(ve);   // BTN dispara en PRESS (sin RELEASE)
+          }
+          break;
+        case net::WebInput::ENC: {
+          InputEvent ve{ InputId::ENC_ROT, Edge::ROTATE, (int16_t)(wi.a >= 0 ? 1 : -1), 0, now };
+          dispatcher.dispatch(ve);
+          break;
+        }
+      }
+    }
+
+    // Combo de calibracion (ENC_SW+STICK_SW juntos 1.5s): suprime el long-press de ambos
+    // para que a los 600ms no cicle capa ni togglee el mouse antes de entrar a calibrar.
+    // Estado del frame previo: el combo se sostiene, asi que ya esta activo a los 600ms.
+    dispatcher.setComboSuppress(inputs.buttons().pressed((uint8_t)InputId::ENC_SW) &&
+                                inputs.buttons().pressed((uint8_t)InputId::STICK_SW));
     inputs.update(now, dsink);
     dispatcher.tick(now);   // cierra el tap simple del stick pasada la ventana
 
