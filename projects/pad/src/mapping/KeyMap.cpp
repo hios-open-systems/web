@@ -12,7 +12,7 @@ static void copyLabel(char* dst, const char* src) {
 int KeyMap::addLayer(const char* name, uint16_t color, LayerGroup group) {
   if (m_count >= MAX_LAYERS) {
     Serial.printf("[keymap] OVERFLOW: capa '%s' descartada (tope MAX_LAYERS=%u). Subir el tope.\n", name, MAX_LAYERS);
-    return m_count - 1;
+    return -1;   // -1: bind()/bindRotate() ignoran layer<0 -> la capa de mas se descarta (no pisa la ultima valida)
   }
   Layer& L = m_layers[m_count];
   copyLabel(L.name, name);

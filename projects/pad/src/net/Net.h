@@ -51,6 +51,16 @@ void queueCommand(CompanionCmd cmd);
 // (res["launch"]); el companion lo mapea a un comando por OS y lo ejecuta.
 void queueLaunch(uint16_t appId);
 
+// Control web->pad (PWA directa): POST /api/cmd encola aca (core0/netTask) y lo
+// drena inputTask (core1, dueno del Dispatcher). Ring buffer cross-core; mismo
+// patron que la cola de comandos pad->companion.
+struct WebInput {
+  enum Kind : uint8_t { LAYER = 0, BTN = 1, ENC = 2 };
+  uint8_t kind;
+  int16_t a;   // LAYER -> indice de capa · BTN -> boton 0..9 · ENC -> direccion (>0 cw)
+};
+bool popWebInput(WebInput& out);       // true si habia uno; lo consume
+
 const char* ip();          // IP actual (STA o AP)
 const char* apName();      // SSID del portal de config
 const char* ssid();        // SSID de la red guardada/conectada (para la pantalla de estado)
