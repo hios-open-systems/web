@@ -24,60 +24,59 @@ export interface PrintModel {
 // Tus piezas publicadas. Las que tienen `file` muestran visor 3D + descarga.
 // Si queda vacío, la página muestra un placeholder en vez de una sección vacía.
 //
-// ⚠️ REVISAR: los nombres y descripciones de abajo los puse yo sin ver las piezas
-// físicas — ajustá lo que no cuadre. Y si querés sumar Body1/Body2 (los tenés en
-// disco pero no sé qué son), copialos a public/downloads/pad/ y agregá su entrada.
+// Nombres/descripciones basados en la GEOMETRÍA de cada malla (dimensiones + forma
+// renderizada), no en función confirmada: describen lo que la pieza ES, no para qué
+// va. Si alguna cumple un rol específico (p.ej. a qué se atornilla un soporte),
+// afiná su description acá.
 export const myPrints: PrintModel[] = [
     {
-        name: 'Carcasa — cuerpo',
+        name: 'Carcasa — paredes',
         source: 'Propio',
         file: '/downloads/pad/box.stl',
         fileKB: 400,
-        description: 'Cuerpo principal de la carcasa del HIOS PAD (aloja placa, batería y módulos). Diseño propio.',
+        description: 'Marco perimetral (paredes) de la carcasa, 110×160×30 mm, con ventilación en panal en dos caras. Diseño propio.',
     },
     {
-        name: 'Placa frontal',
+        name: 'Tapa superior — cara de teclas',
+        source: 'Propio',
+        file: '/downloads/pad/tapa-superior.stl',
+        fileKB: 101,
+        description: 'Placa superior con los recortes cuadrados de las teclas, 110×160 mm × 2.5 mm de espesor. Diseño propio.',
+    },
+    {
+        name: 'Placa perforada',
         source: 'Propio',
         file: '/downloads/pad/front_plate.stl',
         fileKB: 138,
-        description: 'Frente con los recortes de las 12 teclas, el encoder y el stick. Diseño propio.',
+        description: 'Placa fina con una grilla de agujeros redondos, 110×160 mm × 2.5 mm. Diseño propio.',
     },
     {
         name: 'Marco de la pantalla',
         source: 'Propio',
         file: '/downloads/pad/display-case.stl',
         fileKB: 65,
-        description: 'Marco/bisel para el módulo ILI9488 3.5". Diseño propio.',
+        description: 'Marco / bisel cerrado para el módulo de pantalla ILI9488 3.5", 110×61 mm. Diseño propio.',
     },
     {
-        name: 'Marco de la pantalla — variante',
+        name: 'Retén de pantalla — marco en U',
         source: 'Propio',
         file: '/downloads/pad/display-case_1.stl',
         fileKB: 164,
-        description: 'Segunda versión del marco de pantalla. Diseño propio.',
+        description: 'Marco abierto en U (retén de la pantalla), 110×61 mm × 5 mm. Variante del bisel. Diseño propio.',
     },
     {
-        name: 'Tapa superior',
-        source: 'Propio',
-        file: '/downloads/pad/tapa-superior.stl',
-        fileKB: 101,
-        description: 'Tapa superior de la carcasa del HIOS PAD. Diseño propio.',
-    },
-    {
-        // ⚠️ REVISAR: "Body1/Body2" son los nombres default de Fusion — no sé qué
-        // pieza es cada uno. Poné el nombre y la descripción reales.
-        name: 'Pieza — Body1',
+        name: 'Soporte en L — agujero redondo',
         source: 'Propio',
         file: '/downloads/pad/Body1.stl',
         fileKB: 34,
-        description: 'Pieza impresa del HIOS PAD (revisar nombre/descripción). Diseño propio.',
+        description: 'Escuadra en L con un agujero redondo y dos tornillos en la base, 30×34×18 mm. Diseño propio.',
     },
     {
-        name: 'Pieza — Body2',
+        name: 'Soporte en L — agujero cuadrado',
         source: 'Propio',
         file: '/downloads/pad/Body2.stl',
         fileKB: 20,
-        description: 'Pieza impresa del HIOS PAD (revisar nombre/descripción). Diseño propio.',
+        description: 'Escuadra en L con un agujero cuadrado — variante del soporte anterior, 30×34×18 mm. Diseño propio.',
     },
 ];
 
