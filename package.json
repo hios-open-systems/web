@@ -67,6 +67,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20260718.1",
+    "@eslint/eslintrc": "^3.3.6",
     "@opennextjs/cloudflare": "^1.20.1",
     "@playwright/test": "^1.60.0",
     "@types/node": "^20.11.0",
@@ -74,7 +75,7 @@
     "@types/react-dom": "^19.2.3",
     "@types/react-syntax-highlighter": "^15.5.11",
     "@types/three": "^0.169.0",
-    "eslint": "^8.57.0",
+    "eslint": "^9.39.5",
     "eslint-config-next": "^15.5.20",
     "husky": "^9.0.0",
     "lint-staged": "^15.2.0",
