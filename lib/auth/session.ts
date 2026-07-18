@@ -84,8 +84,10 @@ export async function findSessionWithUser(
     };
 }
 
-export function setSessionCookie(sessionId: string) {
-    cookies().set(SESSION_COOKIE, sessionId, {
+// En Next 15 cookies() es async (devuelve Promise). Las tres funciones pasan a
+// async y sus llamadores las await-ean.
+export async function setSessionCookie(sessionId: string) {
+    (await cookies()).set(SESSION_COOKIE, sessionId, {
         httpOnly: true,
         sameSite: 'lax',
         secure: true,
@@ -94,8 +96,8 @@ export function setSessionCookie(sessionId: string) {
     });
 }
 
-export function clearSessionCookie() {
-    cookies().set(SESSION_COOKIE, '', {
+export async function clearSessionCookie() {
+    (await cookies()).set(SESSION_COOKIE, '', {
         httpOnly: true,
         sameSite: 'lax',
         secure: true,
@@ -104,13 +106,13 @@ export function clearSessionCookie() {
     });
 }
 
-export function readSessionCookie(): string | null {
-    return cookies().get(SESSION_COOKIE)?.value ?? null;
+export async function readSessionCookie(): Promise<string | null> {
+    return (await cookies()).get(SESSION_COOKIE)?.value ?? null;
 }
 
 /** Devuelve el usuario actual o null. Tira si la DB no está disponible. */
 export async function getCurrentUser(): Promise<UserRow | null> {
-    const sessionId = readSessionCookie();
+    const sessionId = await readSessionCookie();
     if (!sessionId) return null;
     try {
         const db = getDb();
