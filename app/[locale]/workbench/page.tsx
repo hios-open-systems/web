@@ -7,7 +7,12 @@ export const metadata: Metadata = {
   description: 'Workspace local-first para payloads, snippets y flujos prácticos de desarrollo.',
 };
 
-export const runtime = 'edge';
+// WorkbenchLanding usa useSearchParams() (client). Antes esta página era
+// runtime='edge' (dinámica); sin edge, Next intenta prerenderizarla estática y el
+// CSR bailout de useSearchParams rompe el build. force-dynamic restaura el
+// render por-request (SSR), que es lo que hacía el edge.
+export const dynamic = 'force-dynamic';
+
 
 interface PageProps {
   params: Promise<{ locale: string }>;

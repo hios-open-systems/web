@@ -1,0 +1,26 @@
+{
+  // Config de Cloudflare Workers para el deploy vía @opennextjs/cloudflare.
+  // Reemplaza al wrangler.toml (modelo Pages). El binding D1 y las vars no-secretas
+  // se mantienen; el GITHUB_CLIENT_SECRET va como Secret del Worker (dashboard).
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "hios-platform",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2025-04-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "vars": {
+    "GITHUB_CLIENT_ID": "Ov23licdOWRnG6AVSnyR",
+    "AUTH_BASE_URL": "https://openhios.dev"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "hios-playground",
+      "database_id": "a3b55142-933d-451e-aa95-21eb1231516a",
+      "migrations_dir": "migrations"
+    }
+  ]
+}

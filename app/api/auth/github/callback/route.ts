@@ -8,7 +8,6 @@ import {
 } from '@/lib/auth/session';
 import { upsertUserFromGithub } from '@/lib/auth/users';
 
-export const runtime = 'edge';
 
 const STATE_COOKIE = 'hios_oauth_state';
 const NEXT_COOKIE = 'hios_oauth_next';
