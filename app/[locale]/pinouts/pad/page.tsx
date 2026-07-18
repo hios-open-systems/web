@@ -5,10 +5,11 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 
 export async function generateMetadata({
-  params: { locale },
+  params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'Pinouts.meta.pad' });
   return { title: t('title'), description: t('description') };
 }
@@ -19,7 +20,8 @@ export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
-export default function PadWiringPage({ params: { locale } }: { params: { locale: string } }) {
+export default async function PadWiringPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   setRequestLocale(locale);
 
   return <WiringGuideView guide={PAD_WIRING} />;
