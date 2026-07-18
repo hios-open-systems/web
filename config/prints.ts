@@ -7,21 +7,78 @@
 export interface PrintModel {
     name: string;
     author?: string;   // creditá al creador si el modelo no es tuyo
-    source: string;    // Thingiverse | Printables | MakerWorld | Sitio | ...
-    url: string;
+    source: string;    // Thingiverse | Printables | MakerWorld | Sitio | Propio | ...
+    /** link externo (Thingiverse/etc). Opcional si el modelo se sirve local con `file`. */
+    url?: string;
     description: string;
+    /**
+     * Ruta a un .stl servido desde public/ (ej '/downloads/pad/box.stl'). Si está,
+     * la card ofrece VISOR 3D navegable + descarga directa, todo del lado del cliente
+     * (el browser baja el STL y lo renderiza por WebGL; el server no hace nada).
+     */
+    file?: string;
+    /** KB del archivo, solo para mostrar "descargar (400 KB)". Cosmético. */
+    fileKB?: number;
 }
 
-// Tus piezas publicadas. Agregá tu modelo de Thingiverse (name + url reales).
+// Tus piezas publicadas. Las que tienen `file` muestran visor 3D + descarga.
 // Si queda vacío, la página muestra un placeholder en vez de una sección vacía.
+//
+// ⚠️ REVISAR: los nombres y descripciones de abajo los puse yo sin ver las piezas
+// físicas — ajustá lo que no cuadre. Y si querés sumar Body1/Body2 (los tenés en
+// disco pero no sé qué son), copialos a public/downloads/pad/ y agregá su entrada.
 export const myPrints: PrintModel[] = [
-    // Editá con tu modelo real (tenés el link de Thingiverse):
-    // {
-    //     name: 'Tapa del joystick — HIOS PAD',
-    //     source: 'Thingiverse',
-    //     url: 'https://www.thingiverse.com/thing:XXXXXXX',
-    //     description: 'Carcasa impresa para el stick analógico del macropad.',
-    // },
+    {
+        name: 'Carcasa — cuerpo',
+        source: 'Propio',
+        file: '/downloads/pad/box.stl',
+        fileKB: 400,
+        description: 'Cuerpo principal de la carcasa del HIOS PAD (aloja placa, batería y módulos). Diseño propio.',
+    },
+    {
+        name: 'Placa frontal',
+        source: 'Propio',
+        file: '/downloads/pad/front_plate.stl',
+        fileKB: 138,
+        description: 'Frente con los recortes de las 12 teclas, el encoder y el stick. Diseño propio.',
+    },
+    {
+        name: 'Marco de la pantalla',
+        source: 'Propio',
+        file: '/downloads/pad/display-case.stl',
+        fileKB: 65,
+        description: 'Marco/bisel para el módulo ILI9488 3.5". Diseño propio.',
+    },
+    {
+        name: 'Marco de la pantalla — variante',
+        source: 'Propio',
+        file: '/downloads/pad/display-case_1.stl',
+        fileKB: 164,
+        description: 'Segunda versión del marco de pantalla. Diseño propio.',
+    },
+    {
+        name: 'Tapa superior',
+        source: 'Propio',
+        file: '/downloads/pad/tapa-superior.stl',
+        fileKB: 101,
+        description: 'Tapa superior de la carcasa del HIOS PAD. Diseño propio.',
+    },
+    {
+        // ⚠️ REVISAR: "Body1/Body2" son los nombres default de Fusion — no sé qué
+        // pieza es cada uno. Poné el nombre y la descripción reales.
+        name: 'Pieza — Body1',
+        source: 'Propio',
+        file: '/downloads/pad/Body1.stl',
+        fileKB: 34,
+        description: 'Pieza impresa del HIOS PAD (revisar nombre/descripción). Diseño propio.',
+    },
+    {
+        name: 'Pieza — Body2',
+        source: 'Propio',
+        file: '/downloads/pad/Body2.stl',
+        fileKB: 20,
+        description: 'Pieza impresa del HIOS PAD (revisar nombre/descripción). Diseño propio.',
+    },
 ];
 
 // Modelos de la comunidad que vale la pena tener a mano (links estables).
