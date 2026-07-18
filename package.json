@@ -9,6 +9,9 @@
     "build": "NEXT_TELEMETRY_DISABLED=1 next build",
     "start": "next start",
     "lint": "next lint",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv",
     "test:jwt": "node --experimental-strip-types scripts/jwt-selftest.ts",
     "test:calc": "node --experimental-strip-types scripts/calc-selftest.ts",
     "test:auth": "node --experimental-strip-types scripts/auth-selftest.ts",
@@ -36,8 +39,8 @@
     "test:csvjson": "node --experimental-strip-types scripts/csvjson-selftest.ts",
     "test:tuning": "node --experimental-strip-types scripts/tuning-selftest.ts",
     "test:pitch": "node --experimental-strip-types scripts/pitch-selftest.ts",
-    "db:migrate": "npx --yes wrangler d1 migrations apply hios-playground --remote",
-    "db:migrate:local": "npx --yes wrangler d1 migrations apply hios-playground --local",
+    "db:migrate": "wrangler d1 migrations apply hios-playground --remote",
+    "db:migrate:local": "wrangler d1 migrations apply hios-playground --local",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:auth": "playwright test -c playwright.cloudflare.config.ts"
@@ -63,7 +66,8 @@
     "three": "^0.169.0"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260515.1",
+    "@cloudflare/workers-types": "^5.20260718.1",
+    "@opennextjs/cloudflare": "^1.20.1",
     "@playwright/test": "^1.60.0",
     "@types/node": "^20.11.0",
     "@types/react": "^18.2.0",
@@ -75,6 +79,7 @@
     "husky": "^9.0.0",
     "lint-staged": "^15.2.0",
     "prettier": "^3.2.0",
-    "typescript": "^5.3.0"
+    "typescript": "^5.3.0",
+    "wrangler": "^4.112.0"
   }
 }

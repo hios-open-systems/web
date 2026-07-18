@@ -2,7 +2,6 @@ import type { NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
 import { getPublicSnippetById } from '@/lib/snippets';
 
-export const runtime = 'edge';
 
 export async function GET(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;

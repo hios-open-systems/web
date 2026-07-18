@@ -10,7 +10,6 @@ export const metadata: Metadata = {
   description: 'Formatea, valida y comparte payloads JSON con un flujo local-first.',
 };
 
-export const runtime = 'edge';
 
 interface PageProps {
   params: Promise<{ locale: string }>;

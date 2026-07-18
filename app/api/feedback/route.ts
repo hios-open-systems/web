@@ -2,7 +2,6 @@ import type { NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
 import { getRequestAuth } from '@/lib/auth/request';
 
-export const runtime = 'edge';
 
 const KINDS = ['bug', 'idea', 'note'] as const;
 type Kind = (typeof KINDS)[number];

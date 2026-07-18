@@ -2,7 +2,6 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
 import { SESSION_COOKIE, deleteSession } from '@/lib/auth/session';
 
-export const runtime = 'edge';
 
 export async function POST(request: NextRequest) {
     const sessionId = request.cookies.get(SESSION_COOKIE)?.value;

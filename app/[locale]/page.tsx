@@ -2,7 +2,6 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import { setRequestLocale } from 'next-intl/server';
 
-export const runtime = 'edge';
 
 const locales = ['en', 'es', 'de', 'it'];
 

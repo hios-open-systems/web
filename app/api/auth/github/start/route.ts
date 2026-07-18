@@ -5,7 +5,6 @@ import {
     safeNextPath,
 } from '@/lib/auth/github';
 
-export const runtime = 'edge';
 
 const STATE_COOKIE = 'hios_oauth_state';
 const NEXT_COOKIE = 'hios_oauth_next';

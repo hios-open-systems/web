@@ -8,7 +8,6 @@ import {
     validateUpdateSnippetInput,
 } from '@/lib/snippets';
 
-export const runtime = 'edge';
 
 interface RouteProps {
     params: Promise<{ id: string }>;

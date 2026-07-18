@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { PinoutsContent } from '@/components/pinouts/PinoutsContent';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
-export const runtime = 'edge';
 
 export async function generateMetadata({
   params: { locale },

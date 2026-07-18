@@ -9,7 +9,6 @@ export const metadata: Metadata = {
   description: 'Notas rápidas, comandos y recipes con modo local-first y backup opcional en cuenta dentro de HIOS Workbench.',
 };
 
-export const runtime = 'edge';
 
 interface PageProps {
   params: Promise<{ locale: string }>;

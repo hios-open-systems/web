@@ -38,7 +38,6 @@ function getRegistrar(entities: RdapEntity[] = []) {
   return entries.find((entry) => entry[0] === 'fn')?.[3];
 }
 
-export const runtime = 'edge';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

@@ -3,7 +3,6 @@ import { WiringGuideView } from '@/components/wiring-guide';
 import { SPEAKER_WIRING } from '@/config/pinouts/speaker';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
-export const runtime = 'edge';
 
 export async function generateMetadata({
   params: { locale },
