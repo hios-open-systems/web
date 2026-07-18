@@ -2,7 +2,6 @@ import type { NextRequest } from 'next/server';
 import { getRequestAuth } from '@/lib/auth/request';
 import { getDb } from '@/lib/db';
 
-export const runtime = 'edge';
 
 const DEFAULT_DAYS = 7;
 const MAX_DAYS = 90;

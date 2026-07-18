@@ -2,7 +2,6 @@ import type { NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
 import { getRequestAuth } from '@/lib/auth/request';
 
-export const runtime = 'edge';
 
 type EventName = 'page_view' | 'tool_open';
 

@@ -5,7 +5,6 @@ import manifest from '@/lib/blogManifest.json';
 
 // Índice edge (como el resto de las páginas índice del sitio). NO usa fs: la lista
 // sale del manifest precomputado en build (`prebuild` -> lib/blogManifest.json).
-export const runtime = 'edge';
 
 const locales = ['en', 'es', 'de', 'it'];
 

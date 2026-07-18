@@ -178,7 +178,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return metadataMap[tool] ?? { title: 'Workbench Tool | HIOS' };
 }
 
-export const runtime = 'edge';
 
 export default async function DynamicWorkbenchToolPage({ params }: PageProps) {
   const { locale, tool } = await params;

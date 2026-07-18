@@ -8,7 +8,6 @@ import {
     validateCreateSnippetInput,
 } from '@/lib/snippets';
 
-export const runtime = 'edge';
 
 function jsonError(error: string, status: number) {
     return Response.json({ error }, { status });

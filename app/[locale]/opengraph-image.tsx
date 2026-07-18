@@ -1,7 +1,6 @@
 import { ImageResponse } from 'next/og';
 import { getTranslations } from 'next-intl/server';
 
-export const runtime = 'edge';
 export const alt = 'HIOS — open workbench';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';

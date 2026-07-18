@@ -52,7 +52,6 @@ function parseDnsAnswer(type: DnsRecordType, answer: GoogleDnsAnswer): DnsAnswer
   return { value };
 }
 
-export const runtime = 'edge';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
