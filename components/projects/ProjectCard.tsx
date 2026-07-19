@@ -7,7 +7,7 @@ import { useTheme } from '@/lib/ThemeContext';
 import Image from 'next/image';
 import Link from 'next/link';
 import { BookOutlined, GithubOutlined, CheckCircleOutlined } from '@ant-design/icons';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Project, statusConfig } from '@/config/projects';
 import { colors, getBorderStyle } from '@/config/theme';
 
@@ -20,6 +20,7 @@ interface ProjectCardProps {
 
 export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
     const { mode } = useTheme();
+    const locale = useLocale();
     const t = useTranslations('Projects');
 
     const status = {
@@ -39,7 +40,7 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
             whileHover={{ y: -8 }}
             style={{ height: '100%' }}
         >
-            <Link href={`/projects/${project.slug}`} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
+            <Link href={`/${locale}/projects/${project.slug}`} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
                 <Card
                     hoverable
                     className={mode === 'dark' ? 'glass-card' : ''}
