@@ -8,6 +8,7 @@ const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 // VersionWatcher would always see the local fallback and stay disabled.
 function resolveDeployVersion() {
 	const fromEnv =
+		process.env.WORKERS_CI_COMMIT_SHA || // Workers Builds (deploy actual)
 		process.env.CF_PAGES_COMMIT_SHA ||
 		process.env.VERCEL_GIT_COMMIT_SHA ||
 		process.env.GITHUB_SHA;
