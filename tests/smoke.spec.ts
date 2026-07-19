@@ -228,6 +228,20 @@ test.describe('Workbench', () => {
         await page.evaluate(() => window.localStorage.removeItem('hios-workbench-notes'));
     });
 
+    test('Chiptune: carga, toca/para y expone export .mid/.wav', async ({ page }) => {
+        await page.goto('/es/workbench/chiptune');
+        await expect(page.getByRole('heading', { name: 'Compositor Chiptune', level: 1 })).toBeVisible({
+            timeout: 10_000,
+        });
+        await expect(page.getByRole('button', { name: '.mid' })).toBeVisible();
+        await expect(page.getByRole('button', { name: '.wav' })).toBeVisible();
+        await page.getByRole('button', { name: 'Reproducir' }).click();
+        await expect(page.getByRole('button', { name: 'Detener' })).toBeVisible({ timeout: 10_000 });
+        await page.getByRole('button', { name: 'Detener' }).click();
+        await expect(page.getByRole('button', { name: 'Reproducir' })).toBeVisible();
+        await page.evaluate(() => window.localStorage.removeItem('hios-workbench-chiptune'));
+    });
+
     test('Mermaid renderiza el diagrama por defecto', async ({ page }) => {
         await page.goto('/es/workbench/mermaid');
         await expect(page.locator('[data-testid="mermaid-preview"] svg').first()).toBeVisible({
