@@ -924,6 +924,10 @@
         "pagerPrev": "Precedente",
         "pagerNext": "Successivo",
         "packs": {
+            "chiptune": {
+                "title": "Compositore Chiptune",
+                "description": "Componi musica retro da videogioco in un piano-roll con voci sintetizzate a 8 bit ed esporta in .mid e .wav."
+            },
             "tone-generator": {
                 "title": "Generatore di toni",
                 "description": "Oscillatore configurabile per testare speaker, DAC, filtri e catene audio."

@@ -151,6 +151,10 @@ const metadataMap: Record<string, Metadata> = {
     title: 'Nota / Frecuencia / MIDI | HIOS Audio Lab',
     description: 'Convierte entre nota musical, frecuencia en Hz y número MIDI, con A4 configurable.',
   },
+  'chiptune': {
+    title: 'Compositor Chiptune | HIOS Audio Lab',
+    description: 'Compone música de videojuego retro en un piano-roll con voces sintetizadas 8-bit y exportá a .mid y .wav, todo en el navegador.',
+  },
   'ipv6-expand': {
     title: 'IPv6 Expand / Compress | HIOS Network Lab',
     description: 'Expande y comprime direcciones IPv6 según RFC 5952, en el navegador.',
