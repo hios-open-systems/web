@@ -8,7 +8,6 @@ export const metadata: Metadata = {
     description: 'Errores auto-capturados y entradas manuales (bug, idea, nota). Local-first.',
 };
 
-export const runtime = 'edge';
 
 interface PageProps {
     params: Promise<{ locale: string }>;

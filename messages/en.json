@@ -1384,6 +1384,10 @@
                 "title": "Note · Frequency · MIDI",
                 "description": "Convert between musical note, frequency in Hz and MIDI note number, with tunable A4."
             },
+            "chiptune": {
+                "title": "Chiptune Composer",
+                "description": "Compose retro video-game music in a piano-roll with synthesized 8-bit voices and export to .mid and .wav."
+            },
             "ipv6-expand": {
                 "title": "IPv6 Expand / Compress",
                 "description": "Expand and compress IPv6 addresses following RFC 5952, fully in the browser."

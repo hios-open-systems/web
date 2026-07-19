@@ -34,6 +34,12 @@ yarn-error.log*
 # vercel
 .vercel
 
+# OpenNext / Cloudflare Workers (output del adaptador + secrets locales + tipos generados)
+.open-next
+.dev.vars
+cloudflare-env.d.ts
+worker-configuration.d.ts
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

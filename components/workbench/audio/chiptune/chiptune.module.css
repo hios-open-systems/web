@@ -1,0 +1,137 @@
+.transport {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.transportSpacer {
+  flex: 1 1 12px;
+}
+
+.tracks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.track {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid rgba(128, 128, 128, 0.22);
+  flex-wrap: wrap;
+}
+
+.trackActive {
+  border-color: #a855f7;
+  background: rgba(168, 85, 247, 0.08);
+}
+
+.trackDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+}
+
+.trackName {
+  min-width: 68px;
+}
+
+.trackVolume {
+  width: 90px;
+  margin: 0;
+}
+
+.roll {
+  border: 1px solid rgba(128, 128, 128, 0.22);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.rollScroll {
+  overflow: auto;
+  max-height: 520px;
+}
+
+.rollInner {
+  display: flex;
+  width: max-content;
+}
+
+.rollGutter {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  flex: 0 0 46px;
+  background: var(--hios-surface, rgba(20, 20, 28, 0.92));
+  border-right: 1px solid rgba(128, 128, 128, 0.22);
+}
+
+.rollLabel {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 6px;
+  font-size: 10px;
+  opacity: 0.55;
+  box-sizing: border-box;
+  font-variant-numeric: tabular-nums;
+}
+
+.rollLabelC {
+  opacity: 0.95;
+  font-weight: 600;
+}
+
+.rollGrid {
+  position: relative;
+  flex: 0 0 auto;
+  touch-action: none;
+}
+
+.note {
+  position: absolute;
+  border-radius: 3px;
+  box-sizing: border-box;
+  cursor: grab;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35);
+  touch-action: none;
+}
+
+.noteSelected {
+  outline: 2px solid #ffffff;
+  z-index: 2;
+}
+
+.noteGhost {
+  position: absolute;
+  border-radius: 3px;
+  opacity: 0.26;
+  pointer-events: none;
+}
+
+.noteResize {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 6px;
+  height: 100%;
+  cursor: ew-resize;
+}
+
+.playhead {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  background: #f472b6;
+  pointer-events: none;
+  opacity: 0;
+  will-change: transform;
+  z-index: 1;
+}
