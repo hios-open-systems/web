@@ -48,6 +48,21 @@ El dominio solo lo puede servir una cosa a la vez. Secuencia segura:
 ## Deploy normal (día a día)
 `git push` a `main` → Workers Builds buildea y publica. Nada más.
 
+## Si aparece un deploy en Pages después del refactor
+Si el deployment URL termina en `*.pages.dev` o el log dice `pages/view/...`, ese build
+sigue corriendo en el **proyecto Pages viejo**. Cambiar solo el build command de Pages a
+`npx opennextjs-cloudflare build` no alcanza: OpenNext genera `.open-next/worker.js`, pero
+Pages después intenta desplegar un output estático como `.vercel/output/static` y falla.
+
+En ese caso no hay que agregar `pages_build_output_dir` ni volver a `next-on-pages`; hay
+que crear/usar el deploy de **Workers Builds** en `Compute (Workers)` con:
+
+- **Build command:** `npx opennextjs-cloudflare build`
+- **Deploy command:** `npx opennextjs-cloudflare deploy`
+
+El proyecto Pages viejo queda solo como fallback temporal hasta quitarle el custom domain
+durante el cutover.
+
 ## Preview de un branch
 `git push` de cualquier branch → Workers Builds genera un preview deployment con URL propia.
 
