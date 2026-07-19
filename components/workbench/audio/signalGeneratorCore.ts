@@ -29,7 +29,7 @@ export function getChannelPan(channel: ChannelTarget) {
   return CHANNELS.find((item) => item.value === channel)?.pan ?? 0;
 }
 
-export function createNoiseBuffer(context: AudioContext, kind: NoiseKind) {
+export function createNoiseBuffer(context: BaseAudioContext, kind: NoiseKind) {
   const buffer = context.createBuffer(2, context.sampleRate * 2, context.sampleRate);
   for (let channel = 0; channel < buffer.numberOfChannels; channel += 1) {
     const data = buffer.getChannelData(channel);

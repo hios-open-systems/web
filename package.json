@@ -39,6 +39,7 @@
     "test:csvjson": "node --experimental-strip-types scripts/csvjson-selftest.ts",
     "test:tuning": "node --experimental-strip-types scripts/tuning-selftest.ts",
     "test:pitch": "node --experimental-strip-types scripts/pitch-selftest.ts",
+    "test:chiptune": "node --experimental-strip-types scripts/chiptune-selftest.ts",
     "db:migrate": "wrangler d1 migrations apply hios-playground --remote",
     "db:migrate:local": "wrangler d1 migrations apply hios-playground --local",
     "test:e2e": "playwright test",
