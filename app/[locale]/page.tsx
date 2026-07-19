@@ -2,7 +2,6 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import { setRequestLocale } from 'next-intl/server';
 
-export const runtime = 'edge';
 
 const locales = ['en', 'es', 'de', 'it'];
 
@@ -40,11 +39,16 @@ const HomeQuickAccess = dynamic(
   { ssr: true },
 );
 
-export default function Home({ params: { locale } }: { params: { locale: string } }) {
+export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   setRequestLocale(locale);
   return (
     <main>
-      <HomeToolDeepLink />
+      {/* useSearchParams() (deep-link a tools) necesita Suspense para no romper el
+          prerender estático en Next 15 (CSR bailout). Antes lo tapaba runtime=edge. */}
+      <React.Suspense fallback={null}>
+        <HomeToolDeepLink />
+      </React.Suspense>
       <HeroSection />
       <HeroRandomTool />
       {/* Proyectos con más prioridad (arriba de las tools). */}

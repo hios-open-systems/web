@@ -1,7 +1,6 @@
 import { setRequestLocale } from 'next-intl/server';
 import { RecommendedSoftwareCatalog } from '@/components/tools/RecommendedSoftwareCatalog';
 
-export const runtime = 'edge';
 
 interface PageProps {
   params: Promise<{ locale: string }>;

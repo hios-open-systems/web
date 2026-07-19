@@ -183,3 +183,10 @@ Una fila por herramienta. Sirve como **spec previo** (antes de codear) y como **
 - **Output**: Data URI completa, base64 puro, snippet CSS ackground-image, etiqueta HTML <img> con dimensiones.
 - **Casos borde**: muestra tamaño del archivo original y del base64 resultante para awareness de overhead; archivos no-imagen son rechazados.
 - **Status**: works (local only)
+
+### ChiptuneTool (/workbench/chiptune)
+- **Propósito**: componer música de videojuego retro en un piano-roll, reproducir con voces sintetizadas estilo 8-bit (Web Audio, sin samples) y exportar la canción.
+- **Input**: notas en la grilla pitch×tiempo (click=crear, arrastrar=mover, borde=alargar, click-derecho/Delete=borrar); tempo, compases, instrumento/mute/volumen por pista.
+- **Output**: reproducción en vivo con loop + playhead; descarga `.mid` (SMF tipo-1, `encodeMidi`) y `.wav` (render offline, `renderSongToWav`); autoguardado local (`hios-workbench-chiptune`).
+- **Casos borde**: canción vacía exporta archivos válidos pero silenciosos; percusión va a canal MIDI 10; editar tempo/mute en vivo aplica al próximo play (limitación v1); sin URL-state (una canción es muy grande para el query string).
+- **Status**: works (local only). Encoders MIDI/WAV verificados por `npm run test:chiptune` (30 checks, golden bytes).

@@ -3,13 +3,13 @@ import { WiringGuideView } from '@/components/wiring-guide';
 import { SPEAKER_WIRING } from '@/config/pinouts/speaker';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
-export const runtime = 'edge';
 
 export async function generateMetadata({
-  params: { locale },
+  params,
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'Pinouts.meta.speaker' });
   return { title: t('title'), description: t('description') };
 }
@@ -20,7 +20,8 @@ export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
-export default function SpeakerWiringPage({ params: { locale } }: { params: { locale: string } }) {
+export default async function SpeakerWiringPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   setRequestLocale(locale);
 
   return <WiringGuideView guide={SPEAKER_WIRING} />;
