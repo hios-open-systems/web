@@ -11,7 +11,6 @@ interface PageProps {
     params: Promise<{ locale: string; id: string }>;
 }
 
-export const runtime = 'edge';
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { id } = await params;

@@ -42,6 +42,7 @@ export type WorkbenchToolId =
   | 'http-status-codes'
   | 'ascii-unicode'
   | 'note-frequency'
+  | 'chiptune'
   | 'ipv6-expand'
   | 'hmac'
   | 'csv-json'
@@ -482,6 +483,15 @@ export const workbenchTools: WorkbenchTool[] = [
     sectionId: 'audio',
     href: '/workbench/note-frequency',
     accent: '#06b6d4',
+    icon: 'audio',
+    featured: true,
+  },
+  {
+    id: 'chiptune',
+    locality: 'local',
+    sectionId: 'audio',
+    href: '/workbench/chiptune',
+    accent: '#a855f7',
     icon: 'audio',
     featured: true,
   },

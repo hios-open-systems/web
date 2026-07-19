@@ -1,7 +1,6 @@
 import { setRequestLocale } from 'next-intl/server';
 import { PrintsCatalog } from '@/components/prints/PrintsCatalog';
 
-export const runtime = 'edge';
 
 interface PageProps {
   params: Promise<{ locale: string }>;

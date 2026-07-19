@@ -1,7 +1,6 @@
 import { ImageResponse } from 'next/og';
 import { getTranslations } from 'next-intl/server';
 
-export const runtime = 'edge';
 export const alt = 'HIOS — open workbench';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
@@ -10,8 +9,9 @@ export function generateStaticParams() {
   return ['en', 'es', 'de', 'it'].map((locale) => ({ locale }));
 }
 
-export default async function OgImage({ params }: { params: { locale: string } }) {
-  const t = await getTranslations({ locale: params.locale, namespace: 'Hero' });
+export default async function OgImage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'Hero' });
   return new ImageResponse(
     (
       <div

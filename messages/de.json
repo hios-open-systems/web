@@ -924,6 +924,10 @@
         "pagerPrev": "Zurück",
         "pagerNext": "Weiter",
         "packs": {
+            "chiptune": {
+                "title": "Chiptune-Komponist",
+                "description": "Komponiere Retro-Videospielmusik im Piano-Roll mit synthetisierten 8-Bit-Stimmen und exportiere als .mid und .wav."
+            },
             "tone-generator": {
                 "title": "Tongenerator",
                 "description": "Konfigurierbarer Oszillator zum Testen von Lautsprechern, DACs, Filtern und Audioketten."

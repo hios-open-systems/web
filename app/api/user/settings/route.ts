@@ -3,7 +3,6 @@ import { getRequestAuth } from '@/lib/auth/request';
 import { getDb } from '@/lib/db';
 import { getUserSettings, updateUserSettings, validateThemeAccent, type UpdateUserSettingsInput } from '@/lib/userSettings';
 
-export const runtime = 'edge';
 
 function jsonError(error: string, status: number) {
     return Response.json({ error }, { status });

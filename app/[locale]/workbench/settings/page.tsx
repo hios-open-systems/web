@@ -7,7 +7,6 @@ export const metadata: Metadata = {
     description: 'Configurá el tema y otras preferencias del workbench.',
 };
 
-export const runtime = 'edge';
 
 interface PageProps {
     params: Promise<{ locale: string }>;
