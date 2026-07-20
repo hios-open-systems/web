@@ -22,6 +22,7 @@ export function BlogIndex({ posts, locale }: { posts: PostMeta[]; locale: string
                         <Link
                             key={p.slug}
                             href={`/${locale}/blog/${p.slug}`}
+                            prefetch={false}
                             className={styles.card}
                         >
                             <div className={styles.date}>{p.date}</div>

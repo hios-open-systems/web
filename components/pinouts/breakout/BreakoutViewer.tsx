@@ -48,7 +48,7 @@ export function BreakoutViewer({ breakout }: { breakout: Breakout }) {
           <div className={styles.usedBy}>
             {t('usedIn')}
             {breakout.usedBy.map((slug) => (
-              <Link key={slug} href={`/${locale}/pinouts/${slug}`} className={styles.usedByLink}>
+              <Link key={slug} href={`/${locale}/pinouts/${slug}`} prefetch={false} className={styles.usedByLink}>
                 {slug}
               </Link>
             ))}

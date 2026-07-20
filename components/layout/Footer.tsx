@@ -65,7 +65,7 @@ export function Footer() {
                 <Space direction="vertical" size="large">
                     <nav className={styles.nav} aria-label="Footer">
                         {navLinks.map((link) => (
-                            <NextLink key={link.href} href={link.href} className={styles.navLink}>
+                            <NextLink key={link.href} href={link.href} prefetch={false} className={styles.navLink}>
                                 {link.label}
                             </NextLink>
                         ))}
