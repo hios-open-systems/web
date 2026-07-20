@@ -40,7 +40,7 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
             whileHover={{ y: -8 }}
             style={{ height: '100%' }}
         >
-            <Link href={`/${locale}/projects/${project.slug}`} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
+            <Link href={`/${locale}/projects/${project.slug}`} prefetch={false} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
                 <Card
                     hoverable
                     className={mode === 'dark' ? 'glass-card' : ''}

@@ -91,12 +91,12 @@ export function ToolsSection() {
                         </div>
 
                         <div className={styles.ctaRow}>
-                            <Link href={`/${locale}/workbench`}>
+                            <Link href={`/${locale}/workbench`} prefetch={false}>
                                 <Button type="primary" size="large" icon={<ArrowRightOutlined />}>
                                     {headerT('workbench')}
                                 </Button>
                             </Link>
-                            <Link href={`/${locale}/workbench/sections/validation`}>
+                            <Link href={`/${locale}/workbench/sections/validation`} prefetch={false}>
                                 <Button size="large">{t('sections.validation.title')}</Button>
                             </Link>
                         </div>
@@ -110,7 +110,7 @@ export function ToolsSection() {
                                     viewport={{ once: true }}
                                     transition={{ duration: 0.35, delay: 0.06 * index }}
                                 >
-                                    <Link href={`/${locale}${tool.href}`} className={styles.quickCard}>
+                                    <Link href={`/${locale}${tool.href}`} prefetch={false} className={styles.quickCard}>
                                         <div className={styles.packIcon} style={{ color: tool.accent, background: `${tool.accent}20` }}>
                                             {getWorkbenchIcon(tool.icon)}
                                         </div>
@@ -143,7 +143,7 @@ export function ToolsSection() {
                             const tools = getWorkbenchToolsBySection(section.id).filter((tool) => !tool.external);
 
                             return (
-                                <Link key={section.id} href={`/${locale}${section.href}`} className={styles.sectionLink}>
+                                <Link key={section.id} href={`/${locale}${section.href}`} prefetch={false} className={styles.sectionLink}>
                                     <div className={styles.sectionGlow} style={{ background: `${section.accent}20` }} />
                                     <div className={styles.sectionTopline}>
                                         <div className={styles.packIcon} style={{ color: section.accent, background: `${section.accent}20` }}>
