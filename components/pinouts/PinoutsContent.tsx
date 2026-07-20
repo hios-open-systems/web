@@ -32,7 +32,7 @@ export function PinoutsContent() {
         <div className={styles.buildsTitle}>{t('builds_title')}</div>
         <div className={styles.buildsGrid}>
           {BUILDS.map((build) => (
-            <Link key={build.slug} href={`/${locale}/pinouts/${build.slug}`} className={styles.buildCard}>
+            <Link key={build.slug} href={`/${locale}/pinouts/${build.slug}`} prefetch={false} className={styles.buildCard}>
               <span className={styles.buildName}>{build.label}</span>
               <span className={styles.buildHint}>{t('builds_hint')}</span>
             </Link>

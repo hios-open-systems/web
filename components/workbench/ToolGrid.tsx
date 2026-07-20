@@ -17,7 +17,7 @@ export function ToolCard({ tool }: { tool: WorkbenchTool }) {
   const t = useTranslations('Workbench');
 
   return (
-    <Link href={`/${locale}${tool.href}`} className={`${styles.toolCard} ${styles.toolCardV}`}>
+    <Link href={`/${locale}${tool.href}`} prefetch={false} className={`${styles.toolCard} ${styles.toolCardV}`}>
       <span className={styles.toolCardHeadRow}>
         <span
           className={styles.toolIcon}

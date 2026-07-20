@@ -86,7 +86,7 @@ export function Header() {
               active ? styles.navLinkActive : '',
             ].filter(Boolean).join(' ');
             return (
-              <Link key={item.href} href={item.href} className={className}>
+              <Link key={item.href} href={item.href} prefetch={false} className={className}>
                 {item.label}
               </Link>
             );
@@ -113,6 +113,7 @@ export function Header() {
           />
           <Link
             href={`/${locale}/workbench/feedback`}
+            prefetch={false}
             className={`${styles.iconLink} ${styles.desktopOnlyControl} ${unreadCount > 0 ? styles.iconLinkDot : ''}`}
             aria-label={`Feedback${unreadCount > 0 ? ` (${unreadCount})` : ''}`}
             data-unread={unreadCount}
@@ -121,6 +122,7 @@ export function Header() {
           </Link>
           <Link
             href={`/${locale}/workbench/settings`}
+            prefetch={false}
             className={`${styles.iconLink} ${styles.desktopOnlyControl}`}
             aria-label="Settings"
           >
@@ -161,6 +163,7 @@ export function Header() {
             <Link
               key={item.href}
               href={item.href}
+              prefetch={false}
               onClick={() => setMenuOpen(false)}
               className={[styles.drawerLink, isActive(item.href) ? styles.drawerLinkActive : '']
                 .filter(Boolean)
@@ -181,10 +184,10 @@ export function Header() {
             >
               {tSettings(mode === 'dark' ? 'savedModeLight' : 'savedModeDark')}
             </Button>
-            <Link href={`/${locale}/workbench/feedback`} className={styles.drawerAction} onClick={() => setMenuOpen(false)}>
+            <Link href={`/${locale}/workbench/feedback`} prefetch={false} className={styles.drawerAction} onClick={() => setMenuOpen(false)}>
               <BellOutlined /> {tFeedback('title')}{unreadCount > 0 ? ` (${unreadCount})` : ''}
             </Link>
-            <Link href={`/${locale}/workbench/settings`} className={styles.drawerAction} onClick={() => setMenuOpen(false)}>
+            <Link href={`/${locale}/workbench/settings`} prefetch={false} className={styles.drawerAction} onClick={() => setMenuOpen(false)}>
               <SettingOutlined /> {tSettings('title')}
             </Link>
           </div>

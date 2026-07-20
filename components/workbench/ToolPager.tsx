@@ -25,14 +25,14 @@ export function ToolPager({ currentId }: { currentId: string }) {
 
   return (
     <nav className={styles.toolPager} aria-label="tool pager">
-      <Link href={`/${locale}${prev.href}`} className={styles.toolPagerLink}>
+      <Link href={`/${locale}${prev.href}`} prefetch={false} className={styles.toolPagerLink}>
         <LeftOutlined />
         <span className={styles.toolPagerMeta}>
           <span className={styles.toolPagerKicker}>{t('pagerPrev')}</span>
           <span className={styles.toolPagerName}>{packs(`${prev.id}.title`)}</span>
         </span>
       </Link>
-      <Link href={`/${locale}${next.href}`} className={`${styles.toolPagerLink} ${styles.toolPagerNext}`}>
+      <Link href={`/${locale}${next.href}`} prefetch={false} className={`${styles.toolPagerLink} ${styles.toolPagerNext}`}>
         <span className={styles.toolPagerMeta}>
           <span className={styles.toolPagerKicker}>{t('pagerNext')}</span>
           <span className={styles.toolPagerName}>{packs(`${next.id}.title`)}</span>

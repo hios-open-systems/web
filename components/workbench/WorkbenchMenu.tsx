@@ -54,7 +54,7 @@ export function WorkbenchMenu() {
     const pinned = usage.pinned.includes(tool.id);
     return (
       <li key={tool.id} className={styles.wbMenuRow}>
-        <Link href={`/${locale}${tool.href}`} className={styles.wbMenuRowLink}>
+        <Link href={`/${locale}${tool.href}`} prefetch={false} className={styles.wbMenuRowLink}>
           <span
             className={styles.wbMenuRowIcon}
             style={{ color: tool.accent, background: `${tool.accent}1a` }}

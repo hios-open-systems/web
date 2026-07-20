@@ -32,6 +32,7 @@ export function HomeQuickAccess() {
                     <Link
                         key={it.href}
                         href={`/${locale}/${it.href}`}
+                        prefetch={false}
                         style={{ display: 'block', padding: 20, background: cardBg, border: cardBorder, borderRadius: 14, textDecoration: 'none' }}
                     >
                         <div style={{ color: accent, fontSize: 22, marginBottom: 10 }}>{it.icon}</div>
