@@ -11,10 +11,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    name: Build
+  test:
+    name: Self-tests
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
 
     steps:
       - name: Checkout
@@ -23,13 +23,42 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          # >=22.6: los self-tests corren con --experimental-strip-types.
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
-        run: npm run build
+      - name: Lint
+        run: npm run lint
+
+      - name: Self-tests
+        run: npm test
+
+  build:
+    name: Build (Workers)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Buildea el mismo target que publica Workers Builds
+      # (`npx opennextjs-cloudflare build`, ver DEPLOY.md), no `next build`.
+      # Los bugs propios del Worker — SSR de antd, imágenes, prerender — no
+      # aparecen en un `next build`, así que validar eso no protegía de nada.
+      - name: OpenNext build
+        run: npx opennextjs-cloudflare build
         env:
           NEXT_TELEMETRY_DISABLED: '1'
