@@ -37,7 +37,14 @@ export default getRequestConfig(async ({ requestLocale }) => {
     return {
         locale,
         messages: fallback ? deepMerge(fallback, primary) : primary,
-        onError: () => { },
+        // En prod se traga el error a propósito: una clave faltante degrada a
+        // su nombre, no tira la página. Pero en dev tiene que hacer ruido —
+        // callarlo es lo que dejó pasar claves rotas hasta producción.
+        onError: (error) => {
+            if (process.env.NODE_ENV === 'development') {
+                console.warn(`[i18n] ${error.message}`);
+            }
+        },
         getMessageFallback: ({ key }) => key,
     };
 });
