@@ -7,8 +7,10 @@ import { getCurrentDeployVersion } from '@/lib/appVersion';
 import '@/styles/globals.css';
 import '@excalidraw/excalidraw/index.css';
 
-import { NextIntlClientProvider } from 'next-intl';
+import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
+import { notFound } from 'next/navigation';
+import { routing } from '@/i18n/routing';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
 
@@ -27,6 +29,9 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
+  // Locale inválido (ej. escáneres pidiendo /backup.php, que matchea /[locale]) → 404.
+  // Sin esto, i18n cae a 'en' en silencio y se renderiza la home entera (CPU → 1102).
+  if (!hasLocale(routing.locales, locale)) notFound();
   const t = await getTranslations({ locale, namespace: 'Hero' });
   const title = `HIOS — ${t('title')}`;
   const description = t('subtitle');
@@ -79,6 +84,9 @@ export function generateStaticParams() {
 
 export default async function RootLayout({ children, params }: Props) {
   const { locale } = await params;
+  // Guard antes de cualquier render caro: locale inválido → 404 barato (app/not-found.tsx),
+  // no la home completa. Corta el CPU que gastaban los escáneres de /*.php.
+  if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const messages = await getMessages();
 
