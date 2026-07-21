@@ -15,6 +15,7 @@ interface FeedbackBody {
   path?: string;
   locale?: string;
   url?: string;
+  turnstileToken?: string;
 }
 
 function generateId(): string {
@@ -39,6 +40,27 @@ function isEmail(value: string): boolean {
 
 function isSafeSlug(value: string): boolean {
   return /^[a-z0-9-]{1,80}$/.test(value);
+}
+
+// Turnstile siteverify, OPCIONAL: solo se exige si TURNSTILE_SECRET_KEY está
+// configurado como secret del Worker. Sin eso devuelve true → el feedback sigue
+// anónimo sin captcha (local-first). Portable: siteverify es una API de CF usable
+// desde cualquier hosting.
+async function verifyTurnstile(token: string | undefined, ip: string | null): Promise<boolean> {
+  const secret = process.env.TURNSTILE_SECRET_KEY;
+  if (!secret) return true;
+  if (!token) return false;
+  try {
+    const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ secret, response: token, remoteip: ip ?? undefined }),
+    });
+    const data = (await res.json()) as { success?: boolean };
+    return data.success === true;
+  } catch {
+    return false;
+  }
 }
 
 // POST is anonymous on purpose — reporting a broken tool must not require login.
@@ -73,6 +95,11 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: 'invalid_email' }, { status: 400 });
   }
   const toolSlug = body.toolSlug && isSafeSlug(body.toolSlug) ? body.toolSlug : null;
+
+  const clientIp = request.headers.get('cf-connecting-ip');
+  if (!(await verifyTurnstile(body.turnstileToken, clientIp))) {
+    return Response.json({ error: 'turnstile_failed' }, { status: 403 });
+  }
 
   try {
     const auth = await getRequestAuth(request);

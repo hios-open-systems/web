@@ -9,6 +9,7 @@ export interface FeedbackSubmission {
   message: string;
   email?: string;
   toolSlug?: string;
+  turnstileToken?: string;
 }
 
 export async function submitFeedback(input: FeedbackSubmission): Promise<{ ok: boolean }> {
@@ -23,6 +24,7 @@ export async function submitFeedback(input: FeedbackSubmission): Promise<{ ok: b
         message: input.message,
         email: input.email,
         toolSlug: input.toolSlug,
+        turnstileToken: input.turnstileToken,
         path: typeof window !== 'undefined' ? window.location.pathname : undefined,
         url: typeof window !== 'undefined' ? window.location.href : undefined,
         locale:
