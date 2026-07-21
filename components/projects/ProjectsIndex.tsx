@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { Row, Col, Typography } from 'antd';
-import { motion } from 'framer-motion';
 import { useTheme } from '@/lib/ThemeContext';
 import { useTranslations } from 'next-intl';
 import { projects } from '@/config/projects';
@@ -22,12 +21,7 @@ export function ProjectsIndex() {
             background: getSectionBackground(mode),
         }}>
             <div style={{ maxWidth: 1120, margin: '0 auto' }}>
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    style={{ marginBottom: '56px', textAlign: 'center' }}
-                >
+                <div style={{ marginBottom: '56px', textAlign: 'center' }}>
                     <Title
                         level={1}
                         style={{
@@ -47,7 +41,7 @@ export function ProjectsIndex() {
                     }}>
                         {t('subtitle')}
                     </Paragraph>
-                </motion.div>
+                </div>
 
                 <Row gutter={[24, 24]}>
                     {projects.map((project, index) => (
