@@ -104,10 +104,12 @@ const nextConfig = {
 			'upgrade-insecure-requests',
 		].join('; ');
 
-		// Arranca en Report-Only porque workerd no corre en WSL (no hay preview
-		// local): el primer deploy solo reporta violaciones, no bloquea nada. Una
-		// vez que prod confirme cero falsos positivos, poner CSP_ENFORCE = true.
-		const CSP_ENFORCE = false;
+		// Enforcing directo: se verificó el código y no hay nada que el CSP rompa
+		// —cero wasm, cero eval/new Function, cero fetch/WebSocket a hosts externos,
+		// cero <img> remoto; antd/framer/Next-hydration y el srcdoc del PatternsTool
+		// quedan cubiertos por 'unsafe-inline'. Si algún día se agrega un recurso
+		// externo o wasm, esto lo bloqueará: ampliar la allowlist correspondiente.
+		const CSP_ENFORCE = true;
 
 		// Permissions-Policy derivada del uso REAL del código: mic solo el tuner
 		// (useMicAnalyser), clipboard/autoplay para las tools; todo lo demás negado.
