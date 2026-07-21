@@ -47,6 +47,18 @@ const nextConfig = {
 		},
 	},
 
+	// Tree-shaking nativo de barrels (Next 15). Complementa modularizeImports:
+	// recorta imports de librerías con barrels grandes que engordan el bundle del
+	// server — y con él el cold-start del Worker, una de las causas del Error 1102.
+	experimental: {
+		optimizePackageImports: [
+			'antd',
+			'@ant-design/icons',
+			'next-intl',
+			'react-syntax-highlighter',
+		],
+	},
+
 	// Producción
 	poweredByHeader: false,
 	compress: true,
