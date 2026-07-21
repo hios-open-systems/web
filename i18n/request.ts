@@ -24,6 +24,23 @@ function deepMerge<T extends Record<string, any>>(base: T, override: T): T {
     return result as T;
 }
 
+// Cache del árbol de mensajes ya mergeado, por locale (máx 4 entradas). Los
+// mensajes no cambian entre requests dentro de un isolate, así que memoizar es
+// seguro. Sin esto, cada request no-inglés re-clonaba ~100KB/1769 nodos en el
+// deepMerge — allocación transitoria que, bajo concurrencia, empujaba el isolate
+// hacia el techo de 128MB (una de las causas del Error 1102).
+const mergedMessagesCache: Record<string, Record<string, unknown>> = {};
+
+async function getMergedMessages(locale: string): Promise<Record<string, unknown>> {
+    const cached = mergedMessagesCache[locale];
+    if (cached) return cached;
+
+    const primary = await loadMessages(locale);
+    const merged = locale === 'en' ? primary : deepMerge(await loadMessages('en'), primary);
+    mergedMessagesCache[locale] = merged;
+    return merged;
+}
+
 export default getRequestConfig(async ({ requestLocale }) => {
     let locale = await requestLocale;
 
@@ -31,12 +48,9 @@ export default getRequestConfig(async ({ requestLocale }) => {
         locale = routing.defaultLocale;
     }
 
-    const primary = await loadMessages(locale);
-    const fallback = locale === 'en' ? null : await loadMessages('en');
-
     return {
         locale,
-        messages: fallback ? deepMerge(fallback, primary) : primary,
+        messages: await getMergedMessages(locale),
         // En prod se traga el error a propósito: una clave faltante degrada a
         // su nombre, no tira la página. Pero en dev tiene que hacer ruido —
         // callarlo es lo que dejó pasar claves rotas hasta producción.
