@@ -74,11 +74,66 @@ const nextConfig = {
 		];
 	},
 
-	// Headers de seguridad (antes no había ninguno). Conservadores a propósito:
-	// nada que rompa el mic de las tools de audio (sin Permissions-Policy) ni el
-	// iframe sandbox de patterns (X-Frame-Options SAMEORIGIN, no DENY). HSTS lo
-	// maneja Cloudflare en el borde.
+	// Headers de seguridad. Se aplican vía el server de Next (confirmado live en
+	// prod). HSTS lo mete Cloudflare en el borde, acá no se duplica.
 	async headers() {
+		const isDev = process.env.NODE_ENV !== 'production';
+
+		// CSP con 'unsafe-inline' en script/style: obligado por la hidratación de
+		// Next, los estilos inline de antd/framer y el <iframe srcDoc> del
+		// PatternsTool (ejecuta scripts inline generados, aislado por
+		// sandbox="allow-scripts"). En dev se suma 'unsafe-eval' (React Refresh) y
+		// ws: (HMR), o se rompe `npm run dev`. El resto sí es defensa real: cero
+		// scripts externos, sin plugins, anti-clickjacking, forms/fetch solo al
+		// propio origen. connect/img verificados: no hay fetch ni imágenes remotas
+		// del lado del cliente (api.github.com es server-side).
+		const csp = [
+			"default-src 'self'",
+			"base-uri 'self'",
+			"object-src 'none'",
+			"frame-ancestors 'self'",
+			"form-action 'self'",
+			`script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''}`,
+			"style-src 'self' 'unsafe-inline'",
+			"img-src 'self' data: blob: https:",
+			"font-src 'self' data:",
+			`connect-src 'self'${isDev ? ' ws:' : ''}`,
+			"frame-src 'self'",
+			"worker-src 'self' blob:",
+			"manifest-src 'self'",
+			'upgrade-insecure-requests',
+		].join('; ');
+
+		// Arranca en Report-Only porque workerd no corre en WSL (no hay preview
+		// local): el primer deploy solo reporta violaciones, no bloquea nada. Una
+		// vez que prod confirme cero falsos positivos, poner CSP_ENFORCE = true.
+		const CSP_ENFORCE = false;
+
+		// Permissions-Policy derivada del uso REAL del código: mic solo el tuner
+		// (useMicAnalyser), clipboard/autoplay para las tools; todo lo demás negado.
+		// `=(self)` permite la feature a nuestro origen y se la niega a iframes de
+		// terceros — no apaga nada nuestro, el prompt nativo del mic sigue saliendo.
+		const permissionsPolicy = [
+			'accelerometer=()',
+			'autoplay=(self)',
+			'bluetooth=()',
+			'browsing-topics=()',
+			'camera=()',
+			'clipboard-write=(self)',
+			'display-capture=()',
+			'encrypted-media=()',
+			'fullscreen=(self)',
+			'geolocation=()',
+			'gyroscope=()',
+			'hid=()',
+			'magnetometer=()',
+			'microphone=(self)',
+			'midi=()',
+			'payment=()',
+			'serial=()',
+			'usb=()',
+		].join(', ');
+
 		return [
 			{
 				source: '/:path*',
@@ -86,6 +141,13 @@ const nextConfig = {
 					{ key: 'X-Content-Type-Options', value: 'nosniff' },
 					{ key: 'X-Frame-Options', value: 'SAMEORIGIN' },
 					{ key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+					{ key: 'Permissions-Policy', value: permissionsPolicy },
+					{
+						key: CSP_ENFORCE
+							? 'Content-Security-Policy'
+							: 'Content-Security-Policy-Report-Only',
+						value: csp,
+					},
 				],
 			},
 		];
