@@ -8,6 +8,7 @@ import { message } from 'antd';
 import { MessageOutlined } from '@ant-design/icons';
 import { submitFeedback } from '@/lib/feedback/submit';
 import { useFeedback } from '@/components/feedback/FeedbackProvider';
+import { TurnstileWidget, turnstileEnabled } from '@/components/feedback/TurnstileWidget';
 
 type WidgetKind = 'bug' | 'idea' | 'note';
 
@@ -40,6 +41,7 @@ export function FeedbackButton({ toolSlug }: { toolSlug?: string }) {
     const [rating, setRating] = useState(0);
     const [text, setText] = useState('');
     const [email, setEmail] = useState('');
+    const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
     const [sending, setSending] = useState(false);
 
     const resolvedSlug = toolSlug ?? deriveToolSlug(pathname ?? '');
@@ -49,6 +51,7 @@ export function FeedbackButton({ toolSlug }: { toolSlug?: string }) {
         setRating(0);
         setText('');
         setEmail('');
+        setTurnstileToken(null);
     };
 
     const handleCancel = () => {
@@ -59,6 +62,11 @@ export function FeedbackButton({ toolSlug }: { toolSlug?: string }) {
         const trimmed = text.trim();
         if (!trimmed) {
             messageApi.error(t('widget.emptyError'));
+            return;
+        }
+
+        if (turnstileEnabled() && !turnstileToken) {
+            messageApi.error(t.has('widget.captchaError') ? t('widget.captchaError') : 'Completá la verificación');
             return;
         }
 
@@ -73,6 +81,7 @@ export function FeedbackButton({ toolSlug }: { toolSlug?: string }) {
                 message: trimmed,
                 email: email || undefined,
                 toolSlug: resolvedSlug,
+                turnstileToken: turnstileToken ?? undefined,
             });
 
             addManual(kind, trimmed.slice(0, 60) || t(kindLabelKey), trimmed, effectiveRating);
@@ -148,6 +157,8 @@ export function FeedbackButton({ toolSlug }: { toolSlug?: string }) {
                         />
                         <span style={{ fontSize: 12, opacity: 0.65 }}>{t('widget.emailHint')}</span>
                     </label>
+
+                    <TurnstileWidget onToken={setTurnstileToken} />
                 </div>
             </Modal>
         </>
