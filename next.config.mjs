@@ -75,7 +75,8 @@ const nextConfig = {
 	},
 
 	// Headers de seguridad. Se aplican vía el server de Next (confirmado live en
-	// prod). HSTS lo mete Cloudflare en el borde, acá no se duplica.
+	// prod). HSTS va también acá (no solo en el borde de Cloudflare) para que la
+	// seguridad sea PORTABLE si el sitio migra de hosting.
 	async headers() {
 		const isDev = process.env.NODE_ENV !== 'production';
 
@@ -136,23 +137,30 @@ const nextConfig = {
 			'usb=()',
 		].join(', ');
 
-		return [
+		const securityHeaders = [
+			{ key: 'X-Content-Type-Options', value: 'nosniff' },
+			{ key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+			{ key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+			{ key: 'Permissions-Policy', value: permissionsPolicy },
 			{
-				source: '/:path*',
-				headers: [
-					{ key: 'X-Content-Type-Options', value: 'nosniff' },
-					{ key: 'X-Frame-Options', value: 'SAMEORIGIN' },
-					{ key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-					{ key: 'Permissions-Policy', value: permissionsPolicy },
-					{
-						key: CSP_ENFORCE
-							? 'Content-Security-Policy'
-							: 'Content-Security-Policy-Report-Only',
-						value: csp,
-					},
-				],
+				key: CSP_ENFORCE
+					? 'Content-Security-Policy'
+					: 'Content-Security-Policy-Report-Only',
+				value: csp,
 			},
 		];
+
+		// HSTS solo en prod: en dev localhost es HTTP y HSTS forzaría HTTPS local,
+		// rompiendo `npm run dev`. 6 meses + includeSubDomains, sin preload (así es
+		// reversible; preload es difícil de deshacer).
+		if (!isDev) {
+			securityHeaders.push({
+				key: 'Strict-Transport-Security',
+				value: 'max-age=15552000; includeSubDomains',
+			});
+		}
+
+		return [{ source: '/:path*', headers: securityHeaders }];
 	},
 };
 
