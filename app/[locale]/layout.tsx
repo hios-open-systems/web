@@ -46,8 +46,13 @@ export async function generateMetadata({
       title,
       description,
       locale,
+      // Imágenes OG pre-renderadas (public/og/<locale>.png). Antes se generaban
+      // en runtime con next/og (satori+resvg ~1.4MB), que quedaba embebido en el
+      // bundle del Worker y engordaba el cold-start (causa del Error 1102). Ahora
+      // son estáticas, servidas desde ASSETS. Para regenerarlas ver scripts/gen-og.mjs.
+      images: [{ url: `/og/${locale}.png`, width: 1200, height: 630, alt: 'HIOS — open workbench' }],
     },
-    twitter: { card: 'summary_large_image', title, description },
+    twitter: { card: 'summary_large_image', title, description, images: [`/og/${locale}.png`] },
     robots: { index: true, follow: true },
     icons: {
       icon: [
