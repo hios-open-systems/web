@@ -822,7 +822,14 @@
             "matchCount": "match(es)",
             "copyPattern": "Copy pattern",
             "copied": "Copied!",
-            "copyError": "Copy failed"
+            "copyError": "Copy failed",
+            "flagsPlaceholder": "Flags",
+            "groupsLabel": "groups",
+            "noMatches": "No matches",
+            "invalidPattern": "Invalid pattern",
+            "replaceLabel": "Replace preview",
+            "replacePlaceholder": "Replacement (use $1, $<name>)",
+            "replaceHint": "Type a replacement to see the preview"
         },
         "uuidUlid": {
             "badge": "Generation tool",
