@@ -821,7 +821,14 @@
             "matchCount": "coincidencia(s)",
             "copyPattern": "Copiar patrón",
             "copied": "¡Copiado!",
-            "copyError": "Error al copiar"
+            "copyError": "Error al copiar",
+            "flagsPlaceholder": "Flags",
+            "groupsLabel": "grupos",
+            "noMatches": "Sin coincidencias",
+            "invalidPattern": "Patrón inválido",
+            "replaceLabel": "Vista previa de replace",
+            "replacePlaceholder": "Reemplazo (usa $1, $<nombre>)",
+            "replaceHint": "Escribe un reemplazo para ver la vista previa"
         },
         "uuidUlid": {
             "badge": "Herramienta de generación",
