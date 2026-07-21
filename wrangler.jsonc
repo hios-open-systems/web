@@ -22,5 +22,14 @@
       "database_id": "a3b55142-933d-451e-aa95-21eb1231516a",
       "migrations_dir": "migrations"
     }
-  ]
+  ],
+  // Workers Logs persistentes: sin esto, los errores solo se ven con `wrangler
+  // tail` en vivo (si nadie mira el momento exacto, se pierden). Metido para
+  // cazar el próximo 1102 con su excepción real. Incluido en Workers Paid
+  // (20M eventos/mes); a este volumen de tráfico, costo 0. Si el tráfico
+  // creciera mucho, bajar head_sampling_rate (< 1 = loguear una fracción).
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  }
 }
