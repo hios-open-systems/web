@@ -33,6 +33,12 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      # test:padwebui es el único self-test que no es zero-dep: maneja un
+      # server mock con chromium (Playwright). Sin el browser, el runner lo
+      # descubre y falla. --with-deps para no depender de libs del sistema.
+      - name: Install Playwright chromium
+        run: npx playwright install --with-deps chromium
+
       - name: Self-tests
         run: npm test
 
