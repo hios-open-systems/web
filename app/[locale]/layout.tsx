@@ -82,6 +82,13 @@ export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
+// Locales fuera de esta lista (ej. /backup.php, /info.php.bak — todos matchean
+// /[locale]) → 404 en el ROUTER, sin bootear este layout ni el cold-start del
+// Worker. El guard notFound() de abajo corre demasiado tarde (ya cargó el módulo
+// con antd/excalidraw/font/etc.); esto corta antes y mata el CPU (Error 1102) que
+// gastan los escáneres de /*.php al golpear isolates fríos.
+export const dynamicParams = false;
+
 export default async function RootLayout({ children, params }: Props) {
   const { locale } = await params;
   // Guard antes de cualquier render caro: locale inválido → 404 barato (app/not-found.tsx),

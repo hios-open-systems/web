@@ -1,0 +1,6 @@
+# openhios.dev — canal de seguridad / security contact
+# https://www.rfc-editor.org/rfc/rfc9116
+Contact: https://github.com/hios-open-systems/web/security/advisories/new
+Expires: 2027-07-21T00:00:00.000Z
+Preferred-Languages: es, en
+Canonical: https://openhios.dev/.well-known/security.txt
