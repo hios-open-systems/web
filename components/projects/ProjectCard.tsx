@@ -33,11 +33,8 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-30px' }}
-            transition={{ duration: 0.5, delay: index * 0.15 }}
             whileHover={{ y: -8 }}
+            transition={{ duration: 0.2 }}
             style={{ height: '100%' }}
         >
             <Link href={`/${locale}/projects/${project.slug}`} prefetch={false} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
