@@ -3,6 +3,9 @@ import { setRequestLocale } from 'next-intl/server';
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 
+// Fully static: prerenderizada por locale y servida del static-assets cache
+// (open-next.config.ts). Evita el re-render SSR de antd en cada isolate frío.
+export const dynamic = 'force-static';
 export const metadata: Metadata = {
   title: 'Embedded Calculators | HIOS',
   description: 'Calculadoras de resistencias, capacitores, potencia térmica y consumo para proyectos embebidos.',

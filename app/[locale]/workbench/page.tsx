@@ -3,6 +3,9 @@ import { Suspense } from 'react';
 import { setRequestLocale } from 'next-intl/server';
 import { WorkbenchLanding } from '@/components/workbench/WorkbenchLanding';
 
+// Fully static: prerenderizada por locale y servida del static-assets cache
+// (open-next.config.ts). Evita el re-render SSR de antd en cada isolate frío.
+export const dynamic = 'force-static';
 export const metadata: Metadata = {
   title: 'Workbench | HIOS',
   description: 'Workspace local-first para payloads, snippets y flujos prácticos de desarrollo.',

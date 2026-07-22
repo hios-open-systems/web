@@ -4,6 +4,9 @@ import { BTDAC_WIRING } from '@/config/pinouts/btdac';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 
+// Fully static: prerenderizada por locale y servida del static-assets cache
+// (open-next.config.ts). Evita el re-render SSR de antd en cada isolate frío.
+export const dynamic = 'force-static';
 export async function generateMetadata({
   params,
 }: {
