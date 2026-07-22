@@ -173,6 +173,9 @@ interface PageProps {
   params: Promise<{ locale: string; tool: string }>;
 }
 
+// Fully static: prerenderizada por locale y servida del static-assets cache
+// (open-next.config.ts). Evita el re-render SSR de antd en cada isolate frío.
+export const dynamic = 'force-static';
 export function generateStaticParams() {
   return dynamicToolIds.map((tool) => ({ tool }));
 }
