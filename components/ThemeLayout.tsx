@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { ConfigProvider, Layout } from 'antd';
+import { ConsoleEasterEgg } from '@/components/common/ConsoleEasterEgg';
 import { VersionWatcher } from '@/components/common/VersionWatcher';
 import { CommandPalette } from '@/components/common/CommandPalette';
 import { ServiceWorkerRegister } from '@/components/common/ServiceWorkerRegister';
@@ -14,8 +15,8 @@ import { FeedbackProvider } from '@/components/feedback/FeedbackProvider';
 import { getAntdTheme } from '@/styles/theme';
 
 function ThemedLayout({ children, currentVersion }: { children: React.ReactNode; currentVersion: string }) {
-    const { mode, accent } = useTheme();
-    const currentTheme = React.useMemo(() => getAntdTheme(mode, accent), [mode, accent]);
+    const { mode, accent, skin } = useTheme();
+    const currentTheme = React.useMemo(() => getAntdTheme(mode, accent, skin), [mode, accent, skin]);
     // CSS var, no estado React: el SSR renderiza siempre 'dark' y un fondo inline
     // por-modo produce flash oscuro + hydration mismatch para usuarios en light.
     const bgColor = 'var(--hios-bg)';
@@ -23,6 +24,7 @@ function ThemedLayout({ children, currentVersion }: { children: React.ReactNode;
     return (
         <ConfigProvider theme={currentTheme}>
             <FeedbackProvider>
+                <ConsoleEasterEgg />
                 <VersionWatcher currentVersion={currentVersion} />
                 <ServiceWorkerRegister />
                 <DynamicFavicon />

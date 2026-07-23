@@ -35,7 +35,9 @@ export const viewport: Viewport = {
 };
 
 const SITE_URL = (process.env.AUTH_BASE_URL || 'https://openhios.dev').replace(/\/$/, '');
-const THEME_BOOTSTRAP_SCRIPT = `(function(){try{var stored=localStorage.getItem('theme');var next=(stored==='light'||stored==='dark')?stored:null;if(!next&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches){next='dark';}if(!next){next='dark';}document.documentElement.setAttribute('data-theme',next);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`;
+// Setea data-theme y data-skin ANTES de la primera pintura (anti-flash).
+// La whitelist de skins tiene que espejar lib/themes/skins.ts.
+const THEME_BOOTSTRAP_SCRIPT = `(function(){try{var stored=localStorage.getItem('theme');var next=(stored==='light'||stored==='dark')?stored:null;if(!next&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches){next='dark';}if(!next){next='dark';}document.documentElement.setAttribute('data-theme',next);var skin=localStorage.getItem('hios-skin');if(skin==='terminal'||skin==='blueprint'||skin==='datasheet'){document.documentElement.setAttribute('data-skin',skin);}}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`;
 
 export async function generateMetadata({
   params,
@@ -105,11 +107,16 @@ export default async function RootLayout({ children, params }: Props) {
   const messages = await getMessages();
 
   return (
-    <html lang={locale} data-theme="dark" suppressHydrationWarning>
+    <html lang={locale} data-theme="dark" data-skin="datasheet" suppressHydrationWarning>
       <head>
+        {/* Miga para curiosos: todo el código es público, no hay nada escondido. */}
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP_SCRIPT }} />
+        <meta name="source" content="https://github.com/hios-open-systems/web" />
+        <link rel="author" href="/humans.txt" />
       </head>
-      <body className={`${inter.variable} ${archivo.variable} ${plexMono.variable} ${inter.className}`}>
+      {/* Sin inter.className: la font del body la decide var(--font-stack-sans),
+          que los skins pueden overridear (terminal = todo mono). */}
+      <body className={`${inter.variable} ${archivo.variable} ${plexMono.variable}`}>
         <NextIntlClientProvider messages={messages}>
           <AntdRegistry>
             <ThemeLayout currentVersion={getCurrentDeployVersion()}>

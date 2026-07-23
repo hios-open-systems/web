@@ -21,6 +21,13 @@ import {
     type ThemeConfig,
 } from '@/lib/themes/config';
 import { fetchRemoteThemeSettings, updateRemoteThemeAccent } from '@/lib/themes/sync';
+import {
+    DEFAULT_SKIN,
+    isValidSkin,
+    readStoredSkin,
+    writeStoredSkin,
+    type SkinId,
+} from '@/lib/themes/skins';
 import { shouldOfferThemeImport } from '@/lib/userSettings';
 
 type ThemeMode = 'light' | 'dark';
@@ -29,8 +36,10 @@ type ThemeSyncState = 'anonymous' | 'checking' | 'needs-import' | 'synced' | 'er
 interface ThemeContextType {
     mode: ThemeMode;
     accent: string;
+    skin: SkinId;
     toggleTheme: () => void;
     setAccent: (hex: string) => void;
+    setSkin: (skin: SkinId) => void;
     applyPreset: (presetId: string) => void;
     isCustomAccent: boolean;
     isAuthenticated: boolean;
@@ -60,9 +69,18 @@ function applyAccentCssVar(accent: string) {
     document.documentElement.style.setProperty('--accent', accent);
 }
 
+function getInitialSkin(): SkinId {
+    if (typeof window === 'undefined') return DEFAULT_SKIN;
+    // El bootstrap de app/[locale]/layout.tsx ya seteó data-skin pre-hidratación.
+    const attrSkin = document.documentElement.getAttribute('data-skin');
+    if (isValidSkin(attrSkin)) return attrSkin;
+    return readStoredSkin();
+}
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
     const { user, isLoading: isUserLoading } = useCurrentUser();
     const [mode, setMode] = useState<ThemeMode>(getInitialMode);
+    const [skin, setSkinState] = useState<SkinId>(getInitialSkin);
     const [accent, setAccentState] = useState<string>(DEFAULT_ACCENT);
     const [isReady, setIsReady] = useState(false);
     const [isSyncing, setIsSyncing] = useState(false);
@@ -90,6 +108,19 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
     const toggleTheme = useCallback(() => {
         setMode((prev) => (prev === 'light' ? 'dark' : 'light'));
+    }, []);
+
+    useEffect(() => {
+        if (typeof document === 'undefined') return;
+        document.documentElement.setAttribute('data-skin', skin);
+        writeStoredSkin(skin);
+    }, [skin]);
+
+    // Solo local por ahora (como el modo). El sync remoto de skin queda para
+    // cuando el endpoint de settings soporte el campo; degradar sin ruido.
+    const setSkin = useCallback((next: SkinId) => {
+        if (!isValidSkin(next)) return;
+        setSkinState(next);
     }, []);
 
     const pushAccentToAccount = useCallback(async (nextAccent: string) => {
@@ -194,8 +225,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
             value={{
                 mode,
                 accent,
+                skin,
                 toggleTheme,
                 setAccent,
+                setSkin,
                 applyPreset,
                 isCustomAccent,
                 isAuthenticated: Boolean(user),

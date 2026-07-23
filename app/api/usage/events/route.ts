@@ -1,6 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
 import { getRequestAuth } from '@/lib/auth/request';
+import { checkRateLimit } from '@/lib/rateLimit';
 
 
 type EventName = 'page_view' | 'tool_open';
@@ -37,6 +38,10 @@ function trimHeader(value: string | null, max = 300): string | null {
 }
 
 export async function POST(request: NextRequest) {
+  // Telemetría anónima que escribe en D1: frenamos flooding por IP.
+  const limited = checkRateLimit(request, 'usage', { limit: 60, windowMs: 60_000 });
+  if (limited) return limited;
+
   let payload: UsagePayload;
   try {
     payload = (await request.json()) as UsagePayload;

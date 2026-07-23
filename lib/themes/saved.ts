@@ -1,7 +1,9 @@
 /**
- * User-saved named themes (accent + mode), local-first. Pure
+ * User-saved named themes (accent + mode + skin), local-first. Pure
  * serialize/parse/list helpers so they can be unit-tested without the DOM.
  */
+
+import { DEFAULT_SKIN, isValidSkin, type SkinId } from '@/lib/themes/skins';
 
 export type ThemeMode = 'light' | 'dark';
 
@@ -10,6 +12,8 @@ export interface SavedTheme {
   name: string;
   accent: string;
   mode: ThemeMode;
+  /** Opcional para retro-compat con temas guardados antes de los skins. */
+  skin?: SkinId;
 }
 
 interface SavedPayload {
@@ -34,7 +38,8 @@ export function isSavedTheme(value: unknown): value is SavedTheme {
     typeof v.name === 'string' &&
     typeof v.accent === 'string' &&
     HEX_RE.test(v.accent) &&
-    (v.mode === 'light' || v.mode === 'dark')
+    (v.mode === 'light' || v.mode === 'dark') &&
+    (v.skin === undefined || isValidSkin(v.skin))
   );
 }
 
@@ -61,11 +66,12 @@ export function addSavedTheme(
   name: string,
   accent: string,
   mode: ThemeMode,
+  skin: SkinId = DEFAULT_SKIN,
 ): SavedTheme[] {
   const clean = name.trim().slice(0, 40);
   if (!clean || !HEX_RE.test(accent)) return list;
   const without = list.filter((theme) => theme.name.toLowerCase() !== clean.toLowerCase());
-  return [{ id: newId(), name: clean, accent, mode }, ...without].slice(0, MAX_THEMES);
+  return [{ id: newId(), name: clean, accent, mode, skin }, ...without].slice(0, MAX_THEMES);
 }
 
 export function removeSavedTheme(list: SavedTheme[], id: string): SavedTheme[] {

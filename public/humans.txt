@@ -1,0 +1,28 @@
+/* TEAM */
+	Maker: Juan Paredez
+	Location: Argentina
+	Contact: devsolutionsar@gmail.com
+	GitHub: https://github.com/hios-open-systems
+
+/* SITE */
+	Site: https://openhios.dev
+	Language: Español / English / Deutsch / Italiano
+	Stack: Next.js, Ant Design, TypeScript, Cloudflare Workers
+	Fonts: Inter, Archivo, IBM Plex Mono
+	Source: https://github.com/hios-open-systems/web
+
+/* THANKS */
+	A la comunidad open source, que hace que un tipo con un soldador
+	y un editor de texto pueda publicar hardware y software completos.
+	Y al café. Mucho café.
+
+/* NOTE */
+	Todo lo que ves acá — el hardware, el firmware, este sitio — es
+	open source y sin fines de lucro. Es un proyecto hobby: no hay
+	trackers raros, no hay nada que monetizar, solo documentación y
+	herramientas. Si algo te sirve, usalo. Si algo está mal, avisá.
+
+	Everything here — hardware, firmware, this website — is open
+	source and non-profit. It's a hobby project: no shady trackers,
+	nothing to monetize, just documentation and tools. If something
+	is useful, take it. If something is broken, tell me.

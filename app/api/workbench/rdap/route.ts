@@ -1,3 +1,4 @@
+import { checkRateLimit } from '@/lib/rateLimit';
 import {
   formatNetworkError,
   isValidHostname,
@@ -40,6 +41,10 @@ function getRegistrar(entities: RdapEntity[] = []) {
 
 
 export async function GET(request: Request) {
+  // Proxy saliente (rdap.org): limitado para no ser vector de abuso.
+  const limited = checkRateLimit(request, 'rdap', { limit: 20, windowMs: 60_000 });
+  if (limited) return limited;
+
   const { searchParams } = new URL(request.url);
   const domain = normalizeHostname(searchParams.get('domain') ?? '');
 

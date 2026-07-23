@@ -1,7 +1,13 @@
 /**
- * Resistor color-code core: band <-> value conversion, fully client-safe.
- * Pure sync helpers, unit-tested. No Node-only APIs so it runs in the browser
- * and under `node --experimental-strip-types`.
+ * Código de colores de resistencias: bandas <-> valor.
+ *
+ * La idea del estándar (IEC 60062): cada color codifica un dígito, un
+ * multiplicador (potencia de 10) y/o una tolerancia. Una resistencia de
+ * 4 bandas es [dígito, dígito, multiplicador, tolerancia]; una de 5 bandas
+ * agrega un tercer dígito para más precisión.
+ *
+ * Módulo 100% puro: sin React, sin DOM, sin APIs de Node — corre igual
+ * en el browser que en un script.
  */
 
 export type ResistorColor =
@@ -26,6 +32,11 @@ export interface BandColor {
   tolerance: number | null;
 }
 
+/**
+ * La tabla completa del estándar. `digit: null` significa que ese color no
+ * puede ser banda de dígito (oro y plata solo multiplican o toleran);
+ * `tolerance: null`, que no es válido como banda de tolerancia.
+ */
 export const BAND_COLORS: BandColor[] = [
   { color: 'black', hex: '#1a1a1a', digit: 0, multiplier: 1, tolerance: null },
   { color: 'brown', hex: '#7b3f00', digit: 1, multiplier: 10, tolerance: 1 },
@@ -41,6 +52,7 @@ export const BAND_COLORS: BandColor[] = [
   { color: 'silver', hex: '#b0b0b0', digit: null, multiplier: 0.01, tolerance: 10 },
 ];
 
+// Índice color -> fila de la tabla, para no buscar linealmente en cada consulta.
 const BY_COLOR: Record<ResistorColor, BandColor> = BAND_COLORS.reduce(
   (acc, band) => {
     acc[band.color] = band;
@@ -65,6 +77,12 @@ export interface ResistorValue {
   display: string;
 }
 
+/**
+ * Series E (valores preferidos): los fabricantes no producen cualquier valor,
+ * sino estos escalones logarítmicos por década. E24 acompaña tolerancia 5%
+ * (4 bandas), E96 la 1% (5 bandas). Se usan para "ajustar" un valor arbitrario
+ * al componente comprable más cercano.
+ */
 const E12 = [1.0, 1.2, 1.5, 1.8, 2.2, 2.7, 3.3, 3.9, 4.7, 5.6, 6.8, 8.2];
 
 const E24 = [
@@ -108,6 +126,12 @@ function isToleranceColor(color: ResistorColor): boolean {
   return BY_COLOR[color].tolerance !== null;
 }
 
+/**
+ * Bandas -> valor. La estructura es siempre:
+ * [dígitos...] + [multiplicador] + [tolerancia], con 2 o 3 dígitos según
+ * sean 4 o 5 bandas. Los dígitos forman el "significando" (ej: rojo-violeta
+ * = 27) y el multiplicador lo escala (×100 -> 2.7 kΩ).
+ */
 export function bandsToValue(bands: ResistorColor[]): ResistorValue | { error: string } {
   if (bands.length !== 4 && bands.length !== 5) {
     return { error: 'Resistor must have 4 or 5 bands' };
@@ -138,6 +162,7 @@ export function bandsToValue(bands: ResistorColor[]): ResistorValue | { error: s
     return { error: `Band ${digitCount + 2} (${toleranceColor}) is not a valid tolerance` };
   }
 
+  // [2, 7] -> 27: cada dígito corre el acumulado una posición decimal.
   const significand = digits.reduce((acc, d) => acc * 10 + d, 0);
   const ohms = significand * multiplier;
 
@@ -150,12 +175,15 @@ function toleranceToColor(tolerancePct: number): ResistorColor | null {
 }
 
 function multiplierToColor(multiplier: number): ResistorColor | null {
+  // Comparación con tolerancia relativa: los multiplicadores fraccionarios
+  // (0.1, 0.01) no son exactos en binario, así que `===` fallaría.
   const match = BAND_COLORS.find(
     (b) => Math.abs(b.multiplier - multiplier) < multiplier * 1e-9 + 1e-12,
   );
   return match ? match.color : null;
 }
 
+/** Busca el valor de la serie E más cercano al significando pedido. */
 function snapToSeries(significand: number, series: number[]): number {
   let best = series[0];
   let bestDiff = Math.abs(significand - best);
@@ -169,6 +197,13 @@ function snapToSeries(significand: number, series: number[]): number {
   return best;
 }
 
+/**
+ * Valor -> bandas (el camino inverso). El truco es la notación científica:
+ * separamos el valor en significando [1, 10) y exponente, los dígitos salen
+ * del significando y el multiplicador del exponente. Si el valor no cae
+ * exacto en los dígitos disponibles, lo ajustamos a la serie E del caso
+ * (E24 para 4 bandas, E96 para 5).
+ */
 export function valueToBands(
   ohms: number,
   bandCount: 4 | 5,
@@ -186,10 +221,11 @@ export function valueToBands(
   const digitCount = bandCount - 2;
   const series = bandCount === 4 ? E24 : E96;
 
-  // Normalize to a significand in [1, 10) with an exponent (power of ten).
+  // Normalizamos a significando en [1, 10) con su exponente (potencia de 10).
   let exponent = Math.floor(Math.log10(ohms));
   let significand = ohms / 10 ** exponent;
-  // Guard against floating-point drift pushing the significand out of [1, 10).
+  // Guarda contra la deriva de punto flotante que puede sacar el
+  // significando de [1, 10) por un pelo.
   if (significand >= 10) {
     significand /= 10;
     exponent += 1;
@@ -201,8 +237,8 @@ export function valueToBands(
   const digitScale = digitCount - 1;
   const exactDigits = significand * 10 ** digitScale;
   const roundedDigits = Math.round(exactDigits);
-  // Use the value as-is when it already maps cleanly to integer digit bands;
-  // otherwise snap the significand to the nearest E-series value.
+  // Si el valor ya mapea limpio a dígitos enteros lo usamos tal cual;
+  // si no, ajustamos el significando al valor E-series más cercano.
   const isExact = Math.abs(exactDigits - roundedDigits) < 1e-9;
   const significandDigits = isExact
     ? roundedDigits
@@ -214,6 +250,7 @@ export function valueToBands(
     return { error: `Resistance ${formatOhms(ohms)} is out of representable range` };
   }
 
+  // Descomponemos el significando dígito a dígito, de mayor a menor peso.
   const digitColors: ResistorColor[] = [];
   const remaining = significandDigits;
   for (let i = digitCount - 1; i >= 0; i -= 1) {
@@ -229,6 +266,7 @@ export function valueToBands(
   return [...digitColors, multiplierColor, toleranceColor];
 }
 
+/** 4700 -> "4.7 kΩ": elige el prefijo más grande que no deje el número en 0.x */
 export function formatOhms(ohms: number): string {
   const units: { factor: number; suffix: string }[] = [
     { factor: 1_000_000_000, suffix: 'GΩ' },
@@ -239,7 +277,7 @@ export function formatOhms(ohms: number): string {
 
   const unit = units.find((u) => Math.abs(ohms) >= u.factor) ?? units[units.length - 1];
   const scaled = ohms / unit.factor;
-  // Trim trailing zeros while keeping meaningful decimals (4.7, 1, 220).
+  // Recorta ceros de cola pero mantiene los decimales con significado (4.7, 1, 220).
   const text = Number.parseFloat(scaled.toFixed(3)).toString();
   return `${text} ${unit.suffix}`;
 }
