@@ -20,6 +20,8 @@ const posts = (fs.existsSync(DIR) ? fs.readdirSync(DIR) : [])
             summary: String(data.summary ?? ''),
             tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
             lang: String(data.lang ?? 'es'),
+            // 'devlog' (bitácora) | 'referencia' (doc técnico permanente); default devlog.
+            category: data.category === 'referencia' ? 'referencia' : 'devlog',
         };
     })
     .filter(Boolean)

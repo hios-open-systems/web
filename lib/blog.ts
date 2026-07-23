@@ -4,6 +4,9 @@ import matter from 'gray-matter';
 
 const BLOG_DIR = path.join(process.cwd(), 'content', 'blog');
 
+/** Taxonomía del devlog: 'devlog' = bitácora, 'referencia' = doc técnico permanente. */
+export type PostCategory = 'devlog' | 'referencia';
+
 export interface PostMeta {
     slug: string;
     title: string;
@@ -11,6 +14,7 @@ export interface PostMeta {
     summary: string;
     tags: string[];
     lang: string;
+    category: PostCategory;
 }
 
 export interface Post extends PostMeta {
@@ -28,6 +32,7 @@ function parseFile(file: string): Post | null {
         summary: String(data.summary ?? ''),
         tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
         lang: String(data.lang ?? 'es'),
+        category: data.category === 'referencia' ? 'referencia' : 'devlog',
         content,
     };
 }
@@ -50,6 +55,7 @@ export function getAllPostMeta(): PostMeta[] {
         summary: p.summary,
         tags: p.tags,
         lang: p.lang,
+        category: p.category,
     }));
 }
 

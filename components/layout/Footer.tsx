@@ -27,6 +27,7 @@ export function Footer() {
         { href: `/${locale}/calculators`, label: label('calculators', 'Calculadoras') },
         { href: `/${locale}/prints`, label: 'Maker' },
         { href: `/${locale}/blog`, label: 'Devlog' },
+        { href: `/${locale}/stats`, label: 'Stats' },
         { href: `/${locale}/colophon`, label: 'Colophon' },
     ];
 

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
+import { isTelemetryEnabled } from '@/lib/telemetry';
 
 type EventName = 'page_view' | 'tool_open';
 
@@ -53,6 +54,8 @@ export function UsageEventTracker() {
   useEffect(() => {
     if (!pathname) return;
     if (previousPathRef.current === pathname) return;
+    // Opt-in: sin consentimiento explícito no se envía nada (lib/telemetry).
+    if (!isTelemetryEnabled()) return;
 
     const locale = inferLocale(pathname);
     sendUsage({ eventName: 'page_view', path: pathname, locale });
