@@ -4,7 +4,6 @@ import React, { useMemo, useState } from 'react';
 import { Button, Card, Input, Segmented, Select, Space, Switch, Typography, message } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
-import { useTheme } from '@/lib/ThemeContext';
 import { csvToObjects, objectsToCsv, parseCsv, toCsv } from '@/lib/workbench/csvJson';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
@@ -25,7 +24,6 @@ const DELIMITERS = [
 
 export function CsvJsonTool() {
   const t = useTranslations('Workbench.csvJson');
-  const { mode } = useTheme();
   const [messageApi, contextHolder] = message.useMessage();
 
   const [direction, setDirection] = useState<Direction>('toJson');
@@ -56,11 +54,11 @@ export function CsvJsonTool() {
   const themeVars = useMemo(
     () =>
       ({
-        '--wb-surface-border': mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.08)',
-        '--wb-surface-soft-bg': mode === 'dark' ? '#0f172a' : '#f8fafc',
-        '--wb-text-muted': mode === 'dark' ? '#9ca3af' : '#475569',
+        '--wb-surface-border': 'var(--hios-border)',
+        '--wb-surface-soft-bg': 'var(--hios-bg-secondary)',
+        '--wb-text-muted': 'var(--hios-text-secondary)',
       }) as React.CSSProperties,
-    [mode],
+    [],
   );
 
   const sourceLabel = direction === 'toJson' ? t('csvLabel') : t('jsonLabel');

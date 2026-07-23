@@ -34,6 +34,8 @@ const nextConfig = {
 		formats: ['image/avif', 'image/webp'],
 		deviceSizes: [640, 750, 828, 1080, 1200],
 		imageSizes: [16, 32, 48, 64, 96, 128, 256],
+		// Next 16 exige declarar las qualities usadas por <Image quality={...}>.
+		qualities: [75, 85],
 		minimumCacheTTL: 60 * 60 * 24 * 365, // 1 año
 	},
 

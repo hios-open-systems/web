@@ -3,7 +3,6 @@
 import React, { useMemo, useState } from 'react';
 import { Card, Col, Input, Row, Space, Table, Typography, type TableColumnsType } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useTheme } from '@/lib/ThemeContext';
 import {
   CONTROL_CHARS,
   charToCodePoint,
@@ -37,7 +36,6 @@ function interpret(raw: string): number | null {
 
 export function AsciiUnicodeTool() {
   const t = useTranslations('Workbench.asciiUnicode');
-  const { mode } = useTheme();
   const [raw, setRaw] = useState('A');
 
   const cp = useMemo(() => interpret(raw), [raw]);
@@ -50,11 +48,11 @@ export function AsciiUnicodeTool() {
   const themeVars = useMemo(
     () =>
       ({
-        '--wb-surface-border': mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.08)',
-        '--wb-surface-soft-bg': mode === 'dark' ? '#0f172a' : '#f8fafc',
-        '--wb-text-muted': mode === 'dark' ? '#9ca3af' : '#475569',
+        '--wb-surface-border': 'var(--hios-border)',
+        '--wb-surface-soft-bg': 'var(--hios-bg-secondary)',
+        '--wb-text-muted': 'var(--hios-text-secondary)',
       }) as React.CSSProperties,
-    [mode],
+    [],
   );
 
   const metrics = info

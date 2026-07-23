@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { Card, Typography, Tag } from 'antd';
-import { motion } from 'framer-motion';
 import { useTheme } from '@/lib/ThemeContext';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -32,11 +31,7 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
     const taglineKey = `tagline_${project.slug}`;
 
     return (
-        <motion.div
-            whileHover={{ y: -8 }}
-            transition={{ duration: 0.2 }}
-            style={{ height: '100%' }}
-        >
+        <div className="card-hover-lift" style={{ height: '100%' }}>
             <Link href={`/${locale}/projects/${project.slug}`} prefetch={false} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
                 <Card
                     hoverable
@@ -65,6 +60,7 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
                                 width: '100%',
                                 aspectRatio: '16/10',
                                 overflow: 'hidden',
+                                borderBottom: '1px solid var(--hios-border)',
                             }}>
                                 <Image
                                     src={project.image}
@@ -79,33 +75,27 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
                                     }}
                                     className="image-zoom-hover"
                                 />
-                                <div style={{
-                                    position: 'absolute',
-                                    bottom: 0,
-                                    left: 0,
-                                    right: 0,
-                                    height: '60%',
-                                    background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%)',
-                                    pointerEvents: 'none',
-                                }} />
                             </div>
                         ) : (
                             <div style={{
                                 width: '100%',
                                 aspectRatio: '16/10',
-                                background: mode === 'dark'
-                                    ? 'linear-gradient(135deg, #1a1a1a, #0d0d0d)'
-                                    : 'linear-gradient(135deg, #f5f5f5, #e8e8e8)',
+                                background:
+                                    'linear-gradient(to right, var(--hios-grid-line) 1px, transparent 1px), ' +
+                                    'linear-gradient(to bottom, var(--hios-grid-line) 1px, transparent 1px), ' +
+                                    'var(--hios-bg-secondary)',
+                                backgroundSize: '24px 24px, 24px 24px, auto',
+                                borderBottom: '1px solid var(--hios-border)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 flexDirection: 'column',
                                 gap: '8px',
                             }}>
-                                <Text style={{
-                                    color: mode === 'dark' ? '#444' : '#bbb',
-                                    fontSize: '14px',
-                                }}>
+                                <Text
+                                    className="tech-label"
+                                    style={{ color: 'var(--hios-text-muted)' }}
+                                >
                                     {t('in_development')}
                                 </Text>
                             </div>
@@ -210,30 +200,27 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
                             </Text>
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                                 {project.learnings.map((learning) => (
-                                    <motion.div
+                                    <Tag
                                         key={learning}
-                                        whileHover={{ scale: 1.05 }}
-                                        transition={{ duration: 0.15 }}
+                                        style={{
+                                            margin: 0,
+                                            background: 'var(--hios-bg-secondary)',
+                                            border: '1px solid var(--hios-border)',
+                                            color: 'var(--hios-text-secondary)',
+                                            fontFamily: 'var(--font-stack-mono)',
+                                            fontSize: '11px',
+                                            borderRadius: '4px',
+                                            cursor: 'default',
+                                        }}
                                     >
-                                        <Tag
-                                            style={{
-                                                background: mode === 'dark' ? 'rgba(255,255,255,0.08)' : '#f0f0f0',
-                                                border: 'none',
-                                                color: mode === 'dark' ? '#999' : '#666',
-                                                fontSize: '12px',
-                                                borderRadius: '4px',
-                                                cursor: 'default',
-                                            }}
-                                        >
-                                            {learning}
-                                        </Tag>
-                                    </motion.div>
+                                        {learning}
+                                    </Tag>
                                 ))}
                             </div>
                         </div>
                     )}
                 </Card>
             </Link>
-        </motion.div>
+        </div>
     );
 }

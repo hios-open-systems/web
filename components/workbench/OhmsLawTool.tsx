@@ -3,7 +3,6 @@
 import React, { useMemo, useState } from 'react';
 import { Card, Col, InputNumber, Row, Space, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useTheme } from '@/lib/ThemeContext';
 import { solve, type OhmsInput, type OhmsValues } from '@/lib/workbench/ohms';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
@@ -26,7 +25,6 @@ function fmt(n: number): string {
 
 export function OhmsLawTool() {
   const t = useTranslations('Workbench.ohmsLaw');
-  const { mode } = useTheme();
   const [vals, setVals] = useState<Record<Field, number | null>>({ v: 12, i: null, r: 4, p: null });
 
   const result = useMemo(() => {
@@ -44,12 +42,12 @@ export function OhmsLawTool() {
   const themeVars = useMemo(
     () =>
       ({
-        '--wb-surface-border': mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.08)',
-        '--wb-surface-bg': mode === 'dark' ? '#111827' : '#ffffff',
-        '--wb-surface-soft-bg': mode === 'dark' ? '#0f172a' : '#f8fafc',
-        '--wb-text-muted': mode === 'dark' ? '#9ca3af' : '#475569',
+        '--wb-surface-border': 'var(--hios-border)',
+        '--wb-surface-bg': 'var(--hios-bg)',
+        '--wb-surface-soft-bg': 'var(--hios-bg-secondary)',
+        '--wb-text-muted': 'var(--hios-text-secondary)',
       }) as React.CSSProperties,
-    [mode],
+    [],
   );
 
   return (

@@ -3,7 +3,6 @@
 import React, { useMemo, useState } from 'react';
 import { Card, Col, InputNumber, Row, Select, Space, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useTheme } from '@/lib/ThemeContext';
 import {
   NOTE_NAMES,
   freqToNote,
@@ -43,7 +42,6 @@ function Metric({ label, value }: { label: string; value: string }) {
 
 export function NoteFrequencyTool() {
   const t = useTranslations('Workbench.noteFrequency');
-  const { mode } = useTheme();
   const [a4, setA4] = useState<number | null>(440);
   const [note, setNote] = useState('A');
   const [octave, setOctave] = useState<number | null>(4);
@@ -67,11 +65,11 @@ export function NoteFrequencyTool() {
   const themeVars = useMemo(
     () =>
       ({
-        '--wb-surface-border': mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.08)',
-        '--wb-surface-soft-bg': mode === 'dark' ? '#0f172a' : '#f8fafc',
-        '--wb-text-muted': mode === 'dark' ? '#9ca3af' : '#475569',
+        '--wb-surface-border': 'var(--hios-border)',
+        '--wb-surface-soft-bg': 'var(--hios-bg-secondary)',
+        '--wb-text-muted': 'var(--hios-text-secondary)',
       }) as React.CSSProperties,
-    [mode],
+    [],
   );
 
   return (

@@ -4,7 +4,7 @@ import React, { ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { Typography } from 'antd';
 import { useTheme } from '@/lib/ThemeContext';
-import { getColor, layout, motionVariants } from '@/config/theme';
+import { getColor, layout } from '@/config/theme';
 
 const { Title, Paragraph } = Typography;
 
@@ -113,12 +113,13 @@ interface SectionHeaderProps {
  *     badge={<CodeOutlined />}
  *   />
  */
+// `animate` se acepta por compatibilidad pero ya no anima: las animaciones de
+// entrada se eliminaron del sitio (costaban CLS y daban look de template).
 export function SectionHeader({
     title,
     subtitle,
     badge,
     centered = true,
-    animate = true,
 }: SectionHeaderProps) {
     const { mode } = useTheme();
 
@@ -157,14 +158,6 @@ export function SectionHeader({
             )}
         </div>
     );
-
-    if (animate) {
-        return (
-            <motion.div {...motionVariants.fadeInUp}>
-                {content}
-            </motion.div>
-        );
-    }
 
     return content;
 }

@@ -3,7 +3,6 @@
 import React from 'react';
 import { Layout, Typography, Space } from 'antd';
 import { GithubOutlined, MailOutlined } from '@ant-design/icons';
-import { motion } from 'framer-motion';
 import NextLink from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
 import styles from './footer.module.css';
@@ -52,12 +51,7 @@ export function Footer() {
                 borderTop: '1px solid var(--hios-border)',
             }}
         >
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-            >
+            <div>
                 <Space direction="vertical" size="large">
                     <nav className={styles.nav} aria-label="Footer">
                         {navLinks.map((link) => (
@@ -68,15 +62,8 @@ export function Footer() {
                     </nav>
 
                     <Space size="large">
-                        {socialLinks.map((link, index) => (
-                            <motion.div
-                                key={link.label}
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.3, delay: index * 0.1 }}
-                                whileHover={{ y: -3, scale: 1.1 }}
-                            >
+                        {socialLinks.map((link) => (
+                            <div key={link.label}>
                                 <Link
                                     href={link.href}
                                     target={link.href.startsWith('http') ? '_blank' : undefined}
@@ -92,7 +79,7 @@ export function Footer() {
                                 >
                                     <span style={{ fontSize: '20px' }}>{link.icon}</span>
                                 </Link>
-                            </motion.div>
+                            </div>
                         ))}
                     </Space>
 
@@ -117,7 +104,7 @@ export function Footer() {
                         </Text>
                     </div>
                 </Space>
-            </motion.div>
+            </div>
         </AntFooter>
     );
 }

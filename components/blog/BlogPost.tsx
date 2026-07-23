@@ -5,13 +5,10 @@ import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { ArrowLeftOutlined } from '@ant-design/icons';
-import { useTheme } from '@/lib/ThemeContext';
 import type { Post } from '@/lib/blog';
 import styles from './blog.module.css';
 
 export function BlogPost({ post, locale }: { post: Post; locale: string }) {
-    const { mode } = useTheme();
-
     return (
         <main className={styles.page}>
             <nav className={styles.backNav}>
@@ -32,7 +29,7 @@ export function BlogPost({ post, locale }: { post: Post; locale: string }) {
                         remarkPlugins={[remarkGfm]}
                         components={{
                             code: ({ children }) => (
-                                <code style={{ background: mode === 'dark' ? '#1a1a1a' : '#f5f5f5', color: mode === 'dark' ? '#4096ff' : '#0066cc', padding: '2px 6px', borderRadius: 4, fontSize: '0.9em' }}>
+                                <code style={{ background: 'var(--hios-bg-secondary)', color: 'var(--accent)', padding: '2px 6px', borderRadius: 4, fontSize: '0.9em' }}>
                                     {children}
                                 </code>
                             ),

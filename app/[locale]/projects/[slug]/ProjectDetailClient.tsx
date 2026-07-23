@@ -3,7 +3,6 @@
 import React from 'react';
 import { Typography, Tag, Row, Col, Card, Button, Space, Empty } from 'antd';
 import { ArrowLeftOutlined, DownloadOutlined, GithubOutlined, DoubleRightOutlined, EyeOutlined, LinkOutlined, FileOutlined } from '@ant-design/icons';
-import { motion } from 'framer-motion';
 import { useTheme } from '@/lib/ThemeContext';
 import { ProjectMeta } from '@/lib/projects';
 import { WIRING_GUIDE_SLUGS } from '@/config/pinouts/guides';
@@ -26,12 +25,12 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
     const { mode } = useTheme();
     const locale = useLocale();
     const t = useTranslations('ProjectDetail');
-    const accentColor = '#f59e0b';
-    const bgColor = mode === 'dark' ? '#0d0d0d' : '#ffffff';
-    const textColor = mode === 'dark' ? '#e6e6e6' : '#1a1a1a';
-    const secondaryColor = mode === 'dark' ? '#999' : '#666';
-    const mutedColor = mode === 'dark' ? '#666' : '#999';
-    const cardBorder = mode === 'dark' ? '1px solid #1f1f1f' : '1px solid #f0f0f0';
+    const accentColor = 'var(--accent)';
+    const bgColor = 'var(--hios-bg)';
+    const textColor = 'var(--hios-text)';
+    const secondaryColor = 'var(--hios-text-secondary)';
+    const mutedColor = 'var(--hios-text-muted)';
+    const cardBorder = '1px solid var(--hios-border)';
 
     const viewerByKind: Record<string, (assetPath: string) => string> = {
         '3d': (assetPath) => `https://3dviewer.net/#model=${encodeURIComponent(`${window.location.origin}${assetPath}`)}`,
@@ -103,11 +102,7 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
 
             {/* Hero Section */}
             <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 60px' }}>
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                >
+                <div>
                     <Tag
                         color={project.status === 'prototype' ? 'green' : 'orange'}
                         style={{ marginBottom: '16px', borderRadius: '4px', fontWeight: 500 }}
@@ -140,47 +135,37 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                             </Link>
                         )}
                     </Space>
-                </motion.div>
+                </div>
             </section>
 
             {/* Gallery — los visuales primero */}
             {project.gallery && project.gallery.length > 0 && (
-                <motion.section
-                    style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 48px' }}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.2 }}
-                >
+                <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 48px' }}>
                     <ImageCarousel images={project.gallery} alt={project.name} />
-                </motion.section>
+                </section>
             )}
 
             {/* Story / Breakthrough - THE MAGIC */}
             {story && (
                 <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 60px' }}>
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.6, delay: 0.3 }}
-                    >
+                    <div>
                         <Card
                             style={{
-                                background: mode === 'dark' ? '#141414' : '#fafafa',
+                                background: 'var(--hios-bg-secondary)',
                                 border: cardBorder,
                                 borderRadius: '16px',
                                 overflow: 'hidden'
                             }}
                             styles={{ body: { padding: '40px' } }}
                         >
-                            <Text style={{
-                                color: accentColor,
-                                fontWeight: 600,
-                                fontSize: '13px',
-                                textTransform: 'uppercase',
-                                letterSpacing: '2px',
-                                display: 'block',
-                                marginBottom: '16px'
-                            }}>
+                            <Text
+                                className="tech-label"
+                                style={{
+                                    color: accentColor,
+                                    display: 'block',
+                                    marginBottom: '16px'
+                                }}
+                            >
                                 {t('moment')}
                             </Text>
                             <Title level={3} style={{ color: textColor, marginBottom: '24px', fontStyle: 'italic', fontWeight: 500, lineHeight: 1.5 }}>
@@ -192,17 +177,12 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                                 </Paragraph>
                             )}
                         </Card>
-                    </motion.div>
+                    </div>
                 </section>
             )}
 
             {/* Main Content (Markdown README) */}
-            <motion.section
-                style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 60px' }}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.4, delay: 0.4 }}
-            >
+            <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 60px' }}>
                 <div className="markdown-content" style={{ color: textColor }}>
                     <ReactMarkdown
                         remarkPlugins={[remarkGfm]}
@@ -243,7 +223,7 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                         {project.readme}
                     </ReactMarkdown>
                 </div>
-            </motion.section>
+            </section>
 
             {/* Specifications */}
             {story?.specs && (
@@ -369,11 +349,7 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                     <Row gutter={[16, 16]}>
                         {story.whatWorks && (
                             <Col xs={24} md={12}>
-                                <motion.div
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.4, delay: 0.5 }}
-                                >
+                                <div>
                                     <Card
                                         style={{
                                             background: mode === 'dark' ? 'rgba(16,185,129,0.08)' : 'rgba(16,185,129,0.05)',
@@ -405,16 +381,12 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                                             ))}
                                         </ul>
                                     </Card>
-                                </motion.div>
+                                </div>
                             </Col>
                         )}
                         {story.whatDoesnt && (
                             <Col xs={24} md={12}>
-                                <motion.div
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.4, delay: 0.5 }}
-                                >
+                                <div>
                                     <Card
                                         style={{
                                             background: mode === 'dark' ? 'rgba(249,115,22,0.08)' : 'rgba(249,115,22,0.05)',
@@ -446,7 +418,7 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                                             ))}
                                         </ul>
                                     </Card>
-                                </motion.div>
+                                </div>
                             </Col>
                         )}
                     </Row>
@@ -456,11 +428,7 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
             {/* Resources Only */}
             {story?.resources && (
                 <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 40px' }}>
-                    <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4, delay: 0.6 }}
-                    >
+                    <div>
                         <Card
                             style={{
                                 background: mode === 'dark' ? 'rgba(14,165,233,0.08)' : 'rgba(14,165,233,0.05)',
@@ -506,31 +474,28 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                                 ))}
                             </Space>
                         </Card>
-                    </motion.div>
+                    </div>
                 </section>
             )}
 
             {/* Download Gallery / Final CTA */}
-            <motion.section
+            <section
                 style={{
                     maxWidth: 900,
                     margin: '60px auto 0',
                     padding: '60px 24px',
                     textAlign: 'center',
-                    background: mode === 'dark' ? 'linear-gradient(180deg, #141414 0%, #0d0d0d 100%)' : '#fafafa',
-                    borderRadius: '24px',
+                    background: 'var(--hios-bg-secondary)',
+                    borderRadius: '16px',
                     border: cardBorder,
                 }}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.7 }}
             >
                 <Title level={2} style={{ color: textColor, marginBottom: '24px' }}>
                     {t('want_one')}
                 </Title>
                 <Paragraph style={{ color: secondaryColor, fontSize: '1.2rem', maxWidth: 600, margin: '0 auto 40px' }}>
                     {t.rich('build_your_own', {
-                        strongWhite: (chunks) => <strong style={{ color: 'white' }}>{chunks}</strong>,
+                        strongWhite: (chunks) => <strong style={{ color: 'var(--hios-text)' }}>{chunks}</strong>,
                         br: () => <br />
                     })}
                 </Paragraph>
@@ -543,11 +508,6 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                             icon={<DownloadOutlined />}
                             href={project.files[0]?.path}
                             target="_blank"
-                            style={{
-                                background: `linear-gradient(135deg, #0066cc, ${accentColor})`,
-                                border: 'none',
-                                fontWeight: 500,
-                            }}
                         >
                             {t('view_documentation')}
                         </Button>
@@ -564,7 +524,7 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                         {t('view_on_github')}
                     </Button>
                 </Space>
-            </motion.section>
+            </section>
 
             {/* Project Toolbox — archivos técnicos al final (de apéndice, no manda la página) */}
             <section style={{ maxWidth: 900, margin: '60px auto 0', padding: '0 24px 48px' }}>
@@ -670,7 +630,7 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
             }}>
                 <Text style={{ color: mutedColor, fontSize: '14px', display: 'block', textAlign: 'center' }}>
                     {t.rich('prototype_functional', {
-                        highlight: (chunks) => <span style={{ color: '#f59e0b' }}>{chunks}</span>
+                        highlight: (chunks) => <span style={{ color: 'var(--accent)' }}>{chunks}</span>
                     })}<br />
                     <a
                         href="mailto:devsolutionsar@gmail.com?subject=HIOS%20BTDAC%20-%20Consulta"

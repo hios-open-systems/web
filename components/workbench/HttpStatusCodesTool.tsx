@@ -3,7 +3,6 @@
 import React, { useMemo, useState } from 'react';
 import { Card, Input, Space, Table, Tag, Typography, type TableColumnsType } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useTheme } from '@/lib/ThemeContext';
 import { searchStatus, type HttpCategory, type HttpStatus } from '@/lib/workbench/httpStatus';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
@@ -20,7 +19,6 @@ const CATEGORY_COLOR: Record<HttpCategory, string> = {
 
 export function HttpStatusCodesTool() {
   const t = useTranslations('Workbench.httpStatusCodes');
-  const { mode } = useTheme();
   const [query, setQuery] = useState('');
 
   const rows = useMemo(() => searchStatus(query), [query]);
@@ -28,10 +26,10 @@ export function HttpStatusCodesTool() {
   const themeVars = useMemo(
     () =>
       ({
-        '--wb-surface-border': mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.08)',
-        '--wb-text-muted': mode === 'dark' ? '#9ca3af' : '#475569',
+        '--wb-surface-border': 'var(--hios-border)',
+        '--wb-text-muted': 'var(--hios-text-secondary)',
       }) as React.CSSProperties,
-    [mode],
+    [],
   );
 
   const columns: TableColumnsType<HttpStatus> = [

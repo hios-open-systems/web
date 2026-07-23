@@ -5,7 +5,6 @@ import { Button, Card, Space, Tag, Typography, Upload, message } from 'antd';
 import { CopyOutlined, InboxOutlined } from '@ant-design/icons';
 import NextImage from 'next/image';
 import { useTranslations } from 'next-intl';
-import { useTheme } from '@/lib/ThemeContext';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
 
@@ -34,7 +33,6 @@ function formatBytes(bytes: number): string {
 
 export function ImageBase64Tool() {
   const t = useTranslations('Workbench.imageBase64');
-  const { mode } = useTheme();
   const [messageApi, contextHolder] = message.useMessage();
   const [imageInfo, setImageInfo] = useState<ImageInfo | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -42,12 +40,12 @@ export function ImageBase64Tool() {
   const themeVars = useMemo(
     () =>
       ({
-        '--wb-surface-border': mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.08)',
-        '--wb-surface-bg': mode === 'dark' ? '#111827' : '#ffffff',
-        '--wb-surface-soft-bg': mode === 'dark' ? '#0f172a' : '#f8fafc',
-        '--wb-text-muted': mode === 'dark' ? '#9ca3af' : '#475569',
+        '--wb-surface-border': 'var(--hios-border)',
+        '--wb-surface-bg': 'var(--hios-bg)',
+        '--wb-surface-soft-bg': 'var(--hios-bg-secondary)',
+        '--wb-text-muted': 'var(--hios-text-secondary)',
       }) as React.CSSProperties,
-    [mode],
+    [],
   );
 
   const processFile = useCallback(
@@ -144,7 +142,7 @@ export function ImageBase64Tool() {
                   borderRadius: 8,
                   border: '1px solid var(--wb-surface-border)',
                   objectFit: 'contain',
-                  background: mode === 'dark' ? '#1e293b' : '#f1f5f9',
+                  background: 'var(--hios-bg-secondary)',
                 }}
               />
               <div style={{ flex: 1, minWidth: 200 }}>

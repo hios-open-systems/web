@@ -4,7 +4,6 @@ import React, { useMemo, useState } from 'react';
 import { Button, Card, Col, Input, Row, Slider, Space, Tooltip, Typography } from 'antd';
 import { BgColorsOutlined, CopyOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
-import { useTheme } from '@/lib/ThemeContext';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
 
@@ -90,7 +89,6 @@ const PALETTE_PRESETS = [
 
 export function ColorTool() {
   const t = useTranslations('Workbench.color');
-  const { mode } = useTheme();
 
   const [hex, setHex] = useState('#0ea5e9');
   const [hexInput, setHexInput] = useState('#0ea5e9');
@@ -119,12 +117,12 @@ export function ColorTool() {
   const themeVars = useMemo(
     () =>
       ({
-        '--wb-surface-border': mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.08)',
-        '--wb-surface-bg': mode === 'dark' ? '#111827' : '#ffffff',
-        '--wb-surface-soft-bg': mode === 'dark' ? '#0f172a' : '#f8fafc',
-        '--wb-text-muted': mode === 'dark' ? '#9ca3af' : '#475569',
+        '--wb-surface-border': 'var(--hios-border)',
+        '--wb-surface-bg': 'var(--hios-bg)',
+        '--wb-surface-soft-bg': 'var(--hios-bg-secondary)',
+        '--wb-text-muted': 'var(--hios-text-secondary)',
       }) as React.CSSProperties,
-    [mode],
+    [],
   );
 
   const copyVal = async (val: string) => {

@@ -4,11 +4,11 @@
   margin: 0 auto;
   padding: 36px 20px 72px;
   --pw-surface: #ffffff;
-  --pw-surface-muted: #f8fafc;
-  --pw-border: rgba(15, 23, 42, 0.1);
-  --pw-title: #0f172a;
-  --pw-text: #334155;
-  --pw-muted: #64748b;
+  --pw-surface-muted: var(--hios-bg-secondary);
+  --pw-border: var(--hios-border);
+  --pw-title: var(--hios-text);
+  --pw-text: var(--hios-text);
+  --pw-muted: var(--hios-text-secondary);
   --pw-code-bg: rgba(15, 23, 42, 0.06);
   --pw-note: #b45309;
   --pw-schem-bg: #eef2f6;
@@ -24,11 +24,6 @@
 
 :global([data-theme='dark']) .guide {
   --pw-surface: rgba(15, 23, 42, 0.72);
-  --pw-surface-muted: rgba(255, 255, 255, 0.03);
-  --pw-border: rgba(255, 255, 255, 0.1);
-  --pw-title: #f8fafc;
-  --pw-text: #e2e8f0;
-  --pw-muted: #cbd5e1;
   --pw-code-bg: rgba(255, 255, 255, 0.08);
   --pw-note: #f0883e;
   --pw-r5: #ff5c5c;

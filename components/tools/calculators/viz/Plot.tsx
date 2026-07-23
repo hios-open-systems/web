@@ -81,19 +81,19 @@ export function Plot({ series, xLog = true, xLabel, yLabel, yUnit, mark, height 
       {geom.yTicks.map((t, i) => (
         <g key={`y${i}`}>
           <line x1={padL} x2={W - padR} y1={t.y} y2={t.y} stroke="rgba(128,128,128,0.18)" />
-          <text x={padL - 8} y={t.y + 3} textAnchor="end" fontSize="10" fill="#94a3b8">{fmtY(t.v)}</text>
+          <text x={padL - 8} y={t.y + 3} textAnchor="end" fontSize="10" fontFamily="var(--font-stack-mono)" fill="var(--hios-text-muted)">{fmtY(t.v)}</text>
         </g>
       ))}
       {geom.xTicks.map((t, i) => (
         <g key={`x${i}`}>
           <line x1={t.x} x2={t.x} y1={padT} y2={H - padB} stroke="rgba(128,128,128,0.12)" />
-          <text x={t.x} y={H - padB + 14} textAnchor="middle" fontSize="10" fill="#94a3b8">{fmtHz(t.v)}</text>
+          <text x={t.x} y={H - padB + 14} textAnchor="middle" fontSize="10" fontFamily="var(--font-stack-mono)" fill="var(--hios-text-muted)">{fmtHz(t.v)}</text>
         </g>
       ))}
       {/* axis labels */}
-      {xLabel && <text x={(W + padL) / 2} y={H - 2} textAnchor="middle" fontSize="10" fill="#64748b">{xLabel}</text>}
+      {xLabel && <text x={(W + padL) / 2} y={H - 2} textAnchor="middle" fontSize="10" fontFamily="var(--font-stack-mono)" fill="var(--hios-text-secondary)">{xLabel}</text>}
       {yLabel && (
-        <text x={12} y={H / 2} textAnchor="middle" fontSize="10" fill="#64748b" transform={`rotate(-90 12 ${H / 2})`}>
+        <text x={12} y={H / 2} textAnchor="middle" fontSize="10" fontFamily="var(--font-stack-mono)" fill="var(--hios-text-secondary)" transform={`rotate(-90 12 ${H / 2})`}>
           {yLabel}{yUnit ? ` (${yUnit})` : ''}
         </text>
       )}
