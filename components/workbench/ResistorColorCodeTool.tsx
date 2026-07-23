@@ -3,7 +3,6 @@
 import React, { useMemo, useState } from 'react';
 import { Card, Segmented, Select, Space, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
-import { useTheme } from '@/lib/ThemeContext';
 import {
   BAND_COLORS,
   DIGIT_COLORS,
@@ -46,7 +45,6 @@ type BandKey = 'd1' | 'd2' | 'd3' | 'mult' | 'tol';
 
 export function ResistorColorCodeTool() {
   const t = useTranslations('Workbench.resistorColorCode');
-  const { mode } = useTheme();
   const [bandCount, setBandCount] = useState<4 | 5>(4);
   const [sel, setSel] = useState<Record<BandKey, ResistorColor>>({
     d1: 'brown',
@@ -69,11 +67,11 @@ export function ResistorColorCodeTool() {
   const themeVars = useMemo(
     () =>
       ({
-        '--wb-surface-border': mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.08)',
-        '--wb-surface-soft-bg': mode === 'dark' ? '#0f172a' : '#f8fafc',
-        '--wb-text-muted': mode === 'dark' ? '#9ca3af' : '#475569',
+        '--wb-surface-border': 'var(--hios-border)',
+        '--wb-surface-soft-bg': 'var(--hios-bg-secondary)',
+        '--wb-text-muted': 'var(--hios-text-secondary)',
       }) as React.CSSProperties,
-    [mode],
+    [],
   );
 
   const pickers: { key: BandKey; label: string; colors: ResistorColor[] }[] = [

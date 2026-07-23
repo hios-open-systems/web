@@ -24,13 +24,12 @@
   font-size: 13px;
   font-weight: 500;
   text-decoration: none;
-  color: #0f172a;
+  color: var(--hios-text);
   background: rgba(15, 23, 42, 0.04);
   transition: background-color 0.18s ease;
 }
 
 :global([data-theme="dark"]) .loginButton {
-  color: #f1f5f9;
   background: rgba(255, 255, 255, 0.06);
 }
 
@@ -91,15 +90,14 @@
   min-width: 200px;
   padding: 6px;
   border-radius: 10px;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  background: #ffffff;
+  border: 1px solid var(--hios-border);
+  background: var(--hios-bg);
   box-shadow: 0 14px 32px rgba(15, 23, 42, 0.12);
   z-index: 1100;
 }
 
 :global([data-theme="dark"]) .menu {
-  border-color: rgba(255, 255, 255, 0.08);
-  background: #0f172a;
+  background: var(--hios-bg-secondary);
   box-shadow: 0 18px 36px rgba(2, 6, 23, 0.5);
 }
 
@@ -107,26 +105,18 @@
   display: flex;
   flex-direction: column;
   padding: 8px 10px 10px;
-  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
-}
-
-:global([data-theme="dark"]) .menuHeader {
-  border-bottom-color: rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid var(--hios-border);
 }
 
 .menuName {
   font-size: 13px;
   font-weight: 600;
-  color: #0f172a;
-}
-
-:global([data-theme="dark"]) .menuName {
-  color: #f1f5f9;
+  color: var(--hios-text);
 }
 
 .menuLogin {
   font-size: 12px;
-  color: #64748b;
+  color: var(--hios-text-secondary);
 }
 
 .menuItem {
@@ -137,15 +127,11 @@
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: #0f172a;
+  color: var(--hios-text);
   font-size: 13px;
   text-align: left;
   cursor: pointer;
   transition: background-color 0.18s ease;
-}
-
-:global([data-theme="dark"]) .menuItem {
-  color: #e2e8f0;
 }
 
 .menuItem:hover {

@@ -29,6 +29,7 @@
   /* Light mode */
   --hios-bg: #ffffff;
   --hios-bg-secondary: #f6f7f9;
+  --hios-bg-elevated: #ffffff;
   --hios-text: #16181d;
   --hios-text-secondary: #5c6470;
   --hios-text-muted: #8b93a1;
@@ -85,6 +86,7 @@
 [data-theme="dark"] {
   --hios-bg: #0b0e14;
   --hios-bg-secondary: #11151d;
+  --hios-bg-elevated: #151a24;
   --hios-text: #e8eaed;
   --hios-text-secondary: #9aa4b2;
   --hios-text-muted: #667085;

@@ -22,18 +22,23 @@ export function ProjectsIndex() {
         }}>
             <div style={{ maxWidth: 1120, margin: '0 auto' }}>
                 <div style={{ marginBottom: '56px', textAlign: 'center' }}>
+                    <div style={{ marginBottom: '10px' }}>
+                        <span className="tech-label" style={{ color: 'var(--accent)' }} aria-hidden>
+                            01 / Hardware
+                        </span>
+                    </div>
                     <Title
                         level={1}
                         style={{
                             marginBottom: '16px',
-                            color: mode === 'dark' ? '#e6e6e6' : '#1a1a1a',
-                            fontWeight: 600,
+                            color: 'var(--hios-text)',
+                            fontWeight: 700,
                         }}
                     >
                         {t('title')}
                     </Title>
                     <Paragraph style={{
-                        color: mode === 'dark' ? '#888' : '#777',
+                        color: 'var(--hios-text-secondary)',
                         fontSize: '16px',
                         maxWidth: 600,
                         margin: '0 auto',

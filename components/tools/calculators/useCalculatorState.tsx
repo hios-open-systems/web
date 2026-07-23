@@ -4,7 +4,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { message } from 'antd';
-import { useTheme } from '@/lib/ThemeContext';
 import type { ResistorPackageType } from '../ResistorVisualizer';
 import { calc, clamp, formatOhm } from './calc';
 import { type ESeries, isESeries } from './eseries';
@@ -45,7 +44,6 @@ const PRESET_PATCHES: Record<string, Record<string, number | string>> = {
 
 export function useCalculatorState() {
   const t = useTranslations('Calculators');
-  const { mode } = useTheme();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -64,11 +62,11 @@ export function useCalculatorState() {
     setValues((prev) => ({ ...prev, [key]: value }));
 
   const palette = {
-    page: mode === 'dark' ? '#1a1a1a' : '#f7f7f8',
-    surface: mode === 'dark' ? '#202020' : '#ffffff',
-    border: mode === 'dark' ? '#2f2f2f' : '#e5e7eb',
-    borderSoft: mode === 'dark' ? '#3a3a3a' : '#d1d5db',
-    textSecondary: mode === 'dark' ? '#b3b3b3' : '#4b5563',
+    page: 'var(--hios-bg-secondary)',
+    surface: 'var(--hios-bg-elevated)',
+    border: 'var(--hios-border)',
+    borderSoft: 'color-mix(in srgb, var(--hios-text) 16%, transparent)',
+    textSecondary: 'var(--hios-text-secondary)',
   };
 
   const calcCardStyle = {
@@ -81,7 +79,7 @@ export function useCalculatorState() {
     width: '100%',
     height: 'clamp(38px, 4.6vw, 44px)',
     borderRadius: 10,
-    backgroundColor: mode === 'dark' ? '#1b1b1b' : '#ffffff',
+    backgroundColor: 'var(--hios-bg)',
     border: `1px solid ${palette.borderSoft}`,
   };
 

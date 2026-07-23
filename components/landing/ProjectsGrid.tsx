@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { Row, Col, Typography } from 'antd';
-import { motion } from 'framer-motion';
 import { useTheme } from '@/lib/ThemeContext';
 import Link from 'next/link';
 import { ArrowRightOutlined } from '@ant-design/icons';
@@ -24,12 +23,7 @@ export function ProjectsGrid() {
             background: getSectionBackground(mode),
         }}>
             <div style={{ maxWidth: 900, margin: '0 auto' }}>
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: '-50px' }}
-                    transition={{ duration: 0.5 }}
-                >
+                <div>
                     <div style={{ textAlign: 'center', marginBottom: '10px' }}>
                         <span className="tech-label" style={{ color: 'var(--accent)' }} aria-hidden>
                             01 / Hardware
@@ -54,7 +48,7 @@ export function ProjectsGrid() {
                     }}>
                         {t('subtitle')}
                     </Paragraph>
-                </motion.div>
+                </div>
 
                 <Row gutter={[24, 24]} justify="center">
                     {projects.map((project, index) => (
