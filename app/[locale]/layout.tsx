@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Archivo, IBM_Plex_Mono } from 'next/font/google';
 import { ThemeLayout } from '@/components/ThemeLayout';
 import AntdRegistry from '@/lib/AntdRegistry';
 import { getCurrentDeployVersion } from '@/lib/appVersion';
@@ -12,7 +12,21 @@ import { getMessages, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 
-const inter = Inter({ subsets: ['latin'], display: 'swap' });
+const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-sans' });
+// Display industrial para títulos — le saca el look "Inter para todo".
+const archivo = Archivo({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['500', '600', '700'],
+  variable: '--font-display',
+});
+// Mono técnica para labels, datos, pines y eyebrows (estética datasheet).
+const plexMono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['400', '500', '600'],
+  variable: '--font-mono',
+});
 
 export const viewport: Viewport = {
   themeColor: '#0b1220',
@@ -95,7 +109,7 @@ export default async function RootLayout({ children, params }: Props) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP_SCRIPT }} />
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.variable} ${archivo.variable} ${plexMono.variable} ${inter.className}`}>
         <NextIntlClientProvider messages={messages}>
           <AntdRegistry>
             <ThemeLayout currentVersion={getCurrentDeployVersion()}>

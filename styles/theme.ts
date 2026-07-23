@@ -1,60 +1,66 @@
 import type { ThemeConfig } from 'antd';
 import { theme as antdTheme } from 'antd';
+import { DEFAULT_ACCENT } from '@/lib/themes/config';
+
+/**
+ * Tema antd derivado del accent configurable del usuario.
+ *
+ * Única fuente de verdad de color de marca: `--accent` (ThemeContext).
+ * antd necesita hex reales para computar sus paletas derivadas, así que
+ * `getAntdTheme` recibe el accent resuelto en vez de leer la CSS var.
+ */
+
+// Las fuentes llegan como CSS vars desde next/font (app/[locale]/layout.tsx).
+export const FONT_SANS =
+    "var(--font-sans, 'Inter'), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+export const FONT_MONO =
+    "var(--font-mono, 'IBM Plex Mono'), ui-monospace, SFMono-Regular, Menlo, monospace";
 
 const baseTokens = {
-  fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-  fontSize: 14,
-  borderRadius: 6,
+    fontFamily: FONT_SANS,
+    fontFamilyCode: FONT_MONO,
+    fontSize: 14,
+    borderRadius: 8,
+    borderRadiusSM: 6,
+    borderRadiusLG: 12,
 };
 
-export const lightTheme: ThemeConfig = {
-  token: {
-    ...baseTokens,
-    colorPrimary: '#0066cc',
-    colorSuccess: '#52c41a',
-    colorWarning: '#faad14',
-    colorError: '#ff4d4f',
-    colorInfo: '#1890ff',
-    colorBgContainer: '#ffffff',
-    colorBgLayout: '#f5f5f5',
-    colorText: '#1a1a1a',
-    colorTextSecondary: '#666666',
-  },
-  components: {
-    Layout: {
-      bodyBg: '#ffffff',
-      headerBg: 'rgba(255, 255, 255, 0.8)',
-    },
-    Card: {
-      colorBgContainer: '#ffffff',
-    },
-  },
-};
+export function getAntdTheme(mode: 'light' | 'dark', accent: string): ThemeConfig {
+    const dark = mode === 'dark';
+    return {
+        algorithm: dark ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
+        token: {
+            ...baseTokens,
+            colorPrimary: accent,
+            colorInfo: accent,
+            colorLink: accent,
+            colorSuccess: dark ? '#34d399' : '#0e9f6e',
+            colorWarning: dark ? '#fbbf24' : '#d97706',
+            colorError: dark ? '#f87171' : '#dc2626',
+            colorBgContainer: dark ? '#11151d' : '#ffffff',
+            colorBgElevated: dark ? '#151a24' : '#ffffff',
+            colorBgLayout: dark ? '#0b0e14' : '#f6f7f9',
+            colorText: dark ? '#e8eaed' : '#16181d',
+            colorTextSecondary: dark ? '#9aa4b2' : '#5c6470',
+            colorBorder: dark ? 'rgba(255, 255, 255, 0.10)' : 'rgba(2, 6, 23, 0.10)',
+            colorBorderSecondary: dark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(2, 6, 23, 0.06)',
+        },
+        components: {
+            Layout: {
+                bodyBg: dark ? '#0b0e14' : '#ffffff',
+                headerBg: dark ? 'rgba(11, 14, 20, 0.72)' : 'rgba(255, 255, 255, 0.8)',
+            },
+            Card: {
+                colorBgContainer: dark ? '#11151d' : '#ffffff',
+            },
+            Button: {
+                fontWeight: 500,
+            },
+        },
+    };
+}
 
-export const darkTheme: ThemeConfig = {
-  algorithm: antdTheme.darkAlgorithm,
-  token: {
-    ...baseTokens,
-    colorPrimary: '#4096ff',
-    colorSuccess: '#73d13d',
-    colorWarning: '#ffc53d',
-    colorError: '#ff7875',
-    colorInfo: '#69b1ff',
-    colorBgContainer: '#1a1a1a',
-    colorBgLayout: '#0d0d0d',
-    colorText: '#e6e6e6',
-    colorTextSecondary: '#999999',
-  },
-  components: {
-    Layout: {
-      bodyBg: '#0d0d0d',
-      headerBg: 'rgba(13, 13, 13, 0.8)',
-    },
-    Card: {
-      colorBgContainer: '#1a1a1a',
-    },
-  },
-};
-
-// Legacy export for compatibility
+// Legacy exports for compatibility
+export const lightTheme = getAntdTheme('light', DEFAULT_ACCENT);
+export const darkTheme = getAntdTheme('dark', DEFAULT_ACCENT);
 export const theme = lightTheme;

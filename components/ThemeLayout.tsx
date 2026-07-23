@@ -11,12 +11,12 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { ThemeProvider, useTheme } from '@/lib/ThemeContext';
 import { FeedbackProvider } from '@/components/feedback/FeedbackProvider';
-import { lightTheme, darkTheme } from '@/styles/theme';
+import { getAntdTheme } from '@/styles/theme';
 
 function ThemedLayout({ children, currentVersion }: { children: React.ReactNode; currentVersion: string }) {
-    const { mode } = useTheme();
-    const currentTheme = mode === 'dark' ? darkTheme : lightTheme;
-    const bgColor = mode === 'dark' ? '#0d0d0d' : '#ffffff';
+    const { mode, accent } = useTheme();
+    const currentTheme = React.useMemo(() => getAntdTheme(mode, accent), [mode, accent]);
+    const bgColor = mode === 'dark' ? '#0b0e14' : '#ffffff';
 
     return (
         <ConfigProvider theme={currentTheme}>

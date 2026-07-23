@@ -7,14 +7,14 @@
   min-height: var(--layout-header-height);
   padding: 0 max(20px, env(safe-area-inset-right)) 0 max(20px, env(safe-area-inset-left)) !important;
   line-height: normal;
-  background: rgba(2, 6, 23, 0.82);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(9, 12, 18, 0.85);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   backdrop-filter: blur(10px);
 }
 
 :global([data-theme="dark"]) .header {
-  background: rgba(2, 6, 23, 0.7);
-  border-bottom-color: rgba(255, 255, 255, 0.06);
+  background: rgba(9, 12, 18, 0.72);
+  border-bottom-color: rgba(255, 255, 255, 0.07);
 }
 
 .shell {
@@ -30,18 +30,30 @@
 .brandLink {
   display: inline-flex;
   align-items: center;
+  gap: 8px;
   text-decoration: none;
   flex-shrink: 0;
 }
 
-.brand {
-  font-weight: 700;
-  font-size: 16px;
-  letter-spacing: 0.12em;
-  color: #f8fafc;
+/* Cuadradito silkscreen con el accent del usuario */
+.brandLink::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  background: var(--accent);
+  transition: transform 0.15s ease;
 }
 
-:global([data-theme="dark"]) .brand {
+.brandLink:hover::before {
+  transform: rotate(45deg);
+}
+
+.brand {
+  font-family: var(--font-stack-mono);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.14em;
   color: #f8fafc;
 }
 
