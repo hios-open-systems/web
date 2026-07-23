@@ -2,13 +2,12 @@
 
 import React from 'react';
 import { Card, Typography, Tag } from 'antd';
-import { useTheme } from '@/lib/ThemeContext';
 import Image from 'next/image';
 import Link from 'next/link';
 import { BookOutlined, GithubOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { useLocale, useTranslations } from 'next-intl';
 import { Project, statusConfig } from '@/config/projects';
-import { colors, getBorderStyle } from '@/config/theme';
+import { colors } from '@/config/theme';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -18,7 +17,6 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
-    const { mode } = useTheme();
     const locale = useLocale();
     const t = useTranslations('Projects');
 
@@ -35,15 +33,10 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
             <Link href={`/${locale}/projects/${project.slug}`} prefetch={false} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
                 <Card
                     hoverable
-                    className={mode === 'dark' ? 'glass-card' : ''}
+                    className="glass-card"
                     style={{
                         height: '100%',
-                        background: mode === 'dark'
-                            ? 'rgba(17, 21, 29, 0.7)'
-                            : '#ffffff',
-                        backdropFilter: mode === 'dark' ? 'blur(12px)' : 'none',
-                        WebkitBackdropFilter: mode === 'dark' ? 'blur(12px)' : 'none',
-                        border: getBorderStyle(mode),
+                        border: '1px solid var(--hios-border)',
                         borderRadius: '16px',
                         overflow: 'hidden',
                         transition: 'box-shadow 0.3s ease, border-color 0.3s ease',
@@ -118,7 +111,11 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
                             color={status.color}
                             style={{
                                 margin: 0,
+                                fontFamily: 'var(--font-stack-mono)',
+                                fontSize: '11px',
                                 fontWeight: 500,
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.08em',
                                 display: 'flex',
                                 alignItems: 'center',
                             }}
@@ -132,7 +129,7 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
                     {t.has(taglineKey) && (
                         <Paragraph
                             style={{
-                                color: colors.accent,
+                                color: colors.accentText,
                                 marginBottom: '12px',
                                 fontFamily: 'var(--font-stack-mono)',
                                 fontSize: '13px',
