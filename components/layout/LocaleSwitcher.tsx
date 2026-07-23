@@ -28,7 +28,7 @@ export function LocaleSwitcher({ className }: LocaleSwitcherProps) {
             onChange={handleLocaleChange}
             variant="borderless"
             suffixIcon={<GlobalOutlined style={{ fontSize: '14px', color: '#f59e0b' }} />}
-            style={{ width: 110, color: '#f59e0b' }}
+            style={{ color: '#f59e0b' }}
             popupMatchSelectWidth={false}
             options={[
                 { value: 'en', label: 'English' },
