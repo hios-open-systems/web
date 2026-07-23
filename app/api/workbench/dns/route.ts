@@ -1,3 +1,4 @@
+import { checkRateLimit } from '@/lib/rateLimit';
 import {
   dnsRecordTypes,
   formatNetworkError,
@@ -54,6 +55,10 @@ function parseDnsAnswer(type: DnsRecordType, answer: GoogleDnsAnswer): DnsAnswer
 
 
 export async function GET(request: Request) {
+  // Proxy saliente (dns.google): limitado para no ser vector de abuso.
+  const limited = checkRateLimit(request, 'dns', { limit: 30, windowMs: 60_000 });
+  if (limited) return limited;
+
   const { searchParams } = new URL(request.url);
   const domain = normalizeHostname(searchParams.get('domain') ?? '');
   const type = (searchParams.get('type') ?? 'A').toUpperCase() as DnsRecordType;

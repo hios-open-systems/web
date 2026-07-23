@@ -2,39 +2,30 @@
 
 import { useMemo, useState } from 'react';
 import { Card, InputNumber, Space, Typography } from 'antd';
+import {
+  beatDurationMs,
+  delayTimes,
+  msPerMeter,
+  msToDistanceMeters,
+  speedOfSound,
+} from '@/lib/algorithms/delayCalculator';
+import { HowItWorks } from '../HowItWorks';
 import { ToolHeader } from '../ToolHeader';
 import workbenchStyles from '../workbench.module.css';
 import styles from './audioTools.module.css';
 
 const { Text } = Typography;
-const NOTE_VALUES = [
-  { label: '1/1', beats: 4 },
-  { label: '1/2', beats: 2 },
-  { label: '1/4', beats: 1 },
-  { label: '1/8', beats: 0.5 },
-  { label: '1/16', beats: 0.25 },
-  { label: '1/32', beats: 0.125 },
-];
 
 export function DelayCalculatorTool() {
   const [bpm, setBpm] = useState(120);
   const [milliseconds, setMilliseconds] = useState(10);
   const [temperature, setTemperature] = useState(20);
 
-  const speed = 331.3 + 0.606 * temperature;
-  const beatMs = 60000 / bpm;
-  const distance = (milliseconds / 1000) * speed;
+  const speed = speedOfSound(temperature);
+  const beatMs = beatDurationMs(bpm);
+  const distance = msToDistanceMeters(milliseconds, temperature);
 
-  const rows = useMemo(
-    () =>
-      NOTE_VALUES.map((note) => ({
-        ...note,
-        straight: beatMs * note.beats,
-        dotted: beatMs * note.beats * 1.5,
-        triplet: (beatMs * note.beats * 2) / 3,
-      })),
-    [beatMs],
-  );
+  const rows = useMemo(() => delayTimes(bpm), [bpm]);
 
   return (
     <Space direction="vertical" size={20} className={workbenchStyles.stackFull}>
@@ -78,7 +69,7 @@ export function DelayCalculatorTool() {
               </span>
               <span className={styles.stat}>
                 <span className={styles.statLabel}>Por metro</span>
-                <span className={styles.statValue}>{(1000 / speed).toFixed(2)} ms</span>
+                <span className={styles.statValue}>{msPerMeter(temperature).toFixed(2)} ms</span>
               </span>
             </div>
           </div>
@@ -89,13 +80,15 @@ export function DelayCalculatorTool() {
           {rows.map((row) => (
             <div key={row.label} className={styles.delayRow}>
               <strong>{row.label}</strong>
-              <span>{row.straight.toFixed(1)} ms</span>
-              <span>{row.dotted.toFixed(1)} ms dotted</span>
-              <span>{row.triplet.toFixed(1)} ms triplet</span>
+              <span>{row.straightMs.toFixed(1)} ms</span>
+              <span>{row.dottedMs.toFixed(1)} ms dotted</span>
+              <span>{row.tripletMs.toFixed(1)} ms triplet</span>
             </div>
           ))}
         </div>
       </Card>
+
+      <HowItWorks algorithmId="delayCalculator" />
     </Space>
   );
 }
