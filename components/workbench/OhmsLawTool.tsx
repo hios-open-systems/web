@@ -3,7 +3,8 @@
 import React, { useMemo, useState } from 'react';
 import { Card, Col, InputNumber, Row, Space, Typography } from 'antd';
 import { useTranslations } from 'next-intl';
-import { solve, type OhmsInput, type OhmsValues } from '@/lib/workbench/ohms';
+import { solve, type OhmsInput, type OhmsValues } from '@/lib/algorithms/ohmsLaw';
+import { HowItWorks } from './HowItWorks';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
 
@@ -113,6 +114,8 @@ export function OhmsLawTool() {
           </Row>
         </Card>
       ) : null}
+
+      <HowItWorks algorithmId="ohmsLaw" />
     </Space>
   );
 }

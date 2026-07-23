@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "predev": "node scripts/gen-blog-manifest.mjs",
+    "predev": "node scripts/gen-blog-manifest.mjs && node scripts/gen-algorithms-manifest.mjs",
     "dev": "next dev",
-    "prebuild": "node scripts/gen-blog-manifest.mjs",
+    "prebuild": "node scripts/gen-blog-manifest.mjs && node scripts/gen-algorithms-manifest.mjs",
     "build": "NEXT_TELEMETRY_DISABLED=1 next build",
     "start": "next start",
     "lint": "next lint",

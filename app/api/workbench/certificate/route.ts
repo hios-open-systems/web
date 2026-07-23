@@ -1,3 +1,4 @@
+import { checkRateLimit } from '@/lib/rateLimit';
 import {
   formatNetworkError,
   isValidHostname,
@@ -87,6 +88,10 @@ async function inspectCertificate(hostname: string, port: number) {
 
 
 export async function GET(request: Request) {
+  // Proxy saliente: limitado para no ser vector de abuso.
+  const limited = checkRateLimit(request, 'cert', { limit: 10, windowMs: 60_000 });
+  if (limited) return limited;
+
   const { searchParams } = new URL(request.url);
   const hostname = normalizeHostname(searchParams.get('hostname') ?? '');
   const port = parsePort(searchParams.get('port'));

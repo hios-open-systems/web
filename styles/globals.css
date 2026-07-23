@@ -138,6 +138,90 @@
   --pw-func-nc: #6e7681;
 }
 
+/* ============================================================
+ * Skins — tercer eje del tema (data-skin en <html>)
+ * 'datasheet' es el default y vive en :root / [data-theme].
+ * Cada skin overridea variables; la paleta va explícita por modo
+ * ([data-theme='light'|'dark'] + [data-skin]) para ganar en especificidad.
+ * Contrastes verificados AA (≥4.5:1) igual que la paleta base.
+ * ============================================================ */
+
+/* ---- Terminal: todo mono, esquinas casi rectas, fósforo ---- */
+[data-skin='terminal'] {
+  --font-stack-sans: var(--font-stack-mono);
+  --font-stack-display: var(--font-stack-mono);
+  --surface-radius: 4px;
+}
+
+[data-theme='light'][data-skin='terminal'] {
+  /* Printout: papel cálido de impresora de matriz */
+  --hios-bg: #f7f6f1;
+  --hios-bg-secondary: #efede4;
+  --hios-bg-elevated: #fbfaf6;
+  --hios-text: #1d211d;
+  --hios-text-secondary: #47513f;
+  --hios-text-muted: #5f6b5f;
+  --hios-border: rgba(29, 33, 29, 0.14);
+  --hios-grid-line: rgba(29, 33, 29, 0.06);
+}
+
+[data-theme='dark'][data-skin='terminal'] {
+  /* Fósforo: negro verdoso profundo */
+  --hios-bg: #050805;
+  --hios-bg-secondary: #0b120b;
+  --hios-bg-elevated: #101910;
+  --hios-text: #cde5cd;
+  --hios-text-secondary: #9dbf9d;
+  --hios-text-muted: #6f926f;
+  --hios-border: rgba(140, 200, 140, 0.16);
+  --hios-grid-line: rgba(140, 200, 140, 0.06);
+}
+
+/* Scanlines sutiles, solo terminal oscura y solo si no molesta al usuario */
+@media (prefers-reduced-motion: no-preference) {
+  [data-theme='dark'][data-skin='terminal'] body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0 2px,
+      rgba(0, 0, 0, 0.10) 2px 3px
+    );
+  }
+}
+
+/* ---- Blueprint: cianotipo, plano técnico ---- */
+[data-skin='blueprint'] {
+  --surface-radius: 8px;
+}
+
+[data-theme='light'][data-skin='blueprint'] {
+  /* Papel de plano: blanco azulado, líneas azul prusia */
+  --hios-bg: #f4f8fd;
+  --hios-bg-secondary: #e9f0fa;
+  --hios-bg-elevated: #fdfeff;
+  --hios-text: #132c4e;
+  --hios-text-secondary: #3d5578;
+  --hios-text-muted: #56719c;
+  --hios-border: rgba(19, 44, 78, 0.16);
+  --hios-grid-line: rgba(19, 44, 78, 0.08);
+}
+
+[data-theme='dark'][data-skin='blueprint'] {
+  /* Cianotipo clásico: azul de plano, líneas claras */
+  --hios-bg: #0a1f3f;
+  --hios-bg-secondary: #10294f;
+  --hios-bg-elevated: #16305a;
+  --hios-text: #eaf1fb;
+  --hios-text-secondary: #b9c9e0;
+  --hios-text-muted: #8ba3c7;
+  --hios-border: rgba(255, 255, 255, 0.14);
+  --hios-grid-line: rgba(255, 255, 255, 0.07);
+}
+
 * {
   box-sizing: border-box;
 }

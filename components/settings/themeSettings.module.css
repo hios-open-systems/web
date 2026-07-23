@@ -145,6 +145,120 @@
   gap: 10px;
 }
 
+/* ---- Selector de skins ---- */
+.skinRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.skinCard {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--hios-border);
+  background: var(--hios-bg-secondary);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.skinCardActive {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+/* Mini-preview: cada swatch pinta el look de su skin, sin depender del activo */
+.skinSwatch {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  justify-content: center;
+  padding: 0 6px;
+  width: 52px;
+  height: 44px;
+  flex-shrink: 0;
+  border: 1px solid;
+  overflow: hidden;
+}
+
+.skinSwatch[data-skin-preview='datasheet'] {
+  background: #0b0e14;
+  border-color: rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+}
+
+.skinSwatch[data-skin-preview='terminal'] {
+  background: #050805;
+  border-color: rgba(140, 200, 140, 0.4);
+  border-radius: 2px;
+}
+
+.skinSwatch[data-skin-preview='blueprint'] {
+  background: #0a1f3f;
+  border-color: rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.10) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.10) 1px, transparent 1px);
+  background-size: 10px 10px;
+}
+
+.skinSwatchLine {
+  height: 3px;
+  border-radius: 1px;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.skinSwatch[data-skin-preview='terminal'] .skinSwatchLine {
+  background: rgba(140, 200, 140, 0.55);
+}
+
+.skinSwatchLine:last-of-type {
+  width: 60%;
+}
+
+.skinSwatchDot {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 6px;
+  height: 6px;
+  border-radius: 1px;
+  background: var(--accent);
+}
+
+.skinBody {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.skinLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-stack-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--hios-text);
+}
+
+.skinLabel :global(.anticon) {
+  color: var(--accent-text);
+  font-size: 11px;
+}
+
+.skinDescription {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--hios-text-secondary);
+}
+
 .presetChip {
   display: flex;
   align-items: center;

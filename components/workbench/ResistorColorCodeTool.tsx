@@ -10,7 +10,8 @@ import {
   TOLERANCE_COLORS,
   bandsToValue,
   type ResistorColor,
-} from '@/lib/workbench/resistor';
+} from '@/lib/algorithms/resistorColorCode';
+import { HowItWorks } from './HowItWorks';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
 
@@ -161,6 +162,8 @@ export function ResistorColorCodeTool() {
           </Space>
         )}
       </Card>
+
+      <HowItWorks algorithmId="resistorColorCode" />
     </Space>
   );
 }

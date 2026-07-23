@@ -8,6 +8,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import { CheckOutlined } from '@ant-design/icons';
 import { useTheme } from '@/lib/ThemeContext';
 import { DEFAULT_ACCENT, isValidHex, THEME_PRESETS, findPresetByAccent } from '@/lib/themes/config';
+import { SKINS } from '@/lib/themes/skins';
 import {
     type SavedTheme,
     addSavedTheme,
@@ -20,7 +21,7 @@ import styles from './themeSettings.module.css';
 export function ThemeSettings() {
     const t = useTranslations('Settings');
     const locale = useLocale();
-    const { accent, mode, toggleTheme, setAccent, applyPreset, isAuthenticated, isSyncing, syncState, syncError, syncCurrentAccent } = useTheme();
+    const { accent, mode, skin, toggleTheme, setAccent, setSkin, applyPreset, isAuthenticated, isSyncing, syncState, syncError, syncCurrentAccent } = useTheme();
     const [hexDraft, setHexDraft] = useState(accent);
     const [savedThemes, setSavedThemes] = useState<SavedTheme[]>([]);
     const [themeName, setThemeName] = useState('');
@@ -39,7 +40,7 @@ export function ThemeSettings() {
     };
 
     const saveCurrentTheme = () => {
-        const next = addSavedTheme(savedThemes, themeName, accent, mode);
+        const next = addSavedTheme(savedThemes, themeName, accent, mode, skin);
         if (next === savedThemes) return;
         persistThemes(next);
         setThemeName('');
@@ -47,6 +48,7 @@ export function ThemeSettings() {
 
     const applySavedTheme = (theme: SavedTheme) => {
         setAccent(theme.accent);
+        setSkin(theme.skin ?? 'datasheet');
         if (mode !== theme.mode) toggleTheme();
     };
 
@@ -139,6 +141,50 @@ export function ThemeSettings() {
                         description={syncError}
                     />
                 ) : null}
+            </section>
+
+            <section className={styles.section} aria-labelledby="theme-skins">
+                <div className={styles.sectionHeader}>
+                    <h2 id="theme-skins" className={styles.sectionTitle}>
+                        Skin
+                    </h2>
+                    <span className={styles.sectionHint}>
+                        {locale === 'es'
+                            ? 'El lenguaje visual completo: tipografías, superficies, texturas.'
+                            : 'The full visual language: typography, surfaces, textures.'}
+                    </span>
+                </div>
+                <div className={styles.skinRow} role="radiogroup" aria-label="Skin">
+                    {SKINS.map((item) => {
+                        const selected = skin === item.id;
+                        return (
+                            <button
+                                key={item.id}
+                                type="button"
+                                role="radio"
+                                aria-checked={selected}
+                                className={`${styles.skinCard} ${selected ? styles.skinCardActive : ''}`}
+                                onClick={() => setSkin(item.id)}
+                                data-skin-id={item.id}
+                            >
+                                <span className={styles.skinSwatch} data-skin-preview={item.id} aria-hidden>
+                                    <span className={styles.skinSwatchLine} />
+                                    <span className={styles.skinSwatchLine} />
+                                    <span className={styles.skinSwatchDot} />
+                                </span>
+                                <span className={styles.skinBody}>
+                                    <span className={styles.skinLabel}>
+                                        {item.label}
+                                        {selected ? <CheckOutlined /> : null}
+                                    </span>
+                                    <span className={styles.skinDescription}>
+                                        {item.description[locale] ?? item.description.en}
+                                    </span>
+                                </span>
+                            </button>
+                        );
+                    })}
+                </div>
             </section>
 
             <section className={styles.section} aria-labelledby="theme-presets">
@@ -273,6 +319,7 @@ export function ThemeSettings() {
                                         <span className={styles.savedName}>{theme.name}</span>
                                         <span className={styles.savedMode}>
                                             {theme.mode === 'dark' ? t('savedModeDark') : t('savedModeLight')}
+                                            {theme.skin && theme.skin !== 'datasheet' ? ` · ${theme.skin}` : ''}
                                         </span>
                                     </span>
                                 </button>

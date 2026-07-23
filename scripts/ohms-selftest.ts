@@ -4,8 +4,8 @@
  *
  * Run: node --experimental-strip-types scripts/ohms-selftest.ts
  */
-import { solve } from '../lib/workbench/ohms.ts';
-import type { OhmsValues } from '../lib/workbench/ohms.ts';
+import { solve } from '../lib/algorithms/ohmsLaw.ts';
+import type { OhmsValues } from '../lib/algorithms/ohmsLaw.ts';
 
 let failures = 0;
 

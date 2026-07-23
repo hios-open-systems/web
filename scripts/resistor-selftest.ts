@@ -13,7 +13,7 @@ import {
   valueToBands,
   formatOhms,
   type ResistorColor,
-} from '../lib/workbench/resistor.ts';
+} from '../lib/algorithms/resistorColorCode.ts';
 
 let failures = 0;
 

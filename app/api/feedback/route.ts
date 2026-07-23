@@ -1,6 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
 import { getRequestAuth } from '@/lib/auth/request';
+import { checkRateLimit } from '@/lib/rateLimit';
 
 
 const KINDS = ['bug', 'idea', 'note'] as const;
@@ -65,6 +66,10 @@ async function verifyTurnstile(token: string | undefined, ip: string | null): Pr
 
 // POST is anonymous on purpose — reporting a broken tool must not require login.
 export async function POST(request: NextRequest) {
+  // Escribe en D1 y puede correr sin Turnstile: frenamos spam por IP.
+  const limited = checkRateLimit(request, 'feedback', { limit: 5, windowMs: 60_000 });
+  if (limited) return limited;
+
   let body: FeedbackBody;
   try {
     body = (await request.json()) as FeedbackBody;
