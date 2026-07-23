@@ -41,7 +41,7 @@ export function ToolShowcase() {
       <div style={{ textAlign: 'center', marginTop: 24 }}>
         <Link
           href={`/${locale}/workbench`}
-          style={{ color: 'var(--accent)', fontWeight: 500, textDecoration: 'none', fontSize: 15 }}
+          style={{ color: 'var(--accent-text)', fontWeight: 500, textDecoration: 'none', fontSize: 15 }}
         >
           {SEE_ALL[locale] ?? SEE_ALL.es} ({ALL_TOOLS.length}) →
         </Link>

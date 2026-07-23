@@ -230,7 +230,7 @@
 
 .entryPanelCta,
 .toolCardCta {
-  color: var(--accent);
+  color: var(--accent-text);
   font-weight: 700;
 }
 
@@ -328,7 +328,7 @@
 }
 
 .sectionTitleLink:hover {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .sectionCount {
@@ -840,7 +840,7 @@
 }
 
 .markdownBody a {
-  color: var(--accent);
+  color: var(--accent-text);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -1154,7 +1154,7 @@
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.02em;
-  color: var(--accent);
+  color: var(--accent-text);
   text-align: left;
 }
 .guideChevron,
@@ -1375,7 +1375,7 @@
 }
 .wbMenuStar:hover,
 .wbMenuStar[aria-pressed='true'] {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 .wbMenuRowIcon {
   display: inline-flex;

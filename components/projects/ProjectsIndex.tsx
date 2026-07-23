@@ -2,28 +2,25 @@
 
 import React from 'react';
 import { Row, Col, Typography } from 'antd';
-import { useTheme } from '@/lib/ThemeContext';
 import { useTranslations } from 'next-intl';
 import { projects } from '@/config/projects';
-import { getSectionBackground } from '@/config/theme';
 import { ProjectCard } from '@/components/projects/ProjectCard';
 
 const { Title, Paragraph } = Typography;
 
 export function ProjectsIndex() {
-    const { mode } = useTheme();
     const t = useTranslations('ProjectsPage');
 
     return (
         <main style={{
             minHeight: '100vh',
             padding: '72px 24px 120px',
-            background: getSectionBackground(mode),
+            background: 'var(--hios-bg)',
         }}>
             <div style={{ maxWidth: 1120, margin: '0 auto' }}>
                 <div style={{ marginBottom: '56px', textAlign: 'center' }}>
                     <div style={{ marginBottom: '10px' }}>
-                        <span className="tech-label" style={{ color: 'var(--accent)' }} aria-hidden>
+                        <span className="tech-label" style={{ color: 'var(--accent-text)' }} aria-hidden>
                             01 / Hardware
                         </span>
                     </div>

@@ -14,6 +14,9 @@
   --hios-primary-light: #4096ff;
   /* --accent es el color de marca configurable por el usuario. Default amber. */
   --accent: #f59e0b;
+  /* Accent para TEXTO: en light se oscurece para cumplir contraste AA (4.5:1)
+     sobre blanco; en dark es el accent puro. Usar en eyebrows/kickers/links. */
+  --accent-text: color-mix(in srgb, var(--accent) 65%, #000);
   --hios-accent: var(--accent);
   --hios-accent-light: #fbbf24;
   --hios-success: #10b981;
@@ -32,7 +35,8 @@
   --hios-bg-elevated: #ffffff;
   --hios-text: #16181d;
   --hios-text-secondary: #5c6470;
-  --hios-text-muted: #8b93a1;
+  /* AA sobre #fff y #f6f7f9 (≥4.5:1) */
+  --hios-text-muted: #6b7280;
   --hios-border: rgba(2, 6, 23, 0.08);
   --hios-grid-line: rgba(2, 6, 23, 0.05);
 
@@ -89,7 +93,9 @@
   --hios-bg-elevated: #151a24;
   --hios-text: #e8eaed;
   --hios-text-secondary: #9aa4b2;
-  --hios-text-muted: #667085;
+  /* AA sobre #0b0e14 y #11151d (≥4.5:1) */
+  --hios-text-muted: #78849a;
+  --accent-text: var(--accent);
   --hios-border: rgba(255, 255, 255, 0.08);
   --hios-grid-line: rgba(255, 255, 255, 0.045);
 

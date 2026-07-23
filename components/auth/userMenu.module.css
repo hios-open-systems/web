@@ -14,6 +14,8 @@
   background: rgba(255, 255, 255, 0.06);
 }
 
+/* Vive en el header (siempre oscuro en ambos temas): colores fijos
+   light-on-dark, como los nav links — NO variables que sigan el tema. */
 .loginButton {
   display: inline-flex;
   align-items: center;
@@ -24,20 +26,13 @@
   font-size: 13px;
   font-weight: 500;
   text-decoration: none;
-  color: var(--hios-text);
-  background: rgba(15, 23, 42, 0.04);
-  transition: background-color 0.18s ease;
-}
-
-:global([data-theme="dark"]) .loginButton {
+  color: #cbd5e1;
   background: rgba(255, 255, 255, 0.06);
+  transition: background-color 0.18s ease, color 0.18s ease;
 }
 
 .loginButton:hover {
-  background: rgba(15, 23, 42, 0.08);
-}
-
-:global([data-theme="dark"]) .loginButton:hover {
+  color: #f1f5f9;
   background: rgba(255, 255, 255, 0.1);
 }
 

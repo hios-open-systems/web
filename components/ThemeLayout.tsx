@@ -16,7 +16,9 @@ import { getAntdTheme } from '@/styles/theme';
 function ThemedLayout({ children, currentVersion }: { children: React.ReactNode; currentVersion: string }) {
     const { mode, accent } = useTheme();
     const currentTheme = React.useMemo(() => getAntdTheme(mode, accent), [mode, accent]);
-    const bgColor = mode === 'dark' ? '#0b0e14' : '#ffffff';
+    // CSS var, no estado React: el SSR renderiza siempre 'dark' y un fondo inline
+    // por-modo produce flash oscuro + hydration mismatch para usuarios en light.
+    const bgColor = 'var(--hios-bg)';
 
     return (
         <ConfigProvider theme={currentTheme}>

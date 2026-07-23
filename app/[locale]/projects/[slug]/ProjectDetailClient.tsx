@@ -25,7 +25,7 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
     const { mode } = useTheme();
     const locale = useLocale();
     const t = useTranslations('ProjectDetail');
-    const accentColor = 'var(--accent)';
+    const accentColor = 'var(--accent-text)';
     const bgColor = 'var(--hios-bg)';
     const textColor = 'var(--hios-text)';
     const secondaryColor = 'var(--hios-text-secondary)';
@@ -105,7 +105,14 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                 <div>
                     <Tag
                         color={project.status === 'prototype' ? 'green' : 'orange'}
-                        style={{ marginBottom: '16px', borderRadius: '4px', fontWeight: 500 }}
+                        style={{
+                            marginBottom: '16px',
+                            borderRadius: '4px',
+                            fontFamily: 'var(--font-stack-mono)',
+                            fontSize: '11px',
+                            fontWeight: 500,
+                            letterSpacing: '0.08em',
+                        }}
                     >
                         {project.status.toUpperCase()}
                     </Tag>
@@ -630,7 +637,7 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
             }}>
                 <Text style={{ color: mutedColor, fontSize: '14px', display: 'block', textAlign: 'center' }}>
                     {t.rich('prototype_functional', {
-                        highlight: (chunks) => <span style={{ color: 'var(--accent)' }}>{chunks}</span>
+                        highlight: (chunks) => <span style={{ color: 'var(--accent-text)' }}>{chunks}</span>
                     })}<br />
                     <a
                         href="mailto:devsolutionsar@gmail.com?subject=HIOS%20BTDAC%20-%20Consulta"

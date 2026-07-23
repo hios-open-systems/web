@@ -306,7 +306,7 @@
 }
 
 .drawerLinkActive {
-  color: var(--accent);
+  color: var(--accent-text);
   border-left-color: var(--accent);
   font-weight: 700;
   background: color-mix(in srgb, var(--accent) 8%, transparent);
@@ -338,7 +338,7 @@
 }
 
 .drawerAction:hover {
-  color: var(--accent) !important;
+  color: var(--accent-text) !important;
   background: color-mix(in srgb, var(--accent) 8%, transparent) !important;
 }
 
@@ -367,7 +367,7 @@
 }
 
 :global([data-theme='dark']) .drawerLinkActive {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 :global([data-theme='dark']) .drawerFooter {

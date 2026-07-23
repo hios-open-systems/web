@@ -85,7 +85,7 @@
 }
 
 .tags { display: flex; flex-wrap: wrap; gap: 8px; }
-.tag { padding: 4px 9px; border: 1px solid var(--hios-border); border-radius: 999px; color: var(--accent); font-size: 0.75rem; }
+.tag { padding: 4px 9px; border: 1px solid var(--hios-border); border-radius: 999px; color: var(--accent-text); font-size: 0.75rem; }
 .empty { color: var(--hios-text-muted); }
 
 .backNav {

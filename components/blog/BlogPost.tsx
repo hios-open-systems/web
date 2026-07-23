@@ -29,7 +29,7 @@ export function BlogPost({ post, locale }: { post: Post; locale: string }) {
                         remarkPlugins={[remarkGfm]}
                         components={{
                             code: ({ children }) => (
-                                <code style={{ background: 'var(--hios-bg-secondary)', color: 'var(--accent)', padding: '2px 6px', borderRadius: 4, fontSize: '0.9em' }}>
+                                <code style={{ background: 'var(--hios-bg-secondary)', color: 'var(--accent-text)', padding: '2px 6px', borderRadius: 4, fontSize: '0.9em' }}>
                                     {children}
                                 </code>
                             ),

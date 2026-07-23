@@ -2,30 +2,28 @@
 
 import React from 'react';
 import { Row, Col, Typography } from 'antd';
-import { useTheme } from '@/lib/ThemeContext';
 import Link from 'next/link';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import { useLocale, useTranslations } from 'next-intl';
 import { projects } from '@/config/projects';
-import { colors, getSectionBackground } from '@/config/theme';
+import { colors } from '@/config/theme';
 import { ProjectCard } from '@/components/projects/ProjectCard';
 
 const { Title, Paragraph } = Typography;
 
 export function ProjectsGrid() {
-    const { mode } = useTheme();
     const t = useTranslations('Projects');
     const locale = useLocale();
 
     return (
         <section id="projects" style={{
             padding: '80px 24px 120px',
-            background: getSectionBackground(mode),
+            background: 'var(--hios-bg)',
         }}>
             <div style={{ maxWidth: 900, margin: '0 auto' }}>
                 <div>
                     <div style={{ textAlign: 'center', marginBottom: '10px' }}>
-                        <span className="tech-label" style={{ color: 'var(--accent)' }} aria-hidden>
+                        <span className="tech-label" style={{ color: 'var(--accent-text)' }} aria-hidden>
                             01 / Hardware
                         </span>
                     </div>
@@ -65,7 +63,7 @@ export function ProjectsGrid() {
                             display: 'inline-flex',
                             alignItems: 'center',
                             gap: '8px',
-                            color: colors.accent,
+                            color: colors.accentText,
                             fontSize: '15px',
                             fontWeight: 500,
                         }}
