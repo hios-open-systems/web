@@ -1,5 +1,33 @@
 [
   {
+    "slug": "ref-freertos-esp32",
+    "title": "FreeRTOS en ESP32: lo mínimo que hay que saber",
+    "date": "2026-07-23",
+    "summary": "El ESP-IDF corre FreeRTOS en los dos cores: tasks y prioridades, cuándo pinear, colas y semáforos para comunicar, el watchdog y los patrones típicos en proyectos maker.",
+    "tags": [
+      "esp32",
+      "freertos",
+      "rtos",
+      "referencia"
+    ],
+    "lang": "es",
+    "category": "referencia"
+  },
+  {
+    "slug": "ref-esp-now",
+    "title": "ESP-NOW: comunicación entre ESP32 sin router",
+    "date": "2026-07-23",
+    "summary": "Protocolo connectionless de Espressif sobre 802.11: cuándo conviene frente a WiFi/BLE, peers, canal, payload, cifrado y las trampas clásicas.",
+    "tags": [
+      "esp32",
+      "esp-now",
+      "wireless",
+      "referencia"
+    ],
+    "lang": "es",
+    "category": "referencia"
+  },
+  {
     "slug": "2026-06-25-ble-legacy-vs-extendido",
     "title": "BLE que no aparecía: legacy vs extendido",
     "date": "2026-06-25",
@@ -9,7 +37,8 @@
       "ble",
       "firmware"
     ],
-    "lang": "es"
+    "lang": "es",
+    "category": "devlog"
   },
   {
     "slug": "2026-06-24-companion-local-first",
@@ -21,6 +50,7 @@
       "arquitectura",
       "local-first"
     ],
-    "lang": "es"
+    "lang": "es",
+    "category": "devlog"
   }
 ]

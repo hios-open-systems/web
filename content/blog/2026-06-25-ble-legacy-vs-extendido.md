@@ -4,6 +4,7 @@ date: "2026-06-25"
 lang: "es"
 summary: "Por qué el macropad se veía en Windows pero no en Linux, y cómo el advertising extendido de BLE 5 — más un bug de NimBLE — lo explicaba."
 tags: ["esp32", "ble", "firmware"]
+category: "devlog"
 ---
 
 El HIOS PAD funcionaba por Bluetooth en Windows, pero en Linux ni siquiera aparecía en el escaneo. Mismo hardware, mismo firmware: el clásico "anda en una máquina y en la otra no".

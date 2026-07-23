@@ -1,4 +1,5 @@
 import type { NextRequest } from 'next/server';
+import { isOwner } from '@/lib/auth/owner';
 import { getRequestAuth } from '@/lib/auth/request';
 import { getDb } from '@/lib/db';
 
@@ -29,6 +30,10 @@ export async function GET(request: NextRequest) {
   }
   if (!auth.user) {
     return jsonError('Authentication required', 401);
+  }
+  // Telemetría cruda = solo el dueño. Los agregados públicos van por /api/stats/public.
+  if (!isOwner(auth.user)) {
+    return jsonError('Owner only', 403);
   }
 
   const { searchParams } = new URL(request.url);

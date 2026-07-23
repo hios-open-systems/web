@@ -4,6 +4,7 @@ date: "2026-06-24"
 lang: "es"
 summary: "Cómo un daemon liviano le da al macropad el estado real de la PC (volumen, mic, temperaturas) sin que el device dependa de él para funcionar."
 tags: ["companion", "arquitectura", "local-first"]
+category: "devlog"
 ---
 
 El macropad muestra cosas en su pantalla: volumen, si el micrófono está muteado, temperaturas. El problema es que el device, por sí solo, no *sabe* el estado real de la PC — solo conoce lo que él mismo mandó (estado "optimista").

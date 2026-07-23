@@ -1,5 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
+import { isOwner } from '@/lib/auth/owner';
 import { getRequestAuth } from '@/lib/auth/request';
 import { checkRateLimit } from '@/lib/rateLimit';
 
@@ -168,7 +169,7 @@ interface FeedbackRow {
   created_at: number;
 }
 
-// GET is the owner's admin inbox — auth required.
+// GET is the owner's admin inbox — owner only (contiene emails de terceros).
 export async function GET(request: NextRequest) {
   const auth = await getRequestAuth(request);
   if (auth.error) {
@@ -176,6 +177,9 @@ export async function GET(request: NextRequest) {
   }
   if (!auth.user) {
     return Response.json({ error: 'Authentication required' }, { status: 401 });
+  }
+  if (!isOwner(auth.user)) {
+    return Response.json({ error: 'Owner only' }, { status: 403 });
   }
 
   const { searchParams } = new URL(request.url);

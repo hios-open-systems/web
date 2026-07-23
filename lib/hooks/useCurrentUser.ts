@@ -7,6 +7,8 @@ export interface CurrentUser {
     login: string;
     name: string | null;
     avatar_url: string | null;
+    /** true solo para el dueño del sitio (gating de /admin). */
+    isOwner?: boolean;
 }
 
 interface MeResponse {

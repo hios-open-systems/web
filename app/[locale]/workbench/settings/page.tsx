@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
+import { PrivacySettings } from '@/components/settings/PrivacySettings';
 import { ThemeSettings } from '@/components/settings/ThemeSettings';
 
 export const metadata: Metadata = {
@@ -19,6 +20,7 @@ export default async function WorkbenchSettingsPage({ params }: PageProps) {
     return (
         <main style={{ maxWidth: 880, margin: '0 auto', padding: '32px 24px 56px' }}>
             <ThemeSettings />
+            <PrivacySettings />
         </main>
     );
 }

@@ -2,10 +2,11 @@
 
 import React from 'react';
 import { Typography, Tag, Row, Col, Card, Button, Space, Empty } from 'antd';
-import { ArrowLeftOutlined, DownloadOutlined, GithubOutlined, DoubleRightOutlined, EyeOutlined, LinkOutlined, FileOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, DownloadOutlined, GithubOutlined, DoubleRightOutlined, EyeOutlined, LinkOutlined, FileOutlined, PrinterOutlined } from '@ant-design/icons';
 import { useTheme } from '@/lib/ThemeContext';
 import { ProjectMeta } from '@/lib/projects';
 import { WIRING_GUIDE_SLUGS } from '@/config/pinouts/guides';
+import { getPrintsByProject } from '@/config/prints';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -53,6 +54,9 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
     };
 
     const tProjects = useTranslations('Projects');
+
+    // Piezas 3D imprimibles asociadas a este proyecto (config/prints.ts).
+    const projectPrints = getPrintsByProject(slug);
 
     // Define the Story interface locally
     interface Story {
@@ -626,6 +630,46 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                     </Space>
                 </Card>
             </section>
+
+            {/* Piezas 3D imprimibles — link al catálogo Maker, solo si el proyecto tiene piezas */}
+            {projectPrints.length > 0 && (
+                <section style={{ maxWidth: 900, margin: '24px auto 0', padding: '0 24px' }}>
+                    <Card
+                        style={{
+                            background: mode === 'dark' ? '#141414' : '#fafafa',
+                            border: cardBorder,
+                            borderRadius: '14px',
+                        }}
+                        styles={{ body: { padding: '20px' } }}
+                    >
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
+                                <PrinterOutlined style={{ color: accentColor, fontSize: 22 }} />
+                                <div>
+                                    <Text
+                                        className="tech-label"
+                                        style={{ color: accentColor, display: 'block', marginBottom: 4 }}
+                                    >
+                                        MAKER / PRINTS
+                                    </Text>
+                                    <Text style={{ color: textColor, fontWeight: 600, fontSize: 15, display: 'block' }}>
+                                        Piezas 3D imprimibles
+                                    </Text>
+                                    <Text style={{ color: secondaryColor, fontSize: 13 }}>
+                                        {projectPrints.length} {projectPrints.length === 1 ? 'pieza' : 'piezas'} de este proyecto con visor 3D y descarga directa.
+                                    </Text>
+                                </div>
+                            </div>
+                            <Link
+                                href={`/${locale}/prints#prints-${slug}`}
+                                style={{ color: accentColor, fontWeight: 600, fontSize: 14, whiteSpace: 'nowrap' }}
+                            >
+                                Ver en Maker →
+                            </Link>
+                        </div>
+                    </Card>
+                </section>
+            )}
 
             {/* Footer note */}
             <section style={{
