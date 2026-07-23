@@ -82,7 +82,7 @@ export const myPrints: PrintModel[] = [
         fileKB: 65,
         project: 'pad',
         category: 'carcasa',
-        description: 'Marco / bisel cerrado para el módulo de pantalla ILI9488 3.5", 110×61 mm. Diseño propio.',
+        description: 'Marco / bisel legado para un módulo ILI9488 de 110×61 mm identificado como 3.5". No asumir compatibilidad con la pantalla 4" del PAD rev 0.9 sin comparar medidas.',
     },
     {
         name: 'Retén de pantalla — marco en U',
@@ -91,7 +91,7 @@ export const myPrints: PrintModel[] = [
         fileKB: 164,
         project: 'pad',
         category: 'carcasa',
-        description: 'Marco abierto en U (retén de la pantalla), 110×61 mm × 5 mm. Variante del bisel. Diseño propio.',
+        description: 'Marco abierto en U legado, 110×61 mm × 5 mm. No asumir compatibilidad con la pantalla 4" del PAD rev 0.9 sin comparar medidas.',
     },
     {
         name: 'Soporte en L — agujero redondo',

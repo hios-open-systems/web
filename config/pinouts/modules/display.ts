@@ -3,10 +3,10 @@ import type { Breakout } from './breakout';
 export const DISPLAY_BREAKOUTS: Breakout[] = [
   {
     id: 'ili9488',
-    name: 'TFT ILI9488 3.5" (SPI)',
+    name: 'TFT ILI9488 4" (SPI)',
     kind: 'display',
     summary: 'Pantalla 480×320 18-bit por SPI. Trae regulador y level-shifter (VCC a 5V).',
-    form: 'módulo 3.5" SPI',
+    form: 'módulo 4" SPI',
     iface: 'SPI',
     voltage: '5V (VCC) / lógica 3.3V',
     usedBy: ['pad'],
