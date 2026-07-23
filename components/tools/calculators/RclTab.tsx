@@ -27,7 +27,7 @@ export function RclTab({ c }: { c: CalculatorState }) {
           cText={`${c.rclC} µF`}
         />
         <Plot
-          series={[{ points: curve.mag, color: 'var(--accent)' }]}
+          series={[{ points: curve.mag, color: 'var(--accent-text)' }]}
           xLog
           xLabel="f"
           yLabel="|Z|"

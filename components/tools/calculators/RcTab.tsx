@@ -33,7 +33,7 @@ export function RcTab({ c }: { c: CalculatorState }) {
       >
         <RcSchematic rText={formatOhm(c.rcR)} cText={`${c.rcC} nF`} />
         <Plot
-          series={[{ points: bode.mag, color: 'var(--accent)' }]}
+          series={[{ points: bode.mag, color: 'var(--accent-text)' }]}
           xLog
           xLabel="f"
           yLabel="|H|"

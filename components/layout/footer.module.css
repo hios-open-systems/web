@@ -8,6 +8,9 @@
 }
 
 .navLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
   font-size: 13px;
   font-weight: 500;
   text-decoration: none;
@@ -16,5 +19,5 @@
 }
 
 .navLink:hover {
-  color: var(--accent);
+  color: var(--accent-text);
 }
