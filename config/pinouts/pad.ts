@@ -4,7 +4,7 @@ export const PAD_WIRING: WiringGuide = {
   meta: {
     id: 'pad',
     title: 'HIOS PAD',
-    subtitle: 'Macropad ESP32-S3: pantalla ILI9488 3.5", nav directa (ALT×2 + encoder + stick), 10 acciones en matriz 2×5, 8 NeoPixel y 2 parlantes I2S.',
+    subtitle: 'Macropad ESP32-S3: pantalla ILI9488 4", nav directa (ALT×2 + encoder + stick), 10 acciones en matriz 2×5, 8 NeoPixel y 2 parlantes I2S.',
     rev: '0.9',
     mcu: 'ESP32-S3 DevKitC-1 (N16R8)',
     boardId: 'esp32-s3-devkitc-1',
@@ -29,7 +29,7 @@ export const PAD_WIRING: WiringGuide = {
     },
     {
       id: 'display',
-      name: 'Pantalla ILI9488 3.5" (SPI)',
+      name: 'Pantalla ILI9488 4" (SPI)',
       icon: '🖥️',
       rail: 5,
       power: 'VCC → 5V · GND → GND · LED → SW-PANTALLA → GPIO21',
@@ -178,7 +178,7 @@ export const PAD_WIRING: WiringGuide = {
       ],
     },
     {
-      t: '🖥️ Pantalla ILI9488 3.5"',
+      t: '🖥️ Pantalla ILI9488 4"',
       group: 'display',
       cnt: '6 pines',
       tip: 'SPI por **HSPI** a 27MHz. El **MISO no se cablea** (`TFT_MISO=-1`): solo escribimos. Los 5 pines de señal salen de `platformio.ini`, no de `Pins.h` — el backlight sí está en `Pins.h` porque lo maneja el LEDC a mano. ⚠️ El **CS es 10**: un doc viejo decía 13, y soldarlo ahí lo cortocircuita contra el DC.',
