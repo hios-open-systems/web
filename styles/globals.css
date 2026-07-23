@@ -21,13 +21,19 @@
   --hios-warning: #f97316;
   --hios-error: #ef4444;
 
+  /* Typography (definidas por next/font en el layout raíz) */
+  --font-stack-sans: var(--font-sans, 'Inter'), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-stack-display: var(--font-display, 'Archivo'), var(--font-sans, 'Inter'), sans-serif;
+  --font-stack-mono: var(--font-mono, 'IBM Plex Mono'), ui-monospace, SFMono-Regular, Menlo, monospace;
+
   /* Light mode */
   --hios-bg: #ffffff;
-  --hios-bg-secondary: #f5f5f5;
-  --hios-text: #1a1a1a;
-  --hios-text-secondary: #666666;
-  --hios-text-muted: #999999;
-  --hios-border: rgba(0, 0, 0, 0.06);
+  --hios-bg-secondary: #f6f7f9;
+  --hios-text: #16181d;
+  --hios-text-secondary: #5c6470;
+  --hios-text-muted: #8b93a1;
+  --hios-border: rgba(2, 6, 23, 0.08);
+  --hios-grid-line: rgba(2, 6, 23, 0.05);
 
   /* Shadows */
   --hios-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
@@ -77,12 +83,13 @@
 /* Dark mode overrides */
 .dark,
 [data-theme="dark"] {
-  --hios-bg: #0d0d0d;
-  --hios-bg-secondary: #141414;
-  --hios-text: #e6e6e6;
-  --hios-text-secondary: #999999;
-  --hios-text-muted: #666666;
+  --hios-bg: #0b0e14;
+  --hios-bg-secondary: #11151d;
+  --hios-text: #e8eaed;
+  --hios-text-secondary: #9aa4b2;
+  --hios-text-muted: #667085;
   --hios-border: rgba(255, 255, 255, 0.08);
+  --hios-grid-line: rgba(255, 255, 255, 0.045);
 
   --hios-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
   --hios-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
@@ -139,11 +146,31 @@ body {
   padding: 0;
   background: var(--hios-bg);
   color: var(--hios-text);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: var(--font-stack-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-width: 320px;
   overflow-x: clip;
+}
+
+/* Títulos con la display industrial — también los Title de antd */
+h1, h2, h3,
+h1.ant-typography, h2.ant-typography, h3.ant-typography {
+  font-family: var(--font-stack-display);
+  letter-spacing: -0.02em;
+}
+
+code, kbd, samp, pre {
+  font-family: var(--font-stack-mono);
+}
+
+/* Label técnico estilo datasheet: mono, uppercase, tracking amplio */
+.tech-label {
+  font-family: var(--font-stack-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
 img, svg, video, canvas { max-width: 100%; }
@@ -215,10 +242,15 @@ a:hover {
   color: var(--hios-primary);
 }
 
-/* Selection highlight with HIOS accent */
+/* Selection y focus siguen el accent configurable */
 ::selection {
-  background: rgba(245, 158, 11, 0.25);
+  background: color-mix(in srgb, var(--accent) 28%, transparent);
   color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 85%, transparent);
+  outline-offset: 2px;
 }
 
 /* Scrollbar styling */

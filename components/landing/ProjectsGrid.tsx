@@ -30,12 +30,17 @@ export function ProjectsGrid() {
                     viewport={{ once: true, margin: '-50px' }}
                     transition={{ duration: 0.5 }}
                 >
+                    <div style={{ textAlign: 'center', marginBottom: '10px' }}>
+                        <span className="tech-label" style={{ color: 'var(--accent)' }} aria-hidden>
+                            01 / Hardware
+                        </span>
+                    </div>
                     <Title
                         level={2}
                         style={{
                             marginBottom: '12px',
-                            color: mode === 'dark' ? '#e6e6e6' : '#1a1a1a',
-                            fontWeight: 600,
+                            color: 'var(--hios-text)',
+                            fontWeight: 700,
                             textAlign: 'center',
                         }}
                     >
@@ -43,7 +48,7 @@ export function ProjectsGrid() {
                     </Title>
                     <Paragraph style={{
                         textAlign: 'center',
-                        color: mode === 'dark' ? '#666' : '#999',
+                        color: 'var(--hios-text-secondary)',
                         marginBottom: '48px',
                         fontSize: '15px',
                     }}>

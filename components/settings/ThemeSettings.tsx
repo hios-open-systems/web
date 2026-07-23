@@ -94,7 +94,7 @@ export function ThemeSettings() {
             <header className={styles.head}>
                 <Link
                     href={`/${locale}/workbench`}
-                    style={{ color: '#f59e0b', fontSize: 13, fontWeight: 500, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6, marginBottom: 10 }}
+                    style={{ color: 'var(--accent)', fontSize: 13, fontWeight: 500, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6, marginBottom: 10 }}
                 >
                     <ArrowLeftOutlined /> Workbench
                 </Link>

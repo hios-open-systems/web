@@ -15,10 +15,11 @@ import { CSSProperties } from 'react';
 // ============================================
 
 export const colors = {
-    // Brand colors
-    accent: '#f59e0b',
-    accentHover: '#d97706',
-    accentMuted: 'rgba(245, 158, 11, 0.3)',
+    // Brand colors — siguen el accent configurable del usuario (--accent).
+    // Solo válidos en contextos CSS (style props); para hex real usar ThemeContext.
+    accent: 'var(--accent)',
+    accentHover: 'color-mix(in srgb, var(--accent) 85%, #000)',
+    accentMuted: 'color-mix(in srgb, var(--accent) 30%, transparent)',
 
     // Primary blue
     primary: '#4096ff',
@@ -35,46 +36,46 @@ export const colors = {
     light: {
         // Backgrounds
         bg: '#ffffff',
-        bgAlt: '#fafafa',
-        bgMuted: '#f5f5f5',
-        bgHover: '#e8e8e8',
+        bgAlt: '#f6f7f9',
+        bgMuted: '#f0f2f5',
+        bgHover: '#e6e9ee',
         bgCard: '#ffffff',
         bgOverlay: 'rgba(255, 255, 255, 0.9)',
 
         // Text
-        text: '#0d0d0d',
-        textStrong: '#1a1a1a',
-        textMuted: '#666666',
-        textSubtle: '#999999',
-        textDisabled: '#bbbbbb',
+        text: '#16181d',
+        textStrong: '#0b0e14',
+        textMuted: '#5c6470',
+        textSubtle: '#8b93a1',
+        textDisabled: '#b6bcc6',
 
         // Borders
-        border: 'rgba(0, 0, 0, 0.06)',
-        borderStrong: '#e8e8e8',
-        borderMuted: '#f0f0f0',
+        border: 'rgba(2, 6, 23, 0.08)',
+        borderStrong: '#e2e5ea',
+        borderMuted: '#eef0f3',
     },
 
     // Dark mode
     dark: {
         // Backgrounds
-        bg: '#0d0d0d',
-        bgAlt: '#0a0a0a',
-        bgMuted: '#1a1a1a',
-        bgHover: '#262626',
-        bgCard: '#141414',
+        bg: '#0b0e14',
+        bgAlt: '#090b10',
+        bgMuted: '#11151d',
+        bgHover: '#1a2029',
+        bgCard: '#11151d',
         bgOverlay: 'rgba(0, 0, 0, 0.6)',
 
         // Text
-        text: '#ffffff',
-        textStrong: '#e6e6e6',
-        textMuted: '#888888',
-        textSubtle: '#666666',
-        textDisabled: '#444444',
+        text: '#f4f6f8',
+        textStrong: '#e8eaed',
+        textMuted: '#9aa4b2',
+        textSubtle: '#667085',
+        textDisabled: '#434c5a',
 
         // Borders
-        border: 'rgba(255, 255, 255, 0.1)',
-        borderStrong: '#262626',
-        borderMuted: '#1a1a1a',
+        border: 'rgba(255, 255, 255, 0.08)',
+        borderStrong: '#222834',
+        borderMuted: '#161b24',
     },
 } as const;
 

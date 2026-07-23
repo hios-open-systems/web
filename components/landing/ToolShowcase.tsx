@@ -27,6 +27,7 @@ export function ToolShowcase() {
     <section className={styles.showcase} id="tools">
       <div className={styles.showcaseHeader}>
         <div className={styles.showcaseHeadings}>
+          <span className={styles.showcaseKicker} aria-hidden>02 / Workbench</span>
           <h2 className={styles.showcaseTitle}>{t('showcaseTitle')}</h2>
           <p className={styles.showcaseSubtitle}>
             {ALL_TOOLS.length} {t('showcaseToolCount')} · {t('showcaseSubtitle')}
@@ -40,7 +41,7 @@ export function ToolShowcase() {
       <div style={{ textAlign: 'center', marginTop: 24 }}>
         <Link
           href={`/${locale}/workbench`}
-          style={{ color: '#f59e0b', fontWeight: 500, textDecoration: 'none', fontSize: 15 }}
+          style={{ color: 'var(--accent)', fontWeight: 500, textDecoration: 'none', fontSize: 15 }}
         >
           {SEE_ALL[locale] ?? SEE_ALL.es} ({ALL_TOOLS.length}) →
         </Link>
