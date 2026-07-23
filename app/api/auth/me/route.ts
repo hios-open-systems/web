@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
+import { isOwner } from '@/lib/auth/owner';
 import { SESSION_COOKIE, findSessionWithUser } from '@/lib/auth/session';
 
 
@@ -19,6 +20,7 @@ export async function GET(request: NextRequest) {
                     login: result.user.github_login,
                     name: result.user.name,
                     avatar_url: result.user.avatar_url,
+                    isOwner: isOwner(result.user),
                 }
                 : null,
         });
