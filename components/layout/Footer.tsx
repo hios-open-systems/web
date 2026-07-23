@@ -6,14 +6,12 @@ import { GithubOutlined, MailOutlined } from '@ant-design/icons';
 import { motion } from 'framer-motion';
 import NextLink from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
-import { useTheme } from '@/lib/ThemeContext';
 import styles from './footer.module.css';
 
 const { Footer: AntFooter } = Layout;
 const { Text, Link } = Typography;
 
 export function Footer() {
-    const { mode } = useTheme();
     const locale = useLocale();
     const t = useTranslations('Header');
 
@@ -50,10 +48,8 @@ export function Footer() {
             style={{
                 textAlign: 'center',
                 padding: '48px 24px',
-                background: mode === 'dark' ? '#0a0a0a' : '#fafafa',
-                borderTop: mode === 'dark'
-                    ? '1px solid rgba(255, 255, 255, 0.06)'
-                    : '1px solid rgba(0, 0, 0, 0.04)',
+                background: 'var(--hios-bg-secondary)',
+                borderTop: '1px solid var(--hios-border)',
             }}
         >
             <motion.div
@@ -85,7 +81,7 @@ export function Footer() {
                                     href={link.href}
                                     target={link.href.startsWith('http') ? '_blank' : undefined}
                                     style={{
-                                        color: mode === 'dark' ? '#666' : '#999',
+                                        color: 'var(--hios-text-muted)',
                                         display: 'flex',
                                         alignItems: 'center',
                                         gap: '6px',
@@ -102,19 +98,22 @@ export function Footer() {
 
                     <div>
                         <Text style={{
-                            color: mode === 'dark' ? '#444' : '#bbb',
+                            color: 'var(--hios-text-muted)',
                             fontSize: '13px',
                             display: 'block',
                         }}>
                             HIOS — Proyectos documentados y open source
                         </Text>
-                        <Text style={{
-                            color: mode === 'dark' ? '#333' : '#ccc',
-                            fontSize: '12px',
-                            marginTop: '8px',
-                            display: 'block',
-                        }}>
-                            Hecho con Next.js, Ant Design y mucho café
+                        <Text
+                            className="tech-label"
+                            style={{
+                                color: 'var(--hios-text-muted)',
+                                marginTop: '10px',
+                                display: 'block',
+                                opacity: 0.7,
+                            }}
+                        >
+                            Next.js · Ant Design · mucho café
                         </Text>
                     </div>
                 </Space>

@@ -44,7 +44,7 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
                     style={{
                         height: '100%',
                         background: mode === 'dark'
-                            ? 'rgba(20, 20, 20, 0.7)'
+                            ? 'rgba(17, 21, 29, 0.7)'
                             : '#ffffff',
                         backdropFilter: mode === 'dark' ? 'blur(12px)' : 'none',
                         WebkitBackdropFilter: mode === 'dark' ? 'blur(12px)' : 'none',
@@ -117,9 +117,9 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
                             level={3}
                             style={{
                                 margin: 0,
-                                color: mode === 'dark' ? '#ffffff' : '#0d0d0d',
+                                color: 'var(--hios-text)',
                                 fontSize: '20px',
-                                fontWeight: 600,
+                                fontWeight: 700,
                             }}
                         >
                             {project.name}
@@ -144,8 +144,8 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
                             style={{
                                 color: colors.accent,
                                 marginBottom: '12px',
-                                fontSize: '14px',
-                                fontStyle: 'italic',
+                                fontFamily: 'var(--font-stack-mono)',
+                                fontSize: '13px',
                             }}
                         >
                             &quot;{t(taglineKey)}&quot;
@@ -154,7 +154,7 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
 
                     <Paragraph
                         style={{
-                            color: mode === 'dark' ? '#999' : '#666',
+                            color: 'var(--hios-text-secondary)',
                             marginBottom: project.learnings ? '16px' : '8px',
                             fontSize: '15px',
                             lineHeight: 1.6,
@@ -172,7 +172,7 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
                             {project.stats.tutorials ? (
                                 <Text style={{
                                     fontSize: '12px',
-                                    color: mode === 'dark' ? '#666' : '#999',
+                                    color: 'var(--hios-text-muted)',
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: '4px',
@@ -184,7 +184,7 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
                             {project.stats.files ? (
                                 <Text style={{
                                     fontSize: '12px',
-                                    color: mode === 'dark' ? '#666' : '#999',
+                                    color: 'var(--hios-text-muted)',
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: '4px',
@@ -198,14 +198,14 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
 
                     {project.learnings && (
                         <div>
-                            <Text style={{
-                                fontSize: '12px',
-                                color: mode === 'dark' ? '#666' : '#999',
-                                display: 'block',
-                                marginBottom: '8px',
-                                textTransform: 'uppercase',
-                                letterSpacing: '0.5px',
-                            }}>
+                            <Text
+                                className="tech-label"
+                                style={{
+                                    color: 'var(--hios-text-muted)',
+                                    display: 'block',
+                                    marginBottom: '8px',
+                                }}
+                            >
                                 {t('learnings')}
                             </Text>
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
