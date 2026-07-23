@@ -23,7 +23,7 @@
   gap: 8px;
   padding: 16px;
   border-radius: 18px;
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  border: 1px solid var(--hios-border);
   background:
     radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 14%, transparent), transparent 46%),
     #ffffff;
@@ -31,7 +31,6 @@
 }
 
 :global([data-theme="dark"]) .summaryCard {
-  border-color: rgba(255, 255, 255, 0.06);
   background:
     radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 18%, transparent), transparent 46%),
     rgba(15, 23, 42, 0.7);
@@ -42,27 +41,19 @@
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #94a3b8;
+  color: var(--hios-text-muted);
 }
 
 .summaryValue {
   font-size: clamp(1rem, 2vw, 1.25rem);
   line-height: 1.2;
-  color: #0f172a;
-}
-
-:global([data-theme="dark"]) .summaryValue {
-  color: #f8fafc;
+  color: var(--hios-text);
 }
 
 .summaryHint {
   font-size: 12px;
   line-height: 1.55;
-  color: #64748b;
-}
-
-:global([data-theme="dark"]) .summaryHint {
-  color: #cbd5e1;
+  color: var(--hios-text-secondary);
 }
 
 .title {
@@ -70,22 +61,14 @@
   font-size: clamp(1.6rem, 2.4vw, 2rem);
   font-weight: 700;
   letter-spacing: -0.01em;
-  color: #0f172a;
-}
-
-:global([data-theme="dark"]) .title {
-  color: #f8fafc;
+  color: var(--hios-text);
 }
 
 .subtitle {
   margin: 0;
   font-size: 14px;
   line-height: 1.6;
-  color: #64748b;
-}
-
-:global([data-theme="dark"]) .subtitle {
-  color: #94a3b8;
+  color: var(--hios-text-secondary);
 }
 
 .section {
@@ -94,12 +77,11 @@
   gap: 12px;
   padding: 18px;
   border-radius: 14px;
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  border: 1px solid var(--hios-border);
   background: #ffffff;
 }
 
 :global([data-theme="dark"]) .section {
-  border-color: rgba(255, 255, 255, 0.06);
   background: rgba(15, 23, 42, 0.6);
 }
 
@@ -115,25 +97,17 @@
   margin: 0;
   font-size: 14px;
   font-weight: 600;
-  color: #0f172a;
-}
-
-:global([data-theme="dark"]) .sectionTitle {
-  color: #e2e8f0;
+  color: var(--hios-text);
 }
 
 .sectionHint {
   font-size: 12px;
-  color: #94a3b8;
+  color: var(--hios-text-muted);
 }
 
 .syncMeta {
   font-size: 12px;
-  color: #64748b;
-}
-
-:global([data-theme="dark"]) .syncMeta {
-  color: #cbd5e1;
+  color: var(--hios-text-secondary);
 }
 
 .syncActionRow {
@@ -177,14 +151,13 @@
   gap: 10px;
   padding: 10px 12px;
   border-radius: 10px;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  background: #f8fafc;
+  border: 1px solid var(--hios-border);
+  background: var(--hios-bg-secondary);
   cursor: pointer;
   transition: border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
 :global([data-theme="dark"]) .presetChip {
-  border-color: rgba(255, 255, 255, 0.06);
   background: rgba(255, 255, 255, 0.03);
 }
 
@@ -221,12 +194,11 @@
   gap: 10px;
   padding: 8px 10px;
   border-radius: 10px;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  background: #f8fafc;
+  border: 1px solid var(--hios-border);
+  background: var(--hios-bg-secondary);
 }
 
 :global([data-theme="dark"]) .savedChip {
-  border-color: rgba(255, 255, 255, 0.06);
   background: rgba(255, 255, 255, 0.03);
 }
 
@@ -252,19 +224,15 @@
 .savedName {
   font-size: 13px;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--hios-text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-:global([data-theme="dark"]) .savedName {
-  color: #e2e8f0;
-}
-
 .savedMode {
   font-size: 11px;
-  color: #64748b;
+  color: var(--hios-text-secondary);
   text-transform: capitalize;
 }
 
@@ -276,9 +244,9 @@
   width: 26px;
   height: 26px;
   border-radius: 7px;
-  border: 1px solid rgba(15, 23, 42, 0.1);
+  border: 1px solid var(--hios-border);
   background: transparent;
-  color: #64748b;
+  color: var(--hios-text-secondary);
   font-size: 16px;
   line-height: 1;
   cursor: pointer;
@@ -290,19 +258,10 @@
   color: #ef4444;
 }
 
-:global([data-theme="dark"]) .savedDelete {
-  border-color: rgba(255, 255, 255, 0.1);
-  color: #94a3b8;
-}
-
 .presetLabel {
   font-size: 13px;
   font-weight: 500;
-  color: #0f172a;
-}
-
-:global([data-theme="dark"]) .presetLabel {
-  color: #e2e8f0;
+  color: var(--hios-text);
 }
 
 /* Custom row -------------------------------------------------------- */
@@ -326,7 +285,7 @@
   font-size: 11px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #64748b;
+  color: var(--hios-text-secondary);
 }
 
 .hexInputWrap {
@@ -335,12 +294,11 @@
   gap: 8px;
   padding: 6px 8px;
   border-radius: 8px;
-  border: 1px solid rgba(15, 23, 42, 0.1);
+  border: 1px solid var(--hios-border);
   background: #ffffff;
 }
 
 :global([data-theme="dark"]) .hexInputWrap {
-  border-color: rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.04);
 }
 
@@ -357,21 +315,17 @@
   outline: none;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 13px;
-  color: #0f172a;
+  color: var(--hios-text);
   width: 100%;
-}
-
-:global([data-theme="dark"]) .hexInput {
-  color: #f1f5f9;
 }
 
 .resetButton {
   height: 36px;
   padding: 0 12px;
   border-radius: 8px;
-  border: 1px solid rgba(15, 23, 42, 0.1);
+  border: 1px solid var(--hios-border);
   background: #ffffff;
-  color: #0f172a;
+  color: var(--hios-text);
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
@@ -379,9 +333,7 @@
 }
 
 :global([data-theme="dark"]) .resetButton {
-  border-color: rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.04);
-  color: #f1f5f9;
 }
 
 .resetButton:hover {
@@ -420,12 +372,8 @@
   gap: 14px;
   padding: 16px;
   border-radius: 12px;
-  border: 1px solid rgba(15, 23, 42, 0.08);
+  border: 1px solid var(--hios-border);
   background: color-mix(in srgb, var(--accent) 6%, transparent);
-}
-
-:global([data-theme="dark"]) .previewSurface {
-  border-color: rgba(255, 255, 255, 0.06);
 }
 
 .previewBadge {
@@ -464,16 +412,12 @@
   flex-direction: column;
   gap: 4px;
   padding: 12px 4px 0;
-  border-top: 1px solid rgba(15, 23, 42, 0.06);
-}
-
-:global([data-theme="dark"]) .footer {
-  border-top-color: rgba(255, 255, 255, 0.06);
+  border-top: 1px solid var(--hios-border);
 }
 
 .footerNote {
   font-size: 12px;
-  color: #94a3b8;
+  color: var(--hios-text-muted);
 }
 
 @media (max-width: 720px) {

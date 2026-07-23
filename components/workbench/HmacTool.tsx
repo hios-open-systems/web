@@ -45,11 +45,11 @@ export function HmacTool() {
   const themeVars = useMemo(
     () =>
       ({
-        '--wb-surface-border': mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.08)',
-        '--wb-surface-soft-bg': mode === 'dark' ? '#0f172a' : '#f8fafc',
-        '--wb-text-muted': mode === 'dark' ? '#9ca3af' : '#475569',
+        '--wb-surface-border': 'var(--hios-border)',
+        '--wb-surface-soft-bg': 'var(--hios-bg-secondary)',
+        '--wb-text-muted': 'var(--hios-text-secondary)',
         '--wb-code-bg': mode === 'dark' ? '#020617' : '#e2e8f0',
-        '--wb-code-text': mode === 'dark' ? '#e2e8f0' : '#0f172a',
+        '--wb-code-text': 'var(--hios-text)',
       }) as React.CSSProperties,
     [mode],
   );

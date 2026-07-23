@@ -4,11 +4,11 @@
  * meterlo en la guía se quedaba sin colores. Autocontenido = se puede mover.
  */
 .wrap {
-  --bk-surface: #ffffff;
-  --bk-surface-muted: #f1f5f9;
+  --bk-surface: var(--hios-bg);
+  --bk-surface-muted: var(--hios-bg-secondary);
   --bk-border: rgba(15, 23, 42, 0.14);
-  --bk-muted: #64748b;
-  --bk-title: #0f172a;
+  --bk-muted: var(--hios-text-secondary);
+  --bk-title: var(--hios-text);
   --bk-pcb: #14532d;
   --bk-shield: #cbd5e1;
 
@@ -18,11 +18,7 @@
 }
 
 :global([data-theme='dark']) .wrap {
-  --bk-surface: #0f172a;
-  --bk-surface-muted: rgba(255, 255, 255, 0.06);
   --bk-border: rgba(255, 255, 255, 0.16);
-  --bk-muted: #94a3b8;
-  --bk-title: #f8fafc;
   --bk-pcb: #0d2818;
   --bk-shield: #94a3b8;
 }

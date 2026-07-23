@@ -4,7 +4,6 @@ import React, { useMemo, useState } from 'react';
 import { Button, Card, Input, Space, Table, Tag, Typography, message } from 'antd';
 import { CopyOutlined, LinkOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
-import { useTheme } from '@/lib/ThemeContext';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
 
@@ -70,7 +69,6 @@ const EXAMPLE_URL = 'https://api.example.com/v2/users?page=1&limit=20&filter=act
 
 export function UrlParserTool() {
   const t = useTranslations('Workbench.urlParser');
-  const { mode } = useTheme();
   const [messageApi, contextHolder] = message.useMessage();
 
   const [rawUrl, setRawUrl] = useState(EXAMPLE_URL);
@@ -82,12 +80,12 @@ export function UrlParserTool() {
   const themeVars = useMemo(
     () =>
       ({
-        '--wb-surface-border': mode === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.08)',
-        '--wb-surface-bg': mode === 'dark' ? '#111827' : '#ffffff',
-        '--wb-surface-soft-bg': mode === 'dark' ? '#0f172a' : '#f8fafc',
-        '--wb-text-muted': mode === 'dark' ? '#9ca3af' : '#475569',
+        '--wb-surface-border': 'var(--hios-border)',
+        '--wb-surface-bg': 'var(--hios-bg)',
+        '--wb-surface-soft-bg': 'var(--hios-bg-secondary)',
+        '--wb-text-muted': 'var(--hios-text-secondary)',
       }) as React.CSSProperties,
-    [mode],
+    [],
   );
 
   const copy = async (val: string) => {

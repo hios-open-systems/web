@@ -35,7 +35,7 @@ export function ImageCarousel({ images, alt }: ImageCarouselProps) {
                 position: 'relative',
                 borderRadius: '16px',
                 overflow: 'hidden',
-                background: mode === 'dark' ? '#141414' : '#f5f5f5',
+                background: 'var(--hios-bg-secondary)',
             }}>
                 <Carousel
                     ref={carouselRef}
@@ -155,10 +155,8 @@ export function ImageCarousel({ images, alt }: ImageCarouselProps) {
                                 borderRadius: '8px',
                                 overflow: 'hidden',
                                 border: currentSlide === idx
-                                    ? '2px solid #f59e0b'
-                                    : mode === 'dark'
-                                        ? '2px solid #333'
-                                        : '2px solid #e0e0e0',
+                                    ? '2px solid var(--accent)'
+                                    : '2px solid var(--hios-border)',
                                 cursor: 'pointer',
                                 padding: 0,
                                 background: 'transparent',
