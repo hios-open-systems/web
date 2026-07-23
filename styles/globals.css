@@ -183,12 +183,12 @@
     content: '';
     position: fixed;
     inset: 0;
-    z-index: 9999;
+    z-index: 2;
     pointer-events: none;
     background: repeating-linear-gradient(
       to bottom,
       transparent 0 2px,
-      rgba(0, 0, 0, 0.10) 2px 3px
+      rgba(0, 0, 0, 0.08) 2px 3px
     );
   }
 }
