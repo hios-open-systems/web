@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Drawer, Layout } from 'antd';
 import {
   BellOutlined,
@@ -47,6 +47,12 @@ export function Header() {
   const tSettings = useTranslations('Settings');
   const { unreadCount } = useFeedback();
   const [menuOpen, setMenuOpen] = useState(false);
+  // El SSR siempre pinta 'dark': si el primer render del cliente ya usara el
+  // modo real, React no parchea el atributo del icono (hydration mismatch) y
+  // el usuario en light se queda con el icono equivocado para siempre.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  const themeIcon = !mounted || mode === 'dark' ? <SunOutlined /> : <MoonOutlined />;
 
   const resolveLabel = (key: HeaderKey, fallback: string) => {
     const value = t(key);
@@ -106,7 +112,7 @@ export function Header() {
           <Button
             type="text"
             size="small"
-            icon={mode === 'dark' ? <SunOutlined /> : <MoonOutlined />}
+            icon={themeIcon}
             onClick={toggleTheme}
             className={`${styles.iconButton} ${styles.desktopOnlyControl}`}
             aria-label="Toggle theme"

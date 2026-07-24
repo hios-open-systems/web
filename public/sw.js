@@ -1,12 +1,23 @@
-/* HIOS service worker — installable + real offline.
- * Strategy:
- *  - navigations: network-first, fall back to cached page, then /offline.html
- *  - static (_next/static, icons, manifest): cache-first
- *  - other same-origin GET: stale-while-revalidate
- * Versioned cache + skipWaiting/clientsClaim so deploys roll out fast
- * (the site deploys on every push, SW must not pin stale content).
+/* HIOS service worker — installable + offline fallback.
+ *
+ * Regla de oro: NADA que dependa del build puede sobrevivir a un deploy.
+ * Los chunks de /_next/static llevan hash en el nombre y se reemplazan en cada
+ * deploy: si el SW devuelve un HTML o un payload RSC viejo, ese documento pide
+ * CSS/JS que ya no existen → 404 → la página se ve sin estilos. Dos defensas:
+ *
+ *  1. El cache se llama por versión de deploy — la página registra
+ *     /sw.js?v=<deploy>, así que cada deploy instala un SW nuevo, con cache
+ *     nuevo, y activate borra todos los anteriores.
+ *  2. HTML y RSC van SIEMPRE network-first (el cache es solo fallback offline).
+ *     Antes el RSC era cache-first y el hash ?_rsc= NO depende del build, así
+ *     que una navegación cliente servía el payload del deploy anterior.
+ *
+ * Estrategias:
+ *  - navegaciones y RSC: network-first → cache → /offline.html
+ *  - /_next/static, iconos, manifest: cache-first (inmutables dentro del build)
+ *  - resto de GET same-origin: stale-while-revalidate
  */
-const VERSION = 'hios-v3';
+const VERSION = new URL(self.location.href).searchParams.get('v') || 'dev';
 const CACHE = `hios-cache-${VERSION}`;
 const PRECACHE = ['/offline.html', '/icons/icon.svg', '/icons/icon-192.png'];
 
@@ -32,6 +43,16 @@ function isStatic(url) {
   );
 }
 
+/** Payload del App Router: acoplado al build igual que el HTML. */
+function isRsc(request, url) {
+  return url.searchParams.has('_rsc') || request.headers.get('RSC') === '1';
+}
+
+function cachePut(request, response) {
+  const copy = response.clone();
+  caches.open(CACHE).then((c) => c.put(request, copy));
+}
+
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   if (request.method !== 'GET') return;
@@ -40,18 +61,19 @@ self.addEventListener('fetch', (event) => {
   // Never cache API responses.
   if (url.pathname.startsWith('/api/')) return;
 
-  if (request.mode === 'navigate') {
+  const navigation = request.mode === 'navigate';
+
+  if (navigation || isRsc(request, url)) {
     event.respondWith(
       fetch(request)
         .then((res) => {
-          if (res.ok) {
-            const copy = res.clone();
-            caches.open(CACHE).then((c) => c.put(request, copy));
-          }
+          if (res.ok) cachePut(request, res);
           return res;
         })
         .catch(() =>
-          caches.match(request).then((hit) => hit || caches.match('/offline.html')),
+          caches
+            .match(request)
+            .then((hit) => hit || (navigation ? caches.match('/offline.html') : Response.error())),
         ),
     );
     return;
@@ -63,10 +85,7 @@ self.addEventListener('fetch', (event) => {
         (hit) =>
           hit ||
           fetch(request).then((res) => {
-            if (res.ok) {
-              const copy = res.clone();
-              caches.open(CACHE).then((c) => c.put(request, copy));
-            }
+            if (res.ok) cachePut(request, res);
             return res;
           }),
       ),
@@ -79,10 +98,7 @@ self.addEventListener('fetch', (event) => {
     caches.match(request).then((hit) => {
       const fetched = fetch(request)
         .then((res) => {
-          if (res.ok) {
-            const copy = res.clone();
-            caches.open(CACHE).then((c) => c.put(request, copy));
-          }
+          if (res.ok) cachePut(request, res);
           return res;
         })
         .catch(() => hit);

@@ -3,7 +3,7 @@
  * serialize/parse/list helpers so they can be unit-tested without the DOM.
  */
 
-import { DEFAULT_SKIN, isValidSkin, type SkinId } from '@/lib/themes/skins';
+import { DEFAULT_SKIN, isValidSkin, type SkinId } from './skins.ts';
 
 export type ThemeMode = 'light' | 'dark';
 
