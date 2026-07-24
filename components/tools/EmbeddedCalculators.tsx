@@ -37,7 +37,9 @@ export function EmbeddedCalculators() {
   const c = useCalculatorState();
   const { t } = c;
 
-  const tabLabel = (key: string) => <span style={{ whiteSpace: 'nowrap' }}>{t(`cards.${key}.title`)}</span>;
+  // Sin nowrap: en los skins mono los títulos largos se cortaban contra el
+  // borde del rail en vez de pasar a dos líneas.
+  const tabLabel = (key: string) => <span>{t(`cards.${key}.title`)}</span>;
 
   // El render de cada calc vive en su *Tab.tsx; el registry solo decide orden/categoría.
   const render: Record<string, ReactNode> = {
