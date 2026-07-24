@@ -3,7 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
-import { useTheme } from '@/lib/ThemeContext';
 import { CalculatorOutlined, ApiOutlined, PrinterOutlined, ReadOutlined } from '@ant-design/icons';
 
 type Bi = { es: string; en: string };
@@ -17,13 +16,15 @@ const ITEMS: { href: string; icon: React.ReactNode; label: Bi; desc: Bi }[] = [
 
 export function HomeQuickAccess() {
     const locale = useLocale();
-    const { mode } = useTheme();
     const pick = (m: Bi) => (locale === 'en' ? m.en : m.es);
-    const textColor = mode === 'dark' ? '#e6e6e6' : '#1a1a1a';
-    const secondary = mode === 'dark' ? '#999' : '#666';
-    const cardBg = mode === 'dark' ? '#141414' : '#fafafa';
-    const cardBorder = mode === 'dark' ? '1px solid #1f1f1f' : '1px solid #f0f0f0';
-    const accent = '#f59e0b';
+    // CSS vars, no `mode`: el SSR pinta siempre dark y React no parchea estilos
+    // inline en la hidratación — el usuario en light quedaba con las tarjetas
+    // oscuras. Las vars además siguen al skin activo.
+    const textColor = 'var(--hios-text)';
+    const secondary = 'var(--hios-text-secondary)';
+    const cardBg = 'var(--hios-bg-elevated)';
+    const cardBorder = '1px solid var(--hios-border)';
+    const accent = 'var(--accent, #f59e0b)';
 
     return (
         <section style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 24px 56px' }}>

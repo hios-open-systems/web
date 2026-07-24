@@ -111,6 +111,10 @@ export function getAntdTheme(
     const palette = SKIN_PALETTES[skin][mode];
     const terminal = skin === 'terminal';
     return {
+        // Tokens como CSS vars con key fija: el hash de clase de antd deja de
+        // depender del tema, así que el HTML del SSR (dark/datasheet) sigue
+        // matcheando cuando el cliente hidrata con otro modo o skin.
+        cssVar: { key: 'hios' },
         algorithm: dark ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
         token: {
             ...baseTokens,
