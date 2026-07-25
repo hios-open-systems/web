@@ -57,9 +57,16 @@ function classifyAsset(ext: string): ProjectMeta['technicalAssets'][number]['kin
     return 'other';
 }
 
+/**
+ * Carpetas dentro de projects/ que NO son proyectos-showcase del sitio: bancos
+ * de prueba y firmware de desarrollo. No tienen page pública ni i18n en Projects.*
+ */
+const NON_SHOWCASE = new Set(['speaker-test']);
+
 export function getProjectSlugs(): string[] {
     if (!fs.existsSync(projectsDir)) return [];
     return fs.readdirSync(projectsDir).filter((name) => {
+        if (NON_SHOWCASE.has(name)) return false;
         const stat = fs.statSync(path.join(projectsDir, name));
         return stat.isDirectory();
     });

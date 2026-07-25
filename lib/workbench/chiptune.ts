@@ -134,6 +134,37 @@ export function serializeSong(song: ChiptuneSong): string {
   return JSON.stringify({ version: 1, song });
 }
 
+/**
+ * Formato "wire" reducido que entiende el firmware del device (ESP32).
+ *
+ * A diferencia de serializeSong (que guarda UUIDs por nota + nombres de track que
+ * el ESP tiraría), esto es compacto y posicional para no desperdiciar heap ni
+ * fragmentar el JsonDocument transitorio:
+ *   - instrumento = índice entero en INSTRUMENT_IDS (el ORDEN de este archivo ES
+ *     el contrato; SongFormat.h del firmware lo espeja, verificado por test:song).
+ *   - volumen 0..1 -> 0..255.
+ *   - nota = [pitch, start, duration, velocity] (se descarta el id).
+ * Es el ÚNICO productor de este formato: la lógica vive acá para poder testearla.
+ */
+export const DEVICE_WIRE_VERSION = 2;
+
+export function serializeDeviceSong(song: ChiptuneSong): string {
+  return JSON.stringify({
+    v: DEVICE_WIRE_VERSION,
+    n: song.name,
+    bpm: song.bpm,
+    ppq: song.ppq,
+    bpb: song.beatsPerBar,
+    lb: song.lengthBars,
+    t: song.tracks.map((track) => ({
+      i: Math.max(0, INSTRUMENT_IDS.indexOf(track.instrument)),
+      m: track.muted ? 1 : 0,
+      vol: clamp(Math.round(track.volume * 255), 0, 255),
+      no: track.notes.map((note) => [note.pitch, note.start, note.duration, note.velocity]),
+    })),
+  });
+}
+
 export function parseSong(raw: string | null): ChiptuneSong | null {
   if (!raw) return null;
   try {

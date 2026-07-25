@@ -690,6 +690,7 @@
             "tools": "Herramientas",
             "workbench": "Workbench",
             "calculators": "Calculadoras",
+            "composer": "Compositor Chiptune",
             "pinouts": "Pinouts",
             "padWiring": "PAD · guía de cableado",
             "btdacWiring": "BTDAC · guía de cableado",
@@ -1061,6 +1062,16 @@
                     "Copiar resumen = los resultados en texto · Copiar enlace = la URL con tu configuración para compartir."
                 ],
                 "tip": "En las calcs de resistencias (LED, Filtro RC, Divisor ADC) el control 'Serie E' ajusta el valor al comercial más cercano (E12/E24)."
+            },
+            "composer": {
+                "intro": "Compone chiptune retro en un piano-roll, escuchalo en el navegador y mandalo al parlante HIOS. Todo corre local.",
+                "steps": [
+                    "Elegí una pista y su instrumento; clic en la grilla para agregar notas, arrastrá para mover o cambiar el largo.",
+                    "Ajustá tempo y compases, y dale Reproducir para escucharlo (Loop lo repite).",
+                    "Exportá .mid / .wav para descargar, o Compartir link para copiar la canción entera dentro de una URL.",
+                    "Exportar para device = el código para el parlante: abrí la página del device (http://hioschip.local) y pegalo para que suene en vivo."
+                ],
+                "tip": "El device reusa estas mismas voces, así que lo que escuchás en el navegador es lo que toca el parlante."
             },
             "guitarTuner": {
                 "intro": "Afiná guitarra, bajo, ukelele o cuerdas de arco a oído o por micrófono — todo local, el audio no sale de tu navegador.",
