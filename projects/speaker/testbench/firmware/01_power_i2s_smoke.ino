@@ -6,7 +6,7 @@
 #define I2S_BCLK 26
 #define I2S_LRC  27
 #define I2S_DMA_BUF_LEN 64
-constexpr float DEFAULT_GAIN = 0.4f;  // Nivel conservador para validar audio inicial evitando clipping temprano.
+constexpr float DEFAULT_GAIN = 0.4f;  // Conservative level for initial audio check, avoiding early clipping.
 
 static void setupI2S() {
   i2s_config_t cfg = {
@@ -17,11 +17,11 @@ static void setupI2S() {
     .communication_format = I2S_COMM_FORMAT_STAND_I2S,
     .intr_alloc_flags = ESP_INTR_FLAG_LEVEL1,
     .dma_buf_count = 8,
-    // Buffer I2S_DMA_BUF_LEN para latencia baja en smoke test inicial.
+    // I2S_DMA_BUF_LEN buffer for low latency during the initial smoke test.
     .dma_buf_len = I2S_DMA_BUF_LEN,
     .use_apll = false,
     .tx_desc_auto_clear = true,
-    // MCLK dedicado no se usa con MAX98357A en este banco de pruebas.
+    // Dedicated MCLK is not used with MAX98357A in this testbench.
     .fixed_mclk = 0,
   };
 
