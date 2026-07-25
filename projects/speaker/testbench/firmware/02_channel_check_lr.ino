@@ -6,6 +6,7 @@
 #define I2S_BCLK 26
 #define I2S_LRC  27
 #define I2S_DMA_BUF_LEN 64
+constexpr float DEFAULT_GAIN = 0.45f;  // Un poco mayor para distinguir mejor L/R en prueba auditiva.
 
 static void setupI2S() {
   i2s_config_t cfg = {
@@ -35,7 +36,7 @@ static void setupI2S() {
   i2s_set_pin(I2S_NUM_0, &pins);
 }
 
-static void playChannelTone(float hz, uint32_t ms, bool left, bool right, float gain = 0.45f) {
+static void playChannelTone(float hz, uint32_t ms, bool left, bool right, float gain = DEFAULT_GAIN) {
   const int sampleRate = 44100;
   const int total = (sampleRate * ms) / 1000;
   size_t written = 0;
