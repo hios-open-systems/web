@@ -21,7 +21,7 @@ static void setupI2S() {
     .communication_format = I2S_COMM_FORMAT_STAND_I2S,
     .intr_alloc_flags = ESP_INTR_FLAG_LEVEL1,
     .dma_buf_count = 8,
-    // 2x buffer (128 vs 64 in smoke test) for continuous playback and lower underflow risk.
+    // Larger 128-sample buffer for continuous playback and lower underflow risk.
     .dma_buf_len = I2S_DMA_BUF_LEN,
     .use_apll = false,
     .tx_desc_auto_clear = true,
