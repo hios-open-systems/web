@@ -9,6 +9,7 @@
 #define I2S_DMA_BUF_LEN 128
 constexpr float LEFT_TEST_FREQ_HZ = 330.0f;     // E4
 constexpr float RIGHT_TEST_FREQ_HZ = 554.37f;   // C#5
+constexpr uint32_t PLAYBACK_DURATION_MS = 10000;
 static uint32_t cycle = 0;
 
 static void setupI2S() {
@@ -64,8 +65,8 @@ void setup() {
 
 void loop() {
   cycle++;
-  Serial.printf("[STABILITY] cycle=%" PRIu32 " start (10s playback)\n", cycle);
-  playStereo(10000);
+  Serial.printf("[STABILITY] cycle=%" PRIu32 " start (%" PRIu32 "ms playback)\n", cycle, PLAYBACK_DURATION_MS);
+  playStereo(PLAYBACK_DURATION_MS);
   Serial.println("[STABILITY] cool-down 2s");
   delay(2000);
 }
