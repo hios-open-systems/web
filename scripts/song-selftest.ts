@@ -129,7 +129,7 @@ ok(
 eq('demo track 0 (pulse-lead) -> i=0', wire.t[0].i, INSTRUMENT_IDS.indexOf('pulse-lead'));
 
 // ─── 5. cancionero de dominio publico entra en los caps del device ──────────
-ok('hay 5 canciones famosas', FAMOUS_SONGS.length === 5);
+ok('cancionero: 1 original + 5 dominio público', FAMOUS_SONGS.length === 6);
 for (const s of FAMOUS_SONGS) {
   const w = JSON.parse(serializeDeviceSong(s.make()));
   const total = w.t.reduce((a: number, t: { no: unknown[] }) => a + t.no.length, 0);
@@ -139,6 +139,16 @@ for (const s of FAMOUS_SONGS) {
     total <= (maxNotes ?? 512) &&
     w.t.every((t: { i: number }) => t.i >= 0 && t.i < INSTRUMENT_IDS.length));
 }
+
+// ─── 6. el timbre custom (web-only) NO viaja al wire del device ─────────────
+const timbred = createDemoSong();
+timbred.tracks[0].timbre = { duty: 0.2, attack: 0.03 };
+const wt = JSON.parse(serializeDeviceSong(timbred));
+ok(
+  'el wire NO lleva timbre (solo {i,m,no,vol} por track)',
+  wt.t.every((tr: Record<string, unknown>) =>
+    !('timbre' in tr) && Object.keys(tr).sort().join(',') === 'i,m,no,vol'),
+);
 
 if (failures > 0) {
   console.error(`\n${failures} check(s) failed`);

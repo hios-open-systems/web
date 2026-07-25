@@ -149,6 +149,39 @@ const canonInD = (): ChiptuneSong =>
     },
   ]);
 
+// ─── Tema por defecto: "HIOS Adventure" ─────────────────────────────────────
+// Composición ORIGINAL (melodía propia) estilo aventura NES upbeat. No es ningún
+// tema con copyright — es el demo con el que abre el composer.
+const hiosAdventure = (): ChiptuneSong =>
+  makeSong('HIOS Adventure', 150, [
+    {
+      name: 'Lead', instrument: 'pulse-lead', evs: [
+        [67, 1], [72, 1], [76, 1], [79, 1], [76, 1], [79, 1], [81, 2],
+        [79, 1], [76, 1], [72, 1], [76, 1], [74, 2], [72, 2],
+        [65, 1], [69, 1], [72, 1], [77, 1], [76, 1], [72, 1], [74, 2],
+        [71, 1], [74, 1], [79, 1], [76, 1], [72, 2], [0, 2],
+      ],
+    },
+    {
+      name: 'Bajo', instrument: 'triangle-bass', velocity: 92, evs: [
+        [48, 4], [48, 4], [43, 4], [43, 4], [41, 4], [41, 4], [43, 4], [47, 4],
+      ],
+    },
+    {
+      name: 'Batería', instrument: 'noise-perc', velocity: 85, evs: [
+        [36, 1], [0, 1], [42, 1], [0, 1], [36, 1], [0, 1], [42, 1], [0, 1],
+        [36, 1], [0, 1], [42, 1], [0, 1], [36, 1], [0, 1], [42, 1], [0, 1],
+        [36, 1], [0, 1], [42, 1], [0, 1], [36, 1], [0, 1], [42, 1], [0, 1],
+        [36, 1], [0, 1], [42, 1], [0, 1], [36, 1], [0, 1], [42, 1], [0, 1],
+      ],
+    },
+  ]);
+
+/** Canción con la que abre el composer (original, sin copyright). */
+export function makeDefaultSong(): ChiptuneSong {
+  return hiosAdventure();
+}
+
 export interface FamousSong {
   id: string;
   label: string;
@@ -157,6 +190,7 @@ export interface FamousSong {
 
 /** Los 5, en orden de presentación. `make()` crea una copia fresca cada vez. */
 export const FAMOUS_SONGS: FamousSong[] = [
+  { id: 'hios-adventure', label: 'HIOS Adventure (original)', make: hiosAdventure },
   { id: 'korobeiniki', label: 'Korobeiniki (Tetris)', make: korobeiniki },
   { id: 'oda-alegria', label: 'Himno de la Alegría', make: odaAlegria },
   { id: 'mountain-king', label: 'In the Hall of the Mountain King', make: mountainKing },

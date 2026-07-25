@@ -42,6 +42,8 @@
     "test:pitch": "node --experimental-strip-types scripts/pitch-selftest.ts",
     "test:chiptune": "node --experimental-strip-types scripts/chiptune-selftest.ts",
     "test:song": "node --experimental-strip-types scripts/song-selftest.ts",
+    "test:patternops": "node --experimental-strip-types scripts/patternops-selftest.ts",
+    "test:arrange": "node --experimental-strip-types scripts/arrange-selftest.ts",
     "db:migrate": "wrangler d1 migrations apply hios-playground --remote",
     "db:migrate:local": "wrangler d1 migrations apply hios-playground --local",
     "test:e2e": "playwright test",
@@ -51,6 +53,7 @@
   "dependencies": {
     "@ant-design/cssinjs": "^1.18.0",
     "@ant-design/icons": "^5.2.0",
+    "@breezystack/lamejs": "^1.2.7",
     "@excalidraw/excalidraw": "^0.18.1",
     "@lmstudio/sdk": "^1.5.0",
     "antd": "^5.14.0",
