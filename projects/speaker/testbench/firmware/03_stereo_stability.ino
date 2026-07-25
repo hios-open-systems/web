@@ -5,6 +5,9 @@
 #define I2S_DOUT 25
 #define I2S_BCLK 26
 #define I2S_LRC  27
+#define I2S_DMA_BUF_LEN 128
+constexpr float LEFT_TEST_FREQ_HZ = 330.0f;     // E4
+constexpr float RIGHT_TEST_FREQ_HZ = 554.37f;   // C#5
 
 static void setupI2S() {
   i2s_config_t cfg = {
@@ -15,9 +18,11 @@ static void setupI2S() {
     .communication_format = I2S_COMM_FORMAT_STAND_I2S,
     .intr_alloc_flags = ESP_INTR_FLAG_LEVEL1,
     .dma_buf_count = 8,
-    .dma_buf_len = 128,
+    // Buffer más grande para playback continuo y menor riesgo de underflow.
+    .dma_buf_len = I2S_DMA_BUF_LEN,
     .use_apll = false,
     .tx_desc_auto_clear = true,
+    // MCLK dedicado no se usa con MAX98357A en este banco de pruebas.
     .fixed_mclk = 0,
   };
 
@@ -39,8 +44,8 @@ static void playStereo(uint32_t ms, float gain = 0.35f) {
 
   for (int i = 0; i < total; ++i) {
     float t = (float)i / (float)sampleRate;
-    int16_t l = (int16_t)(sin(2.0f * PI * 330.0f * t) * 32767.0f * gain);
-    int16_t r = (int16_t)(sin(2.0f * PI * 554.37f * t) * 32767.0f * gain);
+    int16_t l = (int16_t)(sin(2.0f * PI * LEFT_TEST_FREQ_HZ * t) * 32767.0f * gain);
+    int16_t r = (int16_t)(sin(2.0f * PI * RIGHT_TEST_FREQ_HZ * t) * 32767.0f * gain);
     int16_t frame[2] = {l, r};
     i2s_write(I2S_NUM_0, frame, sizeof(frame), &written, portMAX_DELAY);
   }
