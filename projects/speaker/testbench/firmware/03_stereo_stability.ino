@@ -8,6 +8,7 @@
 #define I2S_DMA_BUF_LEN 128
 constexpr float LEFT_TEST_FREQ_HZ = 330.0f;     // E4
 constexpr float RIGHT_TEST_FREQ_HZ = 554.37f;   // C#5
+static uint32_t cycle = 0;
 
 static void setupI2S() {
   i2s_config_t cfg = {
@@ -61,7 +62,6 @@ void setup() {
 }
 
 void loop() {
-  static uint32_t cycle = 0;
   cycle++;
   Serial.printf("[STABILITY] cycle=%lu start (10s playback)\n", (unsigned long)cycle);
   playStereo(10000);
