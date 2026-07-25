@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <inttypes.h>
 #include <math.h>
 #include "driver/i2s.h"
 
@@ -63,7 +64,7 @@ void setup() {
 
 void loop() {
   cycle++;
-  Serial.printf("[STABILITY] cycle=%lu start (10s playback)\n", (unsigned long)cycle);
+  Serial.printf("[STABILITY] cycle=%" PRIu32 " start (10s playback)\n", cycle);
   playStereo(10000);
   Serial.println("[STABILITY] cool-down 2s");
   delay(2000);
