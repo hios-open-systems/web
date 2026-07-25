@@ -16,6 +16,7 @@ import {
   createDemoSong,
   serializeSong,
   parseSong,
+  audibleTracks,
 } from '../lib/workbench/chiptune.ts';
 import { encodeMidi, writeVarLen } from '../lib/workbench/chiptuneMidi.ts';
 import { encodeWav } from '../lib/workbench/wav.ts';
@@ -118,6 +119,16 @@ const clamped = parseSong(serializeSong(wild))?.tracks[0].timbre;
 eq('timbre clamp duty', clamped?.duty, 0.95);
 eq('timbre clamp attack', clamped?.attack, 0);
 eq('timbre clamp filterHz', clamped?.filterHz, 16000);
+
+// --- audibleTracks (mute / solo) ---
+const mix = createSong();
+mix.tracks = [createTrack('a', 'pulse-lead'), createTrack('b', 'triangle-bass'), createTrack('c', 'noise-perc')];
+eq('audibleTracks: todas por defecto', audibleTracks(mix).length, 3);
+mix.tracks[1].muted = true;
+eq('audibleTracks: mute excluye', audibleTracks(mix).length, 2);
+mix.tracks[0].solo = true;
+const soloed = audibleTracks(mix);
+ok('audibleTracks: con solo, solo esa (ignora muteada y no-solo)', soloed.length === 1 && soloed[0].name === 'a');
 
 if (failures > 0) {
   console.error(`\n${failures} check(s) failed`);

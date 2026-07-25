@@ -4,7 +4,7 @@
  * OfflineAudioContext), so it never touches the server/edge bundle.
  */
 import { midiToFreq } from '@/lib/workbench/noteFreq';
-import { ticksToSeconds, loopLengthTicks, type ChiptuneSong } from '@/lib/workbench/chiptune';
+import { ticksToSeconds, loopLengthTicks, audibleTracks, type ChiptuneSong } from '@/lib/workbench/chiptune';
 import { encodeWav } from '@/lib/workbench/wav';
 import { scheduleVoice } from './synth';
 
@@ -21,10 +21,7 @@ export async function renderSongToBuffer(song: ChiptuneSong): Promise<{ sampleRa
   master.gain.value = 0.85;
   master.connect(offline.destination);
 
-  const soloed = song.tracks.some((track) => track.solo);
-  for (const track of song.tracks) {
-    if (track.muted) continue;
-    if (soloed && !track.solo) continue;
+  for (const track of audibleTracks(song)) {
     for (const note of track.notes) {
       const when = ticksToSeconds(note.start, song.bpm, song.ppq);
       const dur = ticksToSeconds(note.duration, song.bpm, song.ppq);
