@@ -17,7 +17,7 @@ static void setupI2S() {
     .communication_format = I2S_COMM_FORMAT_STAND_I2S,
     .intr_alloc_flags = ESP_INTR_FLAG_LEVEL1,
     .dma_buf_count = 8,
-    // Igual al smoke test para mantener latencia baja en alternancia L/R.
+    // Mismo buffer de 64 samples que smoke test para mantener respuesta consistente en alternancia L/R.
     .dma_buf_len = I2S_DMA_BUF_LEN,
     .use_apll = false,
     .tx_desc_auto_clear = true,
