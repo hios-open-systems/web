@@ -6,7 +6,7 @@
 #define I2S_BCLK 26
 #define I2S_LRC  27
 #define I2S_DMA_BUF_LEN 64
-constexpr float DEFAULT_GAIN = 0.45f;  // Un poco mayor que smoke test (0.4f) para distinguir mejor L/R.
+constexpr float DEFAULT_GAIN = 0.45f;  // Slightly higher than smoke test (0.4f) to make L/R distinction easier.
 
 static void setupI2S() {
   i2s_config_t cfg = {
@@ -17,11 +17,11 @@ static void setupI2S() {
     .communication_format = I2S_COMM_FORMAT_STAND_I2S,
     .intr_alloc_flags = ESP_INTR_FLAG_LEVEL1,
     .dma_buf_count = 8,
-    // Mismo buffer de 64 samples que smoke test para mantener respuesta consistente en alternancia L/R.
+    // Same 64-sample buffer as smoke test for consistent response during L/R alternation.
     .dma_buf_len = I2S_DMA_BUF_LEN,
     .use_apll = false,
     .tx_desc_auto_clear = true,
-    // MCLK dedicado no se usa con MAX98357A en este banco de pruebas.
+    // Dedicated MCLK is not used with MAX98357A in this testbench.
     .fixed_mclk = 0,
   };
 
