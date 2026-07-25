@@ -5,6 +5,7 @@
 #define I2S_DOUT 25
 #define I2S_BCLK 26
 #define I2S_LRC  27
+#define I2S_DMA_BUF_LEN 64
 
 static void setupI2S() {
   i2s_config_t cfg = {
@@ -15,9 +16,11 @@ static void setupI2S() {
     .communication_format = I2S_COMM_FORMAT_STAND_I2S,
     .intr_alloc_flags = ESP_INTR_FLAG_LEVEL1,
     .dma_buf_count = 8,
-    .dma_buf_len = 64,
+    // Igual al smoke test para mantener latencia baja en alternancia L/R.
+    .dma_buf_len = I2S_DMA_BUF_LEN,
     .use_apll = false,
     .tx_desc_auto_clear = true,
+    // MCLK dedicado no se usa con MAX98357A en este banco de pruebas.
     .fixed_mclk = 0,
   };
 
