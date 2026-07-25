@@ -6,7 +6,7 @@
 #define I2S_BCLK 26
 #define I2S_LRC  27
 #define I2S_DMA_BUF_LEN 64
-constexpr float DEFAULT_GAIN = 0.4f;  // Nivel conservador para validar audio sin saturar.
+constexpr float DEFAULT_GAIN = 0.4f;  // Nivel conservador para validar audio inicial evitando clipping temprano.
 
 static void setupI2S() {
   i2s_config_t cfg = {

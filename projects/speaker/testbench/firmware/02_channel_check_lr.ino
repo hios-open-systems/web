@@ -6,7 +6,7 @@
 #define I2S_BCLK 26
 #define I2S_LRC  27
 #define I2S_DMA_BUF_LEN 64
-constexpr float DEFAULT_GAIN = 0.45f;  // Un poco mayor para distinguir mejor L/R en prueba auditiva.
+constexpr float DEFAULT_GAIN = 0.45f;  // Un poco mayor que smoke test (0.4f) para distinguir mejor L/R.
 
 static void setupI2S() {
   i2s_config_t cfg = {
