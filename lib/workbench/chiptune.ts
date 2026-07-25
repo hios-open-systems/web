@@ -25,6 +25,24 @@ export interface ChiptuneNote {
   velocity: number; // 1..127
 }
 
+/**
+ * Override de timbre por pista (edición client-side). Campos opcionales que se
+ * mergean sobre la "recipe" base del instrumento en el synth. Tipos planos (no
+ * DOM) para que el modelo siga corriendo bajo node --experimental-strip-types.
+ * NO viaja al device (el firmware tiene 6 voces fijas): serializeDeviceSong lo ignora.
+ */
+export interface TrackTimbre {
+  oscType?: 'sine' | 'square' | 'sawtooth' | 'triangle';
+  duty?: number;     // 0.05..0.95 (pulso)
+  attack?: number;   // s
+  decay?: number;    // s
+  sustain?: number;  // 0..1
+  release?: number;  // s
+  filterHz?: number; // Hz
+  detune?: number;   // cents
+  peak?: number;     // 0..1 nivel de la voz
+}
+
 export interface ChiptuneTrack {
   id: string;
   name: string;
@@ -32,6 +50,23 @@ export interface ChiptuneTrack {
   notes: ChiptuneNote[];
   muted: boolean;
   volume: number; // 0..1
+  solo?: boolean;
+  timbre?: TrackTimbre;
+}
+
+/** Sección reusable (mini-canción). Se compila a la canción plana antes de tocar/exportar. */
+export interface ChiptunePattern {
+  id: string;
+  name: string;
+  lengthBars: number;
+  tracks: ChiptuneTrack[];
+}
+
+/** Un clip del arreglo: qué pattern y en qué compás arranca. */
+export interface ArrangementClip {
+  id: string;
+  patternId: string;
+  startBar: number;
 }
 
 export interface ChiptuneSong {
@@ -43,6 +78,10 @@ export interface ChiptuneSong {
   lengthBars: number;
   tracks: ChiptuneTrack[];
   updatedAt: number;
+  // Secciones/arreglo opcionales (persisten y viajan en el share). El device y el
+  // playback consumen SIEMPRE la canción plana (tracks); esto se compila a plano.
+  patterns?: ChiptunePattern[];
+  arrangement?: ArrangementClip[];
 }
 
 export interface InstrumentMeta {
@@ -63,6 +102,30 @@ export const INSTRUMENT_IDS = Object.keys(INSTRUMENTS) as InstrumentId[];
 
 export function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
+}
+
+const clampOpt = (v: unknown, lo: number, hi: number): number | undefined =>
+  typeof v === 'number' && Number.isFinite(v) ? Math.max(lo, Math.min(hi, v)) : undefined;
+
+/** Sanea un override de timbre: recorta rangos y descarta claves inválidas/undefined. */
+export function clampTimbre(t: TrackTimbre): TrackTimbre {
+  const out: TrackTimbre = {};
+  if (t.oscType === 'sine' || t.oscType === 'square' || t.oscType === 'sawtooth' || t.oscType === 'triangle') {
+    out.oscType = t.oscType;
+  }
+  const set = (key: keyof TrackTimbre, lo: number, hi: number) => {
+    const v = clampOpt(t[key], lo, hi);
+    if (v !== undefined) (out[key] as number) = v;
+  };
+  set('duty', 0.05, 0.95);
+  set('attack', 0, 1);
+  set('decay', 0, 2);
+  set('sustain', 0, 1);
+  set('release', 0, 2);
+  set('filterHz', 100, 16000);
+  set('detune', -50, 50);
+  set('peak', 0.02, 0.5);
+  return out;
 }
 
 export const secondsPerTick = (bpm: number, ppq = PPQ): number => 60 / (bpm * ppq);
@@ -175,6 +238,9 @@ export function parseSong(raw: string | null): ChiptuneSong | null {
     song.ppq = song.ppq || PPQ;
     song.beatsPerBar = song.beatsPerBar || 4;
     song.lengthBars = song.lengthBars || 4;
+    for (const track of song.tracks as ChiptuneTrack[]) {
+      if (track && track.timbre) track.timbre = clampTimbre(track.timbre);
+    }
     return song as ChiptuneSong;
   } catch {
     return null;

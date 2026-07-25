@@ -1406,6 +1406,10 @@
                 "title": "Chiptune Composer",
                 "description": "Compose retro video-game music in a piano-roll with synthesized 8-bit voices and export to .mid and .wav."
             },
+            "audio-convert": {
+                "title": "Audio Converter",
+                "description": "Upload an audio file and export it to WAV or MP3, all in the browser."
+            },
             "ipv6-expand": {
                 "title": "IPv6 Expand / Compress",
                 "description": "Expand and compress IPv6 addresses following RFC 5952, fully in the browser."
