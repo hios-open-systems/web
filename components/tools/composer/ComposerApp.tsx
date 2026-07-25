@@ -114,12 +114,14 @@ export function ComposerApp() {
           beatsPerBar={c.song.beatsPerBar}
           isPlaying={c.isPlaying}
           loop={c.loop}
+          metronome={c.metronome}
           rendering={c.rendering}
           masterVolume={c.masterVolume}
           getPlayheadTicks={c.getPlayheadTicks}
           onPlay={c.play}
           onStop={c.stop}
           onToggleLoop={c.toggleLoop}
+          onToggleMetronome={c.toggleMetronome}
           onBpm={c.setBpm}
           onLength={c.setLength}
           onMasterVolume={c.setMasterVolume}

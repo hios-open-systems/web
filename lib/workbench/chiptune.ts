@@ -133,6 +133,12 @@ export const ticksToSeconds = (ticks: number, bpm: number, ppq = PPQ): number =>
   ticks * secondsPerTick(bpm, ppq);
 export const loopLengthTicks = (song: ChiptuneSong): number =>
   song.lengthBars * song.beatsPerBar * song.ppq;
+
+/** Única fuente de "qué pistas suenan": excluye muteadas; si hay alguna en solo, solo esas. */
+export function audibleTracks(song: ChiptuneSong): ChiptuneTrack[] {
+  const soloed = song.tracks.some((track) => track.solo);
+  return song.tracks.filter((track) => !track.muted && (!soloed || track.solo));
+}
 export const snapTick = (tick: number): number =>
   Math.round(tick / TICKS_PER_STEP) * TICKS_PER_STEP;
 

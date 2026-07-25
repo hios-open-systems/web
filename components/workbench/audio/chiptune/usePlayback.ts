@@ -10,11 +10,13 @@ import {
   ticksToSeconds,
   secondsPerTick,
   loopLengthTicks,
+  audibleTracks,
   type ChiptuneSong,
   type InstrumentId,
   type TrackTimbre,
 } from '@/lib/workbench/chiptune';
 import { scheduleVoice } from './synth';
+import { scheduleClick } from '@/lib/workbench/audioClick';
 
 const LOOKAHEAD_MS = 25;
 const SCHEDULE_AHEAD = 0.1;
@@ -30,10 +32,7 @@ interface SchedEvent {
 
 function buildEvents(song: ChiptuneSong): SchedEvent[] {
   const events: SchedEvent[] = [];
-  const soloed = song.tracks.some((track) => track.solo);
-  for (const track of song.tracks) {
-    if (track.muted) continue;
-    if (soloed && !track.solo) continue; // hay pistas en solo -> solo esas suenan
+  for (const track of audibleTracks(song)) {
     for (const note of track.notes) {
       events.push({
         startSec: ticksToSeconds(note.start, song.bpm, song.ppq),
@@ -55,9 +54,12 @@ export function usePlayback(song: ChiptuneSong) {
   const masterRef = useRef<GainNode | null>(null);
   const timerRef = useRef<number | null>(null);
   const nodesRef = useRef<AudioScheduledSourceNode[]>([]);
-  const stateRef = useRef({ events: [] as SchedEvent[], cursor: 0, scheduleBase: 0, startTime: 0, loopSec: 0 });
+  const stateRef = useRef({ events: [] as SchedEvent[], cursor: 0, scheduleBase: 0, startTime: 0, loopSec: 0, beatBase: 0, beatIndex: 0 });
   const loopRef = useRef(loop);
   loopRef.current = loop;
+  const [metronome, setMetronome] = useState(false);
+  const metronomeRef = useRef(metronome);
+  metronomeRef.current = metronome;
   const songRef = useRef(song);
   songRef.current = song;
 
@@ -113,6 +115,10 @@ export function usePlayback(song: ChiptuneSong) {
     state.startTime = base - off;
     state.cursor = 0;
     while (state.cursor < state.events.length && state.events[state.cursor].startSec < off) state.cursor += 1;
+    // Cursor de beats del metrónomo (independiente del cursor de notas).
+    const beatSec = 60 / current.bpm; // un beat = negra = PPQ ticks
+    state.beatBase = base - off;
+    state.beatIndex = beatSec > 0 ? Math.floor(off / beatSec) : 0;
     setPlaying(true);
 
     const poll = () => {
@@ -141,6 +147,25 @@ export function usePlayback(song: ChiptuneSong) {
           ...scheduleVoice(audio, masterRef.current, event.instrument, event.freq, when, event.durSec, event.gain, event.timbre),
         );
         s.cursor += 1;
+      }
+
+      // Metrónomo: un click por beat sincronizado al mismo reloj. Vive solo acá
+      // (playback en vivo), nunca en render.ts, así el export no lleva el click.
+      if (metronomeRef.current) {
+        const beatSec = 60 / songRef.current.bpm;
+        const beatsPerBar = songRef.current.beatsPerBar || 4;
+        const beatsPerLoop = Math.max(1, Math.round(s.loopSec / beatSec));
+        while (s.beatBase + s.beatIndex * beatSec < horizon) {
+          const when = s.beatBase + s.beatIndex * beatSec;
+          if (when >= audio.currentTime - 0.001) {
+            nodesRef.current.push(scheduleClick(audio, masterRef.current, when, s.beatIndex % beatsPerBar === 0));
+          }
+          s.beatIndex += 1;
+          if (s.beatIndex >= beatsPerLoop) {
+            s.beatIndex = 0;
+            s.beatBase += s.loopSec;
+          }
+        }
       }
     };
     timerRef.current = window.setInterval(poll, LOOKAHEAD_MS);
@@ -211,6 +236,8 @@ export function usePlayback(song: ChiptuneSong) {
     play,
     stop,
     toggleLoop: () => setLoop((value) => !value),
+    metronome,
+    toggleMetronome: () => setMetronome((value) => !value),
     getPlayheadTicks,
     previewNote,
     masterVolume,

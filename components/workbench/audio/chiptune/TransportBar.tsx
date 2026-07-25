@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useTapTempo } from '../useTapTempo';
 import { Button, InputNumber, Slider, Space, Typography } from 'antd';
 import {
   PauseCircleOutlined,
@@ -21,12 +22,14 @@ interface Props {
   beatsPerBar: number;
   isPlaying: boolean;
   loop: boolean;
+  metronome: boolean;
   rendering: boolean;
   masterVolume: number;
   getPlayheadTicks: () => number | null;
   onPlay: () => void;
   onStop: () => void;
   onToggleLoop: () => void;
+  onToggleMetronome: () => void;
   onBpm: (value: number) => void;
   onLength: (value: number) => void;
   onMasterVolume: (value: number) => void;
@@ -63,12 +66,14 @@ export function TransportBar({
   beatsPerBar,
   isPlaying,
   loop,
+  metronome,
   rendering,
   masterVolume,
   getPlayheadTicks,
   onPlay,
   onStop,
   onToggleLoop,
+  onToggleMetronome,
   onBpm,
   onLength,
   onMasterVolume,
@@ -80,18 +85,7 @@ export function TransportBar({
 }: Props) {
   const position = usePosition(isPlaying, getPlayheadTicks, ppq, beatsPerBar);
 
-  const tapTimes = useRef<number[]>([]);
-  const onTap = () => {
-    const now = performance.now();
-    const arr = tapTimes.current.filter((t) => now - t < 2000); // ventana 2s
-    arr.push(now);
-    tapTimes.current = arr;
-    if (arr.length >= 2) {
-      const intervals = arr.slice(1).map((t, i) => t - arr[i]);
-      const avg = intervals.reduce((a, b) => a + b, 0) / intervals.length;
-      onBpm(Math.max(40, Math.min(300, Math.round(60000 / avg))));
-    }
-  };
+  const onTap = useTapTempo(onBpm);
 
   return (
     <div className={styles.transport}>
@@ -104,6 +98,9 @@ export function TransportBar({
       </Button>
       <Button icon={<RetweetOutlined />} type={loop ? 'primary' : 'default'} onClick={onToggleLoop}>
         Loop
+      </Button>
+      <Button type={metronome ? 'primary' : 'default'} onClick={onToggleMetronome} title="Metrónomo (m)">
+        Metrónomo
       </Button>
       <Text type="secondary" className={styles.position}>{position}</Text>
       <Space size={6}>

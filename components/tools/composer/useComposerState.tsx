@@ -24,7 +24,6 @@ import { makeDefaultSong } from '@/lib/workbench/chiptuneSongs';
 import { encodeMidi } from '@/lib/workbench/chiptuneMidi';
 import { downloadBlob } from '@/lib/workbench/download';
 import { renderSongToWav, renderSongToBuffer } from '@/components/workbench/audio/chiptune/render';
-import { encodeMp3 } from '@/lib/workbench/mp3';
 import { usePlayback } from '@/components/workbench/audio/chiptune/usePlayback';
 import { repeatRange, fillSubdivision } from '@/lib/workbench/patternOps';
 import { encodeShare, decodeShare } from './registry';
@@ -61,7 +60,7 @@ export function useComposerState() {
   const [rendering, setRendering] = useState(false);
   const [deviceCopied, setDeviceCopied] = useState(false);
 
-  const { isPlaying, loop, play, stop, toggleLoop, getPlayheadTicks, previewNote, masterVolume, setMasterVolume, seek } = usePlayback(song);
+  const { isPlaying, loop, play, stop, toggleLoop, metronome, toggleMetronome, getPlayheadTicks, previewNote, masterVolume, setMasterVolume, seek } = usePlayback(song);
 
   // --- historia (undo/redo) con coalescing de ediciones rápidas (drags) ------
   const songRef = useRef(song);
@@ -335,6 +334,7 @@ export function useComposerState() {
     setRendering(true);
     try {
       const { sampleRate, channelData } = await renderSongToBuffer(song);
+      const { encodeMp3 } = await import('@/lib/workbench/mp3'); // lazy: lamejs baja solo al exportar
       downloadBlob(encodeMp3(channelData, sampleRate), `${slugify(song.name)}.mp3`, 'audio/mpeg');
       messageApi.success('MP3 exportado');
     } finally {
@@ -395,6 +395,8 @@ export function useComposerState() {
         if (isPlaying) stop(); else play();
       } else if (event.key.toLowerCase() === 'l') {
         toggleLoop();
+      } else if (event.key.toLowerCase() === 'm') {
+        toggleMetronome();
       } else if (event.key === 'Delete' || event.key === 'Backspace') {
         if (!selectedNoteId) return;
         event.preventDefault();
@@ -410,11 +412,11 @@ export function useComposerState() {
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [isPlaying, play, stop, toggleLoop, undo, redo, duplicateNote, nudgeNote, onDeleteNote, selectedNoteId]);
+  }, [isPlaying, play, stop, toggleLoop, toggleMetronome, undo, redo, duplicateNote, nudgeNote, onDeleteNote, selectedNoteId]);
 
   return {
     song, activeTrackId, selectedNoteId, rendering, deviceCopied, contextHolder,
-    isPlaying, loop, play, stop, toggleLoop, getPlayheadTicks, seek,
+    isPlaying, loop, play, stop, toggleLoop, metronome, toggleMetronome, getPlayheadTicks, seek,
     masterVolume, setMasterVolume,
     canUndo: past.current.length > 0, canRedo: future.current.length > 0, undo, redo,
     setActiveTrackId, setSelectedNoteId, selectNote,

@@ -6,7 +6,6 @@ import { InboxOutlined, DownloadOutlined } from '@ant-design/icons';
 import { ToolHeader } from '../ToolHeader';
 import styles from '../workbench.module.css';
 import { encodeWav } from '@/lib/workbench/wav';
-import { encodeMp3 } from '@/lib/workbench/mp3';
 import { downloadBlob } from '@/lib/workbench/download';
 
 const { Text } = Typography;
@@ -60,10 +59,11 @@ export function AudioConvertTool() {
     downloadBlob(encodeWav({ sampleRate: audio.sampleRate, channelData: audio.channelData }), `${baseName(audio.name)}.wav`, 'audio/wav');
     messageApi.success('WAV exportado');
   };
-  const exportMp3 = () => {
+  const exportMp3 = async () => {
     if (!audio) return;
     setBusy(true);
     try {
+      const { encodeMp3 } = await import('@/lib/workbench/mp3'); // lazy: lamejs baja solo al exportar
       downloadBlob(encodeMp3(audio.channelData, audio.sampleRate), `${baseName(audio.name)}.mp3`, 'audio/mpeg');
       messageApi.success('MP3 exportado');
     } finally {
