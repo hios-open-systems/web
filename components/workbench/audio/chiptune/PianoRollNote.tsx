@@ -10,6 +10,8 @@ interface Props {
   note: ChiptuneNote;
   color: string;
   selected: boolean;
+  stepW?: number;
+  rowH?: number;
   onSelect: (id: string) => void;
   onChange: (id: string, patch: Partial<ChiptuneNote>) => void;
   onDelete: (id: string) => void;
@@ -24,18 +26,18 @@ interface DragState {
   duration: number;
 }
 
-export function PianoRollNote({ note, color, selected, onSelect, onChange, onDelete }: Props) {
+export function PianoRollNote({ note, color, selected, stepW = STEP_W, rowH = ROW_H, onSelect, onChange, onDelete }: Props) {
   const drag = useRef<DragState | null>(null);
 
   const onPointerMove = (event: globalThis.PointerEvent) => {
     const d = drag.current;
     if (!d) return;
     if (d.mode === 'move') {
-      const step = Math.max(0, Math.round((tickToX(d.start) + (event.clientX - d.x)) / STEP_W));
-      const pitch = clamp(d.pitch - Math.round((event.clientY - d.y) / ROW_H), PITCH_MIN, PITCH_MAX);
+      const step = Math.max(0, Math.round((tickToX(d.start, stepW) + (event.clientX - d.x)) / stepW));
+      const pitch = clamp(d.pitch - Math.round((event.clientY - d.y) / rowH), PITCH_MIN, PITCH_MAX);
       onChange(note.id, { start: step * TICKS_PER_STEP, pitch });
     } else {
-      const steps = Math.max(1, Math.round((durToWidth(d.duration) + (event.clientX - d.x)) / STEP_W));
+      const steps = Math.max(1, Math.round((durToWidth(d.duration, stepW) + (event.clientX - d.x)) / stepW));
       onChange(note.id, { duration: steps * TICKS_PER_STEP });
     }
   };
@@ -58,11 +60,13 @@ export function PianoRollNote({ note, color, selected, onSelect, onChange, onDel
     <div
       className={`${styles.note} ${selected ? styles.noteSelected : ''}`}
       style={{
-        left: tickToX(note.start),
-        top: pitchToY(note.pitch),
-        width: Math.max(STEP_W - 2, durToWidth(note.duration) - 2),
-        height: ROW_H - 2,
+        left: tickToX(note.start, stepW),
+        top: pitchToY(note.pitch, rowH),
+        width: Math.max(stepW - 2, durToWidth(note.duration, stepW) - 2),
+        height: rowH - 2,
         background: color,
+        // velocity visible: notas suaves más translúcidas
+        opacity: 0.4 + 0.6 * (note.velocity / 127),
       }}
       onPointerDown={begin('move')}
       onContextMenu={(event) => {

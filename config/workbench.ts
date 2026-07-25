@@ -43,6 +43,7 @@ export type WorkbenchToolId =
   | 'ascii-unicode'
   | 'note-frequency'
   | 'chiptune'
+  | 'audio-convert'
   | 'ipv6-expand'
   | 'hmac'
   | 'csv-json'
@@ -490,8 +491,19 @@ export const workbenchTools: WorkbenchTool[] = [
     id: 'chiptune',
     locality: 'local',
     sectionId: 'audio',
-    href: '/workbench/chiptune',
+    // Composer consolidado: la card apunta directo a /composer (pagina propia,
+    // como /calculators). /workbench/chiptune redirige ahi para bookmarks viejos.
+    href: '/composer',
     accent: '#a855f7',
+    icon: 'audio',
+    featured: true,
+  },
+  {
+    id: 'audio-convert',
+    locality: 'local',
+    sectionId: 'audio',
+    href: '/workbench/audio-convert',
+    accent: '#0ea5e9',
     icon: 'audio',
     featured: true,
   },

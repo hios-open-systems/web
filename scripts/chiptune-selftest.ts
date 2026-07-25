@@ -103,6 +103,22 @@ eq('wav fmt ', hex(wav.slice(12, 16)), '666d7420');
 eq('wav data', hex(wav.slice(36, 40)), '64617461');
 eq('wav samples +1/-1 -> 0x7fff / -0x8000 (LE)', hex(wav.slice(44, 48)), 'ff7f0080');
 
+// --- timbre override (web-only): persiste en el round-trip y se clampa ---
+const withTimbre = createDemoSong();
+withTimbre.tracks[0].timbre = { duty: 0.25, attack: 0.02 };
+eq(
+  'timbre sobrevive round-trip',
+  JSON.stringify(parseSong(serializeSong(withTimbre))?.tracks[0].timbre),
+  JSON.stringify({ duty: 0.25, attack: 0.02 }),
+);
+const wild = createDemoSong();
+// @ts-expect-error valores fuera de rango a propósito para probar el clamp
+wild.tracks[0].timbre = { duty: 5, attack: -1, filterHz: 999999 };
+const clamped = parseSong(serializeSong(wild))?.tracks[0].timbre;
+eq('timbre clamp duty', clamped?.duty, 0.95);
+eq('timbre clamp attack', clamped?.attack, 0);
+eq('timbre clamp filterHz', clamped?.filterHz, 16000);
+
 if (failures > 0) {
   console.error(`\n${failures} check(s) failed`);
   process.exit(1);

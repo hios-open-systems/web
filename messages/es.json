@@ -1405,6 +1405,10 @@
                 "title": "Compositor Chiptune",
                 "description": "Compone música de videojuego retro en un piano-roll con voces sintetizadas 8-bit y exportá a .mid y .wav."
             },
+            "audio-convert": {
+                "title": "Conversor de audio",
+                "description": "Subí un archivo de audio y exportalo a WAV o MP3, todo en el navegador."
+            },
             "ipv6-expand": {
                 "title": "IPv6 Expandir / Comprimir",
                 "description": "Expande y comprime direcciones IPv6 según RFC 5952, todo en el navegador."

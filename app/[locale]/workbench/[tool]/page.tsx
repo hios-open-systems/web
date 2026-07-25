@@ -7,7 +7,9 @@ import { ToolUsageTracker } from '@/components/workbench/ToolUsageTracker';
 import { getWorkbenchTool, workbenchTools, type WorkbenchToolId } from '@/config/workbench';
 
 const dynamicToolIds = workbenchTools
-  .filter((tool) => !tool.external && !['payload', 'snippets'].includes(tool.id))
+  // 'chiptune' se consolidó en la página propia /composer (con su redirect estático),
+  // así que no se genera como tool dinámico.
+  .filter((tool) => !tool.external && !['payload', 'snippets', 'chiptune'].includes(tool.id))
   .map((tool) => tool.id);
 
 const metadataMap: Record<string, Metadata> = {
@@ -150,6 +152,10 @@ const metadataMap: Record<string, Metadata> = {
   'note-frequency': {
     title: 'Nota / Frecuencia / MIDI | HIOS Audio Lab',
     description: 'Convierte entre nota musical, frecuencia en Hz y número MIDI, con A4 configurable.',
+  },
+  'audio-convert': {
+    title: 'Conversor de audio | HIOS Audio Lab',
+    description: 'Subí un audio y exportá a WAV o MP3, todo en el navegador.',
   },
   'chiptune': {
     title: 'Compositor Chiptune | HIOS Audio Lab',

@@ -11,7 +11,8 @@ import { scheduleVoice } from './synth';
 const SAMPLE_RATE = 44100;
 const TAIL_SEC = 0.6; // let release envelopes ring out
 
-export async function renderSongToWav(song: ChiptuneSong): Promise<ArrayBuffer> {
+/** Renderiza la canción a PCM (channel data). Reusable por WAV/MP3/FLAC. */
+export async function renderSongToBuffer(song: ChiptuneSong): Promise<{ sampleRate: number; channelData: Float32Array[] }> {
   const loopSec = ticksToSeconds(loopLengthTicks(song), song.bpm, song.ppq);
   const totalSec = Math.max(0.1, loopSec) + TAIL_SEC;
   const frames = Math.ceil(totalSec * SAMPLE_RATE);
@@ -20,19 +21,23 @@ export async function renderSongToWav(song: ChiptuneSong): Promise<ArrayBuffer> 
   master.gain.value = 0.85;
   master.connect(offline.destination);
 
+  const soloed = song.tracks.some((track) => track.solo);
   for (const track of song.tracks) {
     if (track.muted) continue;
+    if (soloed && !track.solo) continue;
     for (const note of track.notes) {
       const when = ticksToSeconds(note.start, song.bpm, song.ppq);
       const dur = ticksToSeconds(note.duration, song.bpm, song.ppq);
       const gain = track.volume * (note.velocity / 127);
-      scheduleVoice(offline, master, track.instrument, midiToFreq(note.pitch), when, dur, gain);
+      scheduleVoice(offline, master, track.instrument, midiToFreq(note.pitch), when, dur, gain, track.timbre);
     }
   }
 
   const rendered = await offline.startRendering();
-  return encodeWav({
-    sampleRate: SAMPLE_RATE,
-    channelData: [rendered.getChannelData(0), rendered.getChannelData(1)],
-  });
+  return { sampleRate: SAMPLE_RATE, channelData: [rendered.getChannelData(0), rendered.getChannelData(1)] };
+}
+
+export async function renderSongToWav(song: ChiptuneSong): Promise<ArrayBuffer> {
+  const { sampleRate, channelData } = await renderSongToBuffer(song);
+  return encodeWav({ sampleRate, channelData });
 }

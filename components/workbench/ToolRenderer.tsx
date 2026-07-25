@@ -18,7 +18,8 @@ const TOOLS: Partial<Record<WorkbenchToolId, ComponentType>> = {
   'beat-counter': dynamic(() => import('@/components/workbench/audio/BeatCounterTool').then((m) => m.BeatCounterTool), { ssr: false }),
   'delay-calculator': dynamic(() => import('@/components/workbench/audio/DelayCalculatorTool').then((m) => m.DelayCalculatorTool), { ssr: false }),
   'note-frequency': dynamic(() => import('@/components/workbench/audio/NoteFrequencyTool').then((m) => m.NoteFrequencyTool), { ssr: false }),
-  'chiptune': dynamic(() => import('@/components/workbench/audio/ChiptuneTool').then((m) => m.ChiptuneTool), { ssr: false }),
+  // 'chiptune' se consolidó en /composer (ver app/[locale]/composer + workbench/chiptune redirect).
+  'audio-convert': dynamic(() => import('@/components/workbench/audio/AudioConvertTool').then((m) => m.AudioConvertTool), { ssr: false }),
   'type-checker': dynamic(() => import('@/components/workbench/TypeCheckerTool').then((m) => m.TypeCheckerTool), { ssr: false }),
   'jwt-decode': dynamic(() => import('@/components/workbench/JwtPlaygroundTool').then((m) => m.JwtPlaygroundTool), { ssr: false }),
   'dns-lookup': dynamic(() => import('@/components/workbench/DnsLookupTool').then((m) => m.DnsLookupTool), { ssr: false }),

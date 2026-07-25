@@ -12,6 +12,7 @@ import {
   loopLengthTicks,
   type ChiptuneSong,
   type InstrumentId,
+  type TrackTimbre,
 } from '@/lib/workbench/chiptune';
 import { scheduleVoice } from './synth';
 
@@ -24,12 +25,15 @@ interface SchedEvent {
   freq: number;
   instrument: InstrumentId;
   gain: number;
+  timbre?: TrackTimbre;
 }
 
 function buildEvents(song: ChiptuneSong): SchedEvent[] {
   const events: SchedEvent[] = [];
+  const soloed = song.tracks.some((track) => track.solo);
   for (const track of song.tracks) {
     if (track.muted) continue;
+    if (soloed && !track.solo) continue; // hay pistas en solo -> solo esas suenan
     for (const note of track.notes) {
       events.push({
         startSec: ticksToSeconds(note.start, song.bpm, song.ppq),
@@ -37,6 +41,7 @@ function buildEvents(song: ChiptuneSong): SchedEvent[] {
         freq: midiToFreq(note.pitch),
         instrument: track.instrument,
         gain: track.volume * (note.velocity / 127),
+        timbre: track.timbre,
       });
     }
   }
@@ -56,6 +61,16 @@ export function usePlayback(song: ChiptuneSong) {
   const songRef = useRef(song);
   songRef.current = song;
 
+  const startTickRef = useRef(0); // desde dónde arranca play() (para seek en la regla)
+  const [masterVolume, setMasterVolumeState] = useState(0.85);
+  const masterVolRef = useRef(0.85);
+  const setMasterVolume = useCallback((value: number) => {
+    const vol = Math.max(0, Math.min(1, value));
+    masterVolRef.current = vol;
+    setMasterVolumeState(vol);
+    if (masterRef.current) masterRef.current.gain.value = vol;
+  }, []);
+
   const stop = useCallback(() => {
     if (timerRef.current) window.clearInterval(timerRef.current);
     timerRef.current = null;
@@ -69,6 +84,7 @@ export function usePlayback(song: ChiptuneSong) {
     nodesRef.current = [];
     masterRef.current?.disconnect();
     masterRef.current = null;
+    startTickRef.current = 0; // stop vuelve al inicio (seek lo re-setea después)
     setPlaying(false);
   }, []);
 
@@ -81,17 +97,22 @@ export function usePlayback(song: ChiptuneSong) {
     nodesRef.current = [];
 
     const master = ctx.createGain();
-    master.gain.value = 0.85;
+    master.gain.value = masterVolRef.current;
     master.connect(ctx.destination);
     masterRef.current = master;
 
     const base = ctx.currentTime + 0.1;
     const state = stateRef.current;
     state.events = buildEvents(current);
-    state.cursor = 0;
-    state.scheduleBase = base;
-    state.startTime = base;
     state.loopSec = ticksToSeconds(loopLengthTicks(current), current.bpm, current.ppq);
+    // Arranca desde startTick (seek): desplaza la base para que el evento en 'off'
+    // suene en 'base', y ubica el cursor pasando lo que quedó antes del offset.
+    const startSec = ticksToSeconds(startTickRef.current, current.bpm, current.ppq);
+    const off = state.loopSec > 0 ? ((startSec % state.loopSec) + state.loopSec) % state.loopSec : 0;
+    state.scheduleBase = base - off;
+    state.startTime = base - off;
+    state.cursor = 0;
+    while (state.cursor < state.events.length && state.events[state.cursor].startSec < off) state.cursor += 1;
     setPlaying(true);
 
     const poll = () => {
@@ -117,7 +138,7 @@ export function usePlayback(song: ChiptuneSong) {
         const when = s.scheduleBase + event.startSec;
         if (when >= horizon) break;
         nodesRef.current.push(
-          ...scheduleVoice(audio, masterRef.current, event.instrument, event.freq, when, event.durSec, event.gain),
+          ...scheduleVoice(audio, masterRef.current, event.instrument, event.freq, when, event.durSec, event.gain, event.timbre),
         );
         s.cursor += 1;
       }
@@ -125,6 +146,39 @@ export function usePlayback(song: ChiptuneSong) {
     timerRef.current = window.setInterval(poll, LOOKAHEAD_MS);
     poll();
   }, [stop]);
+
+  // Reconstruye el schedule en vivo cuando cambia la canción mientras suena, así
+  // las notas que el usuario agrega/mueve/borra durante el loop SÍ entran (antes
+  // `events` era un snapshot congelado en play() → las notas nuevas no sonaban).
+  // El cursor se re-ubica pasando el horizonte ya agendado para no duplicar ni
+  // re-disparar lo que ya está sonando.
+  useEffect(() => {
+    if (!isPlaying) return;
+    const audio = ctxRef.current;
+    if (!audio) return;
+    const s = stateRef.current;
+    s.events = buildEvents(song);
+    s.loopSec = ticksToSeconds(loopLengthTicks(song), song.bpm, song.ppq);
+    const horizonPhase = audio.currentTime - s.scheduleBase + SCHEDULE_AHEAD;
+    let i = 0;
+    while (i < s.events.length && s.events[i].startSec < horizonPhase) i += 1;
+    s.cursor = i;
+  }, [song, isPlaying]);
+
+  // Audición one-shot: suena la nota al agregarla o tocarla (feedback inmediato).
+  const previewNote = useCallback((pitch: number, instrument: InstrumentId, timbre?: TrackTimbre) => {
+    const ctx = ctxRef.current ?? new AudioContext();
+    ctxRef.current = ctx;
+    void ctx.resume();
+    let out = masterRef.current;
+    if (!out) {
+      const gain = ctx.createGain();
+      gain.gain.value = masterVolRef.current;
+      gain.connect(ctx.destination);
+      out = gain;
+    }
+    scheduleVoice(ctx, out, instrument, midiToFreq(pitch), ctx.currentTime + 0.01, 0.18, 0.9, timbre);
+  }, []);
 
   const getPlayheadTicks = useCallback((): number | null => {
     const ctx = ctxRef.current;
@@ -137,6 +191,18 @@ export function usePlayback(song: ChiptuneSong) {
     return within / secondsPerTick(songRef.current.bpm, songRef.current.ppq);
   }, [isPlaying]);
 
+  // Reubica el playhead (click en la regla). Si está sonando, reprograma desde ahí.
+  const seek = useCallback((tick: number) => {
+    const t = Math.max(0, tick);
+    if (isPlaying) {
+      stop();
+      startTickRef.current = t;
+      void play();
+    } else {
+      startTickRef.current = t;
+    }
+  }, [isPlaying, stop, play]);
+
   useEffect(() => stop, [stop]);
 
   return {
@@ -146,5 +212,9 @@ export function usePlayback(song: ChiptuneSong) {
     stop,
     toggleLoop: () => setLoop((value) => !value),
     getPlayheadTicks,
+    previewNote,
+    masterVolume,
+    setMasterVolume,
+    seek,
   };
 }
