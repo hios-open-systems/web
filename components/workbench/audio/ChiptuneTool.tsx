@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { Space } from 'antd';
+import { Button, Space, Tooltip } from 'antd';
 import { ToolHeader } from '../ToolHeader';
 import workbenchStyles from '../workbench.module.css';
 import {
@@ -11,6 +11,7 @@ import {
   readSong,
   writeSong,
   clamp,
+  serializeDeviceSong,
   type ChiptuneNote,
   type ChiptuneSong,
   type ChiptuneTrack,
@@ -73,6 +74,19 @@ export function ChiptuneTool() {
     setSelectedNoteId(null);
   }, [stop]);
 
+  const [deviceCopied, setDeviceCopied] = useState(false);
+  const exportDevice = useCallback(() => {
+    const code = serializeDeviceSong(song);
+    // .json para el file-upload de la pagina del device...
+    downloadBlob(new TextEncoder().encode(code), `${slugify(song.name)}.device.json`, 'application/json');
+    // ...y al portapapeles para pegarlo directo
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(code)
+        .then(() => { setDeviceCopied(true); window.setTimeout(() => setDeviceCopied(false), 2000); })
+        .catch(() => {});
+    }
+  }, [song]);
+
   const exportMidi = useCallback(() => downloadBlob(encodeMidi(song), `${slugify(song.name)}.mid`, 'audio/midi'), [song]);
   const exportWav = useCallback(async () => {
     setRendering(true);
@@ -125,6 +139,11 @@ export function ChiptuneTool() {
         onLoadDemo={() => resetTo(createDemoSong())}
         onClear={() => resetTo(createSong())}
       />
+      <Tooltip title="Descarga el .json y lo copia al portapapeles. Pegalo en la pagina del device (http://hioschip.local) para que suene en el parlante.">
+        <Button size="small" onClick={exportDevice}>
+          {deviceCopied ? '✓ Copiado para device' : 'Exportar para device'}
+        </Button>
+      </Tooltip>
       <TrackPanel
         song={song}
         activeTrackId={activeTrackId}
