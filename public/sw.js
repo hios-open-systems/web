@@ -22,7 +22,14 @@ const CACHE = `hios-cache-${VERSION}`;
 const PRECACHE = ['/offline.html', '/icons/icon.svg', '/icons/icon-192.png'];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting()));
+  // allSettled: si el precache de un asset falla (p.ej. durante un deploy), el SW
+  // igual se instala. Antes un c.addAll rechazado dejaba la instalación colgada.
+  event.waitUntil(
+    caches
+      .open(CACHE)
+      .then((c) => Promise.allSettled(PRECACHE.map((u) => c.add(u))))
+      .then(() => self.skipWaiting()),
+  );
 });
 
 self.addEventListener('activate', (event) => {
@@ -53,6 +60,19 @@ function cachePut(request, response) {
   caches.open(CACHE).then((c) => c.put(request, copy));
 }
 
+/**
+ * SIEMPRE devuelve un Response válido. respondWith() con undefined/null tira
+ * "Failed to convert value to 'Response'" y rompe la navegación entera; este
+ * helper es la red de seguridad de todas las ramas del fetch.
+ */
+async function fallbackResponse(navigation) {
+  if (navigation) {
+    const offline = await caches.match('/offline.html');
+    if (offline) return offline;
+  }
+  return new Response('', { status: 503, statusText: 'Offline', headers: { 'Content-Type': 'text/plain' } });
+}
+
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   if (request.method !== 'GET') return;
@@ -63,46 +83,52 @@ self.addEventListener('fetch', (event) => {
 
   const navigation = request.mode === 'navigate';
 
+  // Navegaciones y RSC: network-first → cache → offline. Siempre un Response.
   if (navigation || isRsc(request, url)) {
     event.respondWith(
-      fetch(request)
-        .then((res) => {
+      (async () => {
+        try {
+          const res = await fetch(request);
           if (res.ok) cachePut(request, res);
           return res;
-        })
-        .catch(() =>
-          caches
-            .match(request)
-            .then((hit) => hit || (navigation ? caches.match('/offline.html') : Response.error())),
-        ),
+        } catch {
+          const hit = await caches.match(request);
+          return hit || fallbackResponse(navigation);
+        }
+      })(),
     );
     return;
   }
 
+  // /_next/static, iconos, manifest: cache-first (inmutables dentro del build).
   if (isStatic(url)) {
     event.respondWith(
-      caches.match(request).then(
-        (hit) =>
-          hit ||
-          fetch(request).then((res) => {
-            if (res.ok) cachePut(request, res);
-            return res;
-          }),
-      ),
+      (async () => {
+        const hit = await caches.match(request);
+        if (hit) return hit;
+        try {
+          const res = await fetch(request);
+          if (res.ok) cachePut(request, res);
+          return res;
+        } catch {
+          return fallbackResponse(false);
+        }
+      })(),
     );
     return;
   }
 
-  // Same-origin GET: stale-while-revalidate.
+  // Resto de GET same-origin: stale-while-revalidate (nunca undefined).
   event.respondWith(
-    caches.match(request).then((hit) => {
+    (async () => {
+      const hit = await caches.match(request);
       const fetched = fetch(request)
         .then((res) => {
           if (res.ok) cachePut(request, res);
           return res;
         })
-        .catch(() => hit);
-      return hit || fetched;
-    }),
+        .catch(() => null);
+      return hit || (await fetched) || fallbackResponse(false);
+    })(),
   );
 });
