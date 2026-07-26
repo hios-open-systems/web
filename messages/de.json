@@ -508,6 +508,13 @@
         "asTypes": "als Typen"
     },
     "Workbench": {
+        "error": {
+            "title": "Dieses Tool ist fehlgeschlagen",
+            "subtitle": "Bei der Ausführung ist etwas kaputtgegangen. Der Rest der Werkbank funktioniert weiter.",
+            "retry": "Erneut versuchen",
+            "pageTitle": "Etwas ist schiefgelaufen",
+            "pageSubtitle": "Auf dieser Seite ist ein Fehler aufgetreten. Du kannst es erneut versuchen."
+        },
         "pinnedTitle": "Angeheftet",
         "recentTitle": "Zuletzt verwendet",
         "pin": "Tool anheften",

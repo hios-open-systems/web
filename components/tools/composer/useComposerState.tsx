@@ -227,7 +227,14 @@ export function useComposerState() {
     [update],
   );
   const onResetTimbre = useCallback(
-    (id: string) => update((song) => withTrack(song, id, ({ timbre, ...rest }) => rest as ChiptuneTrack)),
+    (id: string) =>
+      update((song) =>
+        withTrack(song, id, (track) => {
+          const next = { ...track };
+          delete next.timbre;
+          return next;
+        }),
+      ),
     [update],
   );
   const onAddTrack = useCallback(
