@@ -20,6 +20,7 @@ const TOOLS: Partial<Record<WorkbenchToolId, ComponentType>> = {
   'note-frequency': dynamic(() => import('@/components/workbench/audio/NoteFrequencyTool').then((m) => m.NoteFrequencyTool), { ssr: false }),
   // 'chiptune' se consolidó en /composer (ver app/[locale]/composer + workbench/chiptune redirect).
   'audio-convert': dynamic(() => import('@/components/workbench/audio/AudioConvertTool').then((m) => m.AudioConvertTool), { ssr: false }),
+  'image-convert': dynamic(() => import('@/components/workbench/ImageConvertTool').then((m) => m.ImageConvertTool), { ssr: false }),
   'type-checker': dynamic(() => import('@/components/workbench/TypeCheckerTool').then((m) => m.TypeCheckerTool), { ssr: false }),
   'jwt-decode': dynamic(() => import('@/components/workbench/JwtPlaygroundTool').then((m) => m.JwtPlaygroundTool), { ssr: false }),
   'dns-lookup': dynamic(() => import('@/components/workbench/DnsLookupTool').then((m) => m.DnsLookupTool), { ssr: false }),

@@ -343,7 +343,7 @@
         "troubleshooting_desc": "Common issues, FAQs, and diagnostics"
     },
     "Tools": {
-        "title": "Tech Stack",
+        "title": "Stack",
         "subtitle": "The tools we use to design, develop, and document",
         "software_category": "Software & Code",
         "hardware_category": "Hardware & Design",
@@ -538,7 +538,7 @@
     "Header": {
         "home": "Home",
         "projects": "Projects",
-        "tools": "Tools",
+        "tools": "Stack",
         "workbench": "Workbench",
         "pinouts": "Pinouts",
         "calculators": "Calculators",
@@ -688,7 +688,7 @@
         "sectionsGroup": "Sections",
         "pages": {
             "home": "Home",
-            "tools": "Tools",
+            "tools": "Stack",
             "workbench": "Workbench",
             "calculators": "Calculators",
             "composer": "Chiptune Composer",
@@ -1409,6 +1409,10 @@
             "audio-convert": {
                 "title": "Audio Converter",
                 "description": "Upload an audio file and export it to WAV or MP3, all in the browser."
+            },
+            "image-convert": {
+                "title": "Image Converter",
+                "description": "Upload an image and export it to PNG, JPG or WEBP, all in the browser."
             },
             "ipv6-expand": {
                 "title": "IPv6 Expand / Compress",

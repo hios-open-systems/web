@@ -13,6 +13,7 @@
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv",
     "test": "node scripts/run-selftests.mjs",
+    "shots": "node scripts/shots.mjs",
     "test:jwt": "node --experimental-strip-types scripts/jwt-selftest.ts",
     "test:calc": "node --experimental-strip-types scripts/calc-selftest.ts",
     "test:auth": "node --experimental-strip-types scripts/auth-selftest.ts",

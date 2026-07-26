@@ -240,57 +240,54 @@ export function BoardDiagram({
             fill="var(--bk-surface)"
             fillOpacity={0.5}
           />
-          <text
-            x={modX + modW / 2}
-            y={PIN_TOP + modH / 2}
-            fill="#1c2128"
-            fontSize={10}
-            fontWeight={800}
-            textAnchor="middle"
-          >
-            ESP32-S3
-          </text>
-          <text
-            x={modX + modW / 2}
-            y={PIN_TOP + modH / 2 + 14}
-            fill="#1c2128"
-            fontSize={8.5}
-            fontWeight={700}
-            textAnchor="middle"
-          >
-            WROOM-1
-          </text>
+          {(board.chipLabel ?? [name]).slice(0, 2).map((line, i) => (
+            <text
+              key={line}
+              x={modX + modW / 2}
+              y={PIN_TOP + modH / 2 + i * 14}
+              fill="#1c2128"
+              fontSize={i === 0 ? 10 : 8.5}
+              fontWeight={i === 0 ? 800 : 700}
+              textAnchor="middle"
+            >
+              {line}
+            </text>
+          ))}
 
           {/* LED RGB integrado. Va al CENTRO del PCB a propósito: pegado al borde quedaba
               al lado del IO39, justo el pin que la guía aclara que NO es el RGB. */}
-          <rect
-            x={boardX + BOARD_W / 2 - 7}
-            y={PIN_TOP + modH + 26}
-            width={14}
-            height={14}
-            rx={2}
-            fill="var(--pw-func-rgb, #e879f9)"
-            stroke="var(--bk-border)"
-          />
-          <text
-            x={boardX + BOARD_W / 2}
-            y={PIN_TOP + modH + 54}
-            fill="var(--bk-muted)"
-            fontSize={7.5}
-            fontWeight={700}
-            textAnchor="middle"
-          >
-            RGB · IO38 o IO48
-          </text>
-          <text
-            x={boardX + BOARD_W / 2}
-            y={PIN_TOP + modH + 65}
-            fill="var(--bk-muted)"
-            fontSize={7}
-            textAnchor="middle"
-          >
-            (según revisión)
-          </text>
+          {board.rgb && (
+            <>
+              <rect
+                x={boardX + BOARD_W / 2 - 7}
+                y={PIN_TOP + modH + 26}
+                width={14}
+                height={14}
+                rx={2}
+                fill="var(--pw-func-rgb, #e879f9)"
+                stroke="var(--bk-border)"
+              />
+              <text
+                x={boardX + BOARD_W / 2}
+                y={PIN_TOP + modH + 54}
+                fill="var(--bk-muted)"
+                fontSize={7.5}
+                fontWeight={700}
+                textAnchor="middle"
+              >
+                RGB · IO38 o IO48
+              </text>
+              <text
+                x={boardX + BOARD_W / 2}
+                y={PIN_TOP + modH + 65}
+                fill="var(--bk-muted)"
+                fontSize={7}
+                textAnchor="middle"
+              >
+                (según revisión)
+              </text>
+            </>
+          )}
 
           {/* BOOT y RESET: los dos pulsadores de abajo */}
           {[
@@ -321,41 +318,25 @@ export function BoardDiagram({
             </g>
           ))}
 
-          {/* los DOS USB-C, abajo. Izquierda = UART (flasheo), derecha = nativo (HID) */}
-          {[
-            { x: boardX + BOARD_W / 2 - 74, label: 'UART' },
-            { x: boardX + BOARD_W / 2 + 10, label: 'USB' },
-          ].map((usb) => (
-            <g key={usb.label}>
-              <rect
-                x={usb.x}
-                y={usbY}
-                width={64}
-                height={26}
-                rx={5}
-                fill="var(--bk-surface)"
-                stroke="var(--bk-muted)"
-              />
-              <rect
-                x={usb.x + 8}
-                y={usbY + 8}
-                width={48}
-                height={10}
-                rx={5}
-                fill="var(--bk-surface-muted)"
-              />
-              <text
-                x={usb.x + 32}
-                y={usbY + 38}
-                fill="var(--bk-muted)"
-                fontSize={8.5}
-                fontWeight={700}
-                textAnchor="middle"
-              >
-                {usb.label}
-              </text>
-            </g>
-          ))}
+          {(() => {
+            const ports = board.usbPorts ?? [{ label: 'USB' }];
+            const portW = 64;
+            const gap = 16;
+            const total = ports.length * portW + (ports.length - 1) * gap;
+            const start = boardX + BOARD_W / 2 - total / 2;
+            return ports.map((port, i) => {
+              const x = start + i * (portW + gap);
+              return (
+                <g key={`${port.label}-${i}`}>
+                  <rect x={x} y={usbY} width={portW} height={26} rx={5} fill="var(--bk-surface)" stroke="var(--bk-muted)" />
+                  <rect x={x + 8} y={usbY + 8} width={48} height={10} rx={5} fill="var(--bk-surface-muted)" />
+                  <text x={x + portW / 2} y={usbY + 38} fill="var(--bk-muted)" fontSize={8.5} fontWeight={700} textAnchor="middle">
+                    {port.label}
+                  </text>
+                </g>
+              );
+            });
+          })()}
 
           {board.left.map((pin, index) => (
             <Pin

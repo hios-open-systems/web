@@ -231,10 +231,12 @@ export function ComposerApp() {
           {c.selectedRange && (
             <Button size="small" type="text" onClick={() => c.setSelectedRange(null)}>Limpiar rango</Button>
           )}
+          <Button size="small" danger onClick={c.clearActiveTrack}>Limpiar pista</Button>
         </Space>
 
-        {selNote && activeTrack && (
-          <Space wrap size={10} align="center" style={{ marginBottom: 10 }}>
+        <div style={{ minHeight: 44, marginBottom: 10 }}>
+          {selNote && activeTrack && (
+          <Space wrap size={10} align="center">
             <Text strong style={{ fontSize: 12 }}>Nota</Text>
             <Space size={4}>
               <Text type="secondary" style={{ fontSize: 12 }}>Tono</Text>
@@ -264,7 +266,8 @@ export function ComposerApp() {
               Eliminar
             </Button>
           </Space>
-        )}
+          )}
+        </div>
 
         <PianoRoll
           song={c.song}
