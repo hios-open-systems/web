@@ -157,6 +157,10 @@ const metadataMap: Record<string, Metadata> = {
     title: 'Conversor de audio | HIOS Audio Lab',
     description: 'Subí un audio y exportá a WAV o MP3, todo en el navegador.',
   },
+  'image-convert': {
+    title: 'Conversor de imágenes | HIOS',
+    description: 'Subí una imagen y exportá a PNG, JPG o WEBP, todo en el navegador.',
+  },
   'chiptune': {
     title: 'Compositor Chiptune | HIOS Audio Lab',
     description: 'Compone música de videojuego retro en un piano-roll con voces sintetizadas 8-bit y exportá a .mid y .wav, todo en el navegador.',

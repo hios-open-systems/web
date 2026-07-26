@@ -21,7 +21,7 @@ export function Footer() {
 
     const navLinks = [
         { href: `/${locale}/projects`, label: label('projects', 'Proyectos') },
-        { href: `/${locale}/tools`, label: label('tools', 'Herramientas') },
+        { href: `/${locale}/tools`, label: label('tools', 'Stack') },
         { href: `/${locale}/workbench`, label: label('workbench', 'Workbench') },
         { href: `/${locale}/pinouts`, label: label('pinouts', 'Pinouts') },
         { href: `/${locale}/calculators`, label: label('calculators', 'Calculadoras') },

@@ -26,7 +26,7 @@ function ThemedLayout({ children, currentVersion }: { children: React.ReactNode;
             <FeedbackProvider>
                 <ConsoleEasterEgg />
                 <VersionWatcher currentVersion={currentVersion} />
-                <ServiceWorkerRegister version={currentVersion} />
+                <ServiceWorkerRegister />
                 <DynamicFavicon />
                 <UsageEventTracker />
                 <CommandPalette />

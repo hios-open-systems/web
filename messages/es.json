@@ -342,7 +342,7 @@
         "troubleshooting_desc": "Problemas comunes, FAQs y diagnóstico"
     },
     "Tools": {
-        "title": "Herramientas",
+        "title": "Stack",
         "subtitle": "Las herramientas que usamos para diseñar, desarrollar y documentar",
         "software_category": "Software & Code",
         "hardware_category": "Hardware & Design",
@@ -537,7 +537,7 @@
     "Header": {
         "home": "Inicio",
         "projects": "Proyectos",
-        "tools": "Herramientas",
+        "tools": "Stack",
         "workbench": "Workbench",
         "pinouts": "Pinouts",
         "calculators": "Calculadoras",
@@ -687,7 +687,7 @@
         "sectionsGroup": "Secciones",
         "pages": {
             "home": "Inicio",
-            "tools": "Herramientas",
+            "tools": "Stack",
             "workbench": "Workbench",
             "calculators": "Calculadoras",
             "composer": "Compositor Chiptune",
@@ -1408,6 +1408,10 @@
             "audio-convert": {
                 "title": "Conversor de audio",
                 "description": "Subí un archivo de audio y exportalo a WAV o MP3, todo en el navegador."
+            },
+            "image-convert": {
+                "title": "Conversor de imágenes",
+                "description": "Subí una imagen y exportala a PNG, JPG o WEBP, todo en el navegador."
             },
             "ipv6-expand": {
                 "title": "IPv6 Expandir / Comprimir",

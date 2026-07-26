@@ -4,7 +4,9 @@ import { Inter, Archivo, IBM_Plex_Mono } from 'next/font/google';
 import { ThemeLayout } from '@/components/ThemeLayout';
 import AntdRegistry from '@/lib/AntdRegistry';
 import { getCurrentDeployVersion } from '@/lib/appVersion';
+// @ts-expect-error Global stylesheet is imported for its side effects without a module declaration.
 import '@/styles/globals.css';
+// @ts-expect-error Excalidraw ships this stylesheet without a CSS module declaration.
 import '@excalidraw/excalidraw/index.css';
 
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
@@ -13,14 +15,12 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-sans' });
-// Display industrial para títulos — le saca el look "Inter para todo".
 const archivo = Archivo({
   subsets: ['latin'],
-  display: 'swap',
+  display: 'optional',
   weight: ['500', '600', '700'],
   variable: '--font-display',
 });
-// Mono técnica para labels, datos, pines y eyebrows (estética datasheet).
 const plexMono = IBM_Plex_Mono({
   subsets: ['latin'],
   display: 'swap',
@@ -35,8 +35,7 @@ export const viewport: Viewport = {
 };
 
 const SITE_URL = (process.env.AUTH_BASE_URL || 'https://openhios.dev').replace(/\/$/, '');
-// Setea data-theme y data-skin ANTES de la primera pintura (anti-flash).
-// La whitelist de skins tiene que espejar lib/themes/skins.ts.
+
 const THEME_BOOTSTRAP_SCRIPT = `(function(){try{var stored=localStorage.getItem('theme');var next=(stored==='light'||stored==='dark')?stored:null;if(!next&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches){next='dark';}if(!next){next='dark';}document.documentElement.setAttribute('data-theme',next);var skin=localStorage.getItem('hios-skin');if(skin==='terminal'||skin==='blueprint'||skin==='datasheet'){document.documentElement.setAttribute('data-skin',skin);}}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`;
 
 export async function generateMetadata({
@@ -45,8 +44,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  // Locale inválido (ej. escáneres pidiendo /backup.php, que matchea /[locale]) → 404.
-  // Sin esto, i18n cae a 'en' en silencio y se renderiza la home entera (CPU → 1102).
+
   if (!hasLocale(routing.locales, locale)) notFound();
   const t = await getTranslations({ locale, namespace: 'Hero' });
   const title = `HIOS — ${t('title')}`;
@@ -67,10 +65,7 @@ export async function generateMetadata({
       title,
       description,
       locale,
-      // Imágenes OG pre-renderadas (public/og/<locale>.png). Antes se generaban
-      // en runtime con next/og (satori+resvg ~1.4MB), que quedaba embebido en el
-      // bundle del Worker y engordaba el cold-start (causa del Error 1102). Ahora
-      // son estáticas, servidas desde ASSETS. Para regenerarlas ver scripts/gen-og.mjs.
+
       images: [{ url: `/og/${locale}.png`, width: 1200, height: 630, alt: 'HIOS — open workbench' }],
     },
     twitter: { card: 'summary_large_image', title, description, images: [`/og/${locale}.png`] },
