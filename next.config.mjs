@@ -97,11 +97,13 @@ const nextConfig = {
 			"frame-ancestors 'self'",
 			"form-action 'self'",
 			// challenges.cloudflare.com = Turnstile (script + iframe del widget).
-			`script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com${isDev ? " 'unsafe-eval'" : ''}`,
+			// static.cloudflareinsights.com = beacon de Cloudflare Web Analytics (lo
+			// inyecta CF automáticamente; sin esto el CSP lo bloqueaba y llenaba la consola).
+			`script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://static.cloudflareinsights.com${isDev ? " 'unsafe-eval'" : ''}`,
 			"style-src 'self' 'unsafe-inline'",
 			"img-src 'self' data: blob: https:",
 			"font-src 'self' data:",
-			`connect-src 'self' https://challenges.cloudflare.com${isDev ? ' ws:' : ''}`,
+			`connect-src 'self' https://challenges.cloudflare.com https://cloudflareinsights.com${isDev ? ' ws:' : ''}`,
 			"frame-src 'self' https://challenges.cloudflare.com",
 			"worker-src 'self' blob:",
 			"manifest-src 'self'",
