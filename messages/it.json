@@ -268,7 +268,7 @@
         "troubleshooting_desc": "Problemi comuni, FAQ e diagnostica"
     },
     "Tools": {
-        "title": "Strumenti",
+        "title": "Stack",
         "subtitle": "Gli strumenti che utilizziamo per progettare, sviluppare e documentare",
         "software_category": "Software & Code",
         "hardware_category": "Hardware & Design",
@@ -463,7 +463,7 @@
     "Header": {
         "home": "Home",
         "projects": "Progetti",
-        "tools": "Strumenti",
+        "tools": "Stack",
         "workbench": "Workbench",
         "pinouts": "Pinouts",
         "calculators": "Calcolatori",
@@ -480,7 +480,7 @@
         "sectionsGroup": "Sezioni",
         "pages": {
             "home": "Home",
-            "tools": "Strumenti",
+            "tools": "Stack",
             "workbench": "Workbench",
             "calculators": "Calcolatrici",
             "pinouts": "Pinouts",

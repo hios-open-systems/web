@@ -44,6 +44,7 @@ export type WorkbenchToolId =
   | 'note-frequency'
   | 'chiptune'
   | 'audio-convert'
+  | 'image-convert'
   | 'ipv6-expand'
   | 'hmac'
   | 'csv-json'
@@ -505,6 +506,15 @@ export const workbenchTools: WorkbenchTool[] = [
     href: '/workbench/audio-convert',
     accent: '#0ea5e9',
     icon: 'audio',
+    featured: true,
+  },
+  {
+    id: 'image-convert',
+    locality: 'local',
+    sectionId: 'generation',
+    href: '/workbench/image-convert',
+    accent: '#ec4899',
+    icon: 'data',
     featured: true,
   },
   {

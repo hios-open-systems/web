@@ -21,6 +21,9 @@ const P = (pos: number, ...labels: ReturnType<typeof L>[]): BoardPin => ({ pos, 
  */
 export const ESP32_S3_BOARD: BoardPinout = {
   usb: 'USB-C ×2 (UART + OTG nativo)',
+  usbPorts: [{ label: 'UART' }, { label: 'USB' }],
+  rgb: true,
+  chipLabel: ['ESP32-S3', 'WROOM-1'],
   left: [
     P(1, L('3V3', 'power', true)),
     P(2, L('3V3', 'power', true)),
@@ -76,6 +79,9 @@ export const ESP32_S3_BOARD: BoardPinout = {
  */
 export const ESP32_WROOM_BOARD: BoardPinout = {
   usb: 'micro-USB (CP2102 / CH340)',
+  usbPorts: [{ label: 'USB' }],
+  rgb: false,
+  chipLabel: ['ESP32', 'WROOM-32'],
   left: [
     P(1, L('3V3', 'power', true)),
     P(2, L('EN', 'strap', true)),

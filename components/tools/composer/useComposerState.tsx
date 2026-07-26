@@ -414,13 +414,25 @@ export function useComposerState() {
     return () => window.removeEventListener('keydown', handler);
   }, [isPlaying, play, stop, toggleLoop, toggleMetronome, undo, redo, duplicateNote, nudgeNote, onDeleteNote, selectedNoteId]);
 
+  const changeActiveTrack = useCallback((id: string) => {
+    setActiveTrackId(id);
+    setSelectedNoteId(null);
+    setSelectedRange(null);
+  }, []);
+
+  const clearActiveTrack = useCallback(() => {
+    patchActiveNotes(() => []);
+    setSelectedNoteId(null);
+    setSelectedRange(null);
+  }, [patchActiveNotes]);
+
   return {
     song, activeTrackId, selectedNoteId, rendering, deviceCopied, contextHolder,
     isPlaying, loop, play, stop, toggleLoop, metronome, toggleMetronome, getPlayheadTicks, seek,
     masterVolume, setMasterVolume,
     canUndo: past.current.length > 0, canRedo: future.current.length > 0, undo, redo,
-    setActiveTrackId, setSelectedNoteId, selectNote,
-    selectedRange, setSelectedRange, repeatSelection, fillActiveTrack,
+    setActiveTrackId: changeActiveTrack, setSelectedNoteId, selectNote,
+    selectedRange, setSelectedRange, repeatSelection, fillActiveTrack, clearActiveTrack,
     onAddNote, onChangeNote, onDeleteNote, duplicateNote,
     onInstrument, onMute, onSolo, onVolume, onRenameTrack, onTimbre, onResetTimbre,
     onAddTrack, onRemoveTrack,

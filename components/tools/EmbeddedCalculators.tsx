@@ -81,7 +81,7 @@ export function EmbeddedCalculators() {
   });
 
   return (
-    <Space direction="vertical" size={24} style={{ width: '100%', background: c.palette.page, padding: '4px 2px' }}>
+    <Space direction="vertical" size={24} style={{ width: '100%' }}>
       {c.contextHolder}
       <ToolHeader
         eyebrow={t('tags.embedded')}

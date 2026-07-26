@@ -73,6 +73,9 @@ export interface BoardPin {
 export interface BoardPinout {
   /** lo que dice el conector de arriba (USB-C, micro-USB…) */
   usb?: string;
+  usbPorts?: { label: string }[];
+  rgb?: boolean;
+  chipLabel?: string[];
   left: BoardPin[];
   right: BoardPin[];
 }
