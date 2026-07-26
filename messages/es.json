@@ -716,6 +716,13 @@
         "asTypes": "como tipos"
     },
     "Workbench": {
+        "error": {
+            "title": "Este tool falló",
+            "subtitle": "Algo se rompió al ejecutarlo. El resto del workbench sigue funcionando.",
+            "retry": "Reintentar",
+            "pageTitle": "Algo salió mal",
+            "pageSubtitle": "Esta página tuvo un error. Podés reintentar."
+        },
         "pinnedTitle": "Fijadas",
         "recentTitle": "Usadas recientemente",
         "pin": "Fijar tool",

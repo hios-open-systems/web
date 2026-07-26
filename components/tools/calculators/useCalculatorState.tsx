@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { message } from 'antd';
@@ -55,8 +55,8 @@ export function useCalculatorState() {
   const [activeTab, setActiveTab] = useState<TabKey>(DEFAULT_CALC_ID);
   const [eSeries, setESeries] = useState<ESeries>('E24');
 
-  const num = (key: string) => Number(values[key]);
-  const str = (key: string) => String(values[key]);
+  const num = useCallback((key: string) => Number(values[key]), [values]);
+  const str = useCallback((key: string) => String(values[key]), [values]);
   /** setter genérico — lo usan tanto los accessors de compat como las calcs nuevas */
   const set = (key: string, value: number | string) =>
     setValues((prev) => ({ ...prev, [key]: value }));
@@ -83,33 +83,31 @@ export function useCalculatorState() {
     border: `1px solid ${palette.borderSoft}`,
   };
 
-  // --- resultados computados (matemática pura de calc.ts) ---------------------
-  const led = useMemo(() => calc.ledResistor(num('supply'), num('ledVf'), num('ledCurrent')), [values.supply, values.ledVf, values.ledCurrent]);
+  const led = useMemo(() => calc.ledResistor(num('supply'), num('ledVf'), num('ledCurrent')), [num]);
   const capacitor = useMemo(
     () => calc.capacitorForRipple(num('rippleCurrent'), num('rippleDeltaV'), num('rippleFreq')),
-    [values.rippleCurrent, values.rippleDeltaV, values.rippleFreq]
+    [num]
   );
-  const thermal = useMemo(() => calc.powerAndTemp(num('powerV'), num('powerI'), num('thetaJa'), num('ambient')), [values.powerV, values.powerI, values.thetaJa, values.ambient]);
-  const runtime = useMemo(() => calc.runtimeHours(num('batteryMah'), num('avgCurrent'), num('efficiency')), [values.batteryMah, values.avgCurrent, values.efficiency]);
-  const divider = useMemo(() => calc.adcDivider(num('vinMax'), num('vadcMax'), num('rBottomK')), [values.vinMax, values.vadcMax, values.rBottomK]);
-  const cutoff = useMemo(() => calc.rcCutoff(num('rcR'), num('rcC')), [values.rcR, values.rcC]);
-  const requiredR = useMemo(() => calc.rcRequiredR(num('targetFc'), num('rcC')), [values.targetFc, values.rcC]);
+  const thermal = useMemo(() => calc.powerAndTemp(num('powerV'), num('powerI'), num('thetaJa'), num('ambient')), [num]);
+  const runtime = useMemo(() => calc.runtimeHours(num('batteryMah'), num('avgCurrent'), num('efficiency')), [num]);
+  const divider = useMemo(() => calc.adcDivider(num('vinMax'), num('vadcMax'), num('rBottomK')), [num]);
+  const cutoff = useMemo(() => calc.rcCutoff(num('rcR'), num('rcC')), [num]);
+  const requiredR = useMemo(() => calc.rcRequiredR(num('targetFc'), num('rcC')), [num]);
   const cutoffValid = num('rcR') > 0 && num('rcC') > 0;
   const requiredRValid = num('targetFc') > 0 && num('rcC') > 0;
-  const rlFilter = useMemo(() => calc.rlFilter(num('rlR'), num('rlL')), [values.rlR, values.rlL]);
-  const rlRequiredL = useMemo(() => calc.rlRequiredL(num('rlTargetFc'), num('rlR')), [values.rlTargetFc, values.rlR]);
+  const rlFilter = useMemo(() => calc.rlFilter(num('rlR'), num('rlL')), [num]);
+  const rlRequiredL = useMemo(() => calc.rlRequiredL(num('rlTargetFc'), num('rlR')), [num]);
   const rlRequiredValid = num('rlTargetFc') > 0 && num('rlR') > 0;
-  const rcl = useMemo(() => calc.rclSeries(num('rclR'), num('rclL'), num('rclC'), num('rclF')), [values.rclR, values.rclL, values.rclC, values.rclF]);
-  const gain = useMemo(() => calc.ampGain(num('rf'), num('rg')), [values.rf, values.rg]);
-  const i2s = useMemo(() => calc.i2sClocks(num('sampleRate'), num('bitDepth'), num('channels'), num('mclkMult')), [values.sampleRate, values.bitDepth, values.channels, values.mclkMult]);
+  const rcl = useMemo(() => calc.rclSeries(num('rclR'), num('rclL'), num('rclC'), num('rclF')), [num]);
+  const gain = useMemo(() => calc.ampGain(num('rf'), num('rg')), [num]);
+  const i2s = useMemo(() => calc.i2sClocks(num('sampleRate'), num('bitDepth'), num('channels'), num('mclkMult')), [num]);
 
   const resistorValue = useMemo(
     () => (Number(str('band1')) * 10 + Number(str('band2'))) * Number(str('multiplierBand')),
-    [values.band1, values.band2, values.multiplierBand]
+    [str]
   );
 
-  // Inverse mode: type a resistance and back-solve the two significant digits +
-  // decade multiplier so the band colors update automatically.
+
   const applyTargetValue = (raw: number) => {
     const value = Number(raw);
     if (!Number.isFinite(value) || value <= 0) return;
@@ -146,8 +144,7 @@ export function useCalculatorState() {
     return `${sig}${multiplier}`;
   }, [resistorValue, resistorTolerance]);
 
-  // --- hidratación desde URL (one-shot). Solo lee las keys que están; el resto
-  //     queda en su default. Por eso la URL puede ser corta. -------------------
+
   useEffect(() => {
     if (hydratedFromUrl.current) return;
 
@@ -176,7 +173,6 @@ export function useCalculatorState() {
     hydratedFromUrl.current = true;
   }, [searchParams]);
 
-  // --- serialización a URL: escribe SOLO lo que difiere del default -----------
   useEffect(() => {
     if (!hydratedFromUrl.current) return;
 
@@ -237,7 +233,6 @@ export function useCalculatorState() {
     }
   };
 
-  // Setters tipados por campo (capa de compat: los *Tab.tsx siguen usando estos).
   const setter = (key: string) => (n: number) => set(key, n);
 
   return {
@@ -245,7 +240,6 @@ export function useCalculatorState() {
     calcCardStyle, calcCardBodyStyle, inputStyle,
     applyPreset, activeTab, setActiveTab, eSeries, setESeries,
     copySummary, copyShareLink,
-    // acceso genérico para calcs nuevas (Fase 2)
     get: (key: string) => values[key], set,
     // led
     supply: num('supply'), setSupply: setter('supply'),

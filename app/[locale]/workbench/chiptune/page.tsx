@@ -1,8 +1,5 @@
 import { redirect } from 'next/navigation';
 
-// El compositor chiptune se consolidó en /composer (página propia, como
-// /calculators). Este segmento estático gana al dinámico [tool] y redirige los
-// links/bookmarks viejos de /workbench/chiptune.
 export const dynamic = 'force-static';
 
 export function generateStaticParams() {
