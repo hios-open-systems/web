@@ -717,6 +717,13 @@
         "asTypes": "as types"
     },
     "Workbench": {
+        "error": {
+            "title": "This tool failed",
+            "subtitle": "Something broke while running it. The rest of the workbench keeps working.",
+            "retry": "Retry",
+            "pageTitle": "Something went wrong",
+            "pageSubtitle": "This page hit an error. You can retry."
+        },
         "pinnedTitle": "Pinned",
         "recentTitle": "Recently used",
         "pin": "Pin tool",

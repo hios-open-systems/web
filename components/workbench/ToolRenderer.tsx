@@ -3,12 +3,8 @@
 import dynamic from 'next/dynamic';
 import type { ComponentType } from 'react';
 import type { WorkbenchToolId } from '@/config/workbench';
+import { ToolErrorBoundary } from '@/components/workbench/ToolErrorBoundary';
 
-// Each tool is a client-only dynamic import. This keeps the heavy tool
-// components (antd-laden, plus mermaid/excalidraw via their own dynamic
-// imports) OUT of the server/edge bundle for /workbench/[tool] — only the
-// chunk for the opened tool is fetched. Before this, the static switch pulled
-// every tool into one ~4 MB edge function and blew Cloudflare's worker limits.
 const TOOLS: Partial<Record<WorkbenchToolId, ComponentType>> = {
   'tone-generator': dynamic(() => import('@/components/workbench/audio/ToneGeneratorTool').then((m) => m.ToneGeneratorTool), { ssr: false }),
   'guitar-tuner': dynamic(() => import('@/components/workbench/audio/GuitarTunerTool').then((m) => m.GuitarTunerTool), { ssr: false }),
@@ -18,7 +14,6 @@ const TOOLS: Partial<Record<WorkbenchToolId, ComponentType>> = {
   'beat-counter': dynamic(() => import('@/components/workbench/audio/BeatCounterTool').then((m) => m.BeatCounterTool), { ssr: false }),
   'delay-calculator': dynamic(() => import('@/components/workbench/audio/DelayCalculatorTool').then((m) => m.DelayCalculatorTool), { ssr: false }),
   'note-frequency': dynamic(() => import('@/components/workbench/audio/NoteFrequencyTool').then((m) => m.NoteFrequencyTool), { ssr: false }),
-  // 'chiptune' se consolidó en /composer (ver app/[locale]/composer + workbench/chiptune redirect).
   'audio-convert': dynamic(() => import('@/components/workbench/audio/AudioConvertTool').then((m) => m.AudioConvertTool), { ssr: false }),
   'image-convert': dynamic(() => import('@/components/workbench/ImageConvertTool').then((m) => m.ImageConvertTool), { ssr: false }),
   'type-checker': dynamic(() => import('@/components/workbench/TypeCheckerTool').then((m) => m.TypeCheckerTool), { ssr: false }),
@@ -59,5 +54,10 @@ const TOOLS: Partial<Record<WorkbenchToolId, ComponentType>> = {
 
 export function ToolRenderer({ toolId }: { toolId: WorkbenchToolId }) {
   const Tool = TOOLS[toolId];
-  return Tool ? <Tool /> : null;
+  if (!Tool) return null;
+  return (
+    <ToolErrorBoundary>
+      <Tool />
+    </ToolErrorBoundary>
+  );
 }

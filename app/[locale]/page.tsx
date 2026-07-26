@@ -5,8 +5,6 @@ import { setRequestLocale } from 'next-intl/server';
 
 const locales = ['en', 'es', 'de', 'it'];
 
-// Fully static: prerenderizada por locale y servida del static-assets cache
-// (open-next.config.ts). Evita el re-render SSR de antd en cada isolate frío.
 export const dynamic = 'force-static';
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -47,18 +45,13 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   setRequestLocale(locale);
   return (
     <main>
-      {/* useSearchParams() (deep-link a tools) necesita Suspense para no romper el
-          prerender estático en Next 15 (CSR bailout). Antes lo tapaba runtime=edge. */}
       <React.Suspense fallback={null}>
         <HomeToolDeepLink />
       </React.Suspense>
       <HeroSection />
       <HeroRandomTool />
-      {/* Proyectos con más prioridad (arriba de las tools). */}
       <ProjectsGrid />
-      {/* Pantallazo de 8 herramientas + "ver todas". */}
       <ToolShowcase />
-      {/* Accesos: calculadoras, pinouts, Maker, Devlog. */}
       <HomeQuickAccess />
     </main>
   );

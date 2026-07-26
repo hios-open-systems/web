@@ -2,8 +2,6 @@ import type { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 import { AdminPanel } from '@/components/admin/AdminPanel';
 
-// Shell estático; el gating real es server-side en los endpoints (owner-only).
-// Ruta deliberadamente sin link en la navegación.
 export const dynamic = 'force-static';
 
 export const metadata: Metadata = {

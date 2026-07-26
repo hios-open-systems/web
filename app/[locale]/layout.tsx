@@ -4,13 +4,11 @@ import { Inter, Archivo, IBM_Plex_Mono } from 'next/font/google';
 import { ThemeLayout } from '@/components/ThemeLayout';
 import AntdRegistry from '@/lib/AntdRegistry';
 import { getCurrentDeployVersion } from '@/lib/appVersion';
-// @ts-expect-error Global stylesheet is imported for its side effects without a module declaration.
 import '@/styles/globals.css';
-// @ts-expect-error Excalidraw ships this stylesheet without a CSS module declaration.
 import '@excalidraw/excalidraw/index.css';
 
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
-import { getMessages, getTranslations } from 'next-intl/server';
+import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 
@@ -85,8 +83,6 @@ type Props = {
   params: Promise<{ locale: string }>;
 };
 
-import { setRequestLocale } from 'next-intl/server';
-
 const locales = ['en', 'es', 'de', 'it'];
 
 export function generateStaticParams() {
@@ -95,8 +91,6 @@ export function generateStaticParams() {
 
 export default async function RootLayout({ children, params }: Props) {
   const { locale } = await params;
-  // Guard antes de cualquier render caro: locale inválido → 404 barato (app/not-found.tsx),
-  // no la home completa. Corta el CPU que gastaban los escáneres de /*.php.
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const messages = await getMessages();
@@ -104,13 +98,10 @@ export default async function RootLayout({ children, params }: Props) {
   return (
     <html lang={locale} data-theme="dark" data-skin="datasheet" suppressHydrationWarning>
       <head>
-        {/* Miga para curiosos: todo el código es público, no hay nada escondido. */}
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP_SCRIPT }} />
         <meta name="source" content="https://github.com/hios-open-systems/web" />
         <link rel="author" href="/humans.txt" />
       </head>
-      {/* Sin inter.className: la font del body la decide var(--font-stack-sans),
-          que los skins pueden overridear (terminal = todo mono). */}
       <body className={`${inter.variable} ${archivo.variable} ${plexMono.variable}`}>
         <NextIntlClientProvider messages={messages}>
           <AntdRegistry>

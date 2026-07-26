@@ -508,6 +508,13 @@
         "asTypes": "come tipi"
     },
     "Workbench": {
+        "error": {
+            "title": "Questo strumento è fallito",
+            "subtitle": "Qualcosa si è rotto durante l’esecuzione. Il resto del workbench continua a funzionare.",
+            "retry": "Riprova",
+            "pageTitle": "Qualcosa è andato storto",
+            "pageSubtitle": "Questa pagina ha riscontrato un errore. Puoi riprovare."
+        },
         "pinnedTitle": "Fissate",
         "recentTitle": "Usate di recente",
         "pin": "Fissa tool",
