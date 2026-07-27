@@ -83,12 +83,23 @@ export async function GET(request: NextRequest) {
             .bind(sinceEpoch)
             .all<{ locale: string; count: number }>();
 
+        let guestbookSignatures = 0;
+        try {
+            const g = await db
+                .prepare(`SELECT COUNT(*) AS count FROM guestbook WHERE status = 'visible'`)
+                .first<{ count: number | null }>();
+            guestbookSignatures = g?.count ?? 0;
+        } catch {
+            guestbookSignatures = 0;
+        }
+
         return Response.json(
             {
                 rangeDays: DAYS,
                 totals: {
                     pageViews: totals?.page_views ?? 0,
                     toolOpens: totals?.tool_opens ?? 0,
+                    guestbook: guestbookSignatures,
                 },
                 perDay: perDay.results,
                 topTools: topTools.results.map((r) => ({ toolId: r.tool_id, count: r.count })),
