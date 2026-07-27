@@ -1,4 +1,23 @@
 {
+    "Guestbook": {
+        "title": "Libro de visitas",
+        "subtitle": "¿De paso? Dejá tu marca.",
+        "signTitle": "Firmá el libro",
+        "namePlaceholder": "Tu nombre o alias",
+        "messagePlaceholder": "Escribí algo…",
+        "submit": "Firmar",
+        "submitting": "Firmando…",
+        "thanks": "¡Gracias por firmar!",
+        "errorGeneric": "Algo salió mal. Probá de nuevo.",
+        "errorEmpty": "Poné un nombre y un mensaje primero.",
+        "errorCaptcha": "Completá el anti-spam primero.",
+        "loadError": "No se pudo cargar el libro de visitas.",
+        "entriesTitle": "Firmas",
+        "loading": "Cargando…",
+        "empty": "Todavía no hay firmas. Sé el primero.",
+        "hide": "Ocultar",
+        "hidden": "Entrada ocultada."
+    },
     "Hero": {
         "showcaseTitle": "Las tools",
         "showcaseSubtitle": "Todo corre en tu navegador. Elegí una, o tirá los dados.",
