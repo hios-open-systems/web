@@ -1,4 +1,23 @@
 {
+    "Guestbook": {
+        "title": "Guestbook",
+        "subtitle": "Passing through? Leave a mark.",
+        "signTitle": "Sign the guestbook",
+        "namePlaceholder": "Your name or handle",
+        "messagePlaceholder": "Say something…",
+        "submit": "Sign",
+        "submitting": "Signing…",
+        "thanks": "Thanks for signing!",
+        "errorGeneric": "Something went wrong. Try again.",
+        "errorEmpty": "Add a name and a message first.",
+        "errorCaptcha": "Complete the anti-spam check first.",
+        "loadError": "Couldn’t load the guestbook.",
+        "entriesTitle": "Signatures",
+        "loading": "Loading…",
+        "empty": "No signatures yet. Be the first.",
+        "hide": "Hide",
+        "hidden": "Entry hidden."
+    },
     "Hero": {
         "showcaseTitle": "The tools",
         "showcaseSubtitle": "Everything runs in your browser. Pick one, or roll the dice.",

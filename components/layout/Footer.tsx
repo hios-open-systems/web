@@ -28,6 +28,7 @@ export function Footer() {
         { href: `/${locale}/prints`, label: 'Maker' },
         { href: `/${locale}/blog`, label: 'Devlog' },
         { href: `/${locale}/stats`, label: 'Stats' },
+        { href: `/${locale}/guestbook`, label: label('guestbook', 'Guestbook') },
         { href: `/${locale}/colophon`, label: 'Colophon' },
     ];
 
