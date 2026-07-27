@@ -6,7 +6,7 @@ import styles from './publicStats.module.css';
 
 interface StatsPayload {
     rangeDays: number;
-    totals: { pageViews: number; toolOpens: number };
+    totals: { pageViews: number; toolOpens: number; guestbook: number };
     perDay: { day: string; count: number }[];
     topTools: { toolId: string; count: number }[];
     countries: { country: string; count: number }[];
@@ -21,6 +21,8 @@ const COPY = {
             'La telemetría de este sitio es opt-in (apagada por default) y anónima. Lo poco que se junta se muestra acá, abierto y agregado — la contracara de no trackear a nadie sin permiso.',
         pageViews: 'Vistas de página',
         toolOpens: 'Tools abiertas',
+        guestbook: 'Firmas',
+        allTime: 'en total',
         lastDays: (d: number) => `últimos ${d} días`,
         activity: 'Actividad por día',
         topTools: 'Tools más usadas',
@@ -36,6 +38,8 @@ const COPY = {
             'Telemetry on this site is opt-in (off by default) and anonymous. The little that gets collected is shown here, open and aggregated — the flip side of not tracking anyone without permission.',
         pageViews: 'Page views',
         toolOpens: 'Tools opened',
+        guestbook: 'Signatures',
+        allTime: 'all time',
         lastDays: (d: number) => `last ${d} days`,
         activity: 'Activity per day',
         topTools: 'Most used tools',
@@ -87,7 +91,8 @@ export function PublicStats() {
     const maxDay = data ? Math.max(1, ...data.perDay.map((d) => d.count)) : 1;
     const maxTool = data ? Math.max(1, ...data.topTools.map((d) => d.count)) : 1;
     const maxCountry = data ? Math.max(1, ...data.countries.map((d) => d.count)) : 1;
-    const isEmpty = data && data.totals.pageViews === 0 && data.totals.toolOpens === 0;
+    const isEmpty =
+        data && data.totals.pageViews === 0 && data.totals.toolOpens === 0 && data.totals.guestbook === 0;
 
     return (
         <main className={styles.page}>
@@ -112,6 +117,11 @@ export function PublicStats() {
                             <span className={styles.tileValue}>{data.totals.toolOpens.toLocaleString()}</span>
                             <span className={styles.tileLabel}>{t.toolOpens}</span>
                             <span className={styles.tileHint}>{t.lastDays(data.rangeDays)}</span>
+                        </article>
+                        <article className={styles.tile}>
+                            <span className={styles.tileValue}>{(data.totals.guestbook ?? 0).toLocaleString()}</span>
+                            <span className={styles.tileLabel}>{t.guestbook}</span>
+                            <span className={styles.tileHint}>{t.allTime}</span>
                         </article>
                     </section>
 
