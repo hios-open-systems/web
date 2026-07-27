@@ -1,4 +1,5 @@
 import type { SnippetRecord } from '@/lib/snippets';
+import { readRaw, writeRaw, removeRaw } from '../storage/safeLocalStorage.ts';
 
 interface LocalPayload {
     version: 1;
@@ -51,22 +52,17 @@ function normalizeLegacySnippet(snippet: LegacySnippet): SnippetRecord | null {
 }
 
 function safeRead<T>(storageKey: string): T | null {
-    if (typeof window === 'undefined') return null;
+    const raw = readRaw(storageKey);
+    if (!raw) return null;
     try {
-        const raw = window.localStorage.getItem(storageKey);
-        return raw ? (JSON.parse(raw) as T) : null;
+        return JSON.parse(raw) as T;
     } catch {
         return null;
     }
 }
 
 function safeWrite(storageKey: string, value: unknown) {
-    if (typeof window === 'undefined') return;
-    try {
-        window.localStorage.setItem(storageKey, JSON.stringify(value));
-    } catch {
-        // localStorage lleno o bloqueado: no es fatal
-    }
+    writeRaw(storageKey, JSON.stringify(value));
 }
 
 export function createSnippetDraft(input: { title: string; body: string; tags: string[] }): SnippetRecord {
@@ -111,12 +107,7 @@ export function writeLocalSnippets(snippets: SnippetRecord[]) {
 }
 
 export function clearLocalSnippets() {
-    if (typeof window === 'undefined') return;
-    try {
-        window.localStorage.removeItem(LOCAL_STORAGE_KEY);
-    } catch {
-        // ignore
-    }
+    removeRaw(LOCAL_STORAGE_KEY);
 }
 
 function getRemoteCacheKey(userId: string) {

@@ -10,6 +10,7 @@ import React, {
     type ReactNode,
 } from 'react';
 import { useCurrentUser } from '@/lib/hooks/useCurrentUser';
+import { readRaw, writeRaw } from '@/lib/storage/safeLocalStorage';
 import {
     DEFAULT_ACCENT,
     findPresetByAccent,
@@ -57,7 +58,7 @@ function getInitialMode(): ThemeMode {
     const attrMode = document.documentElement.getAttribute('data-theme');
     if (attrMode === 'light' || attrMode === 'dark') return attrMode;
 
-    const storedMode = localStorage.getItem('theme');
+    const storedMode = readRaw('theme');
     if (storedMode === 'light' || storedMode === 'dark') return storedMode;
 
     if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
@@ -102,7 +103,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
-        localStorage.setItem('theme', mode);
+        writeRaw('theme', mode);
         document.documentElement.setAttribute('data-theme', mode);
     }, [mode]);
 

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { readRaw, writeRaw, removeRaw } from '@/lib/storage/safeLocalStorage';
 import dynamic from 'next/dynamic';
 import { Button, Card, Space, Typography, message } from 'antd';
 import { DeleteOutlined, DownloadOutlined } from '@ant-design/icons';
@@ -30,10 +31,9 @@ interface StoredScene {
 }
 
 function readScene(): StoredScene | null {
-  if (typeof window === 'undefined') return null;
+  const raw = readRaw(LS_KEY);
+  if (!raw) return null;
   try {
-    const raw = window.localStorage.getItem(LS_KEY);
-    if (!raw) return null;
     const parsed = JSON.parse(raw) as Partial<StoredScene>;
     if (
       parsed.version === 1 &&
@@ -57,12 +57,7 @@ function readScene(): StoredScene | null {
 }
 
 function writeScene(scene: StoredScene): void {
-  if (typeof window === 'undefined') return;
-  try {
-    window.localStorage.setItem(LS_KEY, JSON.stringify(scene));
-  } catch {
-    /* storage full/unavailable - non-fatal */
-  }
+  writeRaw(LS_KEY, JSON.stringify(scene));
 }
 
 export function ExcalidrawTool() {
@@ -122,9 +117,7 @@ export function ExcalidrawTool() {
   };
 
   const clearScene = () => {
-    if (typeof window !== 'undefined') {
-      window.localStorage.removeItem(LS_KEY);
-    }
+    removeRaw(LS_KEY);
     setScene(null);
     setEditorKey((value) => value + 1);
     messageApi.success(t('cleared'));

@@ -1,6 +1,7 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useLocalStorage } from '@/lib/hooks/useLocalStorage';
 import { Button, Dropdown, Input, Modal, type MenuProps } from 'antd';
 import { DeleteOutlined, SaveOutlined, StarOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
@@ -29,32 +30,11 @@ export function UrlPresets({
 }) {
   const t = useTranslations('Presets');
   const lsKey = `hios-presets-${storageKey}`;
-  const [presets, setPresets] = useState<Preset[]>([]);
+  const [presets, setPresets] = useLocalStorage<Preset[]>(lsKey, []);
   const [naming, setNaming] = useState(false);
   const [draftName, setDraftName] = useState('');
 
-  const read = useCallback((): Preset[] => {
-    try {
-      const raw = window.localStorage.getItem(lsKey);
-      const parsed = raw ? JSON.parse(raw) : [];
-      return Array.isArray(parsed) ? parsed : [];
-    } catch {
-      return [];
-    }
-  }, [lsKey]);
-
-  useEffect(() => {
-    setPresets(read());
-  }, [read]);
-
-  const persist = (next: Preset[]) => {
-    setPresets(next);
-    try {
-      window.localStorage.setItem(lsKey, JSON.stringify(next));
-    } catch {
-      /* storage full / unavailable — keep in-memory only */
-    }
-  };
+  const persist = setPresets;
 
   const openNaming = () => {
     setDraftName(t('defaultName', { n: presets.length + 1 }));

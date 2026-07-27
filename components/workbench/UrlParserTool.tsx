@@ -5,6 +5,7 @@ import { Button, Card, Input, Space, Table, Tag, Typography, message } from 'ant
 import { CopyOutlined, LinkOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { ToolHeader } from './ToolHeader';
+import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import styles from './workbench.module.css';
 
 const { Text } = Typography;
@@ -88,14 +89,7 @@ export function UrlParserTool() {
     [],
   );
 
-  const copy = async (val: string) => {
-    try {
-      await navigator.clipboard.writeText(val);
-      messageApi.success(t('copied'));
-    } catch {
-      messageApi.error(t('copyError'));
-    }
-  };
+  const copy = useCopyToClipboard(messageApi);
 
   const startEdit = () => {
     if (!parsed) return;

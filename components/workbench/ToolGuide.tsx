@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { readRaw, writeRaw } from '@/lib/storage/safeLocalStorage';
 import { useTranslations } from 'next-intl';
 import { BulbOutlined, RightOutlined } from '@ant-design/icons';
 import styles from './workbench.module.css';
@@ -23,11 +24,7 @@ export function ToolGuide({ guideId }: { guideId: string }) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    try {
-      setOpen(window.localStorage.getItem(storageKey) === '1');
-    } catch {
-      /* localStorage unavailable — default collapsed */
-    }
+    setOpen(readRaw(storageKey) === '1');
   }, [storageKey]);
 
   let guide: Guide | null = null;
@@ -44,11 +41,7 @@ export function ToolGuide({ guideId }: { guideId: string }) {
   const toggle = () => {
     setOpen((prev) => {
       const next = !prev;
-      try {
-        window.localStorage.setItem(storageKey, next ? '1' : '0');
-      } catch {
-        /* ignore persistence failure */
-      }
+      writeRaw(storageKey, next ? '1' : '0');
       return next;
     });
   };

@@ -6,6 +6,7 @@ import { CopyOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { ToolHeader } from './ToolHeader';
+import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import styles from './workbench.module.css';
 
 const { Text } = Typography;
@@ -117,14 +118,10 @@ export function JsonSchemaTool() {
     [mode],
   );
 
-  const copy = async () => {
+  const copyRaw = useCopyToClipboard(messageApi);
+  const copy = () => {
     if (!result.ok) return;
-    try {
-      await navigator.clipboard.writeText(result.schema);
-      messageApi.success(t('copied'));
-    } catch {
-      messageApi.error(t('copyError'));
-    }
+    void copyRaw(result.schema, t('copied'));
   };
 
   return (

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { message } from 'antd';
+import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import {
   createSong,
   createTrack,
@@ -52,6 +53,7 @@ export function useComposerState() {
   const searchParams = useSearchParams();
   const hydrated = useRef(false);
   const [messageApi, contextHolder] = message.useMessage();
+  const copyRaw = useCopyToClipboard(messageApi);
 
   const [song, setSong] = useState<ChiptuneSong>(() => readSong() ?? makeDefaultSong());
   const [activeTrackId, setActiveTrackId] = useState<string>(() => song.tracks[0]?.id ?? '');
@@ -359,14 +361,9 @@ export function useComposerState() {
     messageApi.success('Código para device copiado y descargado');
   }, [song, messageApi]);
   const copyShareLink = useCallback(async () => {
-    try {
-      const url = `${window.location.origin}${pathname}?s=${encodeShare(song)}`;
-      await navigator.clipboard.writeText(url);
-      messageApi.success('Link copiado — la canción viaja en la URL');
-    } catch {
-      messageApi.error('No se pudo copiar el link');
-    }
-  }, [song, pathname, messageApi]);
+    const url = `${window.location.origin}${pathname}?s=${encodeShare(song)}`;
+    await copyRaw(url, 'Link copiado — la canción viaja en la URL');
+  }, [song, pathname, copyRaw]);
 
   // --- hidratación one-shot desde ?s= (código de compartir) ------------------
   useEffect(() => {

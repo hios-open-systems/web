@@ -10,6 +10,8 @@
  *
  * v2 = rev 0.9 + los pasos de encoder/stick/parlantes/NeoPixel encadenado.
  */
+import { readRaw, writeRaw } from '../storage/safeLocalStorage.ts';
+
 export interface ChecklistState {
   version: 2;
   done: number[];
@@ -53,19 +55,9 @@ export function parse(raw: string | null): ChecklistState {
 }
 
 export function readChecklist(id: string): ChecklistState {
-  if (typeof window === 'undefined') return { version: 2, done: [] };
-  try {
-    return parse(window.localStorage.getItem(keyFor(id)));
-  } catch {
-    return { version: 2, done: [] };
-  }
+  return parse(readRaw(keyFor(id)));
 }
 
 export function writeChecklist(id: string, state: ChecklistState): void {
-  if (typeof window === 'undefined') return;
-  try {
-    window.localStorage.setItem(keyFor(id), serialize(state));
-  } catch {
-    return;
-  }
+  writeRaw(keyFor(id), serialize(state));
 }

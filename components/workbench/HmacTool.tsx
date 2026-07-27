@@ -5,6 +5,7 @@ import { Button, Card, Input, Segmented, Space, Typography, message } from 'antd
 import { CopyOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
+import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import { HMAC_ALGORITHMS, type HmacAlgorithm, hmac } from '@/lib/workbench/hmac';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
@@ -54,14 +55,7 @@ export function HmacTool() {
     [mode],
   );
 
-  const copy = async (value: string) => {
-    try {
-      await navigator.clipboard.writeText(value);
-      messageApi.success(t('copied'));
-    } catch {
-      messageApi.error(t('copyError'));
-    }
-  };
+  const copy = useCopyToClipboard(messageApi);
 
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>

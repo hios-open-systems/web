@@ -6,6 +6,7 @@ import { CopyOutlined, LinkOutlined, ReloadOutlined, ShrinkOutlined, ExpandOutli
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
+import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import { parsePayloadInput } from '@/lib/workbench/payload';
 import { PayloadInspector } from './PayloadInspector';
 import { UrlPresets } from '@/components/common/UrlPresets';
@@ -91,14 +92,7 @@ export function PayloadLab() {
             .slice(0, 18);
     }, [parsedState, pathSearch]);
 
-    const handleCopy = async (value: string, successMessage: string) => {
-        try {
-            await navigator.clipboard.writeText(value);
-            messageApi.success(successMessage);
-        } catch {
-            messageApi.error(t('copyError'));
-        }
-    };
+    const handleCopy = useCopyToClipboard(messageApi);
 
     const handleLoadExample = () => {
         setInput(JSON.stringify(EXAMPLE_PAYLOAD, null, 2));
