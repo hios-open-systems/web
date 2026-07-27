@@ -1,4 +1,23 @@
 {
+    "Guestbook": {
+        "title": "Gästebuch",
+        "subtitle": "Nur auf der Durchreise? Hinterlass eine Spur.",
+        "signTitle": "Ins Gästebuch eintragen",
+        "namePlaceholder": "Dein Name oder Handle",
+        "messagePlaceholder": "Sag etwas…",
+        "submit": "Eintragen",
+        "submitting": "Wird eingetragen…",
+        "thanks": "Danke fürs Eintragen!",
+        "errorGeneric": "Etwas ist schiefgelaufen. Versuch es nochmal.",
+        "errorEmpty": "Gib zuerst einen Namen und eine Nachricht ein.",
+        "errorCaptcha": "Bitte zuerst den Spam-Schutz lösen.",
+        "loadError": "Gästebuch konnte nicht geladen werden.",
+        "entriesTitle": "Einträge",
+        "loading": "Lädt…",
+        "empty": "Noch keine Einträge. Sei der Erste.",
+        "hide": "Ausblenden",
+        "hidden": "Eintrag ausgeblendet."
+    },
     "Hero": {
         "showcaseTitle": "Die Werkzeuge",
         "showcaseSubtitle": "Alles läuft im Browser. Wähl eins oder lass den Zufall entscheiden.",

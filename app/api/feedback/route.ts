@@ -3,6 +3,7 @@ import { getDb } from '@/lib/db';
 import { isOwner } from '@/lib/auth/owner';
 import { getRequestAuth } from '@/lib/auth/request';
 import { checkRateLimit } from '@/lib/rateLimit';
+import { verifyTurnstile } from '@/lib/turnstile';
 
 
 const KINDS = ['bug', 'idea', 'note'] as const;
@@ -44,28 +45,6 @@ function isSafeSlug(value: string): boolean {
   return /^[a-z0-9-]{1,80}$/.test(value);
 }
 
-// Turnstile siteverify, OPCIONAL: solo se exige si TURNSTILE_SECRET_KEY está
-// configurado como secret del Worker. Sin eso devuelve true → el feedback sigue
-// anónimo sin captcha (local-first). Portable: siteverify es una API de CF usable
-// desde cualquier hosting.
-async function verifyTurnstile(token: string | undefined, ip: string | null): Promise<boolean> {
-  const secret = process.env.TURNSTILE_SECRET_KEY;
-  if (!secret) return true;
-  if (!token) return false;
-  try {
-    const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ secret, response: token, remoteip: ip ?? undefined }),
-    });
-    const data = (await res.json()) as { success?: boolean };
-    return data.success === true;
-  } catch {
-    return false;
-  }
-}
-
-// POST is anonymous on purpose — reporting a broken tool must not require login.
 export async function POST(request: NextRequest) {
   // Escribe en D1 y puede correr sin Turnstile: frenamos spam por IP.
   const limited = checkRateLimit(request, 'feedback', { limit: 5, windowMs: 60_000 });

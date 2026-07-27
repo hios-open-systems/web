@@ -1,4 +1,23 @@
 {
+    "Guestbook": {
+        "title": "Libro degli ospiti",
+        "subtitle": "Solo di passaggio? Lascia un segno.",
+        "signTitle": "Firma il libro",
+        "namePlaceholder": "Il tuo nome o handle",
+        "messagePlaceholder": "Scrivi qualcosa…",
+        "submit": "Firma",
+        "submitting": "Invio…",
+        "thanks": "Grazie per aver firmato!",
+        "errorGeneric": "Qualcosa è andato storto. Riprova.",
+        "errorEmpty": "Inserisci prima un nome e un messaggio.",
+        "errorCaptcha": "Completa prima l’anti-spam.",
+        "loadError": "Impossibile caricare il libro degli ospiti.",
+        "entriesTitle": "Firme",
+        "loading": "Caricamento…",
+        "empty": "Ancora nessuna firma. Sii il primo.",
+        "hide": "Nascondi",
+        "hidden": "Voce nascosta."
+    },
     "Hero": {
         "showcaseTitle": "Gli strumenti",
         "showcaseSubtitle": "Tutto gira nel browser. Scegline uno o lascia decidere il caso.",
