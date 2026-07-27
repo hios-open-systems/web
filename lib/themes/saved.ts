@@ -4,6 +4,7 @@
  */
 
 import { DEFAULT_SKIN, isValidSkin, type SkinId } from './skins.ts';
+import { readRaw, writeRaw } from '../storage/safeLocalStorage.ts';
 
 export type ThemeMode = 'light' | 'dark';
 
@@ -79,19 +80,9 @@ export function removeSavedTheme(list: SavedTheme[], id: string): SavedTheme[] {
 }
 
 export function readSavedThemes(): SavedTheme[] {
-  if (typeof window === 'undefined') return [];
-  try {
-    return parseSavedThemes(window.localStorage.getItem(SAVED_THEMES_KEY));
-  } catch {
-    return [];
-  }
+  return parseSavedThemes(readRaw(SAVED_THEMES_KEY));
 }
 
 export function writeSavedThemes(themes: SavedTheme[]): void {
-  if (typeof window === 'undefined') return;
-  try {
-    window.localStorage.setItem(SAVED_THEMES_KEY, serializeSavedThemes(themes));
-  } catch {
-    /* storage full/unavailable — non-fatal */
-  }
+  writeRaw(SAVED_THEMES_KEY, serializeSavedThemes(themes));
 }

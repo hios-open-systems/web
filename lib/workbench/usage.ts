@@ -3,6 +3,8 @@
  * state transitions so they unit-test without the DOM.
  */
 
+import { readRaw, writeRaw } from '../storage/safeLocalStorage.ts';
+
 export interface UsageState {
   version: 1;
   pinned: string[];
@@ -55,19 +57,9 @@ export function parseUsage(raw: string | null): UsageState {
 }
 
 export function readUsage(): UsageState {
-  if (typeof window === 'undefined') return { ...EMPTY_USAGE };
-  try {
-    return parseUsage(window.localStorage.getItem(USAGE_KEY));
-  } catch {
-    return { ...EMPTY_USAGE };
-  }
+  return parseUsage(readRaw(USAGE_KEY));
 }
 
 export function writeUsage(state: UsageState): void {
-  if (typeof window === 'undefined') return;
-  try {
-    window.localStorage.setItem(USAGE_KEY, serializeUsage(state));
-  } catch {
-    /* storage full/unavailable — non-fatal */
-  }
+  writeRaw(USAGE_KEY, serializeUsage(state));
 }

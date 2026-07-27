@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { readRaw, writeRaw } from '@/lib/storage/safeLocalStorage';
 import { Button, Card, Input, Segmented, Space, Typography, message } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -21,9 +22,9 @@ const { TextArea } = Input;
 const LS_KEY = 'hios-mermaid';
 
 function safeRead(): string | null {
+  const raw = readRaw(LS_KEY);
+  if (!raw) return null;
   try {
-    const raw = window.localStorage.getItem(LS_KEY);
-    if (!raw) return null;
     const parsed = JSON.parse(raw);
     return parsed && parsed.version === 1 && typeof parsed.code === 'string' ? parsed.code : null;
   } catch {
@@ -31,11 +32,7 @@ function safeRead(): string | null {
   }
 }
 function safeWrite(code: string) {
-  try {
-    window.localStorage.setItem(LS_KEY, JSON.stringify({ version: 1, code }));
-  } catch {
-    /* storage full/unavailable — non-fatal */
-  }
+  writeRaw(LS_KEY, JSON.stringify({ version: 1, code }));
 }
 
 export function MermaidTool() {

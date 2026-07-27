@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { readRaw, writeRaw } from '@/lib/storage/safeLocalStorage';
 import { Button, Card, Col, Input, Row, Space, Typography } from 'antd';
 import { CaretRightOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
@@ -54,26 +55,26 @@ export function PatternsTool() {
     if (hydrated.current) return;
     hydrated.current = true;
     try {
-      const raw = window.localStorage.getItem(LS_KEY);
+      const raw = readRaw(LS_KEY);
       const parsed = raw ? JSON.parse(raw) : null;
       if (parsed && parsed.version === 1 && getLesson(parsed.lastLesson)) {
         setActiveId(parsed.lastLesson);
         setCode(parsed.edits?.[parsed.lastLesson] ?? getLesson(parsed.lastLesson)!.code);
       }
     } catch {
-      /* ignore */
+      return;
     }
   }, []);
 
   useEffect(() => {
     if (!hydrated.current) return;
     try {
-      const raw = window.localStorage.getItem(LS_KEY);
+      const raw = readRaw(LS_KEY);
       const prev = raw ? JSON.parse(raw) : {};
       const edits = { ...(prev.edits ?? {}), [activeId]: code };
-      window.localStorage.setItem(LS_KEY, JSON.stringify({ version: 1, lastLesson: activeId, edits }));
+      writeRaw(LS_KEY, JSON.stringify({ version: 1, lastLesson: activeId, edits }));
     } catch {
-      /* non-fatal */
+      return;
     }
   }, [activeId, code]);
 

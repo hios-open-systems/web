@@ -6,6 +6,7 @@ import { CopyOutlined, ReloadOutlined } from '@ant-design/icons';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
+import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import { type IdType, generateIds, isIdType } from '@/lib/workbench/ids';
 import { ToolHeader } from './ToolHeader';
 import { UrlPresets } from '@/components/common/UrlPresets';
@@ -67,14 +68,7 @@ export function UuidUlidTool() {
     [mode],
   );
 
-  const copy = async (value: string, ok: string) => {
-    try {
-      await navigator.clipboard.writeText(value);
-      messageApi.success(ok);
-    } catch {
-      messageApi.error(t('copyError'));
-    }
-  };
+  const copy = useCopyToClipboard(messageApi);
 
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>

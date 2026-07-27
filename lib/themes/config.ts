@@ -9,6 +9,8 @@
  *  - Versionado simple por si después agregamos densidad/escala de fuente.
  */
 
+import { readRaw, writeRaw } from '../storage/safeLocalStorage.ts';
+
 export interface ThemeConfig {
     version: 1;
     accent: string; // hex string, e.g. '#f59e0b'
@@ -53,10 +55,9 @@ export function normalizeHex(value: string): string {
 }
 
 export function readThemeConfig(): ThemeConfig {
-    if (typeof window === 'undefined') return DEFAULT_THEME_CONFIG;
+    const raw = readRaw(THEME_STORAGE_KEY);
+    if (!raw) return DEFAULT_THEME_CONFIG;
     try {
-        const raw = window.localStorage.getItem(THEME_STORAGE_KEY);
-        if (!raw) return DEFAULT_THEME_CONFIG;
         const parsed = JSON.parse(raw);
         if (
             parsed &&
@@ -68,18 +69,13 @@ export function readThemeConfig(): ThemeConfig {
             return { version: 1, accent: normalizeHex(parsed.accent) };
         }
     } catch {
-        // ignoramos: lo dejamos en default
+        return DEFAULT_THEME_CONFIG;
     }
     return DEFAULT_THEME_CONFIG;
 }
 
 export function writeThemeConfig(config: ThemeConfig): void {
-    if (typeof window === 'undefined') return;
-    try {
-        window.localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(config));
-    } catch {
-        // si localStorage está lleno o bloqueado, no es fatal: la sesión actual sigue funcionando.
-    }
+    writeRaw(THEME_STORAGE_KEY, JSON.stringify(config));
 }
 
 export function findPresetByAccent(accent: string): ThemePreset | undefined {

@@ -5,6 +5,7 @@ import { Button, Card, Input, Space, Typography, message } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
+import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import { compressIpv6, expandIpv6 } from '@/lib/workbench/ipv6';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
@@ -40,14 +41,7 @@ export function Ipv6ExpandTool() {
     [mode],
   );
 
-  const copy = async (value: string) => {
-    try {
-      await navigator.clipboard.writeText(value);
-      messageApi.success(t('copied'));
-    } catch {
-      messageApi.error(t('copyError'));
-    }
-  };
+  const copy = useCopyToClipboard(messageApi);
 
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>

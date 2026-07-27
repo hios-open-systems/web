@@ -7,6 +7,7 @@ import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { generateTypesFromObject } from '@/lib/workbench/objectToTypes';
+import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import { SendToMenu } from '@/components/common/SendToMenu';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
@@ -59,17 +60,12 @@ export function ObjectToTypesTool() {
     }
   }, [input, rootName]);
 
-  const handleCopy = async () => {
+  const copyGenerated = useCopyToClipboard(messageApi);
+  const handleCopy = () => {
     if (!generated.code) {
       return;
     }
-
-    try {
-      await navigator.clipboard.writeText(generated.code);
-      messageApi.success(t('copied'));
-    } catch {
-      messageApi.error(t('copyError'));
-    }
+    void copyGenerated(generated.code, t('copied'));
   };
 
   const themeVars = {

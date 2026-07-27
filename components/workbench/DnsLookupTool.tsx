@@ -8,6 +8,7 @@ import { useTheme } from '@/lib/ThemeContext';
 import { dnsRecordTypes, type DnsLookupResponse, type DnsRecordType } from '@/lib/workbench/network';
 import { ToolHeader } from './ToolHeader';
 import { useRunHotkey } from '@/lib/hooks/useRunHotkey';
+import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import styles from './workbench.module.css';
 
 const { Paragraph, Text } = Typography;
@@ -90,14 +91,7 @@ export function DnsLookupTool() {
     void bootstrap();
   }, []);
 
-  const handleCopy = async (value: string, successMessage: string) => {
-    try {
-      await navigator.clipboard.writeText(value);
-      messageApi.success(successMessage);
-    } catch {
-      messageApi.error(t('copyError'));
-    }
-  };
+  const handleCopy = useCopyToClipboard(messageApi);
 
   const loadExample = () => {
     const nextDomain = exampleDomains[recordType];

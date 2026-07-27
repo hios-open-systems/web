@@ -4,6 +4,7 @@ import React, { useMemo, useState } from 'react';
 import { Button, Card, Input, Segmented, Select, Space, Switch, Typography, message } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
+import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import { csvToObjects, objectsToCsv, parseCsv, toCsv } from '@/lib/workbench/csvJson';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
@@ -66,14 +67,10 @@ export function CsvJsonTool() {
   const sourceValue = direction === 'toJson' ? csvText : jsonText;
   const setSource = direction === 'toJson' ? setCsvText : setJsonText;
 
-  const copy = async () => {
+  const copyToClipboard = useCopyToClipboard(messageApi);
+  const copy = () => {
     if (!('value' in output) || !output.value) return;
-    try {
-      await navigator.clipboard.writeText(output.value);
-      messageApi.success(t('copied'));
-    } catch {
-      messageApi.error(t('copyError'));
-    }
+    void copyToClipboard(output.value);
   };
 
   return (

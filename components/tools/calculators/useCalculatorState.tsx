@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { message } from 'antd';
+import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import type { ResistorPackageType } from '../ResistorVisualizer';
 import { calc, clamp, formatOhm } from './calc';
 import { type ESeries, isESeries } from './eseries';
@@ -49,6 +50,7 @@ export function useCalculatorState() {
   const searchParams = useSearchParams();
   const hydratedFromUrl = useRef(false);
   const [messageApi, contextHolder] = message.useMessage();
+  const copyRaw = useCopyToClipboard(messageApi);
 
   // --- estado central: un solo mapa de valores derivado del registry ---------
   const [values, setValues] = useState<Record<string, number | string>>(() => ({ ...DEFAULTS }));
@@ -213,24 +215,12 @@ export function useCalculatorState() {
     resistorMin, resistorMax, divider, cutoff, requiredR, gain, i2s,
   ]);
 
-  const copySummary = async () => {
-    try {
-      await navigator.clipboard.writeText(summary);
-      messageApi.success(t('copy_ok'));
-    } catch {
-      messageApi.error(t('copy_error'));
-    }
-  };
+  const copySummary = () => copyRaw(summary, t('copy_ok'));
 
-  const copyShareLink = async () => {
-    try {
-      const query = searchParams.toString();
-      const shareUrl = `${window.location.origin}${pathname}${query ? `?${query}` : ''}`;
-      await navigator.clipboard.writeText(shareUrl);
-      messageApi.success(t('share_ok'));
-    } catch {
-      messageApi.error(t('share_error'));
-    }
+  const copyShareLink = () => {
+    const query = searchParams.toString();
+    const shareUrl = `${window.location.origin}${pathname}${query ? `?${query}` : ''}`;
+    return copyRaw(shareUrl, t('share_ok'));
   };
 
   const setter = (key: string) => (n: number) => set(key, n);

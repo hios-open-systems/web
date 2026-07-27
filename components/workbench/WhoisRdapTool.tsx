@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Card, Input, Space, Tag, Typography, message } from 'antd';
 import { CopyOutlined, ReloadOutlined, SearchOutlined } from '@ant-design/icons';
 import type { RdapLookupResponse } from '@/lib/workbench/network';
+import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
 
@@ -43,14 +44,8 @@ export function WhoisRdapTool() {
     void runLookup(defaultDomain);
   }, [runLookup]);
 
-  const copyResult = async () => {
-    try {
-      await navigator.clipboard.writeText(resultText);
-      messageApi.success('Resultado copiado');
-    } catch {
-      messageApi.error('No se pudo copiar');
-    }
-  };
+  const copyRaw = useCopyToClipboard(messageApi);
+  const copyResult = () => copyRaw(resultText, 'Resultado copiado');
 
   return (
     <Space direction="vertical" size={20} className={styles.stackFull}>

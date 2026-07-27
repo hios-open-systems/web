@@ -12,6 +12,8 @@
  * de app/[locale]/layout.tsx para el no-flash.
  */
 
+import { readRaw, writeRaw } from '../storage/safeLocalStorage.ts';
+
 export type SkinId = 'datasheet' | 'terminal' | 'blueprint';
 
 export interface Skin {
@@ -57,21 +59,11 @@ export function isValidSkin(value: unknown): value is SkinId {
 }
 
 export function readStoredSkin(): SkinId {
-    if (typeof window === 'undefined') return DEFAULT_SKIN;
-    try {
-        const raw = window.localStorage.getItem(SKIN_STORAGE_KEY);
-        if (isValidSkin(raw)) return raw;
-    } catch {
-        // localStorage bloqueado: seguimos con el default
-    }
+    const raw = readRaw(SKIN_STORAGE_KEY);
+    if (isValidSkin(raw)) return raw;
     return DEFAULT_SKIN;
 }
 
 export function writeStoredSkin(skin: SkinId): void {
-    if (typeof window === 'undefined') return;
-    try {
-        window.localStorage.setItem(SKIN_STORAGE_KEY, skin);
-    } catch {
-        // no fatal
-    }
+    writeRaw(SKIN_STORAGE_KEY, skin);
 }

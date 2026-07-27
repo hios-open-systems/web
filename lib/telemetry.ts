@@ -8,22 +8,14 @@
  * (cf-ipcountry) — nunca la IP. Si hay sesión, se asocia al user id.
  */
 
+import { readRaw, writeRaw } from './storage/safeLocalStorage.ts';
+
 export const TELEMETRY_STORAGE_KEY = 'hios-telemetry';
 
 export function isTelemetryEnabled(): boolean {
-    if (typeof window === 'undefined') return false;
-    try {
-        return window.localStorage.getItem(TELEMETRY_STORAGE_KEY) === 'on';
-    } catch {
-        return false;
-    }
+    return readRaw(TELEMETRY_STORAGE_KEY) === 'on';
 }
 
 export function setTelemetryEnabled(enabled: boolean): void {
-    if (typeof window === 'undefined') return;
-    try {
-        window.localStorage.setItem(TELEMETRY_STORAGE_KEY, enabled ? 'on' : 'off');
-    } catch {
-        // storage bloqueado: queda apagada, que es el default seguro
-    }
+    writeRaw(TELEMETRY_STORAGE_KEY, enabled ? 'on' : 'off');
 }

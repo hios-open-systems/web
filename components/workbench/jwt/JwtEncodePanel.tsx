@@ -14,6 +14,7 @@ import {
     signJwt,
     type JwtAlgorithm,
 } from '@/lib/workbench/jwt';
+import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import styles from '../workbench.module.css';
 
 const { Text } = Typography;
@@ -88,14 +89,7 @@ export function JwtEncodePanel() {
         }
     };
 
-    const copyValue = async (value: string) => {
-        try {
-            await navigator.clipboard.writeText(value);
-            messageApi.success(t('copied'));
-        } catch {
-            messageApi.error(t('copyError'));
-        }
-    };
+    const copyValue = useCopyToClipboard(messageApi);
 
     return (
         <Space direction="vertical" size={16} className={styles.stackFull}>

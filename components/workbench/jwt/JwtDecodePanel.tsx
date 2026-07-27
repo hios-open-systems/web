@@ -5,6 +5,7 @@ import { Button, Card, Col, Input, Row, Space, Tag, Typography, message } from '
 import { ClearOutlined, CopyOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { buildExampleJwt, decodeJwtToken } from '@/lib/workbench/jwt';
+import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import styles from '../workbench.module.css';
 
 const { Text } = Typography;
@@ -16,14 +17,7 @@ export function JwtDecodePanel() {
     const [input, setInput] = useState(buildExampleJwt());
     const decoded = useMemo(() => decodeJwtToken(input, t('unknownError')), [input, t]);
 
-    const copy = async (value: string) => {
-        try {
-            await navigator.clipboard.writeText(value);
-            messageApi.success(t('copied'));
-        } catch {
-            messageApi.error(t('copyError'));
-        }
-    };
+    const copy = useCopyToClipboard(messageApi);
 
     return (
         <Space direction="vertical" size={16} className={styles.stackFull}>

@@ -9,6 +9,7 @@ import {
     type FeedbackEntry,
     type FeedbackPayload,
 } from './types';
+import { readRaw, writeRaw } from '../storage/safeLocalStorage.ts';
 
 interface LegacyFeedbackEntry {
     id: string;
@@ -141,10 +142,9 @@ function migrateLegacyEntry(entry: LegacyFeedbackEntry): FeedbackEntry {
 }
 
 export function readEntries(): FeedbackEntry[] {
-    if (typeof window === 'undefined') return [];
+    const raw = readRaw(FEEDBACK_STORAGE_KEY);
+    if (!raw) return [];
     try {
-        const raw = window.localStorage.getItem(FEEDBACK_STORAGE_KEY);
-        if (!raw) return [];
         const parsed = JSON.parse(raw) as FeedbackPayload | LegacyFeedbackPayload | unknown;
         if (
             parsed &&
@@ -167,22 +167,17 @@ export function readEntries(): FeedbackEntry[] {
             return migrated;
         }
     } catch {
-        // corrupted: lo dejamos como vacío
+        return [];
     }
     return [];
 }
 
 export function writeEntries(entries: FeedbackEntry[]): void {
-    if (typeof window === 'undefined') return;
-    try {
-        const payload: FeedbackPayload = {
-            version: FEEDBACK_STORAGE_VERSION,
-            entries: entries.slice(0, FEEDBACK_CAP),
-        };
-        window.localStorage.setItem(FEEDBACK_STORAGE_KEY, JSON.stringify(payload));
-    } catch {
-        // localStorage lleno o bloqueado: no es fatal
-    }
+    const payload: FeedbackPayload = {
+        version: FEEDBACK_STORAGE_VERSION,
+        entries: entries.slice(0, FEEDBACK_CAP),
+    };
+    writeRaw(FEEDBACK_STORAGE_KEY, JSON.stringify(payload));
 }
 
 export interface AppendDraft {

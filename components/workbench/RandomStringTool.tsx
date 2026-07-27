@@ -5,6 +5,7 @@ import { Button, Card, Checkbox, Col, InputNumber, Row, Space, Typography, messa
 import { CopyOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
+import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import { estimateEntropy, generateRandomStrings, type RandomStringOptions } from '@/lib/workbench/random';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
@@ -44,14 +45,7 @@ export function RandomStringTool() {
         }
     }, []);
 
-    const handleCopy = async (value: string, successMessage: string) => {
-        try {
-            await navigator.clipboard.writeText(value);
-            messageApi.success(successMessage);
-        } catch {
-            messageApi.error(t('copyError'));
-        }
-    };
+    const handleCopy = useCopyToClipboard(messageApi);
 
     const updateOption = <K extends keyof RandomStringOptions>(key: K, value: RandomStringOptions[K]) => {
         const next = { ...options, [key]: value };

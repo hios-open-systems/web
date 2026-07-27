@@ -25,6 +25,7 @@
     "test:mermaid": "node --experimental-strip-types scripts/mermaid-selftest.ts",
     "test:notes": "node --experimental-strip-types scripts/notes-selftest.ts",
     "test:i18n": "node --experimental-strip-types scripts/i18n-selftest.ts",
+    "test:storage": "node --experimental-strip-types scripts/storage-selftest.ts",
     "test:patterns": "node --experimental-strip-types scripts/patterns-selftest.ts",
     "test:themes": "node --experimental-strip-types scripts/themes-selftest.ts",
     "test:usage": "node --experimental-strip-types scripts/usage-selftest.ts",

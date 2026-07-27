@@ -7,6 +7,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { ENCODER_MODES, type EncoderMode, decode, encode, isEncoderMode } from '@/lib/workbench/encoder';
+import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import { ToolHeader } from './ToolHeader';
 import { UrlPresets } from '@/components/common/UrlPresets';
 import { SendToMenu } from '@/components/common/SendToMenu';
@@ -74,14 +75,8 @@ export function EncoderTool() {
     [themeMode],
   );
 
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(output.value);
-      messageApi.success(t('copied'));
-    } catch {
-      messageApi.error(t('copyError'));
-    }
-  };
+  const copyRaw = useCopyToClipboard(messageApi);
+  const copy = () => copyRaw(output.value, t('copied'));
 
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
