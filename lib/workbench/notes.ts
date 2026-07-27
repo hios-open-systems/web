@@ -4,6 +4,8 @@
  * serialize/parse so it can be unit-tested without the DOM.
  */
 
+import { readRaw, writeRaw } from '../storage/safeLocalStorage.ts';
+
 export interface NoteRecord {
   id: string;
   title: string;
@@ -67,19 +69,9 @@ export function parseNotes(raw: string | null): NoteRecord[] {
 }
 
 export function readNotes(): NoteRecord[] {
-  if (typeof window === 'undefined') return [];
-  try {
-    return parseNotes(window.localStorage.getItem(LS_KEY));
-  } catch {
-    return [];
-  }
+  return parseNotes(readRaw(LS_KEY));
 }
 
 export function writeNotes(notes: NoteRecord[]): void {
-  if (typeof window === 'undefined') return;
-  try {
-    window.localStorage.setItem(LS_KEY, serializeNotes(notes));
-  } catch {
-    /* storage full/unavailable — non-fatal */
-  }
+  writeRaw(LS_KEY, serializeNotes(notes));
 }

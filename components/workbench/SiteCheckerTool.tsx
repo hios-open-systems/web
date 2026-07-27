@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { readRaw, writeRaw, removeRaw } from '@/lib/storage/safeLocalStorage';
 import { Button, Card, Checkbox, Col, Input, InputNumber, Row, Space, Tag, Typography, message } from 'antd';
 import { BellOutlined, DeleteOutlined, PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
@@ -63,25 +64,20 @@ export function SiteCheckerTool() {
 
     setNotificationPermission('Notification' in window ? Notification.permission : 'unsupported');
 
+    const raw = readRaw(STORAGE_KEY);
+    if (!raw) {
+      return;
+    }
     try {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (!raw) {
-        return;
-      }
-
       const parsed = JSON.parse(raw) as SiteMonitor[];
       setMonitors(parsed);
     } catch {
-      window.localStorage.removeItem(STORAGE_KEY);
+      removeRaw(STORAGE_KEY);
     }
   }, []);
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(monitors));
+    writeRaw(STORAGE_KEY, JSON.stringify(monitors));
   }, [monitors]);
 
   const sendNotification = useCallback((title: string, body: string) => {

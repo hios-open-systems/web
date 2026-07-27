@@ -3,12 +3,8 @@
 import { Button, message } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
+import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 
-/**
- * One copy affordance for every tool's text output. Consistent label,
- * icon, success/error feedback. Pass the value (or a getter for lazy
- * computation). Renders nothing when there is nothing to copy.
- */
 export function CopyButton({
   value,
   size = 'small',
@@ -22,18 +18,12 @@ export function CopyButton({
 }) {
   const t = useTranslations('Workbench.common');
   const [messageApi, contextHolder] = message.useMessage();
+  const copy = useCopyToClipboard(messageApi);
 
-  const resolve = () => (typeof value === 'function' ? value() : value);
-
-  const onCopy = async () => {
-    const v = resolve();
+  const onCopy = () => {
+    const v = typeof value === 'function' ? value() : value;
     if (!v) return;
-    try {
-      await navigator.clipboard.writeText(v);
-      messageApi.success(t('copied'));
-    } catch {
-      messageApi.error(t('copyError'));
-    }
+    copy(v);
   };
 
   return (

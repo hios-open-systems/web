@@ -8,6 +8,7 @@ import { useTheme } from '@/lib/ThemeContext';
 import { type CertificateLookupResponse } from '@/lib/workbench/network';
 import { ToolHeader } from './ToolHeader';
 import { useRunHotkey } from '@/lib/hooks/useRunHotkey';
+import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import styles from './workbench.module.css';
 
 const { Paragraph, Text } = Typography;
@@ -81,14 +82,7 @@ export function CertificateCheckTool() {
     void bootstrap();
   }, []);
 
-  const handleCopy = async (value: string) => {
-    try {
-      await navigator.clipboard.writeText(value);
-      messageApi.success(t('copied'));
-    } catch {
-      messageApi.error(t('copyError'));
-    }
-  };
+  const handleCopy = useCopyToClipboard(messageApi);
 
   const themeVars = {
     '--wb-surface-border': 'var(--hios-border)',

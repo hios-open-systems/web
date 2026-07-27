@@ -9,6 +9,7 @@ import { useTheme } from '@/lib/ThemeContext';
 import { HASH_ALGORITHMS, type HashAlgorithm, digest, isHashAlgorithm } from '@/lib/workbench/hash';
 import { ToolHeader } from './ToolHeader';
 import { UrlPresets } from '@/components/common/UrlPresets';
+import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import styles from './workbench.module.css';
 
 const { Text } = Typography;
@@ -81,14 +82,7 @@ export function HashDigestTool() {
     [mode],
   );
 
-  const copy = async (value: string) => {
-    try {
-      await navigator.clipboard.writeText(value);
-      messageApi.success(t('copied'));
-    } catch {
-      messageApi.error(t('copyError'));
-    }
-  };
+  const copy = useCopyToClipboard(messageApi);
 
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>

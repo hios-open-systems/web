@@ -5,6 +5,8 @@
  * note number; timing in ticks (PPQ resolution) so it maps straight to a MIDI file.
  */
 
+import { readRaw, writeRaw } from '../storage/safeLocalStorage.ts';
+
 export const PPQ = 480;
 export const STEPS_PER_BEAT = 4;
 export const TICKS_PER_STEP = PPQ / STEPS_PER_BEAT; // 120 -> 16th-note grid
@@ -254,19 +256,9 @@ export function parseSong(raw: string | null): ChiptuneSong | null {
 }
 
 export function readSong(): ChiptuneSong | null {
-  if (typeof window === 'undefined') return null;
-  try {
-    return parseSong(window.localStorage.getItem(LS_KEY));
-  } catch {
-    return null;
-  }
+  return parseSong(readRaw(LS_KEY));
 }
 
 export function writeSong(song: ChiptuneSong): void {
-  if (typeof window === 'undefined') return;
-  try {
-    window.localStorage.setItem(LS_KEY, serializeSong(song));
-  } catch {
-    /* storage full/unavailable — non-fatal */
-  }
+  writeRaw(LS_KEY, serializeSong(song));
 }

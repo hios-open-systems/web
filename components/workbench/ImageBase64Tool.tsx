@@ -5,6 +5,7 @@ import { Button, Card, Space, Tag, Typography, Upload, message } from 'antd';
 import { CopyOutlined, InboxOutlined } from '@ant-design/icons';
 import NextImage from 'next/image';
 import { useTranslations } from 'next-intl';
+import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
 
@@ -77,14 +78,8 @@ export function ImageBase64Tool() {
     [messageApi, t],
   );
 
-  const copy = async (val: string, label: string) => {
-    try {
-      await navigator.clipboard.writeText(val);
-      messageApi.success(`${label} ${t('copied')}`);
-    } catch {
-      messageApi.error(t('copyError'));
-    }
-  };
+  const copyRaw = useCopyToClipboard(messageApi);
+  const copy = (val: string, label: string) => copyRaw(val, `${label} ${t('copied')}`);
 
   const clear = () => {
     setImageInfo(null);

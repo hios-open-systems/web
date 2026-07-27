@@ -7,6 +7,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { ToolGuide } from './ToolGuide';
 import { useCurrentUser } from '@/lib/hooks/useCurrentUser';
+import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import type { SnippetRecord } from '@/lib/snippets';
 import {
     clearLocalSnippets,
@@ -167,14 +168,7 @@ export function SnippetsShelf() {
         }
     };
 
-    const handleCopy = async (value: string) => {
-        try {
-            await navigator.clipboard.writeText(value);
-            messageApi.success(t('copied'));
-        } catch {
-            messageApi.error(t('copyError'));
-        }
-    };
+    const handleCopy = useCopyToClipboard(messageApi);
 
     const handleShare = async (snippetId: string) => {
         try {
