@@ -66,28 +66,27 @@ export function ExcalidrawTool() {
   const [messageApi, contextHolder] = message.useMessage();
   const [booted, setBooted] = useState(false);
   const [editorKey, setEditorKey] = useState(0);
-  const [scene, setScene] = useState<StoredScene | null>(null);
+  const [hasScene, setHasScene] = useState(false);
+  const sceneRef = useRef<StoredScene | null>(null);
+  const initialDataRef = useRef<ExcalidrawInitialDataState | undefined>(undefined);
   const saveTimeout = useRef<number | null>(null);
 
   useEffect(() => {
-    setScene(readScene());
+    const loaded = readScene();
+    sceneRef.current = loaded;
+    initialDataRef.current = loaded
+      ? { elements: loaded.elements, appState: loaded.appState, files: loaded.files }
+      : undefined;
+    setHasScene(Boolean(loaded && loaded.elements.length > 0));
     setBooted(true);
   }, []);
 
-  useEffect(() => {
-    if (!booted || !scene) return;
-    if (saveTimeout.current) {
-      window.clearTimeout(saveTimeout.current);
-    }
-    saveTimeout.current = window.setTimeout(() => {
-      writeScene(scene);
-    }, 300);
-    return () => {
-      if (saveTimeout.current) {
-        window.clearTimeout(saveTimeout.current);
-      }
-    };
-  }, [booted, scene]);
+  useEffect(
+    () => () => {
+      if (saveTimeout.current) window.clearTimeout(saveTimeout.current);
+    },
+    [],
+  );
 
   const themeVars = useMemo(
     () =>
@@ -102,6 +101,7 @@ export function ExcalidrawTool() {
   );
 
   const downloadScene = () => {
+    const scene = sceneRef.current;
     if (!scene) return;
     try {
       const blob = new Blob([JSON.stringify(scene, null, 2)], { type: 'application/json' });
@@ -118,18 +118,12 @@ export function ExcalidrawTool() {
 
   const clearScene = () => {
     removeRaw(LS_KEY);
-    setScene(null);
+    sceneRef.current = null;
+    initialDataRef.current = undefined;
+    setHasScene(false);
     setEditorKey((value) => value + 1);
     messageApi.success(t('cleared'));
   };
-
-  const initialData: ExcalidrawInitialDataState | undefined = scene
-    ? {
-        elements: scene.elements,
-        appState: scene.appState,
-        files: scene.files,
-      }
-    : undefined;
 
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
@@ -141,7 +135,7 @@ export function ExcalidrawTool() {
         locality="local"
         actions={
           <Space wrap>
-            <Button icon={<DownloadOutlined />} onClick={downloadScene} disabled={!scene}>
+            <Button icon={<DownloadOutlined />} onClick={downloadScene} disabled={!hasScene}>
               {t('downloadScene')}
             </Button>
             <Button icon={<DeleteOutlined />} onClick={clearScene}>
@@ -157,14 +151,14 @@ export function ExcalidrawTool() {
             <ExcalidrawCanvas
               key={editorKey}
               theme={mode}
-              initialData={initialData}
+              initialData={initialDataRef.current}
               onChange={(elements, appState, files) => {
-                setScene({
-                  version: 1,
-                  elements: [...elements],
-                  appState,
-                  files,
-                });
+                const next: StoredScene = { version: 1, elements: [...elements], appState, files };
+                sceneRef.current = next;
+                const nowHas = elements.length > 0;
+                setHasScene((prev) => (prev === nowHas ? prev : nowHas));
+                if (saveTimeout.current) window.clearTimeout(saveTimeout.current);
+                saveTimeout.current = window.setTimeout(() => writeScene(next), 300);
               }}
             />
           ) : (
