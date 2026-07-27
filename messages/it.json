@@ -1,5 +1,9 @@
 {
     "Hero": {
+        "showcaseTitle": "Gli strumenti",
+        "showcaseSubtitle": "Tutto gira nel browser. Scegline uno o lascia decidere il caso.",
+        "showcaseRandomCta": "Aprine uno a caso",
+        "showcaseToolCount": "strumenti",
         "title": "Strumenti locali per validare, generare e testare.",
         "subtitle": "Un workbench chiaro per payload, audio, rete e debugging tecnico. Gira nel browser, con attenzione a velocità e privacy.",
         "cta": "Apri Workbench",
@@ -10,45 +14,44 @@
         "previewKicker": "Tool in evidenza",
         "previewOpenTool": "Apri tool",
         "previewNext": "Avanti",
-        "previewRandom": "A caso",
-        "showcaseTitle": "Gli strumenti",
-        "showcaseSubtitle": "Tutto gira nel browser. Scegline uno o lascia decidere il caso.",
-        "showcaseRandomCta": "Aprine uno a caso",
-        "showcaseToolCount": "strumenti",
-        "titlePrefix": "Open",
-        "black": "Nero",
-        "brown": "Marrone",
-        "red": "Rosso",
-        "orange": "Arancione",
-        "yellow": "Giallo",
-        "green": "Verde",
-        "blue": "Blu",
-        "violet": "Viola",
-        "tagline_speaker": "WiFi + I2S = audio senza fili, zero rumore.",
+        "previewRandom": "A caso"
+    },
+    "Projects": {
+        "title": "Progetti",
+        "subtitle": "Cose che funzionano. Errori che ho fatto. Tutto documentato.",
+        "learnings": "Cosa ho imparato",
+        "status_prototype": "Funziona",
+        "status_concept": "In arrivo",
+        "status_wip": "WIP",
+        "in_development": "In sviluppo",
+        "tagline_btdac": "Quando finalmente ha suonato, ho urlato alle 2 di notte.",
+        "tagline_speaker": "WiFi + I2S = audio wireless, zero rumore.",
+        "tagline_pad": "Livelli fisici per tutto quello che faccio. Niente driver, niente cavi.",
+        "view_all": "Vedi tutti i progetti",
         "tutorials": "tutorial",
         "files": "file",
         "btdac": {
-            "moment": "Il momento in cui è uscito un suono pulito invece del rumore è stato incredibile. Dopo 3 giorni di debugging, finalmente ha funzionato. Ho urlato \"SÌ!\" alle 2 del mattino.",
-            "struggle": "Mi ci sono volute 2 settimane per far funzionare correttamente l'I2S. Il primo tentativo non aveva audio. Il secondo aveva così tanto rumore da essere inutilizzabile. Al terzo, ho finalmente capito come configurare i pin.",
+            "moment": "Il momento in cui è uscito un suono pulito al posto del rumore è stato incredibile. Dopo 3 giorni di debugging, alla fine ha funzionato. Ho urlato \"SÌ!\" alle 2 di notte.",
+            "struggle": "Ci ho messo 2 settimane per far funzionare l'I2S come si deve. Al primo tentativo non c'era audio. Al secondo c'era così tanto rumore da renderlo inutilizzabile. Al terzo, ho finalmente capito come configurare i pin.",
             "whatWorks": [
                 "Bluetooth A2DP — connessione stabile",
                 "Audio 24-bit — qualità sorprendente",
-                "Batteria 12+ ore — testato",
+                "Batteria 12+ ore — testata",
                 "LED di stato RGB",
                 "Serial Monitor con metadati"
             ],
             "whatDoesnt": [
-                "Case — funzionale ma semplice",
-                "Nessun controllo fisico del volume",
+                "Case — funzionale ma basilare",
+                "Nessun controllo del volume fisico",
                 "A volte servono 2 tentativi per l'accoppiamento"
             ],
             "resources": [
                 {
-                    "name": "Libreria ESP32-A2DP",
+                    "name": "ESP32-A2DP Library",
                     "url": "https://github.com/pschatzmann/ESP32-A2DP"
                 },
                 {
-                    "name": "Datasheet PCM5102",
+                    "name": "PCM5102 Datasheet",
                     "url": "https://www.ti.com/product/PCM5102"
                 },
                 {
@@ -72,7 +75,7 @@
                     "notes": "Bluetooth + WiFi"
                 },
                 {
-                    "component": "Modulo DAC PCM5102",
+                    "component": "PCM5102 DAC Module",
                     "qty": 1,
                     "priceUSD": 10,
                     "notes": "24-bit, 112dB SNR"
@@ -81,7 +84,7 @@
                     "component": "BMS 2S USB-C",
                     "qty": 1,
                     "priceUSD": 6,
-                    "notes": "Ricarica e protezione"
+                    "notes": "Carica e protezione"
                 },
                 {
                     "component": "DC-DC LM2596",
@@ -90,7 +93,7 @@
                     "notes": "Step-down a 5V"
                 },
                 {
-                    "component": "Batteria 18650 3500mAh",
+                    "component": "18650 Battery 3500mAh",
                     "qty": 2,
                     "priceUSD": 12,
                     "notes": "Li-Ion, buona qualità"
@@ -102,16 +105,16 @@
                     "notes": "Indicatore di stato"
                 },
                 {
-                    "component": "Resistenza 330Ω",
+                    "component": "Resistor 330Ω",
                     "qty": 3,
                     "priceUSD": 1,
-                    "notes": "Per LED"
+                    "notes": "Per il LED"
                 },
                 {
-                    "component": "Cavi, connettori, PCB",
+                    "component": "Cables, connectors, PCB",
                     "qty": 1,
                     "priceUSD": 5,
-                    "notes": "Vari"
+                    "notes": "Varie"
                 }
             ],
             "specs": [
@@ -133,7 +136,7 @@
                 },
                 {
                     "label": "Uscita",
-                    "value": "Livello di linea, Jack 3.5mm"
+                    "value": "Line level, Jack 3.5mm"
                 },
                 {
                     "label": "Consumo",
@@ -141,38 +144,47 @@
                 }
             ],
             "futureFeatures": [
-                "Amp cuffie NE5532",
-                "Partitore resistivo misurazione batteria",
+                "Ampli per cuffie NE5532",
+                "Misura batteria con partitore resistivo",
                 "App Android BLE",
                 "Modalità streaming WiFi",
                 "Integrazione YouTube/Spotify",
-                "Controllo volume BLE",
+                "Controllo volume via BLE",
                 "Integrazione Wear OS / Garmin"
             ]
         },
         "speaker": {
-            "moment": "Il primo tono di test che suona via WiFi. Niente cavi, niente rumore, solo musica.",
-            "struggle": "Configurare I2S con il MAX98357 è stato più facile del PCM5102, ma lo streaming WiFi ha le sue sfide. Buffer underrun, latenza, riconnessione automatica...",
+            "moment": "Il primo tono di prova che esce dal WiFi. Niente cavi, niente rumore, solo musica.",
+            "struggle": "Configurare l'I2S con il MAX98357 è stato più facile che col PCM5102, ma lo streaming WiFi ha le sue sfide. Buffer underrun, latenza, riconnessione automatica...",
             "whatWorks": [
-                "Audio I2S — qualità digitale, nessun rumore",
+                "Audio I2S — qualità digitale, niente rumore",
                 "Controllo web — da qualsiasi dispositivo",
-                "Batteria USB-C — ricarica rapida",
+                "Batteria USB-C — carica rapida",
                 "Display voltaggio — sempre visibile",
-                "mDNS — accesso per nome, non IP"
+                "mDNS — accesso per nome, non per IP"
             ],
             "whatDoesnt": [
-                "Streaming reale — solo tono di test per ora",
-                "Nessun case — elettronica esposta",
+                "Streaming vero — per ora solo tono di prova",
+                "Niente case — elettronica esposta",
                 "Portata WiFi — dipende dal router"
             ],
             "resources": [
                 {
-                    "name": "Libreria ESP32-audioI2S",
+                    "name": "Interactive Pinout",
+                    "url": "/pinouts/speaker/",
+                    "highlight": true
+                },
+                {
+                    "name": "ESP32-audioI2S Library",
                     "url": "https://github.com/schreibfaul1/ESP32-audioI2S"
                 },
                 {
-                    "name": "Datasheet MAX98357",
+                    "name": "MAX98357 Datasheet",
                     "url": "https://www.analog.com/en/products/max98357a.html"
+                },
+                {
+                    "name": "Luis Llamas - ESP32 Pinout",
+                    "url": "https://www.luisllamas.es/en/esp32-hardware-details-pinout/"
                 },
                 {
                     "name": "Random Nerd Tutorials - ESP32 Web Server",
@@ -188,30 +200,30 @@
                 },
                 {
                     "component": "MAX98357 I2S Amp",
-                    "qty": 1,
-                    "priceUSD": 3,
-                    "notes": "Amplificatore 3W"
+                    "qty": 2,
+                    "priceUSD": 6,
+                    "notes": "Amplificatore 3W x2 (stereo)"
                 },
                 {
-                    "component": "LM2596S con Display",
+                    "component": "LM2596S w/Display",
                     "qty": 1,
                     "priceUSD": 4,
-                    "notes": "Alimentatore 5V regolabile"
+                    "notes": "Alimentazione 5V regolabile"
                 },
                 {
-                    "component": "Batteria 18650",
+                    "component": "18650 Battery",
                     "qty": 2,
                     "priceUSD": 12,
                     "notes": "Li-Ion 3500mAh"
                 },
                 {
-                    "component": "Caricatore USB-C 2S",
+                    "component": "USB-C Charger 2S",
                     "qty": 1,
                     "priceUSD": 5,
                     "notes": "BMS con protezione"
                 },
                 {
-                    "component": "Altoparlante 63mm 4Ω 3W",
+                    "component": "Speaker 63mm 4Ω 3W",
                     "qty": 1,
                     "priceUSD": 3,
                     "notes": "Altoparlante full range"
@@ -244,13 +256,76 @@
                 }
             ],
             "futureFeatures": [
-                "Streaming audio reale (HTTP/WebSocket)",
+                "Streaming audio vero (HTTP/WebSocket)",
                 "Spotify Connect",
                 "Compatibile AirPlay",
                 "Sync multi-room",
-                "App Android di controllo",
+                "App di controllo Android",
                 "Equalizzatore web",
                 "Aggiornamenti OTA"
+            ]
+        },
+        "pad": {
+            "moment": "La prima volta che il cursore si è mosso dallo stick via Bluetooth — niente cavo, niente dongle, niente driver — e il PC ha semplicemente risposto. Dopo qualche ora a mettere a punto il BLE su Linux tra documentazione, IA, test e build, vederlo funzionare ha chiuso il cerchio.",
+            "struggle": "Lo stesso hardware funzionava su Windows ma su Linux non compariva nella scansione. Si è rivelata una combinazione sottile: l'adattatore non captava l'advertising legacy, quindi sono passato all'advertising esteso di BLE 5; e per di più, un bug noto di NimBLE che resettava l'ESP a ogni connessione e lo faceva sembrare un 'non si connette'. Un bel po' di btmon e di letture per isolarlo.",
+            "whatWorks": [
+                "HID su USB e BLE insieme, con auto-switch",
+                "Livelli per contesto navigabili dallo schermo",
+                "Stick analogico come mouse, con accelerazione regolabile",
+                "WiFi + portale captive + NTP + OTA",
+                "Feedback reale dal PC tramite il daemon companion",
+                "Mute globale del microfono a livello OS"
+            ],
+            "whatDoesnt": [
+                "Il click dello stick non funziona nelle app X11 (in revisione)",
+                "Rilevamento batteria pronto ma disattivato di default",
+                "Configurazione via JSON ancora in sospeso (oggi è in fase di compilazione)"
+            ],
+            "specs": [
+                {
+                    "label": "MCU",
+                    "value": "ESP32-S3 (N16, 16MB)"
+                },
+                {
+                    "label": "Display",
+                    "value": "ILI9488 480×320 SPI"
+                },
+                {
+                    "label": "Ingressi",
+                    "value": "Encoder + joystick + 5 tasti"
+                },
+                {
+                    "label": "Trasporti",
+                    "value": "USB HID · BLE HID · WiFi"
+                },
+                {
+                    "label": "Alimentazione",
+                    "value": "Batteria 2S Li-Ion"
+                },
+                {
+                    "label": "Firmware",
+                    "value": "Arduino + FreeRTOS dual-core"
+                }
+            ],
+            "futureFeatures": [
+                "Configurazione via JSON",
+                "Controllo dal telefono (PWA)",
+                "Schermo remoto / mirror",
+                "Più mappe di livelli"
+            ],
+            "resources": [
+                {
+                    "name": "Printed stick cap (Thingiverse)",
+                    "url": "https://www.thingiverse.com/thing:6189483"
+                },
+                {
+                    "name": "NimBLE-Arduino",
+                    "url": "https://github.com/h2zero/NimBLE-Arduino"
+                },
+                {
+                    "name": "TFT_eSPI",
+                    "url": "https://github.com/Bodmer/TFT_eSPI"
+                }
             ]
         }
     },
@@ -471,6 +546,139 @@
         "menu": "Menu",
         "search": "Cerca"
     },
+    "Auth": {
+        "signIn": "Accedi",
+        "signOut": "Esci"
+    },
+    "Feedback": {
+        "title": "Inbox feedback",
+        "subtitle": "Errori catturati in automatico e voci che crei tu: bug, idee e note. Salvato in locale in questo browser.",
+        "newEntry": "Nuova voce",
+        "kind": "Tipo",
+        "kinds": {
+            "error": "Errore",
+            "bug": "Bug",
+            "idea": "Idea",
+            "note": "Nota"
+        },
+        "sources": {
+            "runtime": "Runtime",
+            "manual": "Manuale"
+        },
+        "severity": {
+            "info": "Info",
+            "warn": "Avviso",
+            "error": "Errore"
+        },
+        "titleField": "Titolo",
+        "titlePlaceholder": "Riassunto breve (es. 'il JWT decoder si rompe con token senza firma')",
+        "bodyField": "Dettaglio",
+        "bodyPlaceholder": "Contesto, passi per riprodurre, qualsiasi cosa utile...",
+        "save": "Salva",
+        "entries": "Voci",
+        "clearAll": "Cancella tutto",
+        "empty": "Ancora nessuna voce. Quando qualcosa si rompe comparirà qui automaticamente.",
+        "copy": "Copia",
+        "copied": "Copiato negli appunti",
+        "copyError": "Impossibile copiare",
+        "delete": "Elimina",
+        "stack": "Vedi stack",
+        "occurrences": "{count}x",
+        "firstSeen": "prima volta",
+        "lastSeen": "ultima volta",
+        "context": "contesto",
+        "toastErrorCaptured": "Errore catturato: {title}",
+        "localFootnote": "Per ora è salvato in locale. Quando arriverà l'auth si sincronizzerà con il tuo account in automatico.",
+        "widget": {
+            "button": "Feedback",
+            "title": "Invia feedback",
+            "kindBug": "Qualcosa non va",
+            "kindIdea": "Idea",
+            "kindNote": "Commento",
+            "ratingLabel": "Come va?",
+            "messageLabel": "Il tuo messaggio",
+            "messagePlaceholder": "Cosa è successo, cosa vorresti, qualsiasi cosa…",
+            "emailLabel": "Email (facoltativa)",
+            "emailPlaceholder": "tu@esempio.com",
+            "emailHint": "Solo se vuoi una risposta.",
+            "send": "Invia",
+            "cancel": "Annulla",
+            "thanks": "Grazie! Ricevuto.",
+            "thanksLocal": "Salvato — mi arriverà quando torna la connessione.",
+            "emptyError": "Scrivi prima qualcosa"
+        },
+        "admin": {
+            "sectionTitle": "Feedback ricevuto",
+            "authRequired": "Accedi per vedere il feedback inviato dagli utenti.",
+            "errorLoad": "Impossibile caricare il feedback.",
+            "empty": "Ancora nessun feedback.",
+            "statTotal": "Totale",
+            "statAvgRating": "Rating medio",
+            "statBugs": "Bug",
+            "statIdeas": "Idee",
+            "statNotes": "Commenti",
+            "filterDays": "Finestra",
+            "filterKind": "Tipo",
+            "kindAll": "Tutti",
+            "colKind": "Tipo",
+            "colRating": "Rating",
+            "colMessage": "Messaggio",
+            "colTool": "Strumento",
+            "colWhen": "Quando",
+            "colCountry": "Paese",
+            "colEmail": "Email",
+            "loading": "Caricamento feedback…"
+        }
+    },
+    "Settings": {
+        "savedTitle": "I miei temi",
+        "savedHint": "Salva accent + modalità correnti e riapplicali quando vuoi. Restano in questo browser.",
+        "savedName": "Nome",
+        "savedNamePlaceholder": "es. Ambra notturna",
+        "savedSave": "Salva corrente",
+        "savedEmpty": "Nessun tema salvato",
+        "savedApply": "Applica tema",
+        "savedDelete": "Elimina tema",
+        "savedModeDark": "scuro",
+        "savedModeLight": "chiaro",
+        "title": "Impostazioni",
+        "subtitle": "Personalizza il tema del workbench. Salvato in locale in questo browser.",
+        "syncTitle": "Sync",
+        "localMode": "Solo locale",
+        "accountMode": "Con backup sull'account",
+        "syncing": "Sincronizzazione con il tuo account...",
+        "needsImport": "Pronto a importare l'accent locale",
+        "syncErrorState": "Il sync richiede attenzione",
+        "syncUnavailable": "Sync non disponibile",
+        "syncHintLocal": "Senza accesso l'accent resta solo in questo browser.",
+        "syncHintAccount": "Con l'accesso l'accent attuale può seguire il tuo account tra i dispositivi.",
+        "syncNow": "Salva l'accent attuale nell'account",
+        "syncWarningTitle": "Impossibile sincronizzare il tema dell'account",
+        "summaryRegion": "Riepilogo tema",
+        "summarySyncLabel": "Sync",
+        "summarySyncHintLocal": "Non c’è ancora una copia remota per questo accent.",
+        "summarySyncHintAccount": "Il tuo account può già portare questo accent su altri dispositivi.",
+        "summaryPresetLabel": "Preset attivo",
+        "summaryPresetCustom": "Custom",
+        "summaryPresetHintPreset": "Stai usando una palette di base pronta da continuare a regolare.",
+        "summaryPresetHintCustom": "L’accent attuale proviene da un valore hex manuale.",
+        "summaryAccentLabel": "Accent attivo",
+        "summaryAccentHint": "Questo valore alimenta badge, azioni e UI in evidenza nel workbench.",
+        "presets": "Preset",
+        "presetsHint": "Scegli una palette pronta all'uso.",
+        "custom": "Colore personalizzato",
+        "customHint": "Incolla un hex (#rrggbb) e si applica all'istante.",
+        "hex": "Hex",
+        "reset": "Torna al default",
+        "invalidHex": "Formato non valido. Usa #rrggbb o #rgb.",
+        "preview": "Anteprima dal vivo",
+        "previewHint": "Ecco come appare l'accent su componenti reali.",
+        "previewTagline": "Workbench",
+        "previewButton": "Azione primaria",
+        "previewLink": "Link di esempio",
+        "localFootnote": "Per ora è salvato solo in questo browser. Accedi se vuoi che in futuro segua il tuo account.",
+        "accountFootnote": "Le modifiche vengono comunque applicate prima in locale, ma la copia sull'account diventa il riferimento per i dispositivi futuri."
+    },
     "CommandPalette": {
         "placeholder": "Cerca tool e pagine…",
         "empty": "Nessun risultato",
@@ -483,6 +691,7 @@
             "tools": "Stack",
             "workbench": "Workbench",
             "calculators": "Calcolatrici",
+            "composer": "Compositore Chiptune",
             "pinouts": "Pinouts",
             "padWiring": "PAD · guida al cablaggio",
             "btdacWiring": "BTDAC · guida al cablaggio",
@@ -614,9 +823,15 @@
             "title": "Regex Tester",
             "subtitle": "Match, cattura e replace con regex JavaScript, nel browser.",
             "patternPlaceholder": "pattern",
-            "flagsPlaceholder": "flag",
             "inputLabel": "Testo di prova",
+            "inputPlaceholder": "Incolla qui il testo di prova…",
+            "previewLabel": "Anteprima evidenziata",
             "matchesLabel": "Corrispondenze",
+            "matchCount": "corrispondenza/e",
+            "copyPattern": "Copia pattern",
+            "copied": "Copiato!",
+            "copyError": "Copia non riuscita",
+            "flagsPlaceholder": "flag",
             "groupsLabel": "gruppi",
             "noMatches": "Nessuna corrispondenza",
             "invalidPattern": "Pattern non valido",
@@ -668,6 +883,156 @@
             "copyError": "Impossibile copiare",
             "empty": "Scrivi qualcosa per vedere il digest"
         },
+        "ohmsLaw": {
+            "badge": "Elettronica",
+            "title": "Legge di Ohm",
+            "subtitle": "Inserisci due tra tensione, corrente, resistenza e potenza; gli altri due vengono calcolati.",
+            "inputLabel": "Valori noti",
+            "voltage": "Tensione",
+            "current": "Corrente",
+            "resistance": "Resistenza",
+            "power": "Potenza",
+            "voltageUnit": "V",
+            "currentUnit": "A",
+            "resistanceUnit": "Ω",
+            "powerUnit": "W",
+            "hint": "Inserisci esattamente due valori per risolvere il resto.",
+            "error": "Questi due valori non si possono combinare (controlla se ci sono zeri).",
+            "resultLabel": "Risultato"
+        },
+        "resistorColorCode": {
+            "badge": "Elettronica",
+            "title": "Codice colore resistenze",
+            "subtitle": "Decodifica le bande di colore di una resistenza nel suo valore e tolleranza, con supporto a 4 e 5 bande.",
+            "bands4": "4 bande",
+            "bands5": "5 bande",
+            "band1": "Banda 1",
+            "band2": "Banda 2",
+            "band3": "Banda 3",
+            "multiplier": "Moltiplicatore",
+            "tolerance": "Tolleranza",
+            "resultLabel": "Valore",
+            "value": "Resistenza",
+            "toleranceLabel": "Tolleranza",
+            "error": "Questa combinazione di bande non è valida."
+        },
+        "httpStatusCodes": {
+            "badge": "Riferimento",
+            "title": "Codici di stato HTTP",
+            "subtitle": "Riferimento ricercabile dei codici di stato HTTP con categoria e significato.",
+            "searchPlaceholder": "Cerca per codice o testo (es. 404, teapot)…",
+            "colCode": "Codice",
+            "colName": "Nome",
+            "colDescription": "Descrizione",
+            "empty": "Nessun codice di stato corrisponde alla ricerca"
+        },
+        "asciiUnicode": {
+            "badge": "Riferimento",
+            "title": "Tabella ASCII / Unicode",
+            "subtitle": "Ispeziona qualsiasi carattere o code point in decimale, hex, ottale e binario.",
+            "inputLabel": "Carattere o code point",
+            "inputPlaceholder": "A, 65, 0x41 o U+1F600…",
+            "decLabel": "Decimale",
+            "hexLabel": "Hex",
+            "octLabel": "Ottale",
+            "binLabel": "Binario",
+            "controlFlag": "Carattere di controllo",
+            "printableFlag": "Stampabile",
+            "notAssigned": "Non è un code point riconosciuto",
+            "colCode": "Codice",
+            "colAbbr": "Abbr.",
+            "colName": "Nome",
+            "controlTitle": "Caratteri di controllo"
+        },
+        "noteFrequency": {
+            "badge": "Audio",
+            "title": "Nota · Frequenza · MIDI",
+            "subtitle": "Converti tra nota musicale, frequenza e numero di nota MIDI, con A4 regolabile.",
+            "a4Label": "A4",
+            "fromNote": "Dalla nota",
+            "octaveLabel": "Ottava",
+            "freqLabel": "Frequenza",
+            "midiLabel": "MIDI",
+            "fromFreq": "Dalla frequenza",
+            "noteLabel": "Nota",
+            "centsLabel": "Cents",
+            "fromMidi": "Da MIDI"
+        },
+        "guitarTuner": {
+            "badge": "Audio",
+            "title": "Accordatore per strumenti",
+            "subtitle": "Accordatore multi-strumento con riferimento regolabile. Pizzica una corda per sentirne il tono; il misuratore mostra la nota più vicina e i cents — tutto in locale.",
+            "a4Label": "Rif A4",
+            "micStart": "Avvia microfono",
+            "micStop": "Ferma microfono",
+            "micError": "Impossibile accedere al microfono. Controlla i permessi del browser.",
+            "instrumentLabel": "Strumento",
+            "tuningLabel": "Accordatura",
+            "stringHint": "Clicca una corda per sentirla",
+            "pluckString": "Suona corda",
+            "loopPlay": "Tono di riferimento in loop",
+            "loopStop": "Ferma loop",
+            "micPrompt": "Avvia il microfono per accordare",
+            "listening": "In ascolto…",
+            "inTune": "Accordata",
+            "tooLow": "Troppo bassa — tendi",
+            "tooHigh": "Troppo alta — allenta",
+            "chromaticLabel": "Nota più vicina",
+            "centsLabel": "Cents",
+            "referenceLabel": "Riferimento",
+            "instruments": {
+                "guitar": "Chitarra",
+                "bass": "Basso",
+                "ukulele": "Ukulele",
+                "violin": "Violino",
+                "viola": "Viola",
+                "cello": "Violoncello"
+            }
+        },
+        "ipv6Expand": {
+            "badge": "Rete",
+            "title": "IPv6 Espandi / Comprimi",
+            "subtitle": "Espandi un indirizzo IPv6 in tutti gli 8 gruppi o comprimilo nella forma breve RFC 5952.",
+            "inputLabel": "Indirizzo IPv6",
+            "inputPlaceholder": "2001:db8::1",
+            "invalid": "Non è un indirizzo IPv6 valido.",
+            "expandedLabel": "Espanso",
+            "compressedLabel": "Compresso",
+            "copied": "Copiato",
+            "copyError": "Impossibile copiare"
+        },
+        "hmac": {
+            "badge": "Validazione",
+            "title": "Generatore HMAC",
+            "subtitle": "Keyed-hash message authentication code, calcolato nel tuo browser con Web Crypto.",
+            "clear": "Svuota",
+            "keyLabel": "Chiave segreta",
+            "keyPlaceholder": "La tua chiave segreta…",
+            "messageLabel": "Messaggio",
+            "messagePlaceholder": "Messaggio da autenticare…",
+            "resultLabel": "HMAC",
+            "hexLabel": "hex",
+            "base64Label": "base64",
+            "copied": "HMAC copiato",
+            "copyError": "Impossibile copiare",
+            "empty": "Inserisci un messaggio per vederne l'HMAC"
+        },
+        "csvJson": {
+            "badge": "Testing",
+            "title": "CSV ⇄ JSON",
+            "subtitle": "Converti da CSV a JSON e viceversa, con quoting RFC 4180 e delimitatore configurabile.",
+            "toJson": "CSV → JSON",
+            "toCsv": "JSON → CSV",
+            "delimiterLabel": "Delimitatore",
+            "headerLabel": "Riga di intestazione",
+            "csvLabel": "CSV",
+            "jsonLabel": "JSON",
+            "csvPlaceholder": "nome,età\nJuan,30…",
+            "jsonPlaceholder": "[{\"name\":\"Juan\",\"age\":30}]…",
+            "error": "Impossibile interpretare l'input — controlla il formato.",
+            "copied": "Copiato",
+            "copyError": "Impossibile copiare"
+        },
         "usageAnalytics": {
             "badge": "Strumento di validazione",
             "title": "Dashboard di utilizzo",
@@ -705,6 +1070,97 @@
                     "Copia riepilogo = i risultati come testo · Copia link = l'URL con la tua configurazione da condividere."
                 ],
                 "tip": "Nei calcolatori di resistenze (LED, filtro RC, partitore ADC) il controllo 'Serie E' arrotonda al valore commerciale più vicino (E12/E24)."
+            },
+            "composer": {
+                "intro": "Componi chiptune retro in un piano-roll, ascoltalo nel browser e mandalo allo speaker HIOS. Tutto gira in locale.",
+                "steps": [
+                    "Scegli una traccia e il suo strumento; clicca sulla griglia per aggiungere note, trascina per spostarle o ridimensionarle.",
+                    "Imposta tempo e battute, poi premi Play per ascoltarlo (Loop lo ripete).",
+                    "Esporta .mid / .wav per scaricarlo, oppure Condividi link per copiare l'intera canzone in una URL.",
+                    "Esporta per il dispositivo = il codice per lo speaker: apri la pagina del dispositivo (http://hioschip.local) e incollalo per riprodurlo dal vivo."
+                ],
+                "tip": "Il dispositivo riusa queste stesse voci, quindi ciò che senti nel browser è ciò che suona lo speaker."
+            },
+            "guitarTuner": {
+                "intro": "Accorda chitarra, basso, ukulele o archi a orecchio o col microfono — tutto in locale, l'audio non esce dal tuo browser.",
+                "steps": [
+                    "Scegli lo strumento e l'accordatura, e imposta il riferimento A4 se serve.",
+                    "Clicca una corda per sentirne il tono di riferimento.",
+                    "Avvia il microfono e suona una corda — la corda corrispondente si illumina e l'ago mostra quanto sei fuori accordatura."
+                ],
+                "tip": "L'A4 standard è 440 Hz; le orchestre usano spesso 442, e alcuni setup di musica antica 415."
+            },
+            "resistorColorCode": {
+                "intro": "Leggi il valore di una resistenza dalle sue bande di colore, o al contrario partendo da un valore — tutto in locale.",
+                "steps": [
+                    "Scegli 4 o 5 bande.",
+                    "Imposta il colore di ogni banda.",
+                    "Leggi la resistenza e la tolleranza."
+                ],
+                "tip": "Le resistenze a 5 bande aggiungono una terza cifra significativa — usate per tolleranze più strette (1%)."
+            },
+            "ohmsLaw": {
+                "intro": "Risolvi la legge di Ohm e la potenza: inserisci due tra V, I, R, P e ottieni il resto.",
+                "steps": [
+                    "Scrivi esattamente due valori noti.",
+                    "Lascia vuoti gli altri due.",
+                    "Leggi i risultati calcolati qui sotto."
+                ],
+                "tip": "Vengono applicate P=V·I, V=I·R, più le forme derivate P=I²·R e P=V²/R."
+            },
+            "httpStatusCodes": {
+                "intro": "Cerca qualsiasi codice di stato HTTP, la sua categoria e il suo significato.",
+                "steps": [
+                    "Scrivi un codice (es. 404) o una parola (es. teapot).",
+                    "Scorri la tabella filtrata.",
+                    "Usa il colore del tag per leggere la classe a colpo d'occhio."
+                ],
+                "tip": "1xx info · 2xx successo · 3xx redirect · 4xx client · 5xx server."
+            },
+            "asciiUnicode": {
+                "intro": "Ispeziona qualsiasi carattere o code point in decimale, hex, ottale e binario.",
+                "steps": [
+                    "Scrivi un carattere, o un code point come 65, 0x41 o U+0041.",
+                    "Leggi i suoi formati e il suo nome.",
+                    "Sfoglia la tabella dei caratteri di controllo qui sotto."
+                ],
+                "tip": "Funziona con emoji e altri code point del piano astrale, non solo ASCII."
+            },
+            "noteFrequency": {
+                "intro": "Converti tra nota musicale, frequenza e numero di nota MIDI.",
+                "steps": [
+                    "Imposta il riferimento A4 (default 440 Hz).",
+                    "Inserisci una nota, una frequenza o un numero MIDI.",
+                    "Leggi i valori corrispondenti e lo scarto in cents."
+                ],
+                "tip": "I cents mostrano quanto una frequenza è lontana dalla nota temperata più vicina."
+            },
+            "ipv6Expand": {
+                "intro": "Espandi un indirizzo IPv6 nella sua forma completa o comprimilo nella forma breve canonica.",
+                "steps": [
+                    "Incolla qualsiasi indirizzo IPv6.",
+                    "Leggi sia la forma espansa che quella compressa.",
+                    "Copia quella che ti serve."
+                ],
+                "tip": "La compressione segue RFC 5952: minuscole, la sequenza di zeri più lunga collassata in ::."
+            },
+            "hmac": {
+                "intro": "Calcola un HMAC con chiave di un messaggio, in locale con Web Crypto — non viene caricato nulla.",
+                "steps": [
+                    "Scegli un algoritmo (SHA-1/256/384/512).",
+                    "Inserisci la chiave segreta e il messaggio.",
+                    "Copia il MAC in hex o base64."
+                ],
+                "tip": "A differenza di un hash semplice, l'HMAC mescola una chiave segreta per autenticare il messaggio."
+            },
+            "csvJson": {
+                "intro": "Converti da CSV a JSON e viceversa, con quoting RFC 4180 corretto — tutto in locale.",
+                "steps": [
+                    "Scegli una direzione (CSV→JSON o JSON→CSV).",
+                    "Incolla i tuoi dati e scegli il delimitatore.",
+                    "Copia l'output convertito."
+                ],
+                "tip": "Con la riga di intestazione attiva, le righe CSV diventano oggetti con chiavi dalla prima riga."
             },
             "patterns": {
                 "intro": "Impara pattern JS moderni modificando ed eseguendo codice reale — sandbox nel browser, niente rete, nessun accesso al sito.",
@@ -888,8 +1344,6 @@
             "panelSubtitle": "Parti dall'intenzione, non da un muro di card. Ogni sezione raggruppa tool correlati così il workbench può scalare bene.",
             "sectionsTitle": "Sezioni principali",
             "sectionsSubtitle": "Validazione, generazione e test separano il catalogo per caso d'uso, così aggiungere altri tool dopo non lo trasforma in una lista statica senza forma.",
-            "catalogTitle": "Catalogo tool",
-            "catalogSubtitle": "Ogni sezione ha la propria route e può crescere senza rompere l'architettura delle informazioni.",
             "cardCta": "Apri sezione",
             "principlesTitle": "Cosa ottimizza questa superficie",
             "principlesSubtitle": "Prima chiarezza, velocità e ottima esperienza mobile. Poi complessità.",
@@ -919,21 +1373,65 @@
             "testing": {
                 "title": "Test",
                 "description": "Confronta oggetti, ispeziona differenze e collega il flusso alle validazioni embedded."
+            },
+            "electronics": {
+                "title": "Elettronica",
+                "description": "Calcoli hardware rapidi — codice colore resistenze, legge di Ohm e affini, accanto ai pinout."
+            },
+            "reference": {
+                "title": "Riferimento",
+                "description": "Consultazioni rapide di ogni giorno: codici di stato HTTP, ASCII/Unicode e altro."
             }
         },
         "sectionToolCount": "tool",
-        "viewAll": "Vedi tutto",
         "viewWorkbench": "Torna al Workbench",
-        "sectionBrowseTitle": "Esplora altre sezioni",
-        "sectionBrowseSubtitle": "Passa tra validazione, generazione e test senza perdere il contesto del workbench.",
-        "externalLabel": "Esterno",
         "toolCta": "Apri tool",
         "pagerPrev": "Precedente",
         "pagerNext": "Successivo",
         "packs": {
+            "resistor-color-code": {
+                "title": "Codice colore resistenze",
+                "description": "Decodifica i colori delle resistenze a 4 e 5 bande in un valore, o costruisci le bande da un valore."
+            },
+            "ohms-law": {
+                "title": "Legge di Ohm",
+                "description": "Risolvi tensione, corrente, resistenza e potenza da due valori noti qualsiasi."
+            },
+            "http-status-codes": {
+                "title": "Codici di stato HTTP",
+                "description": "Riferimento ricercabile dei codici di stato HTTP con categoria e significato."
+            },
+            "ascii-unicode": {
+                "title": "Tabella ASCII / Unicode",
+                "description": "Ispeziona caratteri e code point in decimale, hex, ottale e binario."
+            },
+            "note-frequency": {
+                "title": "Nota · Frequenza · MIDI",
+                "description": "Converti tra nota musicale, frequenza in Hz e numero di nota MIDI, con A4 regolabile."
+            },
             "chiptune": {
                 "title": "Compositore Chiptune",
                 "description": "Componi musica retro da videogioco in un piano-roll con voci sintetizzate a 8 bit ed esporta in .mid e .wav."
+            },
+            "audio-convert": {
+                "title": "Convertitore audio",
+                "description": "Carica un file audio ed esportalo in WAV o MP3, tutto nel browser."
+            },
+            "image-convert": {
+                "title": "Convertitore immagini",
+                "description": "Carica un'immagine ed esportala in PNG, JPG o WEBP, tutto nel browser."
+            },
+            "ipv6-expand": {
+                "title": "IPv6 Espandi / Comprimi",
+                "description": "Espandi e comprimi indirizzi IPv6 secondo RFC 5952, tutto nel browser."
+            },
+            "hmac": {
+                "title": "Generatore HMAC",
+                "description": "Calcola HMAC SHA-1/256/384/512 da una chiave e un messaggio con Web Crypto."
+            },
+            "csv-json": {
+                "title": "CSV ⇄ JSON",
+                "description": "Converti da CSV a JSON e viceversa con quoting RFC 4180 e delimitatore configurabile."
             },
             "tone-generator": {
                 "title": "Generatore di toni",
@@ -1054,6 +1552,34 @@
             "embedded": {
                 "title": "Embedded Bridge",
                 "description": "Collega questo nuovo livello di workbench agli strumenti embedded già presenti."
+            },
+            "cron": {
+                "title": "Espressione Cron",
+                "description": "Analizza espressioni cron e visualizza le prossime esecuzioni con il dettaglio dei campi — nessun server necessario."
+            },
+            "color": {
+                "title": "Strumenti Colore",
+                "description": "Converti HEX, RGB, HSL; scegli colori e ispeziona i rapporti di contrasto WCAG — tutto nel tuo browser."
+            },
+            "timestamp": {
+                "title": "Convertitore di Timestamp",
+                "description": "Converti timestamp Unix e stringhe di data in ISO, UTC, relativo e altri formati."
+            },
+            "number-base": {
+                "title": "Convertitore di Basi Numeriche",
+                "description": "Converti tra decimale, esadecimale, binario e ottale con un visualizzatore di bit."
+            },
+            "json-schema": {
+                "title": "Generatore di JSON Schema",
+                "description": "Deduci un JSON Schema da qualsiasi esempio JSON con rilevamento dei formati e analisi dei campi obbligatori."
+            },
+            "url-parser": {
+                "title": "Parser e Builder di URL",
+                "description": "Analizza URL, ispeziona i query param e costruisci URL modificate — tutto nel tuo browser."
+            },
+            "image-base64": {
+                "title": "Immagine in Base64",
+                "description": "Converti immagini in data URI, base64, snippet CSS o tag HTML img."
             }
         },
         "payload": {
@@ -1311,6 +1837,21 @@
             "saved": "Snippet salvato",
             "copied": "Snippet copiato",
             "copyError": "Impossibile copiare",
+            "saveError": "Impossibile salvare lo snippet",
+            "deleteError": "Impossibile eliminare lo snippet",
+            "localBadge": "Solo locale",
+            "cloudBadge": "Su account",
+            "localStatus": "Salvato solo in questo browser finché non accedi.",
+            "accountStatus": "Sincronizzato con @{login}",
+            "authChecking": "Verifica account...",
+            "syncing": "Aggiornamento dal tuo account...",
+            "syncWarningTitle": "Impossibile aggiornare la copia dell'account",
+            "syncLoadError": "Impossibile caricare gli snippet dal tuo account",
+            "importTitle": "Hai {count} snippet locali pronti da importare",
+            "importBody": "La copia del browser resta in locale finché non la sposti esplicitamente nel tuo account.",
+            "importAction": "Importa snippet locali",
+            "imported": "Importati {imported} snippet, saltati {skipped}",
+            "importError": "Impossibile importare gli snippet locali",
             "summarySavedLabel": "Salvati",
             "summarySavedHintLocal": "Disponibili adesso in questo browser.",
             "summarySavedHintAccount": "La copia canonica vive attualmente nel tuo account.",
@@ -1319,8 +1860,16 @@
             "summaryImportLabel": "Pronti dopo",
             "summaryImportHint": "Questi snippet locali possono passare al tuo account quando accedi.",
             "summarySourceLabel": "Fonte di verità",
-            "cloudBadge": "Su account",
-            "localBadge": "Solo locale"
+            "privateLabel": "Privato",
+            "publicLabel": "Pubblico",
+            "makePublic": "Rendi pubblico",
+            "makePrivate": "Rendi privato",
+            "madePublic": "Lo snippet ora è pubblico",
+            "madePrivate": "Lo snippet ora è privato",
+            "visibilityError": "Impossibile aggiornare la visibilità dello snippet",
+            "share": "Copia link di condivisione",
+            "shareCopied": "Link di condivisione copiato",
+            "shareError": "Impossibile copiare il link di condivisione"
         },
         "toolHeader": {
             "localLabel": "Solo locale",
@@ -1382,7 +1931,133 @@
             "publicKeyLabel": "Chiave pubblica (per verificare)",
             "copyPublic": "Copia chiave pubblica",
             "demoKeyNote": "Chiave demo generata nel browser. Solo per test — non usarla per nulla di sensibile."
+        },
+        "cron": {
+            "badge": "Strumento di prova",
+            "title": "Espressione Cron",
+            "subtitle": "Analizza espressioni cron, visualizza le prossime esecuzioni e ispeziona il dettaglio dei campi — nessun server necessario.",
+            "breakdown": "Dettaglio dei campi",
+            "nextRuns": "Prossime 8 esecuzioni (ora locale)",
+            "field_minute": "Minuto",
+            "field_hour": "Ora",
+            "field_dayOfMonth": "Giorno del mese",
+            "field_month": "Mese",
+            "field_dayOfWeek": "Giorno della settimana",
+            "copy": "Copia espressione",
+            "copied": "Copiato"
+        },
+        "color": {
+            "badge": "Strumento di generazione",
+            "title": "Strumenti Colore",
+            "subtitle": "Converti tra HEX, RGB e HSL, scegli colori e ispeziona i rapporti di contrasto WCAG — tutto nel tuo browser.",
+            "values": "Valori colore",
+            "sliders": "Slider",
+            "copy": "Copia",
+            "contrastOnWhite": "Contrasto su bianco",
+            "contrastOnBlack": "Contrasto su nero"
+        },
+        "timestamp": {
+            "badge": "Strumento di prova",
+            "title": "Convertitore di Timestamp",
+            "subtitle": "Converti timestamp Unix e stringhe di data in più formati — interamente nel tuo browser.",
+            "tabParse": "Analizza",
+            "tabNow": "Adesso",
+            "inputPlaceholder": "Timestamp Unix o stringa di data…",
+            "invalid": "Impossibile analizzare questo valore",
+            "copy": "Copia",
+            "useNow": "Usa l'ora attuale",
+            "refreshNow": "Aggiorna"
+        },
+        "numberBase": {
+            "badge": "Strumento di testing",
+            "title": "Convertitore di Basi Numeriche",
+            "subtitle": "Converti tra decimale, hex, binario e ottale con precisione BigInt e un visualizzatore di bit.",
+            "inputPlaceholder": "Inserisci un numero…",
+            "copy": "Copia",
+            "copied": "Copiato!",
+            "copyError": "Copia non riuscita",
+            "clear": "Svuota",
+            "labelDec": "Decimale",
+            "labelHex": "Esadecimale",
+            "labelBin": "Binario",
+            "labelOct": "Ottale",
+            "labelBits": "Ampiezza in bit",
+            "labelSetBits": "Bit attivi",
+            "labelBytes": "Byte",
+            "labelPow2": "Potenza di 2",
+            "bitVisualizer": "Visualizzatore di bit",
+            "quickFacts": "Dati rapidi",
+            "empty": "Inserisci un numero sopra per vedere le conversioni.",
+            "conversions": "Conversioni",
+            "bits": "Visualizzatore di bit",
+            "facts": "Dati rapidi",
+            "factWidth": "Ampiezza in bit",
+            "factBytes": "Byte",
+            "factSetBits": "Bit attivi",
+            "factPow2": "Potenza di 2",
+            "yes": "Sì",
+            "no": "No"
+        },
+        "jsonSchema": {
+            "badge": "Strumento dati",
+            "title": "Generatore di JSON Schema",
+            "subtitle": "Deduci un JSON Schema (draft-07) da qualsiasi esempio JSON — rilevamento formati, campi obbligatori, oggetti annidati.",
+            "inputLabel": "Input JSON",
+            "outputLabel": "Schema generato",
+            "rootNamePlaceholder": "Nome radice…",
+            "inputPlaceholder": "Incolla qui qualsiasi JSON valido…",
+            "loadExample": "Carica esempio",
+            "clear": "Svuota",
+            "copy": "Copia",
+            "copied": "Copiato!",
+            "copyError": "Copia non riuscita",
+            "empty": "Inserisci JSON valido a sinistra per generare uno schema."
+        },
+        "urlParser": {
+            "badge": "Strumento di testing",
+            "title": "Parser e Builder di URL",
+            "subtitle": "Analizza qualsiasi URL nelle sue parti, ispeziona e modifica i query param, ricostruisci e copia.",
+            "inputPlaceholder": "Incolla qui una URL…",
+            "loadExample": "Carica esempio",
+            "clear": "Svuota",
+            "partsLabel": "Parti della URL",
+            "paramsLabel": "Query param",
+            "copied": "Copiato!",
+            "copyError": "Copia non riuscita",
+            "invalid": "URL non valida",
+            "noParams": "Nessun query param",
+            "edit": "Modifica param",
+            "addParam": "Aggiungi param",
+            "apply": "Applica",
+            "cancel": "Annulla",
+            "colKey": "Chiave",
+            "colValue": "Valore"
+        },
+        "imageBase64": {
+            "badge": "Strumento di generazione",
+            "title": "Immagine → Base64",
+            "subtitle": "Trascina qualsiasi immagine e ottieni un data URI, base64 grezzo, background-image CSS o snippet img HTML — tutto in locale.",
+            "dropHint": "Trascina un'immagine qui o clicca per selezionare",
+            "dropSub": "PNG, JPEG, SVG, WebP, GIF…",
+            "notAnImage": "Il file non è un'immagine",
+            "clear": "Svuota",
+            "outputLabel": "Formati di output",
+            "labelName": "Nome file",
+            "labelType": "Tipo",
+            "labelSize": "Dimensione originale",
+            "labelDimensions": "Dimensioni",
+            "labelBase64Size": "Dimensione base64",
+            "copy": "Copia",
+            "copied": "copiato!",
+            "copyError": "Copia non riuscita",
+            "expand": "espandi"
         }
+    },
+    "VersionWatcher": {
+        "title": "È disponibile una nuova versione",
+        "description": "Questa scheda sta usando un deploy più vecchio. Ricarica per prendere gli ultimi fix e le modifiche alla UI.",
+        "reload": "Ricarica ora",
+        "later": "Più tardi"
     },
     "Calculators": {
         "title": "Calcolatori",
@@ -1390,7 +2065,12 @@
         "presets_label": "Preset Globali",
         "eseries_label": "Serie E",
         "eseries_help": "E12 (±10%) ed E24 (±5%) sono i valori di resistenza che esistono davvero in commercio. Il risultato viene arrotondato al più vicino acquistabile.",
-        "categories": { "electronica": "Elettronica", "obra": "Edilizia", "clima": "Clima", "cotidianas": "Quotidiane" },
+        "categories": {
+            "electronica": "Elettronica",
+            "obra": "Edilizia",
+            "clima": "Clima",
+            "cotidianas": "Quotidiane"
+        },
         "copy_summary_help": "Copia i risultati dei calcolatori come testo semplice.",
         "copy_link_help": "Copia l'URL con questa configurazione per condividerla o salvarla.",
         "go_rcl": "Apri pagina RCL",
@@ -1416,10 +2096,39 @@
             "buck3v3": "Buck 5V→3V3"
         },
         "cards": {
-            "paint": { "title": "Vernice", "paintArea": "Area da dipingere", "paintCoats": "Mani", "paintCoverage": "Resa", "r_liters": "Vernice necessaria", "r_cans": "Latte" },
-            "cooling": { "title": "Raffrescamento (BTU)", "coolArea": "Superficie", "coolFactor": "Fattore", "coolPeople": "Persone", "coolAppliances": "Apparecchi (calore)", "r_frig": "Capacità", "r_split": "Split consigliato", "r_split_hint": "la taglia commerciale più piccola che basta" },
-            "ohm": { "title": "Legge di Ohm", "ohmV": "Tensione", "ohmI": "Corrente", "r_r": "Resistenza", "r_p": "Potenza" },
-            "rule": { "title": "Proporzione", "ruleA": "Se A…", "ruleB": "…è B", "ruleC": "…quanto è C?", "r_x": "Risultato (X)", "r_hint": "A → B, quindi C → X" },
+            "paint": {
+                "title": "Vernice",
+                "paintArea": "Area da dipingere",
+                "paintCoats": "Mani",
+                "paintCoverage": "Resa",
+                "r_liters": "Vernice necessaria",
+                "r_cans": "Latte"
+            },
+            "cooling": {
+                "title": "Raffrescamento (BTU)",
+                "coolArea": "Superficie",
+                "coolFactor": "Fattore",
+                "coolPeople": "Persone",
+                "coolAppliances": "Apparecchi (calore)",
+                "r_frig": "Capacità",
+                "r_split": "Split consigliato",
+                "r_split_hint": "la taglia commerciale più piccola che basta"
+            },
+            "ohm": {
+                "title": "Legge di Ohm",
+                "ohmV": "Tensione",
+                "ohmI": "Corrente",
+                "r_r": "Resistenza",
+                "r_p": "Potenza"
+            },
+            "rule": {
+                "title": "Proporzione",
+                "ruleA": "Se A…",
+                "ruleB": "…è B",
+                "ruleC": "…quanto è C?",
+                "r_x": "Risultato (X)",
+                "r_hint": "A → B, quindi C → X"
+            },
             "rl": {
                 "title": "Filtro RL",
                 "r": "R (Ω)",
@@ -1555,33 +2264,5 @@
         "copy_link": "Copia link",
         "share_ok": "Link copiato",
         "share_error": "Impossibile copiare il link"
-    },
-    "Settings": {
-        "savedTitle": "I miei temi",
-        "savedHint": "Salva accent + modalità correnti e riapplicali quando vuoi. Restano in questo browser.",
-        "savedName": "Nome",
-        "savedNamePlaceholder": "es. Ambra notturna",
-        "savedSave": "Salva corrente",
-        "savedEmpty": "Nessun tema salvato",
-        "savedApply": "Applica tema",
-        "savedDelete": "Elimina tema",
-        "savedModeDark": "scuro",
-        "savedModeLight": "chiaro",
-        "summaryRegion": "Riepilogo tema",
-        "summarySyncLabel": "Sync",
-        "summarySyncHintLocal": "Non c’è ancora una copia remota per questo accent.",
-        "summarySyncHintAccount": "Il tuo account può già portare questo accent su altri dispositivi.",
-        "summaryPresetLabel": "Preset attivo",
-        "summaryPresetCustom": "Custom",
-        "summaryPresetHintPreset": "Stai usando una palette di base pronta da continuare a regolare.",
-        "summaryPresetHintCustom": "L’accent attuale proviene da un valore hex manuale.",
-        "summaryAccentLabel": "Accent attivo",
-        "summaryAccentHint": "Questo valore alimenta badge, azioni e UI in evidenza nel workbench."
-    },
-    "VersionWatcher": {
-        "title": "È disponibile una nuova versione",
-        "description": "Questa scheda sta usando un deploy più vecchio. Ricarica per prendere gli ultimi fix e le modifiche alla UI.",
-        "reload": "Ricarica ora",
-        "later": "Più tardi"
     }
 }
