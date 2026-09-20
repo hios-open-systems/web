@@ -1534,6 +1534,18 @@
                 "title": "ESP32 LLM Bridge Generator",
                 "description": "Generate non-blocking C++ FreeRTOS firmware to query local LLMs over WiFi with OLED UI."
             },
+            "voice-ai-latency": {
+                "title": "Voice AI Latency Calculator",
+                "description": "Calculate end-to-end conversational delay across VAD, Whisper STT, LLM TTFT, and TTS audio."
+            },
+            "llm-grammar-generator": {
+                "title": "Hardware GBNF Grammar Generator",
+                "description": "Compile strict GBNF grammars and JSON schemas for LLMs controlling relays, sensors, and actuators."
+            },
+            "token-inspector": {
+                "title": "Local Tokenizer & Context Inspector",
+                "description": "Visualize BPE subword tokenization, analyze Spanish token inflation, and compute KV memory."
+            },
             "tone-generator": {
                 "title": "Signal Generator",
                 "description": "Tones, white/pink/brown noise, sweeps and L/R tests for speakers, DACs and audio chains."
