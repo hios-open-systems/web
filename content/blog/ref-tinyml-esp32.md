@@ -2,92 +2,134 @@
 title: "TinyML en ESP32-S3: inteligencia real en un microcontrolador"
 date: "2026-09-23"
 lang: "es"
-summary: "Qué entra y qué no en un ESP32-S3, cómo correr redes neuronales en el borde con TFLite Micro, y la arquitectura de 'cerebro delegado' para combinar hardware embebido con IA local."
+summary: "Qué entra y qué no en un ESP32-S3, la latencia de PSRAM vs SRAM, y código completo para correr TFLite Micro en el borde."
 tags: ["ia", "tinyml", "esp32", "tensorflow-lite", "referencia"]
 category: "referencia"
 ---
 
-Acá las cosas claras: el ecosistema actual de inteligencia artificial está obsesionado con meter modelos gigantescos en servidores que consumen el equivalente a una ciudad chica. Pero como makers, desarrolladores de hardware y entusiastas de lo *open*, nuestro campo de batalla es diferente. Trabajamos en el borde (edge), con restricciones eléctricas y físicas reales. Hoy vamos a hablar de cómo meter inteligencia real adentro de un ESP32-S3, qué podés hacer con TinyML, y cuáles son los límites físicos que no podemos ignorar.
+El ecosistema actual de inteligencia artificial está obsesionado con meter modelos gigantescos en servidores, pero el hardware embebido juega con otras reglas. Trabajamos en el borde (edge), con restricciones de memoria estrictas y latencias reales. Correr inteligencia en un ESP32-S3 es posible y muy potente, siempre que entiendas las reglas del silicio.
 
-## La realidad del silicio
+## La realidad de la memoria: SRAM vs PSRAM
 
-Empecemos derribando un mito impulsado por el marketing corporativo. Un Large Language Model (LLM) mínimo, de 1 billón de parámetros y fuertemente cuantizado, necesita alrededor de 700MB de RAM libre solo para cargarse en memoria. 
+Un LLM generativo, incluso cuantizado, no entra en un microcontrolador. Un ESP32-S3 viene típicamente con 512KB de SRAM interna y hasta 32MB de PSRAM externa por bus SPI/OPI. 
 
-Un microcontrolador tope de gama para hobbyists, como el ESP32-S3, suele venir con algo entre 8MB y 32MB de PSRAM externa. **Un LLM generativo no entra. Punto.** No importa cuánto comprimas o recortes, la física y el silicio son inflexibles. 
+Acá está el cuello de botella físico:
+- **SRAM**: Acceso en un ciclo de reloj. Rapidísima. Limitada.
+- **PSRAM**: Acceso a través del bus SPI/OPI. Introduce latencia significativa, especialmente en ráfagas de lectura aleatoria.
 
-Pero que no puedas tener una IA charlatana que te escriba poemas adentro del chip, **NO significa que no puedas tener inteligencia artificial.** Simplemente necesitamos cambiar el enfoque hacia modelos diseñados específicamente para microcontroladores. 
+Para TinyML, el modelo (los pesos) pueden vivir en Flash o PSRAM (es lectura secuencial), pero el **tensor arena** (la memoria de trabajo para las activaciones y tensores intermedios durante la inferencia) **tiene que estar en la SRAM interna** si querés latencias bajas reales para audio o sensores de alta frecuencia. Si el tensor arena cae en PSRAM, los cálculos matemáticos de las capas convolucionales se la van a pasar esperando al bus SPI, destruyendo el rendimiento de las instrucciones vectoriales (SIMD) del S3.
 
-## Qué es TinyML
+## Frameworks disponibles
 
-TinyML es exactamente eso: Machine Learning hiperoptimizado para microcontroladores y dispositivos embebidos. En lugar de modelos masivos que operan con lenguaje y contexto amplio, TinyML utiliza redes neuronales chicas, entrenadas *offline* en una computadora potente, que luego se ejecutan localmente en el chip para tareas específicas.
+El objetivo de TinyML es clasificar, detectar y predecir. Un modelo típico pesa kilobytes. Nos apoyamos en frameworks especializados:
 
-El objetivo acá no es generar texto. El objetivo es **clasificar, detectar y predecir.** 
+- **TensorFlow Lite for Microcontrollers (TFLite Micro):** El estándar multiplataforma. En ESP-IDF, aprovecha la librería ESP-NN de Espressif que acelera las redes a nivel de hardware (usando las instrucciones SIMD del core Xtensa LX7).
+- **ESP-SR (WakeNet/MultiNet):** El framework de audio oficial de Espressif. Si tu único objetivo es un *wake-word* ("Hey HIOS") o reconocimiento de voz offline básico, usá ESP-SR directamente. Está híper optimizado para el ESP32-S3 y es mucho más fácil de configurar que TFLite Micro para audio.
+- **Edge Impulse:** Plataforma que automatiza la captura, el entrenamiento y la exportación a C++.
 
-Un modelo TinyML típico pesa kilobytes, no gigabytes, y su ciclo de ejecución es tan rápido y eficiente que puede alimentarse con una batería LiPo. Para esto, nos apoyamos en frameworks especializados como:
-- **TensorFlow Lite for Microcontrollers (TFLite Micro):** El estándar de facto para correr inferencia en el borde.
-- **ESP-NN:** La librería nativa de Espressif que acelera las redes a nivel de hardware.
-- **Edge Impulse:** Una plataforma excelente para capturar datos, entrenar y empaquetar modelos TinyML directamente para C++.
+## Pipeline: de la idea al código
 
-## Qué podés hacer con TinyML en ESP32-S3
+1. **Recolectar y Entrenar:** Capturás datos (acelerómetro, audio) y entrenás en TensorFlow/Keras en la PC.
+2. **Convertir y Cuantizar a int8:** El modelo pasa a formato `.tflite` y cuantizamos los pesos a 8 bits. Perdemos algo de precisión, pero pesa 4 veces menos y corre usando las instrucciones aceleradas del chip.
+3. **Array C:** Convertimos el `.tflite` a un `const unsigned char g_model[]` en un `.h`.
+4. **Inferencia:** Alocamos tensores e invocamos el intérprete.
 
-Para que te des una idea de lo que realmente podemos lograr con la memoria y capacidad de cómputo limitadas, armé una tabla con casos de uso reales, la entrada que procesan, y los recursos que demandan:
+## Esqueleto completo de TFLite Micro
 
-| Aplicación | Input | Modelo típico | RAM necesaria |
-|------------|-------|---------------|---------------|
-| **Wake-word detection** ("Hey HIOS") | Audio I2S | CNN/RNN | ~200KB |
-| **Clasificación de audio** (aplausos, golpes, voz) | Audio | MobileNet chico | ~300KB |
-| **Detección de anomalías en sensores** | IMU/Temperatura | Autoencoder | ~50KB |
-| **Gesture recognition** (movimientos en el aire) | Acelerómetro | Dense/CNN | ~100KB |
+Este es el código base para inicializar un modelo y correr inferencia en C++ (ESP-IDF/Arduino). Nada de magia negra, este es el loop clásico:
 
-Como ves, todos estos modelos entran cómodamente en la SRAM interna o en la PSRAM de un ESP32-S3.
+```cpp
+#include "tensorflow/lite/micro/all_ops_resolver.h"
+#include "tensorflow/lite/micro/micro_interpreter.h"
+#include "tensorflow/lite/micro/system_setup.h"
+#include "tensorflow/lite/schema/schema_generated.h"
+// Tu modelo exportado a un array de bytes
+#include "my_model.h"
 
-## El ESP32-S3 como plataforma TinyML
+// Globals
+const tflite::Model* model = nullptr;
+tflite::MicroInterpreter* interpreter = nullptr;
+TfLiteTensor* input = nullptr;
+TfLiteTensor* output = nullptr;
 
-Si bien el ESP32 clásico es capaz de correr algunos modelos muy básicos, el ESP32-S3 fue diseñado con la IA en mente. Hay tres factores que lo hacen ideal para TinyML:
+// Tensor Arena: MUST live in SRAM para latencia baja.
+// Ajustar el tamaño (kTensorArenaSize) según el requerimiento del modelo.
+const int kTensorArenaSize = 10 * 1024;
+// En ESP32, forzamos que se asigne en memoria estática interna (SRAM)
+uint8_t tensor_arena[kTensorArenaSize] __attribute__((aligned(16)));
 
-1. **Instrucciones vectoriales (SIMD):** El core Xtensa LX7 del S3 tiene un set de instrucciones diseñadas para acelerar operaciones de vectores y matrices (esencial para los tensores de una red neuronal).
-2. **ESP-NN:** Espressif ofrece esta librería en ESP-IDF que aprovecha las instrucciones SIMD para optimizar drásticamente el cálculo de capas comunes (conv2d, depthwise, fully connected). TFLite Micro ya viene integrado con estas optimizaciones en el framework.
-3. **PSRAM masiva y Dual Core:** Con módulos que traen de 8 a 32MB de PSRAM, la memoria dejó de ser un cuello de botella para modelos de clasificación. Además, al ser dual core, podés dedicar el Core 1 exclusivamente a la inferencia (que es bloqueante e intensiva) y dejar el Core 0 manejando WiFi, Bluetooth y el resto del firmware sin interrupciones.
+void setup() {
+  tflite::InitializeTarget();
 
-## Pipeline: de la idea al modelo corriendo
+  // 1. Cargar el modelo
+  model = tflite::GetModel(g_model);
+  if (model->version() != TFLITE_SCHEMA_VERSION) {
+    // Error de versión incompatible
+    return;
+  }
 
-Correr IA en un microcontrolador requiere un flujo de trabajo distinto al desarrollo de software tradicional. Todo se divide en dos fases: el entrenamiento (en la PC) y la inferencia (en el ESP32).
+  // 2. Cargar operaciones. AllOpsResolver carga todas; en prod, usá MicroMutableOpResolver
+  // para cargar solo las necesarias y ahorrar memoria flash/SRAM.
+  static tflite::AllOpsResolver resolver;
 
-1. **Recolectar datos:** Capturás datos reales de tus sensores o micrófonos. Si querés detectar gestos, tenés que grabar cientos de movimientos con el acelerómetro conectado al ESP32.
-2. **Entrenar el modelo en la PC:** Usás TensorFlow/Keras o PyTorch para diseñar y entrenar la red con tu dataset. 
-3. **Convertir a TFLite:** El modelo `.h5` o `.pb` se exporta al formato plano `.tflite`.
-4. **Cuantizar a int8:** Este paso es crítico (*post-training quantization*). Convertimos los pesos de la red de números flotantes (32 bits) a enteros (8 bits). Perdemos algo de precisión, pero el modelo pesa 4 veces menos y corre mucho más rápido.
-5. **Generar el array en C:** Un microcontrolador no tiene sistema de archivos por defecto. Usamos herramientas como `xxd` o `tflite_model_to_header` para convertir el archivo `.tflite` en un inmenso `const unsigned char array[]` en un archivo `.h`.
-6. **Integrar con TFLite Micro:** Incluimos el modelo en el firmware de ESP-IDF o Arduino.
-7. **Correr inferencia:** En el loop principal, leemos el sensor, alimentamos el tensor de entrada y corremos la inferencia.
+  // 3. Construir el intérprete
+  static tflite::MicroInterpreter static_interpreter(
+      model, resolver, tensor_arena, kTensorArenaSize);
+  interpreter = &static_interpreter;
 
-## Ejemplo mínimo: wake-word detection
+  // 4. Alocar memoria para los tensores
+  TfLiteStatus allocate_status = interpreter->AllocateTensors();
+  if (allocate_status != kTfLiteOk) {
+    // Falla si kTensorArenaSize es muy chico
+    return;
+  }
 
-Aunque un código completo ocuparía todo este artículo, el flujo lógico para algo como detectar "Hey HIOS" (wake-word) es el siguiente:
+  // Punteros a los tensores de entrada/salida
+  input = interpreter->input(0);
+  output = interpreter->output(0);
+}
 
-Primero, configurás un micrófono I2S (por ejemplo, el INMP441) para capturar audio continuo en un buffer circular.
-El audio crudo no se lo pasás directo a la red. Hacés un preprocesamiento: típicamente una extracción de características calculando un *Mel spectrogram* o un *MFCC* (Mel-frequency cepstral coefficients) usando transformadas de Fourier en el mismo chip. Esto convierte 1 segundo de audio en una pequeña matriz 2D.
-Esa matriz es el tensor de entrada para TFLite Micro. Llamás al *interpreter* para que evalúe los datos y te devuelve un tensor de salida con probabilidades. Si la probabilidad de "Hey HIOS" supera el 85%, el ESP32 despierta y ejecuta la acción deseada.
+void loop() {
+  // 5. Cargar datos al tensor de entrada (ejemplo: float32, o int8 si está cuantizado)
+  // Acá copiás los datos de tu sensor/micrófono post-procesados
+  for (int i = 0; i < input->bytes / sizeof(float); ++i) {
+      input->data.f[i] = readSensorValue(i); 
+  }
 
-## La arquitectura "cerebro delegado"
+  // 6. Correr inferencia
+  TfLiteStatus invoke_status = interpreter->Invoke();
+  if (invoke_status != kTfLiteOk) {
+    // Falló la ejecución
+    return;
+  }
 
-Acá es donde las cosas se ponen realmente interesantes para proyectos como nuestro ecosistema open hardware en HIOS. 
+  // 7. Leer salida
+  float prediction = output->data.f[0];
+  if (prediction > 0.8) {
+      // Actuar sobre el resultado
+  }
+}
+```
 
-Dado que el ESP32-S3 no puede correr LLMs pero es excelente para interactuar con el mundo físico (I/O) y TinyML, podemos usar un patrón de arquitectura que yo llamo **"Cerebro Delegado"**.
+## Arquitectura de cerebro delegado
 
-- **El ESP32-S3 actúa como el sistema nervioso periférico:** Escucha comandos con TinyML (wake-word), lee sensores, maneja pantallas y acciona relés o motores.
-- **Una PC local actúa como el cerebro:** Corre un LLM complejo (como Llama 3) usando herramientas open-source como `llama.cpp` u Ollama en nuestra red local.
+Un ESP32-S3 no puede correr LLMs, pero es excelente en I/O y TinyML. Esto habilita la arquitectura de "cerebro delegado": el ESP32 actúa como sistema nervioso periférico. Corre un modelo TinyML liviano para detectar un wake-word. Una vez activado, recolecta audio o datos y los despacha por WiFi a una PC local (el cerebro) corriendo Llama u Ollama. 
 
-El flujo es simple: el ESP32 detecta localmente por TinyML que alguien dijo la wake-word. Empieza a grabar audio o captura texto, lo manda por WiFi a la PC local, la PC "piensa" y procesa el requerimiento, y devuelve el resultado al ESP32 para que hable o actúe. 
+Si la red falla, el ESP32 sigue funcionando con sus modelos locales (graceful degradation), sin quedarse como un pisapapeles.
 
-Lo mejor de esta arquitectura es que **lo local-first se mantiene intacto**. Si la PC de la casa está apagada o se cayó el WiFi, el ESP32 no queda como un pisapapeles inútil. Sigue funcionando con su TinyML interno para tareas básicas, mostrando un graceful degradation (degradación elegante) del sistema. Imaginate el macropad HIOS pudiendo ejecutar atajos y macros detectando gestos simples, y conectándose al cerebro principal solo cuando le pedís tareas de análisis complejas.
+## Trampas comunes
 
-## Limitaciones honestas
+- **Tensor Arena en PSRAM:** Usar `malloc` para el `tensor_arena` en un ESP32 configurado para usar PSRAM externa. La latencia de la inferencia se dispara exponencialmente. Fuerce la SRAM estática.
+- **MicroMutableOpResolver vs AllOpsResolver:** Usar `AllOpsResolver` arrastra todo el framework de TFLite a tu binario y te infla el tamaño de la flash y SRAM. Definí solo los OPs que tu modelo necesita con `MicroMutableOpResolver`.
+- **Cuelgue de Watchdog por Inferencia:** El método `Invoke()` es fuertemente intensivo en CPU y bloquea. Si un modelo es pesado y toma más de algunos segundos, el Task Watchdog de FreeRTOS va a reiniciar el chip. Pineá la task de inferencia en el Core 1 y considerá llamar a `vTaskDelay` si el modelo permite procesamiento por partes, o modificá el timeout del watchdog.
+- **Cuantización que arruina el modelo:** Pasar de float32 a int8 sin dataset de calibración representativo va a resultar en un modelo que corre rápido pero predice cualquier cosa.
 
-Para cerrar, como siempre en HI Open Systems, cero humo. Estas son las limitaciones reales con las que te vas a encontrar:
+## Chuleta
 
-- **No vas a tener un chat filosófico en un ESP32.** La inteligencia es reactiva y clasificatoria, no generativa.
-- **La latencia es un factor.** Incluso con aceleración SIMD, un modelo de clasificación de audio chico puede tardar 50-200ms en correr la inferencia. Es aceptable para wake-words, pero no para procesamiento en streaming de video o señales de muy alta frecuencia.
-- **Olvidate de entrenar en el chip.** El *on-device training* (aprender cosas nuevas en caliente) es un campo en investigación y hoy en día no es viable en estos micros. Siempre entrenás en la PC y desplegás el modelo congelado.
-
-El TinyML en el ESP32-S3 no viene a reemplazar a los servidores de IA, viene a democratizar la computación cognitiva y ponerla donde tiene que estar: en tus manos, sin intermediarios, sin nubes, y sin suscripciones.
+| Tarea / Problema | Solución Recomendada |
+|---|---|
+| Reconocimiento de Wake-word ("Hey HIOS") | ESP-SR (WakeNet) directo |
+| Clasificación de movimiento/vibración | TFLite Micro + Edge Impulse |
+| Latencia alta en inferencia | Mover `tensor_arena` a SRAM estática |
+| Falta memoria de programa (Flash/SRAM) | Reemplazar `AllOpsResolver` por `MicroMutableOpResolver` |
+| Watchdog Resets durante `Invoke()` | Ejecutar en task del Core 1, aumentar Timeout del WDT |

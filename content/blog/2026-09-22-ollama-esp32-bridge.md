@@ -2,167 +2,173 @@
 title: "Conectar un ESP32 a un LLM local: el bridge WiFi"
 date: "2026-09-24"
 lang: "es"
-summary: "Tutorial paso a paso: levantar Ollama en la PC, hacer POST desde un ESP32 por WiFi, y recibir respuestas de una IA sin tocar una sola nube."
+summary: "Levantar Ollama en la PC, hacer POST desde un ESP32 en una task de FreeRTOS sin bloquear el loop, parsear JSON sin overflow y usar un botón físico para hablar con IA local."
 tags: ["ia", "esp32", "ollama", "local-first", "tutorial"]
 category: "devlog"
 ---
 
-Ayer hablamos de la arquitectura del "cerebro delegado", donde usamos un microcontrolador como el sistema nervioso (interfaces físicas) y una PC como el cerebro principal para tareas pesadas de inteligencia artificial. Hoy vamos a ensuciarnos las manos y hacerlo realidad.
+Ayer hablamos del "cerebro delegado": el ESP32 como sistema nervioso (interfaces físicas) y la PC como cerebro principal para la IA pesada. Hoy vamos a escribir el firmware y armar el circuito para conectarlos por WiFi, usando Ollama localmente y sin tocar una sola nube propietaria.
 
-En este tutorial vamos a conectar un ESP32 directamente a un LLM (Large Language Model) corriendo localmente en tu computadora. Nada de OpenAI, nada de nubes propietarias, nada de pagar por tokens. Todo sucede dentro de tu red WiFi local.
+## Paso 1: Ollama expuesto en red local
 
-## La idea
+Por defecto, Ollama solo escucha en `localhost` (127.0.0.1). Para que el ESP32 lo vea, hay que forzarlo a escuchar en `0.0.0.0`.
 
-El concepto es directo:
-1. Tenés un ESP32 con conexión WiFi.
-2. Tenés una PC en tu casa corriendo un LLM potente usando Ollama.
-3. El ESP32 le manda una pregunta (prompt) al LLM a través de una petición HTTP POST.
-4. Ollama procesa, genera la respuesta y se la devuelve al ESP32.
-5. El ESP32 la parsea y la muestra en el puerto Serial (o en una pantallita).
+- **En Windows (Servicio del System Tray):** Hacer click derecho en el ícono de Ollama en la barra de tareas y elegir "Quit". Luego, abrí variables de entorno del sistema, agregá una nueva variable de usuario llamada `OLLAMA_HOST` con el valor `0.0.0.0`. Volvé a abrir Ollama desde el menú inicio.
+- **En Linux/macOS:**
+  ```bash
+  OLLAMA_HOST=0.0.0.0 ollama serve
+  ```
 
-La IA "piensa" en tu red local, de manera privada y segura.
+Bajate un modelo rápido:
+```bash
+ollama pull llama3.1:8b
+```
 
-## Paso 1: Instalar Ollama en la PC
+Averiguá tu IP local (ej. `192.168.1.50`) y probá desde otro equipo (o celular) con `curl`:
+```bash
+curl http://192.168.1.50:11434/api/chat -d '{"model": "llama3.1:8b", "messages": [{"role": "user", "content": "Hola"}], "stream": false}'
+```
 
-Ollama es probablemente la mejor herramienta actual para correr modelos grandes localmente sin volverse loco con configuraciones y dependencias. 
+Ojo acá: usamos `/api/chat` en lugar de `/api/generate`. La ruta de generate de Ollama devuelve un array `context` inmenso de ~15KB que destruye cualquier buffer JSON de Arduino. Usar `/api/chat` mantiene la respuesta limpia.
 
-1. Descargá e instalá Ollama desde [ollama.com](https://ollama.com).
-2. Abrí tu terminal y bajate un modelo. Vamos a usar `llama3.1:8b-instruct-q4_K_M` que es un excelente balance entre tamaño y capacidad de razonamiento:
-   ```bash
-   ollama pull llama3.1:8b
-   ```
-3. Por defecto, el servidor de Ollama solo escucha en `localhost` (127.0.0.1). Para que nuestro ESP32 pueda acceder a través del WiFi local, tenemos que decirle que escuche en todas las interfaces de red. Frená el servicio si está corriendo, y levantalo así:
-   ```bash
-   # En Linux/macOS:
-   OLLAMA_HOST=0.0.0.0 ollama serve
-   
-   # En Windows (Powershell):
-   $env:OLLAMA_HOST="0.0.0.0"
-   ollama serve
-   ```
-   *(Asegurate de que el firewall de tu PC permita conexiones entrantes al puerto 11434).*
-4. **Test rápido:** Averiguá la IP local de tu PC (ejemplo: `192.168.1.50`). En otra computadora o en el celular conectado al mismo WiFi, probá esto:
-   ```bash
-   curl http://192.168.1.50:11434/api/generate -d '{"model": "llama3.1:8b", "prompt": "Hola", "stream": false}'
-   ```
-   Si te devuelve un JSON con una respuesta, el cerebro está online y listo para escuchar al ESP32.
+## Paso 2: Hardware mínimo
 
-## Paso 2: El código del ESP32
+Para que no sea solo mandar texto vacío al aire, armemos un circuito básico. Un botón en el pin 4 (con pull-up interno) para gatillar la consulta, y un LED (o el del pin 2) para señalizar que el modelo está "pensando".
 
-Para que el ESP32 hable con Ollama vamos a usar el entorno de Arduino con las librerías nativas `WiFi.h` y `HTTPClient.h`. También vas a necesitar instalar la librería **ArduinoJson** (desde el Library Manager) para armar y desarmar los paquetes de datos.
+- **Botón:** Entre GPIO 4 y GND.
+- **LED:** GPIO 2 (o LED onboard).
 
-Acá tenés el sketch completo, funcional y comentado:
+## Paso 3: El Firmware no bloqueante
+
+Acá está el error de novato clásico: tirar el `HTTPClient.POST()` directamente en el `loop()`. Un LLM puede tardar 10 a 30 segundos en responder. Si bloqueás el `loop()` todo ese tiempo, no podés leer botones, actualizar pantallas y corrés el riesgo de comerte un watchdog reset.
+
+La solución es FreeRTOS: mandamos el POST en una **task separada pineada al Core 0** (junto con el stack de WiFi) y nos comunicamos con la task principal mediante variables seguras (o colas). En el Core 1, el `loop()` sigue girando rapidísimo leyendo el botón a pelo o actualizando una UI. 
+
+Librerías a instalar: **ArduinoJson v7** (usamos la sintaxis nueva `JsonDocument`, sin el `StaticJsonDocument` obsoleto).
 
 ```cpp
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 
-// Reemplazar con los datos de tu red
 const char* ssid = "TU_WIFI";
 const char* password = "TU_PASSWORD";
+const char* ollama_url = "http://192.168.1.50:11434/api/chat";
 
-// Reemplazar con la IP local de la PC corriendo Ollama
-const char* ollama_url = "http://192.168.1.50:11434/api/generate";
+const int BTN_PIN = 4;
+const int LED_PIN = 2;
+
+// Variables de estado atómicas o protegidas
+volatile bool requestPending = false;
+String promptQueue = "";
 
 void setup() {
   Serial.begin(115200);
-  delay(1000);
-  
-  // 1. Conectar a WiFi
-  Serial.printf("\nConectando a %s...\n", ssid);
+  pinMode(BTN_PIN, INPUT_PULLUP);
+  pinMode(LED_PIN, OUTPUT);
+  digitalWrite(LED_PIN, LOW);
+
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
-  Serial.println("\nConectado! IP: " + WiFi.localIP().toString());
-  
-  // Hacer la pregunta una vez en el setup para la prueba
-  askOllama("En una oración, explicame qué es el hardware open source.");
+  Serial.println("\nWiFi OK");
+
+  // Creamos la task de red en el Core 0
+  xTaskCreatePinnedToCore(
+    networkTask,      // Función
+    "OllamaTask",     // Nombre
+    8192,             // Stack size (8KB mínimo para JSON y HTTP)
+    NULL,             // Parámetros
+    1,                // Prioridad
+    NULL,             // Handle
+    0                 // Core 0 (PRO_CPU, donde corre el WiFi)
+  );
 }
 
 void loop() {
-  // En un caso real, acá leerías sensores o botones
-  // para disparar consultas a Ollama.
+  // El Core 1 queda libre y reactivo a los milisegundos
+  
+  // Debounce ultra básico
+  static uint32_t lastPress = 0;
+  if (digitalRead(BTN_PIN) == LOW && millis() - lastPress > 1000 && !requestPending) {
+    promptQueue = "Explicame FreeRTOS en una sola frase.";
+    requestPending = true;
+    lastPress = millis();
+    Serial.println("Botón presionado. Solicitud encolada.");
+  }
+  
+  // Podemos parpadear un LED o actualizar un OLED acá sin interrupciones
+  if (requestPending) {
+    digitalWrite(LED_PIN, (millis() % 500 < 250) ? HIGH : LOW);
+  } else {
+    digitalWrite(LED_PIN, LOW);
+  }
+
+  delay(10); // Ceder CPU a la IDLE task del Core 1
 }
 
-void askOllama(String promptText) {
-  if (WiFi.status() != WL_CONNECTED) {
-    Serial.println("Error: WiFi desconectado.");
-    return;
-  }
-  
-  Serial.println("\n--- Enviando pregunta a Ollama ---");
-  Serial.println("Pregunta: " + promptText);
-  
-  HTTPClient http;
-  http.begin(ollama_url);
-  http.addHeader("Content-Type", "application/json");
-  // Aumentamos el timeout a 30 segundos porque los LLMs tardan en pensar
-  http.setTimeout(30000); 
-  
-  // 2. Armar el payload JSON usando ArduinoJson
-  StaticJsonDocument<512> doc;
-  doc["model"] = "llama3.1:8b";
-  doc["prompt"] = promptText;
-  doc["stream"] = false; // Queremos la respuesta entera al final, no streameada
-  
-  String requestBody;
-  serializeJson(doc, requestBody);
-  
-  // 3. Hacer HTTP POST
-  Serial.println("Procesando... (el modelo está pensando)");
-  int httpResponseCode = http.POST(requestBody);
-  
-  if (httpResponseCode > 0) {
-    // 4. Parsear la respuesta
-    String response = http.getString();
-    
-    StaticJsonDocument<2048> responseDoc;
-    DeserializationError error = deserializeJson(responseDoc, response);
-    
-    if (!error) {
-      // 5. Imprimir el resultado
-      String answer = responseDoc["response"].as<String>();
-      Serial.println("\n--- Respuesta de Ollama ---");
-      Serial.println(answer);
-      Serial.println("---------------------------");
-    } else {
-      Serial.print("Error al parsear JSON: ");
-      Serial.println(error.c_str());
+// Esta task vive en el Core 0, bloquea tranquilamente esperando el HTTP
+void networkTask(void *param) {
+  for(;;) {
+    if (requestPending && WiFi.status() == WL_CONNECTED) {
+      Serial.println("\n--- Enviando POST a Ollama ---");
+      
+      HTTPClient http;
+      http.begin(ollama_url);
+      http.addHeader("Content-Type", "application/json");
+      http.setTimeout(30000); // 30 segundos timeout
+      
+      // Armamos el payload con ArduinoJson v7
+      JsonDocument doc;
+      doc["model"] = "llama3.1:8b";
+      doc["stream"] = false;
+      
+      // Estructura de array para /api/chat
+      JsonArray messages = doc["messages"].to<JsonArray>();
+      JsonObject msg = messages.add<JsonObject>();
+      msg["role"] = "user";
+      msg["content"] = promptQueue;
+      
+      String requestBody;
+      serializeJson(doc, requestBody);
+      
+      int httpCode = http.POST(requestBody);
+      
+      if (httpCode > 0) {
+        String payload = http.getString();
+        
+        JsonDocument responseDoc;
+        DeserializationError error = deserializeJson(responseDoc, payload);
+        
+        if (!error) {
+          String answer = responseDoc["message"]["content"].as<String>();
+          Serial.println("Respuesta del Cerebro:");
+          Serial.println(answer);
+        } else {
+          Serial.println("Error JSON parse: " + String(error.c_str()));
+        }
+      } else {
+        Serial.println("Error HTTP: " + http.errorToString(httpCode));
+      }
+      
+      http.end();
+      requestPending = false; 
     }
-  } else {
-    Serial.print("Error en la petición HTTP: ");
-    Serial.println(httpResponseCode);
+    
+    // Si no hay requests, esperamos sin comer CPU (cedemos al Core 0)
+    vTaskDelay(pdMS_TO_TICKS(100)); 
   }
-  
-  http.end();
 }
 ```
 
-## Paso 3: Ponerlo a prueba
+## Resiliencia ante todo
 
-Compilá el código y subilo a tu ESP32. Abrí el Serial Monitor (a 115200 baudios). Deberías ver cómo se conecta al WiFi, manda la petición y luego hay una pausa de algunos segundos. 
+Si la PC con Ollama está apagada, el request falla por timeout. Gracias a que la llamada HTTP está en `networkTask`, el botón de hardware sigue leyendo su estado de forma inmediata y el sistema nunca se clava (graceful degradation). Si le pusieras un display, seguiría mostrando animaciones de UI fluidas. Esta separación de responsabilidades (UI/Hardware vs I/O Lento de Red) es vital.
 
-En ese momento, mirá los recursos de tu PC (el administrador de tareas): vas a ver picos en la GPU o CPU. Ollama está procesando el texto. De pronto, la respuesta aparece mágicamente en el monitor serial de tu placa. 
+## Trampas comunes
 
-La latencia exacta depende de tu hardware (si tenés placa de video dedicada en la PC vuela, si lo corrés en CPU tarda más) y del modelo que hayas elegido.
-
-## Lo local-first se mantiene
-
-Algo vital en nuestra filosofía de diseño en HI Open Systems: **el hardware nunca debe quedar inútil si la IA no está disponible.**
-
-Fijate que en el código agregamos un chequeo de WiFi y manejamos los errores HTTP. Si la PC está apagada o el servidor de Ollama crashea, el ESP32 recibe un error, reporta por Serial y su bucle principal (`loop()`) sigue ejecutándose sin bloquearse. 
-
-La IA se convierte en una capa opcional que enriquece al dispositivo, nunca un requisito estructural para que el aparato funcione de base. Igual que hacemos con el *companion daemon* del macropad.
-
-## Ideas para expandir
-
-Esto es solo la base. Con este bridge armadito, se te abre un mundo de proyectos súper interesantes:
-
-- **Comandos de voz completos:** Juntar el TinyML del que hablamos ayer (para detectar el *wake-word*), grabar audio, mandarlo al LLM (usando Whisper local o text-to-speech) y recibir la respuesta para imprimirla en una pantallita OLED.
-- **El botón del pánico AI:** Un botón físico enorme en tu escritorio (fácilmente integrable con el macropad HIOS) que cuando lo apretás, manda la última línea de error de tu PC al ESP32, que consulta al LLM y muestra la solución.
-- **Análisis de sensores on-the-fly:** Enviar lecturas de temperatura, humedad y luz ambiente de una habitación a Ollama, y pedirle: *"Con estos datos crudos, diagnosticá si la habitación necesita ventilación y devolvé solo la respuesta 'SI' o 'NO'"*.
-
-Las combinaciones son infinitas cuando tenés acceso irrestricto al cerebro de la máquina. ¡Que lo disfruten y a hackear en local!
+- **Usar `/api/generate` de Ollama:** Te devuelve el array infinito `context`. Un buffer JSON en ESP32 va a sufrir un overflow al parsearlo, cortando el mensaje o crasheando. `/api/chat` no lo manda.
+- **Stack size en `xTaskCreate`:** Procesar HTTPS o JSON largos requiere memoria. Si le pasás `1024` bytes de stack, te comés un Stack Overflow en el Core 0 apenas hagas el POST. Arrancá en 8KB.
+- **No liberar la request:** Si ocurre un error de red y olvidás resetear la bandera (`requestPending = false`), el loop se queda parpadeando el LED para siempre y no podés mandar más mensajes. Asegurate de limpiar el estado al final de la task.

@@ -4,41 +4,91 @@ date: "2026-09-20"
 lang: "es"
 summary: "Por qué la IA corporativa profundiza la asimetría de poder, y qué tiene que ver el open hardware con la única defensa real."
 tags: ["ia", "opinión", "open-source", "democratización"]
-category: "devlog"
+category: "referencia"
 ---
 
-Hay algo profundamente frustrante en estrellarse contra un muro automatizado. No hablo de un error 404, ni de un servidor caído. Hablo de cuando una corporación decide reemplazar el criterio humano por un modelo probabilístico optimizado, pura y exclusivamente, para reducir costos. Hablo de la asimetría de poder llevada al extremo tecnológico.
+Hay algo profundamente frustrante en estrellarse contra un muro automatizado. Hace poco me pasó con un banco: salto de "movimiento sospechoso", fondos bloqueados un viernes a la tarde, y la única vía de contacto era un chatbot "inteligente" entrenado para absorber insultos y no resolver nada. El modelo no tiene autoridad transaccional; está ahí de escudo.
 
-Hace poco me pasó. Un banco —cuyo nombre no voy a mencionar para no darle entidad a su inoperancia— decidió que una transferencia mía era "sospechosa". Era viernes, tenía una urgencia real, y necesitaba mi propia plata. El sistema automatizado saltó, bloqueó los fondos y me mandó a hablar con su flamante chatbot "inteligente". 
+Es la asimetría de poder llevada al extremo. Cuando la corporación usa IA para blindarse del cliente, recorta costos pero te traslada todo el desgaste a vos. Vos contra un loop infinito de disculpas sintéticas. 
 
-¿La respuesta? Un loop infinito de disculpas sintéticas. "Entiendo tu frustración, Juan. Estamos procesando tu caso". Mentira. No entienden mi frustración porque no tienen sistema nervioso. No están procesando nada porque el modelo no tiene la autoridad para destrabar el proceso. Su único propósito es hacer de escudo, absorber mi enojo y ganar tiempo para que el banco no tenga que pagar el sueldo de un representante de atención al cliente.
+No me voy a poner a filosofar sobre la tiranía algorítmica. El punto es qué hacemos al respecto a nivel técnico. En HIOS, la respuesta es el hardware abierto y la computación offline. No vas a tener un chat filosófico en un ESP32, pero sí podés tener un sistema local que no dependa de que un servidor en la nube te dé permiso para prender la luz o levantar una persiana.
 
-La sensación de impotencia es brutal. En ese momento, te das cuenta de que el "poderoso" (la institución financiera) puede arruinarte el día, retener tus ahorros y empujarte a la desesperación, todo sin enfrentar ninguna consecuencia. No podés gritarle al bot. No podés razonar con él. Sos vos contra un muro de texto generado predictivamente.
+## Nube corporativa vs. Stack Local-First
 
-## La paradoja de la seguridad
+La diferencia no es solo ideológica, es de arquitectura.
 
-Cada vez que se lanza un nuevo modelo, las corporaciones se llenan la boca hablando de "guardarraíles", alineación y seguridad. "Tenemos que proteger a los usuarios de los peligros de la IA". 
+| Aspecto | Nube Corporativa (Vendor Lock-in) | Stack Local-First (HIOS) |
+| :--- | :--- | :--- |
+| **Toma de decisiones** | Modelo de caja negra remoto. | Lógica de control en el microcontrolador o gateway local. |
+| **Latencia** | Depende del RTT a internet y carga del modelo. | Milisegundos. Ejecución determinista a pelo. |
+| **Disponibilidad** | Si te cortan la API, tu hardware es un pisapapeles. | Offline por diseño. Sigue andando aunque se caiga el ISP. |
+| **Auditoría** | "Confiá en nosotros". | Firmware auditable. Compilás vos mismo el `.bin`. |
 
-Pero seamos honestos: esos guardarraíles solo frenan al usuario de a pie. 
+## Código: Ejecución determinista sin depender de la nube
 
-A los actores con recursos reales —estados, grandes corporaciones, grupos de cibercrimen o extremistas— no los vas a frenar con un filtro que le impide a ChatGPT decir malas palabras. Esos grupos ya tienen clústeres inmensos de GPUs, tienen el talento y, lo más importante, ya aplicaron la ley de Murphy: si había un momento y una forma de entrenar modelos sin restricciones para sus propios fines, ya lo hicieron.
+Si vas a armar algo crítico, el enemigo son los loops que esperan girando (polling) o los requests HTTP bloqueantes a una IA para tomar una decisión. En un sistema embebido como el ESP32 con FreeRTOS, todo tiene que ser asíncrono y local.
 
-Esta narrativa me recuerda muchísimo a la "Guerra del Cifrado" (Crypto Wars) de los años 90. En aquella época, los gobiernos (especialmente el de EE. UU.) querían prohibir la criptografía fuerte para los ciudadanos, argumentando que solo servía para proteger a terroristas y criminales. Querían backdoors en cada algoritmo. ¿Quiénes iban a quedar desprotegidos? Los usuarios comunes. Los criminales iban a usar su propia criptografía matemática de todos modos. Hoy, la historia rima: las restricciones artificiales en la IA solo le cortan las alas al desarrollador independiente y al usuario común, mientras los grandes jugadores operan sin límites.
+Acá un ejemplo básico de cómo procesar un comando local por cola, sin bloquear el micro si la red se pone lenta o si el servidor externo (o gateway) no responde.
 
-## "Democratizar la IA"
+```c
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+#include <freertos/queue.h>
 
-Escuchamos la frase "democratizar la Inteligencia Artificial" tantas veces que ya parece un chiste. ¿De qué democratización hablan cuando la implementación promedio consiste en precarizar la atención al cliente, achicar gastos y trasladar toda la fricción al usuario final?
+// Definimos la cola para comandos locales
+QueueHandle_t localCommandQueue;
 
-Si una herramienta amplifica la capacidad técnica de una persona para crear, investigar o entender el mundo, estamos hablando de empoderamiento. Si la herramienta se usa como barrera para que una empresa evite responsabilidades legales y financieras frente a sus propios clientes, es simplemente tiranía algorítmica.
+typedef struct {
+    uint8_t command_id;
+    uint32_t payload;
+} LocalCommand;
 
-La verdadera democratización no viene de los jardines vallados corporativos. No viene de APIs pagas donde te pueden revocar el acceso mañana porque cambiaste una coma en los Terms of Service. Viene del ecosistema de código abierto. Viene de los _open weights_, de modelos que podés correr en tu propia máquina (incluso cuantizados en hardware modesto). Viene del open hardware.
+// Tarea que procesa los comandos offline. Nunca bloquea el main loop.
+void vCommandTask(void *pvParameters) {
+    LocalCommand cmd;
+    for(;;) {
+        // Esperamos un comando en la cola (portMAX_DELAY es seguro acá porque es una tarea dedicada)
+        if (xQueueReceive(localCommandQueue, &cmd, portMAX_DELAY) == pdPASS) {
+            // Ejecución determinista offline
+            if (cmd.command_id == 1) {
+                // Activar relé, sin preguntar a ningún LLM
+                printf("Ejecutando comando crítico localmente: %lu\n", cmd.payload);
+            }
+        }
+    }
+}
 
-## Construir nuestras propias vías
+void setup() {
+    localCommandQueue = xQueueCreate(10, sizeof(LocalCommand));
+    
+    // Asignamos core 1 para la lógica local y core 0 para el stack de red
+    xTaskCreatePinnedToCore(
+        vCommandTask,
+        "CommandTask",
+        2048,
+        NULL,
+        1,
+        NULL,
+        1
+    );
+}
 
-Y esto me lleva al fondo de la cuestión. Es muy fácil enojarse con el sistema. Es muy fácil escribir un rant en Twitter (o donde sea que escribamos hoy) y tirar piedras al tren que pasa.
+void loop() {
+    // El main loop queda libre. Te comés un reset si ponés un delay() largo acá.
+    vTaskDelay(pdMS_TO_TICKS(1000)); 
+}
+```
 
-Pero la mejor respuesta frente a la asimetría de poder no es tirarle piedras al tren; es construir las vías propias.
+## Trampas comunes
 
-Por eso existe HIOS. Por eso insistimos en hardware abierto, documentado y replicable. No somos ingenuos, sabemos que no vamos a desbancar a las grandes corporaciones de un día para el otro. Pero necesitamos herramientas, placas, sistemas embebidos y plataformas que no dependan de que un servidor en Silicon Valley nos dé permiso para existir.
+- **Bloquear el micro por un request HTTP:** Nunca pongas la toma de decisión crítica atada a un timeout de red. Usá FreeRTOS, colas y tareas separadas.
+- **Creer que el vendor lock-in no te va a tocar:** "Es solo una API de 2 centavos". Ojo: cuando te cambien los Terms of Service, tus placas se apagan.
+- **Confundir inteligencia con control:** Que un chatbot genere texto lindo no significa que tenga permisos en el backend bancario. Es solo un proxy.
 
-Si la corporación usa la IA para construir muros más altos, nosotros tenemos que usar la tecnología abierta para construir escaleras más eficientes. Es la única defensa real.
+## Chuleta: Soberanía de datos
+
+| Necesidad | Enfoque corporativo | Enfoque Open/Local |
+| :--- | :--- | :--- |
+| Atención al cliente | Chatbot sin permisos reales | Canales con operadores humanos |
+| Automatización de hardware | API en la nube (AWS/Tuya) | MQTT local + Home Assistant + ESP32 |
+| Ejecución de inferencias | APIs de pago por token | Modelos locales cuantizados / LLMs en gateways locales |

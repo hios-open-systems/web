@@ -2,73 +2,80 @@
 title: "Una persona hace todo: la paradoja de la democratización"
 date: "2026-09-20"
 lang: "es"
-summary: "Antes esta web daba trabajo a diez personas. Hoy la hago solo. Las herramientas se democratizaron, pero los puestos desaparecieron. ¿Es progreso o destrucción?"
+summary: "Antes un proyecto web y de hardware requería 7 roles. Hoy la hago solo. Pero la IA junior te llena de deuda técnica y alucinaciones en C."
 tags: ["ia", "opinión", "democratización", "web", "trabajo"]
-category: "devlog"
+category: "referencia"
 ---
 
-Voy a plantear algo que me contradice a mí mismo, y no me importa.
+Esta plataforma (HIOS) tiene internacionalización, guías interactivas, workbench embebido, auth y proyectos de hardware. Hace diez años, esto requería 7 personas: UX, frontend, backend, DevOps, QA, content y project manager. 
 
-Esta plataforma — la que estás leyendo ahora — tiene internacionalización en cuatro idiomas, un sistema de blog con categorías y manifest prebuild, páginas de proyectos de hardware con galería de fotos y assets técnicos descargables, guías de cableado interactivas, un workbench con más de treinta herramientas, calculadoras de electrónica, un compositor de chiptune, snippets con base de datos, autenticación, un sistema de pinouts... La lista sigue.
+Hoy la hago yo solo. Herramientas democratizadas, frameworks modernos y modelos de lenguaje que te escupen código a demanda. Pero la realidad técnica del "solo dev" usando IA no es un camino de rosas. El verdadero lado B no es la filosofía sobre los puestos de trabajo perdidos; es la montaña de deuda técnica y el agotamiento cognitivo de ser el revisor permanente de un programador junior infinito que, además, es un mentiroso compulsivo en C.
 
-La hago yo solo.
+## El costo real: Fatiga cognitiva y alucinaciones
 
-## Lo que esto hubiera requerido antes
+Cuando le pedís a un LLM que te haga un componente de React, zafa. Cuando le pedís que te arme una tarea en FreeRTOS para un ESP32 interactuando con un sensor I2C, te tira métodos que no existen. 
 
-No hace tanto — cinco, diez años — un proyecto web de esta escala necesitaba un equipo. Mínimo. Estoy hablando de:
+El modelo te inventa APIs de ESP-IDF con una confianza absoluta. Y vos terminás perdiendo tres horas debugeando por qué `i2c_master_transmit_dma()` no compila, hasta que te das cuenta de que el LLM lo alucinó porque leyó mucha documentación de STM32 y la mezcló. El modelo no entiende la arquitectura de memoria del ESP32. Te va a proponer arrays estáticos de 100KB y te comés un stack overflow en tiempo de ejecución.
 
-- Un **diseñador UX/UI** armando wireframes, prototipando en Figma, testeando usabilidad.
-- Un **frontend developer** maquetando componentes, peleando con cross-browser, optimizando performance.
-- Un **backend developer** armando APIs, manejando base de datos, autenticación, lógica de negocio.
-- Un **DevOps / sysadmin** configurando servidores, CI/CD, monitoreo, deploys, certificados SSL.
-- Un **content manager** cargando contenido, manteniendo traducciones, revisando textos.
-- Un **QA** testeando flujos, reportando bugs, verificando regresiones.
-- Tal vez un **project manager** coordinando todo eso.
+## Código: Cómo no caer en las mentiras del LLM
 
-Eso son siete personas. Siete sueldos. Siete escritorios. Una oficina. Una estructura. **Puestos de trabajo reales** que alimentaban familias.
+El error clásico es aceptar código bloqueante o llamadas a APIs inexistentes. Acá un ejemplo de lo que un LLM te suele sugerir para leer un sensor, y cómo debería ser realmente en un entorno embedded decente.
 
-Hoy, con Next.js, Ant Design, Cloudflare Workers, TypeScript, un par de CLIs bien afilados y — sí — con la asistencia de modelos de lenguaje, todo eso lo resuelve una sola persona desde su escritorio en su casa.
+```c
+// ❌ LO QUE TE ESCUPE EL LLM (Peligro de Stack Overflow y Watchdog Reset)
+void read_sensor_llm() {
+    // Alucina un buffer gigante en el stack de la tarea (el stack de FreeRTOS por default es chico)
+    uint8_t buffer[8192]; 
+    // Alucina una API de ESP-IDF que no existe
+    i2c_read_bytes_blocking(I2C_NUM_0, 0x68, buffer, 8192, 1000); 
+    // Bloquea el procesador
+    delay(500); 
+}
 
-## La contradicción que me come
+// ✅ LO QUE TENÉS QUE ESCRIBIR VOS (O corregirle al LLM)
+#include "driver/i2c.h"
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
 
-Y acá está la trampa: yo celebro esto. Me encanta poder construir algo así. Es empoderador. Es la democratización real de la tecnología. Antes, para que un proyecto como HIOS existiera, necesitabas capital, estructura, inversores o un empleador que lo bancara. Ahora necesitás curiosidad, terquedad, un par de módulos ESP32 y una conexión a internet.
+void read_sensor_real(void *pvParameters) {
+    // Memoria dinámica en el heap si el buffer es grande, o estático global.
+    // Usamos la API real de ESP-IDF para I2C
+    uint8_t data[16]; 
+    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+    i2c_master_start(cmd);
+    i2c_master_write_byte(cmd, (0x68 << 1) | I2C_MASTER_READ, true);
+    i2c_master_read(cmd, data, sizeof(data), I2C_MASTER_LAST_NACK);
+    i2c_master_stop(cmd);
+    
+    for(;;) {
+        // Ejecución no bloqueante
+        esp_err_t ret = i2c_master_cmd_begin(I2C_NUM_0, cmd, pdMS_TO_TICKS(1000));
+        if (ret == ESP_OK) {
+            printf("Sensor leído correctamente\n");
+        }
+        // Yield a otras tareas. El watchdog te lo agradece.
+        vTaskDelay(pdMS_TO_TICKS(500));
+    }
+    i2c_cmd_link_delete(cmd);
+}
+```
 
-Pero al mismo tiempo estoy siendo parte del mismo fenómeno que destruye puestos de trabajo. Cada vez que le pido a una IA que me ayude a escribir un test, estoy haciendo el trabajo de un QA. Cada vez que automatizo un deploy, estoy reemplazando a un DevOps. Cada vez que uso un framework que resuelve en tres líneas lo que antes requería una semana de backend, estoy borrando la necesidad de ese backend developer.
+## Estructurar el workflow para no ahogarse
 
-No soy un CEO de Silicon Valley recortando plantilla desde un Excel. Soy un tipo solo, en su casa, haciendo exactamente lo mismo pero sin el poder de echar a nadie — porque nunca los contraté.
+Si querés armar un sistema completo como HIOS siendo uno solo, el secreto es encapsular al LLM. No le pidas "armá el sistema de telemetría". Pedile: "escribí un parser en C puro para este paquete binario de 8 bytes, y dame los tests de unidad en Unity". 
 
-## ¿Era necesario?
+La fatiga cognitiva de revisar código malo de un LLM es peor que escribirlo desde cero. Acotá el scope de la IA a funciones puras sin side-effects.
 
-Acá viene la parte que más me cuesta. Si antes un proyecto como este no veía la luz sin un equipo de siete personas y un presupuesto, ¿no será que simplemente no era necesario?
+## Trampas comunes
 
-Me explico: el mercado decidía qué se construía en función del capital disponible. Si no tenías plata para armar el equipo, tu idea se moría en un README. No importaba si era buena. No importaba si resolvía un problema real. El filtro no era la calidad de la idea, era la capacidad económica para ejecutarla.
+- **Creerle al LLM con APIs de hardware:** Los modelos son malísimos con ESP-IDF, STM32 HAL y Zephyr. Siempre validá contra los headers locales (`grep` es tu amigo).
+- **Fatiga de review:** Leer código generado cansa más rápido que escribirlo. Si la respuesta supera las 50 líneas y no es un boilerplate tonto, descartala.
+- **Stack Overflows en RTOS:** Los LLMs programan en C asumiendo que están en un Linux de escritorio con gigas de RAM. En FreeRTOS el stack por tarea es mínimo (2KB a 8KB). Ojo con los arrays locales.
 
-Ahora ese filtro bajó dramáticamente. Y resulta que hay miles de proyectos como HIOS — plataformas de hardware abierto, documentación técnica accesible, herramientas de nicho — que existen hoy porque **una persona pudo hacerlo**. No porque alguien decidió invertir en ellos.
+## Chuleta: Flujo de trabajo para Solo-Devs con IA
 
-Entonces la pregunta es: ¿esos siete puestos de trabajo existían porque eran necesarios para el valor del producto, o existían porque la tecnología era tan primitiva que necesitaba siete personas para hacer lo que ahora hace una?
-
-## El cinismo corporativo
-
-Y acá es donde el mundo corporativo se pone verdaderamente escrupuloso.
-
-Las mismas empresas que hace diez años contrataban a esos siete profesionales y se jactaban de su "cultura de equipo" y sus "valores humanos", hoy celebran que un equipo de tres reemplaza a veinte gracias a la IA. Lo presentan como innovación. Como eficiencia. Como evolución.
-
-Pero no redistribuyen el valor. No bajan los precios de sus productos. No comparten la ganancia con los que quedaron. Simplemente se quedan con el margen.
-
-El CEO que echa a la mitad de su plantilla "porque la IA puede hacerlo" no está democratizando nada. Está concentrando. El valor que antes se repartía entre siete sueldos ahora va al bonus del directorio y al dividendo del accionista.
-
-La democratización real no es que una corporación necesite menos empleados. La democratización real es que **vos** puedas construir lo que antes solo podía construir una corporación.
-
-## La incomodidad de ser parte
-
-No tengo una conclusión limpia para esto. No voy a cerrar con un "pero al final todo es positivo" porque no lo sé. Lo que sé es esto:
-
-Tengo la capacidad técnica y las herramientas para construir una plataforma entera solo. Eso es un privilegio enorme que no existía hace una década. Y al mismo tiempo, cada vez que abro el editor estoy parado sobre las ruinas de puestos de trabajo que desaparecieron para que estas herramientas sean tan accesibles.
-
-Lo único que puedo hacer — lo único que tiene sentido para mí — es que lo que construya sea **abierto**. Que el firmware sea descargable. Que los esquemáticos estén publicados. Que las guías estén documentadas. Que si alguien en cualquier parte del mundo quiere aprender o replicar algo de lo que hago, pueda hacerlo sin pedirle permiso a nadie ni pagar una suscripción.
-
-Si la tecnología me dio el poder de hacer solo lo que antes hacían muchos, lo mínimo que puedo hacer es no cerrar la puerta detrás de mí.
-
-Es la diferencia entre usar la democratización para acumular y usarla para distribuir. El mundo corporativo eligió lo primero. Yo elijo lo segundo, por más que sea una gota en un océano.
-
-Y si eso me convierte en un idealista ingenuo — ya lo dije antes — soy idealista, no tonto. Sé que el océano no cambia con una gota. Pero esta gota es mía, y la pongo donde quiero.
+| Tipo de tarea | Uso de IA recomendado | Riesgo |
+| :--- | :--- | :--- |
+| Boilerplate React/Next.js | Generación directa, copy-paste iterativo | Bajo (te avisa el linter y Typescript) |
+| Lógica de negocio (Backend) | Pair programming, generación de tests | Medio (errores de lógica, edge cases) |
+| Firmware (ESP-IDF, FreeRTOS) | Solo snippets de funciones puras, regex | **Crítico** (Watchdog resets, memory leaks, APIs inventadas) |
