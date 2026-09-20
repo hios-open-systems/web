@@ -50,6 +50,9 @@ export type WorkbenchToolId =
   | 'csv-json'
   | 'llm-vram-calc'
   | 'esp32-llm-bridge'
+  | 'voice-ai-latency'
+  | 'llm-grammar-generator'
+  | 'token-inspector'
   | 'embedded';
 
 export type WorkbenchIcon = 'audio' | 'data' | 'notes' | 'circuits' | 'shield' | 'spark' | 'compare' | 'network' | 'chip' | 'table';
@@ -562,6 +565,33 @@ export const workbenchTools: WorkbenchTool[] = [
     href: '/workbench/esp32-llm-bridge',
     accent: '#3b82f6',
     icon: 'circuits',
+    featured: true,
+  },
+  {
+    id: 'voice-ai-latency',
+    locality: 'local',
+    sectionId: 'audio',
+    href: '/workbench/voice-ai-latency',
+    accent: '#06b6d4',
+    icon: 'audio',
+    featured: true,
+  },
+  {
+    id: 'llm-grammar-generator',
+    locality: 'local',
+    sectionId: 'generation',
+    href: '/workbench/llm-grammar-generator',
+    accent: '#8b5cf6',
+    icon: 'circuits',
+    featured: true,
+  },
+  {
+    id: 'token-inspector',
+    locality: 'local',
+    sectionId: 'validation',
+    href: '/workbench/token-inspector',
+    accent: '#10b981',
+    icon: 'data',
     featured: true,
   },
   {

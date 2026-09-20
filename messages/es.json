@@ -1533,6 +1533,18 @@
                 "title": "Generador ESP32 ↔ LLM Bridge",
                 "description": "Genera firmware C++ no bloqueante con FreeRTOS para consultar IAs locales por WiFi."
             },
+            "voice-ai-latency": {
+                "title": "Calculadora de Latencia de Voz Humano-IA",
+                "description": "Calcula el retraso conversacional de voz a voz entre VAD, Whisper STT, LLM TTFT y TTS."
+            },
+            "llm-grammar-generator": {
+                "title": "Generador de Gramáticas GBNF para Hardware",
+                "description": "Compila gramáticas GBNF y JSON Schemas para forzar a LLMs a controlar relés y sensores sin alucinar."
+            },
+            "token-inspector": {
+                "title": "Tokenizer & Inspector de Contexto Local",
+                "description": "Visualiza la tokenización BPE, analiza la inflación en español y calcula la memoria en caché KV."
+            },
             "tone-generator": {
                 "title": "Generador de señal",
                 "description": "Tonos, ruido blanco/rosa/marrón, sweep y test L/R para probar parlantes, DACs y cadenas de audio."

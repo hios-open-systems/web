@@ -52,6 +52,9 @@ const TOOLS: Partial<Record<WorkbenchToolId, ComponentType>> = {
   'csv-json': dynamic(() => import('@/components/workbench/CsvJsonTool').then((m) => m.CsvJsonTool), { ssr: false }),
   'llm-vram-calc': dynamic(() => import('@/components/workbench/LlmVramTool').then((m) => m.LlmVramTool), { ssr: false }),
   'esp32-llm-bridge': dynamic(() => import('@/components/workbench/Esp32LlmBridgeTool').then((m) => m.Esp32LlmBridgeTool), { ssr: false }),
+  'voice-ai-latency': dynamic(() => import('@/components/workbench/VoiceAiLatencyTool').then((m) => m.VoiceAiLatencyTool), { ssr: false }),
+  'llm-grammar-generator': dynamic(() => import('@/components/workbench/LlmGrammarTool').then((m) => m.LlmGrammarTool), { ssr: false }),
+  'token-inspector': dynamic(() => import('@/components/workbench/TokenizerTool').then((m) => m.TokenizerTool), { ssr: false }),
 };
 
 export function ToolRenderer({ toolId }: { toolId: WorkbenchToolId }) {
