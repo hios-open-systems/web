@@ -46,6 +46,7 @@
         "tagline_btdac": "When it finally sounded, I screamed at 2am.",
         "tagline_speaker": "WiFi + I2S = wireless audio, zero noise.",
         "tagline_pad": "Physical layers for everything I do. No drivers, no cables.",
+        "tagline_hios-node-ai": "Your own local AI desktop node open hardware.",
         "view_all": "View all projects",
         "tutorials": "tutorials",
         "files": "files",
@@ -282,6 +283,79 @@
                 "Android control app",
                 "Web equalizer",
                 "OTA updates"
+            ]
+        },
+        "hios-node-ai": {
+            "moment": "Connecting an ESP32-S3 to a local Ollama server running Llama 3.1 and getting instant responses on an OLED screen with zero cloud dependency.",
+            "struggle": "Handling FreeRTOS dual-core tasks so the HTTP connection to Ollama never freezes the screen UI or triggers Task Watchdog timeouts.",
+            "whatWorks": [
+                "Local AI querying — zero cloud dependency",
+                "FreeRTOS dual-core — 60 FPS UI responsiveness",
+                "I2S Audio Input/Output — INMP441 & MAX98357A",
+                "OLED SSD1306 display — realtime status",
+                "PlatformIO firmware — clean build"
+            ],
+            "whatDoesnt": [
+                "Requires local PC running Ollama / llama-server",
+                "Speech recognition requires TinyML model or local Whisper"
+            ],
+            "resources": [
+                {
+                    "name": "Ollama Local AI Server",
+                    "url": "https://ollama.com"
+                },
+                {
+                    "name": "llama.cpp Repository",
+                    "url": "https://github.com/ggerganov/llama.cpp"
+                },
+                {
+                    "name": "INMP441 Datasheet",
+                    "url": "https://www.invensense.com/products/motion-tracking/mems-microphones/inmp441/"
+                }
+            ],
+            "bom": [
+                {
+                    "component": "ESP32-S3-DevKitC-1",
+                    "qty": 1,
+                    "priceUSD": 5.5,
+                    "notes": "Dual Core LX7, 16MB Flash, 8MB PSRAM"
+                },
+                {
+                    "component": "INMP441 I2S Mic",
+                    "qty": 1,
+                    "priceUSD": 1.8,
+                    "notes": "24-bit PCM digital mic"
+                },
+                {
+                    "component": "MAX98357A Amp",
+                    "qty": 1,
+                    "priceUSD": 1.5,
+                    "notes": "3.2W Class D audio amp"
+                },
+                {
+                    "component": "SSD1306 OLED 0.96\"",
+                    "qty": 1,
+                    "priceUSD": 2.2,
+                    "notes": "128x64 I2C display"
+                }
+            ],
+            "specs": [
+                {
+                    "label": "Microcontroller",
+                    "value": "ESP32-S3-WROOM-1 (N16R8)"
+                },
+                {
+                    "label": "AI Server",
+                    "value": "Ollama / llama.cpp (Local)"
+                },
+                {
+                    "label": "Interfaces",
+                    "value": "I2S Audio In/Out, I2C Display"
+                }
+            ],
+            "futureFeatures": [
+                "Local wake-word detection with ESP-SR WakeNet",
+                "Whisper.cpp audio streaming for voice prompts"
             ]
         },
         "pad": {
@@ -1451,6 +1525,14 @@
             "csv-json": {
                 "title": "CSV ⇄ JSON",
                 "description": "Convert CSV to JSON and back with RFC 4180 quoting and a configurable delimiter."
+            },
+            "llm-vram-calc": {
+                "title": "Local LLM VRAM Calculator",
+                "description": "Calculate VRAM, KV cache, and GPU offload layers (-ngl) for llama.cpp and Ollama models."
+            },
+            "esp32-llm-bridge": {
+                "title": "ESP32 LLM Bridge Generator",
+                "description": "Generate non-blocking C++ FreeRTOS firmware to query local LLMs over WiFi with OLED UI."
             },
             "tone-generator": {
                 "title": "Signal Generator",

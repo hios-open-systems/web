@@ -48,6 +48,8 @@ export type WorkbenchToolId =
   | 'ipv6-expand'
   | 'hmac'
   | 'csv-json'
+  | 'llm-vram-calc'
+  | 'esp32-llm-bridge'
   | 'embedded';
 
 export type WorkbenchIcon = 'audio' | 'data' | 'notes' | 'circuits' | 'shield' | 'spark' | 'compare' | 'network' | 'chip' | 'table';
@@ -542,6 +544,24 @@ export const workbenchTools: WorkbenchTool[] = [
     href: '/workbench/csv-json',
     accent: '#22c55e',
     icon: 'compare',
+    featured: true,
+  },
+  {
+    id: 'llm-vram-calc',
+    locality: 'local',
+    sectionId: 'electronics',
+    href: '/workbench/llm-vram-calc',
+    accent: '#a855f7',
+    icon: 'chip',
+    featured: true,
+  },
+  {
+    id: 'esp32-llm-bridge',
+    locality: 'local',
+    sectionId: 'electronics',
+    href: '/workbench/esp32-llm-bridge',
+    accent: '#3b82f6',
+    icon: 'circuits',
     featured: true,
   },
   {

@@ -56,6 +56,20 @@ export const projects: Project[] = [
             files: 8,
         },
     },
+    {
+        slug: 'hios-node-ai',
+        name: 'HIOS Node AI',
+        tagline: 'Tu propia IA local en un nodo de escritorio open hardware.',
+        description: 'Nodo de audio y voz embebido basado en ESP32-S3 (N16R8) con I2S, pantalla OLED y firmware FreeRTOS no bloqueante para consultar IAs locales (Ollama/llama.cpp) o ejecutar TinyML.',
+        status: 'prototype',
+        image: '/images/pad/pad-1-overview.jpg',
+        learnings: ['TinyML / ESP-SR', 'Ollama Local Bridge', 'I2S Audio Input/Output', 'FreeRTOS Dual-Core'],
+        breakthrough: 'Interactuar con un LLM local desde un microcontrolador de $5 USD sin enviar un solo byte a la nube.',
+        stats: {
+            tutorials: 2,
+            files: 6,
+        },
+    },
 ];
 
 export const statusConfig = {
