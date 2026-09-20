@@ -45,7 +45,8 @@
         "in_development": "En desarrollo",
         "tagline_btdac": "Cuando finalmente sonó, grité a las 2am.",
         "tagline_speaker": "WiFi + I2S = audio sin cables, sin ruido.",
-        "tagline_pad": "Capas físicas para cada cosa que hago. Sin drivers, sin cables.",
+        "tagline_pad": "Capas físicas para todo lo que hago. Sin drivers, sin cables.",
+        "tagline_hios-node-ai": "Tu propio nodo de escritorio open hardware para IA local.",
         "view_all": "Ver todos los proyectos",
         "tutorials": "tutoriales",
         "files": "archivos",
@@ -274,13 +275,86 @@
                 }
             ],
             "futureFeatures": [
-                "Streaming audio real (HTTP/WebSocket)",
+                "Streaming real de audio (HTTP/WebSocket)",
                 "Spotify Connect",
-                "AirPlay compatible",
-                "Multi-room sync",
-                "App Android control",
+                "Compatible con AirPlay",
+                "Sincronización multi-room",
+                "App de control en Android",
                 "Ecualizador web",
-                "OTA updates"
+                "Actualizaciones OTA"
+            ]
+        },
+        "hios-node-ai": {
+            "moment": "Conectar un ESP32-S3 a un servidor local de Ollama corriendo Llama 3.1 y recibir respuestas instantáneas en una pantalla OLED con cero dependencia de la nube.",
+            "struggle": "Manejar tasks dual-core de FreeRTOS para que la conexión HTTP a Ollama nunca congele la UI de la pantalla ni dispare timeouts de Task Watchdog.",
+            "whatWorks": [
+                "Consultas a IA local — cero nube",
+                "FreeRTOS dual-core — UI reactiva a 60 FPS",
+                "Entrada/Salida Audio I2S — INMP441 & MAX98357A",
+                "Pantalla OLED SSD1306 — estado en tiempo real",
+                "Firmware PlatformIO — compilación limpia"
+            ],
+            "whatDoesnt": [
+                "Requiere PC local corriendo Ollama / llama-server",
+                "Reconocimiento de voz requiere modelo TinyML o Whisper local"
+            ],
+            "resources": [
+                {
+                    "name": "Servidor Ollama IA Local",
+                    "url": "https://ollama.com"
+                },
+                {
+                    "name": "Repositorio llama.cpp",
+                    "url": "https://github.com/ggerganov/llama.cpp"
+                },
+                {
+                    "name": "Datasheet INMP441",
+                    "url": "https://www.invensense.com/products/motion-tracking/mems-microphones/inmp441/"
+                }
+            ],
+            "bom": [
+                {
+                    "component": "ESP32-S3-DevKitC-1",
+                    "qty": 1,
+                    "priceUSD": 5.5,
+                    "notes": "Dual Core LX7, 16MB Flash, 8MB PSRAM"
+                },
+                {
+                    "component": "Micrófono I2S INMP441",
+                    "qty": 1,
+                    "priceUSD": 1.8,
+                    "notes": "Micrófono digital 24-bit PCM"
+                },
+                {
+                    "component": "Amplificador MAX98357A",
+                    "qty": 1,
+                    "priceUSD": 1.5,
+                    "notes": "Amplificador de audio 3.2W Clase D"
+                },
+                {
+                    "component": "OLED SSD1306 0.96\"",
+                    "qty": 1,
+                    "priceUSD": 2.2,
+                    "notes": "Pantalla I2C 128x64"
+                }
+            ],
+            "specs": [
+                {
+                    "label": "Microcontrolador",
+                    "value": "ESP32-S3-WROOM-1 (N16R8)"
+                },
+                {
+                    "label": "Servidor IA",
+                    "value": "Ollama / llama.cpp (Local)"
+                },
+                {
+                    "label": "Interfaces",
+                    "value": "Audio I2S In/Out, Pantalla I2C"
+                }
+            ],
+            "futureFeatures": [
+                "Detección de palabra clave local con ESP-SR WakeNet",
+                "Streaming de audio Whisper.cpp para prompts de voz"
             ]
         },
         "pad": {
@@ -1449,7 +1523,15 @@
             },
             "csv-json": {
                 "title": "CSV ⇄ JSON",
-                "description": "Convertí CSV a JSON y de vuelta, con comillas RFC 4180 y delimitador configurable."
+                "description": "Convertir CSV a JSON y viceversa con comillado RFC 4180 y delimitador personalizable."
+            },
+            "llm-vram-calc": {
+                "title": "Calculadora VRAM para IA Local",
+                "description": "Calcula VRAM, caché KV y capas offload en GPU (-ngl) para modelos de llama.cpp y Ollama."
+            },
+            "esp32-llm-bridge": {
+                "title": "Generador ESP32 ↔ LLM Bridge",
+                "description": "Genera firmware C++ no bloqueante con FreeRTOS para consultar IAs locales por WiFi."
             },
             "tone-generator": {
                 "title": "Generador de señal",

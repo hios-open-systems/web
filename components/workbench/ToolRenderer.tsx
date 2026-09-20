@@ -50,6 +50,8 @@ const TOOLS: Partial<Record<WorkbenchToolId, ComponentType>> = {
   'ipv6-expand': dynamic(() => import('@/components/workbench/Ipv6ExpandTool').then((m) => m.Ipv6ExpandTool), { ssr: false }),
   'hmac': dynamic(() => import('@/components/workbench/HmacTool').then((m) => m.HmacTool), { ssr: false }),
   'csv-json': dynamic(() => import('@/components/workbench/CsvJsonTool').then((m) => m.CsvJsonTool), { ssr: false }),
+  'llm-vram-calc': dynamic(() => import('@/components/workbench/LlmVramTool').then((m) => m.LlmVramTool), { ssr: false }),
+  'esp32-llm-bridge': dynamic(() => import('@/components/workbench/Esp32LlmBridgeTool').then((m) => m.Esp32LlmBridgeTool), { ssr: false }),
 };
 
 export function ToolRenderer({ toolId }: { toolId: WorkbenchToolId }) {
