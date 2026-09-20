@@ -15,9 +15,11 @@ function inferLocale(pathname: string): string | undefined {
 
 function inferToolId(pathname: string): string | undefined {
   const parts = pathname.split('/').filter(Boolean);
-  if (parts.length < 3) return undefined;
-  if (parts[1] !== 'workbench') return undefined;
-  return parts[2];
+  const wbIndex = parts.indexOf('workbench');
+  if (wbIndex === -1 || wbIndex + 1 >= parts.length) return undefined;
+  const tool = parts[wbIndex + 1];
+  if (tool === 'sections' || tool === 'settings' || tool === 'feedback') return undefined;
+  return tool;
 }
 
 function sendUsage(payload: {

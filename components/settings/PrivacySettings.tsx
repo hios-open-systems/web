@@ -13,11 +13,11 @@ const COPY = {
         title: 'Tus datos, tus reglas',
         intro:
             'Por default este sitio no trackea, no notifica y no pide permisos. Todo lo que se guarda o comparte está listado acá, y cada cosa tiene su botón de borrado.',
-        telemetryTitle: 'Telemetría anónima (opt-in)',
+        telemetryTitle: 'Telemetría anónima agregada',
         telemetryHint:
-            'Apagada por default. Si la activás, se envía: evento (vista de página / tool abierta), ruta, idioma, tool, navegador (user-agent), página de origen y país a nivel Cloudflare — nunca tu IP. Los agregados se publican abiertos en /stats.',
+            'Métricas agregadas sin cookies ni IPs para saber qué herramientas se utilizan (visibles públicamente en /stats). Respeta automáticamente Do-Not-Track si tu navegador lo envía.',
         telemetryOn: 'Activada — gracias por aportar a las stats abiertas',
-        telemetryOff: 'Apagada (default)',
+        telemetryOff: 'Desactivada',
         localTitle: 'Datos locales (viven solo en tu navegador)',
         localHint:
             'Tema, accent y skin elegidos · temas guardados · historial local de tools usadas · notas y borradores de las tools. Nada de esto sale de tu máquina.',
@@ -45,11 +45,11 @@ const COPY = {
         title: 'Your data, your rules',
         intro:
             'By default this site does not track, notify, or ask for permissions. Everything stored or shared is listed here, and each item has its own delete button.',
-        telemetryTitle: 'Anonymous telemetry (opt-in)',
+        telemetryTitle: 'Anonymous aggregated telemetry',
         telemetryHint:
-            'Off by default. If you enable it, we send: event (page view / tool open), path, language, tool, browser (user-agent), referrer and Cloudflare-level country — never your IP. Aggregates are published openly at /stats.',
+            'Aggregated metrics with zero cookies and no IPs to track which tools are used (publicly visible at /stats). Automatically respects Do-Not-Track headers.',
         telemetryOn: 'On — thanks for feeding the open stats',
-        telemetryOff: 'Off (default)',
+        telemetryOff: 'Off',
         localTitle: 'Local data (lives only in your browser)',
         localHint:
             'Chosen theme, accent and skin · saved themes · local history of used tools · tool notes and drafts. None of this leaves your machine.',

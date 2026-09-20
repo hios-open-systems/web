@@ -1534,6 +1534,18 @@
                 "title": "ESP32 LLM Bridge Generator",
                 "description": "Erstellen Sie nicht-blockierenden C++ FreeRTOS-Firmware-Code für lokale KI."
             },
+            "voice-ai-latency": {
+                "title": "Sprach-KI Latenzrechner",
+                "description": "Berechnen Sie die End-to-End-Verzögerung über VAD, Whisper STT, LLM TTFT und TTS-Audio."
+            },
+            "llm-grammar-generator": {
+                "title": "Hardware GBNF Grammatik-Generator",
+                "description": "Erstellen Sie GBNF-Grammatiken und JSON-Schemata für LLM-Hardwaresteuerungen."
+            },
+            "token-inspector": {
+                "title": "Lokaler Tokenizer & Kontext-Inspektor",
+                "description": "Visualisieren Sie BPE-Subword-Tokenisierung und berechnen Sie den KV-Cache-Speicher."
+            },
             "tone-generator": {
                 "title": "Tongenerator",
                 "description": "Konfigurierbarer Oszillator zum Testen von Lautsprechern, DACs, Filtern und Audioketten."
