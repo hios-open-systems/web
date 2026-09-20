@@ -3,7 +3,7 @@
     "slug": "2026-09-22-ollama-esp32-bridge",
     "title": "Conectar un ESP32 a un LLM local: el bridge WiFi",
     "date": "2026-09-24",
-    "summary": "Tutorial paso a paso: levantar Ollama en la PC, hacer POST desde un ESP32 por WiFi, y recibir respuestas de una IA sin tocar una sola nube.",
+    "summary": "Levantar Ollama en la PC, hacer POST desde un ESP32 en una task de FreeRTOS sin bloquear el loop, parsear JSON sin overflow y usar un botón físico para hablar con IA local.",
     "tags": [
       "ia",
       "esp32",
@@ -18,7 +18,7 @@
     "slug": "ref-tinyml-esp32",
     "title": "TinyML en ESP32-S3: inteligencia real en un microcontrolador",
     "date": "2026-09-23",
-    "summary": "Qué entra y qué no en un ESP32-S3, cómo correr redes neuronales en el borde con TFLite Micro, y la arquitectura de 'cerebro delegado' para combinar hardware embebido con IA local.",
+    "summary": "Qué entra y qué no en un ESP32-S3, la latencia de PSRAM vs SRAM, y código completo para correr TFLite Micro en el borde.",
     "tags": [
       "ia",
       "tinyml",
@@ -33,7 +33,7 @@
     "slug": "ref-modelos-abiertos",
     "title": "Guía de modelos abiertos: qué hay, qué sirve, qué corre en tu PC",
     "date": "2026-09-22",
-    "summary": "Mapa de los modelos de lenguaje abiertos en 2026: familias, licencias, tamaños y cuáles valen la pena para correr en hardware doméstico.",
+    "summary": "Mapa de modelos locales en 2026: Llama, Qwen, VLMs, modelos de código, gramáticas BNF y requerimientos de hardware real.",
     "tags": [
       "ia",
       "open-source",
@@ -48,7 +48,7 @@
     "slug": "ref-ia-local-setup",
     "title": "IA local: inferencia con llama.cpp y modelos cuantizados",
     "date": "2026-09-22",
-    "summary": "Setup paso a paso para correr modelos de lenguaje en tu máquina: llama.cpp, cuantización GGUF, GPU offloading y los parámetros que cambian de horas a segundos.",
+    "summary": "Setup paso a paso para correr modelos locales: llama.cpp, compilación con CUDA/Vulkan, cálculo de VRAM, offloading y plantillas de chat.",
     "tags": [
       "ia",
       "llama-cpp",
@@ -61,9 +61,9 @@
   },
   {
     "slug": "2026-09-21-denial-of-wallet-etica",
-    "title": "Denial of Wallet: ética, asimetría y el costo de la indignación",
+    "title": "Denial of Wallet: ética, asimetría y la ingeniería de los ataques a LLMs",
     "date": "2026-09-21",
-    "summary": "Qué es un Denial of Wallet, por qué la venganza técnica contra un chatbot corporativo es un mal negocio, y dónde realmente les duele.",
+    "summary": "Qué es un Denial of Wallet, la complejidad O(N^2) de los Transformers y por qué las defensas tradicionales no alcanzan para frenarlos.",
     "tags": [
       "ia",
       "seguridad",
@@ -71,13 +71,13 @@
       "opinión"
     ],
     "lang": "es",
-    "category": "devlog"
+    "category": "referencia"
   },
   {
     "slug": "2026-09-20-una-persona-hace-todo",
     "title": "Una persona hace todo: la paradoja de la democratización",
     "date": "2026-09-20",
-    "summary": "Antes esta web daba trabajo a diez personas. Hoy la hago solo. Las herramientas se democratizaron, pero los puestos desaparecieron. ¿Es progreso o destrucción?",
+    "summary": "Antes un proyecto web y de hardware requería 7 roles. Hoy la hago solo. Pero la IA junior te llena de deuda técnica y alucinaciones en C.",
     "tags": [
       "ia",
       "opinión",
@@ -86,7 +86,7 @@
       "trabajo"
     ],
     "lang": "es",
-    "category": "devlog"
+    "category": "referencia"
   },
   {
     "slug": "2026-09-20-ia-corporativa-vs-usuario",
@@ -100,7 +100,7 @@
       "democratización"
     ],
     "lang": "es",
-    "category": "devlog"
+    "category": "referencia"
   },
   {
     "slug": "ref-freertos-esp32",
