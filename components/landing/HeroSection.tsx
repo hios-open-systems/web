@@ -9,13 +9,12 @@ import styles from './heroSection.module.css';
 export function HeroSection() {
   const locale = useLocale();
   const t = useTranslations('Hero');
-  const headerT = useTranslations('Header');
 
   return (
     <section className={styles.hero}>
       <div className={styles.container}>
         <div className={styles.content}>
-          <span className={styles.eyebrow}>HIOS · {headerT('workbench')}</span>
+          <span className={styles.eyebrow}>HUMAN INTERFACES · OPEN SOFTWARE</span>
 
           <h1 className={styles.title}>{t('title')}</h1>
 
