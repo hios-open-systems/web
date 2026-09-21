@@ -67,6 +67,17 @@ Cada fase se prueba antes de pasar a la siguiente:
 4. **LCD** — VCC→5V, GND, SDA=21 / SCL=22.
 5. **Firmware** — `tests/test_basic.ino` (debe dar un tono) → después `src/main.ino`.
 
+## Banco de pruebas previo (antes del target real)
+
+Para validar hardware/cableado/estabilidad antes del montaje final, usar:
+
+- `testbench/README.md`
+- `testbench/PINOUT.md`
+- `testbench/VALIDATION_PLAN.md`
+- `testbench/CHECKLIST_PRE_MONTAJE.md`
+- `testbench/firmware/` (smoke, L/R, estéreo estabilidad)
+- `testbench/results/logs/LOG_TEMPLATE.md`
+
 **Soldadura:** 350–380°C con plomo (380–400 sin), contacto 2–3s, estañá puntas y pads primero. **Antes de encender:** continuidad de GND (0Ω entre todas las masas), sin corto VIN↔GND (∞), buck a 5.0V. Fotos de referencia en `pics/build/` y `pics/modules/`.
 
 ## Troubleshooting (aprendido a los golpes)
