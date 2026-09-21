@@ -1,0 +1,131 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--hios-bg);
+  border-radius: 8px;
+  min-height: 500px;
+}
+
+.unsupported {
+  padding: 24px;
+  background: var(--hios-bg-elevated);
+  border: 1px solid var(--hios-border);
+  border-radius: 8px;
+  color: var(--hios-text);
+  text-align: center;
+}
+
+.unsupported h3 {
+  margin-top: 0;
+  color: var(--hios-text);
+}
+
+.unsupported p {
+  color: var(--hios-text-secondary);
+  line-height: 1.5;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.status {
+  font-family: var(--font-stack-mono);
+  font-size: 13px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.statusConnected {
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  color: var(--accent);
+}
+
+.statusDisconnected {
+  background: var(--hios-bg-elevated);
+  color: var(--hios-text-secondary);
+}
+
+.terminal {
+  flex: 1;
+  background: #000;
+  border-radius: 8px;
+  border: 1px solid var(--hios-border);
+  padding: 16px;
+  font-family: var(--font-stack-mono);
+  font-size: 14px;
+  color: #0f0;
+  overflow-y: auto;
+  min-height: 400px;
+  max-height: 600px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+
+.inputRow {
+  display: flex;
+  gap: 12px;
+}
+
+.input {
+  flex: 1;
+  background: var(--hios-bg-elevated);
+  border: 1px solid var(--hios-border);
+  color: var(--hios-text);
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-family: var(--font-stack-mono);
+  font-size: 14px;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.btn {
+  background: var(--hios-bg-elevated);
+  border: 1px solid var(--hios-border);
+  color: var(--hios-text);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  background: color-mix(in srgb, var(--hios-text) 5%, transparent);
+}
+
+.btnPrimary {
+  background: var(--hios-text);
+  color: var(--hios-bg);
+  border-color: var(--hios-text);
+}
+
+.btnPrimary:hover {
+  background: var(--hios-text-secondary);
+}
+
+.select {
+  background: var(--hios-bg-elevated);
+  border: 1px solid var(--hios-border);
+  color: var(--hios-text);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-family: var(--font-stack-mono);
+}

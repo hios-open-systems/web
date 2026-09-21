@@ -1,4 +1,16 @@
 {
+    "SerialMonitor": {
+        "unsupportedTitle": "Unsupported Browser",
+        "unsupportedDesc": "The WebSerial API is restricted by Apple and Mozilla. Please open this tool in Chrome, Edge, or Brave.",
+        "connect": "Connect",
+        "disconnect": "Disconnect",
+        "statusConnected": "CONNECTED",
+        "statusDisconnected": "DISCONNECTED",
+        "clear": "Clear",
+        "emptyTerminal": "// Waiting for serial data...",
+        "inputPlaceholder": "Send JSON command or string...",
+        "send": "Send"
+    },
     "Guestbook": {
         "title": "Guestbook",
         "subtitle": "Passing through? Leave a mark.",
@@ -1616,7 +1628,11 @@
             },
             "payload": {
                 "title": "Payload Lab",
-                "description": "Format, validate, and share JSON payloads without leaving the browser."
+                "description": "Format, validate, and share JSON payloads entirely in the browser."
+            },
+            "serial-monitor": {
+                "title": "Serial Monitor",
+                "description": "Native WebSerial terminal to read and write logs to your ESP32/Arduino."
             },
             "type-checker": {
                 "title": "Type Checker",

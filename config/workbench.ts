@@ -53,7 +53,8 @@ export type WorkbenchToolId =
   | 'voice-ai-latency'
   | 'llm-grammar-generator'
   | 'token-inspector'
-  | 'embedded';
+  | 'embedded'
+  | 'serial-monitor';
 
 export type WorkbenchIcon = 'audio' | 'data' | 'notes' | 'circuits' | 'shield' | 'spark' | 'compare' | 'network' | 'chip' | 'table';
 
@@ -592,6 +593,15 @@ export const workbenchTools: WorkbenchTool[] = [
     href: '/workbench/token-inspector',
     accent: '#10b981',
     icon: 'data',
+    featured: true,
+  },
+  {
+    id: 'serial-monitor',
+    locality: 'local',
+    sectionId: 'electronics',
+    href: '/workbench/serial-monitor',
+    accent: '#3b82f6',
+    icon: 'circuits',
     featured: true,
   },
   {
