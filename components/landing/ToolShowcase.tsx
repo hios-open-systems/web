@@ -9,8 +9,20 @@ import wb from '@/components/workbench/workbench.module.css';
 import styles from './toolShowcase.module.css';
 
 const ALL_TOOLS = workbenchTools.filter((tool) => !tool.external);
-const FEATURED_COUNT = 8;
-const TOOLS = ALL_TOOLS.slice(0, FEATURED_COUNT);
+
+// Highlight the latest AI tools and a few core ones to reflect the new platform reality
+const HIGHLIGHTED_IDS = [
+  'esp32-llm-bridge',
+  'llm-vram-calc',
+  'token-inspector',
+  'llm-grammar-generator',
+  'tone-generator',
+  'payload',
+  'resistor-color-code',
+  'chiptune'
+];
+
+const TOOLS = ALL_TOOLS.filter((tool) => HIGHLIGHTED_IDS.includes(tool.id));
 
 const SEE_ALL: Record<string, string> = { en: 'See all', es: 'Ver todas', de: 'Alle ansehen', it: 'Vedi tutte' };
 
