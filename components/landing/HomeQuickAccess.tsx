@@ -3,16 +3,17 @@
 import React from 'react';
 import Link from 'next/link';
 import { useLocale } from 'next-intl';
-import { CalculatorOutlined, ApiOutlined, PrinterOutlined, ReadOutlined } from '@ant-design/icons';
+import { ToolOutlined, ThunderboltOutlined, ReadOutlined, LineChartOutlined } from '@ant-design/icons';
 
 type Bi = { es: string; en: string };
 
 const ITEMS: { href: string; icon: React.ReactNode; label: Bi; desc: Bi }[] = [
-    { href: 'calculators', icon: <CalculatorOutlined />, label: { es: 'Calculadoras', en: 'Calculators' }, desc: { es: 'Resistencias, I2S, RC y más — en el navegador.', en: 'Resistors, I2S, RC and more — in the browser.' } },
-    { href: 'pinouts', icon: <ApiOutlined />, label: { es: 'Pinouts', en: 'Pinouts' }, desc: { es: 'Visor interactivo de pinouts de módulos.', en: 'Interactive module pinout viewer.' } },
-    { href: 'prints', icon: <PrinterOutlined />, label: { es: 'Maker', en: 'Maker' }, desc: { es: 'Modelos 3D propios y de la comunidad.', en: 'My 3D models and community picks.' } },
-    { href: 'blog', icon: <ReadOutlined />, label: { es: 'Devlog', en: 'Devlog' }, desc: { es: 'Notas técnicas de lo que voy construyendo.', en: 'Technical notes on what I build.' } },
+    { href: 'workbench', icon: <ToolOutlined />, label: { es: 'Workbench', en: 'Workbench' }, desc: { es: 'Utilitarios locales para developers, hardware y redes.', en: 'Local utilities for developers, hardware, and networks.' } },
+    { href: 'projects/hios-node-ai', icon: <ThunderboltOutlined />, label: { es: 'IA Local', en: 'Local AI' }, desc: { es: 'Puente ESP32 a Ollama/llama.cpp. Cero nube.', en: 'ESP32 bridge to Ollama/llama.cpp. Zero cloud.' } },
+    { href: 'blog', icon: <ReadOutlined />, label: { es: 'Devlog', en: 'Devlog' }, desc: { es: 'Notas técnicas y tutoriales de lo que voy construyendo.', en: 'Technical notes and tutorials on what I build.' } },
+    { href: 'stats', icon: <LineChartOutlined />, label: { es: 'Métricas', en: 'Open Stats' }, desc: { es: 'Telemetría anónima y pública. Privacidad ante todo.', en: 'Anonymous, public telemetry. Privacy first.' } },
 ];
+
 
 export function HomeQuickAccess() {
     const locale = useLocale();
