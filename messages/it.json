@@ -2396,6 +2396,7 @@
         "share_error": "Impossibile copiare il link"
     },
     "Seo": {
+        "breadcrumbLabel": "Percorso di navigazione",
         "blog": {
             "title": "Documentazione tecnica e diari di costruzione",
             "description": "Guide di hardware aperto, riferimenti su ESP32 e IA locale e diari con esempi pratici dei progetti HIOS."
@@ -2411,6 +2412,57 @@
         "colophon": {
             "title": "Informazioni su HIOS e il suo stack open source",
             "description": "Scopri come nasce HIOS: hardware aperto, strumenti nel browser, IA locale e le tecnologie di questo progetto indipendente."
+        }
+    },
+    "ProjectSoftware": {
+        "label": "Software",
+        "sections": "Esplora le funzioni",
+        "source": "Codice e documentazione",
+        "hardware": "Esplora il progetto hardware",
+        "wiring": "Cablaggio e pinout",
+        "pad": {
+            "title": "PAD: il desktop risponde a te",
+            "description": "Usa PAD per controllare applicazioni, chiamate e musica. Il firmware combina azioni USB e Bluetooth, un editor web e un companion locale opzionale per Windows e Linux.",
+            "controls": {
+                "title": "Livelli, scorciatoie e mouse",
+                "body": "Dieci tasti azione e due ALT organizzano le scorciatoie per contesto. L’encoder naviga nei livelli e controlla volume, scorrimento, zoom o schede secondo la modalità. Il joystick muove il puntatore: un tocco per il clic sinistro, due per il destro. USB e BLE trasmettono azioni tastiera, mouse e multimedia; WiFi serve per configurazione e feedback, non HID."
+            },
+            "editor": {
+                "title": "Configura senza ricompilare",
+                "body": "L’editor web del companion modifica livelli, azioni, testi e macro, con varianti delle scorciatoie per Windows e Linux. Salva la configurazione modificabile e invia al PAD la variante del sistema attuale. Uno specchio web mostra l’interfaccia del dispositivo. Adatta lo stesso hardware a editing, sviluppo, navigazione o riunioni."
+            },
+            "companion": {
+                "title": "Lo stato reale del computer",
+                "body": "Il companion legge volume e stato del microfono, oltre a carico e temperature CPU/GPU quando i sensori sono disponibili. Invia il feedback al PAD sulla rete locale e può attivare il mute globale del microfono. I controlli della videocamera e alcune scorciatoie dipendono dall’applicazione attiva."
+            },
+            "setup": {
+                "title": "Come iniziare",
+                "body": "Usa prima PAD via USB o BLE con i livelli del firmware. Per aggiungere feedback ed editor web, compila il companion seguendo il README, configura indirizzo PAD e token generato dal firmware ed eseguilo sulla stessa rete. Windows include l’installazione all’accesso; Linux documenta un servizio utente systemd."
+            },
+            "availability": {
+                "title": "Cosa funziona in autonomia",
+                "body": "Le azioni HID funzionano senza companion o WiFi. Feedback reale e mute globale richiedono il companion. Windows e Linux sono implementati; macOS non ancora. I sensori disponibili dipendono dall’hardware. Il mute globale della videocamera non è implementato nel companion."
+            }
+        },
+        "btdac": {
+            "title": "BTDAC: audio Bluetooth e strumenti di prova",
+            "description": "Il firmware BTDAC riceve audio Bluetooth e lo invia al DAC PCM5102 via I2S. Un’app Android separata si collega via BLE per richiedere toni di prova.",
+            "audio": {
+                "title": "Dal Bluetooth al DAC",
+                "body": "L’ESP32 riceve audio A2DP da telefono o computer. I LED RGB indicano attesa, connessione, riproduzione ed errori. Il canale BLE di controllo è indipendente dalla connessione Bluetooth per la musica."
+            },
+            "android": {
+                "title": "Toni di prova da Android",
+                "body": "L’app Kotlin con Jetpack Compose cerca il servizio BLE HIOS BTDAC, permette di scegliere e connettere un dispositivo e invia comandi di frequenza. Il firmware genera toni sinusoidali stereo da 20 Hz a 20 kHz per circa due secondi. Non avvia un tono durante la riproduzione musicale."
+            },
+            "setup": {
+                "title": "Come iniziare",
+                "body": "Compila e carica il firmware seguendo la documentazione BTDAC. Associa una sorgente audio per ascoltare musica. Per i toni, compila l’app Android dal codice, concedi i permessi Bluetooth e connetti BTDAC nell’app. Non servono account o cloud."
+            },
+            "availability": {
+                "title": "Funzioni attuali",
+                "body": "L’app controlla toni di prova. Volume ed equalizzazione remoti, monitoraggio batteria e aggiornamenti OTA sono ancora pianificati. Il codice Android è disponibile per compilare l’app; non viene promesso un download APK."
+            }
         }
     }
 }

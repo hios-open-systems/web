@@ -25,6 +25,7 @@
     "test:mermaid": "node --experimental-strip-types scripts/mermaid-selftest.ts",
     "test:notes": "node --experimental-strip-types scripts/notes-selftest.ts",
     "test:seo": "node --experimental-strip-types scripts/seo-selftest.ts",
+    "test:software": "node --experimental-strip-types scripts/project-software-selftest.ts",
     "test:sitemap": "node --experimental-strip-types scripts/sitemap-selftest.ts",
     "test:i18n": "node --experimental-strip-types scripts/i18n-selftest.ts",
     "test:storage": "node --experimental-strip-types scripts/storage-selftest.ts",
