@@ -18,6 +18,10 @@ test('PAD project links to software and the page fits mobile screens', async ({ 
   await page.getByRole('link', { name: 'PAD: un escritorio que responde a vos' }).click();
   await expect(page).toHaveURL(/\/es\/projects\/pad\/software$/);
   await page.setViewportSize({ width: 390, height: 844 });
+  const preview = page.getByRole('img', { name: /Fotografía del PAD en modo Edición/ });
+  await expect(preview).toBeVisible();
+  await expect.poll(() => preview.evaluate((image) => (image as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+  await expect(page.getByRole('heading', { name: 'Controlar una reunión' })).toBeVisible();
   await expect(page.locator('#editor')).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });

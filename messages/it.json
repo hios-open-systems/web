@@ -2421,6 +2421,27 @@
         "hardware": "Esplora il progetto hardware",
         "wiring": "Cablaggio e pinout",
         "pad": {
+            "showcase": {
+                "title": "PAD in uso",
+                "description": "Lo schermo riunisce le azioni del livello attivo e i controlli del dispositivo. Questi esempi mostrano come lo stesso PAD accompagna diversi momenti della giornata.",
+                "imageAlt": "Fotografia di PAD in modalità Editing con copia, incolla, annulla, ripeti e controlli multimediali.",
+                "caption": "Foto reale del prototipo in modalità Editing. Disposizione ed etichette possono cambiare con la configurazione del firmware.",
+                "editing": {
+                    "title": "Mantieni il ritmo di lavoro",
+                    "body": "Assegna copia, incolla, annulla e ripeti ai tasti. Alterna scorrimento e zoom con l’encoder e muovi il puntatore con il joystick.",
+                    "requirement": "Azioni HID via USB o BLE; non serve il companion."
+                },
+                "meetings": {
+                    "title": "Controlla una riunione",
+                    "body": "Usa i livelli Meet, Zoom o Teams per le scorciatoie di microfono e videocamera. Aggiungi il companion per il mute globale e lo stato reale del microfono.",
+                    "requirement": "Le scorciatoie dipendono dall’app attiva; mute globale e feedback richiedono il companion."
+                },
+                "media": {
+                    "title": "Musica a portata di mano",
+                    "body": "Controlla riproduzione e volume con tasti ed encoder. Con il companion, PAD riceve il volume del computer per mostrarlo sullo schermo.",
+                    "requirement": "Controlli multimediali via HID; il volume reale sullo schermo richiede il companion."
+                }
+            },
             "title": "PAD: il desktop risponde a te",
             "description": "Usa PAD per controllare applicazioni, chiamate e musica. Il firmware combina azioni USB e Bluetooth, un editor web e un companion locale opzionale per Windows e Linux.",
             "controls": {

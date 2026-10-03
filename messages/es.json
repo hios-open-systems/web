@@ -2386,6 +2386,27 @@
         "hardware": "Ver el proyecto de hardware",
         "wiring": "Cableado y pinout",
         "pad": {
+            "showcase": {
+                "title": "El PAD en uso",
+                "description": "La pantalla reúne las acciones de la capa activa y los controles del dispositivo. Estos ejemplos muestran cómo usar el mismo PAD en distintos momentos del día.",
+                "imageAlt": "Fotografía del PAD en modo Edición con copiar, pegar, deshacer, rehacer y controles multimedia.",
+                "caption": "Foto real del prototipo en modo Edición. La distribución y las etiquetas pueden cambiar con la configuración del firmware.",
+                "editing": {
+                    "title": "Editar sin romper el ritmo",
+                    "body": "Asigná copiar, pegar, deshacer y rehacer a las teclas. Cambiá el encoder entre scroll y zoom, y usá el joystick para mover el puntero.",
+                    "requirement": "Acciones HID por USB o BLE; no requieren companion."
+                },
+                "meetings": {
+                    "title": "Controlar una reunión",
+                    "body": "Usá las capas de Meet, Zoom o Teams para los atajos de micrófono y cámara. Sumá el companion para alternar el mute global y recibir el estado real del micrófono.",
+                    "requirement": "Los atajos dependen de la aplicación activa; mute global y feedback requieren companion."
+                },
+                "media": {
+                    "title": "Música a mano",
+                    "body": "Controlá reproducción y volumen desde las teclas y el encoder. Con el companion, el PAD recibe el volumen del equipo para mostrarlo en pantalla.",
+                    "requirement": "Controles multimedia por HID; el volumen real en pantalla requiere companion."
+                }
+            },
             "title": "PAD: un escritorio que responde a vos",
             "description": "Convertí el PAD en un control para tus aplicaciones, llamadas y música. El firmware combina acciones por USB y Bluetooth, un editor web y un companion local opcional para Windows y Linux.",
             "controls": {

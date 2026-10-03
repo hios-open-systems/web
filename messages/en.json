@@ -2387,6 +2387,27 @@
         "hardware": "Explore the hardware project",
         "wiring": "Wiring and pinout",
         "pad": {
+            "showcase": {
+                "title": "PAD in use",
+                "description": "The display brings together the active layer actions and device controls. These examples show how the same PAD fits different parts of your day.",
+                "imageAlt": "Photograph of PAD in Editing mode with copy, paste, undo, redo and media controls.",
+                "caption": "Actual prototype photograph in Editing mode. Layout and labels can change with firmware configuration.",
+                "editing": {
+                    "title": "Keep your editing flow",
+                    "body": "Assign copy, paste, undo and redo to the keys. Switch the encoder between scrolling and zoom, and use the joystick to move the pointer.",
+                    "requirement": "USB or BLE HID actions; no companion required."
+                },
+                "meetings": {
+                    "title": "Control a meeting",
+                    "body": "Use Meet, Zoom or Teams layers for microphone and camera shortcuts. Add the companion to toggle global mute and receive the actual microphone state.",
+                    "requirement": "Shortcuts depend on the active application; global mute and feedback require the companion."
+                },
+                "media": {
+                    "title": "Music within reach",
+                    "body": "Control playback and volume with the keys and encoder. With the companion, PAD receives the computer volume to display it on screen.",
+                    "requirement": "Media controls use HID; displaying actual volume requires the companion."
+                }
+            },
             "title": "PAD: a desktop that responds to you",
             "description": "Make PAD a controller for your applications, calls and music. Its firmware combines USB and Bluetooth actions, a web editor and an optional local companion for Windows and Linux.",
             "controls": {
