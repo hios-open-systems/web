@@ -5,6 +5,7 @@ import { PageTrail } from '@/components/seo/PageTrail';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { createProjectPageData } from '@/lib/structured-data';
 import styles from './project-software.module.css';
+import { SoftwareShowcase } from './SoftwareShowcase';
 
 export async function ProjectSoftwarePage({ locale, slug }: { locale: string; slug: SoftwareProjectSlug }) {
   const t = await getTranslations({ locale, namespace: `ProjectSoftware.${slug}` });
@@ -27,6 +28,7 @@ export async function ProjectSoftwarePage({ locale, slug }: { locale: string; sl
           {project.sections.map((section) => <a key={section} href={`#${section}`}>{t(`${section}.title`)}</a>)}
         </nav>
       </header>
+      <SoftwareShowcase locale={locale} slug={slug} />
       <div className={styles.grid}>
         {project.sections.map((section, index) => (
           <section className={styles.card} id={section} key={section}>

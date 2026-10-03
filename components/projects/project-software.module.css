@@ -11,4 +11,14 @@
 .card h2 { font-size: 23px; margin: 12px 0 16px; }
 .card p { color: var(--hios-text-secondary); line-height: 1.85; margin: 0; }
 .footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--hios-border); }
+.showcase { margin-bottom: 48px; }
+.showcase > h2 { font-size: 28px; margin-bottom: 12px; }
+.intro { color: var(--hios-text-secondary); line-height: 1.75; max-width: 760px; }
+.preview { margin: 24px 0; border: 1px solid var(--hios-border); border-radius: 16px; overflow: hidden; background: var(--hios-bg-secondary); }
+.preview img { display: block; width: 100%; height: auto; }
+.preview figcaption { padding: 16px 24px; color: var(--hios-text-secondary); font-size: 14px; line-height: 1.6; }
+.useCases { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.useCases h3 { font-size: 20px; margin: 0 0 16px; }
+.card .requirement { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--hios-border); color: var(--accent-text); font-size: 14px; }
+@media (max-width: 800px) { .useCases { grid-template-columns: 1fr; } }
 @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } .page { padding: 24px 18px 56px; } .hero { padding: 28px 0; } .card { padding: 24px; } }
