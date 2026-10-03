@@ -18,6 +18,14 @@ for (const locale of ['en', 'es', 'de', 'it']) {
     assert.equal((body.match(/<h1\b/g) ?? []).length, 1);
     assert(body.includes(copy.title), `${locale}/${slug}: missing rendered title`);
     for (const section of project.sections) assert(body.includes(`id="${section}"`));
+    if (slug === 'pad') {
+      assert(body.includes(copy.showcase.imageAlt));
+      assert(body.includes(copy.showcase.caption));
+      for (const useCase of ['editing', 'meetings', 'media']) {
+        assert(body.includes(copy.showcase[useCase].title));
+        assert(body.includes(copy.showcase[useCase].requirement));
+      }
+    }
     assert(body.includes(`/${locale}/projects/${slug}`));
     const schemas = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
       .map((match) => JSON.parse(match[1]));

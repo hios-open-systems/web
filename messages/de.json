@@ -2421,6 +2421,27 @@
         "hardware": "Hardwareprojekt ansehen",
         "wiring": "Verdrahtung und Pinout",
         "pad": {
+            "showcase": {
+                "title": "PAD im Einsatz",
+                "description": "Die Anzeige vereint Aktionen der aktiven Ebene und Gerätesteuerung. Diese Beispiele zeigen, wie dasselbe PAD verschiedene Aufgaben im Alltag unterstützt.",
+                "imageAlt": "Foto von PAD im Bearbeitungsmodus mit Kopieren, Einfügen, Rückgängig, Wiederholen und Mediensteuerung.",
+                "caption": "Echtes Prototypfoto im Bearbeitungsmodus. Anordnung und Beschriftung können sich mit der Firmwarekonfiguration ändern.",
+                "editing": {
+                    "title": "Im Bearbeitungsfluss bleiben",
+                    "body": "Belege Tasten mit Kopieren, Einfügen, Rückgängig und Wiederholen. Wechsle den Encoder zwischen Scrollen und Zoom und bewege den Zeiger mit dem Joystick.",
+                    "requirement": "HID-Aktionen per USB oder BLE; kein Companion erforderlich."
+                },
+                "meetings": {
+                    "title": "Meetings steuern",
+                    "body": "Nutze Meet-, Zoom- oder Teams-Ebenen für Mikrofon- und Kamera-Shortcuts. Der Companion ermöglicht systemweites Mikrofon-Mute und Rückmeldung des tatsächlichen Status.",
+                    "requirement": "Shortcuts hängen von der aktiven Anwendung ab; globales Mute und Feedback benötigen den Companion."
+                },
+                "media": {
+                    "title": "Musik griffbereit",
+                    "body": "Steuere Wiedergabe und Lautstärke mit Tasten und Encoder. Mit dem Companion erhält PAD die Computerlautstärke zur Anzeige auf dem Bildschirm.",
+                    "requirement": "Mediensteuerung per HID; tatsächliche Lautstärkeanzeige benötigt den Companion."
+                }
+            },
             "title": "PAD: dein Desktop unter Kontrolle",
             "description": "Steuere Anwendungen, Anrufe und Musik mit PAD. Die Firmware verbindet USB- und Bluetooth-Aktionen, einen Webeditor und einen optionalen lokalen Companion für Windows und Linux.",
             "controls": {
