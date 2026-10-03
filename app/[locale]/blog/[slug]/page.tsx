@@ -1,4 +1,7 @@
-import { setRequestLocale } from 'next-intl/server';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { PageTrail } from '@/components/seo/PageTrail';
+import { createArticleData } from '@/lib/structured-data';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { getPostSlugs, getPostBySlug } from '@/lib/blog';
 import { BlogPost } from '@/components/blog/BlogPost';
@@ -24,5 +27,14 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
     setRequestLocale(locale);
     const post = getPostBySlug(slug);
     if (!post) notFound();
-    return <BlogPost post={post} locale={locale} />;
+    const header = await getTranslations({ locale, namespace: 'Header' });
+    const path = `/blog/${encodeURIComponent(slug)}` as const;
+    return <>
+        <PageTrail locale={locale} items={[
+            { name: header('home'), path: '' }, { name: header('blog'), path: '/blog' },
+            { name: post.title, path },
+        ]} />
+        <JsonLd data={createArticleData(locale, path, post)} />
+        <BlogPost post={post} locale={locale} />
+    </>;
 }
