@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { readRaw, writeRaw } from '@/lib/storage/safeLocalStorage';
 import { useTranslations } from 'next-intl';
 import { BulbOutlined, RightOutlined } from '@ant-design/icons';
@@ -22,6 +22,7 @@ export function ToolGuide({ guideId }: { guideId: string }) {
   const t = useTranslations('Workbench.guides');
   const storageKey = `wb-guide-${guideId}`;
   const [open, setOpen] = useState(false);
+  const panelId = useId();
 
   useEffect(() => {
     setOpen(readRaw(storageKey) === '1');
@@ -48,12 +49,11 @@ export function ToolGuide({ guideId }: { guideId: string }) {
 
   return (
     <section className={styles.guide}>
-      <button type="button" className={styles.guideToggle} aria-expanded={open} onClick={toggle}>
+      <button type="button" className={styles.guideToggle} aria-expanded={open} aria-controls={panelId} onClick={toggle}>
         <RightOutlined className={open ? styles.guideChevronOpen : styles.guideChevron} />
         {t('_label')}
       </button>
-      {open && (
-        <div className={styles.guideBody}>
+      <div id={panelId} className={styles.guideBody} hidden={!open}>
           <p className={styles.guideIntro}>{guide.intro}</p>
           <ol className={styles.guideSteps}>
             {guide.steps.map((step, i) => (
@@ -66,8 +66,7 @@ export function ToolGuide({ guideId }: { guideId: string }) {
               <span>{guide.tip}</span>
             </p>
           ) : null}
-        </div>
-      )}
+      </div>
     </section>
   );
 }
