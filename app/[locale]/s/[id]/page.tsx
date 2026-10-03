@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 import { getDb } from '@/lib/db';
 import { getPublicSnippetById } from '@/lib/snippets';
-import { getPageAlternates } from '@/lib/seo';
+import { createPageMetadata, getPageAlternates } from '@/lib/seo';
 
 const { Paragraph, Text, Title } = Typography;
 
@@ -22,11 +22,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         if (!snippet) {
             return { title: 'Snippet not found | HIOS Workbench' };
         }
-        return {
-            title: `${snippet.title} | HIOS Snippet`,
-            description: snippet.body.slice(0, 140),
-            alternates: getPageAlternates(locale, `/s/${encodeURIComponent(id)}`),
-        };
+        return createPageMetadata(
+            locale, `/s/${encodeURIComponent(id)}`,
+            `${snippet.title} | HIOS Snippet`, snippet.body.slice(0, 140),
+        );
     } catch {
         return {
             title: 'Public snippet | HIOS Workbench',

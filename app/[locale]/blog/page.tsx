@@ -1,4 +1,4 @@
-import { localizedMetadata } from '@/lib/seo';
+import { translatedMetadata } from '@/lib/seo-metadata';
 import { setRequestLocale } from 'next-intl/server';
 import { BlogIndex } from '@/components/blog/BlogIndex';
 import type { PostMeta } from '@/lib/blog';
@@ -20,4 +20,4 @@ export default async function BlogPage({ params }: { params: Promise<{ locale: s
     return <BlogIndex posts={manifest as PostMeta[]} locale={locale} />;
 }
 
-export const generateMetadata = localizedMetadata('/blog');
+export const generateMetadata = translatedMetadata('/blog', 'Seo.blog', 'description');

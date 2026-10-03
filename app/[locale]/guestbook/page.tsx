@@ -1,13 +1,10 @@
-import { localizedMetadata } from '@/lib/seo';
+import { translatedMetadata } from '@/lib/seo-metadata';
 import { setRequestLocale } from 'next-intl/server';
 import { GuestbookClient } from '@/components/guestbook/GuestbookClient';
 
 export const dynamic = 'force-static';
 
-export const generateMetadata = localizedMetadata('/guestbook', {
-  title: 'Guestbook | HIOS',
-  description: 'Firmá el libro de visitas de openhios.dev.',
-});
+export const generateMetadata = translatedMetadata('/guestbook', 'Guestbook', 'subtitle');
 
 const locales = ['en', 'es', 'de', 'it'];
 

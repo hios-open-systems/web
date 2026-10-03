@@ -2,7 +2,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { getPostSlugs, getPostBySlug } from '@/lib/blog';
 import { BlogPost } from '@/components/blog/BlogPost';
-import { getPageAlternates } from '@/lib/seo';
+import { createPageMetadata } from '@/lib/seo';
 
 const locales = ['en', 'es', 'de', 'it'];
 
@@ -16,11 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     const { locale, slug } = await params;
     const post = getPostBySlug(slug);
     if (!post) notFound();
-    return {
-        title: `${post.title} | HIOS`,
-        description: post.summary,
-        alternates: getPageAlternates(locale, `/blog/${encodeURIComponent(slug)}`),
-    };
+    return createPageMetadata(locale, `/blog/${encodeURIComponent(slug)}`, `${post.title} | HIOS`, post.summary);
 }
 
 export default async function BlogPostPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {

@@ -1,4 +1,4 @@
-import { localizedMetadata } from '@/lib/seo';
+import { translatedMetadata } from '@/lib/seo-metadata';
 import React from 'react';
 import nextDynamic from 'next/dynamic';
 import { setRequestLocale } from 'next-intl/server';
@@ -58,4 +58,4 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   );
 }
 
-export const generateMetadata = localizedMetadata('');
+export const generateMetadata = translatedMetadata('', 'Hero', 'subtitle');

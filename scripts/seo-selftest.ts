@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
-import { getPageAlternates, localizedMetadata } from '../lib/seo.ts';
+import { createPageMetadata, getPageAlternates, localizedMetadata } from '../lib/seo.ts';
+import { verifyPageMetadata } from './seo-metadata-check.ts';
 
 const languages = ['en', 'es', 'de', 'it'];
 
@@ -25,6 +26,11 @@ const metadata = await localizedMetadata('/workbench', {
 assert.equal(metadata.title, 'Workbench');
 assert.deepEqual(metadata.robots, { index: false });
 assert.equal(metadata.alternates?.canonical, '/es/workbench');
+const preview = createPageMetadata('de', '/workbench/hmac', 'HMAC | HIOS', 'Lokale HMAC-Berechnung.');
+assert.equal(preview.title, 'HMAC | HIOS');
+assert.equal(preview.description, 'Lokale HMAC-Berechnung.');
+assert.equal(preview.openGraph?.title, preview.title);
+assert.equal(preview.twitter?.description, preview.description);
 
 function htmlFiles(directory: string): string[] {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -65,6 +71,7 @@ function verifyBuild() {
       const expectedLocale = language === 'x-default' ? 'en' : language;
       assert.equal(link.href, `${url.origin}/${[expectedLocale, ...segments].join('/')}`, route);
     }
+    verifyPageMetadata(html, route);
     checked++;
   }
   assert.ok(checked >= 40, `Expected full localized build, found ${checked} pages`);

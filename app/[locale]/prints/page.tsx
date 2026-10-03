@@ -1,4 +1,4 @@
-import { localizedMetadata } from '@/lib/seo';
+import { translatedMetadata } from '@/lib/seo-metadata';
 import { setRequestLocale } from 'next-intl/server';
 import { PrintsCatalog } from '@/components/prints/PrintsCatalog';
 
@@ -14,4 +14,4 @@ export default async function PrintsPage({ params }: PageProps) {
   return <PrintsCatalog />;
 }
 
-export const generateMetadata = localizedMetadata('/prints');
+export const generateMetadata = translatedMetadata('/prints', 'Seo.prints', 'description');

@@ -641,6 +641,7 @@
         "subtitle": "Open hardware I designed, broke and documented. All the code, schematics and instructions, ready for you to build your own."
     },
     "Header": {
+        "guestbook": "Guestbook",
         "home": "Home",
         "projects": "Projects",
         "tools": "Stack",
@@ -2359,5 +2360,23 @@
         "copy_link": "Copy Link",
         "share_ok": "Share link copied",
         "share_error": "Could not copy share link"
+    },
+    "Seo": {
+        "blog": {
+            "title": "Technical documentation and build logs",
+            "description": "Open hardware guides, ESP32 and local AI references, and build logs with practical examples from HIOS projects."
+        },
+        "prints": {
+            "title": "3D printable parts for open hardware",
+            "description": "Explore 3D printable enclosures, brackets and parts for HIOS hardware projects, with model previews and downloadable files."
+        },
+        "stats": {
+            "title": "Public usage statistics",
+            "description": "Explore anonymous, aggregated usage statistics for HIOS pages and browser tools."
+        },
+        "colophon": {
+            "title": "About HIOS and its open source stack",
+            "description": "Learn how HIOS is built: open hardware, browser tools, local AI and the technologies behind this independent project."
+        }
     }
 }

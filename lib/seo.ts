@@ -29,6 +29,28 @@ export function getPageAlternates(locale: string, path: PagePath): Metadata['alt
   return { canonical: languages[locale], languages };
 }
 
+/** Keep search metadata and social previews aligned for every public page. */
+export function createPageMetadata(
+  locale: string,
+  path: PagePath,
+  title: string,
+  description: string,
+): Metadata {
+  const alternates = getPageAlternates(locale, path);
+  const images = [{ url: `/og/${locale}.png`, width: 1200, height: 630, alt: title }];
+  return {
+    title,
+    description,
+    alternates,
+    openGraph: {
+      type: 'website', siteName: 'HIOS', locale,
+      url: `${SITE_URL}${getLocalizedPaths(path)[locale]}`,
+      title, description, images,
+    },
+    twitter: { card: 'summary_large_image', title, description, images: [`/og/${locale}.png`] },
+  };
+}
+
 /** Use in each page, never in an ancestor layout: metadata is inherited. */
 export function localizedMetadata(path: PagePath, metadata: Metadata = {}) {
   return async function generateMetadata({ params }: LocaleParams): Promise<Metadata> {
