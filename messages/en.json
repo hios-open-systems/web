@@ -2362,6 +2362,7 @@
         "share_error": "Could not copy share link"
     },
     "Seo": {
+        "breadcrumbLabel": "Breadcrumb",
         "blog": {
             "title": "Technical documentation and build logs",
             "description": "Open hardware guides, ESP32 and local AI references, and build logs with practical examples from HIOS projects."
@@ -2377,6 +2378,57 @@
         "colophon": {
             "title": "About HIOS and its open source stack",
             "description": "Learn how HIOS is built: open hardware, browser tools, local AI and the technologies behind this independent project."
+        }
+    },
+    "ProjectSoftware": {
+        "label": "Software",
+        "sections": "Explore features",
+        "source": "Code and documentation",
+        "hardware": "Explore the hardware project",
+        "wiring": "Wiring and pinout",
+        "pad": {
+            "title": "PAD: a desktop that responds to you",
+            "description": "Make PAD a controller for your applications, calls and music. Its firmware combines USB and Bluetooth actions, a web editor and an optional local companion for Windows and Linux.",
+            "controls": {
+                "title": "Layers, shortcuts and mouse control",
+                "body": "Ten action keys and two ALT keys organize shortcuts by context. The encoder navigates layers and controls volume, scrolling, zoom or tabs depending on its mode. The joystick moves the pointer: tap for left click and double tap for right click. USB and BLE send keyboard, mouse and media actions; WiFi carries configuration and feedback, not HID."
+            },
+            "editor": {
+                "title": "Your configuration, without rebuilding",
+                "body": "The companion web editor changes layers, actions, text and macros, including Windows and Linux shortcut variants. It saves the editable configuration and sends the current operating system variant to PAD. A web mirror displays the device interface. Adapt the same hardware to editing, development, browsing or meetings."
+            },
+            "companion": {
+                "title": "Real computer state",
+                "body": "The companion reads volume and microphone state, plus CPU/GPU load and temperature when sensors are available. It sends feedback to PAD over the local network and can toggle global microphone mute. Camera controls and some meeting shortcuts depend on the active application."
+            },
+            "setup": {
+                "title": "Getting started",
+                "body": "Start with PAD over USB or BLE using its firmware layers. To add feedback and web editing, build the companion following its README, configure the PAD address and firmware-generated token, and run it on the same network. Windows includes login installation; Linux documents a systemd user service."
+            },
+            "availability": {
+                "title": "What works independently",
+                "body": "HID shortcuts and controls work without a companion or WiFi. Real feedback and global microphone mute require the companion. Windows and Linux providers are implemented; macOS is not yet supported. Sensor readings depend on your hardware. Global camera mute is not implemented in the companion."
+            }
+        },
+        "btdac": {
+            "title": "BTDAC: Bluetooth audio and test tools",
+            "description": "BTDAC firmware receives Bluetooth audio and sends it to the PCM5102 DAC over I2S. A separate Android application connects over BLE to request test tones.",
+            "audio": {
+                "title": "From Bluetooth to your DAC",
+                "body": "The ESP32 acts as an A2DP receiver for audio from a phone or computer. RGB LEDs indicate waiting, connection, playback and errors. The BLE control channel is independent of the Bluetooth connection used for music."
+            },
+            "android": {
+                "title": "Test tones from Android",
+                "body": "The Kotlin application built with Jetpack Compose scans for the HIOS BTDAC BLE service, lets you select and connect a device, and sends frequency commands. Firmware generates stereo sine tones from 20 Hz to 20 kHz for approximately two seconds. It does not start a tone while music is playing."
+            },
+            "setup": {
+                "title": "Getting started",
+                "body": "Build and flash the firmware following the BTDAC documentation. Pair an audio source to listen to music. For test tones, build the Android application from source, grant Bluetooth permissions and connect to BTDAC inside the application. No account or cloud service is required."
+            },
+            "availability": {
+                "title": "Current scope",
+                "body": "The application controls test tones. Remote volume and equalization, battery monitoring and OTA updates remain planned work, not available features of this integration. Android source is provided for building the application; no APK download is promised."
+            }
         }
     }
 }

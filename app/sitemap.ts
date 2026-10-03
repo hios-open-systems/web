@@ -1,3 +1,4 @@
+import { softwareProjects, softwarePath, type SoftwareProjectSlug } from '@/config/project-software';
 import type { MetadataRoute } from 'next';
 import { workbenchTools } from '@/config/workbench';
 import { getAllPostMeta } from '@/lib/blog';
@@ -20,6 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/pinouts/btdac',
     '/pinouts/speaker',
     '/projects',
+    ...Object.keys(softwareProjects).map((slug) => softwarePath(slug as SoftwareProjectSlug)),
     '/blog',
     '/prints',
     '/guestbook',

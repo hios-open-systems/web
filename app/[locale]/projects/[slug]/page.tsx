@@ -2,7 +2,12 @@ import { getProjectBySlug, getProjectSlugs } from '@/lib/projects';
 
 import { ProjectDetailClient } from './ProjectDetailClient';
 import { notFound } from 'next/navigation';
-import { setRequestLocale } from 'next-intl/server';
+import Link from 'next/link';
+import { isSoftwareProject, softwarePath } from '@/config/project-software';
+import { PageTrail } from '@/components/seo/PageTrail';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { createProjectPageData } from '@/lib/structured-data';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { createPageMetadata } from '@/lib/seo';
 
 export const dynamic = 'force-static';
@@ -43,5 +48,21 @@ export default async function ProjectPage({ params }: PageProps) {
         gallery: project.images,
     };
 
-    return <ProjectDetailClient project={projectWithGallery} slug={slug} />;
+    const header = await getTranslations({ locale, namespace: 'Header' });
+    const software = await getTranslations({ locale, namespace: 'ProjectSoftware' });
+    const path = `/projects/${encodeURIComponent(slug)}` as const;
+    return <>
+        <PageTrail locale={locale} items={[
+            { name: header('home'), path: '' }, { name: header('projects'), path: '/projects' },
+            { name: project.name, path },
+        ]} />
+        <JsonLd data={createProjectPageData(locale, path, project.name, project.description)} />
+        {isSoftwareProject(slug) && <aside style={{ maxWidth: 1132, margin: '16px auto', padding: '20px 24px', border: '1px solid var(--hios-border)', borderRadius: 12 }}>
+            <Link href={`/${locale}${softwarePath(slug)}`} style={{ color: 'var(--accent-text)', fontSize: 20 }}>
+                {software(`${slug}.title`)} →
+            </Link>
+            <p style={{ color: 'var(--hios-text-secondary)', marginBottom: 0 }}>{software(`${slug}.description`)}</p>
+        </aside>}
+        <ProjectDetailClient project={projectWithGallery} slug={slug} />
+    </>;
 }

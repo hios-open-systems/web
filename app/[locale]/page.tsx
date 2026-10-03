@@ -2,6 +2,8 @@ import { translatedMetadata } from '@/lib/seo-metadata';
 import React from 'react';
 import nextDynamic from 'next/dynamic';
 import { setRequestLocale } from 'next-intl/server';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { createWebsiteData } from '@/lib/structured-data';
 
 
 const locales = ['en', 'es', 'de', 'it'];
@@ -46,6 +48,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   setRequestLocale(locale);
   return (
     <main>
+      <JsonLd data={createWebsiteData()} />
       <React.Suspense fallback={null}>
         <HomeToolDeepLink />
       </React.Suspense>

@@ -1,0 +1,14 @@
+.page { max-width: 1100px; margin: 0 auto; padding: 32px 24px 80px; color: var(--hios-text); }
+.hero { padding: 48px 0; max-width: 850px; }
+.hero h1 { font-size: clamp(2rem, 5vw, 3.6rem); line-height: 1.12; letter-spacing: -.035em; margin: 16px 0 24px; }
+.eyebrow { color: var(--accent-text); font-family: var(--font-stack-mono); font-size: 12px; letter-spacing: .08em; }
+.lead { font-size: 20px; line-height: 1.7; color: var(--hios-text-secondary); }
+.links { display: flex; flex-wrap: wrap; gap: 12px 24px; margin-top: 24px; }
+.links a { color: var(--accent-text); text-decoration: underline; text-underline-offset: 5px; }
+.links a:focus-visible { outline: 2px solid currentColor; outline-offset: 5px; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.card { scroll-margin-top: 100px; padding: 28px; border: 1px solid var(--hios-border); border-radius: 16px; background: var(--hios-bg-secondary); }
+.card h2 { font-size: 23px; margin: 12px 0 16px; }
+.card p { color: var(--hios-text-secondary); line-height: 1.85; margin: 0; }
+.footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--hios-border); }
+@media (max-width: 640px) { .grid { grid-template-columns: 1fr; } .page { padding: 24px 18px 56px; } .hero { padding: 28px 0; } .card { padding: 24px; } }
