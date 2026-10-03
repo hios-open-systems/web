@@ -641,6 +641,7 @@
         "subtitle": "Hardware aperto che ho progettato, rotto e documentato. Tutto il codice, gli schemi e le istruzioni, pronti per costruire il tuo."
     },
     "Header": {
+        "guestbook": "Libro degli ospiti",
         "home": "Home",
         "projects": "Progetti",
         "tools": "Stack",
@@ -2393,5 +2394,23 @@
         "copy_link": "Copia link",
         "share_ok": "Link copiato",
         "share_error": "Impossibile copiare il link"
+    },
+    "Seo": {
+        "blog": {
+            "title": "Documentazione tecnica e diari di costruzione",
+            "description": "Guide di hardware aperto, riferimenti su ESP32 e IA locale e diari con esempi pratici dei progetti HIOS."
+        },
+        "prints": {
+            "title": "Parti stampabili in 3D per hardware aperto",
+            "description": "Esplora custodie, supporti e parti stampabili in 3D per i progetti hardware HIOS, con anteprime dei modelli e file scaricabili."
+        },
+        "stats": {
+            "title": "Statistiche pubbliche di utilizzo",
+            "description": "Esplora statistiche anonime e aggregate sull’utilizzo delle pagine e degli strumenti nel browser di HIOS."
+        },
+        "colophon": {
+            "title": "Informazioni su HIOS e il suo stack open source",
+            "description": "Scopri come nasce HIOS: hardware aperto, strumenti nel browser, IA locale e le tecnologie di questo progetto indipendente."
+        }
     }
 }

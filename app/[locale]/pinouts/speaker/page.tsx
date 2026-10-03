@@ -1,4 +1,4 @@
-import { getPageAlternates } from '@/lib/seo';
+import { createPageMetadata } from '@/lib/seo';
 import type { Metadata } from 'next';
 import { WiringGuideView } from '@/components/wiring-guide';
 import { SPEAKER_WIRING } from '@/config/pinouts/speaker';
@@ -15,7 +15,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'Pinouts.meta.speaker' });
-  return { title: t('title'), description: t('description'), alternates: getPageAlternates(locale, '/pinouts/speaker') };
+  return createPageMetadata(locale, '/pinouts/speaker', t('title'), t('description'));
 }
 
 const locales = ['en', 'es', 'de', 'it'];
