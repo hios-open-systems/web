@@ -1,15 +1,15 @@
+import { localizedMetadata } from '@/lib/seo';
 import { ComposerClient } from '@/components/tools/composer/ComposerClient';
 import { setRequestLocale } from 'next-intl/server';
-import type { Metadata } from 'next';
 import { Suspense } from 'react';
 
 // Fully static: prerenderizada por locale y servida del static-assets cache
 // (open-next.config.ts). El composer en si es client-only (ssr:false).
 export const dynamic = 'force-static';
-export const metadata: Metadata = {
+export const generateMetadata = localizedMetadata('/composer', {
   title: 'Compositor Chiptune | HIOS',
   description: 'Compone música chiptune en un piano-roll, escuchala en el navegador y mandala al parlante HIOS.',
-};
+});
 
 interface PageProps {
   params: Promise<{ locale: string }>;

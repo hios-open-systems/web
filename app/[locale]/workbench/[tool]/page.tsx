@@ -1,3 +1,4 @@
+import { getPageAlternates } from '@/lib/seo';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
@@ -187,8 +188,12 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { tool } = await params;
-  return metadataMap[tool] ?? { title: 'Workbench Tool | HIOS' };
+  const { locale, tool } = await params;
+  if (!dynamicToolIds.some((id) => id === tool)) notFound();
+  return {
+    ...(metadataMap[tool] ?? { title: 'Workbench Tool | HIOS' }),
+    alternates: getPageAlternates(locale, `/workbench/${encodeURIComponent(tool)}`),
+  };
 }
 
 

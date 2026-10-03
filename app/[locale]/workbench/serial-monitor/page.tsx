@@ -1,13 +1,13 @@
-import type { Metadata } from 'next';
+import { localizedMetadata } from '@/lib/seo';
 import { setRequestLocale } from 'next-intl/server';
 import { SerialMonitor } from '@/components/workbench/SerialMonitor';
 import { ToolPager } from '@/components/workbench/ToolPager';
 import { ToolUsageTracker } from '@/components/workbench/ToolUsageTracker';
 
-export const metadata: Metadata = {
+export const generateMetadata = localizedMetadata('/workbench/serial-monitor', {
   title: 'WebSerial Monitor | HIOS Workbench',
   description: 'Conectá tu ESP32 o Arduino directo al navegador. Lee logs y mandá payloads por puerto serie.',
-};
+});
 
 interface PageProps {
   params: Promise<{ locale: string }>;
