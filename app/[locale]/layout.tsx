@@ -4,6 +4,7 @@ import { Inter, Archivo, IBM_Plex_Mono } from 'next/font/google';
 import { ThemeLayout } from '@/components/ThemeLayout';
 import AntdRegistry from '@/lib/AntdRegistry';
 import { getCurrentDeployVersion } from '@/lib/appVersion';
+import { SITE_URL } from '@/lib/seo';
 import '@/styles/globals.css';
 import '@excalidraw/excalidraw/index.css';
 
@@ -31,8 +32,6 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
 };
-
-const SITE_URL = (process.env.AUTH_BASE_URL || 'https://openhios.dev').replace(/\/$/, '');
 
 const THEME_BOOTSTRAP_SCRIPT = `(function(){try{var stored=localStorage.getItem('theme');var next=(stored==='light'||stored==='dark')?stored:null;if(!next&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches){next='dark';}if(!next){next='dark';}document.documentElement.setAttribute('data-theme',next);var skin=localStorage.getItem('hios-skin');if(skin==='terminal'||skin==='blueprint'||skin==='datasheet'){document.documentElement.setAttribute('data-skin',skin);}}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`;
 
