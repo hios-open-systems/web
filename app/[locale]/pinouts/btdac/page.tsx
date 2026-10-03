@@ -1,3 +1,4 @@
+import { getPageAlternates } from '@/lib/seo';
 import type { Metadata } from 'next';
 import { WiringGuideView } from '@/components/wiring-guide';
 import { BTDAC_WIRING } from '@/config/pinouts/btdac';
@@ -14,7 +15,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'Pinouts.meta.btdac' });
-  return { title: t('title'), description: t('description') };
+  return { title: t('title'), description: t('description'), alternates: getPageAlternates(locale, '/pinouts/btdac') };
 }
 
 const locales = ['en', 'es', 'de', 'it'];

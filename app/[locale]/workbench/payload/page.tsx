@@ -1,14 +1,14 @@
-import type { Metadata } from 'next';
+import { localizedMetadata } from '@/lib/seo';
 import { setRequestLocale } from 'next-intl/server';
 import { PayloadLab } from '@/components/workbench/PayloadLab';
 import { ToolPager } from '@/components/workbench/ToolPager';
 import { ToolUsageTracker } from '@/components/workbench/ToolUsageTracker';
 import { Suspense } from 'react';
 
-export const metadata: Metadata = {
+export const generateMetadata = localizedMetadata('/workbench/payload', {
   title: 'Payload Lab | HIOS Workbench',
   description: 'Formatea, valida y comparte payloads JSON con un flujo local-first.',
-};
+});
 
 
 interface PageProps {

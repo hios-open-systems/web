@@ -3,11 +3,24 @@ import { getProjectBySlug, getProjectSlugs } from '@/lib/projects';
 import { ProjectDetailClient } from './ProjectDetailClient';
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
+import { getPageAlternates } from '@/lib/seo';
 
 export const dynamic = 'force-static';
 
 interface PageProps {
     params: Promise<{ slug: string; locale: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps) {
+    const { locale, slug } = await params;
+    if (!getProjectSlugs().includes(slug)) notFound();
+    const project = getProjectBySlug(slug);
+    if (!project) notFound();
+    return {
+        title: `${project.name} | HIOS`,
+        description: project.description,
+        alternates: getPageAlternates(locale, `/projects/${encodeURIComponent(slug)}`),
+    };
 }
 
 export async function generateStaticParams() {

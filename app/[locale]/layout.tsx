@@ -52,14 +52,9 @@ export async function generateMetadata({
     title,
     description,
     applicationName: 'HIOS',
-    alternates: {
-      canonical: `/${locale}`,
-      languages: { en: '/en', es: '/es', de: '/de', it: '/it', 'x-default': '/en' },
-    },
     openGraph: {
       type: 'website',
       siteName: 'HIOS',
-      url: `${SITE_URL}/${locale}`,
       title,
       description,
       locale,

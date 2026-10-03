@@ -1,12 +1,12 @@
-import type { Metadata } from 'next';
+import { localizedMetadata } from '@/lib/seo';
 import { setRequestLocale } from 'next-intl/server';
 import { PrivacySettings } from '@/components/settings/PrivacySettings';
 import { ThemeSettings } from '@/components/settings/ThemeSettings';
 
-export const metadata: Metadata = {
+export const generateMetadata = localizedMetadata('/workbench/settings', {
     title: 'Settings | HIOS Workbench',
     description: 'Configurá el tema y otras preferencias del workbench.',
-};
+});
 
 
 interface PageProps {

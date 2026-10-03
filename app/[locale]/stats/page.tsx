@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import { localizedMetadata } from '@/lib/seo';
 import { setRequestLocale } from 'next-intl/server';
 import { PublicStats } from '@/components/stats/PublicStats';
 
@@ -6,10 +6,10 @@ import { PublicStats } from '@/components/stats/PublicStats';
 // /api/stats/public, que cachea en edge.
 export const dynamic = 'force-static';
 
-export const metadata: Metadata = {
+export const generateMetadata = localizedMetadata('/stats', {
   title: 'Stats | HIOS',
   description: 'Telemetría abierta y anónima de openhios.dev — opt-in, agregada, pública.',
-};
+});
 
 const locales = ['en', 'es', 'de', 'it'];
 

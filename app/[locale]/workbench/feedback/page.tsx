@@ -1,12 +1,12 @@
-import type { Metadata } from 'next';
+import { localizedMetadata } from '@/lib/seo';
 import { setRequestLocale } from 'next-intl/server';
 import { FeedbackInbox } from '@/components/feedback/FeedbackInbox';
 import { ServerFeedbackInbox } from '@/components/feedback/ServerFeedbackInbox';
 
-export const metadata: Metadata = {
+export const generateMetadata = localizedMetadata('/workbench/feedback', {
     title: 'Feedback | HIOS Workbench',
     description: 'Errores auto-capturados y entradas manuales (bug, idea, nota). Local-first.',
-};
+});
 
 
 interface PageProps {

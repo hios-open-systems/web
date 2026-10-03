@@ -1,3 +1,4 @@
+import { localizedMetadata } from '@/lib/seo';
 import React from 'react';
 import { setRequestLocale } from 'next-intl/server';
 import { ProjectsIndex } from '@/components/projects/ProjectsIndex';
@@ -17,3 +18,5 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
     setRequestLocale(locale);
     return <ProjectsIndex />;
 }
+
+export const generateMetadata = localizedMetadata('/projects');

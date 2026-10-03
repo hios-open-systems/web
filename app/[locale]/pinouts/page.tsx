@@ -1,3 +1,4 @@
+import { getPageAlternates } from '@/lib/seo';
 import type { Metadata } from 'next';
 import { PinoutsContent } from '@/components/pinouts/PinoutsContent';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -13,7 +14,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'Pinouts.meta.index' });
-  return { title: t('title'), description: t('description') };
+  return { title: t('title'), description: t('description'), alternates: getPageAlternates(locale, '/pinouts') };
 }
 
 const locales = ['en', 'es', 'de', 'it'];
