@@ -22,7 +22,7 @@ export default defineConfig({
         {
             name: 'chromium',
             testIgnore: ['**/*.auth.spec.ts', '**/mobile-responsive.spec.ts'],
-            use: { ...devices['Desktop Chrome'], channel: undefined },
+            use: { ...devices['Desktop Chrome'], channel: process.env.PLAYWRIGHT_CHANNEL },
         },
         {
             name: 'mobile-360',
