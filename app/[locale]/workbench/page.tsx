@@ -1,13 +1,13 @@
-import type { Metadata } from 'next';
+import { localizedMetadata } from '@/lib/seo';
 import { Suspense } from 'react';
 import { setRequestLocale } from 'next-intl/server';
 import { WorkbenchLanding } from '@/components/workbench/WorkbenchLanding';
 
 export const dynamic = 'force-static';
-export const metadata: Metadata = {
+export const generateMetadata = localizedMetadata('/workbench', {
   title: 'Workbench | HIOS',
   description: 'Workspace local-first para payloads, snippets y flujos prácticos de desarrollo.',
-};
+});
 
 interface PageProps {
   params: Promise<{ locale: string }>;

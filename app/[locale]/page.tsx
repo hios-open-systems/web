@@ -1,3 +1,4 @@
+import { localizedMetadata } from '@/lib/seo';
 import React from 'react';
 import nextDynamic from 'next/dynamic';
 import { setRequestLocale } from 'next-intl/server';
@@ -56,3 +57,5 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
     </main>
   );
 }
+
+export const generateMetadata = localizedMetadata('');

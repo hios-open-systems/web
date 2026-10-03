@@ -1,13 +1,13 @@
-import type { Metadata } from 'next';
+import { localizedMetadata } from '@/lib/seo';
 import { setRequestLocale } from 'next-intl/server';
 import { SnippetsWorkspace } from '@/components/workbench/SnippetsWorkspace';
 import { ToolPager } from '@/components/workbench/ToolPager';
 import { ToolUsageTracker } from '@/components/workbench/ToolUsageTracker';
 
-export const metadata: Metadata = {
+export const generateMetadata = localizedMetadata('/workbench/snippets', {
   title: 'Snippets | HIOS Workbench',
   description: 'Notas rápidas, comandos y recipes con modo local-first y backup opcional en cuenta dentro de HIOS Workbench.',
-};
+});
 
 
 interface PageProps {

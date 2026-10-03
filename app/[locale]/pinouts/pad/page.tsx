@@ -1,3 +1,4 @@
+import { getPageAlternates } from '@/lib/seo';
 import type { Metadata } from 'next';
 import { WiringGuideView } from '@/components/wiring-guide';
 import { PAD_WIRING } from '@/config/pinouts/pad';
@@ -14,7 +15,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'Pinouts.meta.pad' });
-  return { title: t('title'), description: t('description') };
+  return { title: t('title'), description: t('description'), alternates: getPageAlternates(locale, '/pinouts/pad') };
 }
 
 const locales = ['en', 'es', 'de', 'it'];

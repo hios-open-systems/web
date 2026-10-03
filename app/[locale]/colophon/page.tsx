@@ -1,3 +1,4 @@
+import { localizedMetadata } from '@/lib/seo';
 import { setRequestLocale } from 'next-intl/server';
 
 // Página estática, sin antd ni messages: contenido hardcodeado bilingüe.
@@ -10,12 +11,10 @@ export function generateStaticParams() {
     return locales.map((locale) => ({ locale }));
 }
 
-export function generateMetadata() {
-    return {
-        title: 'Colophon | HIOS',
-        description: 'Qué es HIOS, con qué está hecho y por qué es open source.',
-    };
-}
+export const generateMetadata = localizedMetadata('/colophon', {
+    title: 'Colophon | HIOS',
+    description: 'Qué es HIOS, con qué está hecho y por qué es open source.',
+});
 
 interface Section {
     heading: string;
