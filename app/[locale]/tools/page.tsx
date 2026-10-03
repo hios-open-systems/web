@@ -1,4 +1,4 @@
-import { localizedMetadata } from '@/lib/seo';
+import { translatedMetadata } from '@/lib/seo-metadata';
 import { setRequestLocale } from 'next-intl/server';
 import { RecommendedSoftwareCatalog } from '@/components/tools/RecommendedSoftwareCatalog';
 
@@ -17,4 +17,4 @@ export default async function ToolsPage({ params }: PageProps) {
   return <RecommendedSoftwareCatalog />;
 }
 
-export const generateMetadata = localizedMetadata('/tools');
+export const generateMetadata = translatedMetadata('/tools', 'Tools', 'subtitle');

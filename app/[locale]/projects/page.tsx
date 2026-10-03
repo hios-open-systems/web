@@ -1,4 +1,4 @@
-import { localizedMetadata } from '@/lib/seo';
+import { translatedMetadata } from '@/lib/seo-metadata';
 import React from 'react';
 import { setRequestLocale } from 'next-intl/server';
 import { ProjectsIndex } from '@/components/projects/ProjectsIndex';
@@ -19,4 +19,4 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
     return <ProjectsIndex />;
 }
 
-export const generateMetadata = localizedMetadata('/projects');
+export const generateMetadata = translatedMetadata('/projects', 'Projects', 'subtitle');
