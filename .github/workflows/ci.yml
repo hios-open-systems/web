@@ -68,3 +68,8 @@ jobs:
         run: npx opennextjs-cloudflare build
         env:
           NEXT_TELEMETRY_DISABLED: '1'
+
+      - name: Verify rendered SEO metadata and sitemap
+        run: |
+          npm run test:seo -- --built
+          npm run test:sitemap -- --built
