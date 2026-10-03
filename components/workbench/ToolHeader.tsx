@@ -1,10 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { useContext } from 'react';
 import { Space, Typography } from 'antd';
 import { LocalityBadge, type Locality } from './LocalityBadge';
 import { ToolGuide } from './ToolGuide';
 import { FeedbackButton } from '@/components/feedback/FeedbackButton';
+import { ToolHeaderRenderedContext } from './ToolHeaderContext';
 import styles from './workbench.module.css';
 
 const { Title, Paragraph } = Typography;
@@ -33,6 +34,10 @@ export function ToolHeader({
   actions,
   guideId,
 }: ToolHeaderProps) {
+  const headerRendered = useContext(ToolHeaderRenderedContext);
+  if (headerRendered) {
+    return actions ? <div className={styles.toolHeaderActions}>{actions}</div> : null;
+  }
   return (
     <header className={styles.toolHeader}>
       <div className={styles.toolHeaderTopRow}>

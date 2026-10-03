@@ -3,6 +3,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 import { createPageMetadata, getPageAlternates, localizedMetadata } from '../lib/seo.ts';
 import { verifyPageMetadata } from './seo-metadata-check.ts';
+import { verifyToolContent } from './tool-content-check.ts';
 
 const languages = ['en', 'es', 'de', 'it'];
 
@@ -72,6 +73,7 @@ function verifyBuild() {
       assert.equal(link.href, `${url.origin}/${[expectedLocale, ...segments].join('/')}`, route);
     }
     verifyPageMetadata(html, route);
+    verifyToolContent(html, route);
     checked++;
   }
   assert.ok(checked >= 40, `Expected full localized build, found ${checked} pages`);

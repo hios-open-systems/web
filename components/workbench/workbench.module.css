@@ -1171,6 +1171,10 @@
   gap: 10px;
   padding: 0 18px 16px 18px;
 }
+.guideBody[hidden] {
+  display: none;
+}
+
 .guideIntro {
   margin: 0;
   font-size: 13.5px;

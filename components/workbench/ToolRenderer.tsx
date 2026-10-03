@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import type { ComponentType } from 'react';
 import type { WorkbenchToolId } from '@/config/workbench';
 import { ToolErrorBoundary } from '@/components/workbench/ToolErrorBoundary';
+import { ToolHeaderRenderedContext } from './ToolHeaderContext';
 
 const TOOLS: Partial<Record<WorkbenchToolId, ComponentType>> = {
   'tone-generator': dynamic(() => import('@/components/workbench/audio/ToneGeneratorTool').then((m) => m.ToneGeneratorTool), { ssr: false }),
@@ -57,12 +58,14 @@ const TOOLS: Partial<Record<WorkbenchToolId, ComponentType>> = {
   'token-inspector': dynamic(() => import('@/components/workbench/TokenizerTool').then((m) => m.TokenizerTool), { ssr: false }),
 };
 
-export function ToolRenderer({ toolId }: { toolId: WorkbenchToolId }) {
+export function ToolRenderer({ toolId, headerRendered = false }: { toolId: WorkbenchToolId; headerRendered?: boolean }) {
   const Tool = TOOLS[toolId];
   if (!Tool) return null;
   return (
-    <ToolErrorBoundary>
-      <Tool />
-    </ToolErrorBoundary>
+    <ToolHeaderRenderedContext.Provider value={headerRendered}>
+      <ToolErrorBoundary>
+        <Tool />
+      </ToolErrorBoundary>
+    </ToolHeaderRenderedContext.Provider>
   );
 }

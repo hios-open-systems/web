@@ -5,6 +5,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { ToolRenderer } from '@/components/workbench/ToolRenderer';
 import { ToolPager } from '@/components/workbench/ToolPager';
 import { ToolUsageTracker } from '@/components/workbench/ToolUsageTracker';
+import { ToolPageIntro } from '@/components/workbench/ToolPageIntro';
 import { getWorkbenchTool, workbenchTools, type WorkbenchToolId } from '@/config/workbench';
 
 const dynamicToolIds = workbenchTools
@@ -37,9 +38,10 @@ export default async function DynamicWorkbenchToolPage({ params }: PageProps) {
   }
 
   return (
-    <main style={{ maxWidth: 1180, margin: '0 auto', padding: '32px 24px 56px' }}>
+    <main style={{ maxWidth: 1180, margin: '0 auto', padding: '32px 24px 56px', display: 'flex', flexDirection: 'column', gap: 20 }}>
       <ToolUsageTracker toolId={workbenchTool.id} />
-      <ToolRenderer toolId={workbenchTool.id} />
+      <ToolPageIntro locale={locale} tool={workbenchTool} />
+      <ToolRenderer toolId={workbenchTool.id} headerRendered />
       <ToolPager currentId={workbenchTool.id} />
     </main>
   );
