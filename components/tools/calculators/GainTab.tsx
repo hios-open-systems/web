@@ -17,8 +17,7 @@ export function GainTab({ c }: { c: CalculatorState }) {
         hint={`${t('cards.gain.db')}: ${c.gain.gainDb.toFixed(2)} dB`}
       />
       <div
-        className={styles.fullRow}
-        style={{ marginTop: 16, display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1.2fr)', gap: 20, alignItems: 'center' }}
+        className={`${styles.fullRow} ${styles.visualRow}`}
       >
         <AmpSchematic
           rfText={`${c.rf} Ω`}

@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { inspectMobileLayout } from './helpers/mobile-layout';
 
 const representativeRoutes = [
     '/es',
@@ -25,6 +26,7 @@ test.describe('responsive shell', () => {
             }));
 
             expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth + 1);
+            expect(await page.evaluate(inspectMobileLayout)).toEqual([]);
         });
     }
 

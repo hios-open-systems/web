@@ -1,0 +1,7 @@
+.frame { min-width: 0; margin: 18px 0; }
+.toolbar { display: flex; gap: 8px; justify-content: flex-end; margin-bottom: 10px; }
+.toolbar button { min-height: 44px; padding-inline: 14px; }
+.viewport { min-width: 0; overflow: auto; border-radius: 12px; }
+.expanded > div { width: max-content; min-width: 100%; }
+.expanded svg { min-width: 700px; max-width: none !important; }
+.hint { color: var(--hios-text-secondary); font-size: 12px; }

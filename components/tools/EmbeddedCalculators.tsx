@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { Button, Space, Tabs, Tooltip } from 'antd';
+import { Button, Select, Space, Tabs, Tooltip } from 'antd';
 import { ToolHeader } from '@/components/workbench/ToolHeader';
 import { ToolGuide } from '@/components/workbench/ToolGuide';
 import { UrlPresets } from '@/components/common/UrlPresets';
@@ -107,6 +107,18 @@ export function EmbeddedCalculators() {
       </Space>
 
       <div className={styles.tabsShell}>
+        <div className={styles.mobileSelector}>
+          <label htmlFor="calculator-choice">{t('choose_calculator')}</label>
+          <Select id="calculator-choice" value={c.activeTab} onChange={c.setActiveTab}
+            showSearch optionFilterProp="label"
+            size="large" style={{ width: '100%' }}
+            options={CALCULATORS_BY_CATEGORY.map((group) => ({
+              label: t(`categories.${group.category}`),
+              options: group.calcs.map((def) => ({ value: def.id, label: t(`cards.${def.id}.title`) })),
+            }))}
+            optionRender={(option) => <span style={{ whiteSpace: 'normal' }}>{option.label}</span>}
+          />
+        </div>
         <Tabs
           tabPosition="left"
           activeKey={c.activeTab}

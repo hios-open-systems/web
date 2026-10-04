@@ -105,7 +105,7 @@ export function CsvJsonTool() {
         </Space>
       </Card>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+      <div className={styles.editorGrid}>
         <Card title={sourceLabel} className={styles.sectionCard} styles={{ body: { padding: 16 } }}>
           <TextArea
             value={sourceValue}

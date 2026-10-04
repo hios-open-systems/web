@@ -150,7 +150,7 @@ export function UsageAnalyticsTool() {
 
       {state === 'ready' && data ? (
         <Space direction="vertical" size={20} className={styles.stackFull}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: 12 }}>
             <Card className={styles.sectionCard}><Statistic title={t('totalsEvents')} value={data.totals.events} /></Card>
             <Card className={styles.sectionCard}><Statistic title={t('totalsViews')} value={data.totals.pageViews} /></Card>
             <Card className={styles.sectionCard}><Statistic title={t('totalsToolOpens')} value={data.totals.toolOpens} /></Card>
@@ -172,7 +172,7 @@ export function UsageAnalyticsTool() {
             />
           </Card>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: 12 }}>
             <Card className={styles.sectionCard} title={t('topPagesTitle')} styles={{ body: { padding: 0 } }}>
               <Table<TopPageRow>
                 size="small"

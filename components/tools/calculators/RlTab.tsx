@@ -23,8 +23,7 @@ export function RlTab({ c }: { c: CalculatorState }) {
         invalidText={t('cards.invalid')}
       />
       <div
-        className={styles.fullRow}
-        style={{ marginTop: 16, display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1.4fr)', gap: 20, alignItems: 'center' }}
+        className={`${styles.fullRow} ${styles.visualRow}`}
       >
         <RlSchematic rText={`${c.rlR} Ω`} lText={`${c.rlL} mH`} />
         <Plot

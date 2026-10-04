@@ -145,7 +145,7 @@ export function ExcalidrawTool() {
         }
       />
 
-      <Card className={styles.sectionCard} styles={{ body: { padding: 0 } }}>
+      <Card className={`${styles.sectionCard} ${styles.canvasCard}`} styles={{ body: { padding: 0 } }}>
         <div style={{ height: 'min(74vh, 760px)', minHeight: 520 }}>
           {booted ? (
             <ExcalidrawCanvas

@@ -139,6 +139,10 @@ ok('toda MCU tiene pinout físico (board)', MCUS.every((b) => !!b.board));
 for (const mcu of MCUS) {
   const board = mcu.board!;
   const all = [...board.left, ...board.right];
+  const identities = (['left', 'right'] as const).flatMap((side) =>
+    board[side].map((pin) => `${board.headers[side]}.${pin.pos}`),
+  );
+  ok(`[${mcu.id}] header-qualified pin identities are unique`, new Set(identities).size === all.length);
 
   ok(`[${mcu.id}] cada pin del header tiene al menos una etiqueta`, all.every((p) => p.labels.length > 0));
   ok(
@@ -155,6 +159,17 @@ for (const mcu of MCUS) {
 
 const s3 = BREAKOUTS.find((b) => b.id === 'esp32-s3-devkitc-1')!;
 const wroom = BREAKOUTS.find((b) => b.id === 'esp32-wroom-32')!;
+// Espressif DevKitC header tables, antenna up / USB down. Compare labels, not only counts.
+const expectedHeaders = [
+  [s3, 'left', '3V3 3V3 RST IO4 IO5 IO6 IO7 IO15 IO16 IO17 IO18 IO8 IO3 IO46 IO9 IO10 IO11 IO12 IO13 IO14 5V GND'],
+  [s3, 'right', 'GND IO43 IO44 IO1 IO2 IO42 IO41 IO40 IO39 IO38 IO37 IO36 IO35 IO0 IO45 IO48 IO47 IO21 IO20 IO19 GND GND'],
+  [wroom, 'left', '3V3 EN IO36 IO39 IO34 IO35 IO32 IO33 IO25 IO26 IO27 IO14 IO12 GND IO13 SD2 SD3 CMD 5V'],
+  [wroom, 'right', 'GND IO23 IO22 IO1 IO3 IO21 GND IO19 IO18 IO5 IO17 IO16 IO4 IO0 IO2 IO15 SD1 SD0 CLK'],
+] as const;
+for (const [module, side, expected] of expectedHeaders) {
+  const actual = module.board![side].map((pin) => pin.labels.find((label) => label.primary)!.text).join(' ');
+  ok(`${module.id} ${side} matches Espressif physical header order`, actual === expected);
+}
 ok('ESP32-S3 DevKitC-1 tiene los 44 pines', s3.board!.left.length + s3.board!.right.length === 44);
 ok('ESP32-WROOM-32 DevKit tiene los 38 pines', wroom.board!.left.length + wroom.board!.right.length === 38);
 ok(

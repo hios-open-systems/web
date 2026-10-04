@@ -70,7 +70,7 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
         futureFeatures?: string[];
     }
 
-    // Try to get the story from translations. 
+    // Try to get the story from translations.
     // We check if the key exists by seeing if t.raw returns an object, not a string (key fallback).
     let story: Story | null = null;
     try {
@@ -584,14 +584,15 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                                                         display: 'flex',
                                                         alignItems: 'center',
                                                         justifyContent: 'space-between',
+                                                        flexWrap: 'wrap',
                                                         gap: '10px',
                                                         padding: '8px 6px',
                                                         borderBottom: mode === 'dark' ? '1px solid #1f1f1f' : '1px solid #f0f0f0',
                                                     }}
                                                 >
-                                                    <Space size={8} style={{ minWidth: 0 }}>
+                                                    <Space size={8} wrap style={{ minWidth: 0, flex: '1 1 240px' }}>
                                                         <FileOutlined style={{ color: accentColor }} />
-                                                        <Text style={{ color: textColor }} ellipsis={{ tooltip: asset.name }}>
+                                                        <Text style={{ color: textColor, overflowWrap: 'anywhere' }}>
                                                             {asset.name}
                                                         </Text>
                                                         <Tag style={{ border: 'none', fontSize: 10 }}>

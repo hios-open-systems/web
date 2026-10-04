@@ -93,7 +93,7 @@ export function HttpStatusCodesTool() {
           rowKey="code"
           size="small"
           pagination={false}
-          scroll={{ y: 460 }}
+          scroll={{ x: 640, y: 460 }}
           locale={{ emptyText: t('empty') }}
         />
       </Card>
