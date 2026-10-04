@@ -70,6 +70,7 @@ const server = http.createServer((req, res) => {
   const send = (c, t, b) => { res.writeHead(c, { 'Content-Type': t }); res.end(b); };
   if (req.url.startsWith('/api/')) st.tokenSeen.push({ url: req.url, tok: req.headers['x-pad-token'] || null });
   if (req.url === '/' || req.url === '/index.html') return send(200, 'text/html', PAGE);
+  if (req.url === '/favicon.ico') return send(204, 'image/x-icon', '');
   if (req.url === '/manifest.webmanifest') return send(200, 'application/manifest+json', MANIFEST);
   if (req.url.startsWith('/api/') && !authOk(req)) return send(401, 'text/plain', 'unauthorized');
   if (req.url === '/api/config' && req.method === 'GET') return send(200, 'application/json', JSON.stringify(fullCfg()));
