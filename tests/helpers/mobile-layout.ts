@@ -8,6 +8,8 @@ export function inspectMobileLayout() {
     let parent = element.parentElement;
     while (parent && parent !== document.body) {
       const css = getComputedStyle(parent);
+      // Ant Design clips the fixed header and synchronizes it with body scrolling.
+      if (parent.matches('.ant-table-header') && css.overflowX === 'hidden') return [];
       if (['auto', 'scroll'].includes(css.overflowX) && parent.scrollWidth > parent.clientWidth + 1) return [];
       parent = parent.parentElement;
     }
