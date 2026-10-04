@@ -392,7 +392,7 @@
   flex-direction: column;
   gap: 6px;
   flex: 1;
-  min-width: 240px;
+  min-width: min(100%, 240px);
 }
 
 .customLabel {

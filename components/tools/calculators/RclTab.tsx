@@ -20,7 +20,7 @@ export function RclTab({ c }: { c: CalculatorState }) {
         invalid={!c.rcl.valid}
         invalidText={c.t('cards.invalid')}
       />
-      <div className={styles.fullRow} style={{ marginTop: 16, display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1.4fr)', gap: 20, alignItems: 'center' }}>
+      <div className={`${styles.fullRow} ${styles.visualRow}`} >
         <RclSchematic
           rText={`${c.rclR} Ω`}
           lText={`${c.rclL} mH`}

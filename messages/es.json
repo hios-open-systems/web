@@ -532,6 +532,9 @@
         "wiring_guide": "Guía de cableado"
     },
     "Pinouts": {
+        "boardOrientation": "Vista superior · USB abajo. Referencia del dibujo: números únicos, bajando por la izquierda y subiendo por la derecha. No son números GPIO ni la numeración del fabricante.",
+        "assignedPins": "{count} contactos usados o reservados por esta guía. Los contactos atenuados quedan fuera del cableado indicado.",
+        "functionalDiagram": "Referencia funcional. La forma y la posición de los contactos varían según el fabricante: verificá la serigrafía de tu módulo.",
         "eyebrow": "Referencia de hardware",
         "title": "Pinouts Interactivos",
         "subtitle": "Explora los diagramas de pines de los módulos utilizados en nuestros proyectos",
@@ -557,7 +560,7 @@
                 "description": "MCU WiFi + BT 4.2, header 2×19 (38 pines). Referencia rápida + gotchas."
             },
             "esp32-s3-devkitc-1": {
-                "description": "MCU con USB OTG nativo, WiFi 6, BLE 5. Header 2×22. Referencia rápida + gotchas."
+                "description": "MCU con USB OTG nativo, WiFi 802.11 b/g/n, BLE 5. Header 2×22. Referencia rápida + gotchas."
             },
             "max98357a": {
                 "description": "Amplificador Class-D I2S mono 3.2W (breakout). 2 en paralelo = stereo."
@@ -566,7 +569,7 @@
                 "description": "DAC I2S 32-bit/384kHz (breakout GY-PCM5102). Salida de línea L/R."
             },
             "lm2596": {
-                "description": "Regulador DC-DC reductor ajustable 3A. Suele traer display de tensión."
+                "description": "Regulador DC-DC reductor ajustable. La corriente útil depende del módulo y de su refrigeración."
             },
             "jack-trs": {
                 "description": "Conector hembra estéreo: Tip=L, Ring=R, Sleeve=GND."
@@ -575,7 +578,7 @@
                 "description": "Conector macho con micrófono, estándar CTIA (celulares modernos)."
             },
             "ili9488": {
-                "description": "Pantalla 480×320 18-bit por SPI. Trae regulador y level-shifter (VCC a 5V)."
+                "description": "Pantalla 480×320 por SPI. Alimentación, backlight y adaptación de niveles dependen de la variante del módulo."
             },
             "lcd1602-i2c": {
                 "description": "Display de caracteres 16×2 con backpack I2C: solo 2 pines de datos."
@@ -593,7 +596,7 @@
                 "description": "LED RGB de cátodo común. SIN resistencias a bordo."
             },
             "charger-2s": {
-                "description": "Carga 2 celdas en serie por USB-C con balanceo y protección; pass-through a la carga."
+                "description": "Referencia de conexiones para módulos 2S. Carga, balanceo y protección dependen del modelo concreto."
             },
             "holder-2s": {
                 "description": "Dos 18650 en serie (2S). Ojo: el holder correcto es en SERIE, no en paralelo."
@@ -2189,6 +2192,7 @@
         "later": "Más tarde"
     },
     "Calculators": {
+        "choose_calculator": "Elegí una calculadora",
         "title": "Calculadoras",
         "subtitle": "Cálculo para electrónica, obra, clima y el día a día. Corre local, en el navegador.",
         "presets_label": "Perfiles del Sistema",

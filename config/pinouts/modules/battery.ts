@@ -8,12 +8,12 @@ export const BATTERY_BREAKOUTS: Breakout[] = [
     summary: 'Dos 18650 en serie (2S). Ojo: el holder correcto es en SERIE, no en paralelo.',
     form: 'holder 2× 18650',
     iface: 'pasivo (2 celdas en serie)',
-    voltage: '7.4V nom · 8.4V full · 6.0V vacío',
+    voltage: '7.4V nom · 8.4V full (Li-ion de 4.2V/celda)',
     usedBy: ['pad', 'btdac', 'speaker'],
     pins: [
       { name: '+', role: 'pwr', to: '+ del pack → B+ del cargador/BMS', side: 'left' },
       { name: '−', role: 'gnd', to: '− del pack → B− del cargador/BMS', side: 'left' },
-      { name: 'mid', role: 'pwr', to: 'punto medio entre celdas → BM (balanceo)', side: 'left', req: false },
+      { name: 'mid', role: 'pwr', to: 'punto medio entre celdas → BM; necesario si el BMS requiere conexión de balanceo', side: 'left' },
     ],
     notes: [
       {

@@ -156,8 +156,14 @@
 
 .twoCol {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: 24px;
+}
+
+@media (max-width: 767px) {
+  .row { grid-template-columns: minmax(0, 1fr) minmax(40px, .6fr) auto; gap: 8px; }
+  .rowLabel { white-space: normal; overflow-wrap: anywhere; }
+  .tileValue { overflow-wrap: anywhere; }
 }
 
 .chips {

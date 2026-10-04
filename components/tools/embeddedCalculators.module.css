@@ -105,6 +105,11 @@
   min-width: 0;
 }
 
+.mobileSelector { display: none; }
+.mobileSelector label { display: block; margin-bottom: 8px; color: var(--hios-text-secondary); }
+.resultBar > * { min-width: 0; overflow-wrap: anywhere; }
+.visualRow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 20px; align-items: center; margin-top: 16px; }
+
 :global([data-theme='dark']) .calcTabs :global(.ant-tabs-nav) {
   background: rgba(15, 23, 42, 0.55);
 }
@@ -148,6 +153,11 @@
 }
 
 @media (max-width: 1024px) {
+  .mobileSelector { display: block; margin-bottom: 16px; }
+  .calcTabs:global(.ant-tabs) { display: block; }
+  .calcTabs:global(.ant-tabs) > :global(.ant-tabs-nav) { display: none; }
+  .calcTabs:global(.ant-tabs) > :global(.ant-tabs-content-holder) { border-left: 0; padding: 0; }
+  .calcTabs:global(.ant-tabs) :global(.ant-tabs-tabpane) { padding-left: 0; }
   .toolbar {
     padding-left: 0;
     justify-content: flex-start;
@@ -169,6 +179,8 @@
 }
 
 @media (max-width: 760px) {
+  .visualRow { grid-template-columns: minmax(0, 1fr); }
+  .calcTabs :global(.ant-card-head-title) { white-space: normal; overflow-wrap: anywhere; padding-block: 12px; }
   .toolbar {
     justify-content: flex-start;
     padding-left: 0;

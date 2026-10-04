@@ -19,7 +19,7 @@
     {
       "binding": "DB",
       "database_name": "hios-playground",
-      "database_id": "a3b55142-933d-451e-aa95-21eb1231516a",
+      "database_id": "29a7e5cb-3692-41e3-b09a-fe70b3be9b66",
       "migrations_dir": "migrations"
     }
   ],

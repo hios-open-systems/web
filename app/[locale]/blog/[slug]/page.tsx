@@ -31,7 +31,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
     const path = `/blog/${encodeURIComponent(slug)}` as const;
     return <>
         <PageTrail locale={locale} items={[
-            { name: header('home'), path: '' }, { name: header('blog'), path: '/blog' },
+            { name: header('home'), path: '' }, { name: 'Devlog', path: '/blog' },
             { name: post.title, path },
         ]} />
         <JsonLd data={createArticleData(locale, path, post)} />

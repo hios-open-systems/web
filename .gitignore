@@ -64,3 +64,6 @@ external.integrations.md
 
 # pending-topics tracker (privado, local — puede mencionar temas sensibles)
 PENDING.md
+
+# Local Cloudflare runtime state
+/.wrangler/

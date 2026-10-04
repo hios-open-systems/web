@@ -182,7 +182,7 @@ export function CronTool() {
       </Card>
       {parsed.valid && parsed.fields && (
         <Card title={t('breakdown')} className={styles.sectionCard} styles={{ body: { padding: 20 } }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(180px,1fr))', gap: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(min(100%,180px),1fr))', gap: 12 }}>
             {FIELD_NAMES.map((field, i) => {
               const segment = expr.trim().split(/\s+/)[i] ?? '*';
               const desc = describeField(field, parsed.fields![field]);
@@ -218,7 +218,7 @@ export function CronTool() {
           className={styles.sectionCard}
           styles={{ body: { padding: 20 } }}
         >
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(280px,1fr))', gap: 8 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(min(100%,280px),1fr))', gap: 8 }}>
             {runs.map((d, i) => (
               <div
                 key={i}

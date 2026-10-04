@@ -3,6 +3,7 @@
 import { useMemo } from 'react';
 import { getBreakout } from '@/config/pinouts/modules';
 import { BoardDiagram, type PinAssign } from '@/components/pinouts/breakout/BoardDiagram';
+import { DiagramFrame } from '@/components/pinouts/breakout/DiagramFrame';
 import { useWiringGuide } from '../WiringGuideContext';
 import { RichText } from '../RichText';
 import styles from '../wiring-guide.module.css';
@@ -45,7 +46,9 @@ export function GuideBoardDiagram() {
 
   return (
     <div className={styles.boardBlock}>
-      <BoardDiagram board={board} name={guide.meta.mcu} assign={assign} />
+      <DiagramFrame name={guide.meta.mcu}>
+        <BoardDiagram board={board} name={guide.meta.mcu} assign={assign} />
+      </DiagramFrame>
 
       {guide.divergence?.length ? (
         <div className={styles.divergence}>

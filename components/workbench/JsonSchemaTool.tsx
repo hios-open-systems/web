@@ -140,7 +140,7 @@ export function JsonSchemaTool() {
         }
       />
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+      <div className={styles.editorGrid}>
         {/* Input */}
         <Card
           title={t('inputLabel')}

@@ -123,7 +123,7 @@ export function PrintsCatalog() {
     };
 
     const grid: React.CSSProperties = {
-        display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16,
+        display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))', gap: 16,
     };
     const h2: React.CSSProperties = { color: textColor, fontSize: 20, fontWeight: 600, margin: '0 0 16px' };
     const section: React.CSSProperties = { maxWidth: 980, margin: '0 auto', padding: '0 24px 48px' };

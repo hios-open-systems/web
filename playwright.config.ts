@@ -21,23 +21,23 @@ export default defineConfig({
     projects: [
         {
             name: 'chromium',
-            testIgnore: ['**/*.auth.spec.ts', '**/mobile-responsive.spec.ts'],
+            testIgnore: ['**/*.auth.spec.ts', '**/mobile-*.spec.ts'],
             use: { ...devices['Desktop Chrome'], channel: process.env.PLAYWRIGHT_CHANNEL },
         },
         {
             name: 'mobile-360',
-            testMatch: '**/mobile-responsive.spec.ts',
-            use: { ...devices['Desktop Chrome'], channel: undefined, viewport: { width: 360, height: 800 } },
+            testMatch: '**/mobile-*.spec.ts',
+            use: { ...devices['Desktop Chrome'], channel: process.env.PLAYWRIGHT_CHANNEL, viewport: { width: 360, height: 800 }, hasTouch: true },
         },
         {
             name: 'mobile-390',
-            testMatch: '**/mobile-responsive.spec.ts',
-            use: { ...devices['Desktop Chrome'], channel: undefined, viewport: { width: 390, height: 844 } },
+            testMatch: '**/mobile-*.spec.ts',
+            use: { ...devices['Desktop Chrome'], channel: process.env.PLAYWRIGHT_CHANNEL, viewport: { width: 390, height: 844 }, hasTouch: true },
         },
         {
             name: 'tablet-768',
-            testMatch: '**/mobile-responsive.spec.ts',
-            use: { ...devices['Desktop Chrome'], channel: undefined, viewport: { width: 768, height: 1024 } },
+            testMatch: '**/mobile-*.spec.ts',
+            use: { ...devices['Desktop Chrome'], channel: process.env.PLAYWRIGHT_CHANNEL, viewport: { width: 768, height: 1024 }, hasTouch: true },
         },
     ],
     webServer: {

@@ -94,9 +94,9 @@ export const AUDIO_BREAKOUTS: Breakout[] = [
     jumpers: {
       head: ['Jumper (cara de atrás)', 'Estado'],
       rows: [
-        ['FLT (filtro)', 'L = normal / baja latencia'],
+        ['FLT (filtro)', 'L = latencia normal · H = baja latencia'],
         ['DEMP (de-énfasis)', 'L = off'],
-        ['XSMT (soft-mute)', 'H = sonido ON (auto-mute off)'],
+        ['XSMT (soft-mute)', 'H = sin mute externo · L = mute'],
         ['FMT (formato)', 'L = I2S estándar'],
       ],
     },

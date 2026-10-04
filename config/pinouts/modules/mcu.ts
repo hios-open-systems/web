@@ -6,7 +6,7 @@ const P = (pos: number, ...labels: ReturnType<typeof L>[]): BoardPin => ({ pos, 
 /**
  * ESP32-S3 DevKitC-1 — 44 pines (2 headers de 22: J1 izquierda, J3 derecha).
  *
- * Orden físico REAL del header, contando desde el borde del USB. Verificado contra
+ * Orden físico del header, con antena arriba y USB abajo. Verificado contra
  * la tabla oficial de Espressif (esp-dev-kits, user_guide_v1.1, "Pin Layout").
  *
  * ⚠️ NO reordenar de memoria. Los GPIO no salen en orden numérico y la tentación de
@@ -20,7 +20,8 @@ const P = (pos: number, ...labels: ReturnType<typeof L>[]): BoardPin => ({ pos, 
  *     GPIO15–18 son ADC2, no ADC1.
  */
 export const ESP32_S3_BOARD: BoardPinout = {
-  usb: 'USB-C ×2 (UART + OTG nativo)',
+  headers: { left: 'J1', right: 'J3' },
+  usb: 'USB ×2 (UART + OTG nativo; formato según variante)',
   usbPorts: [{ label: 'UART' }, { label: 'USB' }],
   rgb: true,
   chipLabel: ['ESP32-S3', 'WROOM-1'],
@@ -78,6 +79,7 @@ export const ESP32_S3_BOARD: BoardPinout = {
  * ESP32-WROOM-32 DevKit — 38 pines (2 headers de 19).
  */
 export const ESP32_WROOM_BOARD: BoardPinout = {
+  headers: { left: 'J2', right: 'J3' },
   usb: 'micro-USB (CP2102 / CH340)',
   usbPorts: [{ label: 'USB' }],
   rgb: false,
@@ -133,7 +135,7 @@ export const MCU_BREAKOUTS: Breakout[] = [
     board: ESP32_S3_BOARD,
     name: 'ESP32-S3 DevKitC-1',
     kind: 'mcu',
-    summary: 'MCU con USB OTG nativo, WiFi 6, BLE 5. Header 2×22. Referencia rápida + gotchas.',
+    summary: 'MCU con USB OTG nativo, WiFi 802.11 b/g/n, BLE 5. Header 2×22. Referencia rápida + gotchas.',
     form: 'DevKitC-1 44-pin (N16R8)',
     iface: 'USB · UART · SPI · I2C · I2S · LCD',
     voltage: '3.3V lógica (5V por USB/pin 5V)',
@@ -141,10 +143,10 @@ export const MCU_BREAKOUTS: Breakout[] = [
     datasheetUrl:
       'https://www.espressif.com/sites/default/files/documentation/esp32-s3_datasheet_en.pdf',
     pins: [
-      { name: '3V3', role: 'pwr33', to: 'salida del LDO a bordo (SGM2212-3.3, 800mA) — NO inyectar de afuera', side: 'left' },
+      { name: '3V3', role: 'pwr33', to: 'riel de 3.3V del regulador; también permite alimentación externa según el esquema de la placa. No combinar con USB/5V.', side: 'left' },
       { name: '5V', role: 'pwr5', to: 'entrada de alimentación (VBUS o buck externo) → LDO → 3V3', side: 'left' },
       { name: 'GND', role: 'gnd', to: 'masa común', side: 'left' },
-      { name: 'IO1–IO10', role: 'adc', to: 'ADC1 — el único ADC usable con WiFi/BLE encendido', side: 'left' },
+      { name: 'IO1–IO10', role: 'adc', to: 'ADC1 — preferido cuando se usa WiFi; ADC2 comparte recursos con WiFi', side: 'left' },
       {
         name: 'IO38 o IO48',
         role: 'neo',

@@ -533,6 +533,9 @@
         "wiring_guide": "Wiring guide"
     },
     "Pinouts": {
+        "boardOrientation": "Top view · USB below. Diagram reference: unique numbers down the left side and up the right side. These are neither GPIO numbers nor manufacturer pin numbers.",
+        "assignedPins": "{count} contacts used or reserved by this guide. Dimmed contacts are outside the indicated wiring.",
+        "functionalDiagram": "Functional reference. Shape and contact locations vary by manufacturer: check the labels on your module.",
         "eyebrow": "Hardware reference",
         "title": "Interactive Pinouts",
         "subtitle": "Explore the pin diagrams of modules used in our projects",
@@ -558,7 +561,7 @@
                 "description": "WiFi + BT 4.2 MCU, 2×19 header (38 pins). Quick reference + gotchas."
             },
             "esp32-s3-devkitc-1": {
-                "description": "MCU with native USB OTG, WiFi 6, BLE 5. 2×22 header. Quick reference + gotchas."
+                "description": "MCU with native USB OTG, WiFi 802.11 b/g/n, BLE 5. 2×22 header. Quick reference + gotchas."
             },
             "max98357a": {
                 "description": "Mono 3.2W I2S Class-D amplifier (breakout). 2 in parallel = stereo."
@@ -567,7 +570,7 @@
                 "description": "32-bit/384kHz I2S DAC (GY-PCM5102 breakout). L/R line output."
             },
             "lm2596": {
-                "description": "Adjustable 3A DC-DC step-down regulator. Often includes a voltage display."
+                "description": "Adjustable step-down DC-DC regulator. Usable current depends on the module and its cooling."
             },
             "jack-trs": {
                 "description": "Stereo female connector: Tip=L, Ring=R, Sleeve=GND."
@@ -576,7 +579,7 @@
                 "description": "Male connector with microphone, CTIA standard (modern phones)."
             },
             "ili9488": {
-                "description": "480×320 18-bit SPI display. Includes regulator and level shifter (VCC to 5V)."
+                "description": "480×320 SPI display. Supply, backlight and level shifting depend on the module variant."
             },
             "lcd1602-i2c": {
                 "description": "16×2 character display with I2C backpack: only 2 data pins."
@@ -594,7 +597,7 @@
                 "description": "Common-cathode RGB LED. NO on-board resistors."
             },
             "charger-2s": {
-                "description": "Charges 2 cells in series over USB-C with balancing and protection; pass-through to the load."
+                "description": "Connection reference for 2S modules. Charging, balancing and protection depend on the specific model."
             },
             "holder-2s": {
                 "description": "Two 18650 cells in series (2S). Note: the correct holder is SERIES, not parallel."
@@ -2190,6 +2193,7 @@
         "later": "Later"
     },
     "Calculators": {
+        "choose_calculator": "Choose a calculator",
         "title": "Calculators",
         "subtitle": "Number-crunching for electronics, construction, climate, and everyday math. Runs locally, in your browser.",
         "presets_label": "Global Presets",
