@@ -5,6 +5,10 @@ import { readFileSync } from 'node:fs';
 
 const copy = JSON.parse(readFileSync('messages/es.json', 'utf8')) as {
   Calculators: { cards: Record<string, { title: string }> };
+  Workbench: {
+    packs: Record<string, { title: string }>;
+    urlParser: { edit: string };
+  };
 };
 
 test('every calculator keeps a full-width usable panel', async ({ page }) => {
@@ -61,7 +65,7 @@ test('loaded statistics remain readable with real rows and large counts', async 
     countries: [{ country: 'AR', count: 1234 }], locales: [{ locale: 'es', count: 12 }],
   } }));
   await page.goto('/es/stats');
-  await expect(page.getByText('llm-grammar-generator', { exact: true })).toBeVisible();
+  await expect(page.getByText(copy.Workbench.packs['llm-grammar-generator'].title, { exact: true })).toBeVisible();
   expect(await page.evaluate(inspectMobileLayout)).toEqual([]);
 });
 
@@ -70,7 +74,7 @@ test('long parameter names and URL editing remain usable', async ({ page }) => {
   const input = page.locator('[data-tool-content] input').first();
   await expect(input).toBeVisible();
   await input.fill(`https://example.com/?${'parameter'.repeat(20)}=${'value'.repeat(40)}`);
-  await page.getByRole('button', { name: 'Editar params', exact: true }).click();
+  await page.getByRole('button', { name: copy.Workbench.urlParser.edit, exact: true }).click();
   await expect(page.getByPlaceholder('key', { exact: true })).toBeVisible();
   expect(await page.evaluate(inspectMobileLayout)).toEqual([]);
 });
