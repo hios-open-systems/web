@@ -1481,3 +1481,8 @@
     display: none;
   }
 }
+@media (max-width: 379px) {
+  .canvasCard :global(.excalidraw .App-toolbar > .Stack_horizontal) {
+    column-gap: 3px;
+  }
+}
