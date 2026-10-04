@@ -1,8 +1,8 @@
 # HIOS PAD — Macropad / Control-Deck ESP32-S3
 
-Macropad de escritorio con pantalla a color, encoder, joystick analógico, 10 teclas de acción (+ 2 ALT) y 2 parlantes, que actúa como **teclado/mouse/multimedia HID** por **USB, Bluetooth (BLE) y WiFi**. Capas por contexto (edición, dev, multimedia, navegador, videollamadas) navegables desde la propia pantalla, con feedback real del estado de la PC vía un daemon companion.
+Control programable de escritorio con pantalla, encoder, joystick, 10 teclas de acción y 2 ALT. Envía acciones de **teclado, mouse y multimedia por USB o Bluetooth BLE**. Las capas organizan los controles por contexto. WiFi permite configurar el dispositivo y comunicarse con un companion opcional que informa el estado de la PC.
 
-## Quick Start
+## Primeros pasos
 
 ```bash
 cd projects/pad
@@ -23,29 +23,29 @@ API web y OTA.
 
 ## Flujo de trabajo
 
-Del cero a la placa andando:
+Pasos para preparar el dispositivo:
 
 1. **Soldar** — seguí la guía verificada **[/pinouts/pad](https://openhios.dev/pinouts/pad)**: ordena los módulos por paso, trae el checklist de armado y las mediciones (buck a 5.0V, SD de los amplis, diodos de la matriz). Es la **única** hoja de cableado y se auto-verifica contra [`src/app/Pins.h`](src/app/Pins.h) + [`platformio.ini`](platformio.ini) en cada `npm run test:wiring` (desde la raíz del repo web).
-2. **Primer flasheo (por cable)** — `pio run -t upload` (ver *Quick Start*). En WSL, attachá el CH343 con `usbipd` primero.
-   > ⚠️ **Eléctrico:** con el pack 2S conectado, **no enchufes el USB sin abrir antes `SW-CELDAS`** — el VBUS del USB y la salida del buck pelearían en el pin `5V`. Flasheá con el pack apagado, o subí por OTA sin tocar cables.
-3. **Updates (OTA)** — ya con WiFi: en `platformio.ini`, agregá
+2. **Primer flasheo (por cable)** — `pio run -t upload` (ver *Primeros pasos*). En WSL, conectá el CH343 a WSL con `usbipd` primero.
+   > ⚠️ **Eléctrico:** con el pack 2S conectado, **no enchufes el USB sin abrir antes `SW-CELDAS`** — el VBUS del USB y la salida del regulador quedarían unidos en el pin `5V`. Flasheá con el pack apagado, o subí por OTA sin tocar cables.
+3. **Actualizaciones (OTA)** — ya con WiFi: en `platformio.ini`, agregá
    `--auth=<token API/OTA>` a `upload_flags` de `[env:ota]`, luego ejecutá
    `pio run -e ota -t upload --upload-port hiospad.local`. El USB-C nativo + el
-   botón BOOT quedan accesibles por si un OTA sale mal.
-4. **Companion (opcional)** — arrancá el daemon para feedback real y mute global (ver *Apps companion*). El pad es **local-first**: anda perfecto sin nada de esto.
+   botón BOOT quedan accesibles por si una actualización OTA falla.
+4. **Companion (opcional)** — iniciá el programa para recibir el estado del equipo y usar el mute global del micrófono (ver *Software companion*). Los controles HID del PAD funcionan sin este programa.
 
-## ¿Qué es?
+## Funciones disponibles
 
-Un control-deck que reemplaza atajos y controles dispersos por **capas** físicas. Cada capa mapea las **10 teclas de acción** + los 2 ALT + encoder + stick a acciones (atajos de teclado, multimedia, mouse, macros). Es **HID nativo** (la PC lo ve como teclado/mouse), así que funciona sin drivers.
+Un control programable que reúne atajos y acciones en **capas**. Cada capa asigna funciones a las **10 teclas de acción**, los 2 ALT, el encoder y el joystick. USB y BLE utilizan HID para enviar acciones de teclado, mouse y multimedia; la compatibilidad de los atajos depende del sistema y de la aplicación.
 
 - **Multi-transporte:** USB (TinyUSB) y BLE (NimBLE, HID compuesto teclado+mouse+consumer) en simultáneo; auto-switch (enchufado → USB, desenchufado → BLE). WiFi para feedback/control mediado (no es HID).
-- **Local-first:** todo funciona sin red ni companion. El WiFi y el daemon son una capa opcional que **mejora** (feedback real, mute global), nunca bloquea.
+- **Uso independiente:** los controles HID funcionan sin red ni companion. El estado real del equipo y el mute global necesitan el companion y una conexión de red.
 - **Stick como mouse:** el joystick mueve el puntero; tap = click izq, doble = click der, long = toggle modo mouse.
 - **Encoder contextual:** gira según la capa (volumen/scroll/zoom/pestañas); doble-click cicla entre comportamientos; press abre el menú.
 
 ## Capas y menú
 
-Las capas se agrupan por tipo. El menú (encoder-press) es un **picker de un nivel**: muestra las capas del grupo sobre las **10 teclas físicas** y girás el encoder para pasar de grupo. Apretás un botón → saltás a esa capa.
+Las capas se agrupan por tipo. El menú (encoder-press) es un **selector de un nivel**: muestra las capas del grupo sobre las **10 teclas físicas** y girás el encoder para pasar de grupo. Apretás un botón → saltás a esa capa.
 
 | Grupo | Capas |
 |-------|-------|
@@ -60,15 +60,15 @@ Las capas se agrupan por tipo. El menú (encoder-press) es un **picker de un niv
 
 ### Videollamadas (grupo Llamadas)
 
-Una capa por app con sus atajos. El **mic** tiene doble vía: **tap** = atajo de la app (Meet `Ctrl+D`, Zoom `Alt+A`, Teams `Ctrl+Shift+M`); **hold** (long-press) = **mute global** a nivel OS vía companion (Core Audio), que funciona en cualquier app y refleja el estado real. Slack no tiene atajo de mic → usa el mute global. La cámara va por atajo de la app.
+Cada aplicación tiene una capa de atajos. Una pulsación breve del control de micrófono envía el atajo configurado para la aplicación; una pulsación larga solicita el silencio del micrófono al sistema operativo mediante el companion. La capa de Slack utiliza este control del sistema. La cámara se controla mediante el atajo de la aplicación. La compatibilidad depende del sistema, la configuración de atajos y los permisos.
 
 > Zoom requiere activar *global shortcuts* (Settings → Keyboard Shortcuts) para mutear sin foco en la ventana.
 
-## Apps companion (opcionales)
+## Software companion (opcional)
 
-Todo esto es **local-first**: el pad funciona solo. Las apps lo *potencian*; si se caen, el pad sigue.
+El companion agrega edición web y comunicación con el sistema operativo. Los controles HID siguen disponibles cuando el companion no está conectado.
 
-- **[`pad-companion`](companion) — daemon (headless).** Lee el estado real de la PC (volumen, mic muteado, temps y carga de CPU/GPU en Windows Core Audio / Linux PipeWire) y lo empuja por `POST /api/state`: el display pasa de estado **optimista** (lo que el pad cree haber dejado) a datos reales. El mismo canal lleva comandos **pad→OS** en la respuesta del POST — el más usado es el **mute global de mic** a nivel sistema, que funciona en cualquier app (Slack, Meet, etc.). Si el daemon se cae, el pad vuelve al estado optimista en ~4s. Contrato de la API, dependencias por OS y autostart (systemd en Linux / Tarea Programada en Windows) en [`companion/README.md`](companion/README.md).
+- **[`pad-companion`](companion) — servicio sin interfaz gráfica.** Comunica volumen y estado del micrófono mediante `POST /api/state`, y recibe comandos del PAD para el sistema operativo. Admite Windows y Linux; macOS está pendiente. Las métricas de CPU/GPU y temperatura dependen de los sensores, programas y permisos disponibles. Si deja de recibir datos, el PAD vuelve a mostrar un estado estimado. Consultá el contrato de API, las dependencias y el inicio automático en [`companion/README.md`](companion/README.md).
 - **Admin + mirror — web (dentro del companion).** Servidor liviano ([`companion/src/web`](companion/src/web)) con UI para editar mapeos/capas/textos y un **mirror/emulador** del pad: editás el mismo modelo de datos que corre el firmware y se lo mandás, sin recompilar.
 - **[`host/openrgb-rgb-layer.ahk`](host/openrgb-rgb-layer.ahk) — helper.** Script AutoHotkey que enlaza la capa RGB del pad con **OpenRGB** en la PC (ilumina periféricos según la capa activa).
 
@@ -78,7 +78,7 @@ FreeRTOS, tareas separadas por core:
 
 - **inputTask** (core1): lee botones/encoder/stick → `Dispatcher` resuelve la acción de la capa → cola de acciones; arma el snapshot de UI.
 - **transportTask** (core1): consume acciones → transporte HID activo (USB/BLE) vía `TransportRouter`.
-- **uiTask** (core0): dibuja dashboard/menu/portal con `TFT_eSprite` (sin parpadeo).
+- **uiTask** (core0): dibuja dashboard/menu/portal con `TFT_eSprite`.
 - **netTask** (core0): WiFi STA + portal cautivo + NTP + WebServer (`/api/state`).
 
 Directorios: `actions/` (modelo de `Action`), `mapping/` (`KeyMap`/`Dispatcher`), `inputs/` (botones/encoder/stick), `transport/` (USB/BLE/router), `net/`, `ui/` (skins, menu, dock, iconos vectoriales), `storage/` (config por defecto), `app/` (config, pines, estado).
@@ -91,24 +91,24 @@ Directorios: `actions/` (modelo de `Action`), `mapping/` (`KeyMap`/`Dispatcher`)
 - **2× MAX98357A** (I2S, bus compartido; el canal lo elige el pin SD de cada uno: L = SD a Vin, R = SD por **390k** a Vin).
 - Pines en [`src/app/Pins.h`](src/app/Pins.h) (fuente de verdad). **Cableado y alimentación paso a paso: la guía [/pinouts/pad](https://openhios.dev/pinouts/pad)**, verificada contra el firmware por self-test.
 
-## Gotchas (aprendidos a los golpes)
+## Notas de implementación
 
 - **Sprite + fuente:** `new TFT_eSprite` deja `gfxFont` sin inicializar → boot loop. Llamar `setTextFont(1)` tras crear cada sprite.
 - **Joystick a 3V3:** a 5V sobre-voltea el ADC del S3 y acopla los ejes (diagonales fantasma). El stick va a 3V3.
 - **BLE symbol clash:** `USBHIDKeyboard.h` y las libs BLE chocan (`KEY_*`/`KeyReport`); se aíslan con fábricas (`transport/`), `main` nunca ve ambos headers.
 - **Heap del menú:** el sprite del carrusel (~60KB) se libera al cerrar el menú; si queda alocado, el heap steady-state (con BLE+WiFi) se agota.
-- **Brownout:** un cable USB fino / fuente floja tira la tensión en los picos de corriente (WiFi+BLE) → boot loop. No es software.
+- **Caídas de tensión:** si el dispositivo se reinicia al activar WiFi o BLE, revisá la alimentación y los mensajes del monitor serial antes de atribuirlo al firmware.
 
 ## Estado
 
-**Funcionando:** USB + BLE HID (auto-switch), WiFi + portal + NTP, stick→mouse, capas + menú, feedback real y mute global por companion, **config editable por JSON** (`GET/POST /api/config` en LittleFS, se edita y empuja desde el companion sin recompilar) y **espejo de pantalla** (el companion sirve un mirror live del display por SSE).
+**Funciones implementadas:** USB + BLE HID (auto-switch), WiFi + portal + NTP, stick→mouse, capas + menú, feedback real y mute global por companion, **config editable por JSON** (`GET/POST /api/config` en LittleFS, se edita y empuja desde el companion sin recompilar) y **espejo de pantalla** (el companion sirve un mirror live del display por SSE).
 
-La medición de batería en el pad se **descartó**: la pantalla de la fuente ya muestra la tensión del pack 2S, y GPIO9 (ex-divisor) hoy maneja el NeoPixel — `cfg::BATTERY_ENABLED=false` y **no reactivar** sin reasignar el ADC (si no, le metés 2.7V DC a la línea de datos del NeoPixel).
+La medición de batería en el pad se **descartó**: la pantalla de la fuente ya muestra la tensión del pack 2S, y GPIO9 (ex-divisor) hoy maneja el NeoPixel — `cfg::BATTERY_ENABLED=false` y **no reactivar** sin reasignar el ADC (el divisor de batería no debe conectarse a la línea de datos del NeoPixel).
 
-### Roadmap
+### Próximos desarrollos
 
-- [x] **PWA directa al pad** — servida por el propio pad ([`net/WebUi.cpp`](src/net/WebUi.cpp), sin PC): ver estado live, saltar de capa, **pad virtual 2×5** que dispara las teclas/encoder, y **editor de config** (nombre/color/labels, preservando acciones). Endpoints `GET /api/ui` + `POST /api/cmd` + `/api/config`. Frontend verificado headless por **`npm run test:padwebui`** (Playwright + mock del contrato, extrae la página real del firmware). *Falta confirmar el apply on-device (flasheo pendiente).*
-- [ ] **Gestures editables** — el long-press hardcodeado se quitó a propósito; re-agregar acciones secundarias como gestos *editables* (no hardcode) es rediseño, despriorizado.
+- [ ] **Interfaz web directa del PAD: código implementado, validación física pendiente** — servida por el propio pad ([`net/WebUi.cpp`](src/net/WebUi.cpp), sin PC): ver el estado, saltar de capa, **pad virtual 2×5** que dispara las teclas/encoder, y **editor de configuración** (nombre, color y etiquetas, conservando las acciones). Endpoints `GET /api/ui` + `POST /api/cmd` + `/api/config`. Frontend verificado headless por **`npm run test:padwebui`** (Playwright + mock del contrato, extrae la página real del firmware). *La aplicación de los cambios en el dispositivo todavía requiere una prueba con el firmware cargado.*
+- [ ] **Gestos editables** — el long-press hardcodeado se quitó a propósito; re-agregar acciones secundarias como gestos *editables* (no hardcode) es rediseño, despriorizado.
 - [ ] **Pad2 (reinicio limpio)** — bifurcación mayor: pad virtual primero, data-driven, stack JS+JSDoc zero-build. Pensado, sin arrancar.
 
 ## Créditos

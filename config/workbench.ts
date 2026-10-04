@@ -442,7 +442,7 @@ export const workbenchTools: WorkbenchTool[] = [
   },
   {
     id: 'usage-analytics',
-    locality: 'local',
+    locality: 'network',
     sectionId: 'validation',
     href: '/workbench/usage-analytics',
     accent: '#0ea5e9',

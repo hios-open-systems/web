@@ -21,8 +21,14 @@ export interface Post extends PostMeta {
     content: string;
 }
 
-function parseFile(file: string): Post | null {
-    const raw = fs.readFileSync(path.join(BLOG_DIR, file), 'utf8');
+function parseFile(file: string, locale: string): Post | null {
+    const translatedPath = ['en', 'de', 'it'].includes(locale)
+        ? path.join(BLOG_DIR, locale, file)
+        : null;
+    const sourcePath = translatedPath && fs.existsSync(translatedPath)
+        ? translatedPath
+        : path.join(BLOG_DIR, file);
+    const raw = fs.readFileSync(sourcePath, 'utf8');
     const { data, content } = matter(raw);
     if (!data.title || !data.date) return null;
     return {
@@ -37,18 +43,18 @@ function parseFile(file: string): Post | null {
     };
 }
 
-export function getAllPosts(): Post[] {
+export function getAllPosts(locale = 'es'): Post[] {
     if (!fs.existsSync(BLOG_DIR)) return [];
     return fs
         .readdirSync(BLOG_DIR)
         .filter((f) => f.endsWith('.md'))
-        .map(parseFile)
+        .map((file) => parseFile(file, locale))
         .filter((p): p is Post => p !== null)
         .sort((a, b) => (a.date < b.date ? 1 : -1));   // más nuevo primero
 }
 
-export function getAllPostMeta(): PostMeta[] {
-    return getAllPosts().map((p) => ({
+export function getAllPostMeta(locale = 'es'): PostMeta[] {
+    return getAllPosts(locale).map((p) => ({
         slug: p.slug,
         title: p.title,
         date: p.date,
@@ -63,6 +69,6 @@ export function getPostSlugs(): string[] {
     return getAllPosts().map((p) => p.slug);
 }
 
-export function getPostBySlug(slug: string): Post | null {
-    return getAllPosts().find((p) => p.slug === slug) ?? null;
+export function getPostBySlug(slug: string, locale = 'es'): Post | null {
+    return getAllPosts(locale).find((p) => p.slug === slug) ?? null;
 }

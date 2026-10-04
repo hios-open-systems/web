@@ -2,22 +2,20 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { ToolOutlined, ThunderboltOutlined, ReadOutlined, LineChartOutlined } from '@ant-design/icons';
 
-type Bi = { es: string; en: string };
-
-const ITEMS: { href: string; icon: React.ReactNode; label: Bi; desc: Bi }[] = [
-    { href: 'workbench', icon: <ToolOutlined />, label: { es: 'Workbench', en: 'Workbench' }, desc: { es: 'Utilitarios locales para developers, hardware y redes.', en: 'Local utilities for developers, hardware, and networks.' } },
-    { href: 'projects/hios-node-ai', icon: <ThunderboltOutlined />, label: { es: 'IA Local', en: 'Local AI' }, desc: { es: 'Puente ESP32 a Ollama/llama.cpp. Cero nube.', en: 'ESP32 bridge to Ollama/llama.cpp. Zero cloud.' } },
-    { href: 'blog', icon: <ReadOutlined />, label: { es: 'Devlog', en: 'Devlog' }, desc: { es: 'Notas técnicas y tutoriales de lo que voy construyendo.', en: 'Technical notes and tutorials on what I build.' } },
-    { href: 'stats', icon: <LineChartOutlined />, label: { es: 'Métricas', en: 'Open Stats' }, desc: { es: 'Telemetría anónima y pública. Privacidad ante todo.', en: 'Anonymous, public telemetry. Privacy first.' } },
+const ITEMS = [
+    { id: 'workbench', href: 'workbench', icon: <ToolOutlined /> },
+    { id: 'ai', href: 'projects/hios-node-ai', icon: <ThunderboltOutlined /> },
+    { id: 'blog', href: 'blog', icon: <ReadOutlined /> },
+    { id: 'stats', href: 'stats', icon: <LineChartOutlined /> },
 ];
 
 
 export function HomeQuickAccess() {
     const locale = useLocale();
-    const pick = (m: Bi) => (locale === 'en' ? m.en : m.es);
+    const t = useTranslations('HomeQuickAccess');
     // CSS vars, no `mode`: el SSR pinta siempre dark y React no parchea estilos
     // inline en la hidratación — el usuario en light quedaba con las tarjetas
     // oscuras. Las vars además siguen al skin activo.
@@ -38,8 +36,8 @@ export function HomeQuickAccess() {
                         style={{ display: 'block', padding: 20, background: cardBg, border: cardBorder, borderRadius: 14, textDecoration: 'none' }}
                     >
                         <div style={{ color: accent, fontSize: 22, marginBottom: 10 }}>{it.icon}</div>
-                        <div style={{ color: textColor, fontWeight: 600, fontSize: 16, marginBottom: 4 }}>{pick(it.label)}</div>
-                        <div style={{ color: secondary, fontSize: 13, lineHeight: 1.5 }}>{pick(it.desc)}</div>
+                        <div style={{ color: textColor, fontWeight: 600, fontSize: 16, marginBottom: 4 }}>{t(`${it.id}.label`)}</div>
+                        <div style={{ color: secondary, fontSize: 13, lineHeight: 1.5 }}>{t(`${it.id}.description`)}</div>
                     </Link>
                 ))}
             </div>

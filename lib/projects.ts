@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { projects as projectCatalog } from '../config/projects.ts';
 
 export interface ProjectMeta {
     slug: string;
@@ -72,13 +73,18 @@ export function getProjectSlugs(): string[] {
     });
 }
 
-export function getProjectBySlug(slug: string): ProjectMeta | null {
+export function getProjectBySlug(slug: string, locale = 'es'): ProjectMeta | null {
     const projectPath = path.join(projectsDir, slug);
 
     if (!fs.existsSync(projectPath)) return null;
 
     // Read README
-    const readmePath = path.join(projectPath, 'README.md');
+    const translatedReadme = ['en', 'de', 'it'].includes(locale)
+        ? path.join(process.cwd(), 'content', 'projects', locale, `${slug}.md`)
+        : null;
+    const readmePath = translatedReadme && fs.existsSync(translatedReadme)
+        ? translatedReadme
+        : path.join(projectPath, 'README.md');
     const readme = fs.existsSync(readmePath)
         ? fs.readFileSync(readmePath, 'utf-8')
         : '';
@@ -194,7 +200,7 @@ export function getProjectBySlug(slug: string): ProjectMeta | null {
         slug,
         name,
         description,
-        status: 'prototype', // Could be extracted from frontmatter later
+        status: projectCatalog.find(project => project.slug === slug)?.status ?? 'wip',
         images,
         readme,
         files,

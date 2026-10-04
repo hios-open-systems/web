@@ -19,9 +19,11 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
     const { locale, slug } = await params;
     if (!getProjectSlugs().includes(slug)) notFound();
-    const project = getProjectBySlug(slug);
+    const project = getProjectBySlug(slug, locale);
     if (!project) notFound();
-    return createPageMetadata(locale, `/projects/${encodeURIComponent(slug)}`, `${project.name} | HIOS`, project.description);
+    const copy = await getTranslations({ locale, namespace: 'Projects' });
+    const description = copy.has(`cards.${slug}.description`) ? copy(`cards.${slug}.description`) : project.description;
+    return createPageMetadata(locale, `/projects/${encodeURIComponent(slug)}`, `${project.name} | HIOS`, description);
 }
 
 export async function generateStaticParams() {
@@ -36,15 +38,17 @@ export async function generateStaticParams() {
 export default async function ProjectPage({ params }: PageProps) {
     const { slug, locale } = await params;
     setRequestLocale(locale);
-    const project = getProjectBySlug(slug);
+    const project = getProjectBySlug(slug, locale);
 
     if (!project) {
         notFound();
     }
 
-    // Map images to gallery for the client component
+    const copy = await getTranslations({ locale, namespace: 'Projects' });
+    const description = copy.has(`cards.${slug}.description`) ? copy(`cards.${slug}.description`) : project.description;
     const projectWithGallery = {
         ...project,
+        description,
         gallery: project.images,
     };
 
@@ -56,7 +60,7 @@ export default async function ProjectPage({ params }: PageProps) {
             { name: header('home'), path: '' }, { name: header('projects'), path: '/projects' },
             { name: project.name, path },
         ]} />
-        <JsonLd data={createProjectPageData(locale, path, project.name, project.description)} />
+        <JsonLd data={createProjectPageData(locale, path, project.name, description)} />
         {isSoftwareProject(slug) && <aside style={{ maxWidth: 1132, margin: '16px auto', padding: '20px 24px', border: '1px solid var(--hios-border)', borderRadius: 12 }}>
             <Link href={`/${locale}${softwarePath(slug)}`} style={{ color: 'var(--accent-text)', fontSize: 20 }}>
                 {software(`${slug}.title`)} →

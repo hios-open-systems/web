@@ -1,81 +1,57 @@
 ---
-title: "Una persona hace todo: la paradoja de la democratización"
+title: "Desarrollar con IA: generar código y revisar decisiones"
 date: "2026-09-20"
 lang: "es"
-summary: "Antes un proyecto web y de hardware requería 7 roles. Hoy la hago solo. Pero la IA junior te llena de deuda técnica y alucinaciones en C."
+summary: "Cómo organizar tareas, revisar código generado y comprobar que una solución funciona en el entorno del proyecto."
 tags: ["ia", "opinión", "democratización", "web", "trabajo"]
 category: "referencia"
 ---
 
-Esta plataforma (HIOS) tiene internacionalización, guías interactivas, workbench embebido, auth y proyectos de hardware. Hace diez años, esto requería 7 personas: UX, frontend, backend, DevOps, QA, content y project manager. 
+Un proyecto como HIOS combina interfaz, documentación, firmware y pruebas. Las herramientas de IA pueden ayudar a preparar cambios en esas áreas, pero cada entrega necesita una revisión que conecte el código con el comportamiento esperado.
 
-Hoy la hago yo solo. Herramientas democratizadas, frameworks modernos y modelos de lenguaje que te escupen código a demanda. Pero la realidad técnica del "solo dev" usando IA no es un camino de rosas. El verdadero lado B no es la filosofía sobre los puestos de trabajo perdidos; es la montaña de deuda técnica y el agotamiento cognitivo de ser el revisor permanente de un programador junior infinito que, además, es un mentiroso compulsivo en C.
+La cantidad de código generado no indica cuánto avanzó el proyecto. Una función sirve cuando resuelve la tarea, encaja en la arquitectura y puede comprobarse en el entorno donde va a ejecutarse.
 
-## El costo real: Fatiga cognitiva y alucinaciones
+## Pedí cambios que puedas revisar
 
-Cuando le pedís a un LLM que te haga un componente de React, zafa. Cuando le pedís que te arme una tarea en FreeRTOS para un ESP32 interactuando con un sensor I2C, te tira métodos que no existen. 
+Una tarea acotada facilita detectar supuestos incorrectos. En lugar de pedir un sistema completo de telemetría, definí primero un paso: interpretar un paquete, validar sus campos o mostrar una lectura.
 
-El modelo te inventa APIs de ESP-IDF con una confianza absoluta. Y vos terminás perdiendo tres horas debugeando por qué `i2c_master_transmit_dma()` no compila, hasta que te das cuenta de que el LLM lo alucinó porque leyó mucha documentación de STM32 y la mezcló. El modelo no entiende la arquitectura de memoria del ESP32. Te va a proponer arrays estáticos de 100KB y te comés un stack overflow en tiempo de ejecución.
+Incluí en el pedido:
 
-## Código: Cómo no caer en las mentiras del LLM
+- El resultado esperado y un ejemplo de entrada y salida.
+- Las versiones del lenguaje, framework y bibliotecas.
+- Las restricciones del dispositivo o del navegador.
+- Los casos de error que la solución debe contemplar.
 
-El error clásico es aceptar código bloqueante o llamadas a APIs inexistentes. Acá un ejemplo de lo que un LLM te suele sugerir para leer un sensor, y cómo debería ser realmente en un entorno embedded decente.
+Por ejemplo: «Implementá un parser para este paquete de ocho bytes. Rechazá entradas incompletas y valores fuera del rango definido. Agregá pruebas para esos casos». El formato del paquete y sus rangos deben acompañar el pedido; el modelo no debería inventarlos.
 
-```c
-// ❌ LO QUE TE ESCUPE EL LLM (Peligro de Stack Overflow y Watchdog Reset)
-void read_sensor_llm() {
-    // Alucina un buffer gigante en el stack de la tarea (el stack de FreeRTOS por default es chico)
-    uint8_t buffer[8192]; 
-    // Alucina una API de ESP-IDF que no existe
-    i2c_read_bytes_blocking(I2C_NUM_0, 0x68, buffer, 8192, 1000); 
-    // Bloquea el procesador
-    delay(500); 
-}
+## Revisá las decisiones, además de la sintaxis
 
-// ✅ LO QUE TENÉS QUE ESCRIBIR VOS (O corregirle al LLM)
-#include "driver/i2c.h"
-#include <freertos/FreeRTOS.h>
-#include <freertos/task.h>
+Compilar es un primer control. Después hay que comprobar qué hace el programa con datos reales, errores y dependencias que no responden.
 
-void read_sensor_real(void *pvParameters) {
-    // Memoria dinámica en el heap si el buffer es grande, o estático global.
-    // Usamos la API real de ESP-IDF para I2C
-    uint8_t data[16]; 
-    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-    i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, (0x68 << 1) | I2C_MASTER_READ, true);
-    i2c_master_read(cmd, data, sizeof(data), I2C_MASTER_LAST_NACK);
-    i2c_master_stop(cmd);
-    
-    for(;;) {
-        // Ejecución no bloqueante
-        esp_err_t ret = i2c_master_cmd_begin(I2C_NUM_0, cmd, pdMS_TO_TICKS(1000));
-        if (ret == ESP_OK) {
-            printf("Sensor leído correctamente\n");
-        }
-        // Yield a otras tareas. El watchdog te lo agradece.
-        vTaskDelay(pdMS_TO_TICKS(500));
-    }
-    i2c_cmd_link_delete(cmd);
-}
-```
+| Área | Qué revisar |
+|---|---|
+| Interfaz | Estados de carga, errores, navegación, accesibilidad y tamaños de pantalla. |
+| Datos y servicios | Validación de entradas, permisos y comportamiento ante respuestas inesperadas. |
+| Firmware | Compatibilidad de las APIs, memoria disponible, tiempos de espera y manejo de fallos. |
+| Documentación | Correspondencia entre las instrucciones, el código y la versión publicada. |
 
-## Estructurar el workflow para no ahogarse
+Para una API que no reconocés, buscá su declaración en la biblioteca instalada y contrastá sus argumentos con la documentación de esa versión. No deduzcas que existe porque el nombre parezca razonable.
 
-Si querés armar un sistema completo como HIOS siendo uno solo, el secreto es encapsular al LLM. No le pidas "armá el sistema de telemetría". Pedile: "escribí un parser en C puro para este paquete binario de 8 bytes, y dame los tests de unidad en Unity". 
+## Probá en el entorno de destino
 
-La fatiga cognitiva de revisar código malo de un LLM es peor que escribirlo desde cero. Acotá el scope de la IA a funciones puras sin side-effects.
+En firmware, revisá el tamaño y la duración de los buffers, la configuración de las tareas y qué ocurre cuando falla un periférico. Un ejemplo aislado no demuestra que el conjunto funcione en la placa elegida.
 
-## Trampas comunes
+En una aplicación web, recorré la interacción completa. Un formulario puede renderizar correctamente y fallar al guardar, recuperar la sesión o mostrar una respuesta de error.
 
-- **Creerle al LLM con APIs de hardware:** Los modelos son malísimos con ESP-IDF, STM32 HAL y Zephyr. Siempre validá contra los headers locales (`grep` es tu amigo).
-- **Fatiga de review:** Leer código generado cansa más rápido que escribirlo. Si la respuesta supera las 50 líneas y no es un boilerplate tonto, descartala.
-- **Stack Overflows en RTOS:** Los LLMs programan en C asumiendo que están en un Linux de escritorio con gigas de RAM. En FreeRTOS el stack por tarea es mínimo (2KB a 8KB). Ojo con los arrays locales.
+Las pruebas deben cubrir el comportamiento que importa, incluidos los límites. Si una prueba repite las mismas suposiciones del código generado, puede pasar sin detectar el problema.
 
-## Chuleta: Flujo de trabajo para Solo-Devs con IA
+## Un flujo de trabajo revisable
 
-| Tipo de tarea | Uso de IA recomendado | Riesgo |
-| :--- | :--- | :--- |
-| Boilerplate React/Next.js | Generación directa, copy-paste iterativo | Bajo (te avisa el linter y Typescript) |
-| Lógica de negocio (Backend) | Pair programming, generación de tests | Medio (errores de lógica, edge cases) |
-| Firmware (ESP-IDF, FreeRTOS) | Solo snippets de funciones puras, regex | **Crítico** (Watchdog resets, memory leaks, APIs inventadas) |
+1. Definí una tarea y sus criterios de aceptación.
+2. Pedí o implementá un cambio acotado.
+3. Revisá dependencias, decisiones y manejo de errores.
+4. Ejecutá las comprobaciones pertinentes.
+5. Probá la interacción o el dispositivo completo.
+6. Documentá lo verificado y lo que todavía queda pendiente.
+
+Si el cambio es demasiado grande para entenderlo, dividilo por comportamientos. La meta es poder explicar qué cambió, por qué y cómo se comprobó.

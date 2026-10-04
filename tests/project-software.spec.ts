@@ -15,7 +15,7 @@ test('software pages expose their features without JavaScript', async ({ browser
 
 test('PAD project links to software and the page fits mobile screens', async ({ page }) => {
   await page.goto('/es/projects/pad');
-  await page.getByRole('link', { name: 'PAD: un escritorio que responde a vos' }).click();
+  await page.getByRole('link', { name: 'Software del PAD: controles, editor y companion' }).click();
   await expect(page).toHaveURL(/\/es\/projects\/pad\/software$/);
   await page.setViewportSize({ width: 390, height: 844 });
   const preview = page.getByRole('img', { name: /Fotografía del PAD en modo Edición/ });

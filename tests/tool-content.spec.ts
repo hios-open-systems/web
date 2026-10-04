@@ -4,7 +4,7 @@ test('tool intro and guide exist without JavaScript', async ({ browser, baseURL 
   const context = await browser.newContext({ javaScriptEnabled: false, baseURL });
   const page = await context.newPage();
   await page.goto('/en/workbench/hash-digest');
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Hash & Digest');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Hash generator');
   await expect(page.locator('main ol li').first()).toBeAttached();
   await context.close();
 });
@@ -13,7 +13,7 @@ test('hydration keeps one heading, working actions and persistent guides', async
   await page.goto('/en/workbench/hash-digest');
   const heading = page.getByRole('heading', { level: 1 });
   await expect(heading).toHaveCount(1);
-  await expect(heading).toHaveText('Hash & Digest');
+  await expect(heading).toHaveText('Hash generator');
   const toggle = page.getByRole('button', { name: /how to use/i });
   await expect(toggle).toHaveAttribute('aria-expanded', 'false');
   const panel = page.locator(`[id="${await toggle.getAttribute('aria-controls')}"]`);
