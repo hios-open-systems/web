@@ -6,6 +6,7 @@ import { ArrowRightOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useLocale, useTranslations } from 'next-intl';
 import { workbenchTools } from '@/config/workbench';
 import { getWorkbenchIcon } from '@/components/workbench/workbenchIcons';
+import { LocalityBadge } from '@/components/workbench/LocalityBadge';
 import styles from './heroRandomTool.module.css';
 
 const TOOLS = workbenchTools.filter((tool) => !tool.external);
@@ -54,6 +55,7 @@ export function HeroRandomTool() {
           <div className={styles.meta}>
             <span className={styles.name}>{packs(`${tool.id}.title`)}</span>
             <span className={styles.desc}>{packs(`${tool.id}.description`)}</span>
+            <LocalityBadge kind={tool.locality} />
           </div>
         </div>
         <Link href={`/${locale}${tool.href}`} className={styles.open}>

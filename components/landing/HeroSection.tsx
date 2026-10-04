@@ -14,7 +14,7 @@ export function HeroSection() {
     <section className={styles.hero}>
       <div className={styles.container}>
         <div className={styles.content}>
-          <span className={styles.eyebrow}>HUMAN INTERFACES · OPEN SOFTWARE</span>
+          <span className={styles.eyebrow}>{t('eyebrow')}</span>
 
           <h1 className={styles.title}>{t('title')}</h1>
 

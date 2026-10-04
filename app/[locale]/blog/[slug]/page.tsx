@@ -17,7 +17,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }> }) {
     const { locale, slug } = await params;
-    const post = getPostBySlug(slug);
+    const post = getPostBySlug(slug, locale);
     if (!post) notFound();
     return createPageMetadata(locale, `/blog/${encodeURIComponent(slug)}`, `${post.title} | HIOS`, post.summary);
 }
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function BlogPostPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
     const { locale, slug } = await params;
     setRequestLocale(locale);
-    const post = getPostBySlug(slug);
+    const post = getPostBySlug(slug, locale);
     if (!post) notFound();
     const header = await getTranslations({ locale, namespace: 'Header' });
     const path = `/blog/${encodeURIComponent(slug)}` as const;

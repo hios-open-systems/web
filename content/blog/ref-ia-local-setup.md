@@ -1,75 +1,49 @@
 ---
-title: "IA local: inferencia con llama.cpp y modelos cuantizados"
+title: "IA local: preparar una prueba con llama.cpp"
 date: "2026-09-22"
 lang: "es"
-summary: "Setup paso a paso para correr modelos locales: llama.cpp, compilación con CUDA/Vulkan, cálculo de VRAM, offloading y plantillas de chat."
+summary: "Elegir una compilación, cargar un modelo GGUF y medir memoria y tiempos con una configuración reproducible."
 tags: ["ia", "llama-cpp", "llm", "local", "referencia"]
 category: "referencia"
 ---
 
-Correr inferencia local dejó de ser brujería. Con `llama.cpp` y modelos cuantizados en formato GGUF, podés levantar LLMs en hardware doméstico sin depender de la nube. El truco no es tener el procesador más rápido, sino entender cómo mover los pesos a la memoria sin que el sistema colapse.
+llama.cpp permite ejecutar modelos compatibles en distintos entornos. Para preparar una prueba, identificá primero tu sistema, el hardware disponible y el archivo del modelo. Conservá esos datos junto con la versión del motor.
 
-## Por qué cuantización y formato GGUF
+## Instalación o compilación
 
-Un modelo entrenado en FP16 de 8 billones de parámetros (8B) pesa unos 16 GB. Si intentás meter eso crudo en RAM, la inferencia se arrastra. La cuantización baja la precisión de los pesos (a 8 o 4 bits) para que el modelo entre en la memoria y el ancho de banda no sea un cuello de botella. 
+Podés usar una distribución preparada para tu plataforma o compilar el proyecto. Si elegís compilar, seguí las dependencias y opciones del backend que corresponda a tu equipo. La documentación incluye alternativas como CUDA y Vulkan; habilitar una opción no reemplaza la instalación de sus requisitos. [Guía oficial de compilación](https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md).
 
-El formato estándar es **GGUF**. Si ves nombres como `Q4_K_M` o `Q8_0`, son las recetas:
-- **Q8_0** (8 bits): Casi idéntico al original, pesa el doble que Q4.
-- **Q4_K_M** (4 bits mixto): El sweet spot absoluto. Máximo balance entre memoria y velocidad.
+Antes de descargar un modelo, comprobá que la arquitectura y el formato sean compatibles con la versión instalada. Revisá también su licencia y la procedencia del archivo.
 
-## Cálculo de VRAM: la matemática que no miente
+## Tamaño de pesos y memoria total
 
-La regla de oro para saber si un modelo entra en tu placa de video es esta fórmula rápida para el tamaño de los pesos:
+Una cuenta orientativa para pesos almacenados con una cantidad uniforme de bits es:
 
-`VRAM_Pesos (GB) = (Parámetros_en_Billones * Bits_de_Cuantización) / 8`
+`bytes de pesos ≈ cantidad de parámetros × bits por parámetro / 8`
 
-Ejemplo para un modelo 8B en Q4 (4 bits): `(8 * 4) / 8 = 4 GB`.
+Con ocho mil millones de parámetros y cuatro bits por parámetro, esa cuenta da cuatro mil millones de bytes. Es una aproximación a los pesos, no un presupuesto completo de memoria para ejecutar el modelo.
 
-Pero **ojo**: a eso hay que sumarle el **KV Context Memory** (la memoria para recordar la charla). Si no cuantizás el caché KV, se te comen 1-2 GB extra rápido. Si tenés una placa de 6GB, offloadear todo (`-ngl 33`) te va a tirar un OOM (Out of Memory) o mandarte a shared RAM (lento). La solución es cuantizar el caché: usá `-ctk q8_0 -ctv q8_0` para achicarlo.
+El archivo puede incluir metadatos y una cuantización que no use el mismo formato para todos los tensores. La ejecución agrega otros consumos. Medí la carga real con el contexto y las opciones que vayas a utilizar.
 
-## Compilar llama.cpp
+## Primera ejecución
 
-Olvidate de binarios precompilados si querés sacar cada gota de performance. Compilá a pelo usando CMake moderno.
+Consultá la ayuda de `llama-cli` y prepará una consulta breve. Registrá la ruta del modelo, el contexto, el límite de salida y la configuración de GPU. Los nombres y opciones disponibles deben corresponder a tu versión. [Documentación de llama-cli](https://github.com/ggml-org/llama.cpp/tree/master/tools/cli).
 
-Para NVIDIA (CUDA):
-```bash
-git clone https://github.com/ggerganov/llama.cpp && cd llama.cpp
-cmake -B build -DGGML_CUDA=ON
-cmake --build build --config Release
-```
+En modelos de conversación, revisá la plantilla de chat utilizada. Si la respuesta tiene un formato inesperado, comprobá esa configuración junto con el prompt y la compatibilidad del modelo.
 
-Para AMD/Intel (Vulkan):
-```bash
-cmake -B build -DGGML_VULKAN=1
-cmake --build build --config Release
-```
+## Medí antes de ajustar
 
-## Ejecución y parámetros mágicos
-
-Descargá un modelo GGUF (por ejemplo con `huggingface-cli`) y lanzalo. Para Llama 3.x, es crítico usar el template correcto, si no te comés tokens basura.
-
-```bash
-./build/bin/llama-cli -m ./Llama-3.1-8B-Instruct-Q4_K_M.gguf \
-  -p "Explicame I2C" -n 256 -c 2048 -ngl 33 \
-  --chat-template llama3 -ctk q8_0 -ctv q8_0
-```
-
-- `-ngl 33` (o `--n-gpu-layers`): Capas que mandás a la VRAM. Un 8B tiene ~33 capas. Si entra todo, vuela.
-- `-c 2048`: Ventana de contexto. Mantenela baja si es una charla corta, crece cuadráticamente en memoria.
-- `--chat-template llama3` o `-cnv`: **Indispensable** para que Llama 3.x entienda los roles (user/assistant).
-
-## Trampas comunes
-
-- **OOM silencioso (Shared RAM):** En Windows, si superás tu VRAM, los drivers de NVIDIA mandan el exceso a la RAM normal. La inferencia pasa de 40 tokens/s a 3 tokens/s sin tirar error. Revisá el Task Manager; si tocás memoria compartida, bajá el `-ngl` o cuantizá el KV.
-- **Tokens basura / bucles infinitos:** Causado 99% de las veces por no usar la plantilla de chat correcta (`--chat-template`). El modelo no sabe dónde termina tu prompt.
-- **Drivers desfasados:** El compilador de CUDA (`nvcc`) y tu driver de pantalla tienen que estar en versiones compatibles, o el ejecutable tira `GGML_ASSERT`.
-
-## Chuleta
-
-| Problema / Necesidad | Solución (parámetro) |
+| Observación | Próximo paso |
 |---|---|
-| Acelerar usando placa de video | `-ngl <numero_capas>` (ej. 33 para todo el modelo 8B) |
-| No me entra en la VRAM por poco | Cuantizar caché: `-ctk q8_0 -ctv q8_0` |
-| El modelo responde basura | Especificar template: `--chat-template llama3` |
-| Cortar texto infinito | Limitar salida: `-n 256` |
-| Levantar API estilo OpenAI | Usar `./build/bin/llama-server` en vez de `llama-cli` |
+| El modelo no carga | Revisá el error, la compatibilidad y la memoria disponible. |
+| La respuesta demora demasiado | Registrá tiempos y uso de CPU/GPU con la configuración actual. |
+| El formato de respuesta es incorrecto | Revisá plantilla, prompt y opciones de salida estructurada. |
+| Una consulta extensa falla | Compará el contexto y el consumo con una consulta corta. |
+
+Cambiá una variable por vez y repetí el mismo caso de prueba. Así podés identificar qué ajuste produjo la diferencia.
+
+## Registro mínimo
+
+Guardá la versión del motor, el nombre exacto del modelo, las opciones de ejecución, el equipo y los resultados. Incluí errores y limitaciones junto con las pruebas satisfactorias.
+
+Las estimaciones de memoria sirven para planificar. Los tiempos y resultados que observes en tu equipo son la referencia para decidir si esa configuración alcanza para el proyecto.

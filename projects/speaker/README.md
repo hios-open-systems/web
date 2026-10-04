@@ -2,7 +2,7 @@
 
 Parlante WiFi + Bluetooth con ESP32: **2× amplificador I2S MAX98357 en estéreo**, display LCD 16×2 y batería 2S recargable por USB-C. Reproduce radios WiFi, audio de YouTube (vía Invidious) y actúa como sink Bluetooth A2DP, con control por interfaz web.
 
-## Quick Start
+## Primeros pasos
 
 ```bash
 cd projects/speaker
@@ -12,16 +12,16 @@ pio device monitor -b 115200  # monitor serial
 
 Ya en la red: **http://hios-speaker.local**.
 
-## ¿Qué es?
+## Modos de reproducción
 
-Un hub de audio de escritorio. Modos (enum `Mode` en `src/main.ino`):
+El firmware incluye estos modos (enum `Mode` en `src/main.ino`):
 
-- **WiFi Radio** — streams de radio (presets + URL custom).
-- **YouTube** — audio de YouTube vía la API de Invidious.
-- **Bluetooth A2DP** — sink: le mandás audio desde el celu/PC.
-- **Config por BT serial** — seteás el WiFi desde una terminal Bluetooth, sin recompilar.
+- **WiFi Radio** — emisoras preconfiguradas o una URL de audio.
+- **YouTube** — audio de YouTube mediante la API de Invidious; depende de la disponibilidad y compatibilidad de la instancia utilizada.
+- **Bluetooth A2DP** — recibe audio desde un teléfono o una computadora.
+- **Config por BT serial** — configurás la red WiFi desde una terminal Bluetooth, sin recompilar.
 
-Todo sale por I2S a los dos MAX98357 (estéreo real, un ampli por canal). El LCD muestra modo, volumen y título.
+Todo sale por I2S a los dos MAX98357 (un amplificador por canal). El LCD muestra modo, volumen y título.
 
 ## Cableado
 
@@ -36,28 +36,26 @@ La hoja verificada contra el firmware es la guía **[/pinouts/speaker](https://o
 | VBAT | GPIO34 | divisor 100k/100k del pack (IO34 es input-only) |
 | 5V / GND | VIN / GND | del LM2596 (buck a 5.0V) |
 
-> **El canal L/R lo elige el pin SD de cada ampli — MEDÍ, no asumas.** El bus I2S es compartido; lo único distinto entre los dos módulos es SD. Left = SD→Vin (medí >1,4V); Right = SD→Vin por ~220–330k (medí 0,77–1,4V). Ver el paso "medir SD" en la guía. El viejo dato "1MΩ→GND=Left" es datasheet-dudoso: **no lo uses.**
+> **Selección de canal L/R:** el bus I2S es compartido; cada amplificador selecciona su canal mediante SD. Verificá la tensión de ese pin y contrastala con la ficha del módulo. Consultá el paso de medición de SD en la guía de conexiones.
 
 ## Componentes (BOM)
 
 Estéreo, pack 2S:
 
-| Componente | Función | Specs clave | ~USD |
-|---|---|---|---|
-| ESP32 DevKit (WROOM-32) | Micro + WiFi + BT | solo 2.4GHz | $8 |
-| **2×** MAX98357 | Ampli I2S (L + R) | 3.2W @4Ω, clase D, 2.5–5.5V, THD+N 0.015% | $6 |
-| **2×** parlante 63mm | Salida (L + R) | 4Ω, 3W, 87dB, F0 ~135Hz | $6 |
-| LCD 16×2 + backpack I2C | Display de estado | HD44780, 0x27 (a veces 0x3F), 5V | $4 |
-| LM2596S c/display | Buck 5.0V | 1.25–37V ajust., ~3A c/disipador, ~95% | $4 |
-| Cargador 2S USB-C | BMS + carga | 8.4V full, 2.2A carga, requiere 5V/4A | $5 |
-| **2×** 18650 (serie/2S) | Batería | 7.4V nom → 8.4V full | $12 |
-| Resistencias | 2× 100k (divisor VBAT) · 1 R para SD (valor **medido**) | | — |
+| Componente | Función | Selección del módulo |
+|---|---|---|
+| ESP32 DevKit (WROOM-32) | Control, WiFi y Bluetooth | Red WiFi de 2.4GHz |
+| **2×** MAX98357 | Amplificación I2S, un módulo por canal | Verificá alimentación, carga y selección de canal en la ficha del módulo |
+| **2×** parlante | Salida izquierda y derecha | Seleccioná impedancia y potencia compatibles con los amplificadores |
+| LCD 16×2 + adaptador I2C | Estado, volumen y título | Dirección configurada en el firmware: 0x27 |
+| LM2596S con display | Regulación de alimentación | Salida ajustada a 5.0V; capacidad según módulo y disipación |
+| Cargador y protección 2S USB-C | Carga del pack | Verificá compatibilidad con las celdas y requisitos de entrada |
+| **2×** 18650 en serie | Batería 2S | Usá un portapilas con configuración serie verificada |
+| Resistencias | Divisor de VBAT y selección de canal SD | Consultá la guía de conexiones y validá las tensiones antes de conectar |
 
-> ⚠️ **Batería en SERIE (2S), no en paralelo.** El pack es 7.4V nominal (8.4V a plena carga) y el cargador USB-C es 2S. Un portapilas en paralelo (3.7V) es de una versión vieja y **no sirve** acá.
+No hay mediciones publicadas de potencia, consumo o autonomía del montaje completo.
 
-Compra (AR/MercadoLibre): "esp32 devkit v1" · "max98357 i2s amplificador" (×2) · "lcd 16x2 i2c" · "fuente lm2596 step down display" · "cargador litio 2s usb-c" · "porta pila 18650 serie" · "parlante 4 ohm 3w 63mm" (×2).
-
-## Armado (el orden importa)
+## Secuencia de armado
 
 Cada fase se prueba antes de pasar a la siguiente:
 
@@ -67,9 +65,9 @@ Cada fase se prueba antes de pasar a la siguiente:
 4. **LCD** — VCC→5V, GND, SDA=21 / SCL=22.
 5. **Firmware** — `tests/test_basic.ino` (debe dar un tono) → después `src/main.ino`.
 
-## Banco de pruebas previo (antes del target real)
+## Banco de pruebas previo al montaje
 
-Para validar hardware/cableado/estabilidad antes del montaje final, usar:
+Para validar hardware/cableado/estabilidad antes del montaje final, consultá:
 
 - `testbench/README.md`
 - `testbench/PINOUT.md`
@@ -78,25 +76,23 @@ Para validar hardware/cableado/estabilidad antes del montaje final, usar:
 - `testbench/firmware/` (smoke, L/R, estéreo estabilidad)
 - `testbench/results/logs/LOG_TEMPLATE.md`
 
-**Soldadura:** 350–380°C con plomo (380–400 sin), contacto 2–3s, estañá puntas y pads primero. **Antes de encender:** continuidad de GND (0Ω entre todas las masas), sin corto VIN↔GND (∞), buck a 5.0V. Fotos de referencia en `pics/build/` y `pics/modules/`.
+**Antes de conectar los módulos:** con la alimentación desconectada, comprobá continuidad entre las masas y ausencia de cortocircuitos. Verificá por separado que el regulador entregue 5.0V. Las fotos de referencia están en `pics/build/` y `pics/modules/`.
 
-## Troubleshooting (aprendido a los golpes)
+## Diagnóstico
 
-- **Se reinicia al usar WiFi:** los picos de TX piden ~500mA → **cap 470µF en la entrada del ESP32** (y ojo con cable USB fino / fuente floja = brownout).
-- **Zumbido / ruido:** **una sola masa** (no cablees el GND del ESP32 y del ampli por separado = ground loop); **100nF cerámico + 100µF electrolítico** cerca de cada MAX98357; alejá el ampli de la antena; ferrita en los cables de audio; I2S corto (<10cm) y trenzado.
-- **Distorsión:** buck a 5V estables; bajá el volumen (el MAX98357 satura con señal muy fuerte).
-- **Sale un solo canal:** SD mal seteado en un ampli → **medí SD**, no asumas la R.
-- **WiFi no conecta:** el ESP32 es **solo 2.4GHz**. El voltaje del display del LM2596 es la **salida (5V)**, no la batería.
-
-Consumo típico: idle ~80mA · reproduciendo ~150mA · volumen máx ~300mA. La autonomía depende de la capacidad de las celdas.
+- **Reinicios al usar WiFi:** revisá la alimentación, los cables y los mensajes del monitor serial para identificar posibles caídas de tensión.
+- **Ruido:** comprobá masa común, alimentación y conexiones I2S. Seguí las recomendaciones de desacople del módulo utilizado.
+- **Distorsión:** probá con menor volumen y verificá que la alimentación se mantenga estable durante la reproducción.
+- **Un solo canal:** medí la tensión de SD en cada amplificador y contrastala con su ficha técnica.
+- **WiFi sin conexión:** verificá las credenciales y que la red opere en 2.4GHz.
 
 ## Estado
 
-En desarrollo — prototipo funcional. Firmware andando: WiFi radio, YouTube/Invidious, BT A2DP, config por BT serial, LCD y lectura de VBAT. Pendiente: PCB custom.
+En desarrollo — prototipo funcional. El código incluye WiFi radio, YouTube/Invidious, BT A2DP, config por BT serial, LCD y lectura de VBAT. Pendiente: diseño de una PCB propia.
 
 ## Licencia
 
-Open Hardware — usá, modificá y compartí libremente.
+Consultá las condiciones de licencia de cada dependencia antes de redistribuirla. Este directorio no incluye un archivo de licencia propio.
 
 ---
 

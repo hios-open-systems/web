@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Card, Col, Row, Select, Space, Typography, Tag } from 'antd';
 import { CopyButton } from './CopyButton';
 import { ToolHeader } from './ToolHeader';
@@ -11,21 +12,21 @@ const { Text, Paragraph } = Typography;
 const COMMAND_TEMPLATES = [
   {
     id: 'home_automation',
-    name: 'Domótica: Relés y Luces',
+    name: 'homeTemplate',
     actions: ['turn_on', 'turn_off', 'toggle', 'dim'],
     devices: ['relay_1', 'relay_2', 'desk_lamp', 'fan'],
     payloadField: 'brightness_pct',
   },
   {
     id: 'sensor_node',
-    name: 'Telemetría: Sensores y Muestreo',
+    name: 'sensorTemplate',
     actions: ['read_telemetry', 'calibrate', 'set_interval'],
     devices: ['bme280', 'battery_adc', 'imu_sensor'],
     payloadField: 'rate_seconds',
   },
   {
     id: 'audio_synth',
-    name: 'Audio: Tono y Generador',
+    name: 'audioTemplate',
     actions: ['play_tone', 'stop_tone', 'set_volume'],
     devices: ['buzzer', 'i2s_dac'],
     payloadField: 'frequency_hz',
@@ -33,9 +34,10 @@ const COMMAND_TEMPLATES = [
 ];
 
 export function LlmGrammarTool() {
+  const t = useTranslations('Workbench.grammar');
   const [templateId, setTemplateId] = useState<string>('home_automation');
   const [format, setFormat] = useState<'gbnf' | 'json_schema'>('gbnf');
-  const systemContext = 'Eres el controlador de hardware del sistema HIOS.';
+  const systemContext = 'You are the hardware controller for HIOS.';
 
   const selectedTemplate = useMemo(() => {
     return COMMAND_TEMPLATES.find((t) => t.id === templateId) || COMMAND_TEMPLATES[0];
@@ -46,8 +48,8 @@ export function LlmGrammarTool() {
     const devicesRule = selectedTemplate.devices.map((d) => `"\\"${d}\\""`).join(' | ');
 
     return `# =======================================================
-# Gramática GBNF para llama.cpp / llama-server
-# Fuerza al modelo a emitir ÚNICAMENTE este comando de hardware
+# GBNF grammar for llama.cpp / llama-server
+# Constrains the output format; validate commands before execution
 # =======================================================
 root ::= "{" ws "\\"action\\"" ws ":" ws action "," ws "\\"device\\"" ws ":" ws device "," ws "\\"${selectedTemplate.payloadField}\\"" ws ":" ws number ws "}"
 
@@ -84,20 +86,20 @@ ws ::= [ \\t\\n\\r]*
 
   const llamaCppCommand = useMemo(() => {
     if (format === 'gbnf') {
-      return `# Ejecutar con llama-cli aplicando la gramática estricta:
-llama-cli -m model.gguf --grammar-file grammar.gbnf -p "${systemContext} Comando del usuario: enciende la lampara del escritorio al 80%"`;
+      return `# Run llama-cli with the grammar:
+llama-cli -m model.gguf --grammar-file grammar.gbnf -p "${systemContext} User command: turn on the desk lamp at 80%"`;
     }
-    return `# Llamada HTTP a Ollama con JSON Schema estricto:
+    return `# Ollama HTTP request with JSON Schema:
 curl http://localhost:11434/api/chat -d '{
   "model": "llama3.1:8b",
-  "messages": [{"role": "user", "content": "Enciende la lampara del escritorio al 80%"}],
+  "messages": [{"role": "user", "content": "Turn on the desk lamp at 80%"}],
   "format": ${jsonSchemaStr.replace(/\n/g, '\n  ')},
   "stream": false
 }'`;
   }, [format, systemContext, jsonSchemaStr]);
 
   const esp32DispatchCode = useMemo(() => {
-    return `// Despacho de comando en ESP32 con ArduinoJson v7
+    return `// Illustrative ESP32 dispatch with ArduinoJson v7; add validation before use
 void handleHardwareCommand(const char* jsonPayload) {
   JsonDocument doc;
   DeserializationError err = deserializeJson(doc, jsonPayload);
@@ -133,41 +135,41 @@ void handleHardwareCommand(const char* jsonPayload) {
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
       <ToolHeader
-        eyebrow="Open Software & Control"
-        title="Generador de Gramáticas GBNF & JSON Schema para Hardware"
-        description="Fuerza a modelos de lenguaje locales (llama.cpp u Ollama) a responder con gramáticas estrictas para accionar relés, sensores y periféricos en microcontroladores sin alucinaciones."
+        eyebrow={t('eyebrow')}
+        title={t('title')}
+        description={t('description')}
         locality="local"
       />
 
       <Row gutter={[16, 16]}>
         <Col xs={24} md={12}>
-          <Card title="1. Selección de Perfil de Hardware" className={styles.cardSurface}>
+          <Card title={t('profileTitle')} className={styles.cardSurface}>
             <Space direction="vertical" style={{ width: '100%' }} size={16}>
               <div>
-                <Text type="secondary">Plantilla de Dispositivo:</Text>
+                <Text type="secondary">{t('template')}</Text>
                 <Select
                   style={{ width: '100%', marginTop: 6 }}
                   value={templateId}
                   onChange={setTemplateId}
-                  options={COMMAND_TEMPLATES.map((t) => ({ label: t.name, value: t.id }))}
+                  options={COMMAND_TEMPLATES.map((template) => ({ label: t(template.name), value: template.id }))}
                 />
               </div>
 
               <div>
-                <Text type="secondary">Formato de Restricción Estructural:</Text>
+                <Text type="secondary">{t('format')}</Text>
                 <Select
                   style={{ width: '100%', marginTop: 6 }}
                   value={format}
                   onChange={setFormat}
                   options={[
-                    { label: 'Gramática GBNF Nativa (llama.cpp / llama-server)', value: 'gbnf' },
-                    { label: 'JSON Schema Estricto (Ollama / OpenAI Format)', value: 'json_schema' },
+                    { label: t('gbnfOption'), value: 'gbnf' },
+                    { label: t('schemaOption'), value: 'json_schema' },
                   ]}
                 />
               </div>
 
               <div>
-                <Text type="secondary">Acciones Permitidas en Silicio:</Text>
+                <Text type="secondary">{t('actions')}</Text>
                 <div style={{ marginTop: 6 }}>
                   {selectedTemplate.actions.map((act) => (
                     <Tag color="blue" key={act} style={{ marginBottom: 4 }}>
@@ -178,7 +180,7 @@ void handleHardwareCommand(const char* jsonPayload) {
               </div>
 
               <div>
-                <Text type="secondary">Dispositivos / Nombres:</Text>
+                <Text type="secondary">{t('devices')}</Text>
                 <div style={{ marginTop: 6 }}>
                   {selectedTemplate.devices.map((dev) => (
                     <Tag color="purple" key={dev} style={{ marginBottom: 4 }}>
@@ -192,9 +194,9 @@ void handleHardwareCommand(const char* jsonPayload) {
         </Col>
 
         <Col xs={24} md={12}>
-          <Card title="2. Definición Estructural" className={styles.cardSurface}>
+          <Card title={t('definitionTitle')} className={styles.cardSurface}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-              <Text strong>{format === 'gbnf' ? 'Archivo `grammar.gbnf`:' : 'Definición `schema.json`:'}</Text>
+              <Text strong>{format === 'gbnf' ? t('gbnfFile') : t('schemaFile')}</Text>
               <CopyButton value={format === 'gbnf' ? gbnfGrammar : jsonSchemaStr} />
             </div>
             <pre style={{ background: 'var(--hios-bg-secondary)', padding: 12, borderRadius: 6, overflowX: 'auto', fontSize: 12, maxHeight: 260, margin: 0 }}>
@@ -204,9 +206,9 @@ void handleHardwareCommand(const char* jsonPayload) {
         </Col>
       </Row>
 
-      <Card title="3. Invocación de Inferencia Restringida" className={styles.cardSurface}>
+      <Card title={t('invocationTitle')} className={styles.cardSurface}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-          <Text strong>Comando para la PC local:</Text>
+          <Text strong>{t('localCommand')}</Text>
           <CopyButton value={llamaCppCommand} />
         </div>
         <pre style={{ background: 'var(--hios-bg-secondary)', padding: 12, borderRadius: 6, overflowX: 'auto', fontSize: 13, margin: 0 }}>
@@ -214,9 +216,9 @@ void handleHardwareCommand(const char* jsonPayload) {
         </pre>
       </Card>
 
-      <Card title="4. Recepción y Despacho en Firmware C++ (ESP32)" className={styles.cardSurface}>
+      <Card title={t('dispatchTitle')} className={styles.cardSurface}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-          <Text strong>Handler en `src/main.cpp`:</Text>
+          <Text strong>{t('handler')}</Text>
           <CopyButton value={esp32DispatchCode} />
         </div>
         <pre style={{ background: 'var(--hios-bg-secondary)', padding: 12, borderRadius: 6, overflowX: 'auto', fontSize: 13, margin: 0 }}>
@@ -224,10 +226,9 @@ void handleHardwareCommand(const char* jsonPayload) {
         </pre>
       </Card>
 
-      <Card title="5. Por qué las Gramáticas son Vitales en Silicio" className={styles.cardSurface}>
+      <Card title={t('scopeTitle')} className={styles.cardSurface}>
         <Paragraph style={{ margin: 0 }}>
-          Sin una gramática estructurada, un LLM puede responder frases conversacionales como <em>&ldquo;¡Por supuesto! Procedo a encender el relé...&rdquo;</em>, lo cual rompe el deserializador JSON del microcontrolador.
-          Las <strong>Gramáticas GBNF</strong> intervienen en el nivel de logits durante el muestreo (sampling) de la red neuronal, forzando la probabilidad de cualquier token no permitido a cero absoluto. El resultado en el microcontrolador es un payload 100% determinístico y seguro.
+          {t('scope')}
         </Paragraph>
       </Card>
     </Space>

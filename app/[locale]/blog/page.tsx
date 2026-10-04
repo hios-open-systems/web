@@ -2,7 +2,7 @@ import { translatedMetadata } from '@/lib/seo-metadata';
 import { setRequestLocale } from 'next-intl/server';
 import { BlogIndex } from '@/components/blog/BlogIndex';
 import type { PostMeta } from '@/lib/blog';
-import manifest from '@/lib/blogManifest.json';
+import manifest from '@/lib/blogLocalizedManifest.json';
 
 
 
@@ -17,7 +17,8 @@ export function generateStaticParams() {
 export default async function BlogPage({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params;
     setRequestLocale(locale);
-    return <BlogIndex posts={manifest as PostMeta[]} locale={locale} />;
+    const posts = manifest[locale as keyof typeof manifest] ?? manifest.es;
+    return <BlogIndex posts={posts as PostMeta[]} locale={locale} />;
 }
 
 export const generateMetadata = translatedMetadata('/blog', 'Seo.blog', 'description');

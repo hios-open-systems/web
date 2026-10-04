@@ -1,31 +1,43 @@
 ---
-title: "Feedback real sin romper lo local-first"
+title: "Companion del PAD: estado del equipo y controles por red local"
 date: "2026-06-24"
 lang: "es"
-summary: "Cómo un daemon liviano le da al macropad el estado real de la PC (volumen, mic, temperaturas) sin que el device dependa de él para funcionar."
+summary: "Qué información envía el companion al PAD, qué controles agrega y qué funciones siguen disponibles sin él."
 tags: ["companion", "arquitectura", "local-first"]
 category: "devlog"
 ---
 
-El macropad muestra cosas en su pantalla: volumen, si el micrófono está muteado, temperaturas. El problema es que el device, por sí solo, no *sabe* el estado real de la PC — solo conoce lo que él mismo mandó (estado "optimista").
+El PAD puede enviar atajos por USB o Bluetooth sin conocer el estado real de la computadora. Por ejemplo, una orden para cambiar el volumen no le informa automáticamente cuál fue el valor final.
 
-## El daemon companion
+El companion agrega ese canal de información. Es un programa de Node y TypeScript que se ejecuta en la computadora, consulta los datos disponibles y los envía al PAD por la red local.
 
-Un proceso liviano (Node, headless) corre en la PC, lee el estado real — volumen del sistema, mic, temperaturas de CPU/GPU — y lo empuja al pad con `POST /api/state` cada segundo. La pantalla pasa de mostrar lo que *cree* a mostrar lo que *es*.
+## Qué información envía
 
-## La regla de oro: local-first
+El programa utiliza `POST /api/state` con un intervalo configurable mediante `pollMs`. Puede enviar volumen, estado del micrófono y datos de carga o temperatura de CPU y GPU, según los proveedores y sensores disponibles.
 
-La parte importante del diseño es lo que pasa **cuando el daemon no está**:
+La configuración permite elegir qué campos enviar. Un dato ausente no debería interpretarse como una medición de cero: puede indicar que el equipo no lo expone o que no se pudo obtener.
 
-- El pad funciona perfecto sin él. Sigue siendo HID nativo (teclado/mouse/multimedia) por USB y BLE.
-- Si el daemon se cae, el pad vuelve al estado optimista en unos segundos. No se cuelga, no espera, no rompe.
+## Qué funciones requieren el companion
 
-El WiFi y el companion son una capa **opcional que mejora**, nunca un requisito.
+| Función | Requisito |
+|---|---|
+| Atajos de teclado, mouse y multimedia | Conexión HID por USB o BLE. |
+| Estado real del equipo en pantalla | Companion y conexión de red. |
+| Alternar el mute global del micrófono | Companion y soporte del sistema operativo. |
+| Editor web y espejo de la interfaz | Companion configurado y accesible. |
+
+El firmware vuelve a su estado estimado cuando deja de recibir información reciente. Ese estado representa las acciones del PAD, no una confirmación del sistema operativo.
 
 ## Comandos de vuelta
 
-El canal no es de una sola dirección. El pad puede pedirle algo al companion — por ejemplo, un **mute global de micrófono** a nivel sistema operativo — y ese comando viaja en la *respuesta* del POST. El daemon lo ejecuta (Core Audio en Windows, PipeWire/PulseAudio en Linux) y reporta el nuevo estado en el siguiente push. Funciona en cualquier app, no depende del atajo de Slack o Meet.
+El PAD puede solicitar una acción al companion en la respuesta de `POST /api/state`. El companion la procesa y comunica el estado obtenido en las siguientes actualizaciones.
 
-## Por qué importa
+El mute global del micrófono es distinto de un atajo enviado a una aplicación. Los controles de reuniones y cámara dependen de la aplicación activa y de los atajos configurados.
 
-Es la diferencia entre un gadget que necesita su software para servir, y uno que sirve solo y se *enriquece* con software. Lo segundo envejece mucho mejor.
+## Cómo prepararlo
+
+Seguí el README del companion para compilarlo. Configurá la dirección del PAD, el token generado por el firmware y el intervalo de consulta. Ambos equipos deben poder comunicarse por la red.
+
+Hay proveedores implementados para Windows y Linux. macOS sigue pendiente. Las instrucciones incluyen opciones de inicio automático para Windows y un servicio de usuario para Linux.
+
+Antes de dar por terminada la configuración, comprobá qué datos recibe la pantalla y qué ocurre al detener el companion. Así podés distinguir las acciones HID de las funciones que dependen de la conexión.

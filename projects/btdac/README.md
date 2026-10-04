@@ -1,8 +1,8 @@
 # HIOS BTDAC — Receptor Bluetooth + DAC PCM5102
 
-Receptor de audio **Bluetooth A2DP** de alta fidelidad con control por **BLE**: recibe música (A2DP) y la saca por un DAC PCM5102 (SNR 112dB), mientras un canal BLE simultáneo lo controla desde la app Android sin cortar el audio. HW **rev 2.0** · firmware/app **v0.5**.
+Receptor de audio **Bluetooth A2DP** con ESP32 y DAC PCM5102. Entrega audio estéreo por salida de línea y mantiene un canal **BLE** para solicitar tonos de prueba desde la aplicación Android. HW **rev 2.0** · firmware/app **v0.5**.
 
-## Quick Start
+## Primeros pasos
 
 **Firmware (ESP32):**
 
@@ -12,16 +12,16 @@ pio run -t upload             # compilar y flashear (PlatformIO, partición min_
 pio device monitor -b 115200  # logs de conexión y comandos
 ```
 
-La primera vez baja las libs de Dual Mode (A2DP + BLE).
+PlatformIO descarga las dependencias necesarias durante la primera compilación.
 
 **App Android (control):** abrí `android/` en Android Studio, o `./gradlew installDebug` (JDK 17+). Detalle en [`android/README.md`](android/README.md).
 
-## ¿Qué es?
+## Funciones disponibles
 
 El BTDAC v2 es **Dual Mode**:
 
 1. **Audio Sink (Classic BT):** recibe A2DP estéreo 44.1kHz/16-bit → PCM5102 → salida de línea.
-2. **Smart Control (BLE):** canal GATT simultáneo para manejarlo desde la app sin interrumpir la música. Incluye un **generador de tonos** por software (seno inyectado al buffer I2S) para pruebas.
+2. **Control BLE:** canal GATT independiente para solicitar tonos de prueba desde la app. El firmware genera una señal senoidal durante aproximadamente dos segundos y no inicia el tono mientras hay música en reproducción.
 
 ## Cableado
 
@@ -40,29 +40,29 @@ Hoja verificada contra el firmware: guía **[/pinouts/btdac](https://openhios.de
 
 **GPIO a evitar en el WROOM-32:** 0 / 2 / 12 / 15 (strapping/boot) y 6–11 (flash SPI interno — no usar).
 
-**LED de estado (KY-009):** barrido R→G→B al arrancar (self-test) y verde fijo = conectado; el firmware también señaliza conectando/reproduciendo/error por color (ver `src/HIOS_BTDAC.ino` para el mapa exacto). El monitor de batería es HW v2, todavía no.
+**LED de estado (KY-009):** barrido R→G→B al arrancar (self-test) y verde fijo = conectado; el firmware también señaliza conectando/reproduciendo/error por color (ver `src/HIOS_BTDAC.ino` para el mapa exacto). La lectura del nivel de batería todavía no está implementada.
 
 ## Hardware (BOM)
 
 Batería 2S, salida de línea:
 
-| Componente | Función | Specs clave |
+| Componente | Función | Características |
 |---|---|---|
 | ESP32-WROOM-32 DevKit (38 pines) | MCU + BT/BLE/WiFi | dual-core, BT 4.2, 4MB flash |
 | PCM5102 (LAB1) | DAC I2S | TI PCM5102A, SNR 112dB, salida 2.1V RMS, PLL interno (SCK→GND) |
-| LM2596S c/display | Buck 5.0V | 1.25–37V ajust., ~3A c/disipador, ~95% |
+| LM2596S c/display | Regulador a 5.0V | Capacidad de corriente según módulo y disipación |
 | KY-009 | LED RGB de estado | cátodo común, **sin** R integradas (van 3× 330Ω) |
-| Cargador BMS 2S USB-C | carga + protección | 8.4V full, 2.2A carga, entrada 5V/4A |
-| 2× 18650 (serie/2S) | batería | 7.4V nom → 8.4V full, >12h autonomía |
+| Cargador BMS 2S USB-C | Carga y protección del pack | Verificá tensión, corriente y protecciones en la ficha del módulo utilizado |
+| 2× 18650 (serie/2S) | batería | Pack 2S; autonomía sin medición de referencia publicada |
 
-> ⚠️ El portapilas es **serie (2S)**: si conseguís uno paralelo (el SKU común), hay que **modificarlo a serie**. El pack es 7.4V nominal, no 3.7V.
+> Usá un portapilas para dos celdas en **serie (2S)** y verificá su configuración antes de conectarlo al BMS.
 
-## Armado (el orden importa)
+## Secuencia de armado
 
 Herramientas: soldador punta fina, estaño 60/40, multímetro, pinzas, pelacables.
 
 1. **Energía primero.** Baterías → BMS 2S (B+/B−, y **BM al punto medio** entre celdas) → LM2596. **Ajustá el buck a 5.0V con el multímetro. NO conectes nada más hasta tener 5V estables.**
-2. **PCM5102:** seteá los jumpers (FLT/DEMP/FMT=L, **XSMT=H**) y puenteá **SCK→GND**.
+2. **PCM5102:** configurá los jumpers (FLT/DEMP/FMT=L, **XSMT=H**) y puenteá **SCK→GND**.
 3. **ESP32:** VIN←5V, GND común. Probá que arranca por USB.
 4. **I2S:** GPIO27→BCK, GPIO14→LRCK, GPIO13→DIN (cables cortos, <10cm).
 5. **LED KY-009:** GPIO4/16/17 → 330Ω → R/G/B; cátodo → GND.
@@ -70,7 +70,7 @@ Herramientas: soldador punta fina, estaño 60/40, multímetro, pinzas, pelacable
 
 **Desacople (baja ruido de audio):** 100µF + 100nF cerca del VIN del ESP32; 10µF + 100nF cerca del VIN del PCM5102.
 
-**Antes de encender:** continuidad de GND (0Ω entre todas las masas), sin corto 5V↔GND (∞), buck a 5.0V ±0.1. Fotos en `pics/build/` y `pics/modules/`.
+**Antes de conectar los módulos:** con la alimentación desconectada, verificá continuidad entre las masas y ausencia de cortocircuitos entre 5V y GND. Comprobá por separado que la salida del regulador esté ajustada a 5.0V. Fotos en `pics/build/` y `pics/modules/`.
 
 ## Protocolo de control (BLE)
 
@@ -85,22 +85,22 @@ Servicio GATT propio:
 
 `vol:` / `eq:` todavía **no** existen en el firmware (roadmap). Detalle de la app en [`android/README.md`](android/README.md).
 
-## Troubleshooting (audio)
+## Diagnóstico de audio
 
-Síntoma típico: BT conecta y el LED anda, pero se escucha **fritura/ruido, no música**. Casi siempre es el PCM5102:
+Si Bluetooth conecta pero la salida presenta ruido o no reproduce música, revisá la configuración, el cableado y la alimentación:
 
-1. **Test aislado:** flasheá `tests/HIOS_BTDAC_minimal_test.ino` (usa los **mismos** pines 27/14/13 que el firmware). Si suena → el problema estaba en la config I2S del firmware completo; si no → es hardware/cableado.
+1. **Test aislado:** flasheá `tests/HIOS_BTDAC_minimal_test.ino` (usa los **mismos** pines 27/14/13 que el firmware). Compará el resultado con el firmware completo para acotar el diagnóstico; esta prueba por sí sola no identifica la causa.
 2. **SCK→GND:** sin eso el DAC no genera su clock. Medí continuidad SCK↔GND (~0Ω).
 3. **XSMT=H:** en L el DAC está muteado.
-4. **I2S:** continuidad 27→BCK, 14→LRCK, 13→DIN (~0Ω). Con BT conectado esos pines deben medir ~1.5V DC oscilando (0V = no transmite; 3.3V fijo = mala config).
+4. **I2S:** continuidad 27→BCK, 14→LRCK, 13→DIN (~0Ω). Una lectura de tensión con multímetro no permite validar la comunicación I2S.
 5. **Cables I2S <10cm** y **GND común** (ESP32 y PCM5102 unidos).
-6. **VIN 5V estable** al reproducir (si cae, el buck no da corriente).
+6. **VIN 5V estable** al reproducir. Si la tensión cae, revisá la fuente, el regulador y las conexiones.
 
-Refs: [ESP32-A2DP wiki](https://github.com/pschatzmann/ESP32-A2DP/wiki) · [PCM5102 datasheet](https://www.ti.com/lit/ds/symlink/pcm5102.pdf).
+Referencias: [ESP32-A2DP wiki](https://github.com/pschatzmann/ESP32-A2DP/wiki) · [PCM5102 datasheet](https://www.ti.com/lit/ds/symlink/pcm5102.pdf).
 
 ## Estado
 
-**Fase 2 (Smart Audio)** — arquitectura híbrida funcional:
+Funciones implementadas y ampliaciones pendientes:
 
 - [x] Firmware Dual Mode (A2DP + BLE simultáneos)
 - [x] App Android (scan + connect + tonos)
@@ -109,7 +109,7 @@ Refs: [ESP32-A2DP wiki](https://github.com/pschatzmann/ESP32-A2DP/wiki) · [PCM5
 
 ## Licencia
 
-Open Hardware — usá, modificá y compartí libremente · [openhios.dev/projects/btdac](https://openhios.dev/projects/btdac)
+Consultá las condiciones de licencia de cada dependencia antes de redistribuirla. Este directorio no incluye un archivo de licencia propio.
 
 ---
 

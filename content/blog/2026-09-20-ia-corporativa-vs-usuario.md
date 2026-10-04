@@ -1,94 +1,53 @@
 ---
-title: "La IA corporativa vs. el usuario de a pie"
+title: "Servicios remotos y control local: cómo elegir las dependencias"
 date: "2026-09-20"
 lang: "es"
-summary: "Por qué la IA corporativa profundiza la asimetría de poder, y qué tiene que ver el open hardware con la única defensa real."
+summary: "Qué revisar al conectar un dispositivo a servicios externos y cómo definir qué funciones deben seguir disponibles sin esa conexión."
 tags: ["ia", "opinión", "open-source", "democratización"]
 category: "referencia"
 ---
 
-Hay algo profundamente frustrante en estrellarse contra un muro automatizado. Hace poco me pasó con un banco: salto de "movimiento sospechoso", fondos bloqueados un viernes a la tarde, y la única vía de contacto era un chatbot "inteligente" entrenado para absorber insultos y no resolver nada. El modelo no tiene autoridad transaccional; está ahí de escudo.
+Un dispositivo conectado puede depender de varios sistemas: su firmware, la red local, un servidor y una API externa. Cada dependencia agrega capacidades y también condiciones de uso, mantenimiento y disponibilidad.
 
-Es la asimetría de poder llevada al extremo. Cuando la corporación usa IA para blindarse del cliente, recorta costos pero te traslada todo el desgaste a vos. Vos contra un loop infinito de disculpas sintéticas. 
+El diseño empieza por una pregunta concreta: ¿qué debería poder hacer el dispositivo cuando alguna de esas partes deja de responder?
 
-No me voy a poner a filosofar sobre la tiranía algorítmica. El punto es qué hacemos al respecto a nivel técnico. En HIOS, la respuesta es el hardware abierto y la computación offline. No vas a tener un chat filosófico en un ESP32, pero sí podés tener un sistema local que no dependa de que un servidor en la nube te dé permiso para prender la luz o levantar una persiana.
+## Separá las funciones y sus requisitos
 
-## Nube corporativa vs. Stack Local-First
+Una consulta a un modelo de lenguaje puede necesitar un servidor. La lectura de un botón o una acción local pueden tener requisitos distintos. Definí esas diferencias antes de conectar todo en un mismo flujo.
 
-La diferencia no es solo ideológica, es de arquitectura.
+| Aspecto | Servicio remoto | Servicio en la red local |
+|---|---|---|
+| Conectividad | Requiere acceso al servicio a través de internet. | Requiere acceso al equipo que lo ejecuta. |
+| Operación | Depende del proveedor y de la configuración de la cuenta. | Requiere mantener el equipo, el software y la red. |
+| Datos | Revisá qué información se envía y cómo se trata. | Revisá accesos, registros y servicios externos utilizados. |
+| Cambios | Seguí versiones, límites y condiciones de la API. | Administrá versiones y compatibilidad de los componentes. |
 
-| Aspecto | Nube Corporativa (Vendor Lock-in) | Stack Local-First (HIOS) |
-| :--- | :--- | :--- |
-| **Toma de decisiones** | Modelo de caja negra remoto. | Lógica de control en el microcontrolador o gateway local. |
-| **Latencia** | Depende del RTT a internet y carga del modelo. | Milisegundos. Ejecución determinista a pelo. |
-| **Disponibilidad** | Si te cortan la API, tu hardware es un pisapapeles. | Offline por diseño. Sigue andando aunque se caiga el ISP. |
-| **Auditoría** | "Confiá en nosotros". | Firmware auditable. Compilás vos mismo el `.bin`. |
+«Local» no significa automáticamente «sin conexión»: un dispositivo que consulta un servidor en la red sigue dependiendo de ese servidor. Tampoco define por sí solo la latencia, la privacidad o la seguridad del sistema.
 
-## Código: Ejecución determinista sin depender de la nube
+## Definí el comportamiento ante fallos
 
-Si vas a armar algo crítico, el enemigo son los loops que esperan girando (polling) o los requests HTTP bloqueantes a una IA para tomar una decisión. En un sistema embebido como el ESP32 con FreeRTOS, todo tiene que ser asíncrono y local.
+Para cada consulta de red, establecé qué debe ocurrir si no llega una respuesta, si el formato no es válido o si el servicio rechaza la solicitud. Mostrá un estado que permita distinguir esos casos.
 
-Acá un ejemplo básico de cómo procesar un comando local por cola, sin bloquear el micro si la red se pone lenta o si el servidor externo (o gateway) no responde.
+Cuando una operación tarda, la interfaz debería comunicarlo. Si la arquitectura permite separar la consulta de la interacción física, comprobá igualmente cómo se coordinan ambas partes y qué recursos comparten.
 
-```c
-#include <freertos/FreeRTOS.h>
-#include <freertos/task.h>
-#include <freertos/queue.h>
+Una respuesta generada tampoco debería convertirse directamente en una orden de hardware. Validá el formato, los valores permitidos y la autorización para ejecutar la acción. La decisión sobre qué puede hacer el dispositivo pertenece a la lógica de la aplicación.
 
-// Definimos la cola para comandos locales
-QueueHandle_t localCommandQueue;
+## Qué aporta el código disponible
 
-typedef struct {
-    uint8_t command_id;
-    uint32_t payload;
-} LocalCommand;
+Tener acceso al firmware y a la documentación permite inspeccionar dependencias, adaptar comportamientos y reproducir pruebas. Para hacerlo, también necesitás instrucciones de compilación, versiones identificadas y una licencia que permita el uso previsto.
 
-// Tarea que procesa los comandos offline. Nunca bloquea el main loop.
-void vCommandTask(void *pvParameters) {
-    LocalCommand cmd;
-    for(;;) {
-        // Esperamos un comando en la cola (portMAX_DELAY es seguro acá porque es una tarea dedicada)
-        if (xQueueReceive(localCommandQueue, &cmd, portMAX_DELAY) == pdPASS) {
-            // Ejecución determinista offline
-            if (cmd.command_id == 1) {
-                // Activar relé, sin preguntar a ningún LLM
-                printf("Ejecutando comando crítico localmente: %lu\n", cmd.payload);
-            }
-        }
-    }
-}
+Esa disponibilidad facilita la revisión, pero no reemplaza las pruebas ni garantiza que todas las funciones estén terminadas. Consultá el estado de cada proyecto y sus limitaciones.
 
-void setup() {
-    localCommandQueue = xQueueCreate(10, sizeof(LocalCommand));
-    
-    // Asignamos core 1 para la lógica local y core 0 para el stack de red
-    xTaskCreatePinnedToCore(
-        vCommandTask,
-        "CommandTask",
-        2048,
-        NULL,
-        1,
-        NULL,
-        1
-    );
-}
+## Un ejemplo en HIOS
 
-void loop() {
-    // El main loop queda libre. Te comés un reset si ponés un delay() largo acá.
-    vTaskDelay(pdMS_TO_TICKS(1000)); 
-}
-```
+El prototipo Node AI consulta Ollama desde un ESP32-S3 y muestra la respuesta en una pantalla OLED. El modelo se ejecuta en otro equipo: el microcontrolador necesita conectarse a ese servidor para obtener una respuesta.
 
-## Trampas comunes
+Esa separación permite estudiar la integración entre un dispositivo y un modelo local sin presentar la inferencia como una función que ya corre dentro del ESP32. Las funciones de audio y TinyML mencionadas en el material de diseño siguen siendo desarrollos pendientes.
 
-- **Bloquear el micro por un request HTTP:** Nunca pongas la toma de decisión crítica atada a un timeout de red. Usá FreeRTOS, colas y tareas separadas.
-- **Creer que el vendor lock-in no te va a tocar:** "Es solo una API de 2 centavos". Ojo: cuando te cambien los Terms of Service, tus placas se apagan.
-- **Confundir inteligencia con control:** Que un chatbot genere texto lindo no significa que tenga permisos en el backend bancario. Es solo un proxy.
+## Antes de elegir una arquitectura
 
-## Chuleta: Soberanía de datos
-
-| Necesidad | Enfoque corporativo | Enfoque Open/Local |
-| :--- | :--- | :--- |
-| Atención al cliente | Chatbot sin permisos reales | Canales con operadores humanos |
-| Automatización de hardware | API en la nube (AWS/Tuya) | MQTT local + Home Assistant + ESP32 |
-| Ejecución de inferencias | APIs de pago por token | Modelos locales cuantizados / LLMs en gateways locales |
+- Enumerá las funciones que requieren red y las que deben funcionar sin ella.
+- Definí tiempos de espera y estados de error comprensibles.
+- Revisá qué datos salen del dispositivo y hacia dónde.
+- Documentá las versiones y los requisitos de cada servicio.
+- Probá desconexiones y respuestas inválidas, además del funcionamiento normal.

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import styles from './publicStats.module.css';
 
 interface StatsPayload {
@@ -12,43 +12,6 @@ interface StatsPayload {
     countries: { country: string; count: number }[];
     locales: { locale: string; count: number }[];
 }
-
-const COPY = {
-    es: {
-        kicker: 'Telemetría abierta',
-        title: 'Stats',
-        intro:
-            'La telemetría de este sitio es opt-in (apagada por default) y anónima. Lo poco que se junta se muestra acá, abierto y agregado — la contracara de no trackear a nadie sin permiso.',
-        pageViews: 'Vistas de página',
-        toolOpens: 'Tools abiertas',
-        guestbook: 'Firmas',
-        allTime: 'en total',
-        lastDays: (d: number) => `últimos ${d} días`,
-        activity: 'Actividad por día',
-        topTools: 'Tools más usadas',
-        countries: 'Desde dónde',
-        locales: 'Idiomas',
-        empty: 'Todavía no hay datos suficientes — la telemetría es opt-in, así que esto crece solo si los visitantes eligen compartirla.',
-        error: 'No se pudieron cargar las estadísticas.',
-    },
-    en: {
-        kicker: 'Open telemetry',
-        title: 'Stats',
-        intro:
-            'Telemetry on this site is opt-in (off by default) and anonymous. The little that gets collected is shown here, open and aggregated — the flip side of not tracking anyone without permission.',
-        pageViews: 'Page views',
-        toolOpens: 'Tools opened',
-        guestbook: 'Signatures',
-        allTime: 'all time',
-        lastDays: (d: number) => `last ${d} days`,
-        activity: 'Activity per day',
-        topTools: 'Most used tools',
-        countries: 'Where from',
-        locales: 'Languages',
-        empty: 'Not enough data yet — telemetry is opt-in, so this only grows when visitors choose to share it.',
-        error: 'Could not load stats.',
-    },
-} as const;
 
 /** 'AR' → 🇦🇷 (regional indicator symbols). */
 function countryFlag(code: string): string {
@@ -69,7 +32,8 @@ function Bar({ value, max }: { value: number; max: number }) {
 
 export function PublicStats() {
     const locale = useLocale();
-    const t = COPY[locale as keyof typeof COPY] ?? COPY.en;
+    const t = useTranslations('PublicStats');
+    const tools = useTranslations('Workbench.packs');
     const [data, setData] = useState<StatsPayload | null>(null);
     const [failed, setFailed] = useState(false);
 
@@ -97,38 +61,38 @@ export function PublicStats() {
     return (
         <main className={styles.page}>
             <header className={styles.head}>
-                <span className={`tech-label ${styles.kicker}`}>{t.kicker}</span>
-                <h1 className={styles.title}>{t.title}</h1>
-                <p className={styles.intro}>{t.intro}</p>
+                <span className={`tech-label ${styles.kicker}`}>{t('kicker')}</span>
+                <h1 className={styles.title}>{t('title')}</h1>
+                <p className={styles.intro}>{t('intro')}</p>
             </header>
 
-            {failed ? <p className={styles.note}>{t.error}</p> : null}
-            {isEmpty ? <p className={styles.note}>{t.empty}</p> : null}
+            {failed ? <p className={styles.note}>{t('error')}</p> : null}
+            {isEmpty ? <p className={styles.note}>{t('empty')}</p> : null}
 
             {data && !isEmpty ? (
                 <>
                     <section className={styles.tiles}>
                         <article className={styles.tile}>
-                            <span className={styles.tileValue}>{data.totals.pageViews.toLocaleString()}</span>
-                            <span className={styles.tileLabel}>{t.pageViews}</span>
-                            <span className={styles.tileHint}>{t.lastDays(data.rangeDays)}</span>
+                            <span className={styles.tileValue}>{data.totals.pageViews.toLocaleString(locale)}</span>
+                            <span className={styles.tileLabel}>{t('pageViews')}</span>
+                            <span className={styles.tileHint}>{t('lastDays', { days: data.rangeDays })}</span>
                         </article>
                         <article className={styles.tile}>
-                            <span className={styles.tileValue}>{data.totals.toolOpens.toLocaleString()}</span>
-                            <span className={styles.tileLabel}>{t.toolOpens}</span>
-                            <span className={styles.tileHint}>{t.lastDays(data.rangeDays)}</span>
+                            <span className={styles.tileValue}>{data.totals.toolOpens.toLocaleString(locale)}</span>
+                            <span className={styles.tileLabel}>{t('toolOpens')}</span>
+                            <span className={styles.tileHint}>{t('lastDays', { days: data.rangeDays })}</span>
                         </article>
                         <article className={styles.tile}>
-                            <span className={styles.tileValue}>{(data.totals.guestbook ?? 0).toLocaleString()}</span>
-                            <span className={styles.tileLabel}>{t.guestbook}</span>
-                            <span className={styles.tileHint}>{t.allTime}</span>
+                            <span className={styles.tileValue}>{(data.totals.guestbook ?? 0).toLocaleString(locale)}</span>
+                            <span className={styles.tileLabel}>{t('guestbook')}</span>
+                            <span className={styles.tileHint}>{t('allTime')}</span>
                         </article>
                     </section>
 
                     {data.perDay.length > 0 ? (
                         <section className={styles.section}>
-                            <h2 className={styles.sectionTitle}>{t.activity}</h2>
-                            <div className={styles.sparkRow} role="img" aria-label={t.activity}>
+                            <h2 className={styles.sectionTitle}>{t('activity')}</h2>
+                            <div className={styles.sparkRow} role="img" aria-label={t('activity')}>
                                 {data.perDay.map((d) => (
                                     <span
                                         key={d.day}
@@ -143,11 +107,11 @@ export function PublicStats() {
 
                     {data.topTools.length > 0 ? (
                         <section className={styles.section}>
-                            <h2 className={styles.sectionTitle}>{t.topTools}</h2>
+                            <h2 className={styles.sectionTitle}>{t('topTools')}</h2>
                             <ul className={styles.rows}>
                                 {data.topTools.map((tool) => (
                                     <li key={tool.toolId} className={styles.row}>
-                                        <span className={styles.rowLabel}>{tool.toolId}</span>
+                                        <span className={styles.rowLabel}>{tools.has(`${tool.toolId}.title`) ? tools(`${tool.toolId}.title`) : tool.toolId}</span>
                                         <Bar value={tool.count} max={maxTool} />
                                         <span className={styles.rowValue}>{tool.count}</span>
                                     </li>
@@ -159,7 +123,7 @@ export function PublicStats() {
                     <div className={styles.twoCol}>
                         {data.countries.length > 0 ? (
                             <section className={styles.section}>
-                                <h2 className={styles.sectionTitle}>{t.countries}</h2>
+                                <h2 className={styles.sectionTitle}>{t('countries')}</h2>
                                 <ul className={styles.rows}>
                                     {data.countries.map((c) => (
                                         <li key={c.country} className={styles.row}>
@@ -175,7 +139,7 @@ export function PublicStats() {
                         ) : null}
                         {data.locales.length > 0 ? (
                             <section className={styles.section}>
-                                <h2 className={styles.sectionTitle}>{t.locales}</h2>
+                                <h2 className={styles.sectionTitle}>{t('locales')}</h2>
                                 <div className={styles.chips}>
                                     {data.locales.map((l) => (
                                         <span key={l.locale} className={styles.chip}>

@@ -1,0 +1,638 @@
+{
+  "es": [
+    {
+      "slug": "2026-09-22-ollama-esp32-bridge",
+      "title": "Conectar HIOS Node AI con Ollama por WiFi",
+      "date": "2026-09-24",
+      "summary": "Preparar el servidor, comprobar la API y configurar el prototipo ESP32-S3 que muestra respuestas en una pantalla OLED.",
+      "tags": [
+        "ia",
+        "esp32",
+        "ollama",
+        "local-first",
+        "tutorial"
+      ],
+      "lang": "es",
+      "category": "devlog"
+    },
+    {
+      "slug": "ref-tinyml-esp32",
+      "title": "TinyML en ESP32-S3: cómo preparar una prueba",
+      "date": "2026-09-23",
+      "summary": "Elegir un ejemplo compatible, revisar memoria y medir resultados antes de integrar inferencia en un dispositivo.",
+      "tags": [
+        "ia",
+        "tinyml",
+        "esp32",
+        "tensorflow-lite",
+        "referencia"
+      ],
+      "lang": "es",
+      "category": "referencia"
+    },
+    {
+      "slug": "ref-modelos-abiertos",
+      "title": "Modelos locales: cómo evaluar compatibilidad y resultados",
+      "date": "2026-09-22",
+      "summary": "Qué revisar en la ficha de un modelo, cómo probar el uso de memoria y para qué sirven las salidas estructuradas.",
+      "tags": [
+        "ia",
+        "open-source",
+        "modelos",
+        "huggingface",
+        "referencia"
+      ],
+      "lang": "es",
+      "category": "referencia"
+    },
+    {
+      "slug": "ref-ia-local-setup",
+      "title": "IA local: preparar una prueba con llama.cpp",
+      "date": "2026-09-22",
+      "summary": "Elegir una compilación, cargar un modelo GGUF y medir memoria y tiempos con una configuración reproducible.",
+      "tags": [
+        "ia",
+        "llama-cpp",
+        "llm",
+        "local",
+        "referencia"
+      ],
+      "lang": "es",
+      "category": "referencia"
+    },
+    {
+      "slug": "2026-09-21-denial-of-wallet-etica",
+      "title": "Consumo de APIs de IA: límites y seguimiento",
+      "date": "2026-09-21",
+      "summary": "Cómo definir límites de solicitudes, respuestas y uso de herramientas para controlar el consumo de una integración con IA.",
+      "tags": [
+        "ia",
+        "seguridad",
+        "ética",
+        "opinión"
+      ],
+      "lang": "es",
+      "category": "referencia"
+    },
+    {
+      "slug": "2026-09-20-una-persona-hace-todo",
+      "title": "Desarrollar con IA: generar código y revisar decisiones",
+      "date": "2026-09-20",
+      "summary": "Cómo organizar tareas, revisar código generado y comprobar que una solución funciona en el entorno del proyecto.",
+      "tags": [
+        "ia",
+        "opinión",
+        "democratización",
+        "web",
+        "trabajo"
+      ],
+      "lang": "es",
+      "category": "referencia"
+    },
+    {
+      "slug": "2026-09-20-ia-corporativa-vs-usuario",
+      "title": "Servicios remotos y control local: cómo elegir las dependencias",
+      "date": "2026-09-20",
+      "summary": "Qué revisar al conectar un dispositivo a servicios externos y cómo definir qué funciones deben seguir disponibles sin esa conexión.",
+      "tags": [
+        "ia",
+        "opinión",
+        "open-source",
+        "democratización"
+      ],
+      "lang": "es",
+      "category": "referencia"
+    },
+    {
+      "slug": "ref-freertos-esp32",
+      "title": "FreeRTOS en ESP32: tareas, comunicación y diagnóstico",
+      "date": "2026-07-23",
+      "summary": "Conceptos para organizar tareas, comunicar componentes y revisar memoria y tiempos en un proyecto con ESP-IDF.",
+      "tags": [
+        "esp32",
+        "freertos",
+        "rtos",
+        "referencia"
+      ],
+      "lang": "es",
+      "category": "referencia"
+    },
+    {
+      "slug": "ref-esp-now",
+      "title": "ESP-NOW: comunicación entre ESP32 sin router",
+      "date": "2026-07-23",
+      "summary": "Cómo configurar pares, canal, mensajes y cifrado, y distinguir la recepción por radio del procesamiento en la aplicación.",
+      "tags": [
+        "esp32",
+        "esp-now",
+        "wireless",
+        "referencia"
+      ],
+      "lang": "es",
+      "category": "referencia"
+    },
+    {
+      "slug": "2026-06-25-ble-legacy-vs-extendido",
+      "title": "BLE en el PAD: modos de advertising y diagnóstico",
+      "date": "2026-06-25",
+      "summary": "Cómo seleccionar advertising legacy, extendido o dual en el firmware del PAD y separar problemas de descubrimiento, conexión y reinicio.",
+      "tags": [
+        "esp32",
+        "ble",
+        "firmware"
+      ],
+      "lang": "es",
+      "category": "devlog"
+    },
+    {
+      "slug": "2026-06-24-companion-local-first",
+      "title": "Companion del PAD: estado del equipo y controles por red local",
+      "date": "2026-06-24",
+      "summary": "Qué información envía el companion al PAD, qué controles agrega y qué funciones siguen disponibles sin él.",
+      "tags": [
+        "companion",
+        "arquitectura",
+        "local-first"
+      ],
+      "lang": "es",
+      "category": "devlog"
+    }
+  ],
+  "en": [
+    {
+      "slug": "2026-09-22-ollama-esp32-bridge",
+      "title": "Connect HIOS Node AI to Ollama over WiFi",
+      "date": "2026-09-24",
+      "summary": "Prepare the server, check the API and configure the ESP32-S3 prototype that displays responses on an OLED screen.",
+      "tags": [
+        "ai",
+        "esp32",
+        "ollama",
+        "local-first",
+        "tutorial"
+      ],
+      "lang": "en",
+      "category": "devlog"
+    },
+    {
+      "slug": "ref-tinyml-esp32",
+      "title": "TinyML on ESP32-S3: preparing a test",
+      "date": "2026-09-23",
+      "summary": "Choose a compatible example, review memory and measure results before integrating inference into a device.",
+      "tags": [
+        "ai",
+        "tinyml",
+        "esp32",
+        "tensorflow-lite",
+        "reference"
+      ],
+      "lang": "en",
+      "category": "referencia"
+    },
+    {
+      "slug": "ref-modelos-abiertos",
+      "title": "Local models: evaluating compatibility and results",
+      "date": "2026-09-22",
+      "summary": "What to check in a model card, how to test memory use and what structured outputs provide.",
+      "tags": [
+        "ai",
+        "open-source",
+        "models",
+        "huggingface",
+        "reference"
+      ],
+      "lang": "en",
+      "category": "referencia"
+    },
+    {
+      "slug": "ref-ia-local-setup",
+      "title": "Local AI: preparing a test with llama.cpp",
+      "date": "2026-09-22",
+      "summary": "Choose a build, load a GGUF model and measure memory and timings with a reproducible configuration.",
+      "tags": [
+        "ai",
+        "llama-cpp",
+        "llm",
+        "local",
+        "reference"
+      ],
+      "lang": "en",
+      "category": "referencia"
+    },
+    {
+      "slug": "2026-09-21-denial-of-wallet-etica",
+      "title": "AI API usage: limits and monitoring",
+      "date": "2026-09-21",
+      "summary": "How to define limits for requests, responses and tool use to control the workload of an AI integration.",
+      "tags": [
+        "ai",
+        "security",
+        "ethics",
+        "opinion"
+      ],
+      "lang": "en",
+      "category": "referencia"
+    },
+    {
+      "slug": "2026-09-20-una-persona-hace-todo",
+      "title": "Developing with AI: generating code and reviewing decisions",
+      "date": "2026-09-20",
+      "summary": "How to organize tasks, review generated code and check that a solution works in the project’s environment.",
+      "tags": [
+        "ai",
+        "opinion",
+        "democratization",
+        "web",
+        "work"
+      ],
+      "lang": "en",
+      "category": "referencia"
+    },
+    {
+      "slug": "2026-09-20-ia-corporativa-vs-usuario",
+      "title": "Remote services and local control: choosing dependencies",
+      "date": "2026-09-20",
+      "summary": "What to review when connecting a device to external services and how to decide which functions must remain available without that connection.",
+      "tags": [
+        "ai",
+        "opinion",
+        "open-source",
+        "democratization"
+      ],
+      "lang": "en",
+      "category": "referencia"
+    },
+    {
+      "slug": "ref-freertos-esp32",
+      "title": "FreeRTOS on ESP32: tasks, communication and diagnostics",
+      "date": "2026-07-23",
+      "summary": "Concepts for organizing tasks, communicating between components and reviewing memory and timing in an ESP-IDF project.",
+      "tags": [
+        "esp32",
+        "freertos",
+        "rtos",
+        "reference"
+      ],
+      "lang": "en",
+      "category": "referencia"
+    },
+    {
+      "slug": "ref-esp-now",
+      "title": "ESP-NOW: communication between ESP32 devices without a router",
+      "date": "2026-07-23",
+      "summary": "Configure peers, channels, messages and encryption, and distinguish radio reception from application processing.",
+      "tags": [
+        "esp32",
+        "esp-now",
+        "wireless",
+        "reference"
+      ],
+      "lang": "en",
+      "category": "referencia"
+    },
+    {
+      "slug": "2026-06-25-ble-legacy-vs-extendido",
+      "title": "BLE on PAD: advertising modes and diagnostics",
+      "date": "2026-06-25",
+      "summary": "How to select legacy, extended or dual advertising in PAD firmware and distinguish discovery, connection and reset problems.",
+      "tags": [
+        "esp32",
+        "ble",
+        "firmware"
+      ],
+      "lang": "en",
+      "category": "devlog"
+    },
+    {
+      "slug": "2026-06-24-companion-local-first",
+      "title": "PAD companion: computer status and controls over the local network",
+      "date": "2026-06-24",
+      "summary": "What information the companion sends to PAD, which controls it adds and which functions work without it.",
+      "tags": [
+        "companion",
+        "architecture",
+        "local-first"
+      ],
+      "lang": "en",
+      "category": "devlog"
+    }
+  ],
+  "de": [
+    {
+      "slug": "2026-09-22-ollama-esp32-bridge",
+      "title": "HIOS Node AI über WLAN mit Ollama verbinden",
+      "date": "2026-09-24",
+      "summary": "Server vorbereiten, API prüfen und den ESP32-S3-Prototyp konfigurieren, der Antworten auf einem OLED-Display anzeigt.",
+      "tags": [
+        "KI",
+        "esp32",
+        "ollama",
+        "local-first",
+        "Anleitung"
+      ],
+      "lang": "de",
+      "category": "devlog"
+    },
+    {
+      "slug": "ref-tinyml-esp32",
+      "title": "TinyML auf dem ESP32-S3: einen Test vorbereiten",
+      "date": "2026-09-23",
+      "summary": "Ein kompatibles Beispiel auswählen, Speicher prüfen und Ergebnisse messen, bevor Inferenz in ein Gerät integriert wird.",
+      "tags": [
+        "KI",
+        "tinyml",
+        "esp32",
+        "tensorflow-lite",
+        "Referenz"
+      ],
+      "lang": "de",
+      "category": "referencia"
+    },
+    {
+      "slug": "ref-modelos-abiertos",
+      "title": "Lokale Modelle: Kompatibilität und Ergebnisse bewerten",
+      "date": "2026-09-22",
+      "summary": "Modellbeschreibungen prüfen, Speicherbedarf testen und strukturierte Ausgaben einordnen.",
+      "tags": [
+        "KI",
+        "Open Source",
+        "Modelle",
+        "huggingface",
+        "Referenz"
+      ],
+      "lang": "de",
+      "category": "referencia"
+    },
+    {
+      "slug": "ref-ia-local-setup",
+      "title": "Lokale KI: einen Test mit llama.cpp vorbereiten",
+      "date": "2026-09-22",
+      "summary": "Build auswählen, GGUF-Modell laden und Speicherbedarf sowie Laufzeiten mit einer reproduzierbaren Konfiguration messen.",
+      "tags": [
+        "KI",
+        "llama-cpp",
+        "llm",
+        "lokal",
+        "Referenz"
+      ],
+      "lang": "de",
+      "category": "referencia"
+    },
+    {
+      "slug": "2026-09-21-denial-of-wallet-etica",
+      "title": "Nutzung von KI-APIs: Grenzen und Überwachung",
+      "date": "2026-09-21",
+      "summary": "Grenzen für Anfragen, Antworten und Werkzeugaufrufe festlegen, um die Auslastung einer KI-Integration zu kontrollieren.",
+      "tags": [
+        "KI",
+        "Sicherheit",
+        "Ethik",
+        "Meinung"
+      ],
+      "lang": "de",
+      "category": "referencia"
+    },
+    {
+      "slug": "2026-09-20-una-persona-hace-todo",
+      "title": "Mit KI entwickeln: Code erzeugen und Entscheidungen prüfen",
+      "date": "2026-09-20",
+      "summary": "Aufgaben strukturieren, generierten Code prüfen und sicherstellen, dass eine Lösung in der Projektumgebung funktioniert.",
+      "tags": [
+        "KI",
+        "Meinung",
+        "Demokratisierung",
+        "Web",
+        "Arbeit"
+      ],
+      "lang": "de",
+      "category": "referencia"
+    },
+    {
+      "slug": "2026-09-20-ia-corporativa-vs-usuario",
+      "title": "Externe Dienste und lokale Kontrolle: Abhängigkeiten auswählen",
+      "date": "2026-09-20",
+      "summary": "Was beim Verbinden eines Geräts mit externen Diensten zu prüfen ist und welche Funktionen auch ohne diese Verbindung verfügbar bleiben sollen.",
+      "tags": [
+        "KI",
+        "Meinung",
+        "Open Source",
+        "Demokratisierung"
+      ],
+      "lang": "de",
+      "category": "referencia"
+    },
+    {
+      "slug": "ref-freertos-esp32",
+      "title": "FreeRTOS auf ESP32: Aufgaben, Kommunikation und Diagnose",
+      "date": "2026-07-23",
+      "summary": "Aufgaben strukturieren, Komponenten verbinden und Speicherbedarf sowie Zeiten in einem ESP-IDF-Projekt prüfen.",
+      "tags": [
+        "esp32",
+        "freertos",
+        "rtos",
+        "Referenz"
+      ],
+      "lang": "de",
+      "category": "referencia"
+    },
+    {
+      "slug": "ref-esp-now",
+      "title": "ESP-NOW: Kommunikation zwischen ESP32-Geräten ohne Router",
+      "date": "2026-07-23",
+      "summary": "Gegenstellen, Kanal, Nachrichten und Verschlüsselung konfigurieren und Funkempfang von der Verarbeitung in der Anwendung unterscheiden.",
+      "tags": [
+        "esp32",
+        "esp-now",
+        "Funk",
+        "Referenz"
+      ],
+      "lang": "de",
+      "category": "referencia"
+    },
+    {
+      "slug": "2026-06-25-ble-legacy-vs-extendido",
+      "title": "BLE beim PAD: Advertising-Modi und Diagnose",
+      "date": "2026-06-25",
+      "summary": "Legacy-, Extended- oder Dual-Advertising in der PAD-Firmware auswählen und Probleme bei Erkennung, Verbindung und Neustart unterscheiden.",
+      "tags": [
+        "esp32",
+        "ble",
+        "firmware"
+      ],
+      "lang": "de",
+      "category": "devlog"
+    },
+    {
+      "slug": "2026-06-24-companion-local-first",
+      "title": "PAD-Companion: Rechnerstatus und Steuerung im lokalen Netzwerk",
+      "date": "2026-06-24",
+      "summary": "Welche Informationen der Companion an das PAD sendet, welche Steuerfunktionen er ergänzt und was ohne ihn funktioniert.",
+      "tags": [
+        "companion",
+        "Architektur",
+        "local-first"
+      ],
+      "lang": "de",
+      "category": "devlog"
+    }
+  ],
+  "it": [
+    {
+      "slug": "2026-09-22-ollama-esp32-bridge",
+      "title": "Collegare HIOS Node AI a Ollama tramite WiFi",
+      "date": "2026-09-24",
+      "summary": "Preparare il server, verificare l’API e configurare il prototipo ESP32-S3 che mostra le risposte su un display OLED.",
+      "tags": [
+        "ia",
+        "esp32",
+        "ollama",
+        "local-first",
+        "tutorial"
+      ],
+      "lang": "it",
+      "category": "devlog"
+    },
+    {
+      "slug": "ref-tinyml-esp32",
+      "title": "TinyML su ESP32-S3: preparare una prova",
+      "date": "2026-09-23",
+      "summary": "Scegliere un esempio compatibile, controllare la memoria e misurare i risultati prima di integrare l’inferenza in un dispositivo.",
+      "tags": [
+        "ia",
+        "tinyml",
+        "esp32",
+        "tensorflow-lite",
+        "riferimento"
+      ],
+      "lang": "it",
+      "category": "referencia"
+    },
+    {
+      "slug": "ref-modelos-abiertos",
+      "title": "Modelli locali: valutare compatibilità e risultati",
+      "date": "2026-09-22",
+      "summary": "Cosa controllare nella scheda di un modello, come provare l’uso della memoria e a cosa servono gli output strutturati.",
+      "tags": [
+        "ia",
+        "open-source",
+        "modelli",
+        "huggingface",
+        "riferimento"
+      ],
+      "lang": "it",
+      "category": "referencia"
+    },
+    {
+      "slug": "ref-ia-local-setup",
+      "title": "IA locale: preparare una prova con llama.cpp",
+      "date": "2026-09-22",
+      "summary": "Scegliere una build, caricare un modello GGUF e misurare memoria e tempi con una configurazione riproducibile.",
+      "tags": [
+        "ia",
+        "llama-cpp",
+        "llm",
+        "locale",
+        "riferimento"
+      ],
+      "lang": "it",
+      "category": "referencia"
+    },
+    {
+      "slug": "2026-09-21-denial-of-wallet-etica",
+      "title": "Utilizzo delle API di IA: limiti e monitoraggio",
+      "date": "2026-09-21",
+      "summary": "Come definire limiti per richieste, risposte e uso degli strumenti per controllare il carico di un’integrazione con IA.",
+      "tags": [
+        "ia",
+        "sicurezza",
+        "etica",
+        "opinione"
+      ],
+      "lang": "it",
+      "category": "referencia"
+    },
+    {
+      "slug": "2026-09-20-una-persona-hace-todo",
+      "title": "Sviluppare con l’IA: generare codice e verificare le decisioni",
+      "date": "2026-09-20",
+      "summary": "Come organizzare le attività, esaminare il codice generato e verificare che una soluzione funzioni nell’ambiente del progetto.",
+      "tags": [
+        "ia",
+        "opinione",
+        "democratizzazione",
+        "web",
+        "lavoro"
+      ],
+      "lang": "it",
+      "category": "referencia"
+    },
+    {
+      "slug": "2026-09-20-ia-corporativa-vs-usuario",
+      "title": "Servizi remoti e controllo locale: scegliere le dipendenze",
+      "date": "2026-09-20",
+      "summary": "Cosa verificare quando colleghi un dispositivo a servizi esterni e come decidere quali funzioni devono restare disponibili senza quella connessione.",
+      "tags": [
+        "ia",
+        "opinione",
+        "open-source",
+        "democratizzazione"
+      ],
+      "lang": "it",
+      "category": "referencia"
+    },
+    {
+      "slug": "ref-freertos-esp32",
+      "title": "FreeRTOS su ESP32: task, comunicazione e diagnostica",
+      "date": "2026-07-23",
+      "summary": "Concetti per organizzare task, collegare componenti e controllare memoria e tempi in un progetto ESP-IDF.",
+      "tags": [
+        "esp32",
+        "freertos",
+        "rtos",
+        "riferimento"
+      ],
+      "lang": "it",
+      "category": "referencia"
+    },
+    {
+      "slug": "ref-esp-now",
+      "title": "ESP-NOW: comunicazione tra ESP32 senza router",
+      "date": "2026-07-23",
+      "summary": "Configurare peer, canale, messaggi e cifratura e distinguere la ricezione radio dall’elaborazione nell’applicazione.",
+      "tags": [
+        "esp32",
+        "esp-now",
+        "wireless",
+        "riferimento"
+      ],
+      "lang": "it",
+      "category": "referencia"
+    },
+    {
+      "slug": "2026-06-25-ble-legacy-vs-extendido",
+      "title": "BLE sul PAD: modalità di advertising e diagnostica",
+      "date": "2026-06-25",
+      "summary": "Come scegliere advertising legacy, esteso o duale nel firmware del PAD e distinguere problemi di rilevamento, connessione e riavvio.",
+      "tags": [
+        "esp32",
+        "ble",
+        "firmware"
+      ],
+      "lang": "it",
+      "category": "devlog"
+    },
+    {
+      "slug": "2026-06-24-companion-local-first",
+      "title": "Companion del PAD: stato del computer e controlli sulla rete locale",
+      "date": "2026-06-24",
+      "summary": "Quali informazioni il companion invia al PAD, quali controlli aggiunge e quali funzioni restano disponibili senza di esso.",
+      "tags": [
+        "companion",
+        "architettura",
+        "local-first"
+      ],
+      "lang": "it",
+      "category": "devlog"
+    }
+  ]
+}

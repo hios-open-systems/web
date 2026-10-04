@@ -13,6 +13,7 @@ const { Text, Link } = Typography;
 export function Footer() {
     const locale = useLocale();
     const t = useTranslations('Header');
+    const copy = useTranslations('Footer');
 
     const label = (key: string, fallback: string) => {
         const value = t(key);
@@ -92,7 +93,7 @@ export function Footer() {
                             fontSize: '13px',
                             display: 'block',
                         }}>
-                            HIOS — Proyectos documentados y open source
+                            {copy('description')}
                         </Text>
                         <Text
                             className="tech-label"
@@ -103,7 +104,7 @@ export function Footer() {
                                 opacity: 0.7,
                             }}
                         >
-                            Next.js · Ant Design · mucho café
+                            {copy('detail')}
                         </Text>
                     </div>
                 </Space>

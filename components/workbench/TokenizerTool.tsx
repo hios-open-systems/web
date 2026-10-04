@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Button, Card, Col, Input, Row, Select, Space, Typography } from 'antd';
 import { CopyButton } from './CopyButton';
 import { ToolHeader } from './ToolHeader';
@@ -10,19 +11,19 @@ const { Text, Title, Paragraph } = Typography;
 
 const PRESETS = [
   {
-    name: 'Hardware Prompt en Español',
+    name: 'presetEs',
     text: 'Configura el pin GPIO 4 del ESP32 como entrada con resistencia pull-up interna y reporta cada 500 milisegundos.',
   },
   {
-    name: 'Hardware Prompt en Inglés',
+    name: 'presetEn',
     text: 'Configure ESP32 pin GPIO 4 as an input with internal pull-up resistor and report every 500 milliseconds.',
   },
   {
-    name: 'Estructura C++ Embebida',
+    name: 'presetCpp',
     text: 'struct __attribute__((packed)) TelemetryPacket {\n  uint32_t timestamp;\n  float temperature_c;\n  uint8_t battery_level;\n};',
   },
   {
-    name: 'JSON de Comando de Hardware',
+    name: 'presetJson',
     text: '{"action": "turn_on", "device": "desk_lamp", "brightness_pct": 85, "fade_ms": 300}',
   },
 ];
@@ -38,7 +39,7 @@ const COLORS = [
   '#14b8a6',
 ];
 
-// Tokenizador simulado BPE de alta fidelidad: divide por palabras, puntuación, mayúsculas y prefijos
+// Illustrative heuristic; this is not a model tokenizer.
 function tokenizeText(input: string): string[] {
   if (!input) return [];
   // Tokenize regex que emula el regex de tokenización de GPT/Llama:
@@ -63,6 +64,7 @@ function tokenizeText(input: string): string[] {
 }
 
 export function TokenizerTool() {
+  const t = useTranslations('Workbench.tokenEstimator');
   const [text, setText] = useState<string>(PRESETS[0].text);
   const [modelType, setModelType] = useState<string>('llama3');
 
@@ -75,7 +77,7 @@ export function TokenizerTool() {
     const words = text.trim().split(/\s+/).filter(Boolean).length;
     const count = tokens.length;
     const ratio = words > 0 ? (count / words).toFixed(2) : '0';
-    // KV memory in bytes: 2 * layers (32) * dim (4096) * 2 bytes = ~524KB por 1000 tokens
+    // Fixed coefficient for an illustrative calculation, not a KV-cache estimate.
     const kvMemoryKb = Math.round(count * 0.52);
 
     return { chars, words, count, ratio, kvMemoryKb };
@@ -95,17 +97,17 @@ export function TokenizerTool() {
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
       <ToolHeader
-        eyebrow="Modern AI & Tokenization"
-        title="Tokenizer & Context Inspector Local"
-        description="Visualiza en tiempo real cómo un modelo de lenguaje divide el texto en tokens, analiza la inflación en español y calcula el costo en el buffer de memoria."
+        eyebrow={t('eyebrow')}
+        title={t('title')}
+        description={t('description')}
         locality="local"
       />
 
-      <Card title="1. Texto de Entrada o Prompt" className={styles.cardSurface}>
+      <Card title={t('inputTitle')} className={styles.cardSurface}>
         <Space direction="vertical" style={{ width: '100%' }} size={12}>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             {PRESETS.map((p) => (
-              <Button size="small" key={p.name} onClick={() => setText(p.text)}>
+              <Button size="small" key={t(p.name)} onClick={() => setText(p.text)}>
                 {p.name}
               </Button>
             ))}
@@ -115,20 +117,20 @@ export function TokenizerTool() {
             rows={4}
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Escribe o pega aquí tu texto, prompt o código C++..."
+            placeholder={t('placeholder')}
           />
 
           <Row gutter={16}>
             <Col xs={24} sm={12}>
-              <Text type="secondary">Vocabulario BPE:</Text>
+              <Text type="secondary">{t('modelReference')}</Text>
               <Select
                 style={{ width: '100%', marginTop: 4 }}
                 value={modelType}
                 onChange={setModelType}
                 options={[
-                  { label: 'Llama 3.x BPE (128k Vocab)', value: 'llama3' },
-                  { label: 'Qwen 2.5 BPE (152k Vocab)', value: 'qwen' },
-                  { label: 'Clásico GPT / Llama 2 (32k Vocab)', value: 'legacy' },
+                  { label: 'Llama 3.x', value: 'llama3' },
+                  { label: 'Qwen 2.5', value: 'qwen' },
+                  { label: 'GPT / Llama 2', value: 'legacy' },
                 ]}
               />
             </Col>
@@ -138,39 +140,39 @@ export function TokenizerTool() {
 
       <Row gutter={[16, 16]}>
         <Col xs={24} md={8}>
-          <Card title="2. Métricas de Tokenización" className={styles.cardSurface}>
+          <Card title={t('metricsTitle')} className={styles.cardSurface}>
             <Space direction="vertical" size={16} style={{ width: '100%' }}>
               <div>
-                <Text type="secondary">Tokens Totales:</Text>
+                <Text type="secondary">{t('fragments')}</Text>
                 <Title level={2} style={{ margin: 0, color: '#3b82f6' }}>
                   {stats.count}
                 </Title>
               </div>
               <Row gutter={8}>
                 <Col span={12}>
-                  <Text type="secondary">Palabras:</Text>
+                  <Text type="secondary">{t('words')}</Text>
                   <Title level={4} style={{ margin: 0 }}>
                     {stats.words}
                   </Title>
                 </Col>
                 <Col span={12}>
-                  <Text type="secondary">Caracteres:</Text>
+                  <Text type="secondary">{t('characters')}</Text>
                   <Title level={4} style={{ margin: 0 }}>
                     {stats.chars}
                   </Title>
                 </Col>
               </Row>
               <div>
-                <Text type="secondary">Tokens por Palabra:</Text>
+                <Text type="secondary">{t('ratio')}</Text>
                 <Title level={4} style={{ margin: 0, color: Number(stats.ratio) > 1.5 ? '#f59e0b' : '#22c55e' }}>
                   {stats.ratio}
                 </Title>
                 <Text style={{ fontSize: 12 }} type="secondary">
-                  (En inglés suele ser ~1.2; en español ~1.5 - 1.8)
+                  {t('ratioHint')}
                 </Text>
               </div>
               <div>
-                <Text type="secondary">Memoria en Caché KV:</Text>
+                <Text type="secondary">{t('memory')}</Text>
                 <Title level={4} style={{ margin: 0 }}>
                   ~{stats.kvMemoryKb} KB
                 </Title>
@@ -183,7 +185,7 @@ export function TokenizerTool() {
           <Card
             title={
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
-                <span>3. Inspección Visual de Tokens ({stats.count})</span>
+                <span>{t('visualTitle', { count: stats.count })}</span>
                 <CopyButton value={JSON.stringify(tokens, null, 2)} />
               </div>
             }
@@ -201,7 +203,7 @@ export function TokenizerTool() {
               }}
             >
               {tokens.length === 0 ? (
-                <Text type="secondary">Ingresa texto arriba para inspeccionar los tokens.</Text>
+                <Text type="secondary">{t('empty')}</Text>
               ) : (
                 tokens.map((tok, idx) => {
                   const color = COLORS[idx % COLORS.length];
@@ -220,7 +222,7 @@ export function TokenizerTool() {
                         borderRadius: 3,
                         whiteSpace: 'pre-wrap',
                       }}
-                      title={`Token #${idx + 1}: "${tok}" (${tok.length} chars)`}
+                      title={t('fragmentHint', { index: idx + 1, text: tok, count: tok.length })}
                     >
                       {tok}
                     </span>
@@ -232,11 +234,9 @@ export function TokenizerTool() {
         </Col>
       </Row>
 
-      <Card title="4. ¿Por qué la Tokenización Importa en Hardware?" className={styles.cardSurface}>
+      <Card title={t('scopeTitle')} className={styles.cardSurface}>
         <Paragraph style={{ margin: 0 }}>
-          Los modelos de lenguaje no leen letras ni palabras, sino secuencias de tokens BPE (Byte-Pair Encoding).
-          En idiomas romances como el español o en sintaxis de código como C++, los vocabularios de IA tradicionales dividen las palabras en múltiples fragmentos debido a la baja frecuencia relativa en los datasets de entrenamiento anglosajones.
-          Entender esta métrica permite redactar prompts técnicos que consuman la menor cantidad posible de memoria de contexto en microcontroladores y placas con memoria acotada.
+          {t('scope')}
         </Paragraph>
       </Card>
     </Space>

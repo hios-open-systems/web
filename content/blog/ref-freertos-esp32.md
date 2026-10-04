@@ -1,22 +1,23 @@
 ---
-title: "FreeRTOS en ESP32: lo mínimo que hay que saber"
+title: "FreeRTOS en ESP32: tareas, comunicación y diagnóstico"
 date: "2026-07-23"
 lang: "es"
-summary: "El ESP-IDF corre FreeRTOS en los dos cores: tasks y prioridades, cuándo pinear, colas y semáforos para comunicar, el watchdog y los patrones típicos en proyectos maker."
+summary: "Conceptos para organizar tareas, comunicar componentes y revisar memoria y tiempos en un proyecto con ESP-IDF."
 tags: ["esp32", "freertos", "rtos", "referencia"]
 category: "referencia"
 ---
 
-Aunque nunca escribas `xTaskCreate`, en un ESP32 ya estás corriendo FreeRTOS: el ESP-IDF (y el core de Arduino, que es una capa encima) usa una variante SMP de FreeRTOS que ejecuta tasks en los **dos cores** del chip. Entender lo básico evita la mitad de los bugs raros: cuelgues, watchdogs, datos corruptos entre "hilos".
+ESP-IDF integra FreeRTOS para organizar tareas y recursos. La cantidad de núcleos y la configuración dependen del chip y del proyecto; no todos los integrantes de la familia ESP32 tienen dos núcleos.
 
-## El mapa: dos cores, muchas tasks
+## Tareas, prioridades y afinidad
 
-- **Core 0 (PRO_CPU)**: ahí viven las tasks del sistema — WiFi, Bluetooth, TCP/IP.
-- **Core 1 (APP_CPU)**: en Arduino, el `loop()` corre acá como una task más (prioridad 1).
+En los objetivos compatibles con SMP, una tarea puede tener afinidad con un núcleo o ejecutarse sin una afinidad fija. Las tareas listas se planifican teniendo en cuenta su prioridad y los núcleos donde pueden ejecutarse.
 
-El scheduler es preemptivo por prioridad: siempre corre la task lista de mayor prioridad en cada core. Prioridad **0 es la más baja** (la task IDLE); números más altos ganan. Para código de aplicación, prioridades entre 1 y 5 suelen alcanzar — subir prioridad "para que ande más rápido" es un antipatrón que mata de hambre al resto.
+No asumas una distribución universal de WiFi, Bluetooth y aplicación. Revisá la configuración de tu versión y medí antes de asignar prioridades o fijar tareas a un núcleo. [FreeRTOS en ESP-IDF](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/system/freertos_idf.html).
 
-## Crear tasks y cuándo pinear
+## Crear tareas y elegir afinidad
+
+Este fragmento usa la entrada `setup()` de Arduino-ESP32. Adaptá el trabajo de la tarea y comprobá el resultado de su creación. No es una aplicación de audio completa.
 
 ```cpp
 void audioTask(void *param) {
@@ -35,59 +36,64 @@ void setup() {
     NULL,        // parámetro
     3,           // prioridad
     NULL,        // handle
-    1            // core (0, 1, o tskNO_AFFINITY)
+    tskNO_AFFINITY // sin fijar un núcleo
   );
 }
 ```
 
-¿Cuándo pinear a un core?
+¿Cuándo fijar una tarea a un núcleo?
 
-- **Pineá** lo que es sensible a latencia o jitter (audio, tiras de LED con timing estricto, un loop de control) al core 1, lejos de WiFi/BT.
-- **No pinees** (usá `tskNO_AFFINITY`) lo que no le importa dónde correr: el scheduler balancea solo.
+- **Afinidad fija:** usala cuando el diseño o las mediciones justifiquen un núcleo concreto.
+- **Sin afinidad fija:** `tskNO_AFFINITY` permite que el planificador elija entre los núcleos disponibles.
 
-El stack es por task y **no crece**: si se desborda, crash. Ante dudas, arrancá generoso (4–8 KB) y medí con `uxTaskGetStackHighWaterMark`.
+El stack se dimensiona por tarea. En ESP-IDF, el tamaño indicado al crearla se expresa en bytes. Revisá el uso observado y los casos de mayor consumo; no tomes el tamaño del ejemplo como un valor suficiente para cualquier aplicación.
 
-## Comunicar tasks: nunca estado compartido a pelo
+## Comunicar tareas y proteger recursos
 
-Dos tasks tocando la misma variable global sin protección es una condición de carrera esperando a manifestarse (y con dos cores, ni un `noInterrupts()` te salva). Las herramientas, de más simple a más pesada:
+El acceso concurrente a datos compartidos necesita coordinación. Elegí el mecanismo según el dato o recurso que deban compartir las tareas:
 
-- **Task notifications** (`xTaskNotify` / `ulTaskNotifyTake`): lo más liviano, un "timbre" con un valor de 32 bits. Ideal para "despertá y fijate".
-- **Colas** (`xQueueSend` / `xQueueReceive`): pasan **copias** de datos entre tasks. El patrón productor-consumidor por excelencia. Desde una ISR, la variante `...FromISR`.
-- **Semáforos y mutexes** (`xSemaphoreTake` / `Give`): para proteger un recurso compartido (un bus I2C, un display). Mutex para exclusión, semáforo binario para señalizar.
+- **Notificaciones de tarea** (`xTaskNotify` / `ulTaskNotifyTake`): permiten señalizar eventos a una tarea sin crear una cola. Elegí la operación según cómo uses el valor de notificación.
+- **Colas** (`xQueueSend` / `xQueueReceive`): copian elementos entre tareas. Comprobá qué ocurre si la cola se llena; desde una ISR, usá las variantes `...FromISR`.
+- **Semáforos y mutexes** (`xSemaphoreTake` / `xSemaphoreGive`): usá un mutex para exclusión sobre un recurso compartido y un semáforo binario para señalización.
+
+Los siguientes fragmentos suponen que tu aplicación define `Event` y `render`. Creá la cola durante la inicialización, comprobá que no sea nula y compartí su identificador entre productor y consumidor.
 
 ```cpp
 QueueHandle_t q = xQueueCreate(8, sizeof(Event));
 
-// productor (p. ej. callback de red o ISR)
-xQueueSend(q, &ev, 0);
+// Productor en contexto de tarea; desde una ISR, usar la variante FromISR.
+Event produced{}; // completar con los datos a enviar
+if (xQueueSend(q, &produced, 0) != pdTRUE) {
+  // gestionar la cola llena
+}
 
-// consumidor (task de UI): bloquea sin gastar CPU hasta que llegue algo
+// Consumidor: la espera bloquea esta tarea, no al resto.
 Event ev;
 if (xQueueReceive(q, &ev, portMAX_DELAY) == pdTRUE) {
   render(ev);
 }
 ```
 
-## El watchdog y la task IDLE
+## Watchdog y esperas
 
-El ESP-IDF arma un **task watchdog** que vigila, entre otras, a las tasks IDLE de cada core. Si tu task corre en un loop apretado sin ceder nunca la CPU, la IDLE de ese core no ejecuta, el watchdog no se alimenta y te comés un reset con `task_wdt` en el log.
+La configuración del watchdog determina qué tareas se supervisan y qué ocurre cuando exceden el tiempo permitido. Si aparece un error `task_wdt`, revisá qué tarea dejó de progresar y conservá el log para diagnosticarlo.
 
-La cura es ceder CPU: `vTaskDelay(pdMS_TO_TICKS(n))` bloquea la task y deja correr al resto. Un busy-wait (`while (millis() - t0 < 100) {}`) quema CPU y no cede nada. En Arduino-ESP32, `delay()` llama a `vTaskDelay` por debajo, así que sí cede — el enemigo son los loops que "esperan" girando.
+Para esperar un intervalo, `vTaskDelay(pdMS_TO_TICKS(n))` bloquea la tarea y permite ejecutar otras. Una espera activa como `while (millis() - t0 < 100) {}` consume tiempo de CPU. Elegí el mecanismo según la precisión y la carga del sistema.
 
-Detalle: el tick por defecto suele ser de 100 Hz (10 ms), así que `vTaskDelay` tiene esa granularidad. Para timing fino usá timers de hardware o `vTaskDelayUntil` para periodicidad estable.
+La resolución de las esperas depende de la frecuencia de tick configurada. Revisá esa frecuencia y las necesidades de temporización antes de elegir el mecanismo.
 
-## Patrones típicos en proyectos maker
+## Patrones de organización
 
-- **Task de UI vs task de trabajo**: la pantalla/encoder en una task (core 1), la red o el audio en otra. La UI nunca bloquea esperando la red; se hablan por cola.
-- **Productor-consumidor**: callbacks de red/BLE/ESP-NOW solo copian el dato a una cola y salen; una task consumidora hace el trabajo pesado a su ritmo.
-- **ISR mínima**: la interrupción marca el evento (`xQueueSendFromISR` o notification) y una task lo procesa. Nada de lógica ni `Serial.print` dentro de la ISR.
-- **Un dueño por recurso**: en vez de mutex por todos lados, una sola task es dueña del display (o del bus) y las demás le mandan mensajes. Menos deadlocks, más fácil de razonar.
+- **Interfaz y trabajo en tareas separadas:** comunicá la pantalla y los controles con la tarea de red o audio mediante mensajes. Comprobá que las esperas y los recursos compartidos no bloqueen la interacción.
+- **Productor-consumidor:** mantené breves los callbacks y trasladá el procesamiento a otra tarea mediante una cola. Definí qué hacer cuando no haya espacio.
+- **ISR breve:** registrá el evento con una API apta para interrupciones y procesalo en una tarea. Evitá operaciones bloqueantes y verificá las restricciones de la plataforma.
+- **Una tarea responsable de un recurso:** concentrá el acceso a una pantalla o bus en una tarea y enviá solicitudes desde las demás. Documentá el orden y la capacidad de esas solicitudes.
 
-## Chuleta
+## Referencia rápida
 
 | Necesito... | Uso |
 |---|---|
-| Esperar sin quemar CPU | `vTaskDelay(pdMS_TO_TICKS(ms))` |
+| Esperar un intervalo | `vTaskDelay(pdMS_TO_TICKS(ms))` |
 | Loop con período estable | `vTaskDelayUntil` |
 | Avisarle algo simple a otra task | task notification |
 | Pasarle datos a otra task | cola (`xQueueSend/Receive`) |

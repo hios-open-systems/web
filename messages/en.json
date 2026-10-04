@@ -13,69 +13,71 @@
     },
     "Guestbook": {
         "title": "Guestbook",
-        "subtitle": "Passing through? Leave a mark.",
-        "signTitle": "Sign the guestbook",
+        "subtitle": "Share a comment about HIOS. Your name or alias and message will be public.",
+        "signTitle": "Leave a message",
         "namePlaceholder": "Your name or handle",
-        "messagePlaceholder": "Say something…",
-        "submit": "Sign",
-        "submitting": "Signing…",
-        "thanks": "Thanks for signing!",
+        "messagePlaceholder": "Your comment about the site or its projects",
+        "submit": "Publish message",
+        "submitting": "Publishing…",
+        "thanks": "Message published. Thanks for sharing.",
         "errorGeneric": "Something went wrong. Try again.",
-        "errorEmpty": "Add a name and a message first.",
-        "errorCaptcha": "Complete the anti-spam check first.",
+        "errorEmpty": "Enter a name or alias and a message.",
+        "errorCaptcha": "Complete the anti-spam check.",
         "loadError": "Couldn’t load the guestbook.",
-        "entriesTitle": "Signatures",
+        "entriesTitle": "Messages",
         "loading": "Loading…",
-        "empty": "No signatures yet. Be the first.",
+        "empty": "No published messages yet.",
         "hide": "Hide",
         "hidden": "Entry hidden."
     },
     "Hero": {
-        "showcaseTitle": "The tools",
-        "showcaseSubtitle": "Everything runs in your browser. Pick one, or roll the dice.",
-        "showcaseRandomCta": "Open a random one",
+        "showcaseTitle": "Tools",
+        "showcaseSubtitle": "For working with code, data, electronics and audio.",
+        "showcaseRandomCta": "Discover a tool",
         "showcaseToolCount": "tools",
-        "title": "Open hardware, local AI, and a developer workbench.",
-        "subtitle": "Technical documentation for my ESP32 and audio projects. Direct integration with LLMs (Ollama, llama.cpp) without the cloud, plus a suite of utilities that run entirely in the browser.",
-        "cta": "Open Workbench",
-        "secondary": "View hardware projects",
-        "fact_local": "Local-first",
+        "title": "Open hardware and tools for development.",
+        "subtitle": "Explore projects with ESP32, audio and local AI. Read the documentation, check connections and find tools for coding, calculations and testing.",
+        "cta": "Explore tools",
+        "secondary": "View projects",
+        "fact_local": "Web tools",
         "fact_open": "Open hardware",
-        "fact_daily": "Cloud-free AI",
-        "previewKicker": "Tool spotlight",
+        "fact_daily": "Technical documentation",
+        "previewKicker": "Featured tool",
         "previewOpenTool": "Open tool",
         "previewNext": "Next",
-        "previewRandom": "Random"
+        "previewRandom": "Show another",
+        "eyebrow": "HARDWARE · SOFTWARE · DOCUMENTATION",
+        "showcaseSeeAll": "View all tools"
     },
     "Projects": {
         "title": "Projects",
-        "subtitle": "Things that work. Mistakes I made. Everything documented.",
-        "learnings": "What I learned",
-        "status_prototype": "Works",
-        "status_concept": "Coming soon",
-        "status_wip": "WIP",
+        "subtitle": "ESP32 designs for audio, control and local AI. Explore the code, connections and documentation for each project.",
+        "learnings": "Technologies",
+        "status_prototype": "Prototype",
+        "status_concept": "Concept",
+        "status_wip": "In development",
         "in_development": "In development",
-        "tagline_btdac": "When it finally sounded, I screamed at 2am.",
-        "tagline_speaker": "WiFi + I2S = wireless audio, zero noise.",
-        "tagline_pad": "Physical layers for everything I do. No drivers, no cables.",
-        "tagline_hios-node-ai": "Your own local AI desktop node open hardware.",
+        "tagline_btdac": "Bluetooth audio receiver",
+        "tagline_speaker": "Audio over WiFi and Bluetooth",
+        "tagline_pad": "Programmable PC controller",
+        "tagline_hios-node-ai": "AI queries from an ESP32-S3",
         "view_all": "View all projects",
         "tutorials": "tutorials",
         "files": "files",
         "btdac": {
-            "moment": "The moment clear sound came out instead of noise was incredible. After 3 days of debugging, it finally worked. I screamed \"YES!\" at 2am.",
-            "struggle": "It took me 2 weeks to get I2S working correctly. The first attempt had no audio. The second had so much noise it was unusable. On the third one, I finally understood how to configure the pins.",
+            "moment": "BTDAC receives Bluetooth A2DP audio and sends it over I2S to the PCM5102 DAC. Its line output can connect to an amplifier or powered speakers.",
+            "struggle": "The firmware keeps a BLE control channel separate from audio. The Android app can find the device, connect and request test tones. The project guide covers wiring, DAC configuration and power.",
             "whatWorks": [
-                "Bluetooth A2DP — stable connection",
-                "24-bit Audio — surprising quality",
-                "Battery 12+ hours — tested",
-                "RGB Status LED",
-                "Serial Monitor with metadata"
+                "Bluetooth A2DP audio reception",
+                "Stereo I2S output to the PCM5102",
+                "BLE connection from the Android app",
+                "Test tone generation through the tone: command",
+                "RGB LED indicating connection and playback states"
             ],
             "whatDoesnt": [
-                "Case — functional but basic",
-                "No physical volume control",
-                "Sometimes takes 2 attempts to pair"
+                "The line output requires an amplifier to drive passive speakers",
+                "The app controls test tones; remote volume and equalization are not implemented",
+                "Battery life depends on the cells and power consumption; no reference measurement has been published"
             ],
             "resources": [
                 {
@@ -101,104 +103,93 @@
             ],
             "bom": [
                 {
-                    "component": "ESP32 DevKit 38-pin",
-                    "qty": 1,
-                    "priceUSD": 12,
-                    "notes": "Bluetooth + WiFi"
+                    "component": "ESP32 DevKit, 38 pins",
+                    "notes": "Bluetooth and WiFi",
+                    "qty": 1
                 },
                 {
-                    "component": "PCM5102 DAC Module",
-                    "qty": 1,
-                    "priceUSD": 10,
-                    "notes": "24-bit, 112dB SNR"
+                    "component": "PCM5102 DAC module",
+                    "notes": "I2S input and line output",
+                    "qty": 1
                 },
                 {
-                    "component": "BMS 2S USB-C",
-                    "qty": 1,
-                    "priceUSD": 6,
-                    "notes": "Charging and protection"
+                    "component": "2S USB-C BMS",
+                    "notes": "Charging and protection",
+                    "qty": 1
                 },
                 {
-                    "component": "DC-DC LM2596",
-                    "qty": 1,
-                    "priceUSD": 3,
-                    "notes": "Step-down to 5V"
+                    "component": "LM2596 DC-DC converter",
+                    "notes": "Step-down to 5 V",
+                    "qty": 1
                 },
                 {
-                    "component": "18650 Battery 3500mAh",
-                    "qty": 2,
-                    "priceUSD": 12,
-                    "notes": "Li-Ion, good quality"
+                    "component": "18650 Li-ion cell",
+                    "notes": "Two compatible cells for the 2S pack",
+                    "qty": 2
                 },
                 {
-                    "component": "LED RGB KY-009",
-                    "qty": 1,
-                    "priceUSD": 2,
-                    "notes": "Status indicator"
+                    "component": "KY-009 RGB LED",
+                    "notes": "Status indicator",
+                    "qty": 1
                 },
                 {
-                    "component": "Resistor 330Ω",
-                    "qty": 3,
-                    "priceUSD": 1,
-                    "notes": "For LED"
+                    "component": "330Ω resistor",
+                    "notes": "For the LED",
+                    "qty": 3
                 },
                 {
-                    "component": "Cables, connectors, PCB",
-                    "qty": 1,
-                    "priceUSD": 5,
-                    "notes": "Misc"
+                    "component": "Wires, connectors and PCB",
+                    "notes": "Assembly materials",
+                    "qty": 1
                 }
             ],
             "specs": [
                 {
-                    "label": "Audio",
-                    "value": "Bluetooth A2DP, 16-bit 44.1kHz"
+                    "label": "Microcontroller",
+                    "value": "ESP32-WROOM-32"
                 },
                 {
-                    "label": "DAC",
-                    "value": "PCM5102A, 112dB SNR"
+                    "label": "Audio reception",
+                    "value": "Bluetooth A2DP"
                 },
                 {
-                    "label": "Battery",
-                    "value": "7.4V 7000mAh (2x18650)"
+                    "label": "Control",
+                    "value": "BLE, tone: command"
                 },
                 {
-                    "label": "Autonomy",
-                    "value": "12+ hours"
+                    "label": "Audio conversion",
+                    "value": "PCM5102 over I2S"
                 },
                 {
                     "label": "Output",
-                    "value": "Line level, Jack 3.5mm"
+                    "value": "Stereo line level"
                 },
                 {
-                    "label": "Consumption",
-                    "value": "~130mA BT active"
+                    "label": "Power supply",
+                    "value": "2S pack and 5 V regulator; see the wiring guide"
                 }
             ],
             "futureFeatures": [
-                "Headphone Amp NE5532",
-                "Resistive divider battery measurement",
-                "BLE Android App",
-                "WiFi streaming mode",
-                "YouTube/Spotify integration",
-                "BLE Volume control",
-                "Wear OS / Garmin integration"
+                "Remote volume and equalization control",
+                "Battery monitor",
+                "OTA updates from the app",
+                "WiFi audio reception"
             ]
         },
         "speaker": {
-            "moment": "The first test tone playing through WiFi. No cables, no noise, just music.",
-            "struggle": "Setting up I2S with the MAX98357 was easier than the PCM5102, but WiFi streaming has its own challenges. Buffer underrun, latency, automatic reconnection...",
+            "moment": "WiFi Speaker combines network and Bluetooth audio reception on an ESP32. Two MAX98357 I2S amplifiers drive the audio channels, and an LCD shows playback status.",
+            "struggle": "The firmware includes WiFi radio, URL streaming and Bluetooth A2DP modes. The web interface lets you select sources and adjust controls. The project is still in development; external services and stream addresses can change.",
             "whatWorks": [
-                "I2S Audio — digital quality, no noise",
-                "Web control — from any device",
-                "USB-C battery — fast charging",
-                "Voltage display — always visible",
-                "mDNS — access by name, not IP"
+                "WiFi radio and URL streaming modes in the firmware",
+                "Bluetooth A2DP reception",
+                "I2S output to two MAX98357 amplifiers",
+                "Web control interface",
+                "LCD and mDNS name access on compatible networks"
             ],
             "whatDoesnt": [
-                "Real streaming — only test tone for now",
-                "No case — exposed electronics",
-                "WiFi range — depends on router"
+                "Streaming requires an accessible network and audio source",
+                "YouTube integration depends on an external Invidious instance",
+                "Battery life and usable power depend on the build; no reference tests have been published"
             ],
             "resources": [
                 {
@@ -226,90 +217,82 @@
             "bom": [
                 {
                     "component": "ESP32 DevKit V1",
-                    "qty": 1,
-                    "priceUSD": 8,
-                    "notes": "WiFi + Bluetooth"
+                    "notes": "WiFi and Bluetooth",
+                    "qty": 1
                 },
                 {
-                    "component": "MAX98357 I2S Amp",
-                    "qty": 2,
-                    "priceUSD": 6,
-                    "notes": "3W Amplifier x2 (stereo)"
+                    "component": "MAX98357 I2S amplifier",
+                    "notes": "Two 3 W amplifiers for stereo",
+                    "qty": 2
                 },
                 {
-                    "component": "LM2596S w/Display",
-                    "qty": 1,
-                    "priceUSD": 4,
-                    "notes": "Adjustable 5V supply"
+                    "component": "LM2596S with display",
+                    "notes": "Adjustable 5 V supply",
+                    "qty": 1
                 },
                 {
-                    "component": "18650 Battery",
-                    "qty": 2,
-                    "priceUSD": 12,
-                    "notes": "Li-Ion 3500mAh"
+                    "component": "18650 cell",
+                    "notes": "Two compatible cells for the 2S pack",
+                    "qty": 2
                 },
                 {
-                    "component": "USB-C Charger 2S",
-                    "qty": 1,
-                    "priceUSD": 5,
-                    "notes": "BMS with protection"
+                    "component": "2S USB-C charger",
+                    "notes": "BMS with protection",
+                    "qty": 1
                 },
                 {
-                    "component": "Speaker 63mm 4Ω 3W",
-                    "qty": 1,
-                    "priceUSD": 3,
-                    "notes": "Full range speaker"
+                    "component": "63 mm, 4Ω, 3 W speaker",
+                    "notes": "Full-range speaker",
+                    "qty": 1
                 }
             ],
             "specs": [
                 {
-                    "label": "Audio",
-                    "value": "I2S digital, 44.1kHz 16-bit"
+                    "label": "Microcontroller",
+                    "value": "ESP32"
                 },
                 {
-                    "label": "Amplifier",
-                    "value": "MAX98357A, 3.2W @ 4Ω"
+                    "label": "Audio sources",
+                    "value": "WiFi and Bluetooth A2DP"
                 },
                 {
-                    "label": "Connectivity",
-                    "value": "WiFi 802.11 b/g/n"
+                    "label": "Amplification",
+                    "value": "2 × MAX98357 over I2S"
                 },
                 {
-                    "label": "Battery",
-                    "value": "7.4V 5000mAh (2x18650)"
-                },
-                {
-                    "label": "Battery Life",
-                    "value": "8-16 hours estimated"
+                    "label": "Display",
+                    "value": "16 × 2 LCD over I2C"
                 },
                 {
                     "label": "Control",
-                    "value": "Web interface, mDNS"
+                    "value": "Web interface and mDNS"
+                },
+                {
+                    "label": "Status",
+                    "value": "In development"
                 }
             ],
             "futureFeatures": [
-                "Real audio streaming (HTTP/WebSocket)",
-                "Spotify Connect",
-                "AirPlay compatible",
-                "Multi-room sync",
-                "Android control app",
-                "Web equalizer",
-                "OTA updates"
+                "Streaming and reconnection validation across different networks",
+                "Enclosure design and verification",
+                "Power consumption and battery life measurements"
             ]
         },
         "hios-node-ai": {
-            "moment": "Connecting an ESP32-S3 to a local Ollama server running Llama 3.1 and getting instant responses on an OLED screen with zero cloud dependency.",
-            "struggle": "Handling FreeRTOS dual-core tasks so the HTTP connection to Ollama never freezes the screen UI or triggers Task Watchdog timeouts.",
+            "moment": "HIOS Node AI connects an ESP32-S3 to an Ollama server on the local network. Pressing a button sends a preset text query and displays the response on an OLED screen.",
+            "struggle": "A FreeRTOS task handles the HTTP request while the main loop updates the display. The model runs on the server, not the ESP32. The WiFi network, server address and model name are configured in the firmware.",
             "whatWorks": [
-                "Local AI querying — zero cloud dependency",
-                "FreeRTOS dual-core — 60 FPS UI responsiveness",
-                "I2S Audio Input/Output — INMP441 & MAX98357A",
-                "OLED SSD1306 display — realtime status",
-                "PlatformIO firmware — clean build"
+                "Preset query sent to Ollama’s /api/chat endpoint",
+                "Physical button to trigger the query",
+                "Status and response shown on an SSD1306 OLED display",
+                "HTTP request handled in a FreeRTOS task",
+                "HTTP error and WiFi disconnection indications"
             ],
             "whatDoesnt": [
-                "Requires local PC running Ollama / llama-server",
-                "Speech recognition requires TinyML model or local Whisper"
+                "Requires an Ollama server accessible on the local network",
+                "The query and credentials are configured before compilation",
+                "Voice capture, audio playback and TinyML are not implemented in the current firmware",
+                "Response time depends on the server, model and network"
             ],
             "resources": [
                 {
@@ -328,95 +311,94 @@
             "bom": [
                 {
                     "component": "ESP32-S3-DevKitC-1",
-                    "qty": 1,
-                    "priceUSD": 5.5,
-                    "notes": "Dual Core LX7, 16MB Flash, 8MB PSRAM"
+                    "notes": "Development board",
+                    "qty": 1
                 },
                 {
-                    "component": "INMP441 I2S Mic",
-                    "qty": 1,
-                    "priceUSD": 1.8,
-                    "notes": "24-bit PCM digital mic"
+                    "component": "SSD1306 OLED",
+                    "notes": "I2C display",
+                    "qty": 1
                 },
                 {
-                    "component": "MAX98357A Amp",
-                    "qty": 1,
-                    "priceUSD": 1.5,
-                    "notes": "3.2W Class D audio amp"
-                },
-                {
-                    "component": "SSD1306 OLED 0.96\"",
-                    "qty": 1,
-                    "priceUSD": 2.2,
-                    "notes": "128x64 I2C display"
+                    "component": "Push button",
+                    "notes": "Triggers the query",
+                    "qty": 1
                 }
             ],
             "specs": [
                 {
                     "label": "Microcontroller",
-                    "value": "ESP32-S3-WROOM-1 (N16R8)"
+                    "value": "ESP32-S3"
                 },
                 {
-                    "label": "AI Server",
-                    "value": "Ollama / llama.cpp (Local)"
+                    "label": "Server",
+                    "value": "Ollama, /api/chat API"
                 },
                 {
-                    "label": "Interfaces",
-                    "value": "I2S Audio In/Out, I2C Display"
-                }
-            ],
-            "futureFeatures": [
-                "Local wake-word detection with ESP-SR WakeNet",
-                "Whisper.cpp audio streaming for voice prompts"
-            ]
-        },
-        "pad": {
-            "moment": "The first time the cursor moved from the stick over Bluetooth — no cable, no dongle, no drivers — and the PC just responded. After a few hours tuning BLE on Linux across docs, AI, tests and builds, seeing it work closed the loop.",
-            "struggle": "The same hardware worked on Windows but on Linux it didn't show up in the scan. It turned out to be a subtle combination: the adapter wasn't picking up legacy advertising, so I switched to BLE 5 extended advertising; and on top of that, a known NimBLE bug that reset the ESP on every connection and made it look like a 'won't connect'. A good stretch of btmon and reading to pin it down.",
-            "whatWorks": [
-                "HID over USB and BLE at once, with auto-switch",
-                "Context layers navigable from the screen",
-                "Analog stick as mouse, with adjustable acceleration",
-                "WiFi + captive portal + NTP + OTA",
-                "Real PC feedback via the companion daemon",
-                "OS-level global mic mute"
-            ],
-            "whatDoesnt": [
-                "Stick click doesn't act in X11 apps (under review)",
-                "Battery sensing ready but off by default",
-                "JSON config still pending (compile-time today)"
-            ],
-            "specs": [
-                {
-                    "label": "MCU",
-                    "value": "ESP32-S3 (N16, 16MB)"
+                    "label": "Interaction",
+                    "value": "Physical button and preset text query"
                 },
                 {
                     "label": "Display",
-                    "value": "ILI9488 480×320 SPI"
+                    "value": "SSD1306 over I2C"
                 },
                 {
-                    "label": "Inputs",
-                    "value": "Encoder + joystick + 5 keys"
-                },
-                {
-                    "label": "Transports",
-                    "value": "USB HID · BLE HID · WiFi"
-                },
-                {
-                    "label": "Power",
-                    "value": "2S Li-Ion battery"
-                },
-                {
-                    "label": "Firmware",
-                    "value": "Arduino + FreeRTOS dual-core"
+                    "label": "Connectivity",
+                    "value": "WiFi and HTTP"
                 }
             ],
             "futureFeatures": [
-                "JSON configuration",
-                "Phone control (PWA)",
-                "Remote screen / mirror",
-                "More layer maps"
+                "Audio capture and playback",
+                "Speech recognition integration",
+                "Evaluation of local wake-word detection"
+            ]
+        },
+        "pad": {
+            "moment": "HIOS PAD organizes keyboard shortcuts, media controls and mouse actions in layers. Ten action keys, two ALT keys, an encoder and a joystick let you select and run actions with an on-screen reference.",
+            "struggle": "USB and Bluetooth BLE carry HID actions. WiFi is used for configuration, updates and communication with the companion. This optional program sends computer status to the PAD and enables features such as system-wide microphone mute.",
+            "whatWorks": [
+                "Keyboard, mouse and media actions over USB and BLE",
+                "Layers and groups navigable from the display",
+                "Joystick mouse control and layer-dependent encoder actions",
+                "JSON configuration and a web editor in the companion",
+                "Computer status and system-wide mute through the companion",
+                "PAD-hosted web interface with virtual controls and basic editing"
+            ],
+            "whatDoesnt": [
+                "Actual computer status and system-wide mute require the companion and a network connection",
+                "The companion has Windows and Linux providers; macOS is not implemented",
+                "The direct web interface has tests with a simulated device; applying changes on hardware still needs validation",
+                "Firmware battery measurement is disabled; its former GPIO is used for the NeoPixel"
+            ],
+            "specs": [
+                {
+                    "label": "Microcontroller",
+                    "value": "ESP32-S3 N16R8"
+                },
+                {
+                    "label": "Display",
+                    "value": "ILI9488, 480 × 320, SPI"
+                },
+                {
+                    "label": "Inputs",
+                    "value": "10 action keys, 2 ALT keys, encoder and joystick"
+                },
+                {
+                    "label": "HID actions",
+                    "value": "USB and Bluetooth BLE"
+                },
+                {
+                    "label": "Network",
+                    "value": "WiFi for configuration, OTA and companion"
+                },
+                {
+                    "label": "Firmware",
+                    "value": "Arduino and FreeRTOS"
+                }
+            ],
+            "futureFeatures": [
+                "Validation of changes applied through the device’s direct web interface",
+                "Configurable secondary gestures"
             ],
             "resources": [
                 {
@@ -432,7 +414,45 @@
                     "url": "https://github.com/Bodmer/TFT_eSPI"
                 }
             ]
-        }
+        },
+        "cards": {
+            "btdac": {
+                "description": "Bluetooth audio receiver with an ESP32 and PCM5102 DAC. Provides stereo line output and lets an Android app request test tones.",
+                "technologies": [
+                    "I2S audio",
+                    "Bluetooth A2DP",
+                    "BLE control"
+                ]
+            },
+            "pad": {
+                "description": "Programmable controller with keys, an encoder, a joystick and a display. Organize shortcuts in layers, send keyboard and mouse actions over USB or Bluetooth, and edit the configuration in a web interface.",
+                "technologies": [
+                    "ESP32-S3",
+                    "USB and Bluetooth HID",
+                    "Web editor",
+                    "PC companion"
+                ]
+            },
+            "speaker": {
+                "description": "ESP32 speaker project with WiFi and Bluetooth audio reception, I2S amplification and a web control interface. In development.",
+                "technologies": [
+                    "I2S audio",
+                    "WiFi",
+                    "Bluetooth A2DP",
+                    "Web control"
+                ]
+            },
+            "hios-node-ai": {
+                "description": "ESP32-S3 prototype that sends a text query to Ollama at the press of a button and displays the response on an OLED screen. Requires a server on the local network.",
+                "technologies": [
+                    "ESP32-S3",
+                    "Ollama over HTTP",
+                    "OLED display",
+                    "FreeRTOS"
+                ]
+            }
+        },
+        "cardResources": "Documentation and files"
     },
     "Documentation": {
         "title": "Available Documentation",
@@ -513,24 +533,40 @@
     },
     "ProjectDetail": {
         "back": "Back",
-        "moment": "The Moment",
-        "specifications": "Specifications",
-        "bom": "Bill of Materials (BOM)",
-        "coming_soon": "Coming Soon",
-        "what_works": "What Works",
-        "what_needs_improvement": "What Needs Improvement",
-        "resources": "Resources & Tutorials",
-        "want_one": "Want one?",
-        "build_your_own": "Build it yourself. <strongWhite>It's yours now.</strongWhite><br/>All code, schematics, and instructions are available.",
-        "view_documentation": "View Documentation",
+        "moment": "How it works",
+        "specifications": "Project details",
+        "bom": "Components",
+        "coming_soon": "Planned development",
+        "what_works": "Available features",
+        "what_needs_improvement": "Scope and requirements",
+        "resources": "References and documentation",
+        "want_one": "Explore the project",
+        "build_your_own": "Read the code, design files and instructions before building or adapting the project.",
+        "view_documentation": "View documentation",
         "view_on_github": "View on GitHub",
-        "prototype_functional": "Functional prototype. <highlight>Build your own.</highlight>",
-        "want_me_to_build": "Want me to build it for you? Email me",
+        "prototype_functional": "Code, files and documentation available to explore and adapt.",
+        "want_me_to_build": "Ask about the project",
         "total_approx": "Approximate Total",
         "no_shipping": "Shipping not included",
         "gallery": "Gallery",
         "print_pinout": "Print Pinout",
-        "wiring_guide": "Wiring guide"
+        "wiring_guide": "Wiring guide",
+        "component": "Component",
+        "quantity": "Quantity",
+        "notes": "Notes",
+        "technical_files": "Project files",
+        "technical_files_description": "Open, download or preview design files, firmware and documentation.",
+        "no_technical_files": "No technical files are available.",
+        "download_file": "Download",
+        "source_file": "Source",
+        "open": "Open",
+        "download": "Download",
+        "printable_parts": "3D-printable parts",
+        "asset_documentation": "Documentation",
+        "asset_firmware": "Firmware and configuration",
+        "asset_data": "Data",
+        "view_in_maker": "View in Maker",
+        "printable_parts_description": "{count, plural, one {# part with a 3D viewer and download.} other {# parts with a 3D viewer and downloads.}}"
     },
     "Pinouts": {
         "boardOrientation": "Top view · USB below. Diagram reference: unique numbers down the left side and up the right side. These are neither GPIO numbers nor manufacturer pin numbers.",
@@ -641,7 +677,7 @@
     },
     "ProjectsPage": {
         "title": "Projects",
-        "subtitle": "Open hardware I designed, broke and documented. All the code, schematics and instructions, ready for you to build your own."
+        "subtitle": "ESP32 projects for audio, control and local AI. Explore their features, check development status and access the code and documentation."
     },
     "Header": {
         "guestbook": "Guestbook",
@@ -741,7 +777,7 @@
     },
     "Settings": {
         "savedTitle": "My themes",
-        "savedHint": "Save the current accent + mode and reapply it anytime. Stored in this browser.",
+        "savedHint": "Save the current accent color, mode and style as a theme in this browser.",
         "savedName": "Name",
         "savedNamePlaceholder": "e.g. Night amber",
         "savedSave": "Save current",
@@ -751,10 +787,10 @@
         "savedModeDark": "dark",
         "savedModeLight": "light",
         "title": "Settings",
-        "subtitle": "Customize the workbench theme. Saved locally in this browser.",
+        "subtitle": "Customize the appearance and review data and privacy options.",
         "syncTitle": "Sync",
         "localMode": "Local-only",
-        "accountMode": "Account-backed",
+        "accountMode": "Connected to account",
         "syncing": "Syncing with your account...",
         "needsImport": "Ready to import local accent",
         "syncErrorState": "Sync needs attention",
@@ -765,18 +801,18 @@
         "syncWarningTitle": "Could not sync account theme",
         "summaryRegion": "Theme summary",
         "summarySyncLabel": "Sync",
-        "summarySyncHintLocal": "There is no remote copy for this accent yet.",
-        "summarySyncHintAccount": "Your account can already carry this accent to other devices.",
+        "summarySyncHintLocal": "The accent color is stored in this browser.",
+        "summarySyncHintAccount": "The status shows whether the color was synced to your account.",
         "summaryPresetLabel": "Active preset",
         "summaryPresetCustom": "Custom",
-        "summaryPresetHintPreset": "You are using a base palette that is ready to keep tuning.",
-        "summaryPresetHintCustom": "The current accent came from a manual hex value.",
+        "summaryPresetHintPreset": "You can adjust this palette’s color.",
+        "summaryPresetHintCustom": "The current color does not match a predefined palette.",
         "summaryAccentLabel": "Active accent",
         "summaryAccentHint": "This value drives badges, actions, and highlighted UI across the workbench.",
         "presets": "Presets",
         "presetsHint": "Pick a ready-made palette.",
         "custom": "Custom color",
-        "customHint": "Paste a hex (#rrggbb) and it applies instantly.",
+        "customHint": "Enter a hex color (#rrggbb or #rgb), then press Enter or leave the field to apply it.",
         "hex": "Hex",
         "reset": "Reset to default",
         "invalidHex": "Invalid format. Use #rrggbb or #rgb.",
@@ -785,8 +821,15 @@
         "previewTagline": "Workbench",
         "previewButton": "Primary action",
         "previewLink": "Sample link",
-        "localFootnote": "For now this is stored only in this browser. Sign in if you want it to follow your account later.",
-        "accountFootnote": "Changes still apply locally first, but your account copy becomes the source for future devices."
+        "localFootnote": "Sign in to save the accent color to your account.",
+        "accountFootnote": "Changes apply in this browser. Check the sync status to confirm they were saved to your account.",
+        "skinTitle": "Visual style",
+        "skinHint": "Choose the interface typography, borders and textures.",
+        "skins": {
+            "datasheet": "Technical grid, fine borders and monospaced type.",
+            "terminal": "Monospaced type, square corners and terminal-inspired colors.",
+            "blueprint": "Fine lines on blue, inspired by technical drawings."
+        }
     },
     "CommandPalette": {
         "placeholder": "Search tools and pages…",
@@ -844,8 +887,8 @@
         },
         "patterns": {
             "badge": "Generation tool",
-            "title": "Pattern Lessons",
-            "subtitle": "Hands-on modern-pattern lessons; code runs sandboxed in your browser.",
+            "title": "Programming patterns",
+            "subtitle": "Explore programming patterns through editable examples you can run.",
             "run": "Run",
             "running": "Running…",
             "resetCode": "Reset code",
@@ -864,14 +907,14 @@
                 },
                 "promisePool": {
                     "title": "Bounded concurrency",
-                    "explain": "Run many async tasks **N at a time** instead of all at once — protects rate limits and memory. Change the `limit` and watch the order of results."
+                    "explain": "Run asynchronous tasks with at most **N tasks at once**. Change `limit` and observe the results. This limit is not a requests-per-second limit."
                 }
             }
         },
         "notes": {
             "badge": "Generation tool",
-            "title": "Markdown Notes",
-            "subtitle": "Local-first markdown notes with a live preview — nothing leaves your browser.",
+            "title": "Markdown notes",
+            "subtitle": "Write Markdown notes with a preview and local storage.",
             "newNote": "New note",
             "notesLabel": "Notes",
             "empty": "No notes yet",
@@ -888,8 +931,8 @@
         },
         "mermaid": {
             "badge": "Generation tool",
-            "title": "Mermaid Diagrams",
-            "subtitle": "Live Mermaid editor + SVG render, entirely in your browser.",
+            "title": "Mermaid diagrams",
+            "subtitle": "Create flowcharts, sequence diagrams and other diagram types from text.",
             "exportSvg": "Export SVG",
             "exportError": "Could not export",
             "templatesLabel": "Templates",
@@ -909,8 +952,8 @@
         },
         "excalidraw": {
             "badge": "Generation tool",
-            "title": "Excalidraw Diagrams",
-            "subtitle": "Freeform diagram board for UML and architecture sketches, local-first in your browser.",
+            "title": "Excalidraw diagrams",
+            "subtitle": "Draw diagrams, save the scene and export the result.",
             "downloadScene": "Download scene",
             "downloadError": "Could not export scene",
             "clear": "Clear canvas",
@@ -919,8 +962,8 @@
         },
         "textDiff": {
             "badge": "Testing tool",
-            "title": "Text Diff",
-            "subtitle": "Line-by-line LCS diff of any two texts, computed in your browser.",
+            "title": "Text comparison",
+            "subtitle": "Compare two texts and inspect their differences line by line.",
             "leftLabel": "Original",
             "rightLabel": "Changed",
             "diffLabel": "Diff",
@@ -929,8 +972,8 @@
         },
         "regex": {
             "badge": "Testing tool",
-            "title": "Regex Tester",
-            "subtitle": "Write a pattern, pick flags, paste input — matches highlighted in real time with group capture.",
+            "title": "Regular expression tester",
+            "subtitle": "Test patterns against text and inspect matches and capture groups.",
             "patternPlaceholder": "Enter pattern…",
             "inputLabel": "Test input",
             "inputPlaceholder": "Paste test text here…",
@@ -950,8 +993,8 @@
         },
         "uuidUlid": {
             "badge": "Generation tool",
-            "title": "UUID / ULID",
-            "subtitle": "Batch UUID v4 and ULID generation via Web Crypto, fully in your browser.",
+            "title": "UUID and ULID generator",
+            "subtitle": "Generate UUID v4 and ULID identifiers individually or in batches.",
             "regenerate": "Regenerate",
             "copyAll": "Copy all",
             "copied": "ID copied",
@@ -965,8 +1008,8 @@
         },
         "encoder": {
             "badge": "Generation tool",
-            "title": "Encoder / Decoder",
-            "subtitle": "Base64 / base64url / hex / URL encode and decode, UTF-8 safe, in your browser.",
+            "title": "Encoder and decoder",
+            "subtitle": "Convert text using Base64, Base64URL, hexadecimal and URL encoding.",
             "swap": "Swap direction",
             "copied": "Output copied",
             "copyError": "Could not copy",
@@ -980,8 +1023,8 @@
         },
         "hashDigest": {
             "badge": "Validation tool",
-            "title": "Hash & Digest",
-            "subtitle": "Cryptographic digests of any text, computed in your browser with Web Crypto.",
+            "title": "Hash generator",
+            "subtitle": "Calculate SHA-1, SHA-256, SHA-384 and SHA-512 hashes in hexadecimal or Base64.",
             "clear": "Clear",
             "inputLabel": "Input",
             "inputPlaceholder": "Text to hash…",
@@ -994,8 +1037,8 @@
         },
         "ohmsLaw": {
             "badge": "Electronics tool",
-            "title": "Ohm's Law",
-            "subtitle": "Enter any two of voltage, current, resistance and power; the other two are computed.",
+            "title": "Ohm’s law",
+            "subtitle": "Calculate voltage, current, resistance and power from two known values.",
             "inputLabel": "Known values",
             "voltage": "Voltage",
             "current": "Current",
@@ -1011,8 +1054,8 @@
         },
         "resistorColorCode": {
             "badge": "Electronics tool",
-            "title": "Resistor Color Code",
-            "subtitle": "Decode resistor color bands into a value and tolerance, with 4 and 5-band support.",
+            "title": "Resistor color code",
+            "subtitle": "Convert color bands to resistance values, or calculate the bands for a given value.",
             "bands4": "4 bands",
             "bands5": "5 bands",
             "band1": "Band 1",
@@ -1027,8 +1070,8 @@
         },
         "httpStatusCodes": {
             "badge": "Reference",
-            "title": "HTTP Status Codes",
-            "subtitle": "Searchable reference of HTTP status codes with their category and meaning.",
+            "title": "HTTP status codes",
+            "subtitle": "Look up HTTP status codes and check their categories and meanings.",
             "searchPlaceholder": "Search by code or text (e.g. 404, teapot)…",
             "colCode": "Code",
             "colName": "Name",
@@ -1037,8 +1080,8 @@
         },
         "asciiUnicode": {
             "badge": "Reference",
-            "title": "ASCII / Unicode Table",
-            "subtitle": "Inspect any character or code point across decimal, hex, octal and binary.",
+            "title": "ASCII and Unicode table",
+            "subtitle": "Inspect characters and their decimal, hexadecimal, octal and binary codes.",
             "inputLabel": "Character or code point",
             "inputPlaceholder": "A, 65, 0x41 or U+1F600…",
             "decLabel": "Decimal",
@@ -1055,8 +1098,8 @@
         },
         "noteFrequency": {
             "badge": "Audio tool",
-            "title": "Note · Frequency · MIDI",
-            "subtitle": "Convert between musical note, frequency and MIDI note number, with a tunable A4.",
+            "title": "Notes, frequencies and MIDI",
+            "subtitle": "Convert musical notes, frequencies and MIDI numbers with an adjustable tuning reference.",
             "a4Label": "A4",
             "fromNote": "From note",
             "octaveLabel": "Octave",
@@ -1069,8 +1112,8 @@
         },
         "guitarTuner": {
             "badge": "Audio tool",
-            "title": "Instrument Tuner",
-            "subtitle": "Multi-instrument tuner with adjustable reference. Pluck a string to hear its tone; the meter shows the nearest note and cents — all local.",
+            "title": "Instrument tuner",
+            "subtitle": "Tune instruments using your microphone and an adjustable reference frequency.",
             "a4Label": "Ref A4",
             "micStart": "Start mic",
             "micStop": "Stop mic",
@@ -1100,8 +1143,8 @@
         },
         "ipv6Expand": {
             "badge": "Network tool",
-            "title": "IPv6 Expand / Compress",
-            "subtitle": "Expand an IPv6 address to all 8 groups or compress it to RFC 5952 short form.",
+            "title": "IPv6 addresses",
+            "subtitle": "Expand or shorten IPv6 addresses and inspect their groups.",
             "inputLabel": "IPv6 address",
             "inputPlaceholder": "2001:db8::1",
             "invalid": "Not a valid IPv6 address.",
@@ -1112,8 +1155,8 @@
         },
         "hmac": {
             "badge": "Validation tool",
-            "title": "HMAC Generator",
-            "subtitle": "Keyed-hash message authentication code, computed in your browser with Web Crypto.",
+            "title": "HMAC generator",
+            "subtitle": "Generate an HMAC authentication code from a key and a message.",
             "clear": "Clear",
             "keyLabel": "Secret key",
             "keyPlaceholder": "Your secret key…",
@@ -1128,8 +1171,8 @@
         },
         "csvJson": {
             "badge": "Testing tool",
-            "title": "CSV ⇄ JSON",
-            "subtitle": "Convert CSV to JSON and back, with RFC 4180 quoting and a configurable delimiter.",
+            "title": "CSV and JSON converter",
+            "subtitle": "Convert data between CSV and JSON with configurable delimiters.",
             "toJson": "CSV → JSON",
             "toCsv": "JSON → CSV",
             "delimiterLabel": "Delimiter",
@@ -1144,8 +1187,8 @@
         },
         "usageAnalytics": {
             "badge": "Validation tool",
-            "title": "Usage Dashboard",
-            "subtitle": "Aggregated metrics for navigation and tool openings, with no sensitive content.",
+            "title": "Usage statistics",
+            "subtitle": "View aggregated visit and tool usage metrics by period and language.",
             "days": "Window",
             "locale": "Locale",
             "localeAll": "All",
@@ -1171,42 +1214,42 @@
         },
         "guides": {
             "calculators": {
-                "intro": "A set of calculators for electronics, construction, climate, and everyday math. Everything runs locally; nothing leaves your browser.",
+                "intro": "Calculators for electronics, construction, weather and everyday tasks. Calculations run in the browser.",
                 "steps": [
-                    "Pick a calculator from the list on the left (grouped by category).",
-                    "Adjust values with the sliders or by typing a number; the result updates live.",
-                    "Templates = ready-made built-in configs. Save preset = stores THIS configuration under a name, in this browser; the Presets button lists them.",
-                    "Copy Summary = the results as text · Copy Link = the URL with your configuration to share."
+                    "Choose a calculator from the list, grouped by category.",
+                    "Adjust the sliders or enter numbers; results update automatically.",
+                    "Start from a template or save a named configuration in this browser.",
+                    "Copy the summary for results as text, or copy a link containing your configuration."
                 ],
                 "tip": "In the resistor calcs (LED, RC filter, ADC divider), the 'E-series' control snaps the value to the nearest commercial one (E12/E24)."
             },
             "composer": {
-                "intro": "Compose retro chiptune in a piano-roll, hear it in the browser, and send it to the HIOS speaker. Everything runs locally.",
+                "intro": "Create a chiptune composition, listen in the browser and export it.",
                 "steps": [
-                    "Pick a track and its instrument; click on the grid to add notes, drag to move or resize.",
-                    "Set tempo and bars, then Play to hear it (Loop repeats it).",
-                    "Export .mid / .wav to download, or Share link to copy the whole song inside a URL.",
-                    "Export for device = the code for the speaker: open the device page (http://hioschip.local) and paste it to play it live."
+                    "Choose a track and instrument. Click the grid to add notes; drag to move or resize them.",
+                    "Set the tempo and number of bars, then start playback. Enable the loop to repeat it.",
+                    "Export a MIDI or WAV file, or copy a share link containing the whole composition.",
+                    "To play on compatible hardware, export the device format and load it through the device web interface."
                 ],
-                "tip": "The device reuses these same voices, so what you hear in the browser is what the speaker plays."
+                "tip": "Hardware playback requires firmware compatible with the exported format. The final sound also depends on the device and its audio output."
             },
             "guitarTuner": {
-                "intro": "Tune guitar, bass, ukulele or bowed strings by ear or by mic — fully local, no audio leaves your browser.",
+                "intro": "Tune guitars, basses, ukuleles and bowed strings using reference tones or microphone input. Audio analysis runs in the browser.",
                 "steps": [
                     "Pick your instrument and tuning, and set the reference A4 if needed.",
                     "Click a string to hear its reference tone.",
                     "Start the mic and play a string — the matching string lights up and the needle shows how far off you are."
                 ],
-                "tip": "Standard A4 is 440 Hz; orchestras often use 442, and some early-music setups 415."
+                "tip": "The default A4 reference is 440 Hz. Adjust it to match the reference used by your ensemble or recording."
             },
             "resistorColorCode": {
-                "intro": "Read a resistor's value from its color bands, or work backwards from a value — all local.",
+                "intro": "Read a resistor value from its color bands, or find the bands for a value.",
                 "steps": [
                     "Pick 4 or 5 bands.",
                     "Set each band's color.",
                     "Read the resistance and tolerance."
                 ],
-                "tip": "5-band resistors add a third significant digit — used for tighter (1%) tolerances."
+                "tip": "Five-band resistors use three significant digits. The final band indicates the tolerance."
             },
             "ohmsLaw": {
                 "intro": "Solve Ohm's law and power: enter any two of V, I, R, P and get the rest.",
@@ -1254,7 +1297,7 @@
                 "tip": "Compression follows RFC 5952: lowercase, longest zero-run collapsed to ::."
             },
             "hmac": {
-                "intro": "Compute a keyed HMAC of a message, locally with Web Crypto — nothing is uploaded.",
+                "intro": "Calculate an HMAC from a key and message in the browser.",
                 "steps": [
                     "Pick an algorithm (SHA-1/256/384/512).",
                     "Enter the secret key and the message.",
@@ -1272,25 +1315,25 @@
                 "tip": "With the header row on, CSV rows become objects keyed by the first row."
             },
             "patterns": {
-                "intro": "Learn modern JS patterns by editing and running real code — sandboxed in your browser, no network, no access to the site.",
+                "intro": "Explore JavaScript patterns with editable examples that run in the browser.",
                 "steps": [
-                    "Pick a lesson on the left.",
-                    "Read the explanation, tweak the code.",
-                    "Run it and read the console output."
+                    "Choose a lesson.",
+                    "Read the explanation and edit the code.",
+                    "Run the example and review the console output."
                 ],
-                "tip": "Code runs in an isolated iframe (no same-origin) — it cannot touch your session or this site."
+                "tip": "Examples run in a frame isolated from the page. This isolation does not block network requests made by the code."
             },
             "notes": {
-                "intro": "Keep long-form markdown notes locally — saved in your browser, never uploaded.",
+                "intro": "Write Markdown notes with a preview and storage in this browser.",
                 "steps": [
                     "Create a note and give it a title.",
                     "Write markdown on the left.",
                     "See the rendered preview on the right."
                 ],
-                "tip": "Different from Snippets: notes are prose with preview, snippets are tagged code."
+                "tip": "Use notes for formatted text and code snippets for examples organized with tags."
             },
             "mermaid": {
-                "intro": "Write Mermaid syntax and see the diagram render live — fully local, share via URL.",
+                "intro": "Create diagrams with Mermaid syntax and a live preview. You can export an SVG or share the diagram through a URL.",
                 "steps": [
                     "Pick a template or write your own diagram code.",
                     "The preview re-renders as you type.",
@@ -1299,13 +1342,13 @@
                 "tip": "It runs with securityLevel strict — no scripts or click actions in diagrams."
             },
             "textDiff": {
-                "intro": "Line-level diff between two blocks of free text — local, nothing uploaded.",
+                "intro": "Compare two blocks of text line by line in the browser.",
                 "steps": [
                     "Paste the original on the left.",
                     "Paste the changed version on the right.",
                     "Read the +added / −removed lines below."
                 ],
-                "tip": "Unlike Object Comparator (JSON-structural), this diffs any free text."
+                "tip": "Use this tool for text changes and the object comparator for structural differences in JSON."
             },
             "regex": {
                 "intro": "Test a regular expression against text, see matches/groups and preview a replace — all local.",
@@ -1335,32 +1378,32 @@
                 "tip": "base64url is the URL-safe variant used in JWT — no +/ and no padding."
             },
             "hashDigest": {
-                "intro": "Compute a cryptographic digest of any text, locally — nothing is sent anywhere.",
+                "intro": "Calculate a text hash in the browser.",
                 "steps": [
                     "Pick an algorithm (SHA-1/256/384/512).",
                     "Type or paste the input text.",
                     "Copy the hex or base64 digest."
                 ],
-                "tip": "SHA-1 is fine for checksums but not for security — prefer SHA-256+."
+                "tip": "When comparing hashes, use the same algorithm and text encoding for both inputs."
             },
             "_label": "How to use",
             "snippets": {
-                "intro": "Stash and reuse code snippets — saved locally, no account needed.",
+                "intro": "Save code snippets in this browser or in your account.",
                 "steps": [
-                    "Write a title, optional tags and the snippet body.",
-                    "Save it; it persists in this browser via localStorage.",
-                    "Sign in (optional) to sync snippets across devices."
+                    "Enter a title, optional tags and the snippet content.",
+                    "Save it: without signing in, it is stored in this browser; when signed in, it is stored in your account.",
+                    "After signing in, use the import option to copy local snippets to your account."
                 ],
-                "tip": "Use “Copy link” to share a snippet; the first sign-in imports your local ones."
+                "tip": "To share a snippet by link, save it in your account and make it public. Local snippets are imported only when you choose to do so."
             },
             "payload": {
-                "intro": "Format, inspect and share JSON — everything stays in your browser.",
+                "intro": "Format and inspect JSON in the browser. Share links include the data in the URL.",
                 "steps": [
                     "Paste or type JSON into the editor.",
                     "Use Prettify / Minify and the path explorer to navigate it.",
                     "Click “Share link” to copy a URL that reproduces this exact payload."
                 ],
-                "tip": "The payload travels inside the URL — great for bug reports, but don’t share secrets that way."
+                "tip": "Anyone with the link can read its data. Review the content before sharing and leave out secrets."
             },
             "typeChecker": {
                 "intro": "Check whether a JSON value is assignable to a TypeScript type, fully in the browser.",
@@ -1372,16 +1415,16 @@
                 "tip": "Load the example to see a passing case, then tweak the JSON to watch diagnostics appear."
             },
             "jwtPlayground": {
-                "intro": "Decode, sign and verify JWTs (HS, RS, ES) without anything leaving your machine.",
+                "intro": "Decode, sign and verify JWTs (HS, RS, ES) in the browser.",
                 "steps": [
                     "Paste a token to decode the header and payload instantly.",
                     "Switch to Encode to build and sign a new token.",
                     "Use Verify with the secret or public key to confirm the signature."
                 ],
-                "tip": "For RS/ES you can generate a demo key pair — the keys never leave the browser."
+                "tip": "For RS/ES, you can generate a demo key pair to test signing and verification."
             },
             "dnsLookup": {
-                "intro": "Inspect live DNS records (A, AAAA, MX, TXT, NS, CNAME) for any domain.",
+                "intro": "Query DNS records (A, AAAA, MX, TXT, NS, CNAME) over the network.",
                 "steps": [
                     "Enter a domain name.",
                     "Pick the record type you want to query.",
@@ -1390,31 +1433,31 @@
                 "tip": "TXT records are where SPF, DKIM and verification tokens usually live."
             },
             "certificateCheck": {
-                "intro": "Check a site's TLS certificate: validity dates, issuer and expiry risk.",
+                "intro": "Query a site’s TLS certificate to review its issuer and validity dates.",
                 "steps": [
                     "Enter the hostname (no https:// needed).",
                     "Run the check.",
                     "Review the expiry date and the risk indicator."
                 ],
-                "tip": "A short remaining validity window is the early warning for a renewal you forgot."
+                "tip": "Check the expiry date when planning a certificate renewal."
             },
             "objectToTypes": {
-                "intro": "Turn a real JSON object into TypeScript interfaces in seconds.",
+                "intro": "Generate TypeScript interfaces from a JSON example.",
                 "steps": [
                     "Paste a representative JSON object.",
                     "Set the root interface name.",
                     "Copy the generated types into your codebase."
                 ],
-                "tip": "Feed the richest example you have — optional fields are inferred from what is present."
+                "tip": "Types are inferred from the supplied data. Review optional fields and other possible values before using them in your application."
             },
             "randomString": {
-                "intro": "Generate random strings for tokens, IDs, demos or quick secrets.",
+                "intro": "Generate random strings with a configurable length and character set.",
                 "steps": [
                     "Choose the length and character set / options.",
                     "Watch the live entropy estimate.",
                     "Copy the generated value."
                 ],
-                "tip": "Higher entropy is harder to guess — aim well above 80 bits for anything sensitive."
+                "tip": "Entropy is an estimate based on length and character set. Requirements depend on how the generated value will be used."
             },
             "objectCompare": {
                 "intro": "Compare two JSON objects and spot structural differences fast.",
@@ -1426,13 +1469,13 @@
                 "tip": "Great for diffing an API response before vs after a change."
             },
             "siteChecker": {
-                "intro": "Monitor URLs from your browser with local checks and client notifications.",
+                "intro": "Check URLs periodically through network requests from your browser.",
                 "steps": [
-                    "Add the URL you want to watch.",
+                    "Add the URL you want to check.",
                     "Allow notifications if you want alerts.",
-                    "Keep the tab open; checks run client-side on an interval."
+                    "Keep the tab open for periodic checks."
                 ],
-                "tip": "It is local-first — monitoring stops when you close the tab, nothing runs server-side."
+                "tip": "Monitoring stops when the tab closes. An opaque response does not reveal the HTTP status, so it cannot confirm that the site is working correctly."
             }
         },
         "signals": {
@@ -1441,55 +1484,55 @@
             "dailyUse": "Built for daily return"
         },
         "landing": {
-            "badge": "Local lab",
+            "badge": "Development tools",
             "title": "Workbench",
-            "subtitle": "A clear catalog for validating, generating, inspecting, and testing from the browser.",
-            "randomCta": "Open a random one",
+            "subtitle": "Tools for working with code, data, electronics and audio.",
+            "randomCta": "Open a random tool",
             "allToolsTitle": "All tools",
-            "allToolsSubtitle": "One grid, no levels. Click and go.",
+            "allToolsSubtitle": "Choose a tool to open it.",
             "primaryCta": "Open validation",
             "secondaryCta": "Open generation",
-            "panelTitle": "Start from the task, not the list",
-            "panelSubtitle": "Each section groups related tools so the catalog can grow without turning confusing.",
-            "sectionsTitle": "Workbench areas",
-            "sectionsSubtitle": "Audio, network, validation, generation, and testing in a structure that stays easy to scan.",
+            "panelTitle": "Explore by task",
+            "panelSubtitle": "Find tools grouped by the work you need to do.",
+            "sectionsTitle": "Workbench sections",
+            "sectionsSubtitle": "Audio, networking, electronics, generation, validation and testing.",
             "cardCta": "Open section",
-            "principlesTitle": "What this surface prioritizes",
-            "principlesSubtitle": "Clarity, contrast, and fast response before density.",
+            "principlesTitle": "Using Workbench",
+            "principlesSubtitle": "Processing, storage and sharing options.",
             "principles": {
-                "localFirst": "Payloads, notes, and state stay local whenever that makes sense. Less friction and real privacy.",
-                "shareable": "When a workflow really matters, you can share it by URL instead of explaining ten manual steps.",
-                "dailyUse": "It is not trying to look like a demo. It is trying to solve real work with as little friction as possible."
+                "localFirst": "Each tool has a label showing whether it processes data in the browser or needs network requests.",
+                "shareable": "Some tools let you share settings through a URL. Review what the link contains before sending it.",
+                "dailyUse": "Pin the tools you use often and return to recently opened tools."
             }
         },
         "sections": {
             "audio": {
-                "title": "Audio Lab",
-                "description": "Tuning, reference tones and quick analysis for testing speakers, DACs and signal chains from the browser."
+                "title": "Audio",
+                "description": "Tuning, reference tones and analysis for testing speakers, DACs and signal chains in the browser."
             },
             "network": {
-                "title": "Network Lab",
-                "description": "DNS, certificates, subnets, domains and connectivity checks from one clear surface."
+                "title": "Networking",
+                "description": "DNS queries, certificates, subnets, domain records and connectivity checks."
             },
             "validation": {
                 "title": "Validation",
-                "description": "Decode, inspect, and verify payloads, auth artifacts, DNS records, or TLS state before they reach production."
+                "description": "Inspect data, types, tokens and certificates to check their format and status."
             },
             "generation": {
                 "title": "Generation",
-                "description": "Produce useful strings, snippets, and other quick artifacts without leaving the browser."
+                "description": "Generate test data, identifiers, diagrams and code snippets."
             },
             "testing": {
                 "title": "Testing",
-                "description": "Compare objects, inspect differences, and jump into embedded validation flows."
+                "description": "Compare text and objects, test regular expressions and review results."
             },
             "electronics": {
                 "title": "Electronics",
-                "description": "Quick hardware math — resistor color codes, Ohm's law and friends, next to the pinouts."
+                "description": "Calculate resistor values, voltage, current and power, and consult module pinouts."
             },
             "reference": {
                 "title": "Reference",
-                "description": "Fast lookups you reach for daily: HTTP status codes, ASCII/Unicode and more."
+                "description": "Look up HTTP status codes, ASCII characters and Unicode code points."
             }
         },
         "sectionToolCount": "tools",
@@ -1499,226 +1542,226 @@
         "pagerNext": "Next",
         "packs": {
             "resistor-color-code": {
-                "title": "Resistor Color Code",
-                "description": "Decode 4 and 5-band resistor colors to a value, or build the bands from a value."
+                "title": "Resistor color code",
+                "description": "Convert color bands to resistance values, or calculate the bands for a given value."
             },
             "ohms-law": {
-                "title": "Ohm's Law",
-                "description": "Solve voltage, current, resistance and power from any two known values."
+                "title": "Ohm’s law",
+                "description": "Calculate voltage, current, resistance and power from two known values."
             },
             "http-status-codes": {
-                "title": "HTTP Status Codes",
-                "description": "Searchable reference of HTTP status codes with category and meaning."
+                "title": "HTTP status codes",
+                "description": "Look up HTTP status codes and check their categories and meanings."
             },
             "ascii-unicode": {
-                "title": "ASCII / Unicode Table",
-                "description": "Inspect characters and code points in decimal, hex, octal and binary."
+                "title": "ASCII and Unicode table",
+                "description": "Inspect characters and their decimal, hexadecimal, octal and binary codes."
             },
             "note-frequency": {
-                "title": "Note · Frequency · MIDI",
-                "description": "Convert between musical note, frequency in Hz and MIDI note number, with tunable A4."
+                "title": "Notes, frequencies and MIDI",
+                "description": "Convert musical notes, frequencies and MIDI numbers with an adjustable tuning reference."
             },
             "chiptune": {
-                "title": "Chiptune Composer",
-                "description": "Compose retro video-game music in a piano-roll with synthesized 8-bit voices and export to .mid and .wav."
+                "title": "Chiptune composer",
+                "description": "Create music with 8-bit sounds and export your composition as MIDI or WAV."
             },
             "audio-convert": {
-                "title": "Audio Converter",
-                "description": "Upload an audio file and export it to WAV or MP3, all in the browser."
+                "title": "Audio converter",
+                "description": "Convert audio files to WAV or MP3 in the browser."
             },
             "image-convert": {
-                "title": "Image Converter",
-                "description": "Upload an image and export it to PNG, JPG or WEBP, all in the browser."
+                "title": "Image converter",
+                "description": "Convert images to PNG, JPG or WebP in the browser."
             },
             "ipv6-expand": {
-                "title": "IPv6 Expand / Compress",
-                "description": "Expand and compress IPv6 addresses following RFC 5952, fully in the browser."
+                "title": "IPv6 addresses",
+                "description": "Expand or shorten IPv6 addresses and inspect their groups."
             },
             "hmac": {
-                "title": "HMAC Generator",
-                "description": "Compute HMAC SHA-1/256/384/512 from a key and message with Web Crypto."
+                "title": "HMAC generator",
+                "description": "Generate an HMAC authentication code from a key and a message."
             },
             "csv-json": {
-                "title": "CSV ⇄ JSON",
-                "description": "Convert CSV to JSON and back with RFC 4180 quoting and a configurable delimiter."
+                "title": "CSV and JSON converter",
+                "description": "Convert data between CSV and JSON with configurable delimiters."
             },
             "llm-vram-calc": {
-                "title": "Local LLM VRAM Calculator",
-                "description": "Calculate VRAM, KV cache, and GPU offload layers (-ngl) for llama.cpp and Ollama models."
+                "title": "AI memory scenarios",
+                "description": "Compare sizes, formats and context using an illustrative formula. This does not replace model measurements."
             },
             "esp32-llm-bridge": {
-                "title": "ESP32 LLM Bridge Generator",
-                "description": "Generate non-blocking C++ FreeRTOS firmware to query local LLMs over WiFi with OLED UI."
+                "title": "ESP32 code for local AI",
+                "description": "Generate a FreeRTOS firmware starting point for sending queries to a local AI server over WiFi."
             },
             "voice-ai-latency": {
-                "title": "Voice AI Latency Calculator",
-                "description": "Calculate end-to-end conversational delay across VAD, Whisper STT, LLM TTFT, and TTS audio."
+                "title": "Voice assistant latency",
+                "description": "Estimate response time from the speech recognition, generation and speech synthesis stages."
             },
             "llm-grammar-generator": {
-                "title": "Hardware GBNF Grammar Generator",
-                "description": "Compile strict GBNF grammars and JSON schemas for LLMs controlling relays, sensors, and actuators."
+                "title": "GBNF grammars for hardware",
+                "description": "Generate GBNF grammars and JSON schemas to define the format of commands from a language model."
             },
             "token-inspector": {
-                "title": "Local Tokenizer & Context Inspector",
-                "description": "Visualize BPE subword tokenization, analyze Spanish token inflation, and compute KV memory."
+                "title": "Token estimator",
+                "description": "Explore an approximation of text tokenization and context usage. This does not use the model’s actual tokenizer."
             },
             "tone-generator": {
-                "title": "Signal Generator",
-                "description": "Tones, white/pink/brown noise, sweeps and L/R tests for speakers, DACs and audio chains."
+                "title": "Audio signal generator",
+                "description": "Generate tones, noise and frequency sweeps to test speakers, DACs and audio connections."
             },
             "guitar-tuner": {
-                "title": "Instrument Tuner",
-                "description": "Multi-instrument tuner (guitar, bass, ukulele, strings) with adjustable A4 and a clickable string diagram."
+                "title": "Instrument tuner",
+                "description": "Tune instruments using your microphone and an adjustable reference frequency."
             },
             "spectrum-analyzer": {
-                "title": "Spectrum Analyzer",
-                "description": "Realtime microphone FFT to inspect frequency energy from the browser."
+                "title": "Spectrum analyzer",
+                "description": "View the frequency distribution of sound captured by your microphone."
             },
             "level-meter": {
-                "title": "Level Meter",
-                "description": "Relative microphone meter for comparing loudness, noise floor and signal peaks."
+                "title": "Audio level meter",
+                "description": "Compare relative levels and peaks of sound captured by your microphone."
             },
             "metronome": {
                 "title": "Metronome",
-                "description": "Configurable musical click with tempo, beats and subdivisions for practice or timing tests."
+                "description": "Keep time with configurable tempo, accents and subdivisions."
             },
             "beat-counter": {
-                "title": "Beat Counter",
-                "description": "Estimate BPM by tapping the pulse with clicks or the spacebar."
+                "title": "Tempo counter",
+                "description": "Estimate tempo in BPM by tapping with clicks or the space bar."
             },
             "delay-calculator": {
-                "title": "Delay Calculator",
-                "description": "Convert BPM to musical delay times and milliseconds to acoustic distance."
+                "title": "Delay calculator",
+                "description": "Convert tempo to delay times and relate milliseconds to acoustic distance."
             },
             "patterns": {
-                "title": "Pattern Lessons",
-                "description": "Interactive modern-pattern lessons with editable code and a sandboxed runner."
+                "title": "Programming patterns",
+                "description": "Explore programming patterns through editable examples you can run."
             },
             "notes": {
-                "title": "Markdown Notes",
-                "description": "Local-first markdown notes with a live preview, in your browser."
+                "title": "Markdown notes",
+                "description": "Write Markdown notes with a preview and local storage."
             },
             "mermaid": {
-                "title": "Mermaid Diagrams",
-                "description": "Edit and render Mermaid diagrams (flowchart, sequence, UML…) in your browser."
+                "title": "Mermaid diagrams",
+                "description": "Create flowcharts, sequence diagrams and other diagram types from text."
             },
             "excalidraw": {
-                "title": "Excalidraw Diagrams",
-                "description": "Sketch UML and architecture diagrams visually, then keep/export your scene locally."
+                "title": "Excalidraw diagrams",
+                "description": "Draw diagrams, save the scene and export the result."
             },
             "text-diff": {
-                "title": "Text Diff",
-                "description": "Compare two texts line by line (LCS) entirely in your browser."
+                "title": "Text comparison",
+                "description": "Compare two texts and inspect their differences line by line."
             },
             "regex": {
-                "title": "Regex Tester",
-                "description": "Test regex patterns against multiline input with live highlight and group capture."
+                "title": "Regular expression tester",
+                "description": "Test patterns against text and inspect matches and capture groups."
             },
             "uuid-ulid": {
-                "title": "UUID / ULID",
-                "description": "Generate UUID v4 and ULID identifiers in batches, in your browser."
+                "title": "UUID and ULID generator",
+                "description": "Generate UUID v4 and ULID identifiers individually or in batches."
             },
             "encoder": {
-                "title": "Encoder / Decoder",
-                "description": "Base64, base64url, hex and URL encode/decode (UTF-8) in your browser."
+                "title": "Encoder and decoder",
+                "description": "Convert text using Base64, Base64URL, hexadecimal and URL encoding."
             },
             "hash-digest": {
-                "title": "Hash & Digest",
-                "description": "Generate SHA-1/256/384/512 digests (hex and base64) entirely in your browser."
+                "title": "Hash generator",
+                "description": "Calculate SHA-1, SHA-256, SHA-384 and SHA-512 hashes in hexadecimal or Base64."
             },
             "usage-analytics": {
-                "title": "Usage Dashboard",
-                "description": "Aggregated metrics for top pages and tools by period and locale."
+                "title": "Usage statistics",
+                "description": "View aggregated visit and tool usage metrics by period and language."
             },
             "payload": {
-                "title": "Payload Lab",
-                "description": "Format, validate, and share JSON payloads entirely in the browser."
+                "title": "JSON editor",
+                "description": "Format and validate JSON data and prepare it for sharing."
             },
             "serial-monitor": {
-                "title": "Serial Monitor",
-                "description": "Native WebSerial terminal to read and write logs to your ESP32/Arduino."
+                "title": "Serial monitor",
+                "description": "Connect a board over USB to read and send data in a browser that supports Web Serial."
             },
             "type-checker": {
-                "title": "Type Checker",
-                "description": "Validate in the browser whether a JSON payload is assignable to a root TypeScript type."
+                "title": "Type checker",
+                "description": "Check whether JSON data matches a TypeScript type."
             },
             "jwt-decode": {
-                "title": "JWT Playground",
-                "description": "Inspect JWT headers, payloads, and expiration locally without sending the token anywhere."
+                "title": "JWT inspector",
+                "description": "Inspect a JWT’s header, payload and expiration date in the browser."
             },
             "dns-lookup": {
-                "title": "DNS Inspector",
-                "description": "Query live DNS records, including MX, TXT, NS, A, and AAAA, without leaving the workbench."
+                "title": "DNS lookup",
+                "description": "Query a domain’s DNS records using network services."
             },
             "subnet-calculator": {
-                "title": "IPv4/Subnet Calculator",
-                "description": "Calculate network, broadcast, mask, wildcard and usable hosts from CIDR."
+                "title": "IPv4 subnet calculator",
+                "description": "Calculate the network, mask, broadcast address and host range of a CIDR address."
             },
             "whois-rdap": {
-                "title": "WHOIS / RDAP",
-                "description": "Query public domain registration data with RDAP, the modern WHOIS replacement."
+                "title": "WHOIS and RDAP lookup",
+                "description": "Query public domain registration information through RDAP."
             },
             "certificate-check": {
-                "title": "Certificate Expiry",
-                "description": "Inspect live TLS certificates, issuer details, and remaining validity before they become an outage."
+                "title": "TLS certificates",
+                "description": "Check a TLS certificate’s issuer, validity period and expiration date."
             },
             "object-to-types": {
-                "title": "Object to Types",
-                "description": "Generate TypeScript interfaces and aliases directly from a real JSON object."
+                "title": "TypeScript types from JSON",
+                "description": "Generate TypeScript interfaces and types from a JSON example."
             },
             "random-string": {
-                "title": "Random String Generator",
-                "description": "Generate quick strings for secrets, IDs, demos, or fixtures in one place."
+                "title": "Random string generator",
+                "description": "Generate strings with configurable length and characters for test data and identifiers."
             },
             "object-compare": {
-                "title": "Object Comparator",
-                "description": "Compare two JSON objects and surface structural differences in seconds."
+                "title": "JSON object comparison",
+                "description": "Find differences between the fields and values of two JSON objects."
             },
             "site-checker": {
-                "title": "Site Checker",
-                "description": "Monitor URLs from the browser only, with local checks and desktop notifications."
+                "title": "Website status",
+                "description": "Check web addresses with network requests and browser notifications."
             },
             "snippets": {
-                "title": "Snippets Shelf",
-                "description": "Store quick notes, recipes, and frequent fragments locally."
+                "title": "Code snippets",
+                "description": "Save and organize code snippets and notes for reuse."
             },
             "embedded": {
-                "title": "Embedded Bridge",
-                "description": "Connect this new workbench layer to the embedded tools that already exist."
+                "title": "Electronics calculators",
+                "description": "Access calculators for circuits, filters and electronic components."
             },
             "cron": {
-                "title": "Cron Expression",
-                "description": "Parse cron expressions and preview next run times with a field breakdown — no server needed."
+                "title": "Cron expressions",
+                "description": "Interpret a cron expression and view its upcoming execution times."
             },
             "color": {
-                "title": "Color Tools",
-                "description": "Convert HEX, RGB, HSL; pick colors and inspect WCAG contrast ratios — all in your browser."
+                "title": "Color converter",
+                "description": "Convert colors between HEX, RGB and HSL and check their contrast."
             },
             "timestamp": {
-                "title": "Timestamp Converter",
-                "description": "Convert Unix timestamps and date strings to ISO, UTC, relative and more formats."
+                "title": "Date converter",
+                "description": "Convert Unix timestamps and dates between formats and time zones."
             },
             "number-base": {
-                "title": "Number Base Converter",
-                "description": "Convert between decimal, hexadecimal, binary and octal with a bit-field visualizer."
+                "title": "Number bases",
+                "description": "Convert numbers between decimal, hexadecimal, binary and octal."
             },
             "json-schema": {
-                "title": "JSON Schema Generator",
-                "description": "Infer a JSON Schema from any JSON sample with format detection and required-field analysis."
+                "title": "JSON Schema generator",
+                "description": "Create a JSON Schema from example data."
             },
             "url-parser": {
-                "title": "URL Parser & Builder",
-                "description": "Parse URLs, inspect query params and build modified URLs — all in your browser."
+                "title": "URL editor",
+                "description": "Inspect the parts of a URL and edit its parameters."
             },
             "image-base64": {
                 "title": "Image to Base64",
-                "description": "Convert images to data URIs, base64, CSS snippets or HTML img tags."
+                "description": "Convert an image to Base64 or a data URL for use in HTML or CSS."
             }
         },
         "payload": {
             "badge": "Flagship tool",
-            "title": "Payload Lab",
-            "subtitle": "Take a payload, validate it, switch between readable and minified views, and share the session by URL.",
+            "title": "JSON editor",
+            "subtitle": "Format and validate JSON data and prepare it for sharing.",
             "loadExample": "Load example",
             "minify": "Minify",
             "prettify": "Prettify",
@@ -1752,8 +1795,8 @@
         },
         "jwtDecode": {
             "badge": "Validation tool",
-            "title": "JWT Decode",
-            "subtitle": "Inspect header and payload locally. Useful for debugging auth flows without sending the token anywhere.",
+            "title": "JWT inspector",
+            "subtitle": "Inspect a JWT’s header, payload and expiration date in the browser.",
             "input": "JWT token",
             "placeholder": "Paste a JWT here...",
             "loadExample": "Load example",
@@ -1778,8 +1821,8 @@
         },
         "dnsLookup": {
             "badge": "Validation tool",
-            "title": "DNS Inspector",
-            "subtitle": "Query live DNS records, including MX, TXT, NS, A, AAAA, and CNAME, without leaving the product.",
+            "title": "DNS lookup",
+            "subtitle": "Query a domain’s DNS records using network services.",
             "lookup": "Lookup",
             "loadExample": "Load example",
             "copyResult": "Copy result",
@@ -1810,8 +1853,8 @@
         },
         "certificateCheck": {
             "badge": "Validation tool",
-            "title": "Certificate Expiry",
-            "subtitle": "Inspect live TLS validity dates and issuer details before a certificate becomes a production problem.",
+            "title": "TLS certificates",
+            "subtitle": "Check a TLS certificate’s issuer, validity period and expiration date.",
             "inspect": "Inspect",
             "loadExample": "Load example",
             "copyResult": "Copy result",
@@ -1839,8 +1882,8 @@
         },
         "typeChecker": {
             "badge": "Validation tool",
-            "title": "Type Checker",
-            "subtitle": "Check whether a JSON payload is assignable to a root TypeScript type directly in the browser.",
+            "title": "Type checker",
+            "subtitle": "Check whether JSON data matches a TypeScript type.",
             "check": "Check types",
             "loadExample": "Load example",
             "clear": "Clear",
@@ -1862,8 +1905,8 @@
         },
         "objectToTypes": {
             "badge": "Generation tool",
-            "title": "Object to Types",
-            "subtitle": "Generate TypeScript interfaces and aliases from a real JSON payload without leaving the browser.",
+            "title": "TypeScript types from JSON",
+            "subtitle": "Generate TypeScript interfaces and types from a JSON example.",
             "loadExample": "Load example",
             "copy": "Copy types",
             "clear": "Clear",
@@ -1880,8 +1923,8 @@
         },
         "randomString": {
             "badge": "Generation tool",
-            "title": "Random String Generator",
-            "subtitle": "Generate useful strings for IDs, secrets, demos, or fixtures without leaving the browser.",
+            "title": "Random string generator",
+            "subtitle": "Generate strings with configurable length and characters for test data and identifiers.",
             "length": "Length",
             "uppercase": "Uppercase",
             "lowercase": "Lowercase",
@@ -1900,8 +1943,8 @@
         },
         "objectCompare": {
             "badge": "Testing tool",
-            "title": "Object Comparator",
-            "subtitle": "Compare two JSON objects and surface additions, removals, and changed values quickly.",
+            "title": "JSON object comparison",
+            "subtitle": "Find differences between the fields and values of two JSON objects.",
             "loadExample": "Load example",
             "clear": "Clear",
             "swap": "Swap sides",
@@ -1920,11 +1963,11 @@
         },
         "siteChecker": {
             "badge": "Client-only monitor",
-            "title": "Site Checker",
-            "subtitle": "Monitor URLs from this browser only. No backend polling, no extra server load.",
+            "title": "Website status",
+            "subtitle": "Check web addresses with network requests and browser notifications.",
             "loadExample": "Load local example",
             "clientOnly": "Runs only in this browser tab. Monitoring pauses when the tab or app is closed.",
-            "corsNote": "Cross-origin sites can look healthy but stay opaque when CORS blocks deeper inspection.",
+            "corsNote": "Requests to other sites use no-cors mode. The browser cannot read the HTTP status of those responses: receiving a response does not confirm that the site is working correctly.",
             "url": "URL",
             "interval": "Interval",
             "timeout": "Timeout",
@@ -1958,8 +2001,8 @@
         },
         "snippets": {
             "badge": "Dedicated section",
-            "title": "Quick snippets and recipes",
-            "subtitle": "A small personal layer so the workbench is useful from day one, now with optional account backup.",
+            "title": "Code snippets",
+            "subtitle": "Save code snippets in this browser or in your account.",
             "titlePlaceholder": "Snippet title",
             "tagsPlaceholder": "Comma-separated tags",
             "bodyPlaceholder": "Paste a command, recipe, payload, or useful note...",
@@ -1974,7 +2017,7 @@
             "deleteError": "Could not delete snippet",
             "localBadge": "Local-only",
             "cloudBadge": "Account-backed",
-            "localStatus": "Stored in this browser only until you sign in.",
+            "localStatus": "Saved in this browser. You can import it into your account after signing in.",
             "accountStatus": "Synced with @{login}",
             "authChecking": "Checking account...",
             "syncing": "Refreshing from your account...",
@@ -1987,12 +2030,12 @@
             "importError": "Could not import local snippets",
             "summarySavedLabel": "Saved",
             "summarySavedHintLocal": "Available in this browser right now.",
-            "summarySavedHintAccount": "Canonical copy currently lives in your account.",
+            "summarySavedHintAccount": "Available in your account.",
             "summaryVisibilityLabel": "Public",
             "summaryVisibilityHint": "Share-ready snippets over total account snippets.",
             "summaryImportLabel": "Ready later",
-            "summaryImportHint": "These local snippets can move into your account when you sign in.",
-            "summarySourceLabel": "Source of truth",
+            "summaryImportHint": "After signing in, you can choose to import these snippets into your account.",
+            "summarySourceLabel": "Storage",
             "privateLabel": "Private",
             "publicLabel": "Public",
             "makePublic": "Make public",
@@ -2005,15 +2048,15 @@
             "shareError": "Could not copy share link"
         },
         "toolHeader": {
-            "localLabel": "Local only",
-            "localHint": "Everything runs in your browser. Nothing — tokens, payloads, secrets — leaves your machine.",
-            "networkLabel": "Makes network calls",
-            "networkHint": "This tool sends outbound requests to resolve live data. Avoid pasting secrets here."
+            "localLabel": "Local processing",
+            "localHint": "This tool performs its main processing in the browser.",
+            "networkLabel": "Network request",
+            "networkHint": "This tool needs a network connection to query data."
         },
         "jwtPlayground": {
             "badge": "Validation tool",
             "title": "JWT Playground",
-            "subtitle": "Decode, sign and verify JWTs entirely in your browser. HS, RS and ES — the token and keys never leave your machine.",
+            "subtitle": "Decode, sign and verify JWTs with HS, RS and ES algorithms in the browser.",
             "input": "JWT token",
             "placeholder": "Paste a JWT here...",
             "loadExample": "Load example",
@@ -2067,8 +2110,8 @@
         },
         "cron": {
             "badge": "Testing tool",
-            "title": "Cron Expression",
-            "subtitle": "Parse cron expressions, preview next run times and inspect field breakdowns — no server needed.",
+            "title": "Cron expressions",
+            "subtitle": "Interpret a cron expression and view its upcoming execution times.",
             "breakdown": "Field breakdown",
             "nextRuns": "Next 8 runs (your local time)",
             "field_minute": "Minute",
@@ -2081,8 +2124,8 @@
         },
         "color": {
             "badge": "Generation tool",
-            "title": "Color Tools",
-            "subtitle": "Convert between HEX, RGB and HSL, pick colors and inspect WCAG contrast ratios — fully in your browser.",
+            "title": "Color converter",
+            "subtitle": "Convert colors between HEX, RGB and HSL and check their contrast.",
             "values": "Color values",
             "sliders": "Sliders",
             "copy": "Copy",
@@ -2091,8 +2134,8 @@
         },
         "timestamp": {
             "badge": "Testing tool",
-            "title": "Timestamp Converter",
-            "subtitle": "Convert Unix timestamps and date strings to multiple formats — entirely in your browser.",
+            "title": "Date converter",
+            "subtitle": "Convert Unix timestamps and dates between formats and time zones.",
             "tabParse": "Parse",
             "tabNow": "Now",
             "inputPlaceholder": "Unix timestamp or date string…",
@@ -2103,8 +2146,8 @@
         },
         "numberBase": {
             "badge": "Testing tool",
-            "title": "Number Base Converter",
-            "subtitle": "Convert between decimal, hex, binary and octal with BigInt precision and a bit-field visualizer.",
+            "title": "Number bases",
+            "subtitle": "Convert numbers between decimal, hexadecimal, binary and octal.",
             "inputPlaceholder": "Enter a number…",
             "copy": "Copy",
             "copied": "Copied!",
@@ -2133,8 +2176,8 @@
         },
         "jsonSchema": {
             "badge": "Data tool",
-            "title": "JSON Schema Generator",
-            "subtitle": "Infer a JSON Schema (draft-07) from any JSON sample — format detection, required fields, nested objects.",
+            "title": "JSON Schema generator",
+            "subtitle": "Create a JSON Schema from example data.",
             "inputLabel": "JSON Input",
             "outputLabel": "Generated Schema",
             "rootNamePlaceholder": "Root name…",
@@ -2148,8 +2191,8 @@
         },
         "urlParser": {
             "badge": "Testing tool",
-            "title": "URL Parser & Builder",
-            "subtitle": "Parse any URL into its parts, inspect and edit query params, rebuild and copy.",
+            "title": "URL editor",
+            "subtitle": "Inspect the parts of a URL and edit its parameters.",
             "inputPlaceholder": "Paste a URL here…",
             "loadExample": "Load example",
             "clear": "Clear",
@@ -2168,8 +2211,8 @@
         },
         "imageBase64": {
             "badge": "Generation tool",
-            "title": "Image → Base64",
-            "subtitle": "Drop any image and get a data URI, raw base64, CSS background-image or HTML img snippet — entirely local.",
+            "title": "Image to Base64",
+            "subtitle": "Convert an image to Base64 or a data URL for use in HTML or CSS.",
             "dropHint": "Drop an image here or click to select",
             "dropSub": "PNG, JPEG, SVG, WebP, GIF…",
             "notAnImage": "File is not an image",
@@ -2184,6 +2227,149 @@
             "copied": "copied!",
             "copyError": "Copy failed",
             "expand": "expand"
+        },
+        "tokenEstimator": {
+            "eyebrow": "Local AI",
+            "title": "Token and context estimator",
+            "description": "Explore an approximate split of text into fragments. This tool uses a heuristic, not a model’s tokenizer.",
+            "inputTitle": "1. Input text",
+            "presetEs": "Spanish example",
+            "presetEn": "English example",
+            "presetCpp": "C++ structure",
+            "presetJson": "JSON command",
+            "placeholder": "Enter or paste text to explore its fragments.",
+            "modelReference": "Model reference (does not change the estimate)",
+            "metricsTitle": "2. Approximate counts",
+            "fragments": "Estimated fragments",
+            "words": "Words",
+            "characters": "Characters",
+            "ratio": "Fragments per word",
+            "ratioHint": "Ratio between this heuristic’s fragments and the words in the text.",
+            "memory": "Numerical example: 0.52 KB per fragment",
+            "visualTitle": "3. Fragment view ({count})",
+            "empty": "Enter text to see its fragments.",
+            "fragmentHint": "Fragment {index}: {text} ({count} characters)",
+            "scopeTitle": "4. Scope of the estimate",
+            "scope": "The actual count depends on the tokenizer and conversation format. This view uses simplified rules that do not change when you select another model reference. The memory example applies a fixed coefficient and does not represent a model’s KV cache. To plan context and memory, use the tokenizer and measurements of the engine you intend to run."
+        },
+        "grammar": {
+            "eyebrow": "Local AI and hardware",
+            "title": "Command formats for hardware",
+            "description": "Define the response format with JSON Schema or GBNF. Validate each command before using it to control hardware.",
+            "profileTitle": "1. Hardware profile",
+            "template": "Device template",
+            "format": "Output format",
+            "actions": "Included actions",
+            "devices": "Devices",
+            "definitionTitle": "2. Format definition",
+            "gbnfFile": "grammar.gbnf file",
+            "schemaFile": "schema.json file",
+            "invocationTitle": "3. Query example",
+            "localCommand": "Command for the local computer",
+            "dispatchTitle": "4. C++ receiver example",
+            "handler": "Snippet for src/main.cpp",
+            "scopeTitle": "5. Scope of grammars",
+            "scope": "Grammars constrain the format in compatible engines; they do not guarantee that a command is correct or authorized. Validate structure, values and permissions before running actions. Code examples use English names and prompts and need adapting to your device and engine. The receiver snippet only illustrates actions for desk_lamp; it does not implement every profile or include the validation of a complete application.",
+            "homeTemplate": "Home automation: relays and lights",
+            "sensorTemplate": "Telemetry: sensors",
+            "audioTemplate": "Audio: tones",
+            "gbnfOption": "GBNF (llama.cpp / llama-server)",
+            "schemaOption": "JSON Schema"
+        },
+        "voiceLatency": {
+            "eyebrow": "Local AI and speech",
+            "title": "Voice latency estimator",
+            "description": "Compare scenarios by adding end-of-speech detection, transcription, network, first-token and speech synthesis times. These are illustrative values, not product measurements.",
+            "scenario": "{ms} ms scenario",
+            "inputTitle": "1. Audio input",
+            "vad": "End-of-speech detection (VAD)",
+            "stt": "Speech recognition (STT)",
+            "network": "Network transport",
+            "outputTitle": "2. Generation and output",
+            "llm": "Time to first token (LLM)",
+            "tts": "Speech synthesis (TTS)",
+            "totalTitle": "3. Time breakdown",
+            "total": "Sum of the stages",
+            "networkShort": "Network",
+            "running": "Showing the scenario…",
+            "run": "Show the estimated wait",
+            "scopeTitle": "4. Interpreting the result",
+            "scope": "Measure each stage on the target device and network. This calculator adds times sequentially; it does not run speech recognition, synthesis or audio playback.",
+            "streaming": "Streaming can overlap stages. To evaluate it, measure when audio starts and how the response continues, as well as the total time.",
+            "tuning": "End-of-speech thresholds and chunk size affect waiting time and phrase boundaries. Adjust them using representative recordings and tests.",
+            "stageVad": "1. End-of-speech detection (VAD)…",
+            "stageStt": "2. Transcription (STT)…",
+            "stageNetwork": "3. Network transport…",
+            "stageLlm": "4. First token (LLM)…",
+            "stageTts": "5. Speech synthesis (TTS)…",
+            "done": "Simulation complete; no audio was generated.",
+            "ratingFast": "Below 500 ms",
+            "ratingMedium": "500 to under 900 ms",
+            "ratingSlow": "900 to under 1600 ms",
+            "ratingLong": "1600 ms or more",
+            "hintFast": "The sum is below half a second. The actual experience needs measurement of the complete system.",
+            "hintMedium": "Compare each stage’s contribution to identify where to reduce the wait.",
+            "hintSlow": "The sum approaches or exceeds one second. Compare these durations with device measurements.",
+            "hintLong": "Check which stage contributes the most time. This result describes the scenario, not a performance measurement."
+        },
+        "vram": {
+            "eyebrow": "Local AI and memory",
+            "title": "Memory scenarios for local models",
+            "description": "Compare sizes and formats with a simplified formula. Profiles are illustrative scenarios; they do not describe an exact model architecture or guarantee that it will load.",
+            "hardwareTitle": "1. Available memory",
+            "vram": "Specified VRAM",
+            "ram": "System RAM",
+            "modelTitle": "2. Scenario parameters",
+            "model": "Scenario size and layers",
+            "preset": "{params} billion parameters · {layers} layers",
+            "quant": "Weight format",
+            "context": "Context and KV cache",
+            "kvOption": "{format} · factor {factor}",
+            "resultTitle": "3. Formula result",
+            "weight": "Weight estimate",
+            "quantValue": "Format: {format}",
+            "cache": "Illustrative KV cache ({tokens} tokens)",
+            "format": "Format: {format}",
+            "offload": "GPU layers assigned in the example",
+            "layers": "{count} / {total} layers",
+            "full": "Scenario: all layers on GPU",
+            "partial": "Scenario: GPU and CPU layers",
+            "cpu": "Scenario: layers in RAM",
+            "partialTitle": "GPU and CPU allocation",
+            "partialBody": "The formula assigns {gpu} of {total} layers to GPU and {cpu} to CPU. It estimates {ram} GB of RAM. Check actual usage when loading the model.",
+            "cpuTitle": "The scenario assigns layers to RAM",
+            "cpuBody": "The formula totals {total} GB of weights and cache and allocates {ram} GB to RAM. Change context or format to compare.",
+            "ramTitle": "The calculation exceeds the specified RAM",
+            "ramBody": "The result is {needed} GB against {available} GB specified. This is not a load test or a measurement of your computer.",
+            "commandsTitle": "4. Command examples",
+            "cli": "llama.cpp example",
+            "ollama": "Ollama example",
+            "scopeTitle": "5. Scope of the calculation",
+            "scope": "Weights are approximated as parameters × bits / 8. The cache uses a fixed coefficient of 0.0003 multiplied by context and model size, adjusted by the format factor; it does not use the actual architecture. The calculation reserves 0.6 GB for the engine. Results let you explore this formula, not select hardware or confirm compatibility. Adapt file names, models and command options, then measure usage with your engine."
+        },
+        "esp32Bridge": {
+            "eyebrow": "ESP32 firmware",
+            "title": "ESP32 code for querying Ollama",
+            "description": "Generate firmware that queries Ollama and displays the response on an OLED screen. The HTTP request runs in a FreeRTOS task.",
+            "networkTitle": "1. Network and server",
+            "ssid": "WiFi network name (SSID)",
+            "password": "WiFi password",
+            "host": "Ollama server’s local IP address",
+            "port": "Port",
+            "model": "Model installed in Ollama",
+            "pinsTitle": "2. Pins and instructions",
+            "button": "Button pin",
+            "led": "Status LED pin",
+            "sda": "OLED: SDA",
+            "scl": "OLED: SCL",
+            "prompt": "Model instructions",
+            "defaultPrompt": "Respond in English, directly and concisely, in two sentences.",
+            "codeTitle": "3. C++ firmware example",
+            "codeHint": "Starting point to adapt in PlatformIO or Arduino IDE",
+            "iniTitle": "4. platformio.ini file",
+            "dependencies": "Example dependencies",
+            "scopeTitle": "5. Firmware scope",
+            "scope": "networkTask sends the HTTP request while loop() handles the button and display. Check the pins, core assignments and dependencies for your board. The example waits for WiFi at startup and does not include a complete reconnection or task synchronization strategy. Code comments and status messages are in English. Test it on your build before integrating it; it does not guarantee a refresh rate or eliminate connection errors."
         }
     },
     "VersionWatcher": {
@@ -2199,7 +2385,12 @@
         "presets_label": "Global Presets",
         "eseries_label": "E-series",
         "eseries_help": "E12 (±10%) and E24 (±5%) are the resistor values that actually exist to buy. The result snaps to the nearest one you can source.",
-        "categories": { "electronica": "Electronics", "obra": "Construction", "clima": "Climate", "cotidianas": "Everyday" },
+        "categories": {
+            "electronica": "Electronics",
+            "obra": "Construction",
+            "clima": "Climate",
+            "cotidianas": "Everyday"
+        },
         "copy_summary_help": "Copies the calculator results as plain text.",
         "copy_link_help": "Copies the URL with this configuration to share or save it.",
         "go_rcl": "Open RCL Page",
@@ -2225,10 +2416,39 @@
             "buck3v3": "Buck 5V→3V3"
         },
         "cards": {
-            "paint": { "title": "Paint", "paintArea": "Area to paint", "paintCoats": "Coats", "paintCoverage": "Coverage", "r_liters": "Paint needed", "r_cans": "Cans" },
-            "cooling": { "title": "Cooling (BTU)", "coolArea": "Floor area", "coolFactor": "Factor", "coolPeople": "People", "coolAppliances": "Appliances (heat)", "r_frig": "Capacity", "r_split": "Suggested unit", "r_split_hint": "smallest commercial size that covers it" },
-            "ohm": { "title": "Ohm's Law", "ohmV": "Voltage", "ohmI": "Current", "r_r": "Resistance", "r_p": "Power" },
-            "rule": { "title": "Rule of three", "ruleA": "If A…", "ruleB": "…is B", "ruleC": "…what is C?", "r_x": "Result (X)", "r_hint": "A → B, so C → X" },
+            "paint": {
+                "title": "Paint",
+                "paintArea": "Area to paint",
+                "paintCoats": "Coats",
+                "paintCoverage": "Coverage",
+                "r_liters": "Paint needed",
+                "r_cans": "Cans"
+            },
+            "cooling": {
+                "title": "Cooling (BTU)",
+                "coolArea": "Floor area",
+                "coolFactor": "Factor",
+                "coolPeople": "People",
+                "coolAppliances": "Appliances (heat)",
+                "r_frig": "Capacity",
+                "r_split": "Suggested unit",
+                "r_split_hint": "smallest commercial size that covers it"
+            },
+            "ohm": {
+                "title": "Ohm's Law",
+                "ohmV": "Voltage",
+                "ohmI": "Current",
+                "r_r": "Resistance",
+                "r_p": "Power"
+            },
+            "rule": {
+                "title": "Rule of three",
+                "ruleA": "If A…",
+                "ruleB": "…is B",
+                "ruleC": "…what is C?",
+                "r_x": "Result (X)",
+                "r_hint": "A → B, so C → X"
+            },
             "rl": {
                 "title": "RL Filter",
                 "r": "R (Ω)",
@@ -2377,7 +2597,7 @@
         },
         "stats": {
             "title": "Public usage statistics",
-            "description": "Explore anonymous, aggregated usage statistics for HIOS pages and browser tools."
+            "description": "View totals for page visits, tool openings and messages published on HIOS."
         },
         "colophon": {
             "title": "About HIOS and its open source stack",
@@ -2397,7 +2617,7 @@
                 "imageAlt": "Photograph of PAD in Editing mode with copy, paste, undo, redo and media controls.",
                 "caption": "Actual prototype photograph in Editing mode. Layout and labels can change with firmware configuration.",
                 "editing": {
-                    "title": "Keep your editing flow",
+                    "title": "Editing and navigation",
                     "body": "Assign copy, paste, undo and redo to the keys. Switch the encoder between scrolling and zoom, and use the joystick to move the pointer.",
                     "requirement": "USB or BLE HID actions; no companion required."
                 },
@@ -2407,16 +2627,16 @@
                     "requirement": "Shortcuts depend on the active application; global mute and feedback require the companion."
                 },
                 "media": {
-                    "title": "Music within reach",
+                    "title": "Playback and volume",
                     "body": "Control playback and volume with the keys and encoder. With the companion, PAD receives the computer volume to display it on screen.",
                     "requirement": "Media controls use HID; displaying actual volume requires the companion."
                 }
             },
-            "title": "PAD: a desktop that responds to you",
-            "description": "Make PAD a controller for your applications, calls and music. Its firmware combines USB and Bluetooth actions, a web editor and an optional local companion for Windows and Linux.",
+            "title": "PAD software: controls, editor and companion",
+            "description": "Configure PAD actions and organize them by context. The firmware provides USB and Bluetooth controls; the companion adds web editing and communication with Windows or Linux.",
             "controls": {
                 "title": "Layers, shortcuts and mouse control",
-                "body": "Ten action keys and two ALT keys organize shortcuts by context. The encoder navigates layers and controls volume, scrolling, zoom or tabs depending on its mode. The joystick moves the pointer: tap for left click and double tap for right click. USB and BLE send keyboard, mouse and media actions; WiFi carries configuration and feedback, not HID."
+                "body": "Ten action keys and two ALT keys organize shortcuts by context. The encoder controls volume, scrolling or zoom depending on the layer; the joystick moves the pointer. USB and BLE send keyboard, mouse and media actions. WiFi is used for configuration and companion communication."
             },
             "editor": {
                 "title": "Your configuration, without rebuilding",
@@ -2452,8 +2672,113 @@
             },
             "availability": {
                 "title": "Current scope",
-                "body": "The application controls test tones. Remote volume and equalization, battery monitoring and OTA updates remain planned work, not available features of this integration. Android source is provided for building the application; no APK download is promised."
+                "body": "The app lets you request test tones. Remote volume and equalization, battery monitoring and OTA updates are planned. The Android app is distributed as source code to build with Android Studio or Gradle."
             }
         }
+    },
+    "HomeQuickAccess": {
+        "workbench": {
+            "label": "Workbench",
+            "description": "Tools for working with code, data, electronics and audio."
+        },
+        "ai": {
+            "label": "Local AI",
+            "description": "An ESP32-S3 node for querying Ollama over a local network."
+        },
+        "blog": {
+            "label": "Devlog",
+            "description": "Guides and technical notes on hardware, software and local AI."
+        },
+        "stats": {
+            "label": "Metrics",
+            "description": "Public statistics on visits and tool usage."
+        }
+    },
+    "Footer": {
+        "description": "HIOS — Open hardware, software and technical documentation.",
+        "detail": "Code and resources to explore, build and adapt."
+    },
+    "Colophon": {
+        "title": "About HIOS",
+        "sections": {
+            "0": {
+                "heading": "The project",
+                "body": "HIOS brings together open hardware projects, documentation and development tools. Explore audio modules, programmable controls and examples that connect to local AI."
+            },
+            "1": {
+                "heading": "Exploring the projects",
+                "body": "Check the available features, requirements and planned work before building a device. Prototypes can change, so follow the instructions for the version you intend to use."
+            },
+            "2": {
+                "heading": "Licenses",
+                "body": "Check the license of each project and its dependencies before reusing code, designs or documentation."
+            },
+            "3": {
+                "heading": "Contact",
+                "body": "Report bugs and suggest improvements at github.com/hios-open-systems/web. For security matters, see /.well-known/security.txt. Other questions: devsolutionsar@gmail.com."
+            }
+        }
+    },
+    "Blog": {
+        "kicker": "HIOS / Documentation",
+        "title": "Documentation",
+        "intro": "Reference guides and development notes on hardware, software and local AI.",
+        "refKicker": "01 / Technical reference",
+        "devKicker": "02 / Development notes",
+        "empty": "No articles have been published yet.",
+        "back": "Documentation",
+        "toc": "In this article",
+        "category": {
+            "devlog": "Development",
+            "referencia": "Technical reference"
+        }
+    },
+    "PrivacySettings": {
+        "kicker": "Data and privacy",
+        "title": "Data settings",
+        "intro": "Review telemetry, storage in this browser and your account options.",
+        "telemetryTitle": "Usage statistics",
+        "telemetryHint": "Telemetry is enabled by default. It records page visits and tool openings, together with the path, language, browser information, referring page and request information. When signed in, the event is linked to your account. Totals appear on the Statistics page. You can disable telemetry here; Do Not Track also disables it.",
+        "telemetryOn": "Enabled",
+        "telemetryOff": "Disabled",
+        "localTitle": "Browser storage",
+        "localHint": "Includes appearance preferences, recently used tools, notes and drafts. Some features let you sync data to your account or share it through a link. Clearing local storage does not delete server copies.",
+        "clearStorage": "Clear local storage",
+        "clearStorageDone": "Local and session storage cleared.",
+        "clearCaches": "Clear site cache",
+        "clearCachesDone": "Caches and service worker registrations removed.",
+        "hardReset": "Reset local data",
+        "hardResetHint": "Clears local storage, caches and service worker registrations, then reloads the page. This also removes your telemetry preference, which returns to its default.",
+        "hardResetConfirm": "Clear local storage and the site cache, then reload? Notes and drafts stored only in this browser will be lost.",
+        "accountTitle": "Account data",
+        "accountHint": "Deleting your account removes its sessions, code snippets and preferences. Usage events and submitted feedback remain without the account link; message content and contact email addresses are not deleted. Guestbook entries also remain.",
+        "deleteAccount": "Delete account",
+        "deleteAccountConfirm": "Delete your account, its sessions, snippets and preferences? This cannot be undone. Submitted feedback and guestbook entries remain.",
+        "deleteAccountDone": "Account deleted.",
+        "deleteAccountError": "Could not delete the account. Try again.",
+        "notLoggedIn": "You are not signed in. Telemetry and submitted messages can create records without an account.",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+    },
+    "PublicStats": {
+        "kicker": "HIOS usage",
+        "title": "Statistics",
+        "intro": "A summary of page views, tool openings and guestbook messages. Charts count events, not people. Telemetry is enabled by default and can be disabled in Settings; Do Not Track also disables it.",
+        "pageViews": "Page views",
+        "toolOpens": "Tool openings",
+        "guestbook": "Published messages",
+        "allTime": "total visible in the guestbook",
+        "lastDays": "{days, plural, one {last day} other {last # days}}",
+        "activity": "Events per day",
+        "topTools": "Most opened tools",
+        "countries": "Events by country",
+        "locales": "Browsing languages",
+        "empty": "No data to show for this period.",
+        "error": "Could not load statistics."
+    },
+    "HowItWorks": {
+        "title": "How it works",
+        "github": "View on GitHub →",
+        "note": "This panel shows the algorithm code used by the tool. You can view the source file on GitHub."
     }
 }
