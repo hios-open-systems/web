@@ -24,8 +24,6 @@ const HIGHLIGHTED_IDS = [
 
 const TOOLS = ALL_TOOLS.filter((tool) => HIGHLIGHTED_IDS.includes(tool.id));
 
-const SEE_ALL: Record<string, string> = { en: 'See all', es: 'Ver todas', de: 'Alle ansehen', it: 'Vedi tutte' };
-
 /**
  * Muestra una selección de herramientas en el Home (no las 44): un pantallazo,
  * con atajo al azar y link a /workbench para ver todas. Así Proyectos y los
@@ -55,7 +53,7 @@ export function ToolShowcase() {
           href={`/${locale}/workbench`}
           style={{ color: 'var(--accent-text)', fontWeight: 500, textDecoration: 'none', fontSize: 15 }}
         >
-          {SEE_ALL[locale] ?? SEE_ALL.es} ({ALL_TOOLS.length}) →
+          {t('showcaseSeeAll')} ({ALL_TOOLS.length}) →
         </Link>
       </div>
     </section>

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Collapse, Typography } from 'antd';
-import { useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import SyntaxHighlighter from 'react-syntax-highlighter/dist/esm/prism-light';
 import typescript from 'react-syntax-highlighter/dist/esm/languages/prism/typescript';
 import vscDarkPlus from 'react-syntax-highlighter/dist/esm/styles/prism/vsc-dark-plus';
@@ -22,25 +22,9 @@ const ENTRIES: Record<string, { file: string; source: string }> = manifest;
 
 const REPO_BLOB_BASE = 'https://github.com/hios-open-systems/web/blob/main/';
 
-// Textos inline a propósito (es/en con fallback en): este componente es
-// puramente informativo y no queremos tocar messages/*.json por él.
-const DICT = {
-  en: {
-    title: 'How it works',
-    github: 'View on GitHub →',
-    note: 'This is the actual code this tool runs. Open license — copy it, tweak it, make it yours.',
-  },
-  es: {
-    title: 'Cómo funciona',
-    github: 'Ver en GitHub →',
-    note: 'Este es el código real que ejecuta esta tool. Licencia abierta — copialo, modificalo, hacelo tuyo.',
-  },
-} as const;
-
 export function HowItWorks({ algorithmId }: { algorithmId: string }) {
-  const locale = useLocale();
+  const t = useTranslations('HowItWorks');
   const { mode } = useTheme();
-  const d = locale === 'es' ? DICT.es : DICT.en;
 
   const entry = ENTRIES[algorithmId];
   if (!entry) return null;
@@ -67,7 +51,7 @@ export function HowItWorks({ algorithmId }: { algorithmId: string }) {
             color: 'var(--accent-text)',
           }}
         >
-          {d.github}
+          {t('github')}
         </a>
       </div>
       <SyntaxHighlighter
@@ -87,7 +71,7 @@ export function HowItWorks({ algorithmId }: { algorithmId: string }) {
         {entry.source}
       </SyntaxHighlighter>
       <Text type="secondary" style={{ fontSize: 12 }}>
-        {d.note}
+        {t('note')}
       </Text>
     </div>
   );
@@ -113,7 +97,7 @@ export function HowItWorks({ algorithmId }: { algorithmId: string }) {
                 color: 'var(--accent-text)',
               }}
             >
-              {d.title}
+              {t('title')}
             </span>
           ),
           children: body,

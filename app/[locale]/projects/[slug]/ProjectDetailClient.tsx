@@ -12,6 +12,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useLocale, useTranslations } from 'next-intl';
 import { ImageCarousel } from '@/components/common/ImageCarousel';
+import { ProjectComponents } from '@/components/projects/ProjectComponents';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -48,9 +49,9 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
         '3d': '3D / STL',
         cad: 'CAD',
         pcb: 'PCB / KiCad',
-        doc: 'Documentación',
-        firmware: 'Firmware / Config',
-        data: 'Datos',
+        doc: t('asset_documentation'),
+        firmware: t('asset_firmware'),
+        data: t('asset_data'),
     };
 
     const tProjects = useTranslations('Projects');
@@ -65,7 +66,7 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
         whatWorks?: string[];
         whatDoesnt?: string[];
         resources?: { name: string; url: string }[];
-        bom?: { component: string; qty: number; priceUSD: number; notes?: string }[];
+        bom?: { component: string; qty: number; notes?: string }[];
         specs?: { label: string; value: string }[];
         futureFeatures?: string[];
     }
@@ -93,7 +94,7 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                 display: 'flex',
                 alignItems: 'center',
             }}>
-                <Link href="/" passHref>
+                <Link href={`/${locale}/projects`} passHref>
                     <Button
                         type="text"
                         icon={<ArrowLeftOutlined />}
@@ -118,7 +119,7 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                             letterSpacing: '0.08em',
                         }}
                     >
-                        {project.status.toUpperCase()}
+                        {tProjects(`status_${project.status}`)}
                     </Tag>
                     <Title level={1} style={{
                         fontSize: 'clamp(2.5rem, 6vw, 3.5rem)',
@@ -179,9 +180,9 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                             >
                                 {t('moment')}
                             </Text>
-                            <Title level={3} style={{ color: textColor, marginBottom: '24px', fontStyle: 'italic', fontWeight: 500, lineHeight: 1.5 }}>
-                                &quot;{story.moment}&quot;
-                            </Title>
+                            <Paragraph style={{ color: textColor, marginBottom: '24px', fontSize: '20px', lineHeight: 1.5 }}>
+                                {story.moment}
+                            </Paragraph>
                             {story.struggle && (
                                 <Paragraph style={{ color: secondaryColor, fontSize: '16px', lineHeight: 1.8 }}>
                                     {story.struggle}
@@ -262,54 +263,7 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                 </section>
             )}
 
-            {/* BOM - Bill of Materials */}
-            {story?.bom && (
-                <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 40px' }}>
-                    <Title level={3} style={{ color: textColor, marginBottom: '20px' }}>
-                        {t('bom')}
-                    </Title>
-                    <Card
-                        style={{
-                            background: mode === 'dark' ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.01)',
-                            border: cardBorder,
-                            borderRadius: '12px',
-                        }}
-                        styles={{ body: { padding: '0' } }}
-                    >
-                        <div style={{ overflowX: 'auto' }}>
-                            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                                <thead>
-                                    <tr style={{ borderBottom: mode === 'dark' ? '1px solid #333' : '1px solid #e0e0e0' }}>
-                                        <th style={{ padding: '12px 16px', textAlign: 'left', color: textColor, fontWeight: 600, fontSize: '13px' }}>Componente</th>
-                                        <th style={{ padding: '12px 16px', textAlign: 'center', color: textColor, fontWeight: 600, fontSize: '13px' }}>Cant.</th>
-                                        <th style={{ padding: '12px 16px', textAlign: 'right', color: textColor, fontWeight: 600, fontSize: '13px' }}>Precio</th>
-                                        <th style={{ padding: '12px 16px', textAlign: 'left', color: textColor, fontWeight: 600, fontSize: '13px' }}>Notas</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {story.bom.map((item, idx) => (
-                                        <tr key={idx} style={{ borderBottom: mode === 'dark' ? '1px solid #222' : '1px solid #f0f0f0' }}>
-                                            <td style={{ padding: '12px 16px', color: secondaryColor }}>{item.component}</td>
-                                            <td style={{ padding: '12px 16px', textAlign: 'center', color: secondaryColor }}>{item.qty}</td>
-                                            <td style={{ padding: '12px 16px', textAlign: 'right', color: accentColor, fontWeight: 500 }}>${item.priceUSD}</td>
-                                            <td style={{ padding: '12px 16px', color: mutedColor, fontSize: '13px' }}>{item.notes || '-'}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                                <tfoot>
-                                    <tr style={{ background: mode === 'dark' ? 'rgba(245,158,11,0.1)' : 'rgba(245,158,11,0.05)' }}>
-                                        <td colSpan={2} style={{ padding: '12px 16px', color: textColor, fontWeight: 600 }}>{t('total_approx')}</td>
-                                        <td style={{ padding: '12px 16px', textAlign: 'right', color: accentColor, fontWeight: 700, fontSize: '16px' }}>
-                                            ${story.bom.reduce((acc, item) => acc + (item.priceUSD * item.qty), 0).toFixed(0)} USD
-                                        </td>
-                                        <td style={{ padding: '12px 16px', color: mutedColor, fontSize: '12px' }}>{t('no_shipping')}</td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                    </Card>
-                </section>
-            )}
+            {story?.bom && <ProjectComponents items={story.bom} />}
 
             {/* Future Features */}
             {story?.futureFeatures && (
@@ -550,17 +504,17 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                     <Space direction="vertical" size={16} style={{ width: '100%' }}>
                         <div>
                             <Title level={4} style={{ color: textColor, marginBottom: 6 }}>
-                                Project Toolbox
+                                {t('technical_files')}
                             </Title>
                             <Text style={{ color: secondaryColor }}>
-                                Archivos técnicos listos para flujo embebido diario: abrir, descargar o visualizar por tipo.
+                                {t('technical_files_description')}
                             </Text>
                         </div>
 
                         {Object.keys(groupedAssets).length === 0 ? (
                             <Empty
                                 image={Empty.PRESENTED_IMAGE_SIMPLE}
-                                description={<span style={{ color: secondaryColor }}>No hay assets técnicos detectados</span>}
+                                description={<span style={{ color: secondaryColor }}>{t('no_technical_files')}</span>}
                             />
                         ) : (
                             <Space direction="vertical" size={12} style={{ width: '100%' }}>
@@ -596,14 +550,14 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                                                             {asset.name}
                                                         </Text>
                                                         <Tag style={{ border: 'none', fontSize: 10 }}>
-                                                            {asset.source === 'download' ? 'public' : 'source'}
+                                                            {t(asset.source === 'download' ? 'download_file' : 'source_file')}
                                                         </Tag>
                                                     </Space>
 
                                                     <Space size={6} wrap>
                                                         {asset.path && (
                                                             <Button size="small" icon={<LinkOutlined />} href={asset.path} target="_blank">
-                                                                Abrir
+                                                                {t('open')}
                                                             </Button>
                                                         )}
                                                         {asset.path && viewerByKind[asset.kind] && (
@@ -617,7 +571,7 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                                                         )}
                                                         {asset.path && (
                                                             <Button size="small" icon={<DownloadOutlined />} href={asset.path} target="_blank">
-                                                                Descargar
+                                                                {t('download')}
                                                             </Button>
                                                         )}
                                                     </Space>
@@ -654,10 +608,10 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                                         MAKER / PRINTS
                                     </Text>
                                     <Text style={{ color: textColor, fontWeight: 600, fontSize: 15, display: 'block' }}>
-                                        Piezas 3D imprimibles
+                                        {t('printable_parts')}
                                     </Text>
                                     <Text style={{ color: secondaryColor, fontSize: 13 }}>
-                                        {projectPrints.length} {projectPrints.length === 1 ? 'pieza' : 'piezas'} de este proyecto con visor 3D y descarga directa.
+                                        {t('printable_parts_description', { count: projectPrints.length })}
                                     </Text>
                                 </div>
                             </div>
@@ -665,7 +619,7 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                                 href={`/${locale}/prints#prints-${slug}`}
                                 style={{ color: accentColor, fontWeight: 600, fontSize: 14, whiteSpace: 'nowrap' }}
                             >
-                                Ver en Maker →
+                                {t('view_in_maker')} →
                             </Link>
                         </div>
                     </Card>
@@ -685,7 +639,7 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                         highlight: (chunks) => <span style={{ color: 'var(--accent-text)' }}>{chunks}</span>
                     })}<br />
                     <a
-                        href="mailto:devsolutionsar@gmail.com?subject=HIOS%20BTDAC%20-%20Consulta"
+                        href={`mailto:devsolutionsar@gmail.com?subject=${encodeURIComponent(`HIOS ${slug} — ${t('want_me_to_build')}`)}`}
                         style={{ color: mode === 'dark' ? '#0ea5e9' : '#0284c7', textDecoration: 'underline' }}
                     >
                         {t('want_me_to_build')}

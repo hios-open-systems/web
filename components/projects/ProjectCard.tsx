@@ -4,7 +4,7 @@ import React from 'react';
 import { Card, Typography, Tag } from 'antd';
 import Image from 'next/image';
 import Link from 'next/link';
-import { BookOutlined, GithubOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import { BookOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import { useLocale, useTranslations } from 'next-intl';
 import { Project, statusConfig } from '@/config/projects';
 import { colors } from '@/config/theme';
@@ -19,6 +19,7 @@ interface ProjectCardProps {
 export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
     const locale = useLocale();
     const t = useTranslations('Projects');
+    const technologies = t.raw(`cards.${project.slug}.technologies`) as string[];
 
     const status = {
         ...statusConfig[project.status],
@@ -135,7 +136,7 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
                                 fontSize: '13px',
                             }}
                         >
-                            &quot;{t(taglineKey)}&quot;
+                            {t(taglineKey)}
                         </Paragraph>
                     )}
 
@@ -147,43 +148,16 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
                             lineHeight: 1.6,
                         }}
                     >
-                        {project.description}
+                        {t(`cards.${project.slug}.description`)}
                     </Paragraph>
 
-                    {project.stats && (project.stats.tutorials || project.stats.files) ? (
-                        <div style={{
-                            display: 'flex',
-                            gap: '16px',
-                            marginBottom: project.learnings ? '16px' : 0,
-                        }}>
-                            {project.stats.tutorials ? (
-                                <Text style={{
-                                    fontSize: '12px',
-                                    color: 'var(--hios-text-muted)',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '4px',
-                                }}>
-                                    <BookOutlined />
-                                    {project.stats.tutorials} {t('tutorials')}
-                                </Text>
-                            ) : null}
-                            {project.stats.files ? (
-                                <Text style={{
-                                    fontSize: '12px',
-                                    color: 'var(--hios-text-muted)',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '4px',
-                                }}>
-                                    <GithubOutlined />
-                                    {project.stats.files} {t('files')}
-                                </Text>
-                            ) : null}
-                        </div>
-                    ) : null}
+                    {project.stats && (
+                        <Text style={{ display: 'block', color: 'var(--hios-text-muted)', fontSize: 12, marginBottom: 16 }}>
+                            <BookOutlined /> {t('cardResources')}
+                        </Text>
+                    )}
 
-                    {project.learnings && (
+                    {technologies.length > 0 && (
                         <div>
                             <Text
                                 className="tech-label"
@@ -196,7 +170,7 @@ export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
                                 {t('learnings')}
                             </Text>
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                                {project.learnings.map((learning) => (
+                                {technologies.map((learning) => (
                                     <Tag
                                         key={learning}
                                         style={{

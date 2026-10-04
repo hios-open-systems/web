@@ -146,15 +146,13 @@ export function ThemeSettings() {
             <section className={styles.section} aria-labelledby="theme-skins">
                 <div className={styles.sectionHeader}>
                     <h2 id="theme-skins" className={styles.sectionTitle}>
-                        Skin
+                        {t('skinTitle')}
                     </h2>
                     <span className={styles.sectionHint}>
-                        {locale === 'es'
-                            ? 'El lenguaje visual completo: tipografías, superficies, texturas.'
-                            : 'The full visual language: typography, surfaces, textures.'}
+                        {t('skinHint')}
                     </span>
                 </div>
-                <div className={styles.skinRow} role="radiogroup" aria-label="Skin">
+                <div className={styles.skinRow} role="radiogroup" aria-label={t('skinTitle')}>
                     {SKINS.map((item) => {
                         const selected = skin === item.id;
                         return (
@@ -178,7 +176,7 @@ export function ThemeSettings() {
                                         {selected ? <CheckOutlined /> : null}
                                     </span>
                                     <span className={styles.skinDescription}>
-                                        {item.description[locale] ?? item.description.en}
+                                        {t(`skins.${item.id}`)}
                                     </span>
                                 </span>
                             </button>

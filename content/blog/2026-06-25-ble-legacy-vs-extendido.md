@@ -1,29 +1,45 @@
 ---
-title: "BLE que no aparecía: legacy vs extendido"
+title: "BLE en el PAD: modos de advertising y diagnóstico"
 date: "2026-06-25"
 lang: "es"
-summary: "Por qué el macropad se veía en Windows pero no en Linux, y cómo el advertising extendido de BLE 5 — más un bug de NimBLE — lo explicaba."
+summary: "Cómo seleccionar advertising legacy, extendido o dual en el firmware del PAD y separar problemas de descubrimiento, conexión y reinicio."
 tags: ["esp32", "ble", "firmware"]
 category: "devlog"
 ---
 
-El HIOS PAD funcionaba por Bluetooth en Windows, pero en Linux ni siquiera aparecía en el escaneo. Mismo hardware, mismo firmware: el clásico "anda en una máquina y en la otra no".
+Cuando el PAD no aparece en un escaneo Bluetooth, conviene separar tres situaciones: el equipo no lo descubre, lo descubre pero no conecta, o el dispositivo se reinicia durante la conexión.
 
-## La pista
+El firmware incluye controles por puerto serie para comparar esos estados sin recompilar. La implementación está en `projects/pad/src/transport/BleHidTransport.cpp`.
 
-El adaptador de Linux no estaba tomando el **advertising legacy** de BLE. Para que apareciera había que emitir **advertising extendido**, la variante de BLE 5. El detalle es que el stack de Bluetooth de **Windows no escanea advertising extendido** para emparejar. Cada modo dejaba afuera a una de las dos plataformas.
+## Modos disponibles
 
-## El bug escondido
+| Comando serie | Acción |
+|---|---|
+| `l` | Seleccionar advertising legacy. |
+| `e` | Seleccionar advertising extendido. |
+| `d` | Seleccionar modo dual. |
+| `s` | Mostrar el estado actual. |
+| `c` | Borrar los vínculos guardados y reiniciar el advertising. |
 
-Encima había un bug conocido de NimBLE-Arduino: el constructor de `NimBLEExtAdvertising` no inicializaba su puntero de callbacks. Al entrar una conexión el advertising terminaba, se disparaba el evento de "adv complete" y se dereferenciaba un puntero basura → `panic LoadProhibited`. El ESP se reiniciaba en cada conexión y, desde afuera, parecía un simple "no conecta".
+El modo predeterminado del código es dual. La presencia de estos modos permite probar compatibilidad con distintos adaptadores y sistemas; no garantiza que todos admitan las mismas formas de descubrimiento o emparejamiento.
 
-## La solución
+## Revisá descubrimiento y conexión por separado
 
-1. **Advertising dual.** Emitir una instancia *legacy* (para Windows) y una *extendida* (para el adaptador de Linux) a la vez. Así empareja en ambos sin tocar nada.
-2. **Matar el crash.** `setCallbacks(nullptr)` apunta el puntero a un callback por defecto (no-op) y elimina el panic.
+1. Abrí el monitor serie y consultá el estado con `s`.
+2. Probá un modo de advertising y ejecutá un nuevo escaneo desde la computadora.
+3. Si el PAD aparece, intentá conectar y observá los mensajes del firmware.
+4. Registrá adaptador, sistema, versión del firmware y modo utilizado.
 
-El modo quedó además conmutable en runtime por serial (`l` / `e` / `d`), para probar en distintas máquinas sin reflashear.
+Si borrás los vínculos con `c`, vas a necesitar emparejar nuevamente el dispositivo. Revisá también los vínculos guardados en la computadora.
 
-## Moraleja
+## Reinicios durante el emparejamiento
 
-"No conecta" eran tres problemas apilados: discovery (legacy vs extendido), un crash que se disfrazaba de timeout, y bonding viejo del lado del host. Separarlos — con `btmon` de un lado y el log serial del otro — fue lo que destrabó todo.
+El código incluye una inicialización explícita de callbacks mediante `setCallbacks(nullptr)`. El comentario de implementación la relaciona con un fallo observado en `NimBLEExtAdvertising`.
+
+Ese detalle debe leerse junto con la versión de NimBLE usada por el proyecto. No corresponde asumir que cualquier fallo de conexión tiene la misma causa ni que el comportamiento se mantiene en todas las versiones.
+
+## Qué registrar para reproducir un problema
+
+Conservá el log serie del reinicio o error, el modo de advertising y la versión de las dependencias. En Linux, una captura de `btmon` puede aportar información del lado del equipo.
+
+Comparar esos registros ayuda a localizar en qué etapa falla la conexión y evita tratar un reinicio del dispositivo como si fuera solamente un problema de escaneo.
