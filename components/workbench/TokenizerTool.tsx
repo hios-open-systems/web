@@ -182,7 +182,7 @@ export function TokenizerTool() {
         <Col xs={24} md={16}>
           <Card
             title={
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
                 <span>3. Inspección Visual de Tokens ({stats.count})</span>
                 <CopyButton value={JSON.stringify(tokens, null, 2)} />
               </div>

@@ -20,7 +20,7 @@ export const LED_BREAKOUTS: Breakout[] = [
     notes: [
       {
         title: 'Nivel 3.3 → 5V',
-        body: 'El S3 saca datos a 3.3V y el WS2812 quiere ~3.5V para un "1": marginal. Solución: **level-shifter 74AHCT125**, o usar **SK6812** (más tolerante), o alimentar la tira a ~4.0–4.3V.',
+        body: 'Con una tira alimentada a **5V** y un ESP32 de **3.3V**, usá un **74AHCT125** para adaptar DIN. El umbral y la corriente dependen de la revisión del LED; cambiar WS2812 por SK6812 no garantiza compatibilidad a 3.3V.',
       },
       {
         title: 'Alimentación',

@@ -18,6 +18,7 @@ export const CONNECTOR_BREAKOUTS: Breakout[] = [
     ],
     notes: [
       { title: 'Detección', body: 'Algunos jacks agregan un contacto que abre/cierra al insertar el plug.' },
+      { title: 'Identificar contactos', body: 'Tip/Ring/Sleeve describen los contactos de audio, no el orden de las patillas de soldadura. Con un plug insertado y el módulo sin alimentación, comprobá continuidad para identificar cada terminal.' },
     ],
   },
   {

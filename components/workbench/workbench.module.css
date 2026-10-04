@@ -520,6 +520,8 @@
 
 .stackFull {
   width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .workspaceHero {
@@ -544,6 +546,7 @@
 }
 
 .sectionCard {
+  min-width: 0;
   border-radius: 14px;
   border: 1px solid var(--hios-border);
   background: #ffffff;
@@ -1133,6 +1136,16 @@
   .toolGrid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Editors must shrink within their cards before switching to a single column. */
+.editorGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.editorGrid > * { min-width: 0; }
+@media (max-width: 720px) {
+  .editorGrid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 480px) {
+  .canvasCard { width: calc(100% + 48px); margin-inline: -24px; border-radius: 0; }
 }
 
 /* Reusable "How to use" guide — collapsible, rendered by ToolHeader. */

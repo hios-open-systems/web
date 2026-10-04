@@ -63,9 +63,11 @@ export function ToolRenderer({ toolId, headerRendered = false }: { toolId: Workb
   if (!Tool) return null;
   return (
     <ToolHeaderRenderedContext.Provider value={headerRendered}>
-      <ToolErrorBoundary>
-        <Tool />
-      </ToolErrorBoundary>
+      <div data-tool-content={toolId} style={{ minWidth: 0, width: '100%' }}>
+        <ToolErrorBoundary>
+          <Tool />
+        </ToolErrorBoundary>
+      </div>
     </ToolHeaderRenderedContext.Provider>
   );
 }

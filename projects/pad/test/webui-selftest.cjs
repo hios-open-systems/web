@@ -88,7 +88,7 @@ const PORT = 8791;
 (async () => {
   await new Promise(r => server.listen(PORT, '127.0.0.1', r));
   let browser;
-  try { browser = await chromium.launch(); }
+  try { browser = await chromium.launch({ channel: process.env.PLAYWRIGHT_CHANNEL }); }
   catch (e) { console.error('✗ No pude lanzar chromium. Corré `npx playwright install chromium`.\n', String(e)); process.exit(2); }
   const page = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 });
   const errs = [];

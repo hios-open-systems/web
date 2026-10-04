@@ -1,50 +1,33 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { useLocale, useTranslations } from 'next-intl';
-import { BREAKOUTS, getBreakout, PINOUTS_ATTRIBUTION } from '@/config/pinouts/modules';
+import { useTranslations } from 'next-intl';
+import { BREAKOUTS, PINOUTS_ATTRIBUTION } from '@/config/pinouts/modules';
+import { PinoutsIntro } from './PinoutsIntro';
+import { useBreakoutNavigation } from './useBreakoutNavigation';
 import { BreakoutList } from './breakout/BreakoutList';
 import { BreakoutViewer } from './breakout/BreakoutViewer';
 import styles from './breakout/breakout.module.css';
 
-const BUILDS = [
-  { slug: 'pad', label: 'HIOS PAD' },
-  { slug: 'btdac', label: 'BTDAC' },
-  { slug: 'speaker', label: 'WiFi Speaker' },
-];
-
 export function PinoutsContent() {
   const t = useTranslations('Pinouts');
-  const locale = useLocale();
-  const [selectedId, setSelectedId] = useState(BREAKOUTS[0].id);
-  const selected = getBreakout(selectedId) ?? BREAKOUTS[0];
+  const { selected, select, ready } = useBreakoutNavigation();
 
   return (
-    <main className={styles.page}>
-      <header className={styles.pageHead}>
-        <span className={styles.eyebrow}>{t('eyebrow')}</span>
-        <h1 className={styles.pageTitle}>{t('title')}</h1>
-        <p className={styles.pageSubtitle}>{t('subtitle')}</p>
-      </header>
-
-      <section className={styles.builds}>
-        <div className={styles.buildsTitle}>{t('builds_title')}</div>
-        <div className={styles.buildsGrid}>
-          {BUILDS.map((build) => (
-            <Link key={build.slug} href={`/${locale}/pinouts/${build.slug}`} prefetch={false} className={styles.buildCard}>
-              <span className={styles.buildName}>{build.label}</span>
-              <span className={styles.buildHint}>{t('builds_hint')}</span>
-            </Link>
-          ))}
-        </div>
-      </section>
+    <section className={styles.page} aria-label={t('title')}>
+      <PinoutsIntro />
 
       <div className={styles.layout}>
+        <select className={styles.mobileSelect} disabled={!ready} value={selected.id} onChange={(event) => select(event.target.value)} aria-label={t('title')}>
+          {BREAKOUTS.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
+        </select>
+        <details className={styles.mobileBrowse}>
+          <summary>{t('search_placeholder')}</summary>
+          <BreakoutList selectedId={selected.id} onSelect={select} disabled={!ready} />
+        </details>
         <aside className={styles.sidebar}>
-          <BreakoutList selectedId={selected.id} onSelect={setSelectedId} />
+          <BreakoutList selectedId={selected.id} onSelect={select} disabled={!ready} />
         </aside>
-        <div className={styles.viewerCol}>
+        <div className={styles.viewerCol} id="pinout-detail">
           <BreakoutViewer breakout={selected} />
         </div>
       </div>
@@ -55,6 +38,6 @@ export function PinoutsContent() {
           {PINOUTS_ATTRIBUTION.source}
         </a>
       </p>
-    </main>
+    </section>
   );
 }

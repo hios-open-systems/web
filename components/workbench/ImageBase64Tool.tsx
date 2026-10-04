@@ -140,7 +140,7 @@ export function ImageBase64Tool() {
                   background: 'var(--hios-bg-secondary)',
                 }}
               />
-              <div style={{ flex: 1, minWidth: 200 }}>
+              <div style={{ flex: '1 1 200px', minWidth: 0 }}>
                 <Space direction="vertical" size={6}>
                   {[
                     { label: t('labelName'),       val: imageInfo.name },

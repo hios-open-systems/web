@@ -8,7 +8,8 @@
 import { execSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 
-const EXCLUDED = /^test:e2e/;
+// Software SEO checks consume production HTML and run in CI's build job.
+const EXCLUDED = /^(test:e2e|test:software$)/;
 
 // Los self-tests corren con --experimental-strip-types, que necesita Node
 // >=22.6. Sin este chequeo, un runner en Node 20 falla los 27 con errores de

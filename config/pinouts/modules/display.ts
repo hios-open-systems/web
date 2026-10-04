@@ -5,21 +5,21 @@ export const DISPLAY_BREAKOUTS: Breakout[] = [
     id: 'ili9488',
     name: 'TFT ILI9488 4" (SPI)',
     kind: 'display',
-    summary: 'Pantalla 480×320 18-bit por SPI. Trae regulador y level-shifter (VCC a 5V).',
+    summary: 'Pantalla 480×320 por SPI. Alimentación, backlight y adaptación de niveles dependen de la variante del módulo.',
     form: 'módulo 4" SPI',
     iface: 'SPI',
-    voltage: '5V (VCC) / lógica 3.3V',
+    voltage: 'VCC según variante / lógica ESP32 3.3V',
     usedBy: ['pad'],
     datasheetUrl: 'https://www.buydisplay.com/download/ic/ILI9488.pdf',
     pins: [
-      { name: 'VCC', role: 'pwr5', to: '5V (regulador + level-shifter a bordo)' },
+      { name: 'VCC', role: 'pwr5', to: '5V en la variante del PAD con regulador; confirmar el rango de tu módulo antes de conectar' },
       { name: 'GND', role: 'gnd', to: 'masa común' },
       { name: 'CS', role: 'spi', to: 'chip-select' },
       { name: 'RESET', role: 'io', to: 'reset' },
       { name: 'DC', role: 'io', alt: 'RS', to: 'data/command' },
       { name: 'SDI', role: 'spi', alt: 'MOSI', to: 'datos MCU → TFT' },
       { name: 'SCK', role: 'spi', alt: 'SCL', to: 'clock SPI' },
-      { name: 'LED', role: 'pwm', to: 'backlight (PWM; la corriente sale de VCC)' },
+      { name: 'LED', role: 'pwm', to: 'backlight / control de brillo (según módulo; ver nota)' },
       { name: 'SDO', role: 'nc', alt: 'MISO', to: 'NC (solo escribimos)', req: false },
       { name: 'T_CLK', role: 'spi', to: 'touch: clock (no usado en el pad)', req: false },
       { name: 'T_CS', role: 'spi', to: 'touch: chip-select (no usado en el pad)', req: false },
@@ -30,7 +30,7 @@ export const DISPLAY_BREAKOUTS: Breakout[] = [
     notes: [
       {
         title: 'Solo escritura',
-        body: 'MISO (SDO) queda sin conectar (`TFT_MISO=-1`). El backlight LED se controla por PWM (LEDC).',
+        body: 'En el PAD, MISO (SDO) queda sin conectar (`TFT_MISO=-1`). El pin LED puede ser control lógico o alimentación del backlight según la placa: verificá el esquema y usá un driver si lleva corriente de carga. No alimentar el backlight directamente desde un GPIO.',
       },
       {
         title: 'Touch',
@@ -57,9 +57,14 @@ export const DISPLAY_BREAKOUTS: Breakout[] = [
     notes: [
       {
         title: 'Dirección I2C',
-        body: 'Backpack PCF8574: dirección **0x27** (a veces 0x3F). Si no aparece, escaneá el bus.',
+        body: 'PCF8574: **0x20–0x27**; PCF8574A: **0x38–0x3F**. A0/A1/A2 fijan la dirección. Escaneá el bus en vez de asumir 0x27.',
       },
       { title: 'Contraste', body: 'Potenciómetro azul en la cara de atrás del backpack.' },
+      {
+        title: 'I2C con ESP32',
+        body: 'Muchos backpacks tienen pull-ups de SDA/SCL a **5V**. Usá un adaptador de nivel bidireccional entre el backpack de 5V y el ESP32 de 3.3V. No conectes líneas con pull-ups a 5V directamente al MCU.',
+        warn: true,
+      },
     ],
   },
 ];
