@@ -7,17 +7,18 @@ export async function getTranslatedMetadata(
   path: PagePath,
   namespace: string,
   descriptionKey = 'description',
+  titleKey = 'title',
 ) {
   const t = await getTranslations({ locale, namespace });
-  if (!t.has('title') || !t.has(descriptionKey)) {
+  if (!t.has(titleKey) || !t.has(descriptionKey)) {
     throw new Error(`Missing SEO translations: ${locale}.${namespace}`);
   }
-  return createPageMetadata(locale, path, `${t('title')} | HIOS`, t(descriptionKey));
+  return createPageMetadata(locale, path, `${t(titleKey)} | HIOS`, t(descriptionKey));
 }
 
-export function translatedMetadata(path: PagePath, namespace: string, descriptionKey = 'description') {
+export function translatedMetadata(path: PagePath, namespace: string, descriptionKey = 'description', titleKey = 'title') {
   return async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
     const { locale } = await params;
-    return getTranslatedMetadata(locale, path, namespace, descriptionKey);
+    return getTranslatedMetadata(locale, path, namespace, descriptionKey, titleKey);
   };
 }

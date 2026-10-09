@@ -1,5 +1,9 @@
 import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { ExploreActivities } from '@/components/landing/ExploreActivities';
+import { translatedMetadata } from '@/lib/seo-metadata';
+
+export const generateMetadata = translatedMetadata('/explore', 'Workspace', 'intro', 'explore');
+
 export default async function ExplorePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);

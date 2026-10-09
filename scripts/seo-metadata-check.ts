@@ -3,7 +3,9 @@ import { readFileSync } from 'node:fs';
 
 type Messages = { [key: string]: string | Messages };
 const cache = new Map<string, Messages>();
-const pageNamespaces: Record<string, [string, string]> = {
+const pageNamespaces: Record<string, [string, string, string?]> = {
+  '/explore': ['Workspace', 'intro', 'explore'],
+  '/workbench/spaces': ['Workspace', 'intro'],
   '': ['Hero', 'subtitle'],
   '/tools': ['Tools', 'subtitle'], '/projects': ['Projects', 'subtitle'],
   '/workbench': ['Workbench.landing', 'subtitle'], '/guestbook': ['Guestbook', 'subtitle'],
@@ -57,8 +59,8 @@ export function verifyPageMetadata(html: string, route: string) {
   const config = pageNamespaces[path] ?? (path.startsWith('/workbench/')
     ? [`Workbench.packs.${segments[1]}`, 'description'] : undefined);
   if (!config) return; // Articles and project descriptions retain their original content language.
-  const [namespace, descriptionKey] = config;
-  const translatedTitle = message(locale, `${namespace}.title`);
+  const [namespace, descriptionKey, titleKey = 'title'] = config;
+  const translatedTitle = message(locale, `${namespace}.${titleKey}`);
   assert.equal(title, namespace.startsWith('Pinouts.') ? translatedTitle : `${translatedTitle} | HIOS`, route);
   assert.equal(tags.description, message(locale, `${namespace}.${descriptionKey}`), route);
 }

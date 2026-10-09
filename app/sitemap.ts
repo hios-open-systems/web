@@ -14,6 +14,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '',
     '/tools',
     '/workbench',
+    '/explore',
+    '/workbench/spaces',
     '/calculators',
     '/composer',
     '/pinouts',
