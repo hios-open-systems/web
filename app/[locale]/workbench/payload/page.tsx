@@ -17,7 +17,7 @@ export default async function PayloadPage({ params }: PageProps) {
   setRequestLocale(locale);
 
   return (
-    <main style={{ maxWidth: 1180, margin: '0 auto', padding: '32px 24px 56px' }}>
+    <main style={{ maxWidth: 1440, margin: '0 auto', padding: '32px 24px 56px' }}>
       <ToolUsageTracker toolId="payload" />
       <Suspense fallback={null}>
         <PayloadLab />

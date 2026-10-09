@@ -11,6 +11,12 @@ async function clearLocalStorages(): Promise<void> {
     try {
         window.localStorage.clear();
         window.sessionStorage.clear();
+        await new Promise<void>((resolve, reject) => {
+            const request = indexedDB.deleteDatabase('hios-workspaces');
+            request.onsuccess = () => resolve();
+            request.onerror = () => reject(request.error);
+            request.onblocked = () => reject(new Error('Close other OpenHIOS tabs and retry'));
+        });
     } catch {
         // bloqueado: nada que borrar
     }

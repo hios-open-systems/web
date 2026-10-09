@@ -1,4 +1,5 @@
 'use client';
+import { ToolPresetBinding, textField } from '@/components/workbench/ToolPresetBinding';
 
 import React, { useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
@@ -96,6 +97,7 @@ export function TokenizerTool() {
 
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
+      <ToolPresetBinding toolId="token-inspector" fields={{ text: textField(text, setText), modelType: textField(modelType, setModelType) }} />
       <ToolHeader
         eyebrow={t('eyebrow')}
         title={t('title')}

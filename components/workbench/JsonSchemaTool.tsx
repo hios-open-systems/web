@@ -8,76 +8,13 @@ import { useTheme } from '@/lib/ThemeContext';
 import { ToolHeader } from './ToolHeader';
 import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import styles from './workbench.module.css';
+import { useToolBridge } from '@/lib/hooks/useToolBridge';
+import { PresetControls } from './PresetControls';
 
 const { Text } = Typography;
 const { TextArea } = Input;
 
-// ── JSON Schema generation ────────────────────────────────────────────────────
-
-type JSONValue = string | number | boolean | null | JSONValue[] | { [k: string]: JSONValue };
-
-interface SchemaNode {
-  [key: string]: unknown;
-}
-
-function inferSchema(value: JSONValue, rootName = 'Root', depth = 0): SchemaNode {
-  if (value === null) return { type: 'null' };
-  if (typeof value === 'boolean') return { type: 'boolean' };
-  if (typeof value === 'number') {
-    return Number.isInteger(value) ? { type: 'integer' } : { type: 'number' };
-  }
-  if (typeof value === 'string') {
-    // Try to detect format hints
-    const node: SchemaNode = { type: 'string' };
-    if (/^\d{4}-\d{2}-\d{2}(T[\d:.Z+-]+)?$/.test(value)) node.format = 'date-time';
-    else if (/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value)) node.format = 'email';
-    else if (/^https?:\/\//.test(value)) node.format = 'uri';
-    else if (value.length > 0 && value.length <= 30) node.examples = [value];
-    return node;
-  }
-  if (Array.isArray(value)) {
-    if (value.length === 0) return { type: 'array', items: {} };
-    // Merge all item schemas
-    const itemSchemas = value.map((item) => inferSchema(item as JSONValue, rootName, depth + 1));
-    const merged = mergeSchemas(itemSchemas);
-    return { type: 'array', items: merged };
-  }
-  // Object
-  const obj = value as { [k: string]: JSONValue };
-  const properties: Record<string, SchemaNode> = {};
-  const required: string[] = [];
-  for (const [key, val] of Object.entries(obj)) {
-    properties[key] = inferSchema(val, key, depth + 1);
-    if (val !== null && val !== undefined) required.push(key);
-  }
-  const node: SchemaNode = {
-    type: 'object',
-    properties,
-  };
-  if (required.length > 0) node.required = required;
-  if (depth === 0) node.additionalProperties = false;
-  return node;
-}
-
-function mergeSchemas(schemas: SchemaNode[]): SchemaNode {
-  const types = Array.from(new Set(schemas.map((s) => s.type as string)));
-  if (types.length === 1) return schemas[0];
-  return { oneOf: schemas };
-}
-
-function generate(json: string, rootName: string): { ok: true; schema: string } | { ok: false; error: string } {
-  try {
-    const parsed = JSON.parse(json) as JSONValue;
-    const schema = {
-      $schema: 'https://json-schema.org/draft-07/schema#',
-      title: rootName || 'Root',
-      ...inferSchema(parsed, rootName),
-    };
-    return { ok: true, schema: JSON.stringify(schema, null, 2) };
-  } catch (e) {
-    return { ok: false, error: (e as Error).message };
-  }
-}
+import { generateSchema as generate } from '@/lib/workbench/jsonSchema';
 
 const EXAMPLE_JSON = JSON.stringify({
   id: 42,
@@ -102,6 +39,7 @@ export function JsonSchemaTool() {
 
   const [json, setJson] = useState(EXAMPLE_JSON);
   const [rootName, setRootName] = useState('MyModel');
+  useToolBridge('json-schema', values => { if (values.input !== undefined) setJson(values.input); if (values.rootName) setRootName(values.rootName); });
 
   const result = useMemo(() => generate(json, rootName), [json, rootName]);
 
@@ -134,6 +72,7 @@ export function JsonSchemaTool() {
         locality="local"
         actions={
           <Space wrap>
+            <PresetControls toolId="json-schema" settings={{ rootName }} content={{ input: json }} />
             <Button onClick={() => setJson(EXAMPLE_JSON)}>{t('loadExample')}</Button>
             <Button onClick={() => setJson('')}>{t('clear')}</Button>
           </Space>

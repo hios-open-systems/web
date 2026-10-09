@@ -67,3 +67,4 @@ PENDING.md
 
 # Local Cloudflare runtime state
 /.wrangler/
+/.next-workspaces/

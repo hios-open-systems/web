@@ -3,13 +3,14 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Card, Input, Segmented, Space, Typography, message } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { ENCODER_MODES, type EncoderMode, decode, encode, isEncoderMode } from '@/lib/workbench/encoder';
 import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import { ToolHeader } from './ToolHeader';
-import { UrlPresets } from '@/components/common/UrlPresets';
+import { PresetControls } from './PresetControls';
+import { useToolBridge } from '@/lib/hooks/useToolBridge';
 import { SendToMenu } from '@/components/common/SendToMenu';
 import styles from './workbench.module.css';
 
@@ -21,8 +22,6 @@ type Dir = 'encode' | 'decode';
 export function EncoderTool() {
   const t = useTranslations('Workbench.encoder');
   const { mode: themeMode } = useTheme();
-  const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
   const hydratedFromUrl = useRef(false);
   const [messageApi, contextHolder] = message.useMessage();
@@ -30,6 +29,8 @@ export function EncoderTool() {
   const [mode, setMode] = useState<EncoderMode>('base64');
   const [dir, setDir] = useState<Dir>('encode');
   const [input, setInput] = useState('Hola, HIOS 👋');
+
+  useToolBridge('encoder', v => { if (v.input !== undefined) setInput(v.input); if (v.mode && isEncoderMode(v.mode)) setMode(v.mode); if (v.dir === 'encode' || v.dir === 'decode') setDir(v.dir); });
 
   useEffect(() => {
     if (hydratedFromUrl.current) return;
@@ -42,17 +43,6 @@ export function EncoderTool() {
     if (i !== null) setInput(i);
   }, [searchParams]);
 
-  useEffect(() => {
-    if (!hydratedFromUrl.current) return;
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('mode', mode);
-    params.set('dir', dir);
-    params.set('input', input);
-    const next = params.toString();
-    if (next !== searchParams.toString()) {
-      router.replace(`${pathname}?${next}`, { scroll: false });
-    }
-  }, [mode, dir, input, pathname, router, searchParams]);
 
   const output = useMemo(() => {
     if (!input) return { value: '', error: '' };
@@ -91,7 +81,7 @@ export function EncoderTool() {
           <Space wrap>
             <Button onClick={() => setDir(dir === 'encode' ? 'decode' : 'encode')}>{t('swap')}</Button>
             {output.value ? <SendToMenu kind="json" getValue={() => output.value} /> : null}
-            <UrlPresets storageKey="encoder" />
+            <PresetControls toolId="encoder" settings={{ mode, dir }} content={{ input }} />
           </Space>
         }
       />

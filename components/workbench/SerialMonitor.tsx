@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import styles from './serialMonitor.module.css';
+import { ToolPresetBinding, numberField, booleanField } from './ToolPresetBinding';
 
 interface SerialPort {
   open(options: { baudRate: number }): Promise<void>;
@@ -23,6 +24,18 @@ export function SerialMonitor() {
   const terminalRef = useRef<HTMLDivElement>(null);
   const readerRef = useRef<ReadableStreamDefaultReader | null>(null);
   const outputStreamRef = useRef<WritableStreamDefaultWriter | null>(null);
+  const portRef = useRef<SerialPort | null>(null);
+  const streamsRef = useRef<Promise<void>[]>([]);
+  const generation = useRef(0);
+  const connecting = useRef(false);
+
+  useEffect(() => () => {
+    generation.current++;
+    void readerRef.current?.cancel().catch(() => {});
+    void outputStreamRef.current?.close().catch(() => {});
+    const active = portRef.current;
+    void Promise.allSettled(streamsRef.current).then(() => active?.close()).catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (typeof navigator === 'undefined' || !('serial' in navigator)) {
@@ -37,30 +50,37 @@ export function SerialMonitor() {
   }, [logs]);
 
   const connect = async () => {
+    if (connecting.current || portRef.current) return;
+    connecting.current = true;
+    const ticket = ++generation.current;
     try {
       const navSerial = (navigator as unknown as { serial: { requestPort: () => Promise<SerialPort> } }).serial;
       const p = await navSerial.requestPort();
       await p.open({ baudRate });
+      if (ticket !== generation.current) { await p.close(); return; }
+      portRef.current = p;
       setPort(p);
 
       // Setup output stream
       const textEncoder = new TextEncoderStream();
-      textEncoder.readable.pipeTo(p.writable);
+      const outputPipe = textEncoder.readable.pipeTo(p.writable).catch(() => {});
       outputStreamRef.current = textEncoder.writable.getWriter();
 
       // Setup input stream
       const textDecoder = new TextDecoderStream();
-      p.readable.pipeTo(textDecoder.writable);
+      const inputPipe = p.readable.pipeTo(textDecoder.writable).catch(() => {});
+      streamsRef.current = [inputPipe, outputPipe];
       const reader = textDecoder.readable.getReader();
       readerRef.current = reader;
 
       readLoop(reader);
     } catch (e) {
       console.error('Connection failed:', e);
-    }
+    } finally { connecting.current = false; }
   };
 
   const disconnect = async () => {
+    generation.current++;
     try {
       if (readerRef.current) {
         await readerRef.current.cancel();
@@ -71,7 +91,9 @@ export function SerialMonitor() {
         outputStreamRef.current = null;
       }
       if (port) {
+        await Promise.allSettled(streamsRef.current);
         await port.close();
+        portRef.current = null;
         setPort(null);
       }
     } catch (e) {
@@ -87,7 +109,7 @@ export function SerialMonitor() {
         const { value, done } = await reader.read();
         if (done) break;
         if (value) {
-          setLogs((prev) => prev + value);
+          setLogs((prev) => (prev + value).slice(-1_000_000));
         }
       }
     } catch (error) {
@@ -123,6 +145,7 @@ export function SerialMonitor() {
 
   return (
     <div className={styles.container}>
+      <ToolPresetBinding toolId="serial-monitor" fields={{ baudRate: numberField(baudRate, setBaudRate, 300, 2_000_000), appendNewline: booleanField(appendNewline, setAppendNewline) }} />
       <div className={styles.header}>
         <div className={styles.controls}>
           <select

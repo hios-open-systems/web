@@ -1,4 +1,5 @@
 'use client';
+import { ToolPresetBinding, textField } from '@/components/workbench/ToolPresetBinding';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Card, Input, Space, Tag, Typography, message } from 'antd';
@@ -50,6 +51,7 @@ export function WhoisRdapTool() {
   return (
     <Space direction="vertical" size={20} className={styles.stackFull}>
       {contextHolder}
+      <ToolPresetBinding toolId="whois-rdap" fields={{ domain: textField(domain, setDomain) }} />
       <ToolHeader
         eyebrow="Network Lab"
         title="WHOIS / RDAP"

@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 import { getPostSlugs, getPostBySlug } from '@/lib/blog';
 import { BlogPost } from '@/components/blog/BlogPost';
 import { createPageMetadata } from '@/lib/seo';
+import { RelatedResources } from '@/components/workbench/RelatedResources';
 
 const locales = ['en', 'es', 'de', 'it'];
 
@@ -36,5 +37,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
         ]} />
         <JsonLd data={createArticleData(locale, path, post)} />
         <BlogPost post={post} locale={locale} />
+        <RelatedResources resourceId={`article:${slug}`} toolIds={/ia|llm|ollama|tinyml|esp32/.test(post.tags.join(' '))
+            ? ['llm-vram-calc', 'token-inspector', 'esp32-llm-bridge'] : /audio|music/.test(post.tags.join(' '))
+            ? ['guitar-tuner', 'note-frequency', 'chiptune'] : ['notes', 'patterns', 'payload']} />
     </>;
 }

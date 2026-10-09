@@ -20,7 +20,7 @@ export function useCurrentUser() {
 
     useEffect(() => {
         let cancelled = false;
-        fetch('/api/auth/me', { credentials: 'same-origin' })
+        fetch('/api/auth/me', { credentials: 'same-origin', signal: AbortSignal.timeout(10_000) })
             .then((res) => (res.ok ? res.json() : { user: null }))
             .then((data: MeResponse) => {
                 if (!cancelled) setUser(data.user);

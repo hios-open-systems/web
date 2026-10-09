@@ -1,4 +1,5 @@
 'use client';
+import { ToolPresetBinding, textField } from '@/components/workbench/ToolPresetBinding';
 
 import React, { useMemo, useState } from 'react';
 import { Button, Card, Col, Input, Row, Slider, Space, Tooltip, Typography } from 'antd';
@@ -143,6 +144,7 @@ export function ColorTool() {
 
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
+      <ToolPresetBinding toolId="color" fields={{ hex: textField(hex, value => { applyHex(value); setHexInput(value); }) }} />
       <ToolHeader
         eyebrow={t('badge')}
         title={t('title')}

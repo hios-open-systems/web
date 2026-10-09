@@ -1,4 +1,5 @@
 'use client';
+import { ToolPresetBinding, textField } from '@/components/workbench/ToolPresetBinding';
 
 import React, { useMemo, useState } from 'react';
 import { Button, Card, Input, Space, Typography, message } from 'antd';
@@ -46,6 +47,7 @@ export function Ipv6ExpandTool() {
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
       {contextHolder}
+      <ToolPresetBinding toolId="ipv6-expand" fields={{ addr: textField(addr, setAddr) }} />
       <ToolHeader
         eyebrow={t('badge')}
         title={t('title')}

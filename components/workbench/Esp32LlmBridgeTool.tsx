@@ -1,4 +1,5 @@
 'use client';
+import { ToolPresetBinding, textField, numberField } from '@/components/workbench/ToolPresetBinding';
 
 import React, { useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
@@ -206,6 +207,7 @@ lib_deps =
 
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
+      <ToolPresetBinding toolId="esp32-llm-bridge" fields={{ ssid: textField(ssid, setSsid), password: textField(password, setPassword), hostIp: textField(hostIp, setHostIp), model: textField(model, setModel), systemPrompt: textField(systemPrompt, setSystemPrompt), port: numberField(port, setPort, 1, 65535), btnGpio: numberField(btnGpio, setBtnGpio, 0, 48), ledGpio: numberField(ledGpio, setLedGpio, 0, 48), sdaGpio: numberField(sdaGpio, setSdaGpio, 0, 48), sclGpio: numberField(sclGpio, setSclGpio, 0, 48) }} />
       <ToolHeader
         eyebrow={t('eyebrow')}
         title={t('title')}

@@ -4,6 +4,8 @@ import nextDynamic from 'next/dynamic';
 import { setRequestLocale } from 'next-intl/server';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { createWebsiteData } from '@/lib/structured-data';
+import { WorkbenchReturn } from '@/components/landing/WorkbenchReturn';
+import { ExploreActivities } from '@/components/landing/ExploreActivities';
 
 
 const locales = ['en', 'es', 'de', 'it'];
@@ -23,10 +25,6 @@ const HomeToolDeepLink = nextDynamic(
   { ssr: true },
 );
 
-const HeroRandomTool = nextDynamic(
-  () => import('@/components/landing/HeroRandomTool').then((mod) => ({ default: mod.HeroRandomTool })),
-  { ssr: true },
-);
 
 const ToolShowcase = nextDynamic(
   () => import('@/components/landing/ToolShowcase').then((mod) => ({ default: mod.ToolShowcase })),
@@ -53,7 +51,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         <HomeToolDeepLink />
       </React.Suspense>
       <HeroSection />
-      <HeroRandomTool />
+      <div style={{ maxWidth: 1440, margin: '0 auto', padding: 24 }}><WorkbenchReturn /><ExploreActivities /></div>
       <ProjectsGrid />
       <ToolShowcase />
       <HomeQuickAccess />

@@ -1,4 +1,5 @@
 'use client';
+import { ToolPresetBinding, textField } from '@/components/workbench/ToolPresetBinding';
 
 import React, { useMemo, useState } from 'react';
 import { Button, Card, Input, Space, Table, Tag, Typography, message } from 'antd';
@@ -117,6 +118,7 @@ export function UrlParserTool() {
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
       {contextHolder}
+      <ToolPresetBinding toolId="url-parser" fields={{ rawUrl: textField(rawUrl, setRawUrl) }} />
       <ToolHeader
         eyebrow={t('badge')}
         title={t('title')}

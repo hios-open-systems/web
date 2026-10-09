@@ -1,4 +1,5 @@
 'use client';
+import { ToolPresetBinding, textField, numberField, booleanField } from '@/components/workbench/ToolPresetBinding';
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { readRaw, writeRaw, removeRaw } from '@/lib/storage/safeLocalStorage';
@@ -228,6 +229,7 @@ export function SiteCheckerTool() {
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
       {contextHolder}
+      <ToolPresetBinding toolId="site-checker" fields={{ notifyOnFailure: booleanField(notifyOnFailure, setNotifyOnFailure), urlInput: textField(urlInput, setUrlInput), intervalSeconds: numberField(intervalSeconds, setIntervalSeconds, 5, 3600), timeoutMs: numberField(timeoutMs, setTimeoutMs, 100, 60000) }} />
       <ToolHeader
         eyebrow={t('badge')}
         title={t('title')}

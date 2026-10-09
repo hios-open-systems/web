@@ -14,6 +14,8 @@ import {
 import { HowItWorks } from './HowItWorks';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
+import { PresetControls } from './PresetControls';
+import { useToolBridge } from '@/lib/hooks/useToolBridge';
 
 const { Text } = Typography;
 
@@ -62,6 +64,16 @@ export function ResistorColorCodeTool() {
         : [sel.d1, sel.d2, sel.d3, sel.mult, sel.tol],
     [bandCount, sel],
   );
+  useToolBridge('resistor-color-code', values => {
+    if (values.bandCount === '4' || values.bandCount === '5') setBandCount(Number(values.bandCount) as 4 | 5);
+    try {
+      const candidate: unknown = JSON.parse(values.colors ?? 'null');
+      if (!candidate || typeof candidate !== 'object') return;
+      const selected = candidate as Record<BandKey, ResistorColor>;
+      if (DIGIT_COLORS.includes(selected.d1) && DIGIT_COLORS.includes(selected.d2) && DIGIT_COLORS.includes(selected.d3)
+        && MULTIPLIER_COLORS.includes(selected.mult) && TOLERANCE_COLORS.includes(selected.tol)) setSel(selected);
+    } catch { /* Invalid imported selection is ignored. */ }
+  });
 
   const result = useMemo(() => bandsToValue(bands), [bands]);
 
@@ -85,6 +97,7 @@ export function ResistorColorCodeTool() {
 
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
+      <PresetControls toolId="resistor-color-code" settings={{ bandCount: String(bandCount), colors: JSON.stringify(sel) }} />
       <ToolHeader
         eyebrow={t('badge')}
         title={t('title')}

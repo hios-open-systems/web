@@ -1,4 +1,5 @@
 'use client';
+import { ToolPresetBinding, textField } from '@/components/workbench/ToolPresetBinding';
 
 import React, { useMemo, useState } from 'react';
 import { Button, Card, Input, Space, Tabs, Tooltip, Typography } from 'antd';
@@ -89,6 +90,7 @@ export function TimestampTool() {
 
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
+      <ToolPresetBinding toolId="timestamp" fields={{ rawInput: textField(rawInput, setRawInput) }} />
       <ToolHeader
         eyebrow={t('badge')}
         title={t('title')}

@@ -7,6 +7,9 @@ import { solve, type OhmsInput, type OhmsValues } from '@/lib/algorithms/ohmsLaw
 import { HowItWorks } from './HowItWorks';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
+import { PresetControls } from './PresetControls';
+import { useToolBridge } from '@/lib/hooks/useToolBridge';
+import { parseOhms } from '@/lib/workspaces/validators';
 
 const { Text } = Typography;
 
@@ -27,6 +30,7 @@ function fmt(n: number): string {
 export function OhmsLawTool() {
   const t = useTranslations('Workbench.ohmsLaw');
   const [vals, setVals] = useState<Record<Field, number | null>>({ v: 12, i: null, r: 4, p: null });
+  useToolBridge('ohms-law', data => { const next = parseOhms(data.values ?? ''); if (next) setVals(next); });
 
   const result = useMemo(() => {
     const keys = (Object.keys(vals) as Field[]).filter(
@@ -53,6 +57,7 @@ export function OhmsLawTool() {
 
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
+      <PresetControls toolId="ohms-law" settings={{ values: JSON.stringify(vals) }} />
       <ToolHeader
         eyebrow={t('badge')}
         title={t('title')}

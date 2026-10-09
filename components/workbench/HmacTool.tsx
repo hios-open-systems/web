@@ -1,4 +1,5 @@
 'use client';
+import { ToolPresetBinding, textField } from '@/components/workbench/ToolPresetBinding';
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Card, Input, Segmented, Space, Typography, message } from 'antd';
@@ -60,6 +61,7 @@ export function HmacTool() {
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
       {contextHolder}
+      <ToolPresetBinding toolId="hmac" fields={{ secret: textField(secret, setSecret), text: textField(text, setText), algo: textField(algo, setAlgo, ['SHA-256', 'SHA-384', 'SHA-512'], false) }} />
       <ToolHeader
         eyebrow={t('badge')}
         title={t('title')}

@@ -7,8 +7,14 @@ import { useLocale, useTranslations } from 'next-intl';
 import { usePathname, useRouter } from 'next/navigation';
 import { workbenchSections, workbenchTools } from '@/config/workbench';
 import { EMPTY_USAGE, readUsage } from '@/lib/workbench/usage';
+import { activityFor, rankEntries } from '@/lib/workbench/discovery';
+import { toolAliases } from '@/lib/workbench/toolProfiles';
+import { useWorkspaceFavorites } from '@/lib/hooks/useWorkspaceFavorites';
+import { trackWorkbench } from '@/lib/workbench/events';
 
 interface Entry {
+  id?: string;
+  keywords?: string;
   href: string;
   label: string;
   hint: string;
@@ -43,6 +49,8 @@ export function CommandPalette() {
   const t = useTranslations('CommandPalette');
   const packs = useTranslations('Workbench.packs');
   const workbench = useTranslations('Workbench');
+  const workspace = useTranslations('Workspace');
+  const favorites = useWorkspaceFavorites();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [active, setActive] = useState(0);
@@ -58,10 +66,11 @@ export function CommandPalette() {
       return 1000;
     };
     const tools: Entry[] = workbenchTools
-      .filter((tool) => tool.id !== 'embedded')
       .slice()
       .sort((a, b) => rank(a.id) - rank(b.id))
       .map((tool) => ({
+        id: tool.id,
+        keywords: `${workspace(`activities.${activityFor(tool)}`)} ${toolAliases[tool.id] ?? ''}`,
         href: `/${locale}${tool.href}`,
         label: packs(`${tool.id}.title`),
         hint: packs(`${tool.id}.description`),
@@ -79,16 +88,13 @@ export function CommandPalette() {
       hint: workbench(`sections.${section.id}.description`),
       group: t('sectionsGroup'),
     }));
-    return [...pages, ...sections, ...tools];
-  }, [locale, packs, t, usage, workbench]);
+    return [{ href: `/${locale}/workbench/spaces`, label: workspace('title'), hint: '', group: t('pagesGroup') },
+      { href: `/${locale}/explore`, label: workspace('explore'), hint: '', group: t('pagesGroup') }, ...tools, ...pages, ...sections];
+  }, [locale, packs, t, usage, workbench, workspace]);
 
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return entries;
-    return entries.filter(
-      (e) => e.label.toLowerCase().includes(q) || e.hint.toLowerCase().includes(q)
-    );
-  }, [entries, query]);
+    return rankEntries(entries, query, favorites.pinned, usage.recent);
+  }, [entries, query, usage, favorites.pinned]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -121,10 +127,11 @@ export function CommandPalette() {
 
   const go = useCallback(
     (href: string) => {
+      if (query.trim()) trackWorkbench('search_open');
       setOpen(false);
       if (href !== pathname) router.push(href);
     },
-    [router, pathname]
+    [router, pathname, query]
   );
 
   const onListKey = (e: React.KeyboardEvent) => {
