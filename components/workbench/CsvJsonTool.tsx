@@ -1,4 +1,5 @@
 'use client';
+import { ToolPresetBinding, textField, booleanField } from '@/components/workbench/ToolPresetBinding';
 
 import React, { useMemo, useState } from 'react';
 import { Button, Card, Input, Segmented, Select, Space, Switch, Typography, message } from 'antd';
@@ -76,6 +77,7 @@ export function CsvJsonTool() {
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
       {contextHolder}
+      <ToolPresetBinding toolId="csv-json" fields={{ header: booleanField(header, setHeader), csvText: textField(csvText, setCsvText), jsonText: textField(jsonText, setJsonText), delimiter: textField(delimiter, setDelimiter), direction: textField(direction, setDirection, ['toJson', 'toCsv'], false) }} />
       <ToolHeader
         eyebrow={t('badge')}
         title={t('title')}

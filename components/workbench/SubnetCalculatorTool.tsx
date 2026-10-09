@@ -1,4 +1,5 @@
 'use client';
+import { ToolPresetBinding, textField, numberField } from '@/components/workbench/ToolPresetBinding';
 
 import { useMemo, useState } from 'react';
 import { Card, Input, InputNumber, Slider, Space, Tag, Typography } from 'antd';
@@ -15,6 +16,7 @@ export function SubnetCalculatorTool() {
 
   return (
     <Space direction="vertical" size={20} className={styles.stackFull}>
+      <ToolPresetBinding toolId="subnet-calculator" fields={{ address: textField(address, setAddress), prefix: numberField(prefix, setPrefix, 0, 32) }} />
       <ToolHeader
         eyebrow="Network Lab"
         title="Calculadora IPv4/Subnet"

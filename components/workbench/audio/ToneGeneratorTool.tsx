@@ -1,4 +1,5 @@
 'use client';
+import { ToolPresetBinding, textField, numberField } from '@/components/workbench/ToolPresetBinding';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Card, Space } from 'antd';
@@ -108,6 +109,7 @@ export function ToneGeneratorTool() {
 
   return (
     <Space direction="vertical" size={20} className={workbenchStyles.stackFull}>
+      <ToolPresetBinding toolId="tone-generator" fields={{ channel: textField(channel, setChannel, ['left','center','right'], false), mode: textField(mode, setMode, ['tone','noise','sweep'], false), frequency: numberField(frequency, setFrequency, 20, 20000), gain: numberField(gain, setGain, 0, 1), waveform: textField(waveform, setWaveform, ['sine','square','sawtooth','triangle'], false), noise: textField(noise, setNoise, ['pink','white','brown'], false), sweepStart: numberField(sweepStart, setSweepStart, 20, 20000), sweepEnd: numberField(sweepEnd, setSweepEnd, 20, 20000), sweepDuration: numberField(sweepDuration, setSweepDuration, 1, 120) }} />
       <ToolHeader
         eyebrow="Audio Lab"
         title="Generador de señal"

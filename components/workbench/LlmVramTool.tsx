@@ -1,4 +1,5 @@
 'use client';
+import { ToolPresetBinding, textField, numberField } from '@/components/workbench/ToolPresetBinding';
 
 import React, { useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
@@ -147,6 +148,7 @@ curl http://localhost:11434/api/chat -d '{
 
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
+      <ToolPresetBinding toolId="llm-vram-calc" fields={{ vram: numberField(vram, setVram, 1, 1024), sysRam: numberField(sysRam, setSysRam, 1, 4096), contextTokens: numberField(contextTokens, setContextTokens, 1, 1000000), modelIndex: numberField(modelIndex, setModelIndex, 0, MODEL_PRESETS.length - 1), quantKey: textField(quantKey, setQuantKey), kvQuantKey: textField(kvQuantKey, setKvQuantKey) }} />
       <ToolHeader
         eyebrow={t('eyebrow')}
         title={t('title')}

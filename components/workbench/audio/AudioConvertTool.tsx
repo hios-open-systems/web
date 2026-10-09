@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Card, Space, Typography, Upload, message } from 'antd';
 import { InboxOutlined, DownloadOutlined } from '@ant-design/icons';
 import { ToolHeader } from '../ToolHeader';
@@ -31,16 +31,18 @@ export function AudioConvertTool() {
   const [messageApi, contextHolder] = message.useMessage();
   const [audio, setAudio] = useState<Decoded | null>(null);
   const [busy, setBusy] = useState(false);
+  const generation = useRef(0);
+  useEffect(() => () => { generation.current++; }, []);
 
   const processFile = useCallback(async (file: File) => {
+    const ticket = ++generation.current;
+    let ctx: AudioContext | null = null;
     try {
       const buf = await file.arrayBuffer();
-      const ctx = new AudioContext();
+      ctx = new AudioContext();
       const decoded = await ctx.decodeAudioData(buf);
-      void ctx.close();
-      const channelData = decoded.numberOfChannels >= 2
-        ? [decoded.getChannelData(0), decoded.getChannelData(1)]
-        : [decoded.getChannelData(0), decoded.getChannelData(0)];
+      if (ticket !== generation.current) return;
+      const channelData = Array.from({ length: Math.min(2, decoded.numberOfChannels) }, (_, index) => decoded.getChannelData(index));
       setAudio({
         name: file.name,
         sampleRate: decoded.sampleRate,
@@ -51,7 +53,7 @@ export function AudioConvertTool() {
       messageApi.success('Audio cargado');
     } catch {
       messageApi.error('No se pudo decodificar ese archivo de audio');
-    }
+    } finally { void ctx?.close().catch(() => {}); }
   }, [messageApi]);
 
   const exportWav = () => {

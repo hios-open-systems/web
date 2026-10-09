@@ -2,14 +2,16 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Card, Input, Space, Tag, Typography } from 'antd';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
-import { replacePreview, runRegex, sanitizeFlags } from '@/lib/workbench/regex';
+import { sanitizeFlags } from '@/lib/workbench/regex';
 import { ToolHeader } from './ToolHeader';
 import { CopyButton } from './CopyButton';
-import { UrlPresets } from '@/components/common/UrlPresets';
+import { PresetControls } from './PresetControls';
+import { useToolBridge } from '@/lib/hooks/useToolBridge';
 import styles from './workbench.module.css';
+import { useRegexWorker } from '@/lib/hooks/useRegexWorker';
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -17,8 +19,6 @@ const { TextArea } = Input;
 export function RegexTesterTool() {
   const t = useTranslations('Workbench.regex');
   const { mode } = useTheme();
-  const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
   const hydratedFromUrl = useRef(false);
 
@@ -26,6 +26,8 @@ export function RegexTesterTool() {
   const [flags, setFlags] = useState('g');
   const [input, setInput] = useState('contacto: juan@openhios.dev y soporte@example.com');
   const [replacement, setReplacement] = useState('');
+
+  useToolBridge('regex', v => { if (v.input !== undefined) setInput(v.input); if (v.pattern !== undefined) setPattern(v.pattern); if (v.flags !== undefined) setFlags(sanitizeFlags(v.flags)); if (v.replacement !== undefined) setReplacement(v.replacement); });
 
   useEffect(() => {
     if (hydratedFromUrl.current) return;
@@ -38,23 +40,8 @@ export function RegexTesterTool() {
     if (i !== null) setInput(i);
   }, [searchParams]);
 
-  useEffect(() => {
-    if (!hydratedFromUrl.current) return;
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('pattern', pattern);
-    params.set('flags', flags);
-    params.set('input', input);
-    const next = params.toString();
-    if (next !== searchParams.toString()) {
-      router.replace(`${pathname}?${next}`, { scroll: false });
-    }
-  }, [pattern, flags, input, pathname, router, searchParams]);
 
-  const result = useMemo(() => runRegex(pattern, flags, input), [pattern, flags, input]);
-  const replaced = useMemo(
-    () => (replacement ? replacePreview(pattern, flags, input, replacement) : null),
-    [pattern, flags, input, replacement],
-  );
+  const { result, replaced } = useRegexWorker(pattern, flags, input, replacement);
 
   const themeVars = useMemo(
     () =>
@@ -78,7 +65,7 @@ export function RegexTesterTool() {
         description={t('subtitle')}
         locality="local"
         guideId="regex"
-        actions={<UrlPresets storageKey="regex" />}
+        actions={<PresetControls toolId="regex" settings={{}} content={{ input, pattern, flags, replacement }} />}
       />
       <Card className={styles.sectionCard} styles={{ body: { padding: 20 } }}>
         <Space direction="vertical" size={12} className={styles.stackFull}>

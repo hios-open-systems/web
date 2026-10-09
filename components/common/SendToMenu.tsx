@@ -3,6 +3,8 @@
 import { Button, Dropdown, type MenuProps } from 'antd';
 import { ExportOutlined } from '@ant-design/icons';
 import { useLocale, useTranslations } from 'next-intl';
+import { createHandoff } from '@/lib/workbench/handoff';
+import { message } from 'antd';
 
 type ChainKind = 'json' | 'tsTypes';
 
@@ -18,10 +20,12 @@ interface Target {
  * a query param and a hard navigation, so the target's existing one-time URL
  * hydration picks it up — no shared store, no coupling between tools.
  */
-export function SendToMenu({ kind, getValue }: { kind: ChainKind; getValue: () => string }) {
+export function SendToMenu({ kind, getValue }: { kind: ChainKind; getValue: () => string | Promise<string> }) {
   const locale = useLocale();
   const t = useTranslations('Chain');
   const packs = useTranslations('Workbench.packs');
+  const workspace = useTranslations('Workspace');
+  const [api, contextHolder] = message.useMessage();
 
   const targets: Target[] =
     kind === 'json'
@@ -29,16 +33,20 @@ export function SendToMenu({ kind, getValue }: { kind: ChainKind; getValue: () =
           { href: '/workbench/payload', param: 'payload', packId: 'payload' },
           { href: '/workbench/type-checker', param: 'value', packId: 'type-checker', qualifier: t('asValue') },
           { href: '/workbench/object-to-types', param: 'object', packId: 'object-to-types' },
+          { href: '/workbench/json-schema', param: 'input', packId: 'json-schema' },
+          { href: '/workbench/object-compare', param: 'left', packId: 'object-compare' },
           { href: '/workbench/encoder', param: 'input', packId: 'encoder' },
           { href: '/workbench/hash-digest', param: 'input', packId: 'hash-digest' },
         ]
       : [{ href: '/workbench/type-checker', param: 'types', packId: 'type-checker', qualifier: t('asTypes') }];
 
-  const go = (target: Target) => {
-    const value = getValue();
+  const go = async (target: Target) => {
+    try {
+    const value = await getValue();
     if (!value) return;
-    const q = `${target.param}=${encodeURIComponent(value)}`;
+    const q = `handoff=${createHandoff(target.packId, { [target.param]: value })}`;
     window.location.assign(`/${locale}${target.href}?${q}`);
+    } catch { api.error(workspace('error')); }
   };
 
   const menu: MenuProps = {
@@ -53,10 +61,10 @@ export function SendToMenu({ kind, getValue }: { kind: ChainKind; getValue: () =
   };
 
   return (
-    <Dropdown menu={menu} trigger={['click']}>
+    <>{contextHolder}<Dropdown menu={menu} trigger={['click']}>
       <Button icon={<ExportOutlined />} style={{ borderRadius: 10 }}>
         {t('sendTo')}
       </Button>
-    </Dropdown>
+    </Dropdown></>
   );
 }

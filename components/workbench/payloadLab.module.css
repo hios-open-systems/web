@@ -1,0 +1,6 @@
+.panels { display: grid; grid-template-columns: minmax(260px, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.editor { overflow: auto; min-width: 0; }
+.resize { display: flex; align-items: center; gap: 12px; }
+.output { min-width: 0; }
+.code { max-height: 420px; overflow: auto; padding: 16px; border-radius: 8px; background: var(--hios-bg); white-space: pre-wrap; overflow-wrap: anywhere; font-family: var(--font-stack-mono); }
+@media(max-width: 800px) { .resize { display: none; } .panels { display: flex; flex-direction: column; } .editor, .output { width: 100%; max-width: 100%; resize: none; } }

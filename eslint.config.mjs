@@ -11,7 +11,7 @@ const compat = new FlatCompat({ baseDirectory: __dirname });
 
 const eslintConfig = [
   // next lint ya ignora .next y node_modules; sumamos los outputs propios.
-  { ignores: ['.next/**', '.open-next/**', '.vercel/**', 'node_modules/**', 'projects/**/.pio/**'] },
+  { ignores: ['.next/**', '.next-workspaces/**', '.open-next/**', '.vercel/**', 'node_modules/**', 'projects/**/.pio/**'] },
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
 ];
 
