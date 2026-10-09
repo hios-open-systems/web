@@ -9,6 +9,7 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { createProjectPageData } from '@/lib/structured-data';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { createPageMetadata } from '@/lib/seo';
+import { RelatedResources } from '@/components/workbench/RelatedResources';
 
 export const dynamic = 'force-static';
 
@@ -68,5 +69,7 @@ export default async function ProjectPage({ params }: PageProps) {
             <p style={{ color: 'var(--hios-text-secondary)', marginBottom: 0 }}>{software(`${slug}.description`)}</p>
         </aside>}
         <ProjectDetailClient project={projectWithGallery} slug={slug} />
+        <RelatedResources resourceId={`project:${slug}`} toolIds={['serial-monitor', 'ohms-law', 'resistor-color-code']}
+            pinout={['pad', 'btdac', 'speaker'].includes(slug) ? slug : undefined} />
     </>;
 }

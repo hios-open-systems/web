@@ -3,12 +3,13 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Card, Input, Segmented, Space, Typography, message } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { HASH_ALGORITHMS, type HashAlgorithm, digest, isHashAlgorithm } from '@/lib/workbench/hash';
 import { ToolHeader } from './ToolHeader';
-import { UrlPresets } from '@/components/common/UrlPresets';
+import { PresetControls } from './PresetControls';
+import { useToolBridge } from '@/lib/hooks/useToolBridge';
 import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import styles from './workbench.module.css';
 
@@ -20,8 +21,6 @@ const EXAMPLE = 'The quick brown fox jumps over the lazy dog';
 export function HashDigestTool() {
   const t = useTranslations('Workbench.hashDigest');
   const { mode } = useTheme();
-  const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
   const hydratedFromUrl = useRef(false);
   const [messageApi, contextHolder] = message.useMessage();
@@ -29,6 +28,8 @@ export function HashDigestTool() {
   const [input, setInput] = useState(EXAMPLE);
   const [algo, setAlgo] = useState<HashAlgorithm>('SHA-256');
   const [result, setResult] = useState<{ hex: string; base64: string }>({ hex: '', base64: '' });
+
+  useToolBridge('hash-digest', v => { if (v.input !== undefined) setInput(v.input); if (v.algo && isHashAlgorithm(v.algo)) setAlgo(v.algo); });
 
   useEffect(() => {
     if (hydratedFromUrl.current) return;
@@ -39,16 +40,6 @@ export function HashDigestTool() {
     if (a && isHashAlgorithm(a)) setAlgo(a);
   }, [searchParams]);
 
-  useEffect(() => {
-    if (!hydratedFromUrl.current) return;
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('input', input);
-    params.set('algo', algo);
-    const next = params.toString();
-    if (next !== searchParams.toString()) {
-      router.replace(`${pathname}?${next}`, { scroll: false });
-    }
-  }, [input, algo, pathname, router, searchParams]);
 
   useEffect(() => {
     let cancelled = false;
@@ -95,7 +86,7 @@ export function HashDigestTool() {
         guideId="hashDigest"
         actions={
           <Space wrap>
-            <UrlPresets storageKey="hash-digest" />
+            <PresetControls toolId="hash-digest" settings={{ algo }} content={{ input }} />
             <Button onClick={() => setInput('')}>{t('clear')}</Button>
           </Space>
         }

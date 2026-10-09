@@ -1,4 +1,5 @@
 'use client';
+import { ToolPresetBinding, textField } from '@/components/workbench/ToolPresetBinding';
 
 import React, { useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
@@ -134,6 +135,7 @@ void handleHardwareCommand(const char* jsonPayload) {
 
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
+      <ToolPresetBinding toolId="llm-grammar-generator" fields={{ templateId: textField(templateId, setTemplateId, COMMAND_TEMPLATES.map(item => item.id), false), format: textField(format, setFormat, ['gbnf', 'json_schema'], false) }} />
       <ToolHeader
         eyebrow={t('eyebrow')}
         title={t('title')}

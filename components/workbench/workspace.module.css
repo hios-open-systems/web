@@ -1,0 +1,16 @@
+.stack { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.toolbar, .row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.row { justify-content: space-between; }
+.toolbar > :first-child { flex: 1; min-width: 180px; }
+.toolbar :global(.ant-select) { min-width: 160px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 16px; }
+.card { padding: 20px; border: 1px solid var(--hios-border); border-radius: 14px; background: var(--hios-bg-secondary); min-width: 0; }
+.card h3 { margin: 12px 0; font-size: 18px; }
+.card p { color: var(--hios-text-secondary); line-height: 1.6; }
+.card a { color: var(--hios-text); }
+.card:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+.entry { display: flex; align-items: center; gap: 8px; padding: 12px 0; border-bottom: 1px solid var(--hios-border); flex-wrap: wrap; }
+.entry a { flex: 1; min-width: 130px; overflow-wrap: anywhere; }
+.hero { padding: 28px; border: 1px solid var(--hios-border); border-radius: 18px; background: var(--hios-bg-secondary); }
+.hero h1 { font-size: clamp(26px, 4vw, 42px); margin: 0 0 12px; }
+.hero p { color: var(--hios-text-secondary); max-width: 70ch; line-height: 1.7; }

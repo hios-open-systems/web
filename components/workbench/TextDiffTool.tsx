@@ -2,13 +2,14 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Card, Col, Input, Row, Space, Tag, Typography } from 'antd';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { diffLines } from '@/lib/workbench/textDiff';
 import { ToolHeader } from './ToolHeader';
 import { CopyButton } from './CopyButton';
-import { UrlPresets } from '@/components/common/UrlPresets';
+import { PresetControls } from './PresetControls';
+import { useToolBridge } from '@/lib/hooks/useToolBridge';
 import styles from './workbench.module.css';
 
 const { Text } = Typography;
@@ -20,13 +21,13 @@ const EXAMPLE_B = 'function greet(name) {\n  return `Hello, ${name}`;\n}\nexport
 export function TextDiffTool() {
   const t = useTranslations('Workbench.textDiff');
   const { mode } = useTheme();
-  const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
   const hydratedFromUrl = useRef(false);
 
   const [a, setA] = useState(EXAMPLE_A);
   const [b, setB] = useState(EXAMPLE_B);
+
+  useToolBridge('text-diff', v => { if (v.a !== undefined) setA(v.a); if (v.b !== undefined) setB(v.b); });
 
   useEffect(() => {
     if (hydratedFromUrl.current) return;
@@ -37,16 +38,6 @@ export function TextDiffTool() {
     if (pb !== null) setB(pb);
   }, [searchParams]);
 
-  useEffect(() => {
-    if (!hydratedFromUrl.current) return;
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('a', a);
-    params.set('b', b);
-    const next = params.toString();
-    if (next !== searchParams.toString()) {
-      router.replace(`${pathname}?${next}`, { scroll: false });
-    }
-  }, [a, b, pathname, router, searchParams]);
 
   const diff = useMemo(() => diffLines(a, b), [a, b]);
 
@@ -83,7 +74,7 @@ export function TextDiffTool() {
           <Space wrap>
             <Tag color="green">+{diff.added}</Tag>
             <Tag color="red">-{diff.removed}</Tag>
-            <UrlPresets storageKey="text-diff" />
+            <PresetControls toolId="text-diff" settings={{}} content={{ a, b }} />
           </Space>
         }
       />

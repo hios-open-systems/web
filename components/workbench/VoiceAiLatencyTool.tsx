@@ -1,6 +1,7 @@
 'use client';
+import { ToolPresetBinding, numberField } from '@/components/workbench/ToolPresetBinding';
 
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useRef, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button, Card, Col, Progress, Row, Select, Space, Tag, Typography } from 'antd';
 import { ToolHeader } from './ToolHeader';
@@ -27,6 +28,8 @@ export function VoiceAiLatencyTool() {
   const [ttsMs, setTtsMs] = useState<number>(70);
   const [netMs, setNetMs] = useState<number>(15);
 
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(() => () => clearTimeout(timer.current), []);
   const [simulating, setSimulating] = useState<boolean>(false);
   const [simProgress, setSimProgress] = useState<number>(0);
   const [simStage, setSimStage] = useState<string>('');
@@ -82,14 +85,14 @@ export function VoiceAiLatencyTool() {
       if (index >= stages.length) {
         setSimStage('done');
         setSimProgress(100);
-        setTimeout(() => setSimulating(false), 800);
+        timer.current = setTimeout(() => setSimulating(false), 800);
         return;
       }
       const st = stages[index];
       setSimStage(st.name);
       current += st.duration;
       setSimProgress(Math.min(95, Math.round((current / totalMs) * 100)));
-      setTimeout(() => runStage(index + 1), st.duration);
+      timer.current = setTimeout(() => runStage(index + 1), st.duration);
     };
 
     runStage(0);
@@ -108,6 +111,7 @@ export function VoiceAiLatencyTool() {
 
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
+      <ToolPresetBinding toolId="voice-ai-latency" fields={{ vadMs: numberField(vadMs, setVadMs, 0, 60000), sttMs: numberField(sttMs, setSttMs, 0, 60000), llmMs: numberField(llmMs, setLlmMs, 0, 60000), ttsMs: numberField(ttsMs, setTtsMs, 0, 60000), netMs: numberField(netMs, setNetMs, 0, 60000) }} />
       <ToolHeader
         eyebrow={t('eyebrow')}
         title={t('title')}

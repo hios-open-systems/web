@@ -1,4 +1,5 @@
 'use client';
+import { ToolPresetBinding, textField, numberField } from '@/components/workbench/ToolPresetBinding';
 
 import React, { useMemo, useState } from 'react';
 import { Button, Card, Col, Input, Row, Space, Tooltip, Typography } from 'antd';
@@ -170,6 +171,7 @@ export function NumberBaseTool() {
 
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
+      <ToolPresetBinding toolId="number-base" fields={{ inputVal: textField(inputVal, setInputVal), activeBase: numberField(activeBase, value => { if (value === 2 || value === 8 || value === 10 || value === 16) setActiveBase(value); }, 2, 16) }} />
       <ToolHeader
         eyebrow={t('badge')}
         title={t('title')}

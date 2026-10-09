@@ -1,6 +1,7 @@
 'use client';
+import { ToolPresetBinding, numberField } from '@/components/workbench/ToolPresetBinding';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Card, Slider, Space, Typography, Upload, message } from 'antd';
 import { InboxOutlined, DownloadOutlined } from '@ant-design/icons';
 import { ToolHeader } from './ToolHeader';
@@ -24,14 +25,19 @@ export function ImageConvertTool() {
   const [image, setImage] = useState<Loaded | null>(null);
   const [quality, setQuality] = useState(0.92);
   const [busy, setBusy] = useState(false);
+  const generation = useRef(0);
+  useEffect(() => () => { generation.current++; }, []);
+  useEffect(() => () => image?.bitmap.close(), [image]);
 
   const processFile = useCallback(async (file: File) => {
+    const ticket = ++generation.current;
     if (!file.type.startsWith('image/')) {
       messageApi.error('Ese archivo no es una imagen');
       return;
     }
     try {
       const bitmap = await createImageBitmap(file);
+      if (ticket !== generation.current) { bitmap.close(); return; }
       setImage({ name: file.name, width: bitmap.width, height: bitmap.height, bitmap });
       messageApi.success('Imagen cargada');
     } catch {
@@ -69,6 +75,7 @@ export function ImageConvertTool() {
   return (
     <Space direction="vertical" size={20} className={styles.stackFull}>
       {contextHolder}
+      <ToolPresetBinding toolId="image-convert" fields={{ quality: numberField(quality, setQuality, 0, 1) }} />
       <ToolHeader
         eyebrow="Imagen"
         title="Conversor de imágenes"

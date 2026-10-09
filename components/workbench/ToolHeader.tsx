@@ -7,6 +7,9 @@ import { ToolGuide } from './ToolGuide';
 import { FeedbackButton } from '@/components/feedback/FeedbackButton';
 import { ToolHeaderRenderedContext } from './ToolHeaderContext';
 import styles from './workbench.module.css';
+import { usePathname } from 'next/navigation';
+import { workbenchTools } from '@/config/workbench';
+import { SaveToSpace } from './SaveToSpace';
 
 const { Title, Paragraph } = Typography;
 
@@ -35,6 +38,8 @@ export function ToolHeader({
   guideId,
 }: ToolHeaderProps) {
   const headerRendered = useContext(ToolHeaderRenderedContext);
+  const pathname = usePathname();
+  const tool = workbenchTools.find(item => pathname.endsWith(item.href));
   if (headerRendered) {
     return actions ? <div className={styles.toolHeaderActions}>{actions}</div> : null;
   }
@@ -51,7 +56,7 @@ export function ToolHeader({
         {title}
       </Title>
       <Paragraph className={styles.toolHeaderDescription}>{description}</Paragraph>
-      {actions ? <div className={styles.toolHeaderActions}>{actions}</div> : null}
+      <div className={styles.toolHeaderActions}>{tool ? <SaveToSpace resourceId={`tool:${tool.id}`} /> : null}{actions}</div>
       {guideId ? <ToolGuide guideId={guideId} /> : null}
     </header>
   );

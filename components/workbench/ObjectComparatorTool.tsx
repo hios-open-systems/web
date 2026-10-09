@@ -9,6 +9,8 @@ import { compareJsonInputs } from '@/lib/workbench/compare';
 import { ToolHeader } from './ToolHeader';
 import { CopyButton } from './CopyButton';
 import styles from './workbench.module.css';
+import { useToolBridge } from '@/lib/hooks/useToolBridge';
+import { PresetControls } from './PresetControls';
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -39,6 +41,7 @@ export function ObjectComparatorTool() {
     const { mode } = useTheme();
     const [leftInput, setLeftInput] = useState(EXAMPLE_LEFT);
     const [rightInput, setRightInput] = useState(EXAMPLE_RIGHT);
+    useToolBridge('object-compare', values => { if (values.left !== undefined) setLeftInput(values.left); if (values.right !== undefined) setRightInput(values.right); });
     const result = useMemo(() => compareJsonInputs(leftInput, rightInput, t('unknownError')), [leftInput, rightInput, t]);
 
     const themeVars = {
@@ -61,6 +64,7 @@ export function ObjectComparatorTool() {
                 guideId="objectCompare"
                 actions={
                     <Space wrap>
+                        <PresetControls toolId="object-compare" content={{ left: leftInput, right: rightInput }} />
                         <Button icon={<ReloadOutlined />} onClick={() => {
                             setLeftInput(EXAMPLE_LEFT);
                             setRightInput(EXAMPLE_RIGHT);

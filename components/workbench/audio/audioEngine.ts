@@ -34,6 +34,7 @@ export function playTone(context: AudioContext, frequency: number, options: Play
   amp.gain.exponentialRampToValueAtTime(0.0001, now + seconds);
 
   oscillator.connect(amp).connect(context.destination);
+  oscillator.onended = () => { oscillator.disconnect(); amp.disconnect(); };
   oscillator.start(now);
   oscillator.stop(now + seconds + 0.02);
 }
@@ -54,6 +55,7 @@ export function startTone(context: AudioContext, frequency: number, options: Pla
   amp.gain.exponentialRampToValueAtTime(Math.max(0.0002, gain), now + 0.02);
 
   oscillator.connect(amp).connect(context.destination);
+  oscillator.onended = () => { oscillator.disconnect(); amp.disconnect(); };
   oscillator.start(now);
 
   let stopped = false;

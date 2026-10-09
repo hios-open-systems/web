@@ -1,4 +1,5 @@
 'use client';
+import { ToolPresetBinding, textField, numberField } from '@/components/workbench/ToolPresetBinding';
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Card, Col, Input, InputNumber, Row, Space, Tag, Typography, message } from 'antd';
@@ -102,6 +103,7 @@ export function CertificateCheckTool() {
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
       {contextHolder}
+      <ToolPresetBinding toolId="certificate-check" fields={{ hostname: textField(hostname, setHostname), port: numberField(port, setPort, 1, 65535) }} />
       <ToolHeader
         eyebrow={t('badge')}
         title={t('title')}

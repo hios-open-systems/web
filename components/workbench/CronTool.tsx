@@ -1,4 +1,5 @@
 'use client';
+import { ToolPresetBinding, textField } from '@/components/workbench/ToolPresetBinding';
 
 import React, { useMemo, useState } from 'react';
 import { Button, Card, Input, Space, Tag, Tooltip, Typography } from 'antd';
@@ -136,6 +137,7 @@ export function CronTool() {
 
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
+      <ToolPresetBinding toolId="cron" fields={{ expr: textField(expr, setExpr) }} />
       <ToolHeader
         eyebrow={t('badge')}
         title={t('title')}
