@@ -1,4 +1,5 @@
 'use client';
+import { ToolPresetBinding, textField } from '@/components/workbench/ToolPresetBinding';
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Card, Col, Input, Row, Select, Space, Tag, Typography, message } from 'antd';
@@ -114,6 +115,7 @@ export function DnsLookupTool() {
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
       {contextHolder}
+      <ToolPresetBinding toolId="dns-lookup" fields={{ domain: textField(domain, setDomain), recordType: textField(recordType, setRecordType, ['A','AAAA','CNAME','MX','TXT','NS'], false) }} />
       <ToolHeader
         eyebrow={t('badge')}
         title={t('title')}

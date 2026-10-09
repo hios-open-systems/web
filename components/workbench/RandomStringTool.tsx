@@ -9,6 +9,9 @@ import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import { estimateEntropy, generateRandomStrings, type RandomStringOptions } from '@/lib/workbench/random';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
+import { PresetControls } from './PresetControls';
+import { useToolBridge } from '@/lib/hooks/useToolBridge';
+import { parseRandomOptions } from '@/lib/workspaces/validators';
 
 const { Text } = Typography;
 
@@ -27,6 +30,10 @@ export function RandomStringTool() {
     const [messageApi, contextHolder] = message.useMessage();
     const [options, setOptions] = useState<RandomStringOptions>(defaultOptions);
     const [values, setValues] = useState<string[]>([]);
+    useToolBridge('random-string', data => {
+        const next = parseRandomOptions(data.options ?? '');
+        if (next) { setOptions(next); try { setValues(generateRandomStrings(next, 4)); } catch { setValues([]); } }
+    });
     const entropy = useMemo(() => estimateEntropy(options), [options]);
 
     const regenerate = () => {
@@ -38,6 +45,7 @@ export function RandomStringTool() {
     };
 
     useEffect(() => {
+        if (new URLSearchParams(location.search).has('handoff')) return;
         try {
             setValues(generateRandomStrings(defaultOptions, 4));
         } catch {
@@ -78,6 +86,7 @@ export function RandomStringTool() {
                 guideId="randomString"
                 actions={
                     <Space wrap>
+                        <PresetControls toolId="random-string" settings={{ options: JSON.stringify(options) }} />
                         <Button icon={<ReloadOutlined />} onClick={regenerate}>{t('generate')}</Button>
                         {values[0] ? <Button icon={<CopyOutlined />} onClick={() => handleCopy(values[0], t('copied'))}>{t('copy')}</Button> : null}
                         {values.length > 0 ? <Button icon={<CopyOutlined />} onClick={() => handleCopy(values.join('\n'), t('allCopied'))}>{t('copyAll')}</Button> : null}

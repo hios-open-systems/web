@@ -11,6 +11,7 @@ import { type IdType, generateIds, isIdType } from '@/lib/workbench/ids';
 import { ToolHeader } from './ToolHeader';
 import { UrlPresets } from '@/components/common/UrlPresets';
 import styles from './workbench.module.css';
+import { useToolBridge } from '@/lib/hooks/useToolBridge';
 
 const { Text } = Typography;
 
@@ -42,6 +43,12 @@ export function UuidUlidTool() {
     setCount(initCount);
     setValues(generateIds(initType, initCount));
   }, [searchParams]);
+
+  useToolBridge('uuid-ulid', values => {
+    const nextType = values.type && isIdType(values.type) ? values.type : 'uuid';
+    const nextCount = Math.max(1, Math.min(100, Math.floor(Number(values.count) || 5)));
+    setType(nextType); setCount(nextCount); setValues(generateIds(nextType, nextCount));
+  });
 
   useEffect(() => {
     if (!hydratedFromUrl.current) return;

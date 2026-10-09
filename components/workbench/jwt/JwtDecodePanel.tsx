@@ -7,6 +7,8 @@ import { useTranslations } from 'next-intl';
 import { buildExampleJwt, decodeJwtToken } from '@/lib/workbench/jwt';
 import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import styles from '../workbench.module.css';
+import { ToolPresetBinding, textField } from '../ToolPresetBinding';
+import { SendToMenu } from '@/components/common/SendToMenu';
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -23,10 +25,12 @@ export function JwtDecodePanel() {
         <Space direction="vertical" size={16} className={styles.stackFull}>
             {contextHolder}
             <Space wrap>
+                <ToolPresetBinding toolId="jwt-decode" fields={{ input: textField(input, setInput) }} />
                 <Button icon={<ReloadOutlined />} onClick={() => setInput(buildExampleJwt())}>{t('loadExample')}</Button>
                 <Button icon={<ClearOutlined />} onClick={() => setInput('')}>{t('clear')}</Button>
                 {decoded.status === 'valid' ? (
                     <>
+                        <SendToMenu kind="json" getValue={() => decoded.payloadFormatted} />
                         <Button icon={<CopyOutlined />} onClick={() => copy(decoded.headerFormatted)}>{t('copyHeader')}</Button>
                         <Button icon={<CopyOutlined />} onClick={() => copy(decoded.payloadFormatted)}>{t('copyPayload')}</Button>
                     </>

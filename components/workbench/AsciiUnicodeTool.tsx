@@ -1,4 +1,5 @@
 'use client';
+import { ToolPresetBinding, textField } from '@/components/workbench/ToolPresetBinding';
 
 import React, { useMemo, useState } from 'react';
 import { Card, Col, Input, Row, Space, Table, Typography, type TableColumnsType } from 'antd';
@@ -80,6 +81,7 @@ export function AsciiUnicodeTool() {
 
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
+      <ToolPresetBinding toolId="ascii-unicode" fields={{ raw: textField(raw, setRaw) }} />
       <ToolHeader
         eyebrow={t('badge')}
         title={t('title')}

@@ -11,6 +11,8 @@ import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import { SendToMenu } from '@/components/common/SendToMenu';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
+import { useToolBridge } from '@/lib/hooks/useToolBridge';
+import { PresetControls } from './PresetControls';
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -34,6 +36,7 @@ export function ObjectToTypesTool() {
   const [messageApi, contextHolder] = message.useMessage();
   const [input, setInput] = useState(EXAMPLE_OBJECT);
   const [rootName, setRootName] = useState('SiteSnapshot');
+  useToolBridge('object-to-types', values => { if (values.object !== undefined) setInput(values.object); if (values.rootName) setRootName(values.rootName); });
   const searchParams = useSearchParams();
   const hydratedFromUrl = useRef(false);
 
@@ -89,6 +92,7 @@ export function ObjectToTypesTool() {
         guideId="objectToTypes"
         actions={
           <Space wrap>
+            <PresetControls toolId="object-to-types" settings={{ rootName }} content={{ object: input }} />
             <Button icon={<ReloadOutlined />} onClick={() => {
               setInput(EXAMPLE_OBJECT);
               setRootName('SiteSnapshot');

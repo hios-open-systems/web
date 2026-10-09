@@ -6,12 +6,13 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { ThunderboltOutlined } from '@ant-design/icons';
 import { useLocale, useTranslations } from 'next-intl';
 import { workbenchSignals, workbenchTools } from '@/config/workbench';
-import { WorkbenchMenu } from './WorkbenchMenu';
+import { DiscoveryCatalog } from './DiscoveryCatalog';
 import styles from './workbench.module.css';
 
 export function WorkbenchLanding() {
   const locale = useLocale();
   const t = useTranslations('Workbench');
+  const workspace = useTranslations('Workspace');
   const router = useRouter();
   const searchParams = useSearchParams();
   const visibleTools = workbenchTools.filter((tool) => !tool.external);
@@ -48,7 +49,8 @@ export function WorkbenchLanding() {
         <p className={styles.pageSubtitle}>{t('landing.subtitle')}</p>
       </header>
 
-      <WorkbenchMenu />
+      <nav><Link href={`/${locale}/workbench/spaces`}>{workspace('title')} →</Link></nav>
+      <DiscoveryCatalog />
 
       <section className={`${styles.principlesSection} ${styles.principlesMuted}`}>
         <div className={styles.sectionIntro}>

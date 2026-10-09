@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { readRaw, writeRaw } from '@/lib/storage/safeLocalStorage';
 import { Button, Card, Input, Segmented, Space, Typography, message } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import {
@@ -14,7 +14,8 @@ import {
   svgFilename,
 } from '@/lib/workbench/mermaid';
 import { ToolHeader } from './ToolHeader';
-import { UrlPresets } from '@/components/common/UrlPresets';
+import { PresetControls } from './PresetControls';
+import { useToolBridge } from '@/lib/hooks/useToolBridge';
 import styles from './workbench.module.css';
 
 const { Text } = Typography;
@@ -38,8 +39,6 @@ function safeWrite(code: string) {
 export function MermaidTool() {
   const t = useTranslations('Workbench.mermaid');
   const { mode } = useTheme();
-  const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
   const hydratedFromUrl = useRef(false);
   const [messageApi, contextHolder] = message.useMessage();
@@ -48,25 +47,19 @@ export function MermaidTool() {
   const [svg, setSvg] = useState('');
   const [error, setError] = useState('');
 
+  useToolBridge('mermaid', v => { if (v.code !== undefined) setCode(v.code); });
+
   useEffect(() => {
     if (hydratedFromUrl.current) return;
     hydratedFromUrl.current = true;
     const param = searchParams.get('code');
     const stored = safeRead();
     if (param !== null) setCode(param);
-    else if (stored) setCode(stored);
+    else if (stored && !searchParams.has('handoff')) setCode(stored);
   }, [searchParams]);
 
-  useEffect(() => {
-    if (!hydratedFromUrl.current) return;
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('code', code);
-    const next = params.toString();
-    if (next !== searchParams.toString()) {
-      router.replace(`${pathname}?${next}`, { scroll: false });
-    }
-    safeWrite(code);
-  }, [code, pathname, router, searchParams]);
+  useEffect(() => { const timer = setTimeout(() => safeWrite(code), 300); return () => clearTimeout(timer); }, [code]);
+
 
   // Debounced client-only render. Mermaid is dynamically imported so it
   // never runs during SSR/build. securityLevel:'strict' = no scripts /
@@ -141,7 +134,7 @@ export function MermaidTool() {
             <Button icon={<DownloadOutlined />} onClick={exportSvg} disabled={!svg}>
               {t('exportSvg')}
             </Button>
-            <UrlPresets storageKey="mermaid" />
+            <PresetControls toolId="mermaid" settings={{}} content={{ code }} />
           </Space>
         }
       />

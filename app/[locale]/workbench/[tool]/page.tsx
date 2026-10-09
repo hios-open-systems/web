@@ -38,7 +38,7 @@ export default async function DynamicWorkbenchToolPage({ params }: PageProps) {
   }
 
   return (
-    <main style={{ maxWidth: 1180, margin: '0 auto', padding: '32px 24px 56px', display: 'flex', flexDirection: 'column', gap: 20 }}>
+    <main style={{ maxWidth: 1440, margin: '0 auto', padding: '32px 24px 56px', display: 'flex', flexDirection: 'column', gap: 20 }}>
       <ToolUsageTracker toolId={workbenchTool.id} />
       <ToolPageIntro locale={locale} tool={workbenchTool} />
       <ToolRenderer toolId={workbenchTool.id} headerRendered />

@@ -29,36 +29,54 @@ export function useMicAnalyser(fftSize = 2048, smoothing?: number): MicAnalyser 
   const contextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
+  const generation = useRef(0);
+  const starting = useRef(false);
 
   const stop = useCallback(() => {
+    generation.current++;
+    starting.current = false;
     streamRef.current?.getTracks().forEach((track) => track.stop());
     streamRef.current = null;
     analyserRef.current?.disconnect();
     analyserRef.current = null;
+    sourceRef.current?.disconnect();
+    sourceRef.current = null;
+    void contextRef.current?.close().catch(() => {});
+    contextRef.current = null;
     setActive(false);
   }, []);
 
   const start = useCallback(async () => {
+    if (starting.current || streamRef.current) return;
+    starting.current = true;
+    const ticket = ++generation.current;
+    let pendingStream: MediaStream | null = null;
     try {
       setError(null);
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false },
       });
+      pendingStream = stream;
+      if (ticket !== generation.current) { stream.getTracks().forEach(track => track.stop()); return; }
       const context = contextRef.current ?? new AudioContext();
       contextRef.current = context;
       await context.resume();
+      if (ticket !== generation.current) { stream.getTracks().forEach(track => track.stop()); return; }
       const analyser = context.createAnalyser();
       analyser.fftSize = fftSize;
       if (smoothing !== undefined) analyser.smoothingTimeConstant = smoothing;
-      context.createMediaStreamSource(stream).connect(analyser);
+      const source = context.createMediaStreamSource(stream);
+      source.connect(analyser);
+      sourceRef.current = source;
       streamRef.current = stream;
       analyserRef.current = analyser;
       setActive(true);
     } catch {
-      setError('denied');
-      setActive(false);
-    }
-  }, [fftSize, smoothing]);
+      pendingStream?.getTracks().forEach(track => track.stop());
+      if (ticket === generation.current) { stop(); setError('denied'); }
+    } finally { if (ticket === generation.current) starting.current = false; }
+  }, [fftSize, smoothing, stop]);
 
   useEffect(() => () => stop(), [stop]);
 

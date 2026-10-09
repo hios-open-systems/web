@@ -41,7 +41,7 @@ export default defineConfig({
         },
     ],
     webServer: {
-        command: `PORT=${PORT} npm run start`,
+        command: `npx cross-env PORT=${PORT} npm run start`,
         url: BASE_URL,
         reuseExistingServer: !process.env.CI,
         timeout: 180_000,

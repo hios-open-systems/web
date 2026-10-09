@@ -1,4 +1,5 @@
 'use client';
+import { ToolPresetBinding, textField, numberField } from '@/components/workbench/ToolPresetBinding';
 
 import React, { useMemo, useState } from 'react';
 import { Card, Col, InputNumber, Row, Select, Space, Typography } from 'antd';
@@ -74,6 +75,7 @@ export function NoteFrequencyTool() {
 
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
+      <ToolPresetBinding toolId="note-frequency" fields={{ a4: numberField(a4, setA4, 100, 1000), note: textField(note, setNote), octave: numberField(octave, setOctave, -1, 9), freq: numberField(freq, setFreq, 1, 24000), midi: numberField(midi, setMidi, 0, 127) }} />
       <ToolHeader
         eyebrow={t('badge')}
         title={t('title')}

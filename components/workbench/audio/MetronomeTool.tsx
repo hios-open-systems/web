@@ -1,4 +1,5 @@
 'use client';
+import { ToolPresetBinding, numberField } from '@/components/workbench/ToolPresetBinding';
 
 import { useEffect, useRef, useState } from 'react';
 import type { CSSProperties } from 'react';
@@ -36,6 +37,7 @@ export function MetronomeTool() {
   const [step, setStep] = useState(0);
   const contextRef = useRef<AudioContext | null>(null);
   const timerRef = useRef<number | null>(null);
+  useEffect(() => () => { void contextRef.current?.close().catch(() => {}); }, []);
 
   const stop = () => {
     if (timerRef.current) window.clearInterval(timerRef.current);
@@ -71,6 +73,7 @@ export function MetronomeTool() {
 
   return (
     <Space direction="vertical" size={20} className={workbenchStyles.stackFull}>
+      <ToolPresetBinding toolId="metronome" fields={{ bpm: numberField(bpm, setBpm, 20, 300), beats: numberField(beats, setBeats, 1, 16), subdivision: numberField(subdivision, setSubdivision, 1, 4) }} />
       <ToolHeader
         eyebrow="Audio Lab"
         title="Metrónomo"

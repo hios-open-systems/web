@@ -18,7 +18,7 @@ function inferToolId(pathname: string): string | undefined {
   const wbIndex = parts.indexOf('workbench');
   if (wbIndex === -1 || wbIndex + 1 >= parts.length) return undefined;
   const tool = parts[wbIndex + 1];
-  if (tool === 'sections' || tool === 'settings' || tool === 'feedback') return undefined;
+  if (tool === 'sections' || tool === 'settings' || tool === 'feedback' || tool === 'spaces') return undefined;
   return tool;
 }
 

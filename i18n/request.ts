@@ -5,8 +5,8 @@ async function loadMessages(locale: string) {
     return (await import(`../messages/${locale}.json`)).default;
 }
 
-function deepMerge<T extends Record<string, any>>(base: T, override: T): T {
-    const result: Record<string, any> = { ...base };
+function deepMerge<T extends Record<string, unknown>>(base: T, override: T): T {
+    const result: Record<string, unknown> = { ...base };
     for (const [key, value] of Object.entries(override ?? {})) {
         if (
             value &&
@@ -16,7 +16,7 @@ function deepMerge<T extends Record<string, any>>(base: T, override: T): T {
             typeof result[key] === 'object' &&
             !Array.isArray(result[key])
         ) {
-            result[key] = deepMerge(result[key], value);
+            result[key] = deepMerge(result[key] as Record<string, unknown>, value as Record<string, unknown>);
         } else {
             result[key] = value;
         }
@@ -44,7 +44,7 @@ async function getMergedMessages(locale: string): Promise<Record<string, unknown
 export default getRequestConfig(async ({ requestLocale }) => {
     let locale = await requestLocale;
 
-    if (!locale || !routing.locales.includes(locale as any)) {
+    if (!locale || !routing.locales.some(supported => supported === locale)) {
         locale = routing.defaultLocale;
     }
 

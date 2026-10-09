@@ -60,6 +60,10 @@ export type WorkbenchIcon = 'audio' | 'data' | 'notes' | 'circuits' | 'shield' |
 
 export type WorkbenchLocality = 'local' | 'network';
 
+// Optional capabilities are declared separately so tools without adapters never
+// advertise preset support. Stable IDs remain the source of truth for links.
+export { presetToolIds, toolAliases } from '../lib/workbench/toolProfiles.ts';
+
 export interface WorkbenchSection {
   id: WorkbenchSectionId;
     href: string;
@@ -78,7 +82,7 @@ export interface WorkbenchTool {
   external?: boolean;
 }
 
-export interface WorkbenchPack extends WorkbenchTool { }
+export type WorkbenchPack = WorkbenchTool;
 export type WorkbenchPackId = WorkbenchToolId;
 
 export const workbenchSections: WorkbenchSection[] = [

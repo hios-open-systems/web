@@ -13,6 +13,8 @@ import { Footer } from '@/components/layout/Footer';
 import { ThemeProvider, useTheme } from '@/lib/ThemeContext';
 import { FeedbackProvider } from '@/components/feedback/FeedbackProvider';
 import { getAntdTheme } from '@/styles/theme';
+import { WorkspaceProvider } from '@/components/workbench/WorkspaceProvider';
+import { HandoffNotice } from '@/components/workbench/HandoffNotice';
 
 function ThemedLayout({ children, currentVersion }: { children: React.ReactNode; currentVersion: string }) {
     const { mode, accent, skin } = useTheme();
@@ -24,6 +26,7 @@ function ThemedLayout({ children, currentVersion }: { children: React.ReactNode;
     return (
         <ConfigProvider theme={currentTheme}>
             <FeedbackProvider>
+              <WorkspaceProvider>
                 <ConsoleEasterEgg />
                 <VersionWatcher currentVersion={currentVersion} />
                 <ServiceWorkerRegister />
@@ -33,10 +36,12 @@ function ThemedLayout({ children, currentVersion }: { children: React.ReactNode;
                 <Layout style={{ minHeight: '100vh', background: bgColor }}>
                     <Header />
                     <Layout.Content>
+                        <HandoffNotice />
                         {children}
                     </Layout.Content>
                     <Footer />
                 </Layout>
+              </WorkspaceProvider>
             </FeedbackProvider>
         </ConfigProvider>
     );

@@ -43,6 +43,7 @@ export function Header() {
   const locale = useLocale();
   const pathname = usePathname();
   const t = useTranslations('Header');
+  const workspace = useTranslations('Workspace');
   const tFeedback = useTranslations('Feedback');
   const tSettings = useTranslations('Settings');
   const { unreadCount } = useFeedback();
@@ -60,14 +61,9 @@ export function Header() {
   };
 
   const navItems: NavItem[] = [
-    { href: `/${locale}`, label: resolveLabel('home', 'Inicio'), kind: 'primary' },
+    { href: `/${locale}/workbench`, label: resolveLabel('workbench', 'Workbench'), kind: 'primary' },
+    { href: `/${locale}/explore`, label: workspace('explore'), kind: 'secondary' },
     { href: `/${locale}/projects`, label: resolveLabel('projects', 'Proyectos'), kind: 'secondary' },
-    { href: `/${locale}/tools`, label: resolveLabel('tools', 'Stack'), kind: 'secondary' },
-    { href: `/${locale}/workbench`, label: resolveLabel('workbench', 'Workbench'), kind: 'secondary' },
-    { href: `/${locale}/pinouts`, label: resolveLabel('pinouts', 'Pinouts'), kind: 'secondary' },
-    { href: `/${locale}/calculators`, label: resolveLabel('calculators', 'Calculadoras'), kind: 'secondary' },
-    { href: `/${locale}/prints`, label: 'Maker', kind: 'secondary' },
-    { href: `/${locale}/blog`, label: 'Devlog', kind: 'secondary' },
   ];
 
   const isActive = (href: string) => {
@@ -106,9 +102,9 @@ export function Header() {
             size="small"
             icon={<SearchOutlined />}
             onClick={openCommandPalette}
-            className={styles.iconButton}
+            className={styles.searchButton}
             aria-label={resolveLabel('search', 'Buscar')}
-          />
+          >{resolveLabel('search', 'Buscar')} <kbd>⌘ K</kbd></Button>
           <Button
             type="text"
             size="small"

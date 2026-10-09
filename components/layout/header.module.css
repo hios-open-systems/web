@@ -409,3 +409,6 @@
   height: var(--touch-target);
   margin-inline-end: 4px;
 }
+
+.searchButton { width: auto; color: var(--hios-text-secondary) !important; }
+@media (max-width: 600px) { .searchButton kbd { display: none; } }

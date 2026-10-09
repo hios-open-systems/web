@@ -1,4 +1,5 @@
 'use client';
+import { ToolPresetBinding, numberField } from '@/components/workbench/ToolPresetBinding';
 
 import { useMemo, useState } from 'react';
 import { Card, InputNumber, Space, Typography } from 'antd';
@@ -29,6 +30,7 @@ export function DelayCalculatorTool() {
 
   return (
     <Space direction="vertical" size={20} className={workbenchStyles.stackFull}>
+      <ToolPresetBinding toolId="delay-calculator" fields={{ bpm: numberField(bpm, setBpm, 1, 1000), milliseconds: numberField(milliseconds, setMilliseconds, 0, 100000), temperature: numberField(temperature, setTemperature, -50, 100) }} />
       <ToolHeader
         eyebrow="Audio Lab"
         title="Calculadora de delay"
