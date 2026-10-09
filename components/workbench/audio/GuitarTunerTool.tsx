@@ -1,4 +1,5 @@
 'use client';
+import { ToolPresetBinding, textField, numberField } from '@/components/workbench/ToolPresetBinding';
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Card, InputNumber, Select, Space, Typography } from 'antd';
@@ -144,6 +145,7 @@ export function GuitarTunerTool() {
       className={workbenchStyles.stackFull}
       style={{ '--accent': ACCENT } as React.CSSProperties}
     >
+      <ToolPresetBinding toolId="guitar-tuner" fields={{ instrument: textField(instrument, setInstrument, INSTRUMENTS, false), tuningId: textField(tuningId, setTuningId, TUNINGS.map(item => item.id), false), a4: numberField(a4, setA4, 400, 480) }} />
       <ToolHeader
         eyebrow={t('badge')}
         title={t('title')}

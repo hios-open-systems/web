@@ -11,6 +11,8 @@ import { ToolHeader } from './ToolHeader';
 import { CopyButton } from './CopyButton';
 import { useRunHotkey } from '@/lib/hooks/useRunHotkey';
 import styles from './workbench.module.css';
+import { useToolBridge } from '@/lib/hooks/useToolBridge';
+import { PresetControls } from './PresetControls';
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -49,6 +51,7 @@ export function TypeCheckerTool() {
   const [typeSource, setTypeSource] = useState(EXAMPLE_TYPES);
   const [rootTypeName, setRootTypeName] = useState('ApiResponse');
   const [valueSource, setValueSource] = useState(EXAMPLE_VALUE);
+  useToolBridge('type-checker', values => { if (values.value !== undefined) setValueSource(values.value); if (values.types !== undefined) setTypeSource(values.types); if (values.rootName) setRootTypeName(values.rootName); });
   const [result, setResult] = useState<TypeCheckResult>(EMPTY_RESULT);
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
@@ -58,12 +61,13 @@ export function TypeCheckerTool() {
     const nextResult = await runBrowserTypeCheck(types, value, root);
     setResult(nextResult);
     if (nextResult.normalizedValue !== value) {
-      setValueSource(nextResult.normalizedValue);
+      setValueSource(current => current === value ? nextResult.normalizedValue : current);
     }
     setLoading(false);
   }, []);
 
   useEffect(() => {
+    if (searchParams.has('handoff')) return;
     // Tool chaining: another tool may hand us a value/types via the URL.
     const injectedValue = searchParams.get('value');
     const injectedTypes = searchParams.get('types');
@@ -100,6 +104,7 @@ export function TypeCheckerTool() {
         guideId="typeChecker"
         actions={
           <Space wrap>
+            <PresetControls toolId="type-checker" settings={{ rootName: rootTypeName }} content={{ value: valueSource, types: typeSource }} />
             <Button icon={<SafetyCertificateOutlined />} loading={loading} onClick={() => void runCheck(typeSource, valueSource, rootTypeName)}>{t('check')}</Button>
             <Button icon={<ReloadOutlined />} onClick={() => {
               setTypeSource(EXAMPLE_TYPES);

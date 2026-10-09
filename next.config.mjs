@@ -1,5 +1,10 @@
 import { execSync } from 'node:child_process';
 import createNextIntlPlugin from 'next-intl/plugin';
+import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
+
+if (process.env.HIOS_LOCAL_D1 === '1') {
+	initOpenNextCloudflareForDev({ configPath: 'tests/fixtures/workspaces.wrangler.jsonc', persist: { path: '.wrangler/workspace-e2e' } });
+}
 
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
@@ -22,6 +27,7 @@ function resolveDeployVersion() {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+	distDir: process.env.HIOS_LOCAL_D1 === '1' ? '.next-workspaces' : '.next',
 	transpilePackages: ['antd', '@ant-design/icons', 'next-intl'],
 
 	env: {
@@ -138,7 +144,7 @@ const nextConfig = {
 			'microphone=(self)',
 			'midi=()',
 			'payment=()',
-			'serial=()',
+			'serial=(self)',
 			'usb=()',
 		].join(', ');
 
