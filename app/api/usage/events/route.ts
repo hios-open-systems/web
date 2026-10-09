@@ -4,7 +4,7 @@ import { getRequestAuth } from '@/lib/auth/request';
 import { checkRateLimit } from '@/lib/rateLimit';
 
 
-type EventName = 'page_view' | 'tool_open';
+type EventName = 'page_view' | 'tool_open' | 'search_open' | 'preset_reuse' | 'workspace_open' | 'handoff_complete';
 
 interface UsagePayload {
   eventName: EventName;
@@ -19,7 +19,7 @@ function generateId(): string {
 }
 
 function isSafePath(path: string): boolean {
-  return path.startsWith('/') && path.length <= 320;
+  return path.startsWith('/') && path.length <= 320 && !/[?#]/.test(path);
 }
 
 function isSafeLocale(locale: string): boolean {
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: 'invalid_payload' }, { status: 400 });
   }
 
-  if (payload.eventName !== 'page_view' && payload.eventName !== 'tool_open') {
+  if (!['page_view', 'tool_open', 'search_open', 'preset_reuse', 'workspace_open', 'handoff_complete'].includes(payload.eventName)) {
     return Response.json({ error: 'invalid_event' }, { status: 400 });
   }
 
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     return Response.json({ error: 'invalid_tool_id' }, { status: 400 });
   }
 
-  const safeMetadata = payload.metadata && typeof payload.metadata === 'object' ? payload.metadata : null;
+  const safeMetadata = null;
 
   try {
     const auth = await getRequestAuth(request);
@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
         payload.toolId ?? null,
         safeMetadata ? JSON.stringify(safeMetadata).slice(0, 2000) : null,
         trimHeader(request.headers.get('user-agent'), 500),
-        trimHeader(request.headers.get('referer'), 500),
+        null,
         trimHeader(request.headers.get('cf-ray'), 100),
         trimHeader(request.headers.get('cf-ipcountry'), 20),
       )
