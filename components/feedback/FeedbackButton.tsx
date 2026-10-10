@@ -66,7 +66,7 @@ export function FeedbackButton({ toolSlug }: { toolSlug?: string }) {
         }
 
         if (turnstileEnabled() && !turnstileToken) {
-            messageApi.error(t.has('widget.captchaError') ? t('widget.captchaError') : 'Completá la verificación');
+            messageApi.error(t('widget.captchaError'));
             return;
         }
 

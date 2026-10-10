@@ -22,15 +22,15 @@ export function Footer() {
 
     const navLinks = [
         { href: `/${locale}/projects`, label: label('projects', 'Proyectos') },
-        { href: `/${locale}/tools`, label: label('tools', 'Stack') },
-        { href: `/${locale}/workbench`, label: label('workbench', 'Workbench') },
+        { href: `/${locale}/tools`, label: t('tools') },
+        { href: `/${locale}/workbench`, label: t('workbench') },
         { href: `/${locale}/pinouts`, label: label('pinouts', 'Pinouts') },
         { href: `/${locale}/calculators`, label: label('calculators', 'Calculadoras') },
-        { href: `/${locale}/prints`, label: 'Maker' },
-        { href: `/${locale}/blog`, label: 'Devlog' },
-        { href: `/${locale}/stats`, label: 'Stats' },
+        { href: `/${locale}/prints`, label: copy('prints') },
+        { href: `/${locale}/blog`, label: copy('blog') },
+        { href: `/${locale}/stats`, label: copy('stats') },
         { href: `/${locale}/guestbook`, label: label('guestbook', 'Guestbook') },
-        { href: `/${locale}/colophon`, label: 'Colophon' },
+        { href: `/${locale}/colophon`, label: copy('about') },
     ];
 
     const socialLinks = [
@@ -57,7 +57,7 @@ export function Footer() {
         >
             <div>
                 <Space direction="vertical" size="large">
-                    <nav className={styles.nav} aria-label="Footer">
+                    <nav className={styles.nav} aria-label={copy('navigation')}>
                         {navLinks.map((link) => (
                             <NextLink key={link.href} href={link.href} prefetch={false} className={styles.navLink}>
                                 {link.label}
@@ -94,17 +94,6 @@ export function Footer() {
                             display: 'block',
                         }}>
                             {copy('description')}
-                        </Text>
-                        <Text
-                            className="tech-label"
-                            style={{
-                                color: 'var(--hios-text-muted)',
-                                marginTop: '10px',
-                                display: 'block',
-                                opacity: 0.7,
-                            }}
-                        >
-                            {copy('detail')}
                         </Text>
                     </div>
                 </Space>

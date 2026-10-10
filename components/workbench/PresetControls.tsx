@@ -23,8 +23,8 @@ export function PresetControls({ toolId, settings = {}, content = {} }: {
     <Modal open={open} title={t('savePreset')} onCancel={() => setOpen(false)} onOk={() => void save()} okButtonProps={{ disabled: !name.trim() || busy }}>
       <Space direction="vertical" style={{ width: '100%' }}>
         <Input value={name} maxLength={100} aria-label={t('name')} onChange={e => setName(e.target.value)} />
-        {account !== 'anonymous' ? <Checkbox checked={syncContent} onChange={e => setSyncContent(e.target.checked)}>{t('uploadContent')}</Checkbox> : <p>{t('privacy')}</p>}
-        <p>{t('preview')}</p><pre style={{ maxHeight: 240, overflow: 'auto', whiteSpace: 'pre-wrap' }}>{JSON.stringify(syncContent ? { settings, content } : { settings }, null, 2)}</pre>
+        {account !== 'anonymous' ? <Checkbox checked={syncContent} onChange={e => setSyncContent(e.target.checked)}>{t('uploadContent')}</Checkbox> : <p>{t('presetPrivacy')}</p>}
+        <p>{t(account === 'anonymous' ? 'localPreview' : 'preview')}</p><pre style={{ maxHeight: 240, overflow: 'auto', whiteSpace: 'pre-wrap' }}>{JSON.stringify(account === 'anonymous' || syncContent ? { settings, content } : { settings }, null, 2)}</pre>
       </Space>
     </Modal>
   </>;

@@ -1,14 +1,14 @@
 {
     "SerialMonitor": {
-        "unsupportedTitle": "Unsupported Browser",
-        "unsupportedDesc": "The WebSerial API is restricted by Apple and Mozilla. Please open this tool in Chrome, Edge, or Brave.",
+        "unsupportedTitle": "Browser not supported",
+        "unsupportedDesc": "This browser cannot access the serial port. Use a browser that supports Web Serial to connect your board.",
         "connect": "Connect",
         "disconnect": "Disconnect",
         "statusConnected": "CONNECTED",
         "statusDisconnected": "DISCONNECTED",
         "clear": "Clear",
         "emptyTerminal": "// Waiting for serial data...",
-        "inputPlaceholder": "Send JSON command or string...",
+        "inputPlaceholder": "Command or text to send…",
         "send": "Send"
     },
     "Guestbook": {
@@ -33,10 +33,10 @@
     "Hero": {
         "showcaseTitle": "Tools",
         "showcaseSubtitle": "For working with code, data, electronics and audio.",
-        "showcaseRandomCta": "Discover a tool",
+        "showcaseRandomCta": "Open a random tool",
         "showcaseToolCount": "tools",
         "title": "Open hardware and tools for development.",
-        "subtitle": "Explore projects with ESP32, audio and local AI. Read the documentation, check connections and find tools for coding, calculations and testing.",
+        "subtitle": "ESP32, audio and local AI projects with source code and documentation. Web tools for data, circuits and sound.",
         "cta": "Explore tools",
         "secondary": "View projects",
         "fact_local": "Web tools",
@@ -468,7 +468,7 @@
         "troubleshooting_desc": "Common issues, FAQs, and diagnostics"
     },
     "Tools": {
-        "title": "Stack",
+        "title": "Software and resources",
         "subtitle": "The tools we use to design, develop, and document",
         "software_category": "Software & Code",
         "hardware_category": "Hardware & Design",
@@ -476,8 +476,8 @@
         "filter_all": "All",
         "filter_software": "Software",
         "filter_hardware": "Hardware",
-        "catalog_count": "recommended tools",
-        "used_in_projects": "Used in {count} project(s)",
+        "catalog_count": "resources",
+        "used_in_projects": "{count, plural, one {Used in # project} other {Used in # projects}}",
         "official_site": "Official site"
     },
     "Tutorials": {
@@ -486,7 +486,7 @@
         "subtitle": "Step-by-step guides to get you building",
         "steps": "steps",
         "copied": "Copied!",
-        "vscode_platformio_title": "VSCode + PlatformIO Setup",
+        "vscode_platformio_title": "VS Code and PlatformIO",
         "vscode_platformio_desc": "Set up your development environment",
         "step_install_vscode": "Download and install VSCode",
         "step_install_pio": "Install PlatformIO extension",
@@ -497,7 +497,7 @@
         "step_wait_init": "Wait for PlatformIO to initialize",
         "step_wait_init_desc": "First time may take a few minutes to download toolchains",
         "pio_commands_title": "Essential PlatformIO Commands",
-        "pio_commands_desc": "Commands you'll use every day",
+        "pio_commands_desc": "Build, upload firmware and read the serial port.",
         "cmd_build": "Build the project",
         "cmd_build_desc": "Compiles without uploading",
         "cmd_upload": "Upload to device",
@@ -505,7 +505,7 @@
         "cmd_monitor": "Open serial monitor",
         "cmd_monitor_desc": "View debug output (Ctrl+C to exit)",
         "cmd_clean": "Clean build files",
-        "cmd_clean_desc": "Removes .pio folder, forces full rebuild",
+        "cmd_clean_desc": "Removes generated build files.",
         "cmd_all": "Upload and monitor",
         "cmd_all_desc": "Flash and immediately open serial monitor",
         "wsl_usb_title": "USB Passthrough for WSL",
@@ -521,7 +521,7 @@
         "wsl_verify": "Verify in WSL",
         "wsl_verify_desc": "Should show /dev/ttyUSB0 or similar",
         "troubleshoot_title": "Common Issues",
-        "troubleshoot_desc": "Quick fixes for typical problems",
+        "troubleshoot_desc": "Connection, permission and dependency issues.",
         "ts_port_busy": "Permission denied on port",
         "ts_port_busy_desc": "Add user to dialout group: sudo usermod -a -G dialout $USER",
         "ts_no_port": "Device not detected",
@@ -573,10 +573,10 @@
         "assignedPins": "{count} contacts used or reserved by this guide. Dimmed contacts are outside the indicated wiring.",
         "functionalDiagram": "Functional reference. Shape and contact locations vary by manufacturer: check the labels on your module.",
         "eyebrow": "Hardware reference",
-        "title": "Interactive Pinouts",
-        "subtitle": "Explore the pin diagrams of modules used in our projects",
-        "builds_title": "Builds (as-wired)",
-        "builds_hint": "GPIO map · wiring · checklist →",
+        "title": "Module pinouts",
+        "subtitle": "Pins, interfaces and connections for modules used in HIOS.",
+        "builds_title": "Project wiring",
+        "builds_hint": "GPIO assignments, connections and assembly checks.",
         "usedIn": "Used in:",
         "Kinds": {
             "mcu": "Microcontroller",
@@ -594,13 +594,13 @@
         "datasheet": "Datasheet",
         "Modules": {
             "esp32-wroom-32": {
-                "description": "WiFi + BT 4.2 MCU, 2×19 header (38 pins). Quick reference + gotchas."
+                "description": "Microcontroller with WiFi and Bluetooth 4.2. Board with two rows of 19 pins."
             },
             "esp32-s3-devkitc-1": {
-                "description": "MCU with native USB OTG, WiFi 802.11 b/g/n, BLE 5. 2×22 header. Quick reference + gotchas."
+                "description": "Microcontroller with USB OTG, WiFi 802.11 b/g/n and BLE 5. Two rows of 22 pins."
             },
             "max98357a": {
-                "description": "Mono 3.2W I2S Class-D amplifier (breakout). 2 in parallel = stereo."
+                "description": "Mono class-D amplifier with I2S input. Check channel selection, power and speaker connections."
             },
             "pcm5102": {
                 "description": "32-bit/384kHz I2S DAC (GY-PCM5102 breakout). L/R line output."
@@ -636,7 +636,7 @@
                 "description": "Connection reference for 2S modules. Charging, balancing and protection depend on the specific model."
             },
             "holder-2s": {
-                "description": "Two 18650 cells in series (2S). Note: the correct holder is SERIES, not parallel."
+                "description": "Holder for two 18650 cells in series (2S). Verify that the wiring is in series."
             }
         },
         "tables": {
@@ -683,21 +683,25 @@
         "guestbook": "Guestbook",
         "home": "Home",
         "projects": "Projects",
-        "tools": "Stack",
-        "workbench": "Workbench",
+        "tools": "Software",
+        "workbench": "Tools",
         "pinouts": "Pinouts",
         "calculators": "Calculators",
         "rcl": "RCL",
         "menu": "Menu",
-        "search": "Search"
+        "search": "Search",
+        "primaryNavigation": "Main navigation",
+        "mobileNavigation": "Mobile navigation",
+        "lightTheme": "Use light theme",
+        "darkTheme": "Use dark theme"
     },
     "Auth": {
         "signIn": "Sign in",
         "signOut": "Sign out"
     },
     "Feedback": {
-        "title": "Feedback inbox",
-        "subtitle": "Auto-captured errors and entries you create yourself: bugs, ideas and notes. Stored locally in this browser.",
+        "title": "Local errors and feedback",
+        "subtitle": "Browser errors and notes saved on this device.",
         "newEntry": "New entry",
         "kind": "Kind",
         "kinds": {
@@ -716,13 +720,13 @@
             "error": "Error"
         },
         "titleField": "Title",
-        "titlePlaceholder": "Short summary (e.g. 'JWT decoder breaks on signature-less tokens')",
+        "titlePlaceholder": "Brief description of the issue or idea",
         "bodyField": "Detail",
-        "bodyPlaceholder": "Context, repro steps, anything useful...",
+        "bodyPlaceholder": "What you did, what you expected and what happened.",
         "save": "Save",
         "entries": "Entries",
         "clearAll": "Clear all",
-        "empty": "No entries yet. When something breaks it will show up here automatically.",
+        "empty": "No entries yet. Add a note here; detected errors also appear in this list.",
         "copy": "Copy",
         "copied": "Copied to clipboard",
         "copyError": "Could not copy",
@@ -733,36 +737,37 @@
         "lastSeen": "last seen",
         "context": "context",
         "toastErrorCaptured": "Error captured: {title}",
-        "localFootnote": "Stored locally for now. Once auth lands it will sync to your account automatically.",
+        "localFootnote": "This log stays in your browser and does not sync with your account. Use Send feedback to contact the project.",
         "widget": {
-            "button": "Feedback",
+            "button": "Send feedback",
             "title": "Send feedback",
-            "kindBug": "Something's broken",
+            "kindBug": "Report an issue",
             "kindIdea": "Idea",
             "kindNote": "Comment",
-            "ratingLabel": "How's it going?",
+            "ratingLabel": "Your rating (optional)",
             "messageLabel": "Your message",
-            "messagePlaceholder": "What happened, what you'd like, anything…",
+            "messagePlaceholder": "Describe the issue or the improvement you suggest.",
             "emailLabel": "Email (optional)",
             "emailPlaceholder": "you@example.com",
-            "emailHint": "Only if you want a reply.",
+            "emailHint": "Leave your email if you would like a reply.",
             "send": "Send",
             "cancel": "Cancel",
-            "thanks": "Thanks! Got it.",
-            "thanksLocal": "Saved — it'll reach me when the connection is back.",
-            "emptyError": "Write something first"
+            "thanks": "Feedback sent. Thank you.",
+            "thanksLocal": "Could not send. Check the copy in Local errors and feedback and submit it again.",
+            "emptyError": "Enter a message before sending.",
+            "captchaError": "Complete the verification to send."
         },
         "admin": {
-            "sectionTitle": "Feedback received",
-            "authRequired": "Sign in to see the feedback users sent.",
+            "sectionTitle": "Received feedback",
+            "authRequired": "Sign in to view received feedback.",
             "errorLoad": "Couldn't load feedback.",
             "empty": "No feedback yet.",
             "statTotal": "Total",
-            "statAvgRating": "Avg rating",
+            "statAvgRating": "Average rating",
             "statBugs": "Bugs",
             "statIdeas": "Ideas",
             "statNotes": "Comments",
-            "filterDays": "Window",
+            "filterDays": "Period",
             "filterKind": "Type",
             "kindAll": "All",
             "colKind": "Type",
@@ -780,7 +785,7 @@
         "savedHint": "Save the current accent color, mode and style as a theme in this browser.",
         "savedName": "Name",
         "savedNamePlaceholder": "e.g. Night amber",
-        "savedSave": "Save current",
+        "savedSave": "Save theme",
         "savedEmpty": "No saved themes yet",
         "savedApply": "Apply theme",
         "savedDelete": "Delete theme",
@@ -818,8 +823,8 @@
         "invalidHex": "Invalid format. Use #rrggbb or #rgb.",
         "preview": "Live preview",
         "previewHint": "Here's how the accent looks across real components.",
-        "previewTagline": "Workbench",
-        "previewButton": "Primary action",
+        "previewTagline": "Tools",
+        "previewButton": "Example button",
         "previewLink": "Sample link",
         "localFootnote": "Sign in to save the accent color to your account.",
         "accountFootnote": "Changes apply in this browser. Check the sync status to confirm they were saved to your account.",
@@ -840,28 +845,28 @@
         "sectionsGroup": "Sections",
         "pages": {
             "home": "Home",
-            "tools": "Stack",
-            "workbench": "Workbench",
+            "tools": "Software",
+            "workbench": "Tools",
             "calculators": "Calculators",
             "composer": "Chiptune Composer",
             "pinouts": "Pinouts",
             "padWiring": "PAD wiring guide",
             "btdacWiring": "BTDAC wiring guide",
             "speakerWiring": "Speaker wiring guide",
-            "snippets": "Snippets",
+            "snippets": "Code snippets",
             "settings": "Settings",
-            "feedback": "Feedback",
+            "feedback": "Errors and feedback",
             "random": "Open a random tool"
         }
     },
     "Presets": {
         "base": "Built-in",
-        "save": "Save preset",
-        "presets": "Presets",
-        "namePrompt": "Name this preset",
-        "empty": "No saved presets",
+        "save": "Save configuration",
+        "presets": "Configurations",
+        "namePrompt": "Configuration name",
+        "empty": "No saved configurations",
         "delete": "Delete",
-        "defaultName": "Preset {n}"
+        "defaultName": "Configuration {n}"
     },
     "Chain": {
         "sendTo": "Send to",
@@ -899,7 +904,7 @@
             "lessons": {
                 "debounce": {
                     "title": "Debounce",
-                    "explain": "**Debounce** delays a call until input stops. A burst of calls collapses into one trailing run — classic for search inputs and resize handlers. Edit the code and run it."
+                    "explain": "**Debounce** waits for a pause between calls before running a function. For example, it can wait until someone stops typing a search. Change the delay and run the example."
                 },
                 "reducer": {
                     "title": "Reducer / state machine",
@@ -927,7 +932,7 @@
             "previewEmpty": "Nothing to preview yet",
             "importedTitle": "Shared note",
             "exampleTitle": "Welcome",
-            "exampleBody": "# Hello\\n\\nThis is a **local-first** markdown note.\\n\\n- Lives in your browser\\n- Live preview on the right"
+            "exampleBody": "# Example note\n\nUse **bold**, links and lists.\n\n- The note is saved in this browser.\n- The preview updates as you type."
         },
         "mermaid": {
             "badge": "Generation tool",
@@ -1403,7 +1408,7 @@
                     "Use Prettify / Minify and the path explorer to navigate it.",
                     "Click “Share link” to copy a URL that reproduces this exact payload."
                 ],
-                "tip": "Anyone with the link can read its data. Review the content before sharing and leave out secrets."
+                "tip": "The link includes the complete JSON. Check for passwords, tokens and other data you do not want to share."
             },
             "typeChecker": {
                 "intro": "Check whether a JSON value is assignable to a TypeScript type, fully in the browser.",
@@ -1479,13 +1484,13 @@
             }
         },
         "signals": {
-            "localFirst": "Local-first and private",
-            "shareable": "Shareable sessions",
-            "dailyUse": "Built for daily return"
+            "localFirst": "Processing",
+            "shareable": "Shared links",
+            "dailyUse": "Saved shortcuts"
         },
         "landing": {
             "badge": "Development tools",
-            "title": "Workbench",
+            "title": "Tools",
             "subtitle": "Tools for working with code, data, electronics and audio.",
             "randomCta": "Open a random tool",
             "allToolsTitle": "All tools",
@@ -1497,7 +1502,7 @@
             "sectionsTitle": "Workbench sections",
             "sectionsSubtitle": "Audio, networking, electronics, generation, validation and testing.",
             "cardCta": "Open section",
-            "principlesTitle": "Using Workbench",
+            "principlesTitle": "Data and storage",
             "principlesSubtitle": "Processing, storage and sharing options.",
             "principles": {
                 "localFirst": "Each tool has a label showing whether it processes data in the browser or needs network requests.",
@@ -1586,7 +1591,7 @@
                 "description": "Convert data between CSV and JSON with configurable delimiters."
             },
             "llm-vram-calc": {
-                "title": "AI memory scenarios",
+                "title": "Model memory estimate",
                 "description": "Compare sizes, formats and context using an illustrative formula. This does not replace model measurements."
             },
             "esp32-llm-bridge": {
@@ -1780,7 +1785,7 @@
             "copyPath": "Copy path",
             "pathCopied": "Path copied",
             "noPaths": "No paths match the current search.",
-            "outputHint": "The output respects the current mode and gives you a clean base to copy or share.",
+            "outputHint": "The result uses the selected format.",
             "metrics": {
                 "chars": "Characters",
                 "lines": "Lines",
@@ -1833,7 +1838,7 @@
             "recordType": "Record type",
             "helper": "Use this to verify propagation, MX targets, TXT entries, or name servers from one place.",
             "results": "Live records",
-            "empty": "Run a lookup to inspect live records.",
+            "empty": "Enter a domain and select Look up.",
             "lookupFailed": "Lookup failed",
             "answers": "Answers",
             "duration": "Response time",
@@ -1865,7 +1870,7 @@
             "port": "Port",
             "helper": "Checks the live certificate presented by the server and highlights expiry risk early.",
             "results": "Certificate status",
-            "empty": "Run an inspection to fetch live certificate data.",
+            "empty": "Enter the server and port to look up its certificate.",
             "inspectFailed": "Inspection failed",
             "daysRemaining": "Days remaining",
             "validFrom": "Valid from",
@@ -1966,7 +1971,7 @@
             "title": "Website status",
             "subtitle": "Check web addresses with network requests and browser notifications.",
             "loadExample": "Load local example",
-            "clientOnly": "Runs only in this browser tab. Monitoring pauses when the tab or app is closed.",
+            "clientOnly": "Checks run while this tab remains open.",
             "corsNote": "Requests to other sites use no-cors mode. The browser cannot read the HTTP status of those responses: receiving a response does not confirm that the site is working correctly.",
             "url": "URL",
             "interval": "Interval",
@@ -2005,7 +2010,7 @@
             "subtitle": "Save code snippets in this browser or in your account.",
             "titlePlaceholder": "Snippet title",
             "tagsPlaceholder": "Comma-separated tags",
-            "bodyPlaceholder": "Paste a command, recipe, payload, or useful note...",
+            "bodyPlaceholder": "Code or note to save…",
             "save": "Save snippet",
             "empty": "You have not saved any snippets in this browser yet.",
             "copy": "Copy",
@@ -2314,7 +2319,7 @@
         },
         "vram": {
             "eyebrow": "Local AI and memory",
-            "title": "Memory scenarios for local models",
+            "title": "Model memory estimate",
             "description": "Compare sizes and formats with a simplified formula. Profiles are illustrative scenarios; they do not describe an exact model architecture or guarantee that it will load.",
             "hardwareTitle": "1. Available memory",
             "vram": "Specified VRAM",
@@ -2678,7 +2683,7 @@
     },
     "HomeQuickAccess": {
         "workbench": {
-            "label": "Workbench",
+            "label": "Tools",
             "description": "Tools for working with code, data, electronics and audio."
         },
         "ai": {
@@ -2686,7 +2691,7 @@
             "description": "An ESP32-S3 node for querying Ollama over a local network."
         },
         "blog": {
-            "label": "Devlog",
+            "label": "Documentation",
             "description": "Guides and technical notes on hardware, software and local AI."
         },
         "stats": {
@@ -2696,7 +2701,12 @@
     },
     "Footer": {
         "description": "HIOS — Open hardware, software and technical documentation.",
-        "detail": "Code and resources to explore, build and adapt."
+        "detail": "Code and resources to explore, build and adapt.",
+        "navigation": "Footer navigation",
+        "prints": "3D printing",
+        "blog": "Documentation",
+        "stats": "Statistics",
+        "about": "About HIOS"
     },
     "Colophon": {
         "title": "About HIOS",
@@ -2751,14 +2761,15 @@
         "hardResetHint": "Clears local storage, caches and service worker registrations, then reloads the page. This also removes your telemetry preference, which returns to its default.",
         "hardResetConfirm": "Clear local storage and the site cache, then reload? Notes and drafts stored only in this browser will be lost.",
         "accountTitle": "Account data",
-        "accountHint": "Deleting your account removes its sessions, code snippets and preferences. Usage events and submitted feedback remain without the account link; message content and contact email addresses are not deleted. Guestbook entries also remain.",
+        "accountHint": "Deleting your account removes its sessions, spaces, saved configurations, code snippets and preferences. Usage events and submitted messages remain without the account link; message content and contact emails are retained. Guestbook entries are also retained.",
         "deleteAccount": "Delete account",
-        "deleteAccountConfirm": "Delete your account, its sessions, snippets and preferences? This cannot be undone. Submitted feedback and guestbook entries remain.",
+        "deleteAccountConfirm": "Delete your account and its sessions, spaces, configurations, snippets and preferences? This cannot be undone. Submitted messages and guestbook entries are retained.",
         "deleteAccountDone": "Account deleted.",
         "deleteAccountError": "Could not delete the account. Try again.",
         "notLoggedIn": "You are not signed in. Telemetry and submitted messages can create records without an account.",
         "confirm": "Delete",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "clearStorageError": "Could not clear all data. Close other HIOS tabs and try again."
     },
     "PublicStats": {
         "kicker": "HIOS usage",
@@ -2782,7 +2793,7 @@
         "note": "This panel shows the algorithm code used by the tool. You can view the source file on GitHub."
     },
     "Workspace": {
-        "title": "My Workbench",
+        "title": "My spaces",
         "catalog": "Catalog",
         "explore": "Explore",
         "search": "Search tools or tasks…",
@@ -2814,26 +2825,26 @@
         "importLocal": "Import local spaces",
         "export": "Export",
         "import": "Import",
-        "includeContent": "Include preset contents",
-        "uploadContent": "Upload this preset content to my account",
-        "preview": "Preview data to upload",
+        "includeContent": "Include saved configuration data",
+        "uploadContent": "Also sync this configuration’s data",
+        "preview": "Data synced with your account",
         "up": "Move up",
         "down": "Move down",
         "open": "Open",
         "name": "Name",
         "template": "Template",
         "empty": "Empty space",
-        "presets": "Presets",
-        "savePreset": "Save preset",
-        "error": "Unavailable storage or connection. Your current view has not been discarded.",
+        "presets": "Saved configurations",
+        "savePreset": "Save configuration",
+        "error": "Could not load, save or sync. Check your connection and browser storage.",
         "login": "Sign in to synchronize",
         "recent": "Recent tools",
         "continue": "Continue working",
         "intro": "Make a list of tools and projects to use again.",
         "external": "External resources",
-        "privacy": "Local data stays on this device until you choose to synchronize.",
+        "privacy": "Signed out, spaces are stored in this browser. Account spaces sync automatically; importing local spaces is optional.",
         "results": "Results: {count}",
-        "newPreset": "New preset",
+        "newPreset": "New configuration",
         "selectSpace": "Select a space",
         "addToSpace": "Add to space",
         "copied": "Copied",
@@ -2858,7 +2869,7 @@
         "missingTransfer": "The transferred data is unavailable. Paste it again.",
         "settingsOnly": "Settings only",
         "syncPreview": "Synchronization includes the data displayed below.",
-        "noPresets": "No presets yet.",
+        "noPresets": "No saved configurations yet.",
         "invalidImport": "Import failed: invalid format.",
         "resolve": "Resolve by keeping this version",
         "refresh": "Refresh",
@@ -2873,18 +2884,18 @@
         },
         "mySpaces": "My spaces",
         "defaultSpace": "My space",
-        "spaceHint": "Keep the tools and projects you use for a task together.",
-        "exploreTitle": "What are you working on?",
-        "exploreIntro": "Find a tool and open it. Save it to a space with your projects when you want to use it again.",
+        "spaceHint": "Shortcuts to your tools and projects.",
+        "exploreTitle": "Tools and projects",
+        "exploreIntro": "Search by name or task. Save shortcuts in My spaces to find them later.",
         "exploreSearch": "Search by name or task…",
         "resetFilters": "Show all resources",
         "addedToSpace": "Saved",
         "addResource": "Find a resource to add…",
         "resourceShortcut": "A project or reference saved in this space.",
         "removeFromSpace": "Remove",
-        "emptyHint": "Add tools or projects from Explore. They will be here next time.",
+        "emptyHint": "Add tools or projects from Explore.",
         "findResources": "Explore resources",
-        "startTemplate": "Or start with a selection",
+        "startTemplate": "Create from a template",
         "resourceCount": "{count, plural, =0 {No resources yet} one {# resource} other {# resources}}",
         "done": "Done",
         "organize": "Organize",
@@ -2899,7 +2910,7 @@
         "deleteSpaceTitle": "Delete “{name}”?",
         "deleteSpaceHint": "This list of shortcuts will be deleted. Tools, projects and saved presets will remain available.",
         "resourceDescriptions": {
-            "project-pad": "An ESP32 controller: hardware, firmware and build documentation.",
+            "project-pad": "Programmable controller with ESP32-S3, keys, encoder, joystick and display.",
             "project-btdac": "A Bluetooth audio receiver with ESP32 and PCM5102. Schematics and project files.",
             "pinout-pad": "Look up HIOS PAD pins and connections.",
             "page-blog": "Development notes from HIOS projects.",
@@ -2914,6 +2925,13 @@
             "ai": "llm ai ia inteligencia artificial model tokens memoria memory",
             "knowledge": "reference referencia notes notas documentación documentation",
             "software": "software open source firmware companion"
-        }
+        },
+        "resourceLabels": {
+            "page-blog": "Documentation",
+            "page-prints": "3D printing",
+            "page-calculators": "Calculators"
+        },
+        "localPreview": "Data saved in this browser",
+        "presetPrivacy": "This configuration and its data are saved in this browser."
     }
 }

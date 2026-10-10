@@ -36,7 +36,6 @@ export function WorkbenchLanding() {
       <header className={styles.landingHeaderCompact}>
         <div className={styles.landingHeaderRow}>
           <div className={styles.landingHeaderLeft}>
-            <span className={styles.heroBadge}>{t('landing.badge')}</span>
             <h1 className={styles.pageTitleCompact}>{t('landing.title')}</h1>
             <span className={styles.pageMetaInline}>
               {visibleTools.length} {t('sectionToolCount')}
@@ -55,7 +54,6 @@ export function WorkbenchLanding() {
       <section className={`${styles.principlesSection} ${styles.principlesMuted}`}>
         <div className={styles.sectionIntro}>
           <h2 className={styles.sectionIntroTitle}>{t('landing.principlesTitle')}</h2>
-          <p className={styles.sectionIntroSubtitle}>{t('landing.principlesSubtitle')}</p>
         </div>
         <div className={styles.principlesGrid}>
           {workbenchSignals.map((signal) => (

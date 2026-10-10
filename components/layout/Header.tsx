@@ -86,7 +86,7 @@ export function Header() {
           {workspace('mySpaces')}
         </Link>
 
-        <nav className={styles.nav} aria-label="Primary">
+        <nav className={styles.nav} aria-label={t('primaryNavigation')}>
           {navItems.map((item) => {
             const active = isActive(item.href);
             const className = [
@@ -118,13 +118,13 @@ export function Header() {
             icon={themeIcon}
             onClick={toggleTheme}
             className={`${styles.iconButton} ${styles.desktopOnlyControl}`}
-            aria-label="Toggle theme"
+            aria-label={t(!mounted || mode === 'dark' ? 'lightTheme' : 'darkTheme')}
           />
           <Link
             href={`/${locale}/workbench/feedback`}
             prefetch={false}
             className={`${styles.iconLink} ${styles.desktopOnlyControl} ${unreadCount > 0 ? styles.iconLinkDot : ''}`}
-            aria-label={`Feedback${unreadCount > 0 ? ` (${unreadCount})` : ''}`}
+            aria-label={`${tFeedback('title')}${unreadCount > 0 ? ` (${unreadCount})` : ''}`}
             data-unread={unreadCount}
           >
             <BellOutlined />
@@ -133,7 +133,7 @@ export function Header() {
             href={`/${locale}/workbench/settings`}
             prefetch={false}
             className={`${styles.iconLink} ${styles.desktopOnlyControl}`}
-            aria-label="Settings"
+            aria-label={tSettings('title')}
           >
             <SettingOutlined />
           </Link>
@@ -167,7 +167,7 @@ export function Header() {
         classNames={{ body: styles.drawerBody }}
         rootClassName={styles.mobileDrawer}
       >
-        <nav className={styles.drawerNav} aria-label="Mobile">
+        <nav className={styles.drawerNav} aria-label={t('mobileNavigation')}>
           {navItems.map((item) => (
             <Link
               key={item.href}
