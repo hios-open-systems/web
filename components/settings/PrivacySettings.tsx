@@ -7,7 +7,7 @@ import { useCurrentUser } from '@/lib/hooks/useCurrentUser';
 import { isTelemetryEnabled, setTelemetryEnabled } from '@/lib/telemetry';
 import styles from './privacySettings.module.css';
 
-async function clearLocalStorages(): Promise<void> {
+async function clearLocalStorages(): Promise<boolean> {
     try {
         window.localStorage.clear();
         window.sessionStorage.clear();
@@ -17,8 +17,9 @@ async function clearLocalStorages(): Promise<void> {
             request.onerror = () => reject(request.error);
             request.onblocked = () => reject(new Error('Close other OpenHIOS tabs and retry'));
         });
+        return true;
     } catch {
-        // bloqueado: nada que borrar
+        return false;
     }
 }
 
@@ -88,7 +89,9 @@ export function PrivacySettings() {
                         type="button"
                         className={styles.action}
                         onClick={() => {
-                            void clearLocalStorages().then(() => messageApi.success(t('clearStorageDone')));
+                            void clearLocalStorages().then(cleared => cleared
+                                ? messageApi.success(t('clearStorageDone'))
+                                : messageApi.error(t('clearStorageError')));
                         }}
                     >
                         {t('clearStorage')}
@@ -107,7 +110,10 @@ export function PrivacySettings() {
                         className={`${styles.action} ${styles.actionDanger}`}
                         onClick={() =>
                             confirmDanger(t('hardResetConfirm'), async () => {
-                                await clearLocalStorages();
+                                if (!await clearLocalStorages()) {
+                                    messageApi.error(t('clearStorageError'));
+                                    return;
+                                }
                                 await clearCachesAndSw();
                                 window.location.reload();
                             })

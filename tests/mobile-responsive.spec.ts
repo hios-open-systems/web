@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { inspectMobileLayout } from './helpers/mobile-layout';
+import es from '../messages/es.json';
 
 const representativeRoutes = [
     '/es',
@@ -59,7 +60,7 @@ test.describe('responsive shell', () => {
         await page.getByRole('button', { name: 'Menú' }).click();
         const drawer = page.getByRole('dialog');
         await expect(drawer).toBeVisible();
-        await expect(drawer.getByText('Feedback', { exact: false })).toBeVisible();
+        await expect(drawer.getByText(es.Feedback.title, { exact: false })).toBeVisible();
         await expect(drawer.getByText('Configuración', { exact: true })).toBeVisible();
 
         const actionHeights = await drawer

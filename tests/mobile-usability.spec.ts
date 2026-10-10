@@ -4,6 +4,7 @@ import { CALC_IDS } from '../components/tools/calculators/registry';
 import { readFileSync } from 'node:fs';
 
 const copy = JSON.parse(readFileSync('messages/es.json', 'utf8')) as {
+  SerialMonitor: { inputPlaceholder: string };
   Calculators: { cards: Record<string, { title: string }> };
   Workbench: {
     packs: Record<string, { title: string }>;
@@ -50,7 +51,7 @@ test('editors stack instead of squeezing their content on phones', async ({ page
 
 test('serial controls and command input remain inside the viewport', async ({ page }) => {
   await page.goto('/es/workbench/serial-monitor');
-  const input = page.getByPlaceholder('Enviar comando JSON o string...');
+  const input = page.getByPlaceholder(copy.SerialMonitor.inputPlaceholder);
   await expect(input).toBeVisible();
   await expect(input).toBeDisabled();
   expect(await page.evaluate(inspectMobileLayout)).toEqual([]);

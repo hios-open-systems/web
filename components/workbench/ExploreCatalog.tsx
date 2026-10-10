@@ -11,6 +11,7 @@ import { resources } from '@/lib/workspaces/resources';
 import { SaveToSpace } from './SaveToSpace';
 import { WorkspaceAccess } from './WorkspaceAccess';
 import { useWorkspaces } from './WorkspaceProvider';
+import { useResourceCopy } from './useResourceCopy';
 import styles from './workspace.module.css';
 
 const icons = { development: <CodeOutlined aria-hidden />, maker: <ToolOutlined aria-hidden />, audio: <SoundOutlined aria-hidden />, ai: <BulbOutlined aria-hidden />, knowledge: <ReadOutlined aria-hidden />, software: <GithubOutlined aria-hidden /> };
@@ -21,11 +22,12 @@ export function ExploreCatalog() {
   const packs = useTranslations('Workbench.packs');
   const locale = useLocale();
   const { error } = useWorkspaces();
+  const { label } = useResourceCopy();
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('all');
   const entries = [
     ...workbenchTools.map(tool => ({ id: `tool:${tool.id}`, href: tool.href, label: packs(`${tool.id}.title`), hint: packs(`${tool.id}.description`), category: activityFor(tool), keywords: toolAliases[tool.id] ?? '' })),
-    ...resources.filter(resource => extras.includes(resource.id)).map(resource => ({ ...resource, hint: t(`resourceDescriptions.${resource.id.replaceAll(':', '-')}`), category: resource.id.includes('software') ? 'software' as const : resource.id.startsWith('page:') ? 'knowledge' as const : 'maker' as const })),
+    ...resources.filter(resource => extras.includes(resource.id)).map(resource => ({ ...resource, label: label(resource.id), hint: t(`resourceDescriptions.${resource.id.replaceAll(':', '-')}`), category: resource.id.includes('software') ? 'software' as const : resource.id.startsWith('page:') ? 'knowledge' as const : 'maker' as const })),
   ];
   const results = rankEntries(entries.filter(entry => category === 'all' || entry.category === category), query);
   return <div className={styles.stack}>

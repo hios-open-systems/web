@@ -29,11 +29,6 @@ export function HeroSection() {
             </Link>
           </div>
 
-          <ul className={styles.factRow}>
-            <li>{t('fact_local')}</li>
-            <li>{t('fact_open')}</li>
-            <li>{t('fact_daily')}</li>
-          </ul>
         </div>
       </div>
     </section>

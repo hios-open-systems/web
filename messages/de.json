@@ -1,14 +1,14 @@
 {
     "SerialMonitor": {
-        "unsupportedTitle": "Nicht unterstützter Browser",
-        "unsupportedDesc": "Die WebSerial-API wird von Apple und Mozilla eingeschränkt. Bitte öffnen Sie dieses Tool in Chrome, Edge oder Brave.",
+        "unsupportedTitle": "Browser nicht unterstützt",
+        "unsupportedDesc": "Dieser Browser kann nicht auf den seriellen Port zugreifen. Verbinde die Platine mit einem Browser, der Web Serial unterstützt.",
         "connect": "Verbinden",
         "disconnect": "Trennen",
         "statusConnected": "VERBUNDEN",
         "statusDisconnected": "GETRENNT",
         "clear": "Leeren",
         "emptyTerminal": "// Warten auf serielle Daten...",
-        "inputPlaceholder": "JSON-Befehl oder String senden...",
+        "inputPlaceholder": "Befehl oder Text zum Senden…",
         "send": "Senden"
     },
     "Guestbook": {
@@ -33,10 +33,10 @@
     "Hero": {
         "showcaseTitle": "Werkzeuge",
         "showcaseSubtitle": "Für Code, Daten, Elektronik und Audio.",
-        "showcaseRandomCta": "Ein Werkzeug entdecken",
+        "showcaseRandomCta": "Zufälliges Werkzeug öffnen",
         "showcaseToolCount": "Werkzeuge",
         "title": "Offene Hardware und Werkzeuge zum Entwickeln.",
-        "subtitle": "Entdecke Projekte mit ESP32, Audio und lokaler KI. Lies die Dokumentation, prüfe Anschlüsse und finde Werkzeuge zum Programmieren, Berechnen und Testen.",
+        "subtitle": "Projekte mit ESP32, Audio und lokaler KI, mit Quellcode und Dokumentation. Web-Werkzeuge für Daten, Schaltungen und Klang.",
         "cta": "Werkzeuge entdecken",
         "secondary": "Projekte ansehen",
         "fact_local": "Webwerkzeuge",
@@ -468,7 +468,7 @@
         "troubleshooting_desc": "Häufige Probleme, FAQs und Diagnose"
     },
     "Tools": {
-        "title": "Stack",
+        "title": "Software und Ressourcen",
         "subtitle": "Die Werkzeuge, die wir zum Entwerfen, Entwickeln und Dokumentieren verwenden",
         "software_category": "Software & Code",
         "hardware_category": "Hardware & Design",
@@ -476,8 +476,8 @@
         "filter_all": "Alle",
         "filter_software": "Software",
         "filter_hardware": "Hardware",
-        "catalog_count": "empfohlene Tools",
-        "used_in_projects": "In {count} Projekt(en) verwendet",
+        "catalog_count": "Ressourcen",
+        "used_in_projects": "{count, plural, one {In # Projekt verwendet} other {In # Projekten verwendet}}",
         "official_site": "Offizielle Seite"
     },
     "Tutorials": {
@@ -486,7 +486,7 @@
         "subtitle": "Schritt-für-Schritt-Anleitungen zum Loslegen",
         "steps": "Schritte",
         "copied": "Kopiert!",
-        "vscode_platformio_title": "VSCode + PlatformIO Setup",
+        "vscode_platformio_title": "VS Code und PlatformIO",
         "vscode_platformio_desc": "Entwicklungsumgebung einrichten",
         "step_install_vscode": "VSCode herunterladen und installieren",
         "step_install_pio": "PlatformIO-Erweiterung installieren",
@@ -497,7 +497,7 @@
         "step_wait_init": "PlatformIO-Initialisierung abwarten",
         "step_wait_init_desc": "Beim ersten Mal kann der Download der Toolchains einige Minuten dauern",
         "pio_commands_title": "Wichtige PlatformIO-Befehle",
-        "pio_commands_desc": "Befehle für den täglichen Gebrauch",
+        "pio_commands_desc": "Kompilieren, Firmware übertragen und den seriellen Port lesen.",
         "cmd_build": "Projekt kompilieren",
         "cmd_build_desc": "Kompiliert ohne hochzuladen",
         "cmd_upload": "Auf Gerät hochladen",
@@ -505,7 +505,7 @@
         "cmd_monitor": "Seriellen Monitor öffnen",
         "cmd_monitor_desc": "Debug-Ausgabe anzeigen (Ctrl+C zum Beenden)",
         "cmd_clean": "Build-Dateien löschen",
-        "cmd_clean_desc": "Entfernt .pio-Ordner, erzwingt vollständigen Rebuild",
+        "cmd_clean_desc": "Entfernt erzeugte Build-Dateien.",
         "cmd_all": "Hochladen und überwachen",
         "cmd_all_desc": "Flashen und sofort seriellen Monitor öffnen",
         "wsl_usb_title": "USB-Passthrough für WSL",
@@ -521,7 +521,7 @@
         "wsl_verify": "In WSL überprüfen",
         "wsl_verify_desc": "Sollte /dev/ttyUSB0 oder ähnlich anzeigen",
         "troubleshoot_title": "Häufige Probleme",
-        "troubleshoot_desc": "Schnelle Lösungen für typische Probleme",
+        "troubleshoot_desc": "Probleme mit Verbindung, Berechtigungen und Abhängigkeiten.",
         "ts_port_busy": "Zugriff auf Port verweigert",
         "ts_port_busy_desc": "Benutzer zur dialout-Gruppe hinzufügen: sudo usermod -a -G dialout $USER",
         "ts_no_port": "Gerät nicht erkannt",
@@ -573,10 +573,10 @@
         "assignedPins": "{count} Kontakte werden in dieser Anleitung verwendet oder reserviert. Abgeblendete Kontakte gehören nicht zur gezeigten Verdrahtung.",
         "functionalDiagram": "Funktionsübersicht. Form und Kontaktpositionen variieren je nach Hersteller: Prüfe die Beschriftung deines Moduls.",
         "eyebrow": "Hardware-Referenz",
-        "title": "Interaktive Pinouts",
-        "subtitle": "Erkunde die Pin-Diagramme der Module, die in unseren Projekten verwendet werden",
-        "builds_title": "Builds (reale Verdrahtung)",
-        "builds_hint": "GPIO-Karte · Verdrahtung · Checkliste →",
+        "title": "Modul-Pinbelegungen",
+        "subtitle": "Pins, Schnittstellen und Anschlüsse der in HIOS verwendeten Module.",
+        "builds_title": "Projektverdrahtung",
+        "builds_hint": "GPIO-Zuordnung, Anschlüsse und Aufbauprüfung.",
         "usedIn": "Verwendet in:",
         "Kinds": {
             "mcu": "Mikrocontroller",
@@ -594,13 +594,13 @@
         "datasheet": "Datenblatt",
         "Modules": {
             "esp32-wroom-32": {
-                "description": "WiFi + BT 4.2 MCU, 2×19-Header (38 Pins). Kurzreferenz + Fallstricke."
+                "description": "Mikrocontroller mit WLAN und Bluetooth 4.2. Platine mit zwei Reihen zu je 19 Pins."
             },
             "esp32-s3-devkitc-1": {
-                "description": "MCU mit nativem USB OTG, WiFi 802.11 b/g/n, BLE 5. 2×22-Header. Kurzreferenz + Fallstricke."
+                "description": "Mikrocontroller mit USB OTG, WLAN 802.11 b/g/n und BLE 5. Zwei Reihen zu je 22 Pins."
             },
             "max98357a": {
-                "description": "Mono-3,2W-I2S-Class-D-Verstärker (Breakout). 2 parallel = Stereo."
+                "description": "Mono-Class-D-Verstärker mit I2S-Eingang. Beachte Kanalwahl, Stromversorgung und Lautsprecheranschlüsse."
             },
             "pcm5102": {
                 "description": "32-Bit/384kHz-I2S-DAC (GY-PCM5102 Breakout). L/R-Line-Ausgang."
@@ -636,7 +636,7 @@
                 "description": "Anschlussübersicht für 2S-Module. Laden, Balancieren und Schutz hängen vom konkreten Modell ab."
             },
             "holder-2s": {
-                "description": "Zwei 18650-Zellen in Serie (2S). Achtung: der richtige Halter ist SERIELL, nicht parallel."
+                "description": "Halter für zwei 18650-Zellen in Reihe (2S). Prüfe die Reihenschaltung."
             }
         },
         "tables": {
@@ -683,21 +683,25 @@
         "guestbook": "Gästebuch",
         "home": "Start",
         "projects": "Projekte",
-        "tools": "Stack",
-        "workbench": "Workbench",
+        "tools": "Software",
+        "workbench": "Werkzeuge",
         "pinouts": "Pinouts",
         "calculators": "Rechner",
         "rcl": "RCL",
         "menu": "Menü",
-        "search": "Suchen"
+        "search": "Suchen",
+        "primaryNavigation": "Hauptnavigation",
+        "mobileNavigation": "Mobile Navigation",
+        "lightTheme": "Helles Design verwenden",
+        "darkTheme": "Dunkles Design verwenden"
     },
     "Auth": {
         "signIn": "Anmelden",
         "signOut": "Abmelden"
     },
     "Feedback": {
-        "title": "Feedback-Postfach",
-        "subtitle": "Automatisch erfasste Fehler und Einträge, die du selbst erstellst: Bugs, Ideen und Notizen. Lokal in diesem Browser gespeichert.",
+        "title": "Lokale Fehler und Notizen",
+        "subtitle": "Browserfehler und Notizen, die auf diesem Gerät gespeichert sind.",
         "newEntry": "Neuer Eintrag",
         "kind": "Art",
         "kinds": {
@@ -716,13 +720,13 @@
             "error": "Fehler"
         },
         "titleField": "Titel",
-        "titlePlaceholder": "Kurze Zusammenfassung (z. B. 'JWT-Decoder scheitert an Tokens ohne Signatur')",
+        "titlePlaceholder": "Kurze Beschreibung des Fehlers oder der Idee",
         "bodyField": "Details",
-        "bodyPlaceholder": "Kontext, Repro-Schritte, alles Nützliche...",
+        "bodyPlaceholder": "Was du getan hast, was du erwartet hast und was passiert ist.",
         "save": "Speichern",
         "entries": "Einträge",
         "clearAll": "Alle löschen",
-        "empty": "Noch keine Einträge. Wenn etwas kaputtgeht, taucht es hier automatisch auf.",
+        "empty": "Noch keine Einträge. Du kannst eine Notiz hinzufügen; erkannte Fehler erscheinen ebenfalls hier.",
         "copy": "Kopieren",
         "copied": "In die Zwischenablage kopiert",
         "copyError": "Konnte nicht kopieren",
@@ -733,32 +737,33 @@
         "lastSeen": "zuletzt gesehen",
         "context": "Kontext",
         "toastErrorCaptured": "Fehler erfasst: {title}",
-        "localFootnote": "Vorerst lokal gespeichert. Sobald die Auth da ist, wird es automatisch mit deinem Konto synchronisiert.",
+        "localFootnote": "Dieses Protokoll bleibt im Browser und wird nicht mit deinem Konto synchronisiert. Nutze Feedback senden, um das Projekt zu kontaktieren.",
         "widget": {
-            "button": "Feedback",
+            "button": "Feedback senden",
             "title": "Feedback senden",
-            "kindBug": "Irgendwas ist kaputt",
+            "kindBug": "Fehler melden",
             "kindIdea": "Idee",
             "kindNote": "Kommentar",
-            "ratingLabel": "Wie läuft's?",
+            "ratingLabel": "Deine Bewertung (optional)",
             "messageLabel": "Deine Nachricht",
-            "messagePlaceholder": "Was passiert ist, was du dir wünschst, irgendwas…",
+            "messagePlaceholder": "Beschreibe das Problem oder deinen Verbesserungsvorschlag.",
             "emailLabel": "E-Mail (optional)",
             "emailPlaceholder": "du@beispiel.com",
-            "emailHint": "Nur wenn du eine Antwort willst.",
+            "emailHint": "Gib deine E-Mail-Adresse an, wenn du eine Antwort möchtest.",
             "send": "Senden",
             "cancel": "Abbrechen",
-            "thanks": "Danke! Ist angekommen.",
-            "thanksLocal": "Gespeichert — erreicht mich, sobald die Verbindung wieder da ist.",
-            "emptyError": "Schreib erst mal was"
+            "thanks": "Feedback gesendet. Vielen Dank.",
+            "thanksLocal": "Senden fehlgeschlagen. Öffne die Kopie unter Lokale Fehler und Notizen und sende sie erneut.",
+            "emptyError": "Schreibe vor dem Senden eine Nachricht.",
+            "captchaError": "Schließe die Prüfung ab, um zu senden."
         },
         "admin": {
-            "sectionTitle": "Erhaltenes Feedback",
-            "authRequired": "Melde dich an, um das Feedback der Nutzer zu sehen.",
+            "sectionTitle": "Eingegangenes Feedback",
+            "authRequired": "Melde dich an, um eingegangenes Feedback zu sehen.",
             "errorLoad": "Feedback konnte nicht geladen werden.",
             "empty": "Noch kein Feedback.",
             "statTotal": "Gesamt",
-            "statAvgRating": "Ø Bewertung",
+            "statAvgRating": "Durchschnittliche Bewertung",
             "statBugs": "Bugs",
             "statIdeas": "Ideen",
             "statNotes": "Kommentare",
@@ -780,7 +785,7 @@
         "savedHint": "Speichere die aktuelle Akzentfarbe, den Modus und den Stil als Theme in diesem Browser.",
         "savedName": "Name",
         "savedNamePlaceholder": "z. B. Nacht-Amber",
-        "savedSave": "Aktuelles speichern",
+        "savedSave": "Design speichern",
         "savedEmpty": "Noch keine gespeicherten Themes",
         "savedApply": "Theme anwenden",
         "savedDelete": "Theme löschen",
@@ -818,8 +823,8 @@
         "invalidHex": "Ungültiges Format. Verwende #rrggbb oder #rgb.",
         "preview": "Live-Vorschau",
         "previewHint": "Prüfe die Farbe an Schaltflächen, Markierungen und Links.",
-        "previewTagline": "Workbench",
-        "previewButton": "Primäre Aktion",
+        "previewTagline": "Werkzeuge",
+        "previewButton": "Beispielschaltfläche",
         "previewLink": "Beispiel-Link",
         "localFootnote": "Melde dich an, um die Akzentfarbe in deinem Konto zu speichern.",
         "accountFootnote": "Änderungen werden in diesem Browser angewendet. Prüfe den Synchronisierungsstatus, um das Speichern im Konto zu bestätigen.",
@@ -832,36 +837,36 @@
         }
     },
     "CommandPalette": {
-        "placeholder": "Tools und Seiten suchen…",
+        "placeholder": "Werkzeuge und Seiten suchen…",
         "empty": "Keine Treffer",
         "hint": "↑↓ navigieren · Enter öffnen · Esc schließen",
-        "toolsGroup": "Tools",
+        "toolsGroup": "Werkzeuge",
         "pagesGroup": "Seiten",
         "sectionsGroup": "Bereiche",
         "pages": {
             "home": "Start",
-            "tools": "Stack",
-            "workbench": "Workbench",
+            "tools": "Software",
+            "workbench": "Werkzeuge",
             "calculators": "Rechner",
             "composer": "Chiptune Composer",
             "pinouts": "Pinouts",
             "padWiring": "PAD-Verdrahtungsanleitung",
             "btdacWiring": "BTDAC-Verdrahtungsanleitung",
             "speakerWiring": "Speaker-Verdrahtungsanleitung",
-            "snippets": "Snippets",
+            "snippets": "Code-Snippets",
             "settings": "Einstellungen",
-            "feedback": "Feedback",
-            "random": "Zufälliges Tool öffnen"
+            "feedback": "Fehler und Feedback",
+            "random": "Zufälliges Werkzeug öffnen"
         }
     },
     "Presets": {
         "base": "Vorlagen",
-        "save": "Preset speichern",
-        "presets": "Presets",
-        "namePrompt": "Preset benennen",
-        "empty": "Keine gespeicherten Presets",
+        "save": "Konfiguration speichern",
+        "presets": "Konfigurationen",
+        "namePrompt": "Name der Konfiguration",
+        "empty": "Keine gespeicherten Konfigurationen",
         "delete": "Löschen",
-        "defaultName": "Preset {n}"
+        "defaultName": "Konfiguration {n}"
     },
     "Chain": {
         "sendTo": "Senden an",
@@ -899,7 +904,7 @@
             "lessons": {
                 "debounce": {
                     "title": "Debounce",
-                    "explain": "**Debounce** verzögert einen Aufruf, bis die Eingabe stoppt. Ein Schwall kollabiert zu einem letzten Lauf — klassisch für Suchfelder und Resize. Code bearbeiten und ausführen."
+                    "explain": "**Debounce** wartet auf eine Pause zwischen Aufrufen, bevor eine Funktion ausgeführt wird, etwa bis eine Sucheingabe abgeschlossen ist. Ändere die Wartezeit und führe das Beispiel aus."
                 },
                 "reducer": {
                     "title": "Reducer / Zustandsmaschine",
@@ -927,7 +932,7 @@
             "previewEmpty": "Noch nichts zur Vorschau",
             "importedTitle": "Geteilte Notiz",
             "exampleTitle": "Willkommen",
-            "exampleBody": "# Hallo\\n\\nDies ist eine **local-first** Markdown-Notiz.\\n\\n- Lebt im Browser\\n- Live-Vorschau rechts"
+            "exampleBody": "# Beispielnotiz\n\nVerwende **Fettdruck**, Links und Listen.\n\n- Die Notiz wird in diesem Browser gespeichert.\n- Die Vorschau wird beim Schreiben aktualisiert."
         },
         "mermaid": {
             "badge": "Generierungs-Tool",
@@ -1403,7 +1408,7 @@
                     "Mit Prettify / Minify und dem Pfad-Explorer navigieren.",
                     "Auf „Link teilen“ klicken, um eine URL zu kopieren, die genau dieses Payload reproduziert."
                 ],
-                "tip": "Wer den Link hat, kann die enthaltenen Daten lesen. Prüfe den Inhalt vor dem Teilen und entferne vertrauliche Angaben."
+                "tip": "Der Link enthält das vollständige JSON. Prüfe, ob Passwörter, Tokens oder andere Daten enthalten sind, die du nicht teilen möchtest."
             },
             "typeChecker": {
                 "intro": "Prüfe im Browser, ob ein JSON-Wert einem TypeScript-Typ zuweisbar ist.",
@@ -1479,13 +1484,13 @@
             }
         },
         "signals": {
-            "localFirst": "Local-first und privat",
-            "shareable": "Teilbare Sessions",
-            "dailyUse": "Für den täglichen Einsatz gebaut"
+            "localFirst": "Verarbeitung",
+            "shareable": "Geteilte Links",
+            "dailyUse": "Gespeicherte Verknüpfungen"
         },
         "landing": {
             "badge": "Entwicklungswerkzeuge",
-            "title": "Workbench",
+            "title": "Werkzeuge",
             "subtitle": "Werkzeuge für Code, Daten, Elektronik und Audio.",
             "randomCta": "Zufälliges Werkzeug öffnen",
             "allToolsTitle": "Alle Werkzeuge",
@@ -1497,7 +1502,7 @@
             "sectionsTitle": "Bereiche der Workbench",
             "sectionsSubtitle": "Audio, Netzwerk, Elektronik, Generierung, Validierung und Tests.",
             "cardCta": "Bereich öffnen",
-            "principlesTitle": "Workbench nutzen",
+            "principlesTitle": "Daten und Speicherung",
             "principlesSubtitle": "Verarbeitung, Speicherung und Teilen von Inhalten.",
             "principles": {
                 "localFirst": "Die Kennzeichnung am Werkzeug zeigt, ob es Daten im Browser verarbeitet oder Netzwerkanfragen benötigt.",
@@ -1586,7 +1591,7 @@
                 "description": "Wandle Daten zwischen CSV und JSON mit einstellbaren Trennzeichen um."
             },
             "llm-vram-calc": {
-                "title": "Speicherszenarien für KI",
+                "title": "Speicherschätzung für Modelle",
                 "description": "Vergleiche Größen, Formate und Kontext mit einer Beispielformel. Sie ersetzt keine Messung am Modell."
             },
             "esp32-llm-bridge": {
@@ -1780,7 +1785,7 @@
             "copyPath": "Pfad kopieren",
             "pathCopied": "Pfad kopiert",
             "noPaths": "Keine Pfade passen zur aktuellen Suche.",
-            "outputHint": "Die Ausgabe folgt dem aktuellen Modus und ist eine saubere Basis zum Kopieren oder Teilen.",
+            "outputHint": "Das Ergebnis verwendet das gewählte Format.",
             "metrics": {
                 "chars": "Zeichen",
                 "lines": "Zeilen",
@@ -1833,7 +1838,7 @@
             "recordType": "Record-Typ",
             "helper": "Damit prüfst du Propagation, MX-Ziele, TXT-Einträge oder Nameserver an einer Stelle.",
             "results": "Live-Records",
-            "empty": "Starte eine Abfrage, um Live-Records zu prüfen.",
+            "empty": "Gib eine Domain ein und starte die Abfrage.",
             "lookupFailed": "Abfrage fehlgeschlagen",
             "answers": "Antworten",
             "duration": "Antwortzeit",
@@ -1865,7 +1870,7 @@
             "port": "Port",
             "helper": "Prüft das Zertifikat, das der Server wirklich ausliefert, und markiert Ablauf-Risiken früh.",
             "results": "Zertifikatsstatus",
-            "empty": "Starte eine Prüfung, um Live-Zertifikatsdaten zu laden.",
+            "empty": "Gib Server und Port ein, um das Zertifikat abzufragen.",
             "inspectFailed": "Prüfung fehlgeschlagen",
             "daysRemaining": "Verbleibende Tage",
             "validFrom": "Gültig ab",
@@ -1966,7 +1971,7 @@
             "title": "Websitestatus",
             "subtitle": "Prüfe Webadressen mit Netzwerkanfragen und Browserbenachrichtigungen.",
             "loadExample": "Lokales Beispiel laden",
-            "clientOnly": "Läuft nur in diesem Browser-Tab. Das Monitoring pausiert, sobald Tab oder App geschlossen werden.",
+            "clientOnly": "Die Prüfungen laufen, solange dieser Tab geöffnet bleibt.",
             "corsNote": "Anfragen an andere Websites verwenden den Modus no-cors. Der Browser kann den HTTP-Status dieser Antworten nicht lesen. Eine empfangene Antwort bestätigt daher nicht, dass die Website korrekt funktioniert.",
             "url": "URL",
             "interval": "Intervall",
@@ -2003,9 +2008,9 @@
             "badge": "Eigene Sektion",
             "title": "Code-Snippets",
             "subtitle": "Speichere Code-Snippets in diesem Browser oder in deinem Konto.",
-            "titlePlaceholder": "Titel des Snippets",
+            "titlePlaceholder": "Titel des Code-Snippets",
             "tagsPlaceholder": "Kommagetrennte Tags",
-            "bodyPlaceholder": "Befehl, Rezept, Payload oder nützliche Notiz einfügen...",
+            "bodyPlaceholder": "Code oder Notiz zum Speichern…",
             "save": "Snippet speichern",
             "empty": "In diesem Browser wurden noch keine Snippets gespeichert.",
             "copy": "Kopieren",
@@ -2314,7 +2319,7 @@
         },
         "vram": {
             "eyebrow": "Lokale KI und Speicher",
-            "title": "Speicherszenarien für lokale Modelle",
+            "title": "Speicherschätzung für Modelle",
             "description": "Vergleiche Größen und Formate mit einer vereinfachten Formel. Die Profile sind Beispielszenarien. Sie bilden keine genaue Modellarchitektur ab und garantieren nicht, dass ein Modell geladen werden kann.",
             "hardwareTitle": "1. Verfügbarer Speicher",
             "vram": "Angegebener VRAM",
@@ -2678,7 +2683,7 @@
     },
     "HomeQuickAccess": {
         "workbench": {
-            "label": "Workbench",
+            "label": "Werkzeuge",
             "description": "Werkzeuge für Code, Daten, Elektronik und Audio."
         },
         "ai": {
@@ -2686,7 +2691,7 @@
             "description": "Ein ESP32-S3-Knoten für Anfragen an Ollama im lokalen Netzwerk."
         },
         "blog": {
-            "label": "Devlog",
+            "label": "Dokumentation",
             "description": "Anleitungen und technische Notizen zu Hardware, Software und lokaler KI."
         },
         "stats": {
@@ -2696,7 +2701,12 @@
     },
     "Footer": {
         "description": "HIOS — Offene Hardware, Software und technische Dokumentation.",
-        "detail": "Code und Ressourcen zum Erkunden, Bauen und Anpassen."
+        "detail": "Code und Ressourcen zum Erkunden, Bauen und Anpassen.",
+        "navigation": "Fußzeilennavigation",
+        "prints": "3D-Druck",
+        "blog": "Dokumentation",
+        "stats": "Statistik",
+        "about": "Über HIOS"
     },
     "Colophon": {
         "title": "Über HIOS",
@@ -2751,14 +2761,15 @@
         "hardResetHint": "Löscht lokalen Speicher, Caches und Service-Worker-Registrierungen und lädt die Seite neu. Auch die Telemetrie-Einstellung wird entfernt und auf ihren Standardwert zurückgesetzt.",
         "hardResetConfirm": "Lokalen Speicher und Website-Cache löschen und neu laden? Notizen und Entwürfe, die nur in diesem Browser gespeichert sind, gehen verloren.",
         "accountTitle": "Kontodaten",
-        "accountHint": "Beim Löschen des Kontos werden seine Sitzungen, Code-Snippets und Einstellungen gelöscht. Nutzungsereignisse und gesendetes Feedback bleiben ohne Kontoverknüpfung erhalten; Nachrichtentext und Kontaktadresse werden nicht gelöscht. Gästebucheinträge bleiben ebenfalls erhalten.",
+        "accountHint": "Beim Löschen deines Kontos werden Sitzungen, Bereiche, gespeicherte Konfigurationen, Code-Snippets und Einstellungen gelöscht. Nutzungsereignisse und gesendete Nachrichten bleiben ohne Kontoverknüpfung erhalten; Nachrichteninhalte und Kontaktadressen werden nicht gelöscht. Gästebucheinträge bleiben ebenfalls erhalten.",
         "deleteAccount": "Konto löschen",
-        "deleteAccountConfirm": "Konto, Sitzungen, Snippets und Einstellungen löschen? Das kann nicht rückgängig gemacht werden. Gesendetes Feedback und Gästebucheinträge bleiben erhalten.",
+        "deleteAccountConfirm": "Konto sowie Sitzungen, Bereiche, Konfigurationen, Snippets und Einstellungen löschen? Dies kann nicht rückgängig gemacht werden. Gesendete Nachrichten und Gästebucheinträge bleiben erhalten.",
         "deleteAccountDone": "Konto gelöscht.",
         "deleteAccountError": "Das Konto konnte nicht gelöscht werden. Versuche es erneut.",
         "notLoggedIn": "Du bist nicht angemeldet. Telemetrie und gesendete Nachrichten können auch ohne Konto Datensätze erzeugen.",
         "confirm": "Löschen",
-        "cancel": "Abbrechen"
+        "cancel": "Abbrechen",
+        "clearStorageError": "Nicht alle Daten konnten gelöscht werden. Schließe andere HIOS-Tabs und versuche es erneut."
     },
     "PublicStats": {
         "kicker": "HIOS-Nutzung",
@@ -2782,7 +2793,7 @@
         "note": "Dieses Panel zeigt den Code des Algorithmus, den das Werkzeug verwendet. Die Quelldatei ist auf GitHub verfügbar."
     },
     "Workspace": {
-        "title": "Mein Workbench",
+        "title": "Meine Bereiche",
         "catalog": "Katalog",
         "explore": "Entdecken",
         "search": "Werkzeuge oder Aufgaben suchen…",
@@ -2814,26 +2825,26 @@
         "importLocal": "Lokale Arbeitsbereiche importieren",
         "export": "Exportieren",
         "import": "Importieren",
-        "includeContent": "Preset-Inhalte einschließen",
-        "uploadContent": "Diesen Preset-Inhalt in mein Konto hochladen",
-        "preview": "Vorschau der hochzuladenden Daten",
+        "includeContent": "Daten gespeicherter Konfigurationen einschließen",
+        "uploadContent": "Auch die Daten dieser Konfiguration synchronisieren",
+        "preview": "Mit deinem Konto synchronisierte Daten",
         "up": "Nach oben",
         "down": "Nach unten",
         "open": "Öffnen",
         "name": "Name",
         "template": "Vorlage",
         "empty": "Leerer Arbeitsbereich",
-        "presets": "Presets",
-        "savePreset": "Preset speichern",
-        "error": "Speicher oder Verbindung nicht verfügbar. Die aktuelle Ansicht bleibt erhalten.",
+        "presets": "Gespeicherte Konfigurationen",
+        "savePreset": "Konfiguration speichern",
+        "error": "Laden, Speichern oder Synchronisieren fehlgeschlagen. Prüfe Verbindung und Browserspeicher.",
         "login": "Zum Synchronisieren anmelden",
         "recent": "Zuletzt verwendet",
         "continue": "Weiterarbeiten",
         "intro": "Stelle eine Liste von Werkzeugen und Projekten zusammen, die du wieder verwenden möchtest.",
         "external": "Externe Ressourcen",
-        "privacy": "Lokale Daten bleiben bis zur gewählten Synchronisierung auf diesem Gerät.",
+        "privacy": "Ohne Anmeldung bleiben Bereiche in diesem Browser. Bereiche deines Kontos werden automatisch synchronisiert; lokale Bereiche kannst du optional importieren.",
         "results": "Ergebnisse: {count}",
-        "newPreset": "Neues Preset",
+        "newPreset": "Neue Konfiguration",
         "selectSpace": "Arbeitsbereich wählen",
         "addToSpace": "Zum Arbeitsbereich hinzufügen",
         "copied": "Kopiert",
@@ -2858,7 +2869,7 @@
         "missingTransfer": "Übertragene Daten nicht verfügbar. Erneut einfügen.",
         "settingsOnly": "Nur Einstellungen",
         "syncPreview": "Die Synchronisierung umfasst die unten angezeigten Daten.",
-        "noPresets": "Noch keine Presets.",
+        "noPresets": "Noch keine gespeicherten Konfigurationen.",
         "invalidImport": "Import fehlgeschlagen: ungültiges Format.",
         "resolve": "Diese Version behalten",
         "refresh": "Aktualisieren",
@@ -2873,18 +2884,18 @@
         },
         "mySpaces": "Meine Bereiche",
         "defaultSpace": "Mein Bereich",
-        "spaceHint": "Sammle Werkzeuge und Projekte für eine Aufgabe an einem Ort.",
-        "exploreTitle": "Woran arbeitest du?",
-        "exploreIntro": "Suche ein Werkzeug und öffne es. Speichere es mit deinen Projekten in einem Bereich, wenn du es wieder brauchst.",
+        "spaceHint": "Verknüpfungen zu deinen Werkzeugen und Projekten.",
+        "exploreTitle": "Werkzeuge und Projekte",
+        "exploreIntro": "Suche nach Name oder Aufgabe. Speichere Verknüpfungen unter Meine Bereiche, um sie später wiederzufinden.",
         "exploreSearch": "Nach Name oder Aufgabe suchen…",
         "resetFilters": "Alle Ressourcen anzeigen",
         "addedToSpace": "Gespeichert",
         "addResource": "Ressource zum Hinzufügen suchen…",
         "resourceShortcut": "Ein Projekt oder eine Referenz in diesem Bereich.",
         "removeFromSpace": "Entfernen",
-        "emptyHint": "Füge unter Entdecken Werkzeuge oder Projekte hinzu. Beim nächsten Besuch findest du sie hier.",
+        "emptyHint": "Füge Werkzeuge oder Projekte über Entdecken hinzu.",
         "findResources": "Ressourcen entdecken",
-        "startTemplate": "Oder mit einer Auswahl beginnen",
+        "startTemplate": "Aus Vorlage erstellen",
         "resourceCount": "{count, plural, =0 {Noch keine Ressourcen} one {# Ressource} other {# Ressourcen}}",
         "done": "Fertig",
         "organize": "Organisieren",
@@ -2899,7 +2910,7 @@
         "deleteSpaceTitle": "„{name}“ löschen?",
         "deleteSpaceHint": "Diese Liste von Verknüpfungen wird gelöscht. Werkzeuge, Projekte und gespeicherte Einstellungen bleiben verfügbar.",
         "resourceDescriptions": {
-            "project-pad": "Ein ESP32-Controller: Hardware, Firmware und Bauanleitung.",
+            "project-pad": "Programmierbarer Controller mit ESP32-S3, Tasten, Drehgeber, Joystick und Display.",
             "project-btdac": "Ein Bluetooth-Audioempfänger mit ESP32 und PCM5102. Schaltpläne und Projektdateien.",
             "pinout-pad": "Pins und Anschlüsse des HIOS PAD nachschlagen.",
             "page-blog": "Entwicklungsnotizen zu HIOS-Projekten.",
@@ -2914,6 +2925,13 @@
             "ai": "llm ai ia inteligencia artificial model tokens memoria memory",
             "knowledge": "reference referencia notes notas documentación documentation",
             "software": "software open source firmware companion"
-        }
+        },
+        "resourceLabels": {
+            "page-blog": "Dokumentation",
+            "page-prints": "3D-Druck",
+            "page-calculators": "Rechner"
+        },
+        "localPreview": "In diesem Browser gespeicherte Daten",
+        "presetPrivacy": "Diese Konfiguration und ihre Daten werden in diesem Browser gespeichert."
     }
 }

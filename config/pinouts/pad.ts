@@ -97,7 +97,7 @@ export const PAD_WIRING: WiringGuide = {
       rail: null,
       power: 'no se cablea: los usa la placa',
       step: 9,
-      tip: 'Reservados. Tocarlos rompe el HID (19/20) o el flasheo por cable (43/44).',
+      tip: 'Pines reservados para USB HID (19/20) y programación por cable (43/44). No los asignes a otros periféricos.',
     },
   ],
 
@@ -171,7 +171,7 @@ export const PAD_WIRING: WiringGuide = {
       t: '🔌 Switches',
       group: 'power',
       cnt: '2',
-      tip: '⚠️ **SW-PANTALLA va en la línea LED/BL, NO en el VCC de la pantalla.** Si le cortás el VCC mientras los GPIO10–14 siguen manejando el SPI a 3.3V, violás el abs-max del ILI9488 (`VIN ≤ IOVCC + 0.3V`, o sea 0.3V con el módulo apagado) y le metés corriente por los diodos de ESD: es la forma clásica de cocinar el controlador. Cortando el backlight ahorrás casi la misma corriente, sin romper nada.',
+      tip: '**SW-PANTALLA debe cortar la línea LED/BL, no el VCC de la pantalla.** Si cortás VCC mientras los GPIO10–14 mantienen señales SPI de 3.3 V, se supera el límite de entrada del ILI9488 (`VIN ≤ IOVCC + 0.3V`, equivalente a 0.3 V con el módulo apagado). La corriente por los diodos de protección puede dañar el controlador. Mantené alimentado el módulo y controlá por separado la retroiluminación.',
       rows: [
         { pin: 'SW1', kind: 'pwr5', nm: 'SW-CELDAS', to: 'corta BAT+ → buck (apaga TODO)', note: '≥3A' },
         { pin: 'SW2', kind: 'pwr33', nm: 'SW-PANTALLA', to: 'corta GPIO21 → LED/BL de la pantalla (la lógica queda alimentada)' },

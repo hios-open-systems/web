@@ -1,14 +1,14 @@
 {
     "SerialMonitor": {
-        "unsupportedTitle": "Navegador No Soportado",
-        "unsupportedDesc": "La API de WebSerial está restringida por Apple y Mozilla. Por favor, abrí esta herramienta en Chrome, Edge o Brave.",
+        "unsupportedTitle": "Navegador no compatible",
+        "unsupportedDesc": "Este navegador no permite acceder al puerto serie. Usá un navegador compatible con Web Serial para conectar la placa.",
         "connect": "Conectar",
         "disconnect": "Desconectar",
         "statusConnected": "CONECTADO",
         "statusDisconnected": "DESCONECTADO",
         "clear": "Limpiar",
         "emptyTerminal": "// Esperando datos del puerto serie...",
-        "inputPlaceholder": "Enviar comando JSON o string...",
+        "inputPlaceholder": "Comando o texto para enviar…",
         "send": "Enviar"
     },
     "Guestbook": {
@@ -33,10 +33,10 @@
     "Hero": {
         "showcaseTitle": "Herramientas",
         "showcaseSubtitle": "Para trabajar con código, datos, electrónica y audio.",
-        "showcaseRandomCta": "Descubrir una herramienta",
+        "showcaseRandomCta": "Abrir una al azar",
         "showcaseToolCount": "herramientas",
         "title": "Hardware abierto y herramientas para desarrollar.",
-        "subtitle": "Explorá proyectos con ESP32, audio e IA local. Consultá documentación, revisá conexiones y encontrá herramientas para programar, calcular y probar.",
+        "subtitle": "Proyectos con ESP32, audio e IA local, con código y documentación. Herramientas web para trabajar con datos, circuitos y sonido.",
         "cta": "Explorar herramientas",
         "secondary": "Ver proyectos",
         "fact_local": "Herramientas web",
@@ -468,7 +468,7 @@
         "troubleshooting_desc": "Problemas habituales y pasos para identificar su causa"
     },
     "Tools": {
-        "title": "Stack",
+        "title": "Software y recursos",
         "subtitle": "Software y recursos utilizados en los proyectos de HIOS",
         "software_category": "Software y código",
         "hardware_category": "Hardware y diseño",
@@ -476,39 +476,39 @@
         "filter_all": "Todos",
         "filter_software": "Software",
         "filter_hardware": "Hardware",
-        "catalog_count": "herramientas recomendadas",
-        "used_in_projects": "Usado en {count} proyecto(s)",
+        "catalog_count": "recursos",
+        "used_in_projects": "{count, plural, one {Usado en # proyecto} other {Usado en # proyectos}}",
         "official_site": "Sitio oficial"
     },
     "Tutorials": {
-        "badge": "Inicio Rápido",
+        "badge": "Inicio rápido",
         "title": "Tutoriales",
         "subtitle": "Guías paso a paso para empezar a construir",
         "steps": "pasos",
-        "copied": "¡Copiado!",
-        "vscode_platformio_title": "Setup VSCode + PlatformIO",
+        "copied": "Copiado",
+        "vscode_platformio_title": "VS Code y PlatformIO",
         "vscode_platformio_desc": "Configurá tu entorno de desarrollo",
-        "step_install_vscode": "Descargá e instalá VSCode",
+        "step_install_vscode": "Descargá e instalá VS Code",
         "step_install_pio": "Instalá la extensión PlatformIO",
         "step_install_pio_desc": "Buscá 'PlatformIO IDE' en Extensiones (Ctrl+Shift+X)",
         "step_clone_repo": "Cloná el repositorio del proyecto",
-        "step_open_folder": "Abrí la carpeta del proyecto en VSCode",
+        "step_open_folder": "Abrí la carpeta del proyecto en VS Code",
         "step_open_folder_desc": "Archivo → Abrir Carpeta → seleccioná el directorio",
         "step_wait_init": "Esperá que PlatformIO inicialice",
-        "step_wait_init_desc": "La primera vez puede tardar unos minutos en descargar toolchains",
-        "pio_commands_title": "Comandos Esenciales de PlatformIO",
-        "pio_commands_desc": "Comandos que vas a usar todos los días",
+        "step_wait_init_desc": "La primera vez, PlatformIO descarga los compiladores y las herramientas necesarios.",
+        "pio_commands_title": "Comandos de PlatformIO",
+        "pio_commands_desc": "Compilar, cargar firmware y leer el puerto serie.",
         "cmd_build": "Compilar el proyecto",
         "cmd_build_desc": "Compila sin subir al dispositivo",
         "cmd_upload": "Subir al dispositivo",
-        "cmd_upload_desc": "Compila y flashea al ESP32",
-        "cmd_monitor": "Abrir monitor serial",
-        "cmd_monitor_desc": "Ver output de debug (Ctrl+C para salir)",
-        "cmd_clean": "Limpiar archivos de build",
-        "cmd_clean_desc": "Elimina carpeta .pio, fuerza rebuild completo",
+        "cmd_upload_desc": "Compila y carga el firmware en el ESP32",
+        "cmd_monitor": "Abrir monitor serie",
+        "cmd_monitor_desc": "Muestra los mensajes del dispositivo (Ctrl+C para salir)",
+        "cmd_clean": "Limpiar archivos de compilación",
+        "cmd_clean_desc": "Elimina archivos generados durante la compilación.",
         "cmd_all": "Subir y monitorear",
-        "cmd_all_desc": "Flashea y abre el monitor serial inmediatamente",
-        "wsl_usb_title": "USB Passthrough para WSL",
+        "cmd_all_desc": "Carga el firmware y abre el monitor serie",
+        "wsl_usb_title": "Acceso USB desde WSL",
         "wsl_usb_desc": "Conectá el ESP32 a WSL desde Windows",
         "wsl_install_usbipd": "Instalá usbipd-win",
         "wsl_install_usbipd_desc": "Ejecutá en PowerShell como Administrador",
@@ -520,14 +520,14 @@
         "wsl_attach_desc": "Ejecutá esto cada vez que conectes el dispositivo",
         "wsl_verify": "Verificá en WSL",
         "wsl_verify_desc": "Debería mostrar /dev/ttyUSB0 o similar",
-        "troubleshoot_title": "Problemas Comunes",
-        "troubleshoot_desc": "Soluciones rápidas para problemas típicos",
+        "troubleshoot_title": "Problemas frecuentes",
+        "troubleshoot_desc": "Problemas de conexión, permisos y dependencias.",
         "ts_port_busy": "Permiso denegado en puerto",
         "ts_port_busy_desc": "Agregá tu usuario al grupo dialout: sudo usermod -a -G dialout $USER",
         "ts_no_port": "Dispositivo no detectado",
         "ts_no_port_desc": "Probá con otro cable USB (cable de datos, no solo carga)",
         "ts_upload_fail": "Falla al subir",
-        "ts_upload_fail_desc": "Especificá el puerto manualmente si falla auto-detect",
+        "ts_upload_fail_desc": "Indicá el puerto manualmente si la detección automática falla.",
         "ts_libs": "Librerías faltantes",
         "ts_libs_desc": "Las librerías se instalan automáticamente desde platformio.ini"
     },
@@ -546,7 +546,7 @@
         "view_on_github": "Ver en GitHub",
         "prototype_functional": "Código, archivos y documentación disponibles para consultar y adaptar.",
         "want_me_to_build": "Consultar sobre el proyecto",
-        "total_approx": "Total Aproximado",
+        "total_approx": "Total aproximado",
         "no_shipping": "Sin envío",
         "gallery": "Galería",
         "print_pinout": "Imprimir pinout",
@@ -555,9 +555,9 @@
         "quantity": "Cantidad",
         "notes": "Notas",
         "technical_files": "Archivos del proyecto",
-        "technical_files_description": "Abrí, descargá o visualizá los archivos de diseño, firmware y documentación.",
+        "technical_files_description": "Archivos de diseño, firmware y documentación del proyecto.",
         "no_technical_files": "No hay archivos técnicos disponibles.",
-        "download_file": "Descarga",
+        "download_file": "Descargar",
         "source_file": "Código fuente",
         "open": "Abrir",
         "download": "Descargar",
@@ -565,7 +565,7 @@
         "asset_documentation": "Documentación",
         "asset_firmware": "Firmware y configuración",
         "asset_data": "Datos",
-        "view_in_maker": "Ver en Maker",
+        "view_in_maker": "Ver piezas para impresión 3D",
         "printable_parts_description": "{count, plural, one {# pieza con visor 3D y descarga.} other {# piezas con visor 3D y descarga.}}"
     },
     "Pinouts": {
@@ -573,10 +573,10 @@
         "assignedPins": "{count} contactos usados o reservados por esta guía. Los contactos atenuados quedan fuera del cableado indicado.",
         "functionalDiagram": "Referencia funcional. La forma y la posición de los contactos varían según el fabricante: verificá la serigrafía de tu módulo.",
         "eyebrow": "Referencia de hardware",
-        "title": "Pinouts Interactivos",
-        "subtitle": "Explora los diagramas de pines de los módulos utilizados en nuestros proyectos",
-        "builds_title": "Builds (cableado real)",
-        "builds_hint": "mapa GPIO · cableado · checklist →",
+        "title": "Pinouts de módulos",
+        "subtitle": "Pines, interfaces y conexiones de los módulos usados en HIOS.",
+        "builds_title": "Cableado de los proyectos",
+        "builds_hint": "Asignación de GPIO, conexiones y verificación del montaje.",
         "usedIn": "Se usa en:",
         "Kinds": {
             "mcu": "Microcontrolador",
@@ -594,13 +594,13 @@
         "datasheet": "Datasheet",
         "Modules": {
             "esp32-wroom-32": {
-                "description": "MCU WiFi + BT 4.2, header 2×19 (38 pines). Referencia rápida + gotchas."
+                "description": "Microcontrolador con WiFi y Bluetooth 4.2. Placa con dos filas de 19 pines."
             },
             "esp32-s3-devkitc-1": {
-                "description": "MCU con USB OTG nativo, WiFi 802.11 b/g/n, BLE 5. Header 2×22. Referencia rápida + gotchas."
+                "description": "Microcontrolador con USB OTG, WiFi 802.11 b/g/n y BLE 5. Dos filas de 22 pines."
             },
             "max98357a": {
-                "description": "Amplificador Class-D I2S mono 3.2W (breakout). 2 en paralelo = stereo."
+                "description": "Amplificador mono clase D con entrada I2S. Consultá la selección de canal y las conexiones de alimentación y parlante."
             },
             "pcm5102": {
                 "description": "DAC I2S 32-bit/384kHz (breakout GY-PCM5102). Salida de línea L/R."
@@ -618,10 +618,10 @@
                 "description": "Pantalla 480×320 por SPI. Alimentación, backlight y adaptación de niveles dependen de la variante del módulo."
             },
             "lcd1602-i2c": {
-                "description": "Display de caracteres 16×2 con backpack I2C: solo 2 pines de datos."
+                "description": "Pantalla de 16 × 2 caracteres con adaptador I2C y dos líneas de datos."
             },
             "ky-040": {
-                "description": "Encoder incremental con pulsador. Pull-ups a bordo."
+                "description": "Encoder incremental con pulsador y resistencias pull-up integradas."
             },
             "hw-504": {
                 "description": "Joystick tipo PlayStation: 2 ejes analógicos + pulsador."
@@ -630,13 +630,13 @@
                 "description": "LEDs RGB direccionables encadenados: toda la tira usa 1 pin de datos."
             },
             "ky-009": {
-                "description": "LED RGB de cátodo común. SIN resistencias a bordo."
+                "description": "LED RGB de cátodo común. Requiere resistencias externas para limitar la corriente."
             },
             "charger-2s": {
                 "description": "Referencia de conexiones para módulos 2S. Carga, balanceo y protección dependen del modelo concreto."
             },
             "holder-2s": {
-                "description": "Dos 18650 en serie (2S). Ojo: el holder correcto es en SERIE, no en paralelo."
+                "description": "Portapilas para dos celdas 18650 en serie (2S). Verificá que el cableado sea en serie."
             }
         },
         "tables": {
@@ -683,96 +683,101 @@
         "guestbook": "Libro de visitas",
         "home": "Inicio",
         "projects": "Proyectos",
-        "tools": "Stack",
-        "workbench": "Workbench",
+        "tools": "Software",
+        "workbench": "Herramientas",
         "pinouts": "Pinouts",
         "calculators": "Calculadoras",
         "rcl": "RCL",
         "menu": "Menú",
-        "search": "Buscar"
+        "search": "Buscar",
+        "primaryNavigation": "Navegación principal",
+        "mobileNavigation": "Navegación móvil",
+        "lightTheme": "Usar tema claro",
+        "darkTheme": "Usar tema oscuro"
     },
     "Auth": {
         "signIn": "Iniciar sesión",
         "signOut": "Cerrar sesión"
     },
     "Feedback": {
-        "title": "Feedback inbox",
-        "subtitle": "Errores auto-capturados y entradas que vos crees: bugs, ideas y notas. Todo local, en este navegador.",
+        "title": "Errores y comentarios locales",
+        "subtitle": "Registro de errores del navegador y notas que guardaste en este dispositivo.",
         "newEntry": "Nueva entrada",
         "kind": "Tipo",
         "kinds": {
             "error": "Error",
-            "bug": "Bug",
+            "bug": "Fallo",
             "idea": "Idea",
             "note": "Nota"
         },
         "sources": {
-            "runtime": "Runtime",
+            "runtime": "Automático",
             "manual": "Manual"
         },
         "severity": {
-            "info": "Info",
-            "warn": "Warn",
+            "info": "Información",
+            "warn": "Advertencia",
             "error": "Error"
         },
         "titleField": "Título",
-        "titlePlaceholder": "Resumen corto (ej. 'el JWT decoder rompe con tokens sin firma')",
+        "titlePlaceholder": "Resumen del error o de la idea",
         "bodyField": "Detalle",
-        "bodyPlaceholder": "Contexto, pasos para reproducir, lo que se te ocurra...",
+        "bodyPlaceholder": "Qué hiciste, qué esperabas y qué ocurrió.",
         "save": "Guardar",
         "entries": "Entradas",
         "clearAll": "Borrar todo",
-        "empty": "No hay entradas todavía. Cuando algo rompa, va a aparecer acá automáticamente.",
+        "empty": "No hay entradas. Podés agregar una nota; los errores detectados también aparecen acá.",
         "copy": "Copiar",
         "copied": "Copiado al portapapeles",
         "copyError": "No se pudo copiar",
         "delete": "Borrar",
-        "stack": "Ver stack",
+        "stack": "Ver detalle técnico",
         "occurrences": "{count}x",
         "firstSeen": "primera vez",
         "lastSeen": "última vez",
         "context": "contexto",
         "toastErrorCaptured": "Error capturado: {title}",
-        "localFootnote": "Hoy se guarda local. Cuando llegue la auth se sincroniza a tu cuenta automáticamente.",
+        "localFootnote": "Este registro se guarda en el navegador y no se sincroniza con tu cuenta. Para contactar al proyecto, usá Enviar comentario.",
         "widget": {
-            "button": "Feedback",
-            "title": "Enviar feedback",
-            "kindBug": "Algo no anda",
+            "button": "Enviar comentario",
+            "title": "Enviar comentario",
+            "kindBug": "Informar un error",
             "kindIdea": "Idea",
             "kindNote": "Comentario",
-            "ratingLabel": "¿Cómo la ves?",
+            "ratingLabel": "Tu valoración (opcional)",
             "messageLabel": "Tu mensaje",
-            "messagePlaceholder": "Qué pasó, qué te gustaría, lo que sea…",
+            "messagePlaceholder": "Describí el problema o la mejora que proponés.",
             "emailLabel": "Email (opcional)",
             "emailPlaceholder": "vos@ejemplo.com",
-            "emailHint": "Solo si querés que te responda.",
+            "emailHint": "Dejá tu email si querés recibir una respuesta.",
             "send": "Enviar",
             "cancel": "Cancelar",
-            "thanks": "¡Gracias! Lo recibí.",
-            "thanksLocal": "Guardado — te llega cuando vuelva la conexión.",
-            "emptyError": "Escribí algo primero"
+            "thanks": "Comentario enviado. Gracias.",
+            "thanksLocal": "No se pudo enviar. Consultá la copia en Errores y comentarios locales y volvé a enviarla.",
+            "emptyError": "Escribí un mensaje antes de enviar.",
+            "captchaError": "Completá la verificación para enviar."
         },
         "admin": {
-            "sectionTitle": "Feedback recibido",
-            "authRequired": "Iniciá sesión para ver el feedback que mandaron.",
-            "errorLoad": "No se pudo cargar el feedback.",
-            "empty": "Todavía no llegó feedback.",
+            "sectionTitle": "Comentarios recibidos",
+            "authRequired": "Iniciá sesión para consultar los comentarios recibidos.",
+            "errorLoad": "No se pudieron cargar los comentarios.",
+            "empty": "Todavía no hay comentarios recibidos.",
             "statTotal": "Total",
-            "statAvgRating": "Rating prom.",
-            "statBugs": "Bugs",
+            "statAvgRating": "Valoración media",
+            "statBugs": "Fallos",
             "statIdeas": "Ideas",
             "statNotes": "Comentarios",
-            "filterDays": "Ventana",
+            "filterDays": "Período",
             "filterKind": "Tipo",
             "kindAll": "Todos",
             "colKind": "Tipo",
-            "colRating": "Rating",
+            "colRating": "Valoración",
             "colMessage": "Mensaje",
             "colTool": "Herramienta",
             "colWhen": "Cuándo",
             "colCountry": "País",
             "colEmail": "Email",
-            "loading": "Cargando feedback…"
+            "loading": "Cargando comentarios…"
         }
     },
     "Settings": {
@@ -780,7 +785,7 @@
         "savedHint": "Guardá el color de acento, el modo y el estilo actuales como un tema en este navegador.",
         "savedName": "Nombre",
         "savedNamePlaceholder": "ej. Ámbar nocturno",
-        "savedSave": "Guardar actual",
+        "savedSave": "Guardar tema",
         "savedEmpty": "Todavía no hay temas guardados",
         "savedApply": "Aplicar tema",
         "savedDelete": "Eliminar tema",
@@ -818,8 +823,8 @@
         "invalidHex": "Formato inválido. Usá #rrggbb o #rgb.",
         "preview": "Vista previa",
         "previewHint": "Revisá el color aplicado a botones, etiquetas y enlaces.",
-        "previewTagline": "Workbench",
-        "previewButton": "Acción primaria",
+        "previewTagline": "Herramientas",
+        "previewButton": "Botón de ejemplo",
         "previewLink": "Enlace de ejemplo",
         "localFootnote": "Podés iniciar sesión para guardar el color de acento en tu cuenta.",
         "accountFootnote": "Los cambios se aplican en este navegador. Revisá el estado de sincronización para confirmar el guardado en tu cuenta.",
@@ -832,39 +837,39 @@
         }
     },
     "CommandPalette": {
-        "placeholder": "Buscar tools y páginas…",
+        "placeholder": "Buscar herramientas y páginas…",
         "empty": "Sin resultados",
         "hint": "↑↓ navegar · Enter abrir · Esc cerrar",
-        "toolsGroup": "Tools",
+        "toolsGroup": "Herramientas",
         "pagesGroup": "Páginas",
         "sectionsGroup": "Secciones",
         "pages": {
             "home": "Inicio",
-            "tools": "Stack",
-            "workbench": "Workbench",
+            "tools": "Software",
+            "workbench": "Herramientas",
             "calculators": "Calculadoras",
             "composer": "Compositor Chiptune",
             "pinouts": "Pinouts",
             "padWiring": "PAD · guía de cableado",
             "btdacWiring": "BTDAC · guía de cableado",
             "speakerWiring": "Speaker · guía de cableado",
-            "snippets": "Snippets",
-            "settings": "Ajustes",
-            "feedback": "Feedback",
-            "random": "Abrir una tool al azar"
+            "snippets": "Fragmentos de código",
+            "settings": "Configuración",
+            "feedback": "Errores y comentarios",
+            "random": "Abrir una herramienta al azar"
         }
     },
     "Presets": {
         "base": "Plantillas",
-        "save": "Guardar preset",
-        "presets": "Presets",
-        "namePrompt": "Nombrá el preset",
-        "empty": "Sin presets guardados",
+        "save": "Guardar configuración",
+        "presets": "Configuraciones",
+        "namePrompt": "Nombre de la configuración",
+        "empty": "Sin configuraciones guardadas",
         "delete": "Eliminar",
-        "defaultName": "Preset {n}"
+        "defaultName": "Configuración {n}"
     },
     "Chain": {
-        "sendTo": "Mandar a",
+        "sendTo": "Enviar a",
         "asValue": "como valor",
         "asTypes": "como tipos"
     },
@@ -899,11 +904,11 @@
             "lessons": {
                 "debounce": {
                     "title": "Debounce",
-                    "explain": "**Debounce** retrasa una llamada hasta que el input para. Una ráfaga colapsa en una sola ejecución final — clásico para búsquedas y resize. Editá el código y corrélo."
+                    "explain": "**Debounce** espera una pausa entre llamadas antes de ejecutar la función. Sirve, por ejemplo, para esperar a que alguien termine de escribir una búsqueda. Cambiá el tiempo de espera y ejecutá el ejemplo."
                 },
                 "reducer": {
                     "title": "Reducer / máquina de estados",
-                    "explain": "Un **reducer** es una función pura `(state, action) => state`. Sin mutación oculta: cada transición es explícita y testeable. Probá agregar una acción nueva."
+                    "explain": "Un **reducer** calcula el siguiente estado a partir del estado actual y una acción: `(state, action) => state`. Probá agregar una acción sin modificar el estado original."
                 },
                 "promisePool": {
                     "title": "Concurrencia acotada",
@@ -927,7 +932,7 @@
             "previewEmpty": "Nada para previsualizar aún",
             "importedTitle": "Nota compartida",
             "exampleTitle": "Bienvenida",
-            "exampleBody": "# Hola\\n\\nEsta es una nota markdown **local-first**.\\n\\n- Vive en tu navegador\\n- Preview en vivo a la derecha"
+            "exampleBody": "# Nota de ejemplo\n\nPodés usar **negrita**, enlaces y listas.\n\n- La nota se guarda en este navegador.\n- La vista previa se actualiza mientras escribís."
         },
         "mermaid": {
             "badge": "Herramienta de generación",
@@ -981,7 +986,7 @@
             "matchesLabel": "Coincidencias",
             "matchCount": "coincidencia(s)",
             "copyPattern": "Copiar patrón",
-            "copied": "¡Copiado!",
+            "copied": "Copiado",
             "copyError": "Error al copiar",
             "flagsPlaceholder": "Flags",
             "groupsLabel": "grupos",
@@ -1004,7 +1009,7 @@
             "typeUlid": "ULID",
             "countLabel": "Cuántos",
             "resultLabel": "IDs generados",
-            "empty": "Tocá Regenerar para crear IDs"
+            "empty": "Seleccioná Regenerar para crear identificadores."
         },
         "encoder": {
             "badge": "Herramienta de generación",
@@ -1033,7 +1038,7 @@
             "base64Label": "base64",
             "copied": "Digest copiado",
             "copyError": "No se pudo copiar",
-            "empty": "Escribí algo para ver su digest"
+            "empty": "Ingresá un texto para calcular su hash."
         },
         "ohmsLaw": {
             "badge": "Electrónica",
@@ -1170,7 +1175,7 @@
             "empty": "Ingresá un mensaje para ver su HMAC"
         },
         "csvJson": {
-            "badge": "Testing",
+            "badge": "Pruebas",
             "title": "Conversor CSV y JSON",
             "subtitle": "Convertí datos entre CSV y JSON con delimitadores configurables.",
             "toJson": "CSV → JSON",
@@ -1189,7 +1194,7 @@
             "badge": "Herramienta de validación",
             "title": "Estadísticas de uso",
             "subtitle": "Consultá métricas agregadas de visitas y herramientas por período e idioma.",
-            "days": "Ventana",
+            "days": "Período",
             "locale": "Idioma",
             "localeAll": "Todos",
             "scope": "{days}d · {locale}",
@@ -1294,7 +1299,7 @@
                     "Leé las formas expandida y comprimida.",
                     "Copiá la que necesites."
                 ],
-                "tip": "La compresión sigue RFC 5952: minúsculas y la racha de ceros más larga colapsada a ::."
+                "tip": "La compresión sigue RFC 5952: usa minúsculas y reemplaza la secuencia más larga de bloques cero por ::."
             },
             "hmac": {
                 "intro": "Calculá un HMAC a partir de una clave y un mensaje en el navegador.",
@@ -1303,7 +1308,7 @@
                     "Ingresá la clave secreta y el mensaje.",
                     "Copiá el MAC en hex o base64."
                 ],
-                "tip": "A diferencia de un hash simple, el HMAC mezcla una clave secreta para autenticar el mensaje."
+                "tip": "HMAC usa una clave secreta para autenticar el mensaje. Quien lo verifica necesita la misma clave."
             },
             "csvJson": {
                 "intro": "Convertí CSV a JSON y de vuelta, con comillas RFC 4180 correctas — todo local.",
@@ -1312,7 +1317,7 @@
                     "Pegá tus datos y elegí el delimitador.",
                     "Copiá la salida convertida."
                 ],
-                "tip": "Con la fila de encabezado activada, las filas CSV se vuelven objetos con clave de la primera fila."
+                "tip": "Con encabezados activados, la primera fila del CSV define las claves de cada objeto JSON."
             },
             "patterns": {
                 "intro": "Explorá patrones de JavaScript con ejemplos editables que se ejecutan en el navegador.",
@@ -1403,7 +1408,7 @@
                     "Usá Formatear o Minificar y explorá los campos del JSON.",
                     "Usá Copiar enlace para compartir el contenido por URL."
                 ],
-                "tip": "El payload viaja dentro de la URL — ideal para reportes de bug, pero no compartas secretos así."
+                "tip": "El enlace incluye el JSON completo. Revisá que no contenga contraseñas, tokens ni otros datos que no quieras compartir."
             },
             "typeChecker": {
                 "intro": "Verificá si un valor JSON es asignable a un tipo TypeScript, todo en el navegador.",
@@ -1479,13 +1484,13 @@
             }
         },
         "signals": {
-            "localFirst": "Local-first y privado",
-            "shareable": "Sesiones compartibles",
-            "dailyUse": "Hecho para volver todos los días"
+            "localFirst": "Procesamiento",
+            "shareable": "Enlaces compartidos",
+            "dailyUse": "Accesos guardados"
         },
         "landing": {
             "badge": "Herramientas de desarrollo",
-            "title": "Workbench",
+            "title": "Herramientas",
             "subtitle": "Herramientas para trabajar con código, datos, electrónica y audio.",
             "randomCta": "Abrir una al azar",
             "allToolsTitle": "Todas las herramientas",
@@ -1494,10 +1499,10 @@
             "secondaryCta": "Abrir generación",
             "panelTitle": "Explorá por tarea",
             "panelSubtitle": "Encontrá herramientas agrupadas por el trabajo que necesitás hacer.",
-            "sectionsTitle": "Áreas de Workbench",
+            "sectionsTitle": "Categorías de herramientas",
             "sectionsSubtitle": "Audio, redes, electrónica, generación, validación y pruebas.",
             "cardCta": "Abrir sección",
-            "principlesTitle": "Cómo usar Workbench",
+            "principlesTitle": "Datos y guardado",
             "principlesSubtitle": "Procesamiento, almacenamiento y opciones para compartir.",
             "principles": {
                 "localFirst": "La etiqueta de cada herramienta indica si procesa los datos en el navegador o necesita consultas de red.",
@@ -1586,7 +1591,7 @@
                 "description": "Convertí datos entre CSV y JSON con delimitadores configurables."
             },
             "llm-vram-calc": {
-                "title": "Escenarios de memoria para IA",
+                "title": "Estimación de memoria para modelos",
                 "description": "Compará tamaños, formatos y contexto mediante una fórmula ilustrativa. No sustituye una medición del modelo."
             },
             "esp32-llm-bridge": {
@@ -1780,7 +1785,7 @@
             "copyPath": "Copiar ruta",
             "pathCopied": "Ruta copiada",
             "noPaths": "No hay campos que coincidan con la búsqueda.",
-            "outputHint": "La salida respeta el modo actual y sirve como base limpia para copiar o compartir.",
+            "outputHint": "El resultado usa el formato seleccionado.",
             "metrics": {
                 "chars": "Caracteres",
                 "lines": "Líneas",
@@ -1801,11 +1806,11 @@
             "placeholder": "Pegá un JWT acá...",
             "loadExample": "Cargar ejemplo",
             "clear": "Limpiar",
-            "header": "Header",
+            "header": "Cabecera",
             "payload": "Payload",
             "signature": "Largo de firma",
             "decoded": "Decodificado solo en local",
-            "copyHeader": "Copiar header",
+            "copyHeader": "Copiar cabecera",
             "copyPayload": "Copiar payload",
             "copied": "Copiado",
             "copyError": "No se pudo copiar",
@@ -1832,8 +1837,8 @@
             "domain": "Dominio",
             "recordType": "Tipo de registro",
             "helper": "Revisá registros de direcciones, correo, texto y servidores de nombres.",
-            "results": "Registros en vivo",
-            "empty": "Ejecutá una consulta para inspeccionar registros en vivo.",
+            "results": "Registros encontrados",
+            "empty": "Ingresá un dominio y seleccioná Consultar.",
             "lookupFailed": "La consulta falló",
             "answers": "Respuestas",
             "duration": "Tiempo de respuesta",
@@ -1860,12 +1865,12 @@
             "copyResult": "Copiar resultado",
             "copied": "Resultado copiado",
             "copyError": "No se pudo copiar",
-            "queryTitle": "Objetivo TLS",
-            "hostname": "Hostname",
+            "queryTitle": "Servidor TLS",
+            "hostname": "Nombre del servidor",
             "port": "Puerto",
             "helper": "Consultá la vigencia del certificado presentado por el servidor.",
             "results": "Estado del certificado",
-            "empty": "Ejecutá una inspección para traer datos reales del certificado.",
+            "empty": "Ingresá el servidor y el puerto para consultar su certificado.",
             "inspectFailed": "La inspección falló",
             "daysRemaining": "Días restantes",
             "validFrom": "Válido desde",
@@ -1925,7 +1930,7 @@
             "badge": "Herramienta de generación",
             "title": "Generador de cadenas aleatorias",
             "subtitle": "Generá cadenas con longitud y caracteres configurables para datos de prueba e identificadores.",
-            "length": "Largo",
+            "length": "Longitud",
             "uppercase": "Mayúsculas",
             "lowercase": "Minúsculas",
             "numbers": "Números",
@@ -1952,7 +1957,7 @@
             "right": "Objeto derecho",
             "placeholder": "Pegá JSON acá...",
             "added": "Agregados",
-            "removed": "Removidos",
+            "removed": "Eliminados",
             "changed": "Cambiados",
             "equal": "Los objetos coinciden",
             "differences": "Diferencias",
@@ -1962,20 +1967,20 @@
             "unknownError": "Error desconocido"
         },
         "siteChecker": {
-            "badge": "Monitor cliente",
+            "badge": "Consultas de red",
             "title": "Estado de sitios web",
             "subtitle": "Consultá direcciones web periódicamente desde esta pestaña. Cada comprobación envía una solicitud al sitio indicado.",
             "loadExample": "Cargar ejemplo local",
-            "clientOnly": "Corre solo en esta pestaña del navegador. El monitoreo se pausa cuando cerrás la pestaña o la app.",
+            "clientOnly": "Las comprobaciones se ejecutan mientras esta pestaña permanece abierta.",
             "corsNote": "Las consultas a otros sitios usan el modo no-cors. El navegador no permite leer el estado HTTP de esas respuestas: recibir una respuesta no confirma que el sitio funcione correctamente.",
             "url": "URL",
             "interval": "Intervalo",
-            "timeout": "Timeout",
+            "timeout": "Tiempo de espera máximo",
             "notifications": "Notificaciones de escritorio",
             "addMonitor": "Agregar monitor",
             "monitors": "Monitores activos",
             "empty": "Todavía no hay monitores. Agregá uno para empezar a comprobar desde este navegador.",
-            "healthy": "Sano",
+            "healthy": "Responde correctamente",
             "reachable": "Accesible",
             "down": "Caído",
             "checking": "Comprobando",
@@ -2003,36 +2008,36 @@
             "badge": "Sección dedicada",
             "title": "Fragmentos de código",
             "subtitle": "Guardá fragmentos de código en este navegador o en tu cuenta.",
-            "titlePlaceholder": "Título del snippet",
+            "titlePlaceholder": "Título del fragmento",
             "tagsPlaceholder": "Etiquetas separadas por comas",
-            "bodyPlaceholder": "Pegá un comando, una receta, un payload o una nota útil...",
-            "save": "Guardar snippet",
-            "empty": "Todavía no guardaste snippets en este navegador.",
+            "bodyPlaceholder": "Código o nota que querés guardar…",
+            "save": "Guardar fragmento",
+            "empty": "Todavía no guardaste fragmentos en este navegador.",
             "copy": "Copiar",
             "delete": "Borrar",
-            "saved": "Snippet guardado",
-            "copied": "Snippet copiado",
+            "saved": "Fragmento guardado",
+            "copied": "Fragmento copiado",
             "copyError": "No se pudo copiar",
-            "saveError": "No se pudo guardar el snippet",
-            "deleteError": "No se pudo borrar el snippet",
+            "saveError": "No se pudo guardar el fragmento",
+            "deleteError": "No se pudo eliminar el fragmento",
             "localBadge": "Solo local",
             "cloudBadge": "Guardado en la cuenta",
             "localStatus": "Guardado en este navegador. Podés importarlo a tu cuenta después de iniciar sesión.",
             "accountStatus": "Sincronizado con @{login}",
             "authChecking": "Comprobando sesión…",
             "syncing": "Actualizando desde tu cuenta...",
-            "syncWarningTitle": "No se pudo refrescar la copia de tu cuenta",
-            "syncLoadError": "No se pudieron cargar los snippets de tu cuenta",
-            "importTitle": "Tenés {count} snippets locales listos para importar",
-            "importBody": "La copia del navegador sigue local hasta que la muevas explícitamente a tu cuenta.",
-            "importAction": "Importar snippets locales",
-            "imported": "Se importaron {imported} snippets y se saltearon {skipped}",
-            "importError": "No se pudieron importar los snippets locales",
+            "syncWarningTitle": "No se pudo actualizar la copia de tu cuenta",
+            "syncLoadError": "No se pudieron cargar los fragmentos de tu cuenta",
+            "importTitle": "Fragmentos locales disponibles: {count}",
+            "importBody": "Se guardan en tu cuenta cuando lo solicitás. Al completar la importación, se elimina la copia local.",
+            "importAction": "Importar fragmentos locales",
+            "imported": "Fragmentos importados: {imported}. Omitidos: {skipped}.",
+            "importError": "No se pudieron importar los fragmentos locales",
             "summarySavedLabel": "Guardados",
-            "summarySavedHintLocal": "Disponibles ahora mismo en este navegador.",
+            "summarySavedHintLocal": "Guardados en este navegador.",
             "summarySavedHintAccount": "Disponible en tu cuenta.",
             "summaryVisibilityLabel": "Públicos",
-            "summaryVisibilityHint": "Snippets compartibles sobre el total de la cuenta.",
+            "summaryVisibilityHint": "Fragmentos de la cuenta accesibles mediante un enlace público.",
             "summaryImportLabel": "Para importar",
             "summaryImportHint": "Después de iniciar sesión, podés elegir importar estos fragmentos a tu cuenta.",
             "summarySourceLabel": "Almacenamiento",
@@ -2040,9 +2045,9 @@
             "publicLabel": "Público",
             "makePublic": "Hacer público",
             "makePrivate": "Hacer privado",
-            "madePublic": "El snippet ahora es público",
-            "madePrivate": "El snippet ahora es privado",
-            "visibilityError": "No se pudo actualizar la visibilidad del snippet",
+            "madePublic": "El fragmento ahora es público",
+            "madePrivate": "El fragmento ahora es privado",
+            "visibilityError": "No se pudo cambiar la visibilidad del fragmento",
             "share": "Copiar enlace público",
             "shareCopied": "Enlace público copiado",
             "shareError": "No se pudo copiar el enlace público"
@@ -2055,17 +2060,17 @@
         },
         "jwtPlayground": {
             "badge": "Herramienta de validación",
-            "title": "JWT Playground",
+            "title": "Editor y verificador JWT",
             "subtitle": "Decodificá, firmá y verificá JWT con algoritmos HS, RS y ES en el navegador.",
             "input": "Token JWT",
             "placeholder": "Pegá un JWT acá...",
             "loadExample": "Cargar ejemplo",
             "clear": "Limpiar",
-            "header": "Header",
+            "header": "Cabecera",
             "payload": "Payload",
             "signature": "Largo de firma",
             "decoded": "Decodificado solo en local",
-            "copyHeader": "Copiar header",
+            "copyHeader": "Copiar cabecera",
             "copyPayload": "Copiar payload",
             "copied": "Copiado",
             "copyError": "No se pudo copiar",
@@ -2082,13 +2087,13 @@
             "tabEncode": "Codificar",
             "tabVerify": "Verificar",
             "algorithmLabel": "Algoritmo",
-            "headerJson": "Header (JSON)",
+            "headerJson": "Cabecera (JSON)",
             "payloadJson": "Payload (JSON)",
             "signKeyLabel": "Clave de firma",
-            "signKeyHmac": "Secret HMAC",
+            "signKeyHmac": "Clave secreta HMAC",
             "signKeyPrivate": "Clave privada PEM (PKCS#8)",
             "verifyKeyLabel": "Clave de verificación",
-            "verifyKeyHmac": "Secret HMAC",
+            "verifyKeyHmac": "Clave secreta HMAC",
             "verifyKeyPublic": "Clave pública PEM (SPKI)",
             "sign": "Firmar token",
             "signing": "Firmando…",
@@ -2101,12 +2106,12 @@
             "verifyValid": "Firma válida",
             "verifyInvalid": "La firma no coincide",
             "verifyErrorTitle": "Error de verificación",
-            "jsonError": "Header y payload deben ser objetos JSON válidos",
-            "generateKeys": "Generar par de claves demo",
+            "jsonError": "La cabecera y el payload deben ser objetos JSON válidos",
+            "generateKeys": "Generar claves de prueba",
             "generatingKeys": "Generando…",
             "publicKeyLabel": "Clave pública (para verificar)",
             "copyPublic": "Copiar clave pública",
-            "demoKeyNote": "Clave demo generada en tu navegador. Solo para pruebas — no la uses para nada sensible."
+            "demoKeyNote": "Claves generadas en este navegador para probar firmas. No las uses en producción."
         },
         "cron": {
             "badge": "Herramienta de prueba",
@@ -2141,7 +2146,7 @@
             "inputPlaceholder": "Timestamp Unix o fecha…",
             "invalid": "No se pudo interpretar este valor",
             "copy": "Copiar",
-            "useNow": "Usar tiempo actual",
+            "useNow": "Usar fecha y hora actuales",
             "refreshNow": "Actualizar"
         },
         "numberBase": {
@@ -2150,7 +2155,7 @@
             "subtitle": "Convertí números entre decimal, hexadecimal, binario y octal.",
             "inputPlaceholder": "Ingresá un número…",
             "copy": "Copiar",
-            "copied": "¡Copiado!",
+            "copied": "Copiado",
             "copyError": "Error al copiar",
             "clear": "Limpiar",
             "labelDec": "Decimal",
@@ -2185,7 +2190,7 @@
             "loadExample": "Cargar ejemplo",
             "clear": "Limpiar",
             "copy": "Copiar",
-            "copied": "¡Copiado!",
+            "copied": "Copiado",
             "copyError": "Error al copiar",
             "empty": "Ingresá JSON válido para generar un esquema."
         },
@@ -2198,7 +2203,7 @@
             "clear": "Limpiar",
             "partsLabel": "Partes de la URL",
             "paramsLabel": "Parámetros de consulta",
-            "copied": "¡Copiado!",
+            "copied": "Copiado",
             "copyError": "Error al copiar",
             "invalid": "URL no válida",
             "noParams": "Sin parámetros",
@@ -2224,9 +2229,9 @@
             "labelDimensions": "Dimensiones",
             "labelBase64Size": "Tamaño base64",
             "copy": "Copiar",
-            "copied": "copiado!",
+            "copied": "Copiado",
             "copyError": "Error al copiar",
-            "expand": "expandir"
+            "expand": "Expandir"
         },
         "tokenEstimator": {
             "eyebrow": "IA local",
@@ -2314,7 +2319,7 @@
         },
         "vram": {
             "eyebrow": "IA local y memoria",
-            "title": "Escenarios de memoria para modelos locales",
+            "title": "Estimación de memoria para modelos",
             "description": "Compará tamaños y formatos con una fórmula simplificada. Los perfiles son escenarios ilustrativos; no describen la arquitectura exacta de un modelo ni garantizan que pueda cargarse.",
             "hardwareTitle": "1. Memoria disponible",
             "vram": "VRAM indicada",
@@ -2460,7 +2465,7 @@
             "rcl": {
                 "title": "RCL Serie"
             },
-            "invalid": "Revisá las entradas — sin resultado válido",
+            "invalid": "No se pudo calcular el resultado. Revisá los valores ingresados.",
             "eseries": "Más cercano",
             "led": {
                 "title": "Resistencia para LED",
@@ -2471,15 +2476,15 @@
                 "p": "Potencia en resistencia"
             },
             "cap": {
-                "title": "Capacitor por Ripple",
+                "title": "Capacitor según rizado",
                 "current": "Corriente de carga (mA)",
-                "ripple": "Ripple permitido ΔV (V)",
-                "freq": "Frecuencia de switching (Hz)",
+                "ripple": "Rizado permitido ΔV (V)",
+                "freq": "Frecuencia de conmutación (Hz)",
                 "result": "Capacitor mínimo",
                 "formula": "Fórmula: C = I / (ΔV · f)"
             },
             "thermal": {
-                "title": "Potencia y Térmica",
+                "title": "Potencia y temperatura",
                 "v": "Voltaje (V)",
                 "i": "Corriente (A)",
                 "theta": "θJA (°C/W)",
@@ -2488,7 +2493,7 @@
                 "temp": "Estimación térmica"
             },
             "runtime": {
-                "title": "Consumo y Autonomía",
+                "title": "Consumo y autonomía",
                 "battery": "Batería (mAh)",
                 "current": "Corriente promedio (mA)",
                 "eff": "Eficiencia total (%)",
@@ -2496,12 +2501,12 @@
                 "days": "Días"
             },
             "resistorLab": {
-                "title": "Laboratorio de Resistencias",
+                "title": "Valores y tipos de resistencias",
                 "band1": "Banda 1",
                 "band2": "Banda 2",
                 "multiplier": "Multiplicador",
                 "tolerance": "Tolerancia",
-                "package": "Tipo de Paquete",
+                "package": "Encapsulado",
                 "wattage": "Potencia",
                 "smdCode": "Código SMD",
                 "value": "Valor nominal",
@@ -2535,7 +2540,7 @@
                 "required": "R requerida"
             },
             "gain": {
-                "title": "Ganancia Amplificador (No inversor)",
+                "title": "Ganancia de un amplificador no inversor",
                 "rf": "Rf (Ω)",
                 "rg": "Rg (Ω)",
                 "value": "Ganancia",
@@ -2543,8 +2548,8 @@
                 "formula": "Fórmula: Av = 1 + Rf/Rg"
             },
             "i2s": {
-                "title": "Clocks I2S (ESP32 / DAC)",
-                "fs": "Sample rate (Hz)",
+                "title": "Relojes I2S (ESP32 / DAC)",
+                "fs": "Frecuencia de muestreo (Hz)",
                 "bits": "Bits por muestra",
                 "channels": "Canales",
                 "mclk": "Multiplicador MCLK",
@@ -2678,7 +2683,7 @@
     },
     "HomeQuickAccess": {
         "workbench": {
-            "label": "Workbench",
+            "label": "Herramientas",
             "description": "Herramientas para trabajar con código, datos, electrónica y audio."
         },
         "ai": {
@@ -2686,7 +2691,7 @@
             "description": "Un nodo con ESP32-S3 para consultar Ollama desde la red local."
         },
         "blog": {
-            "label": "Devlog",
+            "label": "Documentación",
             "description": "Guías y notas técnicas sobre hardware, software e IA local."
         },
         "stats": {
@@ -2696,7 +2701,12 @@
     },
     "Footer": {
         "description": "HIOS — Hardware abierto, software y documentación técnica.",
-        "detail": "Código y recursos para explorar, construir y adaptar."
+        "detail": "Código y recursos para explorar, construir y adaptar.",
+        "navigation": "Navegación del pie de página",
+        "prints": "Impresión 3D",
+        "blog": "Documentación",
+        "stats": "Estadísticas",
+        "about": "Acerca de HIOS"
     },
     "Colophon": {
         "title": "Acerca de HIOS",
@@ -2751,14 +2761,15 @@
         "hardResetHint": "Borra el almacenamiento local, la caché y los registros de service worker, y recarga la página. También elimina la preferencia de telemetría, que vuelve a su valor predeterminado.",
         "hardResetConfirm": "¿Borrar el almacenamiento local y la caché del sitio y recargar? Se perderán las notas y los borradores guardados solo en este navegador.",
         "accountTitle": "Datos de la cuenta",
-        "accountHint": "Eliminar la cuenta borra sus sesiones, fragmentos de código y preferencias. Los eventos de uso y mensajes enviados se conservan sin el vínculo con la cuenta; el contenido de los mensajes y su correo de contacto no se borran. Las entradas del libro de visitas tampoco se eliminan.",
+        "accountHint": "Eliminar la cuenta borra sus sesiones, espacios, configuraciones guardadas, fragmentos de código y preferencias. Los eventos de uso y mensajes enviados se conservan sin el vínculo con la cuenta; el contenido de los mensajes y su correo de contacto no se borran. Las entradas del libro de visitas tampoco se eliminan.",
         "deleteAccount": "Eliminar cuenta",
-        "deleteAccountConfirm": "¿Eliminar la cuenta, sus sesiones, fragmentos y preferencias? Esta acción no se puede deshacer. Los mensajes enviados y las entradas del libro de visitas se conservan.",
+        "deleteAccountConfirm": "¿Eliminar la cuenta y sus sesiones, espacios, configuraciones, fragmentos y preferencias? No se puede deshacer. Los mensajes enviados y las entradas del libro de visitas se conservan.",
         "deleteAccountDone": "Cuenta eliminada.",
         "deleteAccountError": "No se pudo eliminar la cuenta. Volvé a intentarlo.",
         "notLoggedIn": "No iniciaste sesión. La telemetría y los mensajes enviados pueden generar registros sin una cuenta.",
         "confirm": "Eliminar",
-        "cancel": "Cancelar"
+        "cancel": "Cancelar",
+        "clearStorageError": "No se pudieron borrar todos los datos. Cerrá las otras pestañas de HIOS y volvé a intentarlo."
     },
     "PublicStats": {
         "kicker": "Uso de HIOS",
@@ -2782,7 +2793,7 @@
         "note": "Este panel muestra el código del algoritmo utilizado por la herramienta. Podés consultar el archivo fuente en GitHub."
     },
     "Workspace": {
-        "title": "Mi Workbench",
+        "title": "Mis espacios",
         "catalog": "Catálogo",
         "explore": "Explorar",
         "search": "Buscar herramientas o tareas…",
@@ -2794,7 +2805,7 @@
         "noResults": "Sin resultados. Probá otro término.",
         "favorite": "Favorito",
         "development": "Desarrollo y datos",
-        "maker": "Maker y hardware",
+        "maker": "Electrónica y hardware",
         "audio": "Audio",
         "ai": "IA local",
         "knowledge": "Conocimiento",
@@ -2814,26 +2825,26 @@
         "importLocal": "Importar espacios locales",
         "export": "Exportar",
         "import": "Importar",
-        "includeContent": "Incluir contenido de presets",
-        "uploadContent": "Subir el contenido de este preset a mi cuenta",
-        "preview": "Vista previa de los datos a subir",
-        "up": "Subir",
-        "down": "Bajar",
+        "includeContent": "Incluir los datos de las configuraciones guardadas",
+        "uploadContent": "Sincronizar también los datos de esta configuración",
+        "preview": "Datos que se sincronizan con tu cuenta",
+        "up": "Mover arriba",
+        "down": "Mover abajo",
         "open": "Abrir",
         "name": "Nombre",
         "template": "Plantilla",
         "empty": "Espacio vacío",
-        "presets": "Presets",
-        "savePreset": "Guardar preset",
-        "error": "Almacenamiento o conexión no disponible. No se descartó la vista actual.",
+        "presets": "Configuraciones guardadas",
+        "savePreset": "Guardar configuración",
+        "error": "No se pudo cargar, guardar o sincronizar. Revisá la conexión y el almacenamiento del navegador.",
         "login": "Ingresar para sincronizar",
         "recent": "Herramientas recientes",
         "continue": "Seguir trabajando",
         "intro": "Armá una lista de herramientas y proyectos para volver a usarlos.",
         "external": "Recursos externos",
-        "privacy": "Los datos locales quedan en este dispositivo hasta que elijas sincronizarlos.",
+        "privacy": "Sin sesión, los espacios se guardan en este navegador. Los de tu cuenta se sincronizan automáticamente; importar los locales es opcional.",
         "results": "Resultados: {count}",
-        "newPreset": "Nuevo preset",
+        "newPreset": "Nueva configuración",
         "selectSpace": "Elegir espacio",
         "addToSpace": "Agregar al espacio",
         "copied": "Copiado",
@@ -2858,14 +2869,14 @@
         "missingTransfer": "Los datos transferidos no están disponibles. Volvé a pegarlos.",
         "settingsOnly": "Sólo ajustes",
         "syncPreview": "La sincronización incluye los datos que se muestran abajo.",
-        "noPresets": "Todavía no hay presets.",
+        "noPresets": "Todavía no hay configuraciones guardadas.",
         "invalidImport": "No se pudo importar: formato inválido.",
         "resolve": "Resolver conservando esta versión",
         "refresh": "Actualizar",
         "locality": "Lugar de procesamiento",
         "activities": {
             "development": "Desarrollo y datos",
-            "maker": "Maker y hardware",
+            "maker": "Electrónica y hardware",
             "audio": "Audio",
             "ai": "IA local",
             "knowledge": "Conocimiento",
@@ -2873,18 +2884,18 @@
         },
         "mySpaces": "Mis espacios",
         "defaultSpace": "Mi espacio",
-        "spaceHint": "Reuní las herramientas y los proyectos que usás para una tarea.",
-        "exploreTitle": "¿En qué estás trabajando?",
-        "exploreIntro": "Buscá una herramienta y abrila. Si la vas a volver a usar, guardala en un espacio junto a tus proyectos.",
+        "spaceHint": "Accesos a tus herramientas y proyectos.",
+        "exploreTitle": "Herramientas y proyectos",
+        "exploreIntro": "Buscá por nombre o tarea. Podés guardar accesos en Mis espacios para encontrarlos después.",
         "exploreSearch": "Buscar por nombre o tarea…",
         "resetFilters": "Ver todos los recursos",
         "addedToSpace": "Guardado",
         "addResource": "Buscar un recurso para agregar…",
         "resourceShortcut": "Proyecto o referencia guardada en este espacio.",
         "removeFromSpace": "Quitar",
-        "emptyHint": "Agregá herramientas o proyectos desde Explorar. Los vas a encontrar acá la próxima vez.",
+        "emptyHint": "Agregá herramientas o proyectos desde Explorar.",
         "findResources": "Explorar recursos",
-        "startTemplate": "O empezá con una selección",
+        "startTemplate": "Crear desde una plantilla",
         "resourceCount": "{count, plural, =0 {Sin recursos todavía} one {# recurso} other {# recursos}}",
         "done": "Listo",
         "organize": "Organizar",
@@ -2899,7 +2910,7 @@
         "deleteSpaceTitle": "¿Eliminar «{name}»?",
         "deleteSpaceHint": "Se eliminará esta lista de accesos. Las herramientas, los proyectos y tus configuraciones guardadas seguirán disponibles.",
         "resourceDescriptions": {
-            "project-pad": "Un controlador con ESP32: hardware, firmware y documentación para construirlo.",
+            "project-pad": "Control programable con ESP32-S3, teclas, encoder, joystick y pantalla.",
             "project-btdac": "Un receptor de audio Bluetooth con ESP32 y PCM5102. Esquemas y archivos del proyecto.",
             "pinout-pad": "Consultá los pines y las conexiones del HIOS PAD.",
             "page-blog": "Notas sobre el desarrollo de los proyectos HIOS.",
@@ -2914,6 +2925,13 @@
             "ai": "llm ai ia inteligencia artificial model tokens memoria memory",
             "knowledge": "reference referencia notes notas documentación documentation",
             "software": "software open source firmware companion"
-        }
+        },
+        "resourceLabels": {
+            "page-blog": "Documentación",
+            "page-prints": "Impresión 3D",
+            "page-calculators": "Calculadoras"
+        },
+        "localPreview": "Datos que se guardan en este navegador",
+        "presetPrivacy": "Esta configuración y sus datos se guardan en este navegador."
     }
 }

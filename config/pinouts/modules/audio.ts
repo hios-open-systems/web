@@ -5,7 +5,7 @@ export const AUDIO_BREAKOUTS: Breakout[] = [
     id: 'max98357a',
     name: 'MAX98357A',
     kind: 'amp',
-    summary: 'Amplificador Class-D I2S mono 3.2W (breakout). 2 en paralelo = stereo.',
+    summary: 'Amplificador mono clase D con entrada I2S. Consultá la selección de canal y las conexiones de alimentación y parlante.',
     form: 'breakout ~14 × 16 mm',
     iface: 'I2S',
     voltage: '2.5–5.5V (5V ≈ 3.2W @ 4Ω)',
