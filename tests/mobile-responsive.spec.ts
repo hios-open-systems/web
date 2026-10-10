@@ -62,14 +62,18 @@ test.describe('responsive shell', () => {
         await expect(drawer).toBeVisible();
         await expect(drawer.getByText(es.Feedback.title, { exact: false })).toBeVisible();
         await expect(drawer.getByText('Configuración', { exact: true })).toBeVisible();
+        const sections = drawer.getByRole('navigation', { name: es.Header.sections.label, exact: true });
+        await expect(sections.getByRole('link', { name: es.Header.sections.maker })).toBeAttached();
+        await expect(sections.getByRole('link', { name: es.Header.sections.devlog })).toBeAttached();
 
         const actionHeights = await drawer
             .locator('a:visible, button:visible, [role="combobox"]:visible')
             .evaluateAll((elements) => elements.map((element) => element.getBoundingClientRect().height));
         for (const height of actionHeights) expect(height).toBeGreaterThanOrEqual(44);
 
-        await drawer.getByRole('link', { name: 'Proyectos' }).click();
-        await expect(page).toHaveURL(/\/es\/projects$/);
+        await sections.getByRole('link', { name: es.Header.sections.maker }).click();
+        await expect(page).toHaveURL(/\/es\/prints$/);
+        await expect(page.getByRole('button', { name: 'Ver en 3D', exact: true }).first()).toBeVisible();
     });
 
     test('search remains directly accessible on mobile', async ({ page }, testInfo) => {

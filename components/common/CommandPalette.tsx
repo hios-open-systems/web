@@ -24,6 +24,11 @@ interface Entry {
 const STATIC_PAGES = [
   { key: 'home', href: '' },
   { key: 'tools', href: '/tools' },
+  { key: 'maker', href: '/prints' },
+  { key: 'devlog', href: '/blog' },
+  { key: 'stats', href: '/stats' },
+  { key: 'guestbook', href: '/guestbook' },
+  { key: 'about', href: '/colophon' },
   { key: 'workbench', href: '/workbench' },
   { key: 'calculators', href: '/calculators' },
   { key: 'composer', href: '/composer' },

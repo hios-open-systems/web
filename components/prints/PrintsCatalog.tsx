@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { myPrints, recommendedPrints, printRepos, printProjectMeta, type PrintModel } from '@/config/prints';
 import { WIRING_GUIDE_SLUGS } from '@/config/pinouts/guides';
 import { PrinterOutlined, LinkOutlined, DownloadOutlined, CloseOutlined } from '@ant-design/icons';
@@ -26,6 +26,7 @@ function groupPrintsByProject(models: PrintModel[]): Array<[string, PrintModel[]
 
 export function PrintsCatalog() {
     const locale = useLocale();
+    const t = useTranslations('Header.sections');
     const accent = 'var(--hios-accent)';
     const accentText = 'var(--accent-text)';
     const textColor = 'var(--hios-text)';
@@ -95,7 +96,7 @@ export function PrintsCatalog() {
                             onClick={() => setActive(m)}
                             style={{ ...actionBtn, background: accent, color: '#1a1a1a', border: 'none' }}
                         >
-                            <PrinterOutlined /> Ver en 3D
+                            <PrinterOutlined aria-hidden /> Ver en 3D
                         </button>
                         <a
                             href={m.file}
@@ -138,7 +139,7 @@ export function PrintsCatalog() {
         <main style={{ background: 'var(--hios-bg)', minHeight: '100vh', paddingTop: 8 }}>
             <section style={{ maxWidth: 980, margin: '0 auto', padding: '24px 24px 32px' }}>
                 <h1 style={{ color: textColor, fontSize: 'clamp(2rem, 5vw, 2.8rem)', fontWeight: 700, margin: '0 0 12px', display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <PrinterOutlined style={{ color: accentText }} /> Impresión 3D
+                    <PrinterOutlined style={{ color: accentText }} /> {t('maker')}
                 </h1>
                 <p style={{ color: secondary, fontSize: 17, maxWidth: 620, lineHeight: 1.6, margin: 0 }}>
                     Carcasas y soportes de HIOS con vista 3D y archivos STL para descargar.

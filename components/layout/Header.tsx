@@ -16,6 +16,7 @@ import { usePathname } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { LocaleSwitcher } from './LocaleSwitcher';
+import { SectionNavigation } from './SectionNavigation';
 import { UserMenu } from '@/components/auth/UserMenu';
 import { useFeedback } from '@/components/feedback/FeedbackProvider';
 import styles from './header.module.css';
@@ -75,7 +76,7 @@ export function Header() {
   };
 
   return (
-    <AntHeader className={styles.header}>
+    <><AntHeader className={styles.header}>
       <div className={styles.shell}>
         <Link href={`/${locale}`} className={styles.brandLink} aria-label="HIOS">
           <span className={styles.brand}>HIOS</span>
@@ -183,6 +184,7 @@ export function Header() {
           ))}
         </nav>
 
+        <SectionNavigation inDrawer onNavigate={() => setMenuOpen(false)} />
         <div className={styles.drawerFooter}>
           <div className={styles.drawerActions}>
             <Button
@@ -203,6 +205,6 @@ export function Header() {
           <LocaleSwitcher className={styles.drawerLocale} />
         </div>
       </Drawer>
-    </AntHeader>
+    </AntHeader><SectionNavigation /></>
   );
 }

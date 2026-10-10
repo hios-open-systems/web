@@ -1,0 +1,35 @@
+.bar {
+  position: sticky;
+  top: var(--layout-header-height);
+  z-index: 990;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 16px;
+  padding: 4px 20px;
+  border-bottom: 1px solid var(--hios-border);
+  background: var(--hios-bg-secondary);
+}
+.bar a, .drawer a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--hios-text-secondary);
+  text-decoration: none;
+  font-size: 13px;
+}
+.bar a:hover, .drawer a:hover, .bar a[aria-current], .drawer a[aria-current] {
+  color: var(--accent-text);
+}
+.bar a:focus-visible, .drawer a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.drawer {
+  display: grid;
+  border-top: 1px solid var(--hios-border);
+  margin-top: 8px;
+  padding: 8px 24px;
+}
+.drawer a { font-size: 15px; }
+@media (max-width: 640px) { .bar { display: none; } }

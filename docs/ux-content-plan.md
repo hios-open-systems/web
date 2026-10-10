@@ -4,6 +4,8 @@ Fecha: 10 de octubre de 2026. Criterios editoriales y registro de la revisión. 
 
 ## Revisión aplicada
 
+Corrección de alcance: mejorar la redacción no autoriza ocultar accesos ni sustituir nombres de secciones reconocibles. Maker · visor STL y Devlog conservan sus nombres y tienen acceso desde la navegación de secciones, el menú móvil, el inicio, el pie y el buscador. Las demás secciones también deben permanecer disponibles; cualquier cambio de arquitectura de navegación se evalúa aparte.
+
 Se revisaron las descripciones del catálogo de herramientas, la navegación, Explorar, Mis espacios, ayudas, mensajes de estado, configuración, comentarios, tutoriales, pinouts y calculadoras. También se revisaron las fichas de proyectos y software, el catálogo de software externo y el de impresión 3D. Se conservaron las descripciones técnicas que ya explicaban funciones y límites concretos. Los artículos de referencia consultados sobre modelos locales y desarrollo con IA ya siguen ese criterio; no se reescribieron para introducir variaciones de estilo.
 
 Los cambios compartidos de navegación, espacios, guardado y comentarios se adaptaron a español, inglés, alemán e italiano. El español usa voseo y nombres consistentes. Los catálogos técnicos que ya eran exclusivamente españoles siguen en español; esta revisión no constituye su traducción completa.

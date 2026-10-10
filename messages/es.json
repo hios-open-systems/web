@@ -693,7 +693,18 @@
         "primaryNavigation": "Navegación principal",
         "mobileNavigation": "Navegación móvil",
         "lightTheme": "Usar tema claro",
-        "darkTheme": "Usar tema oscuro"
+        "darkTheme": "Usar tema oscuro",
+        "sections": {
+            "label": "Secciones",
+            "maker": "Maker · visor STL",
+            "devlog": "Devlog",
+            "pinouts": "Pinouts",
+            "calculators": "Calculadoras",
+            "software": "Software",
+            "stats": "Estadísticas",
+            "guestbook": "Libro de visitas",
+            "about": "Acerca de HIOS"
+        }
     },
     "Auth": {
         "signIn": "Iniciar sesión",
@@ -856,7 +867,12 @@
             "snippets": "Fragmentos de código",
             "settings": "Configuración",
             "feedback": "Errores y comentarios",
-            "random": "Abrir una herramienta al azar"
+            "random": "Abrir una herramienta al azar",
+            "maker": "Maker · visor STL",
+            "devlog": "Devlog",
+            "stats": "Estadísticas",
+            "guestbook": "Libro de visitas",
+            "about": "Acerca de HIOS"
         }
     },
     "Presets": {
@@ -2691,20 +2707,24 @@
             "description": "Un nodo con ESP32-S3 para consultar Ollama desde la red local."
         },
         "blog": {
-            "label": "Documentación",
+            "label": "Devlog",
             "description": "Guías y notas técnicas sobre hardware, software e IA local."
         },
         "stats": {
             "label": "Métricas",
             "description": "Estadísticas públicas sobre las visitas y el uso de las herramientas."
+        },
+        "maker": {
+            "label": "Maker · visor STL",
+            "description": "Visor 3D y descarga de piezas STL."
         }
     },
     "Footer": {
         "description": "HIOS — Hardware abierto, software y documentación técnica.",
         "detail": "Código y recursos para explorar, construir y adaptar.",
         "navigation": "Navegación del pie de página",
-        "prints": "Impresión 3D",
-        "blog": "Documentación",
+        "prints": "Maker · visor STL",
+        "blog": "Devlog",
         "stats": "Estadísticas",
         "about": "Acerca de HIOS"
     },
@@ -2731,7 +2751,7 @@
     },
     "Blog": {
         "kicker": "HIOS / Documentación",
-        "title": "Documentación",
+        "title": "Devlog",
         "intro": "Guías de referencia y notas de desarrollo sobre hardware, software e IA local.",
         "refKicker": "01 / Referencia técnica",
         "devKicker": "02 / Notas de desarrollo",
@@ -2927,8 +2947,8 @@
             "software": "software open source firmware companion"
         },
         "resourceLabels": {
-            "page-blog": "Documentación",
-            "page-prints": "Impresión 3D",
+            "page-blog": "Devlog",
+            "page-prints": "Maker · visor STL",
             "page-calculators": "Calculadoras"
         },
         "localPreview": "Datos que se guardan en este navegador",

@@ -79,7 +79,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Verify tool content and hydration
-        run: npx playwright test tests/tool-content.spec.ts tests/project-software.spec.ts --project=chromium --workers=1
+        run: npx playwright test tests/tool-content.spec.ts tests/project-software.spec.ts tests/section-navigation.spec.ts --project=chromium --workers=1
 
       - name: Verify mobile layouts and interactions
         run: npx playwright test tests/mobile-responsive.spec.ts tests/mobile-usability.spec.ts --project=mobile-360 --project=mobile-390 --project=tablet-768 --workers=2

@@ -693,7 +693,18 @@
         "primaryNavigation": "Main navigation",
         "mobileNavigation": "Mobile navigation",
         "lightTheme": "Use light theme",
-        "darkTheme": "Use dark theme"
+        "darkTheme": "Use dark theme",
+        "sections": {
+            "label": "Sections",
+            "maker": "Maker · STL viewer",
+            "devlog": "Devlog",
+            "pinouts": "Pinouts",
+            "calculators": "Calculators",
+            "software": "Software",
+            "stats": "Statistics",
+            "guestbook": "Guestbook",
+            "about": "About HIOS"
+        }
     },
     "Auth": {
         "signIn": "Sign in",
@@ -856,7 +867,12 @@
             "snippets": "Code snippets",
             "settings": "Settings",
             "feedback": "Errors and feedback",
-            "random": "Open a random tool"
+            "random": "Open a random tool",
+            "maker": "Maker · STL viewer",
+            "devlog": "Devlog",
+            "stats": "Statistics",
+            "guestbook": "Guestbook",
+            "about": "About HIOS"
         }
     },
     "Presets": {
@@ -2691,20 +2707,24 @@
             "description": "An ESP32-S3 node for querying Ollama over a local network."
         },
         "blog": {
-            "label": "Documentation",
+            "label": "Devlog",
             "description": "Guides and technical notes on hardware, software and local AI."
         },
         "stats": {
             "label": "Metrics",
             "description": "Public statistics on visits and tool usage."
+        },
+        "maker": {
+            "label": "Maker · STL viewer",
+            "description": "View 3D models and download STL parts."
         }
     },
     "Footer": {
         "description": "HIOS — Open hardware, software and technical documentation.",
         "detail": "Code and resources to explore, build and adapt.",
         "navigation": "Footer navigation",
-        "prints": "3D printing",
-        "blog": "Documentation",
+        "prints": "Maker · STL viewer",
+        "blog": "Devlog",
         "stats": "Statistics",
         "about": "About HIOS"
     },
@@ -2731,7 +2751,7 @@
     },
     "Blog": {
         "kicker": "HIOS / Documentation",
-        "title": "Documentation",
+        "title": "Devlog",
         "intro": "Reference guides and development notes on hardware, software and local AI.",
         "refKicker": "01 / Technical reference",
         "devKicker": "02 / Development notes",
@@ -2927,8 +2947,8 @@
             "software": "software open source firmware companion"
         },
         "resourceLabels": {
-            "page-blog": "Documentation",
-            "page-prints": "3D printing",
+            "page-blog": "Devlog",
+            "page-prints": "Maker · STL viewer",
             "page-calculators": "Calculators"
         },
         "localPreview": "Data saved in this browser",
