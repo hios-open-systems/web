@@ -411,4 +411,15 @@
 }
 
 .searchButton { width: auto; color: var(--hios-text-secondary) !important; }
+.searchLabel { display: inline-flex; align-items: center; gap: 8px; }
+.mobileSpaceLink { display: none; }
+@media (max-width: 640px) {
+  .mobileSpaceLink { display: inline-flex; align-items: center; min-height: 44px; color: var(--accent-text, var(--accent)); font-size: 12px; font-weight: 600; white-space: nowrap; }
+  .searchButton { padding-inline: 0 !important; width: 44px !important; min-height: 44px; }
+  .searchButton .searchLabel { display: none; }
+  .searchButton :global(.ant-btn-icon) { flex-shrink: 0; }
+  .searchButton :global(.anticon) { font-size: 18px; }
+  .searchButton kbd { display: none; }
+  .shell { gap: 8px; }
+}
 @media (max-width: 600px) { .searchButton kbd { display: none; } }

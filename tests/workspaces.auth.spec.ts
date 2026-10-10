@@ -36,9 +36,9 @@ test('a workspace travels between two browser sessions', async ({ browser }) => 
     return (await response.json()).records.some((row: { document: { name: string } }) => row.document.name === name);
   }).toBe(true);
   await second.goto(`${origin}/en/workbench/spaces`);
-  await expect(second.getByRole('combobox', { name: 'Select a space' })).toBeEnabled();
-  await second.getByRole('combobox', { name: 'Select a space' }).press('Enter');
-  await expect(second.getByText(name, { exact: true }).last()).toBeVisible();
+  await expect(second.getByRole('button', { name, exact: true })).toBeEnabled();
+  await second.getByRole('button', { name, exact: true }).click();
+  await expect(second.getByRole('heading', { name, exact: true })).toBeVisible();
   await Promise.all([a.close(), b.close()]);
 });
 
@@ -50,12 +50,11 @@ test('offline changes recover and conflicting edits preserve both versions', asy
   await a.request.put(`${origin}/api/user/workspaces`, { headers: { Origin: origin }, data: { id, revision: 0, document } });
   await page.goto(`${origin}/en/workbench/spaces`);
   await expect(page.getByRole('heading', { name: 'Cloud desk', exact: true })).toBeVisible();
-  await expect(page.getByRole('combobox', { name: 'Select a space' })).toBeEnabled();
-  await page.getByRole('combobox', { name: 'Select a space' }).press('Enter');
-  await page.getByText('Initial', { exact: true }).last().click();
+  await page.getByRole('button', { name: 'Initial', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Initial', exact: true })).toBeVisible();
   await a.setOffline(true);
-  await page.getByRole('button', { name: 'Rename', exact: true }).click();
+  await page.getByRole('button', { name: 'Space options', exact: true }).click();
+  await page.getByRole('menuitem', { name: 'Rename', exact: true }).click();
   await page.getByRole('textbox', { name: 'Name', exact: true }).fill('Local edit');
   await page.getByRole('button', { name: 'OK', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Local edit', exact: true })).toBeVisible();

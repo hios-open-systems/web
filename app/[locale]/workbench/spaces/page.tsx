@@ -2,7 +2,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { SpacesWorkspace } from '@/components/workbench/SpacesWorkspace';
 import { translatedMetadata } from '@/lib/seo-metadata';
 
-export const generateMetadata = translatedMetadata('/workbench/spaces', 'Workspace', 'intro');
+export const generateMetadata = translatedMetadata('/workbench/spaces', 'Workspace', 'intro', 'mySpaces');
 
 export default async function SpacesPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
