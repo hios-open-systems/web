@@ -1,6 +1,41 @@
-# Revisión de contenido: Explorar y Mis espacios
+# Revisión de contenido de HIOS
 
-Fecha: 10 de octubre de 2026. Propuesta editorial para revisar con la interfaz local; no es una auditoría de usuarios ni una reescritura completa del sitio.
+Fecha: 10 de octubre de 2026. Criterios editoriales y registro de la revisión. No es una prueba de comprensión con usuarios.
+
+## Revisión aplicada
+
+Se revisaron las descripciones del catálogo de herramientas, la navegación, Explorar, Mis espacios, ayudas, mensajes de estado, configuración, comentarios, tutoriales, pinouts y calculadoras. También se revisaron las fichas de proyectos y software, el catálogo de software externo y el de impresión 3D. Se conservaron las descripciones técnicas que ya explicaban funciones y límites concretos. Los artículos de referencia consultados sobre modelos locales y desarrollo con IA ya siguen ese criterio; no se reescribieron para introducir variaciones de estilo.
+
+Los cambios compartidos de navegación, espacios, guardado y comentarios se adaptaron a español, inglés, alemán e italiano. El español usa voseo y nombres consistentes. Los catálogos técnicos que ya eran exclusivamente españoles siguen en español; esta revisión no constituye su traducción completa.
+
+| Antes | Ahora | Motivo |
+| --- | --- | --- |
+| Workbench / Stack / Devlog | Herramientas / Software / Documentación | Nombrar los destinos por su contenido. |
+| ¿En qué estás trabajando? | Herramientas y proyectos | Identificar el catálogo sin una pregunta decorativa. |
+| Guardar preset | Guardar configuración | Explicar la acción sin jerga innecesaria. |
+| Proyecto o referencia guardada en este espacio | Descripción propia del recurso; resumen localizado para artículos | Evitar repetir la misma frase en cada tarjeta. |
+| Local-first y privado | Procesamiento | No convertir una ubicación de cálculo en una promesa general de privacidad. |
+| Cuando llegue la auth se sincroniza… | El registro de errores permanece en el navegador | El proveedor de comentarios no sincroniza ese registro. |
+| Te llega cuando vuelva la conexión | No se pudo enviar; consultar la copia local y reenviar | El envío no implementa reintentos automáticos. |
+| Programación sin cables | Carga de firmware por puerto serie | Corregir la descripción de ESP Web Tools. |
+| Referencia rápida + gotchas | Descripción del módulo y sus interfaces | Quitar jerga que no aporta información. |
+| Próximamente… se editan en config/prints.ts | Estado vacío con acceso a otros repositorios | No mostrar instrucciones de implementación al visitante. |
+
+Se retiraron la fila de afirmaciones repetidas del hero, la segunda frase genérica del pie y etiquetas que repetían los títulos. Los nombres accesibles del encabezado ahora usan el idioma seleccionado.
+
+### Comprobaciones de comportamiento
+
+- `WorkspaceProvider.tsx`: los espacios de una cuenta se sincronizan al cargar, al recuperar conexión y después de cambios; la importación de espacios anónimos es opcional.
+- `PresetControls.tsx`: la vista previa distingue datos guardados en el navegador de datos enviados a la cuenta. El contenido se muestra completo en el guardado local.
+- `lib/feedback/submit.ts` y `FeedbackProvider.tsx`: envío remoto y registro local independientes, sin cola de reintentos.
+- `SnippetsShelf.tsx`: la importación completada elimina la copia local; el mensaje lo explica.
+- `migrations/0006_workspaces.sql`: eliminar una cuenta también elimina sus espacios y configuraciones. La confirmación enumera esos datos.
+- `PrivacySettings.tsx`: un error al borrar almacenamiento ya no muestra una confirmación de éxito. La prueba de navegador simula almacenamiento bloqueado.
+- Las descripciones externas se contrastaron con [ESP Web Tools](https://esphome.github.io/esp-web-tools/) y [OrcaSlicer](https://github.com/OrcaSlicer/OrcaSlicer). Se eliminaron calificativos promocionales y la descripción incorrecta de programación sin cables.
+
+La validación combina compilación, lint, paridad de claves, pruebas de persistencia y navegación, y comprobaciones de ancho móvil. Estas pruebas detectan errores funcionales y de presentación; no sustituyen una evaluación con personas.
+
+## Plan original y criterios de continuidad
 
 ## Qué tiene que resolver el contenido
 

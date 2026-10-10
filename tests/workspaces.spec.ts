@@ -49,7 +49,8 @@ test('spaces can be renamed and deleted with a cancelable confirmation', async (
 
 test('template spaces can be duplicated and edited without changing the original', async ({ page }) => {
   await page.goto('/en/workbench/spaces');
-  await page.getByText('Or start with a selection', { exact: true }).click();
+  await page.getByText(en.Workspace.startTemplate, { exact: true }).click();
+  await expect(page.getByRole('combobox', { name: 'Template', exact: true })).toBeEnabled();
   await page.getByRole('combobox', { name: 'Template', exact: true }).press('ArrowDown');
   await page.getByRole('combobox', { name: 'Template', exact: true }).press('Enter');
   await page.getByRole('textbox', { name: 'Name', exact: true }).fill('Development desk');
@@ -98,7 +99,7 @@ test('payload invalid input recovers and new presets restore', async ({ page }) 
   await expect(page.getByText('Invalid JSON', { exact: true })).toBeVisible();
   await input.fill('{"roundTrip":123}');
   await expect(page.getByRole('button', { name: 'roundTrip: 123' })).toBeVisible();
-  await page.getByRole('button', { name: 'Save preset', exact: true }).click();
+  await page.getByRole('button', { name: en.Workspace.savePreset, exact: true }).click();
   await page.getByRole('textbox', { name: 'Name', exact: true }).fill('Round trip');
   await page.getByRole('button', { name: 'OK', exact: true }).click();
   await page.goto('/en/workbench/spaces');

@@ -36,7 +36,7 @@ export interface PrintProjectMeta {
 export const printProjectMeta: Record<string, PrintProjectMeta> = {
     pad: {
         name: 'HIOS PAD',
-        blurb: 'Carcasa, tapas y soportes del macropad ESP32-S3 con pantalla, encoder y joystick. A futuro: knobs para el encoder y sticks.',
+        blurb: 'Carcasa, tapas y soportes del HIOS PAD. Compará las medidas con la revisión de tu montaje antes de imprimir.',
     },
 };
 
@@ -125,7 +125,7 @@ export const recommendedPrints: PrintModel[] = [
         author: 'Zack Freedman',
         source: 'Sitio',
         url: 'https://gridfinity.xyz/',
-        description: 'Sistema modular para organizar cajones y escritorio. El estándar de facto para ordenar herramientas, tornillos y piezas.',
+        description: 'Sistema modular de recipientes y bases para organizar herramientas, tornillos y piezas.',
     },
 ];
 
@@ -140,17 +140,17 @@ export const printRepos: PrintRepo[] = [
     {
         name: 'Printables',
         url: 'https://www.printables.com/',
-        description: 'Repositorio de Prusa. Buena curaduría, concursos y perfiles de impresión listos.',
+        description: 'Repositorio de Prusa con modelos y perfiles de impresión compartidos por la comunidad.',
     },
     {
         name: 'Thingiverse',
         url: 'https://www.thingiverse.com/',
-        description: 'El clásico. Catálogo histórico enorme de modelos imprimibles.',
+        description: 'Catálogo de modelos 3D publicados por la comunidad.',
     },
     {
         name: 'MakerWorld',
         url: 'https://makerworld.com/',
-        description: 'Repositorio de Bambu Lab con print-profiles listos para imprimir.',
+        description: 'Repositorio de Bambu Lab con modelos y perfiles de impresión.',
     },
     {
         name: 'Thangs',

@@ -138,12 +138,11 @@ export function PrintsCatalog() {
         <main style={{ background: 'var(--hios-bg)', minHeight: '100vh', paddingTop: 8 }}>
             <section style={{ maxWidth: 980, margin: '0 auto', padding: '24px 24px 32px' }}>
                 <h1 style={{ color: textColor, fontSize: 'clamp(2rem, 5vw, 2.8rem)', fontWeight: 700, margin: '0 0 12px', display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <PrinterOutlined style={{ color: accentText }} /> Maker / Prints
+                    <PrinterOutlined style={{ color: accentText }} /> Impresión 3D
                 </h1>
                 <p style={{ color: secondary, fontSize: 17, maxWidth: 620, lineHeight: 1.6, margin: 0 }}>
-                    Las piezas imprimibles de cada proyecto de hardware —carcasas, soportes y accesorios—,
-                    modelos de la comunidad que vale la pena tener a mano, y dónde buscar más. Las piezas
-                    propias se ven en 3D y se descargan directo.
+                    Carcasas y soportes de HIOS con vista 3D y archivos STL para descargar.
+                    También podés consultar modelos de la comunidad y otros repositorios.
                 </p>
             </section>
 
@@ -166,7 +165,7 @@ export function PrintsCatalog() {
                                         </span>
                                     )}
                                     <h2 style={{ ...h2, margin: '0 0 6px' }}>
-                                        {isLoose ? 'Sueltas' : (meta?.name ?? groupKey.toUpperCase())}
+                                        {isLoose ? 'Otras piezas' : (meta?.name ?? groupKey.toUpperCase())}
                                     </h2>
                                     <p style={{ color: secondary, fontSize: 14, lineHeight: 1.6, margin: 0, maxWidth: 620 }}>
                                         {isLoose
@@ -180,7 +179,7 @@ export function PrintsCatalog() {
                                             </Link>
                                             {WIRING_GUIDE_SLUGS.includes(groupKey) && (
                                                 <Link href={`/${locale}/pinouts/${groupKey}`} style={groupLink}>
-                                                    Wiring →
+                                                    Guía de cableado →
                                                 </Link>
                                             )}
                                         </div>
@@ -194,7 +193,7 @@ export function PrintsCatalog() {
                     })
                 ) : (
                     <div style={{ padding: '20px', background: cardBg, border: cardBorder, borderRadius: 12, color: muted, fontSize: 14 }}>
-                        Próximamente: acá van a ir mis modelos publicados. (Se editan en <code style={{ color: secondary }}>config/prints.ts</code>.)
+                        Todavía no hay modelos de HIOS publicados. Podés consultar los repositorios de abajo.
                     </div>
                 )}
             </section>
@@ -202,7 +201,7 @@ export function PrintsCatalog() {
             {/* Recomendados de la comunidad */}
             {recommendedPrints.length > 0 && (
                 <section style={section}>
-                    <h2 style={h2}>Recomendados de la comunidad</h2>
+                    <h2 style={h2}>Modelos de la comunidad</h2>
                     <div style={grid}>
                         {recommendedPrints.map((m) => <ModelCard key={m.url} m={m} />)}
                     </div>

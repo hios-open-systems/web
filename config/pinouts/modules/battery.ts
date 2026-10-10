@@ -5,7 +5,7 @@ export const BATTERY_BREAKOUTS: Breakout[] = [
     id: 'holder-2s',
     name: 'Portaceldas 18650 2S (serie)',
     kind: 'battery',
-    summary: 'Dos 18650 en serie (2S). Ojo: el holder correcto es en SERIE, no en paralelo.',
+    summary: 'Portapilas para dos celdas 18650 en serie (2S). Verificá que el cableado sea en serie.',
     form: 'holder 2× 18650',
     iface: 'pasivo (2 celdas en serie)',
     voltage: '7.4V nom · 8.4V full (Li-ion de 4.2V/celda)',
