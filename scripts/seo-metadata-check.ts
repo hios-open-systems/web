@@ -5,7 +5,7 @@ type Messages = { [key: string]: string | Messages };
 const cache = new Map<string, Messages>();
 const pageNamespaces: Record<string, [string, string, string?]> = {
   '/explore': ['Workspace', 'intro', 'explore'],
-  '/workbench/spaces': ['Workspace', 'intro'],
+  '/workbench/spaces': ['Workspace', 'intro', 'mySpaces'],
   '': ['Hero', 'subtitle'],
   '/tools': ['Tools', 'subtitle'], '/projects': ['Projects', 'subtitle'],
   '/workbench': ['Workbench.landing', 'subtitle'], '/guestbook': ['Guestbook', 'subtitle'],
