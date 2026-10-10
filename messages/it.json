@@ -693,7 +693,18 @@
         "primaryNavigation": "Navigazione principale",
         "mobileNavigation": "Navigazione mobile",
         "lightTheme": "Usa il tema chiaro",
-        "darkTheme": "Usa il tema scuro"
+        "darkTheme": "Usa il tema scuro",
+        "sections": {
+            "label": "Sezioni",
+            "maker": "Maker · visualizzatore STL",
+            "devlog": "Devlog",
+            "pinouts": "Pinouts",
+            "calculators": "Calcolatori",
+            "software": "Software",
+            "stats": "Statistiche",
+            "guestbook": "Libro degli ospiti",
+            "about": "Informazioni su HIOS"
+        }
     },
     "Auth": {
         "signIn": "Accedi",
@@ -856,7 +867,12 @@
             "snippets": "Frammenti di codice",
             "settings": "Impostazioni",
             "feedback": "Errori e commenti",
-            "random": "Apri uno strumento casuale"
+            "random": "Apri uno strumento casuale",
+            "maker": "Maker · visualizzatore STL",
+            "devlog": "Devlog",
+            "stats": "Statistiche",
+            "guestbook": "Libro degli ospiti",
+            "about": "Informazioni su HIOS"
         }
     },
     "Presets": {
@@ -2691,20 +2707,24 @@
             "description": "Un nodo ESP32-S3 per inviare richieste a Ollama sulla rete locale."
         },
         "blog": {
-            "label": "Documentazione",
+            "label": "Devlog",
             "description": "Guide e note tecniche su hardware, software e IA locale."
         },
         "stats": {
             "label": "Statistiche",
             "description": "Statistiche pubbliche sulle visite e sull’uso degli strumenti."
+        },
+        "maker": {
+            "label": "Maker · visualizzatore STL",
+            "description": "Visualizza modelli 3D e scarica i file STL."
         }
     },
     "Footer": {
         "description": "HIOS — Hardware aperto, software e documentazione tecnica.",
         "detail": "Codice e risorse da esplorare, costruire e adattare.",
         "navigation": "Navigazione a piè di pagina",
-        "prints": "Stampa 3D",
-        "blog": "Documentazione",
+        "prints": "Maker · visualizzatore STL",
+        "blog": "Devlog",
         "stats": "Statistiche",
         "about": "Informazioni su HIOS"
     },
@@ -2731,7 +2751,7 @@
     },
     "Blog": {
         "kicker": "HIOS / Documentazione",
-        "title": "Documentazione",
+        "title": "Devlog",
         "intro": "Guide di riferimento e note di sviluppo su hardware, software e IA locale.",
         "refKicker": "01 / Riferimenti tecnici",
         "devKicker": "02 / Note di sviluppo",
@@ -2927,8 +2947,8 @@
             "software": "software open source firmware companion"
         },
         "resourceLabels": {
-            "page-blog": "Documentazione",
-            "page-prints": "Stampa 3D",
+            "page-blog": "Devlog",
+            "page-prints": "Maker · visualizzatore STL",
             "page-calculators": "Calcolatrici"
         },
         "localPreview": "Dati salvati in questo browser",
