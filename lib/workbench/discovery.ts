@@ -6,7 +6,7 @@ export type Activity = typeof activities[number];
 export function activityFor(tool: WorkbenchTool): Activity {
   if (/llm|token-inspector|voice-ai/.test(tool.id)) return 'ai';
   if (tool.sectionId === 'audio') return 'audio';
-  if (tool.sectionId === 'electronics' || tool.id === 'serial-monitor') return 'maker';
+  if (tool.sectionId === 'electronics' || tool.id === 'serial-monitor' || tool.id === 'embedded') return 'maker';
   if (tool.sectionId === 'reference' || tool.id === 'notes') return 'knowledge';
   return 'development';
 }

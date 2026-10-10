@@ -61,6 +61,7 @@ export function Header() {
   };
 
   const navItems: NavItem[] = [
+    { href: `/${locale}/workbench/spaces`, label: workspace('mySpaces'), kind: 'primary' },
     { href: `/${locale}/workbench`, label: resolveLabel('workbench', 'Workbench'), kind: 'primary' },
     { href: `/${locale}/explore`, label: workspace('explore'), kind: 'secondary' },
     { href: `/${locale}/projects`, label: resolveLabel('projects', 'Proyectos'), kind: 'secondary' },
@@ -68,6 +69,7 @@ export function Header() {
 
   const isActive = (href: string) => {
     if (!pathname) return false;
+    if (href === `/${locale}/workbench` && pathname.startsWith(`${href}/spaces`)) return false;
     if (href === `/${locale}`) return pathname === href || pathname === `${href}/`;
     return pathname === href || pathname.startsWith(`${href}/`);
   };
@@ -79,6 +81,11 @@ export function Header() {
           <span className={styles.brand}>HIOS</span>
         </Link>
 
+        <Link href={`/${locale}/workbench/spaces`} className={styles.mobileSpaceLink}
+          aria-current={isActive(`/${locale}/workbench/spaces`) ? 'page' : undefined}>
+          {workspace('mySpaces')}
+        </Link>
+
         <nav className={styles.nav} aria-label="Primary">
           {navItems.map((item) => {
             const active = isActive(item.href);
@@ -88,7 +95,7 @@ export function Header() {
               active ? styles.navLinkActive : '',
             ].filter(Boolean).join(' ');
             return (
-              <Link key={item.href} href={item.href} prefetch={false} className={className}>
+              <Link key={item.href} href={item.href} prefetch={false} className={className} aria-current={active ? 'page' : undefined}>
                 {item.label}
               </Link>
             );
@@ -104,7 +111,7 @@ export function Header() {
             onClick={openCommandPalette}
             className={styles.searchButton}
             aria-label={resolveLabel('search', 'Buscar')}
-          >{resolveLabel('search', 'Buscar')} <kbd>⌘ K</kbd></Button>
+          ><span className={styles.searchLabel}>{resolveLabel('search', 'Buscar')} <kbd>⌘ K</kbd></span></Button>
           <Button
             type="text"
             size="small"

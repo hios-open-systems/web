@@ -1,5 +1,5 @@
-import { setRequestLocale, getTranslations } from 'next-intl/server';
-import { ExploreActivities } from '@/components/landing/ExploreActivities';
+import { setRequestLocale } from 'next-intl/server';
+import { ExploreCatalog } from '@/components/workbench/ExploreCatalog';
 import { translatedMetadata } from '@/lib/seo-metadata';
 
 export const generateMetadata = translatedMetadata('/explore', 'Workspace', 'intro', 'explore');
@@ -7,6 +7,5 @@ export const generateMetadata = translatedMetadata('/explore', 'Workspace', 'int
 export default async function ExplorePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const t = await getTranslations('Workspace');
-  return <main style={{ maxWidth: 1440, margin: '0 auto', padding: '32px 24px 56px' }}><h1>{t('explore')}</h1><ExploreActivities heading={false} /></main>;
+  return <main style={{ maxWidth: 1280, margin: '0 auto', padding: '32px 24px 56px' }}><ExploreCatalog /></main>;
 }

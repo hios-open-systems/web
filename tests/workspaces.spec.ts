@@ -5,6 +5,67 @@ test.beforeEach(async ({ page }) => {
   await page.route('**/api/auth/me', route => route.fulfill({ json: { user: null } }));
 });
 
+test('Explore saves a resource, exposes its destination and opens it after reload', async ({ page }) => {
+  await page.goto('/en/explore');
+  await page.getByRole('textbox', { name: 'Search by name or task…' }).fill('JSON');
+  await expect(page.getByRole('heading', { name: en.Workbench.packs['tone-generator'].title, exact: true })).toHaveCount(0);
+  const card = page.getByRole('article').filter({ has: page.getByRole('heading', { name: en.Workbench.packs.payload.title, exact: true }) });
+  await card.getByRole('button', { name: 'Add to space', exact: true }).click();
+  await page.getByRole('menuitem', { name: 'New space', exact: true }).click();
+  await expect(card.getByRole('button', { name: 'Saved', exact: true })).toBeVisible();
+  await page.getByRole('link', { name: 'My spaces', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'My space', exact: true })).toBeVisible();
+  await page.reload();
+  await expect(page.getByRole('link', { name: en.Workbench.packs.payload.title, exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Organize', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Remove', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Done', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Remove', exact: true })).toHaveCount(0);
+  await page.getByRole('link', { name: en.Workbench.packs.payload.title, exact: true }).click();
+  await expect(page).toHaveURL(/\/en\/workbench\/payload$/);
+});
+
+test('spaces can be renamed and deleted with a cancelable confirmation', async ({ page }) => {
+  await page.goto('/en/workbench/spaces');
+  await page.getByRole('button', { name: 'New space', exact: true }).click();
+  await page.getByRole('textbox', { name: 'Name', exact: true }).fill('Test workspace');
+  await page.getByRole('button', { name: 'OK', exact: true }).click();
+  await page.getByRole('button', { name: 'Space options', exact: true }).click();
+  await page.getByRole('menuitem', { name: 'Rename', exact: true }).click();
+  await page.getByRole('textbox', { name: 'Name', exact: true }).fill('Renamed workspace');
+  await page.getByRole('button', { name: 'OK', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Renamed workspace', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Space options', exact: true }).click();
+  await page.getByRole('menuitem', { name: 'Delete', exact: true }).click();
+  await page.getByRole('button', { name: 'Cancel', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Renamed workspace', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Space options', exact: true }).click();
+  await page.getByRole('menuitem', { name: 'Delete', exact: true }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Delete', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Renamed workspace', exact: true })).toHaveCount(0);
+  await page.reload();
+  await expect(page.getByRole('button', { name: 'Create my first space', exact: true })).toBeVisible();
+});
+
+test('template spaces can be duplicated and edited without changing the original', async ({ page }) => {
+  await page.goto('/en/workbench/spaces');
+  await page.getByText('Or start with a selection', { exact: true }).click();
+  await page.getByRole('combobox', { name: 'Template', exact: true }).press('ArrowDown');
+  await page.getByRole('combobox', { name: 'Template', exact: true }).press('Enter');
+  await page.getByRole('textbox', { name: 'Name', exact: true }).fill('Development desk');
+  await page.getByRole('button', { name: 'OK', exact: true }).click();
+  await expect(page.getByText('4 resources', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Space options', exact: true }).click();
+  await page.getByRole('menuitem', { name: 'Duplicate', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Development desk (copy)', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Organize', exact: true }).click();
+  await page.getByRole('button', { name: 'Remove', exact: true }).first().click();
+  await expect(page.getByText('3 resources', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Development desk', exact: true }).click();
+  await expect(page.getByText('4 resources', { exact: true })).toBeVisible();
+  await expect(page.getByRole('link', { name: en.Workbench.packs.payload.title, exact: true })).toBeVisible();
+});
+
 test('catalog search and personal space survive reload', async ({ page }) => {
   await page.goto('/en/workbench');
   await page.getByRole('textbox', { name: 'Search tools or tasks…' }).fill('payload');
