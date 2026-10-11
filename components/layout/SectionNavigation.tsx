@@ -10,6 +10,7 @@ export const sectionLinks = [
   { key: 'devlog', href: '/blog' },
   { key: 'pinouts', href: '/pinouts' },
   { key: 'calculators', href: '/calculators' },
+  { key: 'composer', href: '/composer' },
   { key: 'software', href: '/tools' },
   { key: 'stats', href: '/stats' },
   { key: 'guestbook', href: '/guestbook' },

@@ -18,8 +18,8 @@ const DAY_OPTIONS = [7, 30, 90] as const;
 
 /**
  * Panel del dueño. El gating REAL es server-side (los endpoints devuelven 403
- * si no sos el owner) — esta UI solo decide qué mostrar. Ruta sin link en la
- * navegación a propósito: /​{locale}/admin.
+ * si no sos el owner) — esta UI solo decide qué mostrar. El menú de cuenta
+ * muestra el acceso a /{locale}/admin únicamente al dueño.
  */
 export function AdminPanel() {
     const locale = useLocale();

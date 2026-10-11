@@ -23,6 +23,7 @@ interface Entry {
 
 const STATIC_PAGES = [
   { key: 'home', href: '' },
+  { key: 'projects', href: '/projects' },
   { key: 'tools', href: '/tools' },
   { key: 'maker', href: '/prints' },
   { key: 'devlog', href: '/blog' },
@@ -84,7 +85,7 @@ export function CommandPalette() {
     const pages: Entry[] = STATIC_PAGES.map((p) => ({
       href: `/${locale}${p.href}`,
       label: t(`pages.${p.key}`),
-      hint: '',
+      hint: p.key === 'maker' ? 'STL · 3D' : '',
       group: t('pagesGroup'),
     }));
     const sections: Entry[] = workbenchSections.map((section) => ({
