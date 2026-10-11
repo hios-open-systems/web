@@ -468,7 +468,7 @@
         "troubleshooting_desc": "Common issues, FAQs, and diagnostics"
     },
     "Tools": {
-        "title": "Software and resources",
+        "title": "Stack",
         "subtitle": "The tools we use to design, develop, and document",
         "software_category": "Software & Code",
         "hardware_category": "Hardware & Design",
@@ -573,7 +573,7 @@
         "assignedPins": "{count} contacts used or reserved by this guide. Dimmed contacts are outside the indicated wiring.",
         "functionalDiagram": "Functional reference. Shape and contact locations vary by manufacturer: check the labels on your module.",
         "eyebrow": "Hardware reference",
-        "title": "Module pinouts",
+        "title": "Interactive Pinouts",
         "subtitle": "Pins, interfaces and connections for modules used in HIOS.",
         "builds_title": "Project wiring",
         "builds_hint": "GPIO assignments, connections and assembly checks.",
@@ -683,8 +683,8 @@
         "guestbook": "Guestbook",
         "home": "Home",
         "projects": "Projects",
-        "tools": "Software",
-        "workbench": "Tools",
+        "tools": "Stack",
+        "workbench": "Workbench",
         "pinouts": "Pinouts",
         "calculators": "Calculators",
         "rcl": "RCL",
@@ -696,22 +696,24 @@
         "darkTheme": "Use dark theme",
         "sections": {
             "label": "Sections",
-            "maker": "Maker · STL viewer",
+            "maker": "Maker",
             "devlog": "Devlog",
             "pinouts": "Pinouts",
             "calculators": "Calculators",
-            "software": "Software",
+            "software": "Stack",
             "stats": "Statistics",
             "guestbook": "Guestbook",
-            "about": "About HIOS"
+            "about": "About HIOS",
+            "composer": "Chiptune Composer"
         }
     },
     "Auth": {
         "signIn": "Sign in",
-        "signOut": "Sign out"
+        "signOut": "Sign out",
+        "admin": "Admin"
     },
     "Feedback": {
-        "title": "Local errors and feedback",
+        "title": "Feedback inbox",
         "subtitle": "Browser errors and notes saved on this device.",
         "newEntry": "New entry",
         "kind": "Kind",
@@ -856,23 +858,24 @@
         "sectionsGroup": "Sections",
         "pages": {
             "home": "Home",
-            "tools": "Software",
-            "workbench": "Tools",
+            "tools": "Stack",
+            "workbench": "Workbench",
             "calculators": "Calculators",
             "composer": "Chiptune Composer",
             "pinouts": "Pinouts",
             "padWiring": "PAD wiring guide",
             "btdacWiring": "BTDAC wiring guide",
             "speakerWiring": "Speaker wiring guide",
-            "snippets": "Code snippets",
+            "snippets": "Snippets",
             "settings": "Settings",
-            "feedback": "Errors and feedback",
+            "feedback": "Feedback",
             "random": "Open a random tool",
-            "maker": "Maker · STL viewer",
+            "maker": "Maker",
             "devlog": "Devlog",
             "stats": "Statistics",
             "guestbook": "Guestbook",
-            "about": "About HIOS"
+            "about": "About HIOS",
+            "projects": "Projects"
         }
     },
     "Presets": {
@@ -1506,7 +1509,7 @@
         },
         "landing": {
             "badge": "Development tools",
-            "title": "Tools",
+            "title": "Workbench",
             "subtitle": "Tools for working with code, data, electronics and audio.",
             "randomCta": "Open a random tool",
             "allToolsTitle": "All tools",
@@ -1607,7 +1610,7 @@
                 "description": "Convert data between CSV and JSON with configurable delimiters."
             },
             "llm-vram-calc": {
-                "title": "Model memory estimate",
+                "title": "AI memory scenarios",
                 "description": "Compare sizes, formats and context using an illustrative formula. This does not replace model measurements."
             },
             "esp32-llm-bridge": {
@@ -2335,7 +2338,7 @@
         },
         "vram": {
             "eyebrow": "Local AI and memory",
-            "title": "Model memory estimate",
+            "title": "Memory scenarios for local models",
             "description": "Compare sizes and formats with a simplified formula. Profiles are illustrative scenarios; they do not describe an exact model architecture or guarantee that it will load.",
             "hardwareTitle": "1. Available memory",
             "vram": "Specified VRAM",
@@ -2699,7 +2702,7 @@
     },
     "HomeQuickAccess": {
         "workbench": {
-            "label": "Tools",
+            "label": "Workbench",
             "description": "Tools for working with code, data, electronics and audio."
         },
         "ai": {
@@ -2715,7 +2718,7 @@
             "description": "Public statistics on visits and tool usage."
         },
         "maker": {
-            "label": "Maker · STL viewer",
+            "label": "Maker",
             "description": "View 3D models and download STL parts."
         }
     },
@@ -2723,7 +2726,7 @@
         "description": "HIOS — Open hardware, software and technical documentation.",
         "detail": "Code and resources to explore, build and adapt.",
         "navigation": "Footer navigation",
-        "prints": "Maker · STL viewer",
+        "prints": "Maker",
         "blog": "Devlog",
         "stats": "Statistics",
         "about": "About HIOS"
@@ -2948,7 +2951,7 @@
         },
         "resourceLabels": {
             "page-blog": "Devlog",
-            "page-prints": "Maker · STL viewer",
+            "page-prints": "Maker",
             "page-calculators": "Calculators"
         },
         "localPreview": "Data saved in this browser",

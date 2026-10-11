@@ -468,7 +468,7 @@
         "troubleshooting_desc": "Problemas habituales y pasos para identificar su causa"
     },
     "Tools": {
-        "title": "Software y recursos",
+        "title": "Stack",
         "subtitle": "Software y recursos utilizados en los proyectos de HIOS",
         "software_category": "Software y código",
         "hardware_category": "Hardware y diseño",
@@ -565,7 +565,7 @@
         "asset_documentation": "Documentación",
         "asset_firmware": "Firmware y configuración",
         "asset_data": "Datos",
-        "view_in_maker": "Ver piezas para impresión 3D",
+        "view_in_maker": "Ver en Maker",
         "printable_parts_description": "{count, plural, one {# pieza con visor 3D y descarga.} other {# piezas con visor 3D y descarga.}}"
     },
     "Pinouts": {
@@ -573,7 +573,7 @@
         "assignedPins": "{count} contactos usados o reservados por esta guía. Los contactos atenuados quedan fuera del cableado indicado.",
         "functionalDiagram": "Referencia funcional. La forma y la posición de los contactos varían según el fabricante: verificá la serigrafía de tu módulo.",
         "eyebrow": "Referencia de hardware",
-        "title": "Pinouts de módulos",
+        "title": "Pinouts Interactivos",
         "subtitle": "Pines, interfaces y conexiones de los módulos usados en HIOS.",
         "builds_title": "Cableado de los proyectos",
         "builds_hint": "Asignación de GPIO, conexiones y verificación del montaje.",
@@ -683,8 +683,8 @@
         "guestbook": "Libro de visitas",
         "home": "Inicio",
         "projects": "Proyectos",
-        "tools": "Software",
-        "workbench": "Herramientas",
+        "tools": "Stack",
+        "workbench": "Workbench",
         "pinouts": "Pinouts",
         "calculators": "Calculadoras",
         "rcl": "RCL",
@@ -696,22 +696,24 @@
         "darkTheme": "Usar tema oscuro",
         "sections": {
             "label": "Secciones",
-            "maker": "Maker · visor STL",
+            "maker": "Maker",
             "devlog": "Devlog",
             "pinouts": "Pinouts",
             "calculators": "Calculadoras",
-            "software": "Software",
+            "software": "Stack",
             "stats": "Estadísticas",
             "guestbook": "Libro de visitas",
-            "about": "Acerca de HIOS"
+            "about": "Acerca de HIOS",
+            "composer": "Compositor Chiptune"
         }
     },
     "Auth": {
         "signIn": "Iniciar sesión",
-        "signOut": "Cerrar sesión"
+        "signOut": "Cerrar sesión",
+        "admin": "Admin"
     },
     "Feedback": {
-        "title": "Errores y comentarios locales",
+        "title": "Feedback inbox",
         "subtitle": "Registro de errores del navegador y notas que guardaste en este dispositivo.",
         "newEntry": "Nueva entrada",
         "kind": "Tipo",
@@ -856,23 +858,24 @@
         "sectionsGroup": "Secciones",
         "pages": {
             "home": "Inicio",
-            "tools": "Software",
-            "workbench": "Herramientas",
+            "tools": "Stack",
+            "workbench": "Workbench",
             "calculators": "Calculadoras",
             "composer": "Compositor Chiptune",
             "pinouts": "Pinouts",
             "padWiring": "PAD · guía de cableado",
             "btdacWiring": "BTDAC · guía de cableado",
             "speakerWiring": "Speaker · guía de cableado",
-            "snippets": "Fragmentos de código",
-            "settings": "Configuración",
-            "feedback": "Errores y comentarios",
+            "snippets": "Snippets",
+            "settings": "Ajustes",
+            "feedback": "Feedback",
             "random": "Abrir una herramienta al azar",
-            "maker": "Maker · visor STL",
+            "maker": "Maker",
             "devlog": "Devlog",
             "stats": "Estadísticas",
             "guestbook": "Libro de visitas",
-            "about": "Acerca de HIOS"
+            "about": "Acerca de HIOS",
+            "projects": "Proyectos"
         }
     },
     "Presets": {
@@ -1506,7 +1509,7 @@
         },
         "landing": {
             "badge": "Herramientas de desarrollo",
-            "title": "Herramientas",
+            "title": "Workbench",
             "subtitle": "Herramientas para trabajar con código, datos, electrónica y audio.",
             "randomCta": "Abrir una al azar",
             "allToolsTitle": "Todas las herramientas",
@@ -1607,7 +1610,7 @@
                 "description": "Convertí datos entre CSV y JSON con delimitadores configurables."
             },
             "llm-vram-calc": {
-                "title": "Estimación de memoria para modelos",
+                "title": "Escenarios de memoria para IA",
                 "description": "Compará tamaños, formatos y contexto mediante una fórmula ilustrativa. No sustituye una medición del modelo."
             },
             "esp32-llm-bridge": {
@@ -2076,7 +2079,7 @@
         },
         "jwtPlayground": {
             "badge": "Herramienta de validación",
-            "title": "Editor y verificador JWT",
+            "title": "JWT Playground",
             "subtitle": "Decodificá, firmá y verificá JWT con algoritmos HS, RS y ES en el navegador.",
             "input": "Token JWT",
             "placeholder": "Pegá un JWT acá...",
@@ -2335,7 +2338,7 @@
         },
         "vram": {
             "eyebrow": "IA local y memoria",
-            "title": "Estimación de memoria para modelos",
+            "title": "Escenarios de memoria para modelos locales",
             "description": "Compará tamaños y formatos con una fórmula simplificada. Los perfiles son escenarios ilustrativos; no describen la arquitectura exacta de un modelo ni garantizan que pueda cargarse.",
             "hardwareTitle": "1. Memoria disponible",
             "vram": "VRAM indicada",
@@ -2492,7 +2495,7 @@
                 "p": "Potencia en resistencia"
             },
             "cap": {
-                "title": "Capacitor según rizado",
+                "title": "Capacitor por Ripple",
                 "current": "Corriente de carga (mA)",
                 "ripple": "Rizado permitido ΔV (V)",
                 "freq": "Frecuencia de conmutación (Hz)",
@@ -2500,7 +2503,7 @@
                 "formula": "Fórmula: C = I / (ΔV · f)"
             },
             "thermal": {
-                "title": "Potencia y temperatura",
+                "title": "Potencia y Térmica",
                 "v": "Voltaje (V)",
                 "i": "Corriente (A)",
                 "theta": "θJA (°C/W)",
@@ -2509,7 +2512,7 @@
                 "temp": "Estimación térmica"
             },
             "runtime": {
-                "title": "Consumo y autonomía",
+                "title": "Consumo y Autonomía",
                 "battery": "Batería (mAh)",
                 "current": "Corriente promedio (mA)",
                 "eff": "Eficiencia total (%)",
@@ -2517,7 +2520,7 @@
                 "days": "Días"
             },
             "resistorLab": {
-                "title": "Valores y tipos de resistencias",
+                "title": "Laboratorio de Resistencias",
                 "band1": "Banda 1",
                 "band2": "Banda 2",
                 "multiplier": "Multiplicador",
@@ -2556,7 +2559,7 @@
                 "required": "R requerida"
             },
             "gain": {
-                "title": "Ganancia de un amplificador no inversor",
+                "title": "Ganancia Amplificador (No inversor)",
                 "rf": "Rf (Ω)",
                 "rg": "Rg (Ω)",
                 "value": "Ganancia",
@@ -2564,7 +2567,7 @@
                 "formula": "Fórmula: Av = 1 + Rf/Rg"
             },
             "i2s": {
-                "title": "Relojes I2S (ESP32 / DAC)",
+                "title": "Clocks I2S (ESP32 / DAC)",
                 "fs": "Frecuencia de muestreo (Hz)",
                 "bits": "Bits por muestra",
                 "channels": "Canales",
@@ -2699,7 +2702,7 @@
     },
     "HomeQuickAccess": {
         "workbench": {
-            "label": "Herramientas",
+            "label": "Workbench",
             "description": "Herramientas para trabajar con código, datos, electrónica y audio."
         },
         "ai": {
@@ -2715,7 +2718,7 @@
             "description": "Estadísticas públicas sobre las visitas y el uso de las herramientas."
         },
         "maker": {
-            "label": "Maker · visor STL",
+            "label": "Maker",
             "description": "Visor 3D y descarga de piezas STL."
         }
     },
@@ -2723,7 +2726,7 @@
         "description": "HIOS — Hardware abierto, software y documentación técnica.",
         "detail": "Código y recursos para explorar, construir y adaptar.",
         "navigation": "Navegación del pie de página",
-        "prints": "Maker · visor STL",
+        "prints": "Maker",
         "blog": "Devlog",
         "stats": "Estadísticas",
         "about": "Acerca de HIOS"
@@ -2948,7 +2951,7 @@
         },
         "resourceLabels": {
             "page-blog": "Devlog",
-            "page-prints": "Maker · visor STL",
+            "page-prints": "Maker",
             "page-calculators": "Calculadoras"
         },
         "localPreview": "Datos que se guardan en este navegador",

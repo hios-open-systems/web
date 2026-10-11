@@ -468,7 +468,7 @@
         "troubleshooting_desc": "Problemi comuni, FAQ e diagnostica"
     },
     "Tools": {
-        "title": "Software e risorse",
+        "title": "Stack",
         "subtitle": "Gli strumenti che utilizziamo per progettare, sviluppare e documentare",
         "software_category": "Software & Code",
         "hardware_category": "Hardware & Design",
@@ -573,7 +573,7 @@
         "assignedPins": "{count} contatti usati o riservati da questa guida. I contatti attenuati non fanno parte del cablaggio indicato.",
         "functionalDiagram": "Riferimento funzionale. Forma e posizione dei contatti variano secondo il produttore: verifica le etichette del tuo modulo.",
         "eyebrow": "Riferimento hardware",
-        "title": "Pinout dei moduli",
+        "title": "Pinout Interattivi",
         "subtitle": "Pin, interfacce e collegamenti dei moduli usati in HIOS.",
         "builds_title": "Cablaggio dei progetti",
         "builds_hint": "Assegnazione dei GPIO, collegamenti e verifica del montaggio.",
@@ -683,8 +683,8 @@
         "guestbook": "Libro degli ospiti",
         "home": "Home",
         "projects": "Progetti",
-        "tools": "Software",
-        "workbench": "Strumenti",
+        "tools": "Stack",
+        "workbench": "Workbench",
         "pinouts": "Pinouts",
         "calculators": "Calcolatori",
         "rcl": "RCL",
@@ -696,22 +696,24 @@
         "darkTheme": "Usa il tema scuro",
         "sections": {
             "label": "Sezioni",
-            "maker": "Maker · visualizzatore STL",
+            "maker": "Maker",
             "devlog": "Devlog",
             "pinouts": "Pinouts",
             "calculators": "Calcolatori",
-            "software": "Software",
+            "software": "Stack",
             "stats": "Statistiche",
             "guestbook": "Libro degli ospiti",
-            "about": "Informazioni su HIOS"
+            "about": "Informazioni su HIOS",
+            "composer": "Compositore Chiptune"
         }
     },
     "Auth": {
         "signIn": "Accedi",
-        "signOut": "Esci"
+        "signOut": "Esci",
+        "admin": "Admin"
     },
     "Feedback": {
-        "title": "Errori e commenti locali",
+        "title": "Inbox feedback",
         "subtitle": "Errori del browser e note salvate su questo dispositivo.",
         "newEntry": "Nuova voce",
         "kind": "Tipo",
@@ -856,23 +858,24 @@
         "sectionsGroup": "Sezioni",
         "pages": {
             "home": "Home",
-            "tools": "Software",
-            "workbench": "Strumenti",
+            "tools": "Stack",
+            "workbench": "Workbench",
             "calculators": "Calcolatrici",
             "composer": "Compositore Chiptune",
             "pinouts": "Pinouts",
             "padWiring": "PAD · guida al cablaggio",
             "btdacWiring": "BTDAC · guida al cablaggio",
             "speakerWiring": "Speaker · guida al cablaggio",
-            "snippets": "Frammenti di codice",
+            "snippets": "Snippet",
             "settings": "Impostazioni",
-            "feedback": "Errori e commenti",
+            "feedback": "Feedback",
             "random": "Apri uno strumento casuale",
-            "maker": "Maker · visualizzatore STL",
+            "maker": "Maker",
             "devlog": "Devlog",
             "stats": "Statistiche",
             "guestbook": "Libro degli ospiti",
-            "about": "Informazioni su HIOS"
+            "about": "Informazioni su HIOS",
+            "projects": "Progetti"
         }
     },
     "Presets": {
@@ -1506,7 +1509,7 @@
         },
         "landing": {
             "badge": "Strumenti di sviluppo",
-            "title": "Strumenti",
+            "title": "Workbench",
             "subtitle": "Strumenti per lavorare con codice, dati, elettronica e audio.",
             "randomCta": "Apri uno strumento a caso",
             "allToolsTitle": "Tutti gli strumenti",
@@ -1607,7 +1610,7 @@
                 "description": "Converti dati tra CSV e JSON con delimitatori configurabili."
             },
             "llm-vram-calc": {
-                "title": "Stima della memoria dei modelli",
+                "title": "Scenari di memoria per IA",
                 "description": "Confronta dimensioni, formati e contesto con una formula illustrativa. Non sostituisce le misure del modello."
             },
             "esp32-llm-bridge": {
@@ -2335,7 +2338,7 @@
         },
         "vram": {
             "eyebrow": "IA locale e memoria",
-            "title": "Stima della memoria dei modelli",
+            "title": "Scenari di memoria per modelli locali",
             "description": "Confronta dimensioni e formati con una formula semplificata. I profili sono scenari illustrativi: non descrivono l’architettura esatta di un modello e non garantiscono che possa essere caricato.",
             "hardwareTitle": "1. Memoria disponibile",
             "vram": "VRAM indicata",
@@ -2699,7 +2702,7 @@
     },
     "HomeQuickAccess": {
         "workbench": {
-            "label": "Strumenti",
+            "label": "Workbench",
             "description": "Strumenti per lavorare con codice, dati, elettronica e audio."
         },
         "ai": {
@@ -2715,7 +2718,7 @@
             "description": "Statistiche pubbliche sulle visite e sull’uso degli strumenti."
         },
         "maker": {
-            "label": "Maker · visualizzatore STL",
+            "label": "Maker",
             "description": "Visualizza modelli 3D e scarica i file STL."
         }
     },
@@ -2723,7 +2726,7 @@
         "description": "HIOS — Hardware aperto, software e documentazione tecnica.",
         "detail": "Codice e risorse da esplorare, costruire e adattare.",
         "navigation": "Navigazione a piè di pagina",
-        "prints": "Maker · visualizzatore STL",
+        "prints": "Maker",
         "blog": "Devlog",
         "stats": "Statistiche",
         "about": "Informazioni su HIOS"
@@ -2948,7 +2951,7 @@
         },
         "resourceLabels": {
             "page-blog": "Devlog",
-            "page-prints": "Maker · visualizzatore STL",
+            "page-prints": "Maker",
             "page-calculators": "Calcolatrici"
         },
         "localPreview": "Dati salvati in questo browser",

@@ -31,8 +31,7 @@ test.describe('responsive shell', () => {
         });
     }
 
-    test('mobile header exposes four clear controls without overlap', async ({ page }, testInfo) => {
-        test.skip(testInfo.project.name === 'tablet-768', 'Tablet keeps the desktop navigation contract.');
+    test('mobile header exposes four clear controls without overlap', async ({ page }) => {
         await page.goto('/es/blog');
 
         const header = page.locator('header');
@@ -53,8 +52,7 @@ test.describe('responsive shell', () => {
         }
     });
 
-    test('drawer contains secondary actions and preserves locale navigation', async ({ page }, testInfo) => {
-        test.skip(testInfo.project.name === 'tablet-768', 'Drawer is a mobile navigation surface.');
+    test('drawer contains secondary actions and preserves locale navigation', async ({ page }) => {
         await page.goto('/es/blog');
 
         await page.getByRole('button', { name: 'Menú' }).click();
@@ -76,8 +74,7 @@ test.describe('responsive shell', () => {
         await expect(page.getByRole('button', { name: 'Ver en 3D', exact: true }).first()).toBeVisible();
     });
 
-    test('search remains directly accessible on mobile', async ({ page }, testInfo) => {
-        test.skip(testInfo.project.name === 'tablet-768', 'Mobile-only header assertion.');
+    test('search remains directly accessible on mobile', async ({ page }) => {
         await page.goto('/es');
         await page.getByRole('button', { name: 'Buscar' }).click();
         await expect(page.getByRole('dialog')).toBeVisible();

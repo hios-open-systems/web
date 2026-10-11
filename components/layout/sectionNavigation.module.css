@@ -32,4 +32,4 @@
   padding: 8px 24px;
 }
 .drawer a { font-size: 15px; }
-@media (max-width: 640px) { .bar { display: none; } }
+@media (max-width: 1024px) { .bar { display: none; } }

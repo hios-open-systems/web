@@ -4,7 +4,16 @@ Fecha: 10 de octubre de 2026. Criterios editoriales y registro de la revisión. 
 
 ## Revisión aplicada
 
-Corrección de alcance: mejorar la redacción no autoriza ocultar accesos ni sustituir nombres de secciones reconocibles. Maker · visor STL y Devlog conservan sus nombres y tienen acceso desde la navegación de secciones, el menú móvil, el inicio, el pie y el buscador. Las demás secciones también deben permanecer disponibles; cualquier cambio de arquitectura de navegación se evalúa aparte.
+Corrección de alcance: mejorar la redacción no autoriza ocultar accesos ni sustituir nombres de secciones reconocibles. Se conservan Workbench, Stack, Maker, Devlog, Feedback y los nombres de herramientas. Las mejoras de texto se aplican a descripciones, ayudas y mensajes. Las funcionalidades, destinos y nombres no se eliminan ni se renombran como parte de una revisión editorial.
+
+### Auditoría de accesos (10 de octubre)
+
+- 89 páginas públicas por idioma enlazadas desde el inicio: proyectos, software de proyectos, artículos, herramientas, cableados y secciones generales.
+- Navegación de escritorio y menú móvil: Mis espacios, Workbench, Explorar, Proyectos, Maker, Devlog, Pinouts, Calculadoras, Compositor Chiptune, Stack, Estadísticas, Libro de visitas y Acerca de HIOS.
+- Buscador: se añadió Proyectos y se mantiene la búsqueda de Maker por STL; las herramientas y categorías provienen del registro completo.
+- Cuenta: iniciar sesión, cerrar sesión y acceso a Admin para el dueño en escritorio y móvil. Los permisos del servidor no cambian.
+- Rutas heredadas `/json`, `/calculators/rcl` y `/workbench/chiptune` conservan sus redirecciones. RCL se accede desde el selector de Calculadoras; los enlaces compartidos `/s/[id]` se generan desde Snippets.
+- Pruebas permanentes: alcance por enlaces de todas las páginas públicas, apertura real de cada sección en los cuatro idiomas y estados de cuenta anónimo, miembro y dueño. Se ejecutan en escritorio, teléfonos y tablet.
 
 Se revisaron las descripciones del catálogo de herramientas, la navegación, Explorar, Mis espacios, ayudas, mensajes de estado, configuración, comentarios, tutoriales, pinouts y calculadoras. También se revisaron las fichas de proyectos y software, el catálogo de software externo y el de impresión 3D. Se conservaron las descripciones técnicas que ya explicaban funciones y límites concretos. Los artículos de referencia consultados sobre modelos locales y desarrollo con IA ya siguen ese criterio; no se reescribieron para introducir variaciones de estilo.
 
@@ -12,7 +21,7 @@ Los cambios compartidos de navegación, espacios, guardado y comentarios se adap
 
 | Antes | Ahora | Motivo |
 | --- | --- | --- |
-| Workbench / Stack / Devlog | Herramientas / Software / Documentación | Nombrar los destinos por su contenido. |
+| Workbench / Stack / Maker / Devlog | Se conservan los nombres originales | La descripción explica el contenido sin reemplazar el nombre. |
 | ¿En qué estás trabajando? | Herramientas y proyectos | Identificar el catálogo sin una pregunta decorativa. |
 | Guardar preset | Guardar configuración | Explicar la acción sin jerga innecesaria. |
 | Proyecto o referencia guardada en este espacio | Descripción propia del recurso; resumen localizado para artículos | Evitar repetir la misma frase en cada tarjeta. |
