@@ -3,12 +3,14 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { GithubOutlined } from '@ant-design/icons';
 import { usePathname } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
+import Link from 'next/link';
 import { useCurrentUser } from '@/lib/hooks/useCurrentUser';
 import styles from './userMenu.module.css';
 
-export function UserMenu() {
+export function UserMenu({ inDrawer = false, onNavigate }: { inDrawer?: boolean; onNavigate?: () => void }) {
     const t = useTranslations('Auth');
+    const locale = useLocale();
     const pathname = usePathname() ?? '/';
     const { user: me, isLoading } = useCurrentUser();
     const [open, setOpen] = useState(false);
@@ -44,7 +46,7 @@ export function UserMenu() {
         const next = encodeURIComponent(pathname);
         return (
             <a
-                className={styles.loginButton}
+                className={`${styles.loginButton} ${inDrawer ? styles.drawerLogin : ''}`}
                 href={`/api/auth/github/start?next=${next}`}
                 aria-label={t('signIn')}
             >
@@ -57,7 +59,7 @@ export function UserMenu() {
     const display = me.name || me.login;
 
     return (
-        <div ref={rootRef} className={styles.root}>
+        <div ref={rootRef} className={`${styles.root} ${inDrawer ? styles.drawerAccount : ''}`}>
             <button
                 type="button"
                 className={styles.trigger}
@@ -72,6 +74,7 @@ export function UserMenu() {
                 ) : (
                     <span className={styles.avatarFallback}>{display.charAt(0).toUpperCase()}</span>
                 )}
+                {inDrawer ? <span>{display}</span> : null}
             </button>
             {open ? (
                 <div role="menu" className={styles.menu}>
@@ -79,6 +82,8 @@ export function UserMenu() {
                         <span className={styles.menuName}>{display}</span>
                         <span className={styles.menuLogin}>@{me.login}</span>
                     </div>
+                    {me.isOwner ? <Link href={`/${locale}/admin`} role="menuitem" className={styles.menuItem}
+                        onClick={() => { setOpen(false); onNavigate?.(); }}>{t('admin')}</Link> : null}
                     <button
                         type="button"
                         role="menuitem"

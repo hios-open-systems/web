@@ -468,7 +468,7 @@
         "troubleshooting_desc": "Häufige Probleme, FAQs und Diagnose"
     },
     "Tools": {
-        "title": "Software und Ressourcen",
+        "title": "Stack",
         "subtitle": "Die Werkzeuge, die wir zum Entwerfen, Entwickeln und Dokumentieren verwenden",
         "software_category": "Software & Code",
         "hardware_category": "Hardware & Design",
@@ -573,7 +573,7 @@
         "assignedPins": "{count} Kontakte werden in dieser Anleitung verwendet oder reserviert. Abgeblendete Kontakte gehören nicht zur gezeigten Verdrahtung.",
         "functionalDiagram": "Funktionsübersicht. Form und Kontaktpositionen variieren je nach Hersteller: Prüfe die Beschriftung deines Moduls.",
         "eyebrow": "Hardware-Referenz",
-        "title": "Modul-Pinbelegungen",
+        "title": "Interaktive Pinouts",
         "subtitle": "Pins, Schnittstellen und Anschlüsse der in HIOS verwendeten Module.",
         "builds_title": "Projektverdrahtung",
         "builds_hint": "GPIO-Zuordnung, Anschlüsse und Aufbauprüfung.",
@@ -683,8 +683,8 @@
         "guestbook": "Gästebuch",
         "home": "Start",
         "projects": "Projekte",
-        "tools": "Software",
-        "workbench": "Werkzeuge",
+        "tools": "Stack",
+        "workbench": "Workbench",
         "pinouts": "Pinouts",
         "calculators": "Rechner",
         "rcl": "RCL",
@@ -696,22 +696,24 @@
         "darkTheme": "Dunkles Design verwenden",
         "sections": {
             "label": "Bereiche",
-            "maker": "Maker · STL-Viewer",
+            "maker": "Maker",
             "devlog": "Devlog",
             "pinouts": "Pinouts",
             "calculators": "Rechner",
-            "software": "Software",
+            "software": "Stack",
             "stats": "Statistik",
             "guestbook": "Gästebuch",
-            "about": "Über HIOS"
+            "about": "Über HIOS",
+            "composer": "Chiptune Composer"
         }
     },
     "Auth": {
         "signIn": "Anmelden",
-        "signOut": "Abmelden"
+        "signOut": "Abmelden",
+        "admin": "Admin"
     },
     "Feedback": {
-        "title": "Lokale Fehler und Notizen",
+        "title": "Feedback-Postfach",
         "subtitle": "Browserfehler und Notizen, die auf diesem Gerät gespeichert sind.",
         "newEntry": "Neuer Eintrag",
         "kind": "Art",
@@ -856,23 +858,24 @@
         "sectionsGroup": "Bereiche",
         "pages": {
             "home": "Start",
-            "tools": "Software",
-            "workbench": "Werkzeuge",
+            "tools": "Stack",
+            "workbench": "Workbench",
             "calculators": "Rechner",
             "composer": "Chiptune Composer",
             "pinouts": "Pinouts",
             "padWiring": "PAD-Verdrahtungsanleitung",
             "btdacWiring": "BTDAC-Verdrahtungsanleitung",
             "speakerWiring": "Speaker-Verdrahtungsanleitung",
-            "snippets": "Code-Snippets",
+            "snippets": "Snippets",
             "settings": "Einstellungen",
-            "feedback": "Fehler und Feedback",
+            "feedback": "Feedback",
             "random": "Zufälliges Werkzeug öffnen",
-            "maker": "Maker · STL-Viewer",
+            "maker": "Maker",
             "devlog": "Devlog",
             "stats": "Statistik",
             "guestbook": "Gästebuch",
-            "about": "Über HIOS"
+            "about": "Über HIOS",
+            "projects": "Projekte"
         }
     },
     "Presets": {
@@ -1506,7 +1509,7 @@
         },
         "landing": {
             "badge": "Entwicklungswerkzeuge",
-            "title": "Werkzeuge",
+            "title": "Workbench",
             "subtitle": "Werkzeuge für Code, Daten, Elektronik und Audio.",
             "randomCta": "Zufälliges Werkzeug öffnen",
             "allToolsTitle": "Alle Werkzeuge",
@@ -1607,7 +1610,7 @@
                 "description": "Wandle Daten zwischen CSV und JSON mit einstellbaren Trennzeichen um."
             },
             "llm-vram-calc": {
-                "title": "Speicherschätzung für Modelle",
+                "title": "Speicherszenarien für KI",
                 "description": "Vergleiche Größen, Formate und Kontext mit einer Beispielformel. Sie ersetzt keine Messung am Modell."
             },
             "esp32-llm-bridge": {
@@ -2335,7 +2338,7 @@
         },
         "vram": {
             "eyebrow": "Lokale KI und Speicher",
-            "title": "Speicherschätzung für Modelle",
+            "title": "Speicherszenarien für lokale Modelle",
             "description": "Vergleiche Größen und Formate mit einer vereinfachten Formel. Die Profile sind Beispielszenarien. Sie bilden keine genaue Modellarchitektur ab und garantieren nicht, dass ein Modell geladen werden kann.",
             "hardwareTitle": "1. Verfügbarer Speicher",
             "vram": "Angegebener VRAM",
@@ -2699,7 +2702,7 @@
     },
     "HomeQuickAccess": {
         "workbench": {
-            "label": "Werkzeuge",
+            "label": "Workbench",
             "description": "Werkzeuge für Code, Daten, Elektronik und Audio."
         },
         "ai": {
@@ -2715,7 +2718,7 @@
             "description": "Öffentliche Statistiken zu Seitenaufrufen und Werkzeugnutzung."
         },
         "maker": {
-            "label": "Maker · STL-Viewer",
+            "label": "Maker",
             "description": "3D-Modelle ansehen und STL-Teile herunterladen."
         }
     },
@@ -2723,7 +2726,7 @@
         "description": "HIOS — Offene Hardware, Software und technische Dokumentation.",
         "detail": "Code und Ressourcen zum Erkunden, Bauen und Anpassen.",
         "navigation": "Fußzeilennavigation",
-        "prints": "Maker · STL-Viewer",
+        "prints": "Maker",
         "blog": "Devlog",
         "stats": "Statistik",
         "about": "Über HIOS"
@@ -2948,7 +2951,7 @@
         },
         "resourceLabels": {
             "page-blog": "Devlog",
-            "page-prints": "Maker · STL-Viewer",
+            "page-prints": "Maker",
             "page-calculators": "Rechner"
         },
         "localPreview": "In diesem Browser gespeicherte Daten",

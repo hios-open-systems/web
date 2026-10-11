@@ -147,7 +147,7 @@ export function Header() {
             className={`${styles.iconButton} ${styles.desktopOnlyControl}`}
             aria-label="GitHub"
           />
-          <UserMenu />
+          <div className={styles.desktopOnlyControl}><UserMenu /></div>
           <Button
             type="text"
             size="small"
@@ -186,6 +186,7 @@ export function Header() {
 
         <SectionNavigation inDrawer onNavigate={() => setMenuOpen(false)} />
         <div className={styles.drawerFooter}>
+          <UserMenu inDrawer onNavigate={() => setMenuOpen(false)} />
           <div className={styles.drawerActions}>
             <Button
               type="text"
