@@ -1,90 +1,25 @@
 'use client';
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo } from 'react';
 import { Button, Card, Col, Input, Row, Space, Typography } from 'antd';
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
-import { useSearchParams } from 'next/navigation';
+import { DownloadOutlined, PlusOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useTheme } from '@/lib/ThemeContext';
-import { type NoteRecord, createNoteDraft, readNotes, writeNotes } from '@/lib/workbench/notes';
+import { NotesList } from './NotesList';
+import { useMarkdownNotes } from './useMarkdownNotes';
+import { downloadBlob } from '@/lib/workbench/download';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
 
 const { Text } = Typography;
 const { TextArea } = Input;
 
-function normalizeEscapedNewlines(value: string): string {
-  if (!value.includes('\\n') || value.includes('\n')) return value;
-  return value.replace(/\\n/g, '\n');
-}
-
 export function MarkdownNotesTool() {
   const t = useTranslations('Workbench.notes');
   const { mode } = useTheme();
-  const searchParams = useSearchParams();
-  const hydrated = useRef(false);
-
-  const [notes, setNotes] = useState<NoteRecord[]>([]);
-  const [activeId, setActiveId] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (hydrated.current) return;
-    hydrated.current = true;
-    let loaded = readNotes().map((note) => ({
-      ...note,
-      body: normalizeEscapedNewlines(note.body),
-    }));
-    const shared = searchParams.get('note');
-    if (shared !== null) {
-      const imported = createNoteDraft({
-        title: t('importedTitle'),
-        body: normalizeEscapedNewlines(shared),
-      });
-      loaded = [imported, ...loaded];
-    }
-    if (loaded.length === 0) {
-      loaded = [
-        createNoteDraft({
-          title: t('exampleTitle'),
-          body: normalizeEscapedNewlines(t('exampleBody')),
-        }),
-      ];
-    }
-    setNotes(loaded);
-    setActiveId(loaded[0]?.id ?? null);
-  }, [searchParams, t]);
-
-  // Debounced autosave.
-  useEffect(() => {
-    if (!hydrated.current) return;
-    const h = setTimeout(() => writeNotes(notes), 400);
-    return () => clearTimeout(h);
-  }, [notes]);
-
-  const active = useMemo(() => notes.find((n) => n.id === activeId) ?? null, [notes, activeId]);
-
-  const patchActive = (patch: Partial<NoteRecord>) => {
-    setNotes((prev) =>
-      prev.map((n) => (n.id === activeId ? { ...n, ...patch, updatedAt: Date.now() } : n)),
-    );
-  };
-
-  const addNote = () => {
-    const draft = createNoteDraft({ title: t('newNote') });
-    setNotes((prev) => [draft, ...prev]);
-    setActiveId(draft.id);
-  };
-
-  const removeNote = (id: string) => {
-    setNotes((prev) => {
-      const next = prev.filter((n) => n.id !== id);
-      if (id === activeId) setActiveId(next[0]?.id ?? null);
-      return next;
-    });
-  };
-
+  const { notes, active, activeId, setActiveId, saveFailed, patchActive, addNote, removeNote } = useMarkdownNotes();
   const themeVars = useMemo(
     () =>
       ({
@@ -108,48 +43,19 @@ export function MarkdownNotesTool() {
         locality="local"
         guideId="notes"
         actions={
-          <Button icon={<PlusOutlined />} onClick={addNote}>
-            {t('newNote')}
-          </Button>
+          <Space wrap>
+            <Button size="large" icon={<PlusOutlined />} onClick={addNote}>{t('newNote')}</Button>
+            <Button size="large" icon={<DownloadOutlined />} disabled={!active} onClick={() => {
+              if (active) downloadBlob(active.body, (active.title.replace(/[<>:"/\\|?*]/g, '-').trim() || 'note') + '.md', 'text/markdown;charset=utf-8');
+            }}>{t('download')}</Button>
+          </Space>
         }
       />
+      <Text role="status" type={saveFailed ? 'danger' : 'secondary'}>{t(saveFailed ? 'saveFailed' : 'savedLocal')}</Text>
       <Row gutter={[20, 20]}>
         <Col xs={24} lg={6}>
           <Card title={t('notesLabel')} className={styles.sectionCard} styles={{ body: { padding: 8 } }}>
-            {notes.length === 0 ? (
-              <div className={styles.emptyPanel}>
-                <Text>{t('empty')}</Text>
-              </div>
-            ) : (
-              <div className={styles.generatedList}>
-                {notes.map((n) => (
-                  <div
-                    key={n.id}
-                    className={styles.generatedRow}
-                    style={{
-                      cursor: 'pointer',
-                      background:
-                        n.id === activeId ? 'color-mix(in srgb, var(--accent) 14%, transparent)' : undefined,
-                      borderRadius: 8,
-                    }}
-                    onClick={() => setActiveId(n.id)}
-                  >
-                    <Text className={styles.generatedValue} ellipsis>
-                      {n.title || t('untitled')}
-                    </Text>
-                    <Button
-                      type="text"
-                      size="small"
-                      icon={<DeleteOutlined />}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        removeNote(n.id);
-                      }}
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
+            <NotesList notes={notes} activeId={activeId} setActiveId={setActiveId} removeNote={removeNote} />
           </Card>
         </Col>
         <Col xs={24} lg={9}>
@@ -157,11 +63,13 @@ export function MarkdownNotesTool() {
             {active ? (
               <Space direction="vertical" size={12} className={styles.stackFull}>
                 <Input
+                  aria-label={t('titlePlaceholder')}
                   value={active.title}
                   onChange={(e) => patchActive({ title: e.target.value })}
                   placeholder={t('titlePlaceholder')}
                 />
                 <TextArea
+                  aria-label={t('editorLabel')}
                   value={active.body}
                   onChange={(e) => patchActive({ body: e.target.value })}
                   autoSize={{ minRows: 12, maxRows: 28 }}

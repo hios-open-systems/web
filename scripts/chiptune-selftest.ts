@@ -1,3 +1,4 @@
+import { fitNote, resizeSong } from '../lib/workbench/chiptuneEditing.ts';
 /**
  * Self-test for the Chiptune Composer pure logic: MIDI (SMF) encoder golden
  * bytes, WAV header, VLQ vectors and tick math. Zero-dependency.
@@ -129,6 +130,17 @@ eq('audibleTracks: mute excluye', audibleTracks(mix).length, 2);
 mix.tracks[0].solo = true;
 const soloed = audibleTracks(mix);
 ok('audibleTracks: con solo, solo esa (ignora muteada y no-solo)', soloed.length === 1 && soloed[0].name === 'a');
+
+const edited = createDemoSong();
+const fitted = fitNote(createNote(200, 99999, 99999, 200), edited);
+eq('edits clamp pitch', fitted.pitch, 127);
+eq('edits clamp start to last step', fitted.start, loopLengthTicks(edited) - TICKS_PER_STEP);
+eq('edits stop at song end', fitted.duration, TICKS_PER_STEP);
+const shortened = resizeSong(edited, 1);
+ok('shortened song has no hidden notes after its end', shortened.tracks.every(t => t.notes.every(n => n.start + n.duration <= loopLengthTicks(shortened))));
+eq('malformed track import rejected', parseSong(JSON.stringify({ version: 1, song: { ...edited, tracks: [null] } })), null);
+eq('invalid loop length rejected', parseSong(serializeSong({ ...edited, lengthBars: -1 })), null);
+eq('unsupported PPQ rejected', parseSong(serializeSong({ ...edited, ppq: 960 })), null);
 
 if (failures > 0) {
   console.error(`\n${failures} check(s) failed`);

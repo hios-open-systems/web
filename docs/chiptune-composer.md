@@ -13,6 +13,43 @@ texto simple.
 
 ---
 
+## Crear, escuchar y descargar
+
+- **Generar una idea musical:** elegí Aventura (mayor), Arcade (menor) o Tranquilo,
+  tonalidad y cantidad de compases. El generador combina un motivo melódico,
+  progresión de acordes, bajo, arpegio y percusión. Una misma semilla y ajustes
+  producen la misma música; «Generar otra idea» cambia la semilla. Reemplaza el
+  borrador actual y se puede deshacer. No usa un servicio de IA ni la red.
+- **Editar:** seleccioná una pista, elegí la figura y tocá una celda. Las notas
+  se pueden mover, alargar o editar desde el inspector. En móvil, el modo Dibujar
+  permite desplazar el fondo; Seleccionar rango permite arrastrar una selección.
+- **Reproducir:** loop, metrónomo, tempo y volumen general. El metrónomo funciona
+  también con una canción vacía y no se incluye en las descargas.
+- **Escala y melodía:** el panel del editor muestra una guía mayor o menor natural,
+  con la nota base marcada. La tonalidad del generador se conserva en el proyecto.
+  Cambiar la guía no modifica notas existentes; «Ajustar al dibujar y mover» acerca
+  esas ediciones a la nota de escala más próxima. Se puede apagar la guía visual.
+- **Variar melodía:** modifica alturas de la pista activa usando la escala guía y
+  notas del acompañamiento en los pulsos fuertes. Conserva ritmo, duraciones,
+  intensidad, timbre y las demás pistas. Los botones de transposición desplazan
+  esa pista por semitonos u octavas, sin ajuste a escala. No se aplican a percusión
+  ni a pistas vacías; los límites MIDI deshabilitan movimientos fuera de rango.
+  Cada variación o transposición se puede deshacer por separado.
+- **Descargar tu música:** WAV y MP3 renderizan una vuelta con las pistas audibles,
+  los timbres y el volumen general. MIDI conserva notas para otro editor y usa
+  los sonidos de ese programa. El proyecto JSON conserva la composición editable,
+  incluidas secciones y timbres, y se abre desde Biblioteca.
+- **Guardar configuración:** guarda la canción actual, aunque la URL no cambie.
+  El borrador y las configuraciones se guardan en el almacenamiento de este navegador.
+  Descargá un proyecto para conservar una copia fuera del navegador.
+- **Secciones y arreglo:** se mantienen como funciones opcionales. Los compases
+  se muestran desde 1, al igual que en la regla del piano.
+
+Las descargas para el parlante siguen siendo un formato separado del proyecto
+editable. El firmware usa sus propias voces; los ajustes de timbre web no viajan.
+
+---
+
 ## Flujo
 
 1. Componés en `/composer` (piano-roll, voces chiptune, escucha en el navegador).

@@ -247,3 +247,11 @@
     max-height: 60vh;
   }
 }
+.blackKey { background: rgba(0, 0, 0, 0.24); }
+.noteCaption { display: block; padding: 2px 4px; overflow: hidden; font-size: 10px; color: #111; pointer-events: none; white-space: nowrap; }
+.rollScroll { overscroll-behavior: contain; }
+.rollLabel { opacity: 0.8; }
+.trackActions { display: flex; flex-wrap: wrap; gap: 8px; }
+.scaleRows { position: absolute; inset: 0; pointer-events: none; }
+.scaleRow, .scaleRoot { position: absolute; left: 0; right: 0; background: color-mix(in srgb, var(--accent, #a855f7) 7%, transparent); }
+.scaleRoot { background: color-mix(in srgb, var(--accent, #a855f7) 18%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--accent, #a855f7) 35%, transparent); }

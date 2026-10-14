@@ -30,9 +30,10 @@ function splitLines(text: string): string[] {
 export function diffLines(a: string, b: string): DiffResult {
   const A = splitLines(a);
   const B = splitLines(b);
-  const truncated = A.length > MAX_LINES || B.length > MAX_LINES;
-  const aL = truncated ? A.slice(0, MAX_LINES) : A;
-  const bL = truncated ? B.slice(0, MAX_LINES) : B;
+  const limit = A.length * B.length > 1_000_000 ? 1000 : MAX_LINES;
+  const truncated = A.length > limit || B.length > limit;
+  const aL = truncated ? A.slice(0, limit) : A;
+  const bL = truncated ? B.slice(0, limit) : B;
 
   const n = aL.length;
   const m = bL.length;
