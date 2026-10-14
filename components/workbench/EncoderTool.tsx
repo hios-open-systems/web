@@ -21,6 +21,7 @@ type Dir = 'encode' | 'decode';
 
 export function EncoderTool() {
   const t = useTranslations('Workbench.encoder');
+  const common = useTranslations('Workbench.common');
   const { mode: themeMode } = useTheme();
   const searchParams = useSearchParams();
   const hydratedFromUrl = useRef(false);
@@ -46,7 +47,10 @@ export function EncoderTool() {
 
   const output = useMemo(() => {
     if (!input) return { value: '', error: '' };
-    if (dir === 'encode') return { value: encode(mode, input), error: '' };
+    if (dir === 'encode') {
+      try { return { value: encode(mode, input), error: '' }; }
+      catch { return { value: '', error: t('error') }; }
+    }
     const r = decode(mode, input);
     return r.ok ? { value: r.value, error: '' } : { value: '', error: t('error') };
   }, [mode, dir, input, t]);
@@ -79,7 +83,7 @@ export function EncoderTool() {
         guideId="encoder"
         actions={
           <Space wrap>
-            <Button onClick={() => setDir(dir === 'encode' ? 'decode' : 'encode')}>{t('swap')}</Button>
+            <Button size="large" disabled={!!output.error} onClick={() => { setInput(output.value); setDir(dir === 'encode' ? 'decode' : 'encode'); }}>{t('swap')}</Button>
             {output.value ? <SendToMenu kind="json" getValue={() => output.value} /> : null}
             <PresetControls toolId="encoder" settings={{ mode, dir }} content={{ input }} />
           </Space>
@@ -88,6 +92,7 @@ export function EncoderTool() {
       <Card className={styles.sectionCard} styles={{ body: { padding: 20 } }}>
         <Space wrap size={12}>
           <Segmented
+            style={{ maxWidth: '100%', overflowX: 'auto' }}
             value={mode}
             onChange={(v) => setMode(v as EncoderMode)}
             options={ENCODER_MODES as unknown as string[]}
@@ -104,6 +109,7 @@ export function EncoderTool() {
       </Card>
       <Card title={t('inputLabel')} className={styles.sectionCard} styles={{ body: { padding: 20 } }}>
         <TextArea
+          aria-label={t('inputLabel')}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           autoSize={{ minRows: 4, maxRows: 12 }}
@@ -115,7 +121,7 @@ export function EncoderTool() {
         className={styles.sectionCard}
         styles={{ body: { padding: 20 } }}
         extra={
-          output.value ? <Button size="small" type="text" icon={<CopyOutlined />} onClick={copy} /> : null
+          output.value ? <Button aria-label={common('copy')} style={{ minWidth: 44, minHeight: 44 }} type="text" icon={<CopyOutlined aria-hidden />} onClick={copy} /> : null
         }
       >
         {output.error ? (

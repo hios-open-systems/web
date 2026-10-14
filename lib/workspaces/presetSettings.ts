@@ -2,6 +2,7 @@ const safeSettings: Record<string, readonly string[]> = {
   payload: ['view'], 'object-to-types': ['rootName'], 'json-schema': ['rootName'], 'type-checker': ['rootName'],
   'random-string': ['options'], 'ohms-law': ['values'],
   'resistor-color-code': ['bandCount', 'colors'], 'serial-monitor': ['baudRate', 'appendNewline'],
+  regex: ['replaceEnabled'], timestamp: ['unit'],
   encoder: ['mode', 'dir'], 'hash-digest': ['algo'], 'uuid-ulid': ['type', 'count'],
   'subnet-calculator': ['prefix'], 'esp32-llm-bridge': ['port', 'btnGpio', 'ledGpio', 'sdaGpio', 'sclGpio'],
   'voice-ai-latency': ['vadMs', 'sttMs', 'llmMs', 'ttsMs', 'netMs'],

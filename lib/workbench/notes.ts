@@ -72,6 +72,6 @@ export function readNotes(): NoteRecord[] {
   return parseNotes(readRaw(LS_KEY));
 }
 
-export function writeNotes(notes: NoteRecord[]): void {
-  writeRaw(LS_KEY, serializeNotes(notes));
+export function writeNotes(notes: NoteRecord[]): boolean {
+  return writeRaw(LS_KEY, serializeNotes(notes));
 }

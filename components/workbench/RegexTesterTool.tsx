@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { sanitizeFlags } from '@/lib/workbench/regex';
+import { RegexReplacement } from './RegexReplacement';
 import { ToolHeader } from './ToolHeader';
 import { CopyButton } from './CopyButton';
 import { PresetControls } from './PresetControls';
@@ -25,9 +26,10 @@ export function RegexTesterTool() {
   const [pattern, setPattern] = useState('\\b\\w+@\\w+\\.\\w+\\b');
   const [flags, setFlags] = useState('g');
   const [input, setInput] = useState('contacto: juan@openhios.dev y soporte@example.com');
+  const [replaceEnabled, setReplaceEnabled] = useState(false);
   const [replacement, setReplacement] = useState('');
 
-  useToolBridge('regex', v => { if (v.input !== undefined) setInput(v.input); if (v.pattern !== undefined) setPattern(v.pattern); if (v.flags !== undefined) setFlags(sanitizeFlags(v.flags)); if (v.replacement !== undefined) setReplacement(v.replacement); });
+  useToolBridge('regex', v => { if (v.input !== undefined) setInput(v.input); if (v.pattern !== undefined) setPattern(v.pattern); if (v.flags !== undefined) setFlags(sanitizeFlags(v.flags)); if (v.replacement !== undefined) { setReplacement(v.replacement); setReplaceEnabled(v.replaceEnabled === 'true' || v.replacement !== ''); } });
 
   useEffect(() => {
     if (hydratedFromUrl.current) return;
@@ -41,8 +43,11 @@ export function RegexTesterTool() {
   }, [searchParams]);
 
 
-  const { result, replaced } = useRegexWorker(pattern, flags, input, replacement);
+  const evaluation = useRegexWorker(pattern, flags, input, replacement);
 
+  const { pending } = evaluation;
+  const result = pending ? { ok: true as const, matches: [], truncated: false } : evaluation.result;
+  const replaced = pending ? null : evaluation.replaced;
   const themeVars = useMemo(
     () =>
       ({
@@ -65,12 +70,13 @@ export function RegexTesterTool() {
         description={t('subtitle')}
         locality="local"
         guideId="regex"
-        actions={<PresetControls toolId="regex" settings={{}} content={{ input, pattern, flags, replacement }} />}
+        actions={<PresetControls toolId="regex" settings={{ replaceEnabled: String(replaceEnabled) }} content={{ input, pattern, flags, replacement }} />}
       />
       <Card className={styles.sectionCard} styles={{ body: { padding: 20 } }}>
         <Space direction="vertical" size={12} className={styles.stackFull}>
           <Space.Compact style={{ width: '100%' }}>
             <Input
+              aria-label={t('patternPlaceholder')}
               addonBefore="/"
               value={pattern}
               onChange={(e) => setPattern(e.target.value)}
@@ -79,17 +85,19 @@ export function RegexTesterTool() {
             />
             <Input
               addonBefore="/"
-              style={{ width: 120 }}
+              aria-label={t('flagsPlaceholder')}
+              style={{ width: 100, flexShrink: 0 }}
               value={flags}
               onChange={(e) => setFlags(sanitizeFlags(e.target.value))}
               placeholder={t('flagsPlaceholder')}
             />
           </Space.Compact>
+          {pending && <Text role="status">{t('working')}</Text>}
           {!result.ok ? <Text type="danger">{result.error}</Text> : null}
         </Space>
       </Card>
       <Card title={t('inputLabel')} className={styles.sectionCard} styles={{ body: { padding: 20 } }}>
-        <TextArea value={input} onChange={(e) => setInput(e.target.value)} autoSize={{ minRows: 4, maxRows: 12 }} />
+        <TextArea aria-label={t('inputLabel')} value={input} onChange={(e) => setInput(e.target.value)} autoSize={{ minRows: 4, maxRows: 12 }} />
       </Card>
       <Card
         title={t('matchesLabel')}
@@ -125,26 +133,7 @@ export function RegexTesterTool() {
           </div>
         )}
       </Card>
-      <Card title={t('replaceLabel')} className={styles.sectionCard} styles={{ body: { padding: 20 } }}>
-        <Space direction="vertical" size={12} className={styles.stackFull}>
-          <Input
-            value={replacement}
-            onChange={(e) => setReplacement(e.target.value)}
-            placeholder={t('replacePlaceholder')}
-          />
-          {replaced ? (
-            replaced.ok ? (
-              <pre className={styles.codeBlock} style={{ whiteSpace: 'pre-wrap', margin: 0 }}>
-                {replaced.value}
-              </pre>
-            ) : (
-              <Text type="danger">{replaced.error}</Text>
-            )
-          ) : (
-            <Text type="secondary">{t('replaceHint')}</Text>
-          )}
-        </Space>
-      </Card>
+      <RegexReplacement replaceEnabled={replaceEnabled} setReplaceEnabled={setReplaceEnabled} replacement={replacement} setReplacement={setReplacement} replaced={replaced} pending={pending} />
     </Space>
   );
 }

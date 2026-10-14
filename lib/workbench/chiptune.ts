@@ -6,6 +6,8 @@
  */
 
 import { readRaw, writeRaw } from '../storage/safeLocalStorage.ts';
+import { isValidSong } from './chiptuneValidation.ts';
+import type { MusicalScale } from './chiptuneMusic.ts';
 
 export const PPQ = 480;
 export const STEPS_PER_BEAT = 4;
@@ -72,6 +74,7 @@ export interface ArrangementClip {
 }
 
 export interface ChiptuneSong {
+  scale?: MusicalScale;
   version: 1;
   name: string;
   bpm: number; // 40..300
@@ -229,7 +232,7 @@ export function serializeDeviceSong(song: ChiptuneSong): string {
     lb: song.lengthBars,
     t: song.tracks.map((track) => ({
       i: Math.max(0, INSTRUMENT_IDS.indexOf(track.instrument)),
-      m: track.muted ? 1 : 0,
+      m: track.muted || (song.tracks.some(item => item.solo) && !track.solo) ? 1 : 0,
       vol: clamp(Math.round(track.volume * 255), 0, 255),
       no: track.notes.map((note) => [note.pitch, note.start, note.duration, note.velocity]),
     })),
@@ -241,13 +244,12 @@ export function parseSong(raw: string | null): ChiptuneSong | null {
   try {
     const parsed = JSON.parse(raw);
     const song = parsed && parsed.version === 1 ? parsed.song : null;
-    if (!song || !Array.isArray(song.tracks)) return null;
-    song.bpm = clamp(Number(song.bpm) || 120, 40, 300);
-    song.ppq = song.ppq || PPQ;
-    song.beatsPerBar = song.beatsPerBar || 4;
-    song.lengthBars = song.lengthBars || 4;
+    if (!isValidSong(song)) return null;
     for (const track of song.tracks as ChiptuneTrack[]) {
       if (track && track.timbre) track.timbre = clampTimbre(track.timbre);
+    }
+    for (const pattern of song.patterns ?? []) {
+      for (const track of pattern.tracks) if (track.timbre) track.timbre = clampTimbre(track.timbre);
     }
     return song as ChiptuneSong;
   } catch {
