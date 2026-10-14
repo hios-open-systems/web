@@ -4,7 +4,7 @@
  *
  * Run: node --experimental-strip-types scripts/csvjson-selftest.ts
  */
-import { csvToObjects, objectsToCsv, parseCsv, toCsv } from '../lib/workbench/csvJson.ts';
+import { jsonToCsv, csvToObjects, objectsToCsv, parseCsv, toCsv } from '../lib/workbench/csvJson.ts';
 
 let failures = 0;
 
@@ -67,6 +67,14 @@ eq('parseCsv custom delimiter', parseCsv('a;b\n1;2', ';'), [
   ['1', '2'],
 ]);
 
+eq('numeric JSON cells', jsonToCsv([[1, true, null]]), '1,true,');
+eq('nested JSON cells', jsonToCsv([{ data: { x: 1 } }]), 'data\n"{""x"":1}"');
+eq('prototype header retained', JSON.stringify(csvToObjects('__proto__,x\nhello,1')), '[{"__proto__":"hello","x":"1"}]');
+for (const input of [[1, { x: 2 }], [null], 'text']) {
+  let rejected = false;
+  try { jsonToCsv(input); } catch { rejected = true; }
+  eq('reject non-table JSON', rejected, true);
+}
 if (failures > 0) {
   console.error(`\n${failures} check(s) failed`);
   process.exit(1);

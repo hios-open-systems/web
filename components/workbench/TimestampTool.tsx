@@ -2,9 +2,11 @@
 import { ToolPresetBinding, textField } from '@/components/workbench/ToolPresetBinding';
 
 import React, { useMemo, useState } from 'react';
-import { Button, Card, Input, Space, Tabs, Tooltip, Typography } from 'antd';
+import { Button, Card, Input, Select, Space, Tabs, Tooltip, Typography, message } from 'antd';
 import { CopyOutlined, SyncOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
+import { parseTimestamp, type TimestampUnit } from '@/lib/workbench/timestamp';
+import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
 
@@ -31,25 +33,16 @@ const FORMATS = [
   },
 ];
 
-function parseInput(raw: string): Date | null {
-  const trimmed = raw.trim();
-  if (!trimmed) return null;
-  if (/^\d{9,13}$/.test(trimmed)) {
-    const ms = trimmed.length <= 10 ? parseInt(trimmed) * 1000 : parseInt(trimmed);
-    const d = new Date(ms);
-    return isNaN(d.getTime()) ? null : d;
-  }
-  const d = new Date(trimmed);
-  return isNaN(d.getTime()) ? null : d;
-}
-
 export function TimestampTool() {
   const t = useTranslations('Workbench.timestamp');
 
   const [rawInput, setRawInput] = useState(() => String(Math.floor(Date.now() / 1000)));
+  const [unit, setUnit] = useState<TimestampUnit>('auto');
+  const [messageApi, contextHolder] = message.useMessage();
+  const [now, setNow] = useState(() => new Date());
   const [tab, setTab] = useState<'parse' | 'now'>('parse');
 
-  const parsed = useMemo(() => parseInput(rawInput), [rawInput]);
+  const parsed = useMemo(() => parseTimestamp(rawInput, unit), [rawInput, unit]);
 
   const themeVars = useMemo(
     () =>
@@ -62,16 +55,14 @@ export function TimestampTool() {
     [],
   );
 
-  const refreshNow = () => setRawInput(String(Math.floor(Date.now() / 1000)));
+  const refreshNow = () => setRawInput(String(unit === 'milliseconds' ? Date.now() : Math.floor(Date.now() / 1000)));
 
-  const copyVal = async (val: string) => {
-    await navigator.clipboard.writeText(val).catch(() => null);
-  };
+  const copyVal = useCopyToClipboard(messageApi);
 
   const ValueRow = ({ label, value }: { label: string; value: string }) => (
     <div
       style={{
-        display: 'flex',
+        display: 'flex', flexWrap: 'wrap', gap: 4,
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: '8px 0',
@@ -79,10 +70,10 @@ export function TimestampTool() {
       }}
     >
       <Text style={{ color: 'var(--wb-text-muted)', fontSize: 12, minWidth: 100 }}>{label}</Text>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-        <code style={{ fontSize: 13 }}>{value}</code>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0, maxWidth: '100%' }}>
+        <code style={{ fontSize: 13, overflowWrap: 'anywhere' }}>{value}</code>
         <Tooltip title={t('copy')}>
-          <Button size="small" type="text" icon={<CopyOutlined />} onClick={() => copyVal(value)} />
+          <Button aria-label={t('copy') + ' ' + label} style={{ minWidth: 44, minHeight: 44, flexShrink: 0 }} type="text" icon={<CopyOutlined />} onClick={() => copyVal(value)} />
         </Tooltip>
       </div>
     </div>
@@ -90,7 +81,8 @@ export function TimestampTool() {
 
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
-      <ToolPresetBinding toolId="timestamp" fields={{ rawInput: textField(rawInput, setRawInput) }} />
+      {contextHolder}
+      <ToolPresetBinding toolId="timestamp" fields={{ rawInput: textField(rawInput, setRawInput), unit: textField(unit, setUnit, ['auto', 'seconds', 'milliseconds'], false) }} />
       <ToolHeader
         eyebrow={t('badge')}
         title={t('title')}
@@ -100,7 +92,7 @@ export function TimestampTool() {
 
       <Tabs
         activeKey={tab}
-        onChange={(k) => setTab(k as 'parse' | 'now')}
+        onChange={(k) => { setTab(k as 'parse' | 'now'); if (k === 'now') setNow(new Date()); }}
         items={[
           { key: 'parse', label: t('tabParse') },
           { key: 'now', label: t('tabNow') },
@@ -110,8 +102,10 @@ export function TimestampTool() {
       {tab === 'parse' && (
         <Card className={styles.sectionCard} styles={{ body: { padding: 20 } }}>
           <Space direction="vertical" size={16} className={styles.stackFull}>
+            <Select aria-label={t('unit')} value={unit} onChange={setUnit} style={{ width: '100%' }} options={(['auto', 'seconds', 'milliseconds'] as const).map(value => ({value, label: t(value)}))} />
             <div style={{ display: 'flex', gap: 8 }}>
               <Input
+                aria-label={t('inputPlaceholder')}
                 value={rawInput}
                 onChange={(e) => setRawInput(e.target.value)}
                 placeholder={t('inputPlaceholder')}
@@ -119,7 +113,7 @@ export function TimestampTool() {
                 status={rawInput && !parsed ? 'error' : undefined}
               />
               <Tooltip title={t('useNow')}>
-                <Button icon={<SyncOutlined />} onClick={refreshNow} />
+                <Button aria-label={t('useNow')} icon={<SyncOutlined aria-hidden />} onClick={refreshNow} />
               </Tooltip>
             </div>
             {rawInput && !parsed && <Text type="danger">{t('invalid')}</Text>}
@@ -138,12 +132,12 @@ export function TimestampTool() {
         <Card className={styles.sectionCard} styles={{ body: { padding: 20 } }}>
           <Space direction="vertical" size={14} className={styles.stackFull}>
             <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Button icon={<SyncOutlined />} onClick={() => setRawInput(String(Math.floor(Date.now() / 1000)))}>
+              <Button icon={<SyncOutlined />} onClick={() => setNow(new Date())}>
                 {t('refreshNow')}
               </Button>
             </div>
             {FORMATS.map(({ key, label, fmt }) => (
-              <ValueRow key={key} label={label} value={fmt(new Date())} />
+              <ValueRow key={key} label={label} value={fmt(now)} />
             ))}
           </Space>
         </Card>

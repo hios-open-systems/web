@@ -7,12 +7,13 @@ export function readRaw(key: string): string | null {
   }
 }
 
-export function writeRaw(key: string, value: string): void {
-  if (typeof window === 'undefined') return;
+export function writeRaw(key: string, value: string): boolean {
+  if (typeof window === 'undefined') return false;
   try {
     window.localStorage.setItem(key, value);
+    return true;
   } catch {
-    return;
+    return false;
   }
 }
 

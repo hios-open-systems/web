@@ -2,11 +2,12 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Card, Input, Segmented, Space, Typography, message } from 'antd';
-import { CopyOutlined } from '@ant-design/icons';
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
-import { HASH_ALGORITHMS, type HashAlgorithm, digest, isHashAlgorithm } from '@/lib/workbench/hash';
+import { HASH_ALGORITHMS, type HashAlgorithm, isHashAlgorithm } from '@/lib/workbench/hash';
+import { useDigestResult } from '@/lib/hooks/useDigestResult';
+import { DigestRow } from './DigestRow';
 import { ToolHeader } from './ToolHeader';
 import { PresetControls } from './PresetControls';
 import { useToolBridge } from '@/lib/hooks/useToolBridge';
@@ -27,7 +28,7 @@ export function HashDigestTool() {
 
   const [input, setInput] = useState(EXAMPLE);
   const [algo, setAlgo] = useState<HashAlgorithm>('SHA-256');
-  const [result, setResult] = useState<{ hex: string; base64: string }>({ hex: '', base64: '' });
+  const { result, error, pending, missingKey } = useDigestResult(algo, input);
 
   useToolBridge('hash-digest', v => { if (v.input !== undefined) setInput(v.input); if (v.algo && isHashAlgorithm(v.algo)) setAlgo(v.algo); });
 
@@ -41,23 +42,6 @@ export function HashDigestTool() {
   }, [searchParams]);
 
 
-  useEffect(() => {
-    let cancelled = false;
-    if (!input) {
-      setResult({ hex: '', base64: '' });
-      return;
-    }
-    digest(algo, input)
-      .then((r) => {
-        if (!cancelled) setResult(r);
-      })
-      .catch(() => {
-        if (!cancelled) setResult({ hex: '', base64: '' });
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [input, algo]);
 
   const themeVars = useMemo(
     () =>
@@ -94,11 +78,13 @@ export function HashDigestTool() {
       <Card title={t('inputLabel')} className={styles.sectionCard} styles={{ body: { padding: 20 } }}>
         <Space direction="vertical" size={14} className={styles.stackFull}>
           <Segmented
+            style={{ maxWidth: '100%', overflowX: 'auto' }}
             value={algo}
             onChange={(v) => setAlgo(v as HashAlgorithm)}
             options={HASH_ALGORITHMS as unknown as string[]}
           />
           <TextArea
+            aria-label={t('inputLabel')}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             autoSize={{ minRows: 4, maxRows: 12 }}
@@ -107,39 +93,17 @@ export function HashDigestTool() {
         </Space>
       </Card>
       <Card title={t('resultLabel')} className={styles.sectionCard} styles={{ body: { padding: 20 } }}>
-        {result.hex ? (
+        {result?.hex ? (
           <Space direction="vertical" size={16} className={styles.stackFull}>
             <DigestRow label={`${algo} · ${t('hexLabel')}`} value={result.hex} onCopy={copy} />
             <DigestRow label={`${algo} · ${t('base64Label')}`} value={result.base64} onCopy={copy} />
           </Space>
         ) : (
           <div className={styles.emptyPanel}>
-            <Text>{t('empty')}</Text>
+            <Text role="status" type={error || missingKey ? 'danger' : undefined}>{t(missingKey ? 'missingKey' : error ? 'failed' : pending ? 'working' : 'empty')}</Text>
           </div>
         )}
       </Card>
     </Space>
-  );
-}
-
-function DigestRow({
-  label,
-  value,
-  onCopy,
-}: {
-  label: string;
-  value: string;
-  onCopy: (v: string) => void;
-}) {
-  return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-        <Text className={styles.metricLabel}>{label}</Text>
-        <Button size="small" type="text" icon={<CopyOutlined />} onClick={() => onCopy(value)} />
-      </div>
-      <pre className={styles.codeBlock} style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all', margin: 0 }}>
-        {value}
-      </pre>
-    </div>
   );
 }

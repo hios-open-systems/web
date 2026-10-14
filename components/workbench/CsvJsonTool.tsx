@@ -3,10 +3,11 @@ import { ToolPresetBinding, textField, booleanField } from '@/components/workben
 
 import React, { useMemo, useState } from 'react';
 import { Button, Card, Input, Segmented, Select, Space, Switch, Typography, message } from 'antd';
-import { CopyOutlined } from '@ant-design/icons';
+import { CopyOutlined, DownloadOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
-import { csvToObjects, objectsToCsv, parseCsv, toCsv } from '@/lib/workbench/csvJson';
+import { csvToObjects, jsonToCsv, parseCsv } from '@/lib/workbench/csvJson';
+import { downloadBlob } from '@/lib/workbench/download';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
 
@@ -43,11 +44,7 @@ export function CsvJsonTool() {
       }
       if (!jsonText.trim()) return { value: '' };
       const parsed: unknown = JSON.parse(jsonText);
-      if (!Array.isArray(parsed)) return { error: true };
-      if (parsed.every((r) => Array.isArray(r))) {
-        return { value: toCsv(parsed as string[][], delimiter) };
-      }
-      return { value: objectsToCsv(parsed as Record<string, unknown>[], delimiter) };
+      return { value: jsonToCsv(parsed, delimiter) };
     } catch {
       return { error: true };
     }
@@ -90,7 +87,10 @@ export function CsvJsonTool() {
         <Space wrap size={16}>
           <Segmented
             value={direction}
-            onChange={(v) => setDirection(v as Direction)}
+            onChange={(v) => {
+              if (output.value) (v === 'toCsv' ? setJsonText : setCsvText)(output.value);
+              setDirection(v as Direction);
+            }}
             options={[
               { label: t('toJson'), value: 'toJson' },
               { label: t('toCsv'), value: 'toCsv' },
@@ -102,7 +102,7 @@ export function CsvJsonTool() {
           </Space>
           <Space size={8} align="center">
             <Text className={styles.metricLabel}>{t('headerLabel')}</Text>
-            <Switch checked={header} onChange={setHeader} />
+            <Switch aria-label={t('headerLabel')} checked={header} onChange={setHeader} disabled={direction === 'toCsv'} />
           </Space>
         </Space>
       </Card>
@@ -110,6 +110,7 @@ export function CsvJsonTool() {
       <div className={styles.editorGrid}>
         <Card title={sourceLabel} className={styles.sectionCard} styles={{ body: { padding: 16 } }}>
           <TextArea
+            aria-label={sourceLabel}
             value={sourceValue}
             onChange={(e) => setSource(e.target.value)}
             autoSize={{ minRows: 10, maxRows: 22 }}
@@ -121,10 +122,11 @@ export function CsvJsonTool() {
           title={outputLabel}
           className={styles.sectionCard}
           styles={{ body: { padding: 16 } }}
-          extra={
-            <Button size="small" type="text" icon={<CopyOutlined />} onClick={copy} disabled={!('value' in output) || !output.value} />
-          }
         >
+          <Space wrap style={{ marginBottom: 12 }}>
+            <Button size="large" icon={<CopyOutlined aria-hidden />} onClick={copy} disabled={!output.value}>{t('copy')}</Button>
+            <Button size="large" icon={<DownloadOutlined aria-hidden />} disabled={!output.value} onClick={() => downloadBlob(output.value ?? '', direction === 'toJson' ? 'data.json' : 'data.csv', direction === 'toJson' ? 'application/json' : 'text/csv;charset=utf-8')}>{t('download')}</Button>
+          </Space>
           {'error' in output ? (
             <Text type="danger">{t('error')}</Text>
           ) : (

@@ -936,6 +936,12 @@
             }
         },
         "notes": {
+            "download": "Download .md",
+            "savedLocal": "Saved in this browser",
+            "saveFailed": "Could not save. Download the note before leaving.",
+            "deleteConfirm": "Delete this note?",
+            "delete": "Delete",
+            "cancel": "Cancel",
             "badge": "Generation tool",
             "title": "Markdown notes",
             "subtitle": "Write Markdown notes with a preview and local storage.",
@@ -992,7 +998,10 @@
             "rightLabel": "Changed",
             "diffLabel": "Diff",
             "identical": "The two texts are identical",
-            "truncated": "Truncated (very large input)"
+            "truncated": "Truncated (very large input)",
+            "swap": "Swap texts",
+            "download": "Download comparison",
+            "partialEqual": "No differences in the analyzed portion. The remaining text was not compared."
         },
         "regex": {
             "badge": "Testing tool",
@@ -1013,9 +1022,14 @@
             "invalidPattern": "Invalid pattern",
             "replaceLabel": "Replace preview",
             "replacePlaceholder": "Replacement (use $1, $<name>)",
-            "replaceHint": "Type a replacement to see the preview"
+            "replaceHint": "Type a replacement to see the preview",
+            "enableReplace": "Replace (empty removes matches)",
+            "working": "Finding matches…",
+            "download": "Download result",
+            "emptyResult": "The result is empty: all matches were removed."
         },
         "uuidUlid": {
+            "download": "Download .txt",
             "badge": "Generation tool",
             "title": "UUID and ULID generator",
             "subtitle": "Generate UUID v4 and ULID identifiers individually or in batches.",
@@ -1057,7 +1071,10 @@
             "base64Label": "base64",
             "copied": "Digest copied",
             "copyError": "Could not copy",
-            "empty": "Type something to see its digest"
+            "empty": "Type something to see its digest",
+            "working": "Calculating…",
+            "failed": "Could not calculate. Check that Web Crypto is available in this browser.",
+            "missingKey": "Enter a key to calculate the HMAC."
         },
         "ohmsLaw": {
             "badge": "Electronics tool",
@@ -1191,9 +1208,14 @@
             "base64Label": "base64",
             "copied": "HMAC copied",
             "copyError": "Could not copy",
-            "empty": "Enter a message to see its HMAC"
+            "empty": "Enter a message to see its HMAC",
+            "working": "Calculating…",
+            "failed": "Could not calculate. Check that Web Crypto is available in this browser.",
+            "missingKey": "Enter a key to calculate the HMAC."
         },
         "csvJson": {
+            "copy": "Copy",
+            "download": "Download",
             "badge": "Testing tool",
             "title": "CSV and JSON converter",
             "subtitle": "Convert data between CSV and JSON with configurable delimiters.",
@@ -1963,7 +1985,9 @@
             "copyError": "Could not copy",
             "entropy": "Estimated entropy",
             "results": "Generated values",
-            "emptyCharset": "Select at least one character group"
+            "emptyCharset": "Select at least one character group",
+            "download": "Download .txt",
+            "failed": "Could not generate values. Check that random number generation is available in this browser."
         },
         "objectCompare": {
             "badge": "Testing tool",
@@ -2144,7 +2168,19 @@
             "field_month": "Month",
             "field_dayOfWeek": "Day of week",
             "copy": "Copy expression",
-            "copied": "Copied"
+            "copied": "Copied",
+            "invalid": "Invalid expression. Use 5 fields with values in range and steps greater than zero.",
+            "every": "Every",
+            "limitedRuns": "Showing matches in the next 366 days. There may be fewer than eight.",
+            "presets": {
+                "0": "Every minute",
+                "1": "Every hour",
+                "2": "Midnight",
+                "3": "Monday at 9",
+                "4": "First of month",
+                "5": "Every 5 minutes",
+                "6": "Weekdays at 8"
+            }
         },
         "color": {
             "badge": "Generation tool",
@@ -2154,9 +2190,14 @@
             "sliders": "Sliders",
             "copy": "Copy",
             "contrastOnWhite": "Contrast on white",
-            "contrastOnBlack": "Contrast on black"
+            "contrastOnBlack": "Contrast on black",
+            "invalid": "Use 3 or 6 HEX digits, such as #abc or #aabbcc. Transparency is not supported."
         },
         "timestamp": {
+            "unit": "Timestamp unit",
+            "auto": "Automatic (seconds or milliseconds)",
+            "seconds": "Seconds",
+            "milliseconds": "Milliseconds",
             "badge": "Testing tool",
             "title": "Date converter",
             "subtitle": "Convert Unix timestamps and dates between formats and time zones.",
@@ -2169,6 +2210,7 @@
             "refreshNow": "Refresh"
         },
         "numberBase": {
+            "invalid": "Invalid value for this base",
             "badge": "Testing tool",
             "title": "Number bases",
             "subtitle": "Convert numbers between decimal, hexadecimal, binary and octal.",
@@ -2231,9 +2273,15 @@
             "apply": "Apply",
             "cancel": "Cancel",
             "colKey": "Key",
-            "colValue": "Value"
+            "colValue": "Value",
+            "removeParam": "Remove parameter",
+            "copyParam": "Copy parameter",
+            "copyUrl": "Copy URL"
         },
         "imageBase64": {
+            "readError": "Could not open this image. Try another file.",
+            "loading": "Reading image…",
+            "download": "Download",
             "badge": "Generation tool",
             "title": "Image to Base64",
             "subtitle": "Convert an image to Base64 or a data URL for use in HTML or CSS.",

@@ -88,9 +88,10 @@ export function scheduleVoice(
   const recipe = override ? { ...RECIPES[instrument], ...override } : RECIPES[instrument];
   const amp = ctx.createGain();
   const stopAt = applyEnvelope(amp.gain, start, dur, recipe, gain);
-  const filterHz = recipe.kind === 'noise' ? Math.min(12000, Math.max(400, freq * 6)) : recipe.filterHz;
+  const filterHz = recipe.kind === 'noise' ? (override?.filterHz ?? Math.min(12000, Math.max(400, freq * 6))) : recipe.filterHz;
+  let filter: BiquadFilterNode | undefined;
   if (filterHz) {
-    const filter = ctx.createBiquadFilter();
+    filter = ctx.createBiquadFilter();
     filter.type = recipe.filterType ?? 'lowpass';
     filter.frequency.value = filterHz;
     filter.Q.value = recipe.kind === 'noise' ? 1.2 : 0.7;
@@ -112,7 +113,16 @@ export function scheduleVoice(
     nodes.push(osc);
   };
 
-  if (recipe.kind === 'noise') {
+  if (recipe.kind === 'noise' && freq <= 110) {
+    const kick = ctx.createOscillator();
+    kick.type = 'sine';
+    kick.frequency.setValueAtTime(150, start);
+    kick.frequency.exponentialRampToValueAtTime(45, start + 0.09);
+    kick.connect(amp);
+    kick.start(start);
+    kick.stop(stopAt);
+    nodes.push(kick);
+  } else if (recipe.kind === 'noise') {
     const source = ctx.createBufferSource();
     source.buffer = noiseBuffer(ctx);
     source.loop = true;
@@ -125,7 +135,12 @@ export function scheduleVoice(
     spawnOsc(-cents);
     spawnOsc(cents);
   } else {
-    spawnOsc(0);
+    spawnOsc(recipe.detune ?? 0);
   }
+  let remaining = nodes.length;
+  nodes.forEach(node => node.addEventListener('ended', () => {
+    node.disconnect();
+    if (--remaining === 0) { amp.disconnect(); filter?.disconnect(); }
+  }, { once: true }));
   return nodes;
 }
