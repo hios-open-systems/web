@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Card, Col, Input, Row, Space, Tag, Typography } from 'antd';
+import { Button, Card, Col, Input, Row, Space, Tag, Typography } from 'antd';
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { diffLines } from '@/lib/workbench/textDiff';
+import { downloadBlob } from '@/lib/workbench/download';
 import { ToolHeader } from './ToolHeader';
 import { CopyButton } from './CopyButton';
 import { PresetControls } from './PresetControls';
@@ -72,6 +73,8 @@ export function TextDiffTool() {
         guideId="textDiff"
         actions={
           <Space wrap>
+<Button size="large" onClick={() => { setA(b); setB(a); }}>{t('swap')}</Button>
+            <Button size="large" disabled={!a && !b} onClick={() => downloadBlob(diff.lines.map(line => sign[line.type] + line.value).join('\n'), diff.truncated ? 'comparison-partial.txt' : 'comparison.txt', 'text/plain;charset=utf-8')}>{t('download')}</Button>
             <Tag color="green">+{diff.added}</Tag>
             <Tag color="red">-{diff.removed}</Tag>
             <PresetControls toolId="text-diff" settings={{}} content={{ a, b }} />
@@ -81,12 +84,12 @@ export function TextDiffTool() {
       <Row gutter={[20, 20]}>
         <Col xs={24} lg={12}>
           <Card title={t('leftLabel')} className={styles.sectionCard} styles={{ body: { padding: 16 } }}>
-            <TextArea value={a} onChange={(e) => setA(e.target.value)} autoSize={{ minRows: 6, maxRows: 18 }} />
+            <TextArea aria-label={t('leftLabel')} value={a} onChange={(e) => setA(e.target.value)} autoSize={{ minRows: 6, maxRows: 18 }} />
           </Card>
         </Col>
         <Col xs={24} lg={12}>
           <Card title={t('rightLabel')} className={styles.sectionCard} styles={{ body: { padding: 16 } }}>
-            <TextArea value={b} onChange={(e) => setB(e.target.value)} autoSize={{ minRows: 6, maxRows: 18 }} />
+            <TextArea aria-label={t('rightLabel')} value={b} onChange={(e) => setB(e.target.value)} autoSize={{ minRows: 6, maxRows: 18 }} />
           </Card>
         </Col>
       </Row>
@@ -111,7 +114,7 @@ export function TextDiffTool() {
       >
         {diff.added === 0 && diff.removed === 0 ? (
           <div className={styles.emptyPanel}>
-            <Text>{t('identical')}</Text>
+            <Text>{t(diff.truncated ? 'partialEqual' : 'identical')}</Text>
           </div>
         ) : (
           <pre style={{ margin: 0, padding: 16, overflowX: 'auto', fontSize: 13, lineHeight: 1.55 }}>

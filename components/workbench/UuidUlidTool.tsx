@@ -2,12 +2,13 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Card, InputNumber, Segmented, Space, Typography, message } from 'antd';
-import { CopyOutlined, ReloadOutlined } from '@ant-design/icons';
+import { CopyOutlined, DownloadOutlined, ReloadOutlined } from '@ant-design/icons';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import { type IdType, generateIds, isIdType } from '@/lib/workbench/ids';
+import { downloadBlob } from '@/lib/workbench/download';
 import { ToolHeader } from './ToolHeader';
 import { UrlPresets } from '@/components/common/UrlPresets';
 import styles from './workbench.module.css';
@@ -94,7 +95,8 @@ export function UuidUlidTool() {
                 {t('copyAll')}
               </Button>
             ) : null}
-            <UrlPresets storageKey="uuid-ulid" />
+            <Button size="large" icon={<DownloadOutlined aria-hidden />} disabled={!values.length} onClick={() => downloadBlob(values.join('\n'), type + '.txt', 'text/plain;charset=utf-8')}>{t('download')}</Button>
+            <UrlPresets storageKey="uuid-ulid" getQuery={() => new URLSearchParams({type, count: String(count)}).toString()} />
           </Space>
         }
       />
@@ -114,11 +116,13 @@ export function UuidUlidTool() {
           <Space size={8}>
             <Text className={styles.metricLabel}>{t('countLabel')}</Text>
             <InputNumber
+              aria-label={t('countLabel')}
+              precision={0}
               min={1}
               max={100}
               value={count}
               onChange={(v) => {
-                const c = v ?? 1;
+                const c = Math.max(1, Math.min(100, Math.floor(v ?? 1)));
                 setCount(c);
                 regenerate(type, c);
               }}
@@ -132,7 +136,7 @@ export function UuidUlidTool() {
             {values.map((value) => (
               <div key={value} className={styles.generatedRow}>
                 <Text className={styles.generatedValue}>{value}</Text>
-                <Button type="text" icon={<CopyOutlined />} onClick={() => copy(value, t('copied'))} />
+                <Button aria-label={t('copyAll') + ': ' + value} style={{ minWidth: 44, minHeight: 44 }} type="text" icon={<CopyOutlined aria-hidden />} onClick={() => copy(value, t('copied'))} />
               </div>
             ))}
           </div>

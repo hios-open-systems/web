@@ -2,11 +2,11 @@
  *  Los helpers aceptan stepW/rowH escalados (zoom); por defecto usan la base. */
 import { TICKS_PER_STEP } from '@/lib/workbench/chiptune';
 
-export const ROW_H = 18; // px por semitono (base, zoom 1)
-export const STEP_W = 22; // px por semicorchea (base, zoom 1)
-export const RULER_H = 18; // alto de la regla de compases
-export const PITCH_MIN = 36; // C2
-export const PITCH_MAX = 84; // C6
+export const ROW_H = 22;
+export const STEP_W = 26;
+export const RULER_H = 28;
+export const PITCH_MIN = 0;
+export const PITCH_MAX = 127;
 export const PITCH_COUNT = PITCH_MAX - PITCH_MIN + 1;
 
 export const pitchToY = (pitch: number, rowH: number = ROW_H): number => (PITCH_MAX - pitch) * rowH;

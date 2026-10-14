@@ -936,6 +936,12 @@
             }
         },
         "notes": {
+            "download": "Descargar .md",
+            "savedLocal": "Guardado en este navegador",
+            "saveFailed": "No se pudo guardar. Descargá la nota antes de salir.",
+            "deleteConfirm": "¿Eliminar esta nota?",
+            "delete": "Eliminar",
+            "cancel": "Cancelar",
             "badge": "Herramienta de generación",
             "title": "Notas Markdown",
             "subtitle": "Escribí notas en Markdown con vista previa y almacenamiento local.",
@@ -992,7 +998,10 @@
             "rightLabel": "Modificado",
             "diffLabel": "Diferencias",
             "identical": "Los dos textos son idénticos",
-            "truncated": "Truncado (entrada muy grande)"
+            "truncated": "Truncado (entrada muy grande)",
+            "swap": "Intercambiar textos",
+            "download": "Descargar comparación",
+            "partialEqual": "Sin diferencias en la parte analizada. El resto del texto no se comparó."
         },
         "regex": {
             "badge": "Herramienta de prueba",
@@ -1013,9 +1022,14 @@
             "invalidPattern": "Patrón inválido",
             "replaceLabel": "Vista previa del reemplazo",
             "replacePlaceholder": "Reemplazo (usá $1 o $<nombre>)",
-            "replaceHint": "Escribí un reemplazo para ver el resultado"
+            "replaceHint": "Escribí un reemplazo para ver el resultado",
+            "enableReplace": "Reemplazar (vacío elimina coincidencias)",
+            "working": "Buscando coincidencias…",
+            "download": "Descargar resultado",
+            "emptyResult": "El resultado está vacío: se eliminaron todas las coincidencias."
         },
         "uuidUlid": {
+            "download": "Descargar .txt",
             "badge": "Herramienta de generación",
             "title": "Generador UUID y ULID",
             "subtitle": "Generá identificadores UUID v4 y ULID, de a uno o en lotes.",
@@ -1057,7 +1071,10 @@
             "base64Label": "base64",
             "copied": "Digest copiado",
             "copyError": "No se pudo copiar",
-            "empty": "Ingresá un texto para calcular su hash."
+            "empty": "Ingresá un texto para calcular su hash.",
+            "working": "Calculando…",
+            "failed": "No se pudo calcular. Revisá que el navegador permita Web Crypto.",
+            "missingKey": "Ingresá una clave para calcular el HMAC."
         },
         "ohmsLaw": {
             "badge": "Electrónica",
@@ -1191,9 +1208,14 @@
             "base64Label": "base64",
             "copied": "HMAC copiado",
             "copyError": "No se pudo copiar",
-            "empty": "Ingresá un mensaje para ver su HMAC"
+            "empty": "Ingresá un mensaje para ver su HMAC",
+            "working": "Calculando…",
+            "failed": "No se pudo calcular. Revisá que el navegador permita Web Crypto.",
+            "missingKey": "Ingresá una clave para calcular el HMAC."
         },
         "csvJson": {
+            "copy": "Copiar",
+            "download": "Descargar",
             "badge": "Pruebas",
             "title": "Conversor CSV y JSON",
             "subtitle": "Convertí datos entre CSV y JSON con delimitadores configurables.",
@@ -1963,7 +1985,9 @@
             "copyError": "No se pudo copiar",
             "entropy": "Entropía estimada",
             "results": "Valores generados",
-            "emptyCharset": "Elegí al menos un grupo de caracteres"
+            "emptyCharset": "Elegí al menos un grupo de caracteres",
+            "download": "Descargar .txt",
+            "failed": "No se pudieron generar valores. Revisá que el navegador permita generar números aleatorios."
         },
         "objectCompare": {
             "badge": "Herramienta de prueba",
@@ -2133,6 +2157,18 @@
             "demoKeyNote": "Claves generadas en este navegador para probar firmas. No las uses en producción."
         },
         "cron": {
+            "invalid": "Expresión inválida. Usá 5 campos con valores dentro de rango y pasos mayores que cero.",
+            "every": "Todos",
+            "limitedRuns": "Se muestran las coincidencias de los próximos 366 días. Puede haber menos de ocho.",
+            "presets": {
+                "0": "Cada minuto",
+                "1": "Cada hora",
+                "2": "Medianoche",
+                "3": "Lunes a las 9",
+                "4": "Primero del mes",
+                "5": "Cada 5 minutos",
+                "6": "Días hábiles a las 8"
+            },
             "badge": "Herramienta de prueba",
             "title": "Expresiones cron",
             "subtitle": "Interpretá una expresión cron y consultá sus próximas ejecuciones.",
@@ -2147,6 +2183,7 @@
             "copied": "Copiado"
         },
         "color": {
+            "invalid": "Usá 3 o 6 dígitos HEX, por ejemplo #abc o #aabbcc. No se admite transparencia.",
             "badge": "Herramienta de generación",
             "title": "Conversor de colores",
             "subtitle": "Convertí colores entre HEX, RGB y HSL y comprobá su contraste.",
@@ -2157,6 +2194,10 @@
             "contrastOnBlack": "Contraste sobre negro"
         },
         "timestamp": {
+            "unit": "Unidad del timestamp",
+            "auto": "Automático (segundos o milisegundos)",
+            "seconds": "Segundos",
+            "milliseconds": "Milisegundos",
             "badge": "Herramienta de prueba",
             "title": "Conversor de fechas",
             "subtitle": "Convertí marcas de tiempo Unix y fechas entre distintos formatos y zonas horarias.",
@@ -2169,6 +2210,7 @@
             "refreshNow": "Actualizar"
         },
         "numberBase": {
+            "invalid": "Valor inválido para esta base",
             "badge": "Herramienta de prueba",
             "title": "Bases numéricas",
             "subtitle": "Convertí números entre decimal, hexadecimal, binario y octal.",
@@ -2231,9 +2273,15 @@
             "apply": "Aplicar",
             "cancel": "Cancelar",
             "colKey": "Clave",
-            "colValue": "Valor"
+            "colValue": "Valor",
+            "removeParam": "Eliminar parámetro",
+            "copyParam": "Copiar parámetro",
+            "copyUrl": "Copiar URL"
         },
         "imageBase64": {
+            "readError": "No se pudo abrir la imagen. Probá con otro archivo.",
+            "loading": "Leyendo imagen…",
+            "download": "Descargar",
             "badge": "Herramienta de generación",
             "title": "Imagen a Base64",
             "subtitle": "Convertí una imagen a Base64 o a una URL de datos para usarla en HTML o CSS.",

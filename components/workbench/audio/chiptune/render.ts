@@ -9,22 +9,24 @@ import { encodeWav } from '@/lib/workbench/wav';
 import { scheduleVoice } from './synth';
 
 const SAMPLE_RATE = 44100;
-const TAIL_SEC = 0.6; // let release envelopes ring out
 
 /** Renderiza la canción a PCM (channel data). Reusable por WAV/MP3/FLAC. */
-export async function renderSongToBuffer(song: ChiptuneSong): Promise<{ sampleRate: number; channelData: Float32Array[] }> {
+export async function renderSongToBuffer(song: ChiptuneSong, volume = 0.85): Promise<{ sampleRate: number; channelData: Float32Array[] }> {
   const loopSec = ticksToSeconds(loopLengthTicks(song), song.bpm, song.ppq);
-  const totalSec = Math.max(0.1, loopSec) + TAIL_SEC;
+  const tail = Math.max(0.6, ...song.tracks.map(track =>
+    (track.timbre?.attack ?? 0) + (track.timbre?.decay ?? 0) + (track.timbre?.release ?? 0) + 0.03));
+  const totalSec = Math.max(0.1, loopSec) + tail;
   const frames = Math.ceil(totalSec * SAMPLE_RATE);
   const offline = new OfflineAudioContext(2, frames, SAMPLE_RATE);
   const master = offline.createGain();
-  master.gain.value = 0.85;
+  master.gain.value = volume;
   master.connect(offline.destination);
 
   for (const track of audibleTracks(song)) {
     for (const note of track.notes) {
       const when = ticksToSeconds(note.start, song.bpm, song.ppq);
-      const dur = ticksToSeconds(note.duration, song.bpm, song.ppq);
+      if (when >= loopSec) continue;
+      const dur = Math.min(ticksToSeconds(note.duration, song.bpm, song.ppq), loopSec - when);
       const gain = track.volume * (note.velocity / 127);
       scheduleVoice(offline, master, track.instrument, midiToFreq(note.pitch), when, dur, gain, track.timbre);
     }
@@ -34,7 +36,7 @@ export async function renderSongToBuffer(song: ChiptuneSong): Promise<{ sampleRa
   return { sampleRate: SAMPLE_RATE, channelData: [rendered.getChannelData(0), rendered.getChannelData(1)] };
 }
 
-export async function renderSongToWav(song: ChiptuneSong): Promise<ArrayBuffer> {
-  const { sampleRate, channelData } = await renderSongToBuffer(song);
+export async function renderSongToWav(song: ChiptuneSong, volume = 0.85): Promise<ArrayBuffer> {
+  const { sampleRate, channelData } = await renderSongToBuffer(song, volume);
   return encodeWav({ sampleRate, channelData });
 }

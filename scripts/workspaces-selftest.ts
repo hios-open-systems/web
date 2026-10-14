@@ -28,6 +28,8 @@ const row = makeRecord(preset, 'presets');
 assert.equal('content' in remoteDocument(row), false);
 assert.equal('content' in remoteDocument({ ...row, document: { ...preset, syncContent: true } }), true);
 assert.equal(validDocument(preset, 'presets'), true);
+assert.equal(validDocument({ ...preset, toolId: 'regex', settings: { replaceEnabled: 'true' } }, 'presets'), true);
+assert.equal(validDocument({ ...preset, toolId: 'timestamp', settings: { unit: 'milliseconds' } }, 'presets'), true);
 assert.equal(validDocument({ ...preset, content: { payload: 7 } }, 'presets'), false);
 assert.equal(validDocument({ ...preset, settings: { payload: 'must-not-upload' } }, 'presets'), false);
 assert.equal(validDocument({ id: 'a', name: 'x', version: 1, entries: [{ id: 'a', resourceId: 'javascript:alert(1)' }] }, 'workspaces'), false);

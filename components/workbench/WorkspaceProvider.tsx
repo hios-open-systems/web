@@ -9,7 +9,7 @@ import { synchronize } from '@/lib/workspaces/sync';
 
 interface WorkspaceContextValue {
   store: WorkspaceStore; ready: boolean; busy: boolean; error: boolean; account: string;
-  update: (change: (state: WorkspaceStore) => WorkspaceStore) => Promise<void>;
+  update: (change: (state: WorkspaceStore) => WorkspaceStore) => Promise<boolean>;
   sync: () => Promise<void>;
 }
 const Context = createContext<WorkspaceContextValue | null>(null);
@@ -25,14 +25,15 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const generation = useRef(0);
   const lock = useRef(false);
   const update = useCallback(async (change: (state: WorkspaceStore) => WorkspaceStore) => {
-    if (lock.current || !ready) return;
+    if (lock.current || !ready) return false;
     lock.current = true; setBusy(true);
     const token = generation.current;
-    const next = change(current.current);
     try {
+      const next = change(current.current);
       await writeStore(account, next);
-      if (token === generation.current) { current.current = next; setStore(next); setError(false); }
-    } catch { setError(true); }
+      if (token === generation.current) { current.current = next; setStore(next); setError(false); return true; }
+      return false;
+    } catch { setError(true); return false; }
     finally { lock.current = false; setBusy(false); }
   }, [account, ready]);
   const sync = useCallback(async () => {

@@ -13,6 +13,7 @@ import type {
 } from '@excalidraw/excalidraw/types';
 import type { ExcalidrawElement } from '@excalidraw/excalidraw/element/types';
 import { useTheme } from '@/lib/ThemeContext';
+import { downloadBlob } from '@/lib/workbench/download';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
 
@@ -46,7 +47,7 @@ function readScene(): StoredScene | null {
       return {
         version: 1,
         elements: parsed.elements as ExcalidrawElement[],
-        appState: parsed.appState as Partial<AppState>,
+        appState: { viewBackgroundColor: parsed.appState.viewBackgroundColor, scrollX: parsed.appState.scrollX, scrollY: parsed.appState.scrollY, zoom: parsed.appState.zoom },
         files: parsed.files as BinaryFiles,
       };
     }
@@ -81,12 +82,14 @@ export function ExcalidrawTool() {
     setBooted(true);
   }, []);
 
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    const flush = () => {
       if (saveTimeout.current) window.clearTimeout(saveTimeout.current);
-    },
-    [],
-  );
+      if (sceneRef.current) writeScene(sceneRef.current);
+    };
+    window.addEventListener('pagehide', flush);
+    return () => { window.removeEventListener('pagehide', flush); flush(); };
+  }, []);
 
   const themeVars = useMemo(
     () =>
@@ -100,23 +103,19 @@ export function ExcalidrawTool() {
     [],
   );
 
-  const downloadScene = () => {
+  const downloadScene = async () => {
     const scene = sceneRef.current;
     if (!scene) return;
     try {
-      const blob = new Blob([JSON.stringify(scene, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'hios-diagram.scene.json';
-      a.click();
-      URL.revokeObjectURL(url);
+      const { serializeAsJSON } = await import('@excalidraw/excalidraw');
+      downloadBlob(serializeAsJSON(scene.elements, scene.appState, scene.files, 'local'), 'hios-diagram.excalidraw', 'application/json');
     } catch {
       messageApi.error(t('downloadError'));
     }
   };
 
   const clearScene = () => {
+    if (saveTimeout.current) window.clearTimeout(saveTimeout.current);
     removeRaw(LS_KEY);
     sceneRef.current = null;
     initialDataRef.current = undefined;
@@ -153,7 +152,7 @@ export function ExcalidrawTool() {
               theme={mode}
               initialData={initialDataRef.current}
               onChange={(elements, appState, files) => {
-                const next: StoredScene = { version: 1, elements: [...elements], appState, files };
+                const next: StoredScene = { version: 1, elements: [...elements], appState: { viewBackgroundColor: appState.viewBackgroundColor, scrollX: appState.scrollX, scrollY: appState.scrollY, zoom: appState.zoom }, files };
                 sceneRef.current = next;
                 const nowHas = elements.length > 0;
                 setHasScene((prev) => (prev === nowHas ? prev : nowHas));
