@@ -936,6 +936,12 @@
             }
         },
         "notes": {
+            "download": ".md herunterladen",
+            "savedLocal": "In diesem Browser gespeichert",
+            "saveFailed": "Speichern fehlgeschlagen. Lade die Notiz vor dem Verlassen herunter.",
+            "deleteConfirm": "Diese Notiz löschen?",
+            "delete": "Löschen",
+            "cancel": "Abbrechen",
             "badge": "Generierungs-Tool",
             "title": "Markdown-Notizen",
             "subtitle": "Schreibe Markdown-Notizen mit Vorschau und lokaler Speicherung.",
@@ -992,7 +998,10 @@
             "rightLabel": "Geändert",
             "diffLabel": "Diff",
             "identical": "Die beiden Texte sind identisch",
-            "truncated": "Gekürzt (sehr große Eingabe)"
+            "truncated": "Gekürzt (sehr große Eingabe)",
+            "swap": "Texte tauschen",
+            "download": "Vergleich herunterladen",
+            "partialEqual": "Keine Unterschiede im analysierten Teil. Der Rest wurde nicht verglichen."
         },
         "regex": {
             "badge": "Test-Tool",
@@ -1013,9 +1022,14 @@
             "invalidPattern": "Ungültiges Muster",
             "replaceLabel": "Replace-Vorschau",
             "replacePlaceholder": "Ersetzung ($1, $<name>)",
-            "replaceHint": "Ersetzung eingeben für die Vorschau"
+            "replaceHint": "Ersetzung eingeben für die Vorschau",
+            "enableReplace": "Ersetzen (leer entfernt Treffer)",
+            "working": "Treffer werden gesucht…",
+            "download": "Ergebnis herunterladen",
+            "emptyResult": "Das Ergebnis ist leer: Alle Treffer wurden entfernt."
         },
         "uuidUlid": {
+            "download": ".txt herunterladen",
             "badge": "Generierungs-Tool",
             "title": "UUID- und ULID-Generator",
             "subtitle": "Erzeuge UUID-v4- und ULID-Kennungen einzeln oder in Stapeln.",
@@ -1057,7 +1071,10 @@
             "base64Label": "base64",
             "copied": "Digest kopiert",
             "copyError": "Kopieren fehlgeschlagen",
-            "empty": "Tippe etwas, um den Digest zu sehen"
+            "empty": "Tippe etwas, um den Digest zu sehen",
+            "working": "Berechnung läuft…",
+            "failed": "Berechnung fehlgeschlagen. Prüfe, ob Web Crypto im Browser verfügbar ist.",
+            "missingKey": "Gib einen Schlüssel für den HMAC ein."
         },
         "ohmsLaw": {
             "badge": "Elektronik",
@@ -1191,9 +1208,14 @@
             "base64Label": "base64",
             "copied": "HMAC kopiert",
             "copyError": "Kopieren fehlgeschlagen",
-            "empty": "Nachricht eingeben, um ihren HMAC zu sehen"
+            "empty": "Nachricht eingeben, um ihren HMAC zu sehen",
+            "working": "Berechnung läuft…",
+            "failed": "Berechnung fehlgeschlagen. Prüfe, ob Web Crypto im Browser verfügbar ist.",
+            "missingKey": "Gib einen Schlüssel für den HMAC ein."
         },
         "csvJson": {
+            "copy": "Kopieren",
+            "download": "Herunterladen",
             "badge": "Testing",
             "title": "CSV- und JSON-Konverter",
             "subtitle": "Wandle Daten zwischen CSV und JSON mit einstellbaren Trennzeichen um.",
@@ -1963,7 +1985,9 @@
             "copyError": "Kopieren fehlgeschlagen",
             "entropy": "Geschätzte Entropie",
             "results": "Generierte Werte",
-            "emptyCharset": "Mindestens eine Zeichengruppe auswählen"
+            "emptyCharset": "Mindestens eine Zeichengruppe auswählen",
+            "download": ".txt herunterladen",
+            "failed": "Werte konnten nicht erzeugt werden. Prüfe die Zufallszahlengenerierung im Browser."
         },
         "objectCompare": {
             "badge": "Test-Tool",
@@ -2144,7 +2168,19 @@
             "field_month": "Monat",
             "field_dayOfWeek": "Wochentag",
             "copy": "Ausdruck kopieren",
-            "copied": "Kopiert"
+            "copied": "Kopiert",
+            "invalid": "Ungültiger Ausdruck. Verwende 5 Felder mit gültigen Werten und Schritten größer als null.",
+            "every": "Alle",
+            "limitedRuns": "Treffer in den nächsten 366 Tagen. Es können weniger als acht sein.",
+            "presets": {
+                "0": "Jede Minute",
+                "1": "Jede Stunde",
+                "2": "Mitternacht",
+                "3": "Montags um 9",
+                "4": "Monatsanfang",
+                "5": "Alle 5 Minuten",
+                "6": "Werktags um 8"
+            }
         },
         "color": {
             "badge": "Generierung",
@@ -2154,9 +2190,14 @@
             "sliders": "Schieberegler",
             "copy": "Kopieren",
             "contrastOnWhite": "Kontrast auf Weiß",
-            "contrastOnBlack": "Kontrast auf Schwarz"
+            "contrastOnBlack": "Kontrast auf Schwarz",
+            "invalid": "Verwende 3 oder 6 HEX-Ziffern. Transparenz wird nicht unterstützt."
         },
         "timestamp": {
+            "unit": "Zeitstempeleinheit",
+            "auto": "Automatisch (Sekunden oder Millisekunden)",
+            "seconds": "Sekunden",
+            "milliseconds": "Millisekunden",
             "badge": "Testing",
             "title": "Datums- und Zeitkonverter",
             "subtitle": "Wandle Unix-Zeitstempel und Datumsangaben zwischen Formaten und Zeitzonen um.",
@@ -2169,6 +2210,7 @@
             "refreshNow": "Aktualisieren"
         },
         "numberBase": {
+            "invalid": "Ungültiger Wert für diese Basis",
             "badge": "Testing",
             "title": "Zahlensysteme",
             "subtitle": "Rechne Zahlen zwischen Dezimal-, Hexadezimal-, Binär- und Oktalsystem um.",
@@ -2231,9 +2273,15 @@
             "apply": "Übernehmen",
             "cancel": "Abbrechen",
             "colKey": "Schlüssel",
-            "colValue": "Wert"
+            "colValue": "Wert",
+            "removeParam": "Parameter entfernen",
+            "copyParam": "Parameter kopieren",
+            "copyUrl": "URL kopieren"
         },
         "imageBase64": {
+            "readError": "Bild konnte nicht geöffnet werden. Versuche eine andere Datei.",
+            "loading": "Bild wird gelesen…",
+            "download": "Herunterladen",
             "badge": "Generierung",
             "title": "Bild zu Base64",
             "subtitle": "Wandle ein Bild in Base64 oder eine Daten-URL für HTML oder CSS um.",

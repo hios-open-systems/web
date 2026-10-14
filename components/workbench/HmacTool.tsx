@@ -1,13 +1,14 @@
 'use client';
 import { ToolPresetBinding, textField } from '@/components/workbench/ToolPresetBinding';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Button, Card, Input, Segmented, Space, Typography, message } from 'antd';
-import { CopyOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
-import { HMAC_ALGORITHMS, type HmacAlgorithm, hmac } from '@/lib/workbench/hmac';
+import { HMAC_ALGORITHMS, type HmacAlgorithm } from '@/lib/workbench/hmac';
+import { useDigestResult } from '@/lib/hooks/useDigestResult';
+import { DigestRow } from './DigestRow';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
 
@@ -24,25 +25,8 @@ export function HmacTool() {
   const [secret, setSecret] = useState('key');
   const [text, setText] = useState(EXAMPLE_MSG);
   const [algo, setAlgo] = useState<HmacAlgorithm>('SHA-256');
-  const [result, setResult] = useState<{ hex: string; base64: string }>({ hex: '', base64: '' });
+  const { result, error, pending, missingKey } = useDigestResult(algo, text, secret);
 
-  useEffect(() => {
-    let cancelled = false;
-    if (!text) {
-      setResult({ hex: '', base64: '' });
-      return;
-    }
-    hmac(algo, secret, text)
-      .then((r) => {
-        if (!cancelled) setResult(r);
-      })
-      .catch(() => {
-        if (!cancelled) setResult({ hex: '', base64: '' });
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [secret, text, algo]);
 
   const themeVars = useMemo(
     () =>
@@ -61,7 +45,7 @@ export function HmacTool() {
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
       {contextHolder}
-      <ToolPresetBinding toolId="hmac" fields={{ secret: textField(secret, setSecret), text: textField(text, setText), algo: textField(algo, setAlgo, ['SHA-256', 'SHA-384', 'SHA-512'], false) }} />
+      <ToolPresetBinding toolId="hmac" fields={{ secret: textField(secret, setSecret), text: textField(text, setText), algo: textField(algo, setAlgo, HMAC_ALGORITHMS, false) }} />
       <ToolHeader
         eyebrow={t('badge')}
         title={t('title')}
@@ -83,6 +67,7 @@ export function HmacTool() {
       <Card className={styles.sectionCard} styles={{ body: { padding: 20 } }}>
         <Space direction="vertical" size={14} className={styles.stackFull}>
           <Segmented
+            style={{ maxWidth: '100%', overflowX: 'auto' }}
             value={algo}
             onChange={(v) => setAlgo(v as HmacAlgorithm)}
             options={HMAC_ALGORITHMS as unknown as string[]}
@@ -91,13 +76,14 @@ export function HmacTool() {
             <Text className={styles.metricLabel} style={{ display: 'block', marginBottom: 6 }}>
               {t('keyLabel')}
             </Text>
-            <Input value={secret} onChange={(e) => setSecret(e.target.value)} placeholder={t('keyPlaceholder')} />
+            <Input.Password aria-label={t('keyLabel')} autoComplete="off" value={secret} onChange={(e) => setSecret(e.target.value)} placeholder={t('keyPlaceholder')} />
           </div>
           <div>
             <Text className={styles.metricLabel} style={{ display: 'block', marginBottom: 6 }}>
               {t('messageLabel')}
             </Text>
             <TextArea
+              aria-label={t('messageLabel')}
               value={text}
               onChange={(e) => setText(e.target.value)}
               autoSize={{ minRows: 3, maxRows: 10 }}
@@ -108,39 +94,17 @@ export function HmacTool() {
       </Card>
 
       <Card title={t('resultLabel')} className={styles.sectionCard} styles={{ body: { padding: 20 } }}>
-        {result.hex ? (
+        {result?.hex ? (
           <Space direction="vertical" size={16} className={styles.stackFull}>
             <DigestRow label={`${algo} · ${t('hexLabel')}`} value={result.hex} onCopy={copy} />
             <DigestRow label={`${algo} · ${t('base64Label')}`} value={result.base64} onCopy={copy} />
           </Space>
         ) : (
           <div className={styles.emptyPanel}>
-            <Text>{t('empty')}</Text>
+            <Text role="status" type={error || missingKey ? 'danger' : undefined}>{t(missingKey ? 'missingKey' : error ? 'failed' : pending ? 'working' : 'empty')}</Text>
           </div>
         )}
       </Card>
     </Space>
-  );
-}
-
-function DigestRow({
-  label,
-  value,
-  onCopy,
-}: {
-  label: string;
-  value: string;
-  onCopy: (v: string) => void;
-}) {
-  return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-        <Text className={styles.metricLabel}>{label}</Text>
-        <Button size="small" type="text" icon={<CopyOutlined />} onClick={() => onCopy(value)} />
-      </div>
-      <pre className={styles.codeBlock} style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all', margin: 0 }}>
-        {value}
-      </pre>
-    </div>
   );
 }

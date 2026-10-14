@@ -10,6 +10,9 @@ export function downloadBlob(data: BlobPart, filename: string, mime: string): vo
   const anchor = document.createElement('a');
   anchor.href = url;
   anchor.download = filename;
+  document.body.appendChild(anchor);
   anchor.click();
-  URL.revokeObjectURL(url);
+  anchor.remove();
+  // Give mobile browsers time to consume the URL before releasing it.
+  setTimeout(() => URL.revokeObjectURL(url), 60_000);
 }

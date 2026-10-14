@@ -13,6 +13,7 @@ import {
   type MermaidTemplateId,
   svgFilename,
 } from '@/lib/workbench/mermaid';
+import { downloadBlob } from '@/lib/workbench/download';
 import { ToolHeader } from './ToolHeader';
 import { PresetControls } from './PresetControls';
 import { useToolBridge } from '@/lib/hooks/useToolBridge';
@@ -43,8 +44,10 @@ export function MermaidTool() {
   const hydratedFromUrl = useRef(false);
   const [messageApi, contextHolder] = message.useMessage();
 
+  const [ready, setReady] = useState(false);
   const [code, setCode] = useState(MERMAID_TEMPLATES.flowchart);
   const [svg, setSvg] = useState('');
+  const [renderedCode, setRenderedCode] = useState<string | null>(null);
   const [error, setError] = useState('');
 
   useToolBridge('mermaid', v => { if (v.code !== undefined) setCode(v.code); });
@@ -52,13 +55,20 @@ export function MermaidTool() {
   useEffect(() => {
     if (hydratedFromUrl.current) return;
     hydratedFromUrl.current = true;
+    setReady(true);
     const param = searchParams.get('code');
     const stored = safeRead();
     if (param !== null) setCode(param);
     else if (stored && !searchParams.has('handoff')) setCode(stored);
   }, [searchParams]);
 
-  useEffect(() => { const timer = setTimeout(() => safeWrite(code), 300); return () => clearTimeout(timer); }, [code]);
+  useEffect(() => {
+    if (!ready) return;
+    const save = () => safeWrite(code);
+    const timer = setTimeout(save, 300);
+    window.addEventListener('pagehide', save);
+    return () => { clearTimeout(timer); window.removeEventListener('pagehide', save); save(); };
+  }, [code, ready]);
 
 
   // Debounced client-only render. Mermaid is dynamically imported so it
@@ -79,6 +89,7 @@ export function MermaidTool() {
         const { svg: out } = await mermaid.render(`mmd-${crypto.randomUUID()}`, code);
         if (!cancelled) {
           setSvg(out);
+          setRenderedCode(code);
           setError('');
         }
       } catch (e) {
@@ -106,19 +117,13 @@ export function MermaidTool() {
   );
 
   const exportSvg = useCallback(() => {
-    if (!svg) return;
+    if (!svg || renderedCode !== code || error) return;
     try {
-      const blob = new Blob([svg], { type: 'image/svg+xml' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = svgFilename(code.trim().split('\n')[0] ?? 'diagram');
-      a.click();
-      URL.revokeObjectURL(url);
+      downloadBlob(svg, svgFilename(code.trim().split('\n')[0] ?? 'diagram'), 'image/svg+xml');
     } catch {
       messageApi.error(t('exportError'));
     }
-  }, [svg, code, messageApi, t]);
+  }, [svg, code, renderedCode, error, messageApi, t]);
 
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
@@ -131,7 +136,7 @@ export function MermaidTool() {
         guideId="mermaid"
         actions={
           <Space wrap>
-            <Button icon={<DownloadOutlined />} onClick={exportSvg} disabled={!svg}>
+            <Button icon={<DownloadOutlined />} onClick={exportSvg} disabled={!svg || renderedCode !== code || !!error}>
               {t('exportSvg')}
             </Button>
             <PresetControls toolId="mermaid" settings={{}} content={{ code }} />
@@ -142,6 +147,7 @@ export function MermaidTool() {
         <Space direction="vertical" size={10} className={styles.stackFull}>
           <Text className={styles.metricLabel}>{t('templatesLabel')}</Text>
           <Segmented
+            style={{ maxWidth: '100%', overflowX: 'auto' }}
             value={undefined}
             onChange={(v) => setCode(MERMAID_TEMPLATES[v as MermaidTemplateId])}
             options={MERMAID_TEMPLATE_IDS.map((id) => ({ label: t(`templates.${id}`), value: id }))}
@@ -163,7 +169,7 @@ export function MermaidTool() {
         styles={{ body: { padding: 16 } }}
         extra={error ? <Text type="danger">{t('invalid')}</Text> : null}
       >
-        {svg ? (
+        {svg && renderedCode === code && !error ? (
           <div
             data-testid="mermaid-preview"
             style={{ overflowX: 'auto', textAlign: 'center' }}

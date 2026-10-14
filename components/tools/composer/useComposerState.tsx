@@ -28,6 +28,8 @@ import { renderSongToWav, renderSongToBuffer } from '@/components/workbench/audi
 import { usePlayback } from '@/components/workbench/audio/chiptune/usePlayback';
 import { repeatRange, fillSubdivision } from '@/lib/workbench/patternOps';
 import { encodeShare, decodeShare } from './registry';
+import { fitNote, resizeSong } from '@/lib/workbench/chiptuneEditing';
+import { transposeTrack, varyMelody, type MusicalScale } from '@/lib/workbench/chiptuneMusic';
 
 const uid = (): string =>
   typeof crypto !== 'undefined' && 'randomUUID' in crypto
@@ -62,7 +64,7 @@ export function useComposerState() {
   const [rendering, setRendering] = useState(false);
   const [deviceCopied, setDeviceCopied] = useState(false);
 
-  const { isPlaying, loop, play, stop, toggleLoop, metronome, toggleMetronome, getPlayheadTicks, previewNote, masterVolume, setMasterVolume, seek } = usePlayback(song);
+  const { isPlaying, loop, play, stop, toggleLoop, metronome, toggleMetronome, getPlayheadTicks, previewNote, masterVolume, setMasterVolume, seek, playbackError } = usePlayback(song);
 
   // --- historia (undo/redo) con coalescing de ediciones rápidas (drags) ------
   const songRef = useRef(song);
@@ -77,8 +79,8 @@ export function useComposerState() {
     if (!coalesced) {
       past.current.push(songRef.current);
       if (past.current.length > 100) past.current.shift();
-      future.current = [];
     }
+    future.current = [];
     lastPush.current = now;
     songRef.current = next;
     setSong(next);
@@ -100,6 +102,7 @@ export function useComposerState() {
     setSong(prev);
     setActiveTrackId((id) => (prev.tracks.some((t) => t.id === id) ? id : prev.tracks[0]?.id ?? ''));
     setSelectedNoteId(null);
+    setSelectedRange(null);
     bumpHist((t) => t + 1);
   }, []);
   const redo = useCallback(() => {
@@ -111,6 +114,7 @@ export function useComposerState() {
     setSong(next);
     setActiveTrackId((id) => (next.tracks.some((t) => t.id === id) ? id : next.tracks[0]?.id ?? ''));
     setSelectedNoteId(null);
+    setSelectedRange(null);
     bumpHist((t) => t + 1);
   }, []);
 
@@ -121,6 +125,7 @@ export function useComposerState() {
   );
 
   const onAddNote = useCallback((note: ChiptuneNote) => {
+    note = fitNote(note, songRef.current);
     patchActiveNotes((notes) => [...notes, note]);
     setSelectedNoteId(note.id);
     const track = songRef.current.tracks.find((t) => t.id === activeTrackId);
@@ -138,7 +143,7 @@ export function useComposerState() {
   }, [previewNote]);
   const onChangeNote = useCallback(
     (id: string, patch: Partial<ChiptuneNote>) =>
-      patchActiveNotes((notes) => notes.map((note) => (note.id === id ? { ...note, ...patch } : note)), true),
+      patchActiveNotes((notes) => notes.map((note) => (note.id === id ? fitNote({ ...note, ...patch }, songRef.current) : note)), true),
     [patchActiveNotes],
   );
   const onDeleteNote = useCallback(
@@ -150,7 +155,7 @@ export function useComposerState() {
     const track = songRef.current.tracks.find((t) => t.id === activeTrackId);
     const note = track?.notes.find((n) => n.id === selectedNoteId);
     if (!note) return;
-    const copy = createNote(note.pitch, note.start + note.duration, note.duration, note.velocity);
+    const copy = fitNote(createNote(note.pitch, note.start + note.duration, note.duration, note.velocity), songRef.current);
     patchActiveNotes((notes) => [...notes, copy]);
     setSelectedNoteId(copy.id);
   }, [selectedNoteId, activeTrackId, patchActiveNotes]);
@@ -239,14 +244,22 @@ export function useComposerState() {
       ),
     [update],
   );
-  const onAddTrack = useCallback(
-    () => update((song) => ({ ...song, tracks: [...song.tracks, createTrack(`Pista ${song.tracks.length + 1}`, 'pulse-lead')] })),
-    [update],
-  );
-  const onRemoveTrack = useCallback(
-    (id: string) => update((song) => ({ ...song, tracks: song.tracks.filter((track) => track.id !== id) })),
-    [update],
-  );
+  const onAddTrack = useCallback(() => {
+    if (songRef.current.tracks.length >= 6) return;
+    const track = createTrack(`Pista ${songRef.current.tracks.length + 1}`, 'pulse-lead');
+    update(song => ({ ...song, tracks: [...song.tracks, track] }));
+    setActiveTrackId(track.id);
+    setSelectedNoteId(null);
+    setSelectedRange(null);
+  }, [update]);
+  const onRemoveTrack = useCallback((id: string) => {
+    if (songRef.current.tracks.length <= 1) return;
+    const tracks = songRef.current.tracks.filter(track => track.id !== id);
+    update(song => ({ ...song, tracks }));
+    setActiveTrackId(active => active === id ? tracks[0].id : active);
+    setSelectedNoteId(null);
+    setSelectedRange(null);
+  }, [update]);
 
   // --- secciones (patterns) + arreglo -> compilar ---------------------------
   const saveAsPattern = useCallback((name: string) => {
@@ -268,6 +281,7 @@ export function useComposerState() {
     update((s) => ({ ...s, lengthBars: pat.lengthBars, tracks }));
     setActiveTrackId(tracks[0]?.id ?? '');
     setSelectedNoteId(null);
+    setSelectedRange(null);
   }, [update]);
 
   const deletePattern = useCallback((id: string) => {
@@ -314,15 +328,20 @@ export function useComposerState() {
     messageApi.success('Arreglo compilado al piano-roll');
   }, [update, messageApi]);
 
-  const setName = useCallback((name: string) => update((song) => ({ ...song, name: name.trim() || 'Sin título' })), [update]);
+  const setName = useCallback((name: string) => update((song) => ({ ...song, name }), true), [update]);
   const setBpm = useCallback((value: number) => update((song) => ({ ...song, bpm: clampInt(value, 40, 300) }), true), [update]);
-  const setLength = useCallback((value: number) => update((song) => ({ ...song, lengthBars: clampInt(value, 1, 16) })), [update]);
+  const setLength = useCallback((value: number) => {
+    update(song => resizeSong(song, value));
+    setSelectedNoteId(null);
+    setSelectedRange(null);
+  }, [update]);
 
   const resetTo = useCallback((next: ChiptuneSong) => {
     stop();
     commit(next);
     setActiveTrackId(next.tracks[0]?.id ?? '');
     setSelectedNoteId(null);
+    setSelectedRange(null);
   }, [stop, commit]);
 
   // --- exportaciones ---------------------------------------------------------
@@ -333,23 +352,27 @@ export function useComposerState() {
   const exportWav = useCallback(async () => {
     setRendering(true);
     try {
-      downloadBlob(await renderSongToWav(song), `${slugify(song.name)}.wav`, 'audio/wav');
+      downloadBlob(await renderSongToWav(song, masterVolume), `${slugify(song.name)}.wav`, 'audio/wav');
       messageApi.success('WAV exportado');
+    } catch {
+      messageApi.error('No se pudo exportar el WAV. Intentá de nuevo.');
     } finally {
       setRendering(false);
     }
-  }, [song, messageApi]);
+  }, [song, masterVolume, messageApi]);
   const exportMp3 = useCallback(async () => {
     setRendering(true);
     try {
-      const { sampleRate, channelData } = await renderSongToBuffer(song);
+      const { sampleRate, channelData } = await renderSongToBuffer(song, masterVolume);
       const { encodeMp3 } = await import('@/lib/workbench/mp3'); // lazy: lamejs baja solo al exportar
       downloadBlob(encodeMp3(channelData, sampleRate), `${slugify(song.name)}.mp3`, 'audio/mpeg');
       messageApi.success('MP3 exportado');
+    } catch {
+      messageApi.error('No se pudo exportar el MP3. Probá descargar el WAV.');
     } finally {
       setRendering(false);
     }
-  }, [song, messageApi]);
+  }, [song, masterVolume, messageApi]);
   const exportDevice = useCallback(() => {
     const code = serializeDeviceSong(song);
     downloadBlob(new TextEncoder().encode(code), `${slugify(song.name)}.device.json`, 'application/json');
@@ -358,7 +381,7 @@ export function useComposerState() {
         .then(() => { setDeviceCopied(true); window.setTimeout(() => setDeviceCopied(false), 2000); })
         .catch(() => {});
     }
-    messageApi.success('Código para device copiado y descargado');
+    messageApi.success('Archivo para el parlante descargado');
   }, [song, messageApi]);
   const copyShareLink = useCallback(async () => {
     const url = `${window.location.origin}${pathname}?s=${encodeShare(song)}`;
@@ -387,6 +410,7 @@ export function useComposerState() {
     const handler = (event: KeyboardEvent) => {
       const tag = (event.target as HTMLElement)?.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA' || (event.target as HTMLElement)?.isContentEditable) return;
+      if ((event.target as HTMLElement)?.closest('button, [role="slider"], [role="combobox"], summary')) return;
       const mod = event.metaKey || event.ctrlKey;
       if (mod && event.key.toLowerCase() === 'z') {
         event.preventDefault();
@@ -430,9 +454,21 @@ export function useComposerState() {
     setSelectedRange(null);
   }, [patchActiveNotes]);
 
+  const setScale = useCallback((scale: MusicalScale) => update(song => ({ ...song, scale })), [update]);
+  const transpose = useCallback((semitones: number) => {
+    const next = transposeTrack(songRef.current, activeTrackId, semitones);
+    if (next !== songRef.current) commit({ ...next, updatedAt: Date.now() });
+  }, [activeTrackId, commit]);
+  const varyActiveMelody = useCallback(() => {
+    const seed = crypto.getRandomValues(new Uint32Array(1))[0];
+    const next = varyMelody(songRef.current, activeTrackId, seed);
+    if (next !== songRef.current) commit({ ...next, updatedAt: Date.now() });
+  }, [activeTrackId, commit]);
+
   return {
     song, activeTrackId, selectedNoteId, rendering, deviceCopied, contextHolder,
-    isPlaying, loop, play, stop, toggleLoop, metronome, toggleMetronome, getPlayheadTicks, seek,
+    setScale, transpose, varyActiveMelody,
+    isPlaying, loop, play, stop, toggleLoop, metronome, toggleMetronome, getPlayheadTicks, seek, playbackError,
     masterVolume, setMasterVolume,
     canUndo: past.current.length > 0, canRedo: future.current.length > 0, undo, redo,
     setActiveTrackId: changeActiveTrack, setSelectedNoteId, selectNote,

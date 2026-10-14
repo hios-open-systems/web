@@ -81,6 +81,8 @@ export function parseCsv(text: string, delimiter = ','): string[][] {
     i += 1;
   }
 
+  if (inQuotes) throw new Error('Unclosed CSV quote');
+
   // Flush the final field/row unless the input was empty or ended on a
   // newline (which already flushed the row, leaving nothing pending).
   if (field !== '' || row.length > 0) {
@@ -126,7 +128,7 @@ export function csvToObjects(text: string, delimiter = ','): Record<string, stri
   const objects: Record<string, string>[] = [];
   for (let r = 1; r < rows.length; r += 1) {
     const cells = rows[r];
-    const obj: Record<string, string> = {};
+    const obj: Record<string, string> = Object.create(null);
     for (let c = 0; c < header.length; c += 1) {
       obj[header[c]] = c < cells.length ? cells[c] : '';
     }
@@ -163,5 +165,17 @@ function stringifyValue(value: unknown): string {
   if (value === null || value === undefined) {
     return '';
   }
-  return String(value);
+  return typeof value === 'object' ? JSON.stringify(value) : String(value);
+}
+
+/** Accept a homogeneous table, including numeric/boolean cells. */
+export function jsonToCsv(value: unknown, delimiter = ','): string {
+  if (!Array.isArray(value)) throw new Error('Expected a table');
+  if (value.every(Array.isArray)) {
+    return toCsv(value.map(row => row.map(stringifyValue)), delimiter);
+  }
+  if (!value.every(row => row !== null && typeof row === 'object' && !Array.isArray(row))) {
+    throw new Error('Expected objects or arrays');
+  }
+  return objectsToCsv(value as Record<string, unknown>[], delimiter);
 }

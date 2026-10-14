@@ -1,28 +1,21 @@
 'use client';
 
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Button, Card, Space, Tag, Typography, Upload, message } from 'antd';
-import { CopyOutlined, InboxOutlined } from '@ant-design/icons';
+import { InboxOutlined } from '@ant-design/icons';
 import NextImage from 'next/image';
 import { useTranslations } from 'next-intl';
 import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
+import { useBase64Image } from './useBase64Image';
+import { Base64ImageOutput } from './Base64ImageOutput';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
 
-const { Text, Paragraph } = Typography;
+const { Text } = Typography;
 const { Dragger } = Upload;
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
-interface ImageInfo {
-  name: string;
-  type: string;
-  size: number;
-  width: number;
-  height: number;
-  dataUri: string;
-  base64: string;
-}
 
 function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -35,8 +28,8 @@ function formatBytes(bytes: number): string {
 export function ImageBase64Tool() {
   const t = useTranslations('Workbench.imageBase64');
   const [messageApi, contextHolder] = message.useMessage();
-  const [imageInfo, setImageInfo] = useState<ImageInfo | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const onError = useCallback(() => { messageApi.error(t('readError')); }, [messageApi, t]);
+  const { imageInfo, loading, clear, processFile } = useBase64Image(onError);
 
   const themeVars = useMemo(
     () =>
@@ -49,42 +42,10 @@ export function ImageBase64Tool() {
     [],
   );
 
-  const processFile = useCallback(
-    (file: File) => {
-      if (!file.type.startsWith('image/')) {
-        messageApi.error(t('notAnImage'));
-        return;
-      }
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const dataUri = e.target?.result as string;
-        const base64 = dataUri.split(',')[1] ?? '';
-        const img = new window.Image();
-        img.onload = () => {
-          setImageInfo({
-            name: file.name,
-            type: file.type,
-            size: file.size,
-            width: img.naturalWidth,
-            height: img.naturalHeight,
-            dataUri,
-            base64,
-          });
-        };
-        img.src = dataUri;
-      };
-      reader.readAsDataURL(file);
-    },
-    [messageApi, t],
-  );
-
   const copyRaw = useCopyToClipboard(messageApi);
   const copy = (val: string, label: string) => copyRaw(val, `${label} ${t('copied')}`);
 
-  const clear = () => {
-    setImageInfo(null);
-    if (inputRef.current) inputRef.current.value = '';
-  };
+
 
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
@@ -95,13 +56,15 @@ export function ImageBase64Tool() {
         description={t('subtitle')}
         locality="local"
         actions={
-          imageInfo ? <Button onClick={clear}>{t('clear')}</Button> : undefined
+          (imageInfo || loading) ? <Button size="large" onClick={clear}>{t('clear')}</Button> : undefined
         }
       />
 
+      {loading && <Text role="status">{t('loading')}</Text>}
       {!imageInfo ? (
         <Card className={styles.sectionCard} styles={{ body: { padding: 20 } }}>
           <Dragger
+            disabled={loading}
             accept="image/*"
             showUploadList={false}
             beforeUpload={(file) => {
@@ -132,7 +95,7 @@ export function ImageBase64Tool() {
                 style={{
                   width: 'auto',
                   height: 'auto',
-                  maxWidth: 220,
+                  maxWidth: 'min(220px, 100%)',
                   maxHeight: 180,
                   borderRadius: 8,
                   border: '1px solid var(--wb-surface-border)',
@@ -151,7 +114,7 @@ export function ImageBase64Tool() {
                   ].map(({ label, val }) => (
                     <div key={label} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                       <Text style={{ color: 'var(--wb-text-muted)', fontSize: 12, minWidth: 110 }}>{label}</Text>
-                      <Text style={{ fontSize: 13 }}>{val}</Text>
+                      <Text style={{ fontSize: 13, minWidth: 0, overflowWrap: 'anywhere' }}>{val}</Text>
                     </div>
                   ))}
                 </Space>
@@ -159,45 +122,7 @@ export function ImageBase64Tool() {
             </div>
           </Card>
 
-          {/* Output options */}
-          <Card title={t('outputLabel')} className={styles.sectionCard} styles={{ body: { padding: 20 } }}>
-            <Space direction="vertical" size={12} className={styles.stackFull}>
-              {[
-                { label: 'Data URI', key: 'dataUri', val: imageInfo.dataUri },
-                { label: 'Base64 only', key: 'base64', val: imageInfo.base64 },
-                { label: 'CSS background-image', key: 'css', val: `background-image: url('${imageInfo.dataUri}');` },
-                { label: 'HTML <img>', key: 'html', val: `<img src="${imageInfo.dataUri}" alt="${imageInfo.name}" width="${imageInfo.width}" height="${imageInfo.height}" />` },
-              ].map(({ label, key, val }) => (
-                <div key={key}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                    <Text style={{ fontWeight: 500 }}>{label}</Text>
-                    <Button
-                      size="small"
-                      icon={<CopyOutlined />}
-                      onClick={() => void copy(val, label)}
-                    >
-                      {t('copy')}
-                    </Button>
-                  </div>
-                  <Paragraph
-                    ellipsis={{ rows: 2, expandable: true, symbol: t('expand') }}
-                    style={{
-                      fontFamily: 'monospace',
-                      fontSize: 11,
-                      background: 'var(--wb-surface-soft-bg)',
-                      border: '1px solid var(--wb-surface-border)',
-                      borderRadius: 6,
-                      padding: '8px 10px',
-                      margin: 0,
-                      wordBreak: 'break-all',
-                    }}
-                  >
-                    {val}
-                  </Paragraph>
-                </div>
-              ))}
-            </Space>
-          </Card>
+          <Base64ImageOutput imageInfo={imageInfo} copy={copy} />
         </>
       )}
     </Space>

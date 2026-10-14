@@ -30,6 +30,15 @@ const baseName = (n: string): string => n.replace(/\.[^.]+$/, '') || 'audio';
 export function AudioConvertTool() {
   const [messageApi, contextHolder] = message.useMessage();
   const [audio, setAudio] = useState<Decoded | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [source, setSource] = useState<File | null>(null);
+  const [preview, setPreview] = useState('');
+  useEffect(() => {
+    if (!source) { setPreview(''); return; }
+    const url = URL.createObjectURL(source);
+    setPreview(url);
+    return () => URL.revokeObjectURL(url);
+  }, [source]);
   const [busy, setBusy] = useState(false);
   const generation = useRef(0);
   useEffect(() => () => { generation.current++; }, []);
@@ -37,12 +46,14 @@ export function AudioConvertTool() {
   const processFile = useCallback(async (file: File) => {
     const ticket = ++generation.current;
     let ctx: AudioContext | null = null;
+    setLoading(true);
     try {
       const buf = await file.arrayBuffer();
       ctx = new AudioContext();
       const decoded = await ctx.decodeAudioData(buf);
       if (ticket !== generation.current) return;
-      const channelData = Array.from({ length: Math.min(2, decoded.numberOfChannels) }, (_, index) => decoded.getChannelData(index));
+      setSource(file);
+      const channelData = Array.from({ length: decoded.numberOfChannels }, (_, index) => decoded.getChannelData(index));
       setAudio({
         name: file.name,
         sampleRate: decoded.sampleRate,
@@ -52,22 +63,26 @@ export function AudioConvertTool() {
       });
       messageApi.success('Audio cargado');
     } catch {
-      messageApi.error('No se pudo decodificar ese archivo de audio');
-    } finally { void ctx?.close().catch(() => {}); }
+      if (ticket === generation.current) messageApi.error('No se pudo decodificar ese archivo de audio');
+    } finally { void ctx?.close().catch(() => {}); if (ticket === generation.current) setLoading(false); }
   }, [messageApi]);
 
   const exportWav = () => {
     if (!audio) return;
+    try {
     downloadBlob(encodeWav({ sampleRate: audio.sampleRate, channelData: audio.channelData }), `${baseName(audio.name)}.wav`, 'audio/wav');
     messageApi.success('WAV exportado');
+    } catch { messageApi.error('No se pudo exportar el audio'); }
   };
   const exportMp3 = async () => {
-    if (!audio) return;
+    if (!audio || audio.channels > 2) return;
     setBusy(true);
     try {
       const { encodeMp3 } = await import('@/lib/workbench/mp3'); // lazy: lamejs baja solo al exportar
       downloadBlob(encodeMp3(audio.channelData, audio.sampleRate), `${baseName(audio.name)}.mp3`, 'audio/mpeg');
       messageApi.success('MP3 exportado');
+    } catch {
+      messageApi.error('No se pudo exportar el audio');
     } finally {
       setBusy(false);
     }
@@ -81,12 +96,14 @@ export function AudioConvertTool() {
         title="Conversor de audio"
         description="Subí un archivo de audio y exportalo a WAV o MP3. Todo en el navegador; nada se sube a un servidor."
         locality="local"
-        actions={audio ? <Button onClick={() => setAudio(null)}>Limpiar</Button> : undefined}
+        actions={(audio || loading) ? <Button size="large" disabled={busy} onClick={() => { generation.current++; setLoading(false); setSource(null); setAudio(null); }}>Limpiar</Button> : undefined}
       />
 
+      {loading && <Text role="status">Procesando archivo…</Text>}
       {!audio ? (
         <Card className={styles.sectionCard} styles={{ body: { padding: 20 } }}>
           <Dragger
+            disabled={loading}
             accept="audio/*"
             showUploadList={false}
             beforeUpload={(file) => { processFile(file); return false; }}
@@ -103,14 +120,15 @@ export function AudioConvertTool() {
       ) : (
         <Card className={styles.sectionCard} styles={{ body: { padding: 20 } }}>
           <Space direction="vertical" size={12} style={{ width: '100%' }}>
-            <Text strong>{audio.name}</Text>
+            <Text strong style={{ overflowWrap: 'anywhere' }}>{audio.name}</Text>
+            <audio controls src={preview || undefined} style={{ width: '100%' }} />
             <Text type="secondary" style={{ fontSize: 12 }}>
               {audio.sampleRate} Hz · {audio.channels} canal(es) · {audio.duration.toFixed(1)} s
             </Text>
+            {audio.channels > 2 && <Text type="secondary">Este audio tiene más de dos canales. Descargá WAV para conservarlos todos.</Text>}
             <Space wrap>
-              <Button icon={<DownloadOutlined />} onClick={exportWav}>WAV</Button>
-              <Button icon={<DownloadOutlined />} loading={busy} onClick={exportMp3}>MP3</Button>
-              <Button icon={<DownloadOutlined />} disabled title="Próximamente (encoder FLAC WASM)">FLAC (pronto)</Button>
+              <Button size="large" icon={<DownloadOutlined aria-hidden />} disabled={busy} onClick={exportWav}>WAV</Button>
+              <Button size="large" icon={<DownloadOutlined aria-hidden />} disabled={audio.channels > 2} loading={busy} onClick={exportMp3}>MP3</Button>
             </Space>
           </Space>
         </Card>

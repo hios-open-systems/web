@@ -2,11 +2,12 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Card, Checkbox, Col, InputNumber, Row, Space, Typography, message } from 'antd';
-import { CopyOutlined, ReloadOutlined } from '@ant-design/icons';
+import { CopyOutlined, DownloadOutlined, ReloadOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
-import { estimateEntropy, generateRandomStrings, type RandomStringOptions } from '@/lib/workbench/random';
+import { getCharset, estimateEntropy, generateRandomStrings, type RandomStringOptions } from '@/lib/workbench/random';
+import { downloadBlob } from '@/lib/workbench/download';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
 import { PresetControls } from './PresetControls';
@@ -87,8 +88,9 @@ export function RandomStringTool() {
                 actions={
                     <Space wrap>
                         <PresetControls toolId="random-string" settings={{ options: JSON.stringify(options) }} />
-                        <Button icon={<ReloadOutlined />} onClick={regenerate}>{t('generate')}</Button>
-                        {values[0] ? <Button icon={<CopyOutlined />} onClick={() => handleCopy(values[0], t('copied'))}>{t('copy')}</Button> : null}
+                        <Button size="large" disabled={!getCharset(options)} icon={<ReloadOutlined aria-hidden />} onClick={regenerate}>{t('generate')}</Button>
+
+                        <Button size="large" disabled={!values.length} icon={<DownloadOutlined aria-hidden />} onClick={() => downloadBlob(values.join('\n'), 'random-strings.txt', 'text/plain;charset=utf-8')}>{t('download')}</Button>
                         {values.length > 0 ? <Button icon={<CopyOutlined />} onClick={() => handleCopy(values.join('\n'), t('allCopied'))}>{t('copyAll')}</Button> : null}
                     </Space>
                 }
@@ -101,7 +103,7 @@ export function RandomStringTool() {
                             <div className={styles.optionGrid}>
                                 <div className={styles.metricCard}>
                                     <Text className={styles.metricLabel}>{t('length')}</Text>
-                                    <InputNumber min={8} max={128} value={options.length} onChange={(value) => updateOption('length', value ?? 32)} style={{ width: '100%' }} />
+                                    <InputNumber aria-label={t('length')} precision={0} min={8} max={128} value={options.length} onChange={(value) => updateOption('length', Math.max(8, Math.min(128, Math.floor(value ?? 32))))} style={{ width: '100%' }} />
                                 </div>
                                 <div className={styles.metricCard}>
                                     <Text className={styles.metricLabel}>{t('entropy')}</Text>
@@ -109,7 +111,7 @@ export function RandomStringTool() {
                                 </div>
                             </div>
 
-                            <Checkbox checked={options.uppercase} onChange={(event) => updateOption('uppercase', event.target.checked)}>{t('uppercase')}</Checkbox>
+                            <Checkbox style={{ minHeight: 44, alignItems: 'center' }} checked={options.uppercase} onChange={(event) => updateOption('uppercase', event.target.checked)}>{t('uppercase')}</Checkbox>
                             <Checkbox checked={options.lowercase} onChange={(event) => updateOption('lowercase', event.target.checked)}>{t('lowercase')}</Checkbox>
                             <Checkbox checked={options.numbers} onChange={(event) => updateOption('numbers', event.target.checked)}>{t('numbers')}</Checkbox>
                             <Checkbox checked={options.symbols} onChange={(event) => updateOption('symbols', event.target.checked)}>{t('symbols')}</Checkbox>
@@ -124,13 +126,13 @@ export function RandomStringTool() {
                                 {values.map((value) => (
                                     <div key={value} className={styles.generatedRow}>
                                         <Text className={styles.generatedValue}>{value}</Text>
-                                        <Button type="text" icon={<CopyOutlined />} onClick={() => handleCopy(value, t('copied'))} />
+                                        <Button aria-label={t('copy') + ': ' + value} style={{ minHeight: 44, minWidth: 44 }} type="text" icon={<CopyOutlined aria-hidden />} onClick={() => handleCopy(value, t('copied'))} />
                                     </div>
                                 ))}
                             </div>
                         ) : (
                             <div className={styles.emptyPanel}>
-                                <Text>{t('emptyCharset')}</Text>
+                                <Text>{t(getCharset(options) ? 'failed' : 'emptyCharset')}</Text>
                             </div>
                         )}
                     </Card>

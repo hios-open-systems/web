@@ -22,11 +22,16 @@ export function UrlPresets({
   storageKey,
   basePresets = [],
   onSelectBase,
+  getQuery,
+  onLoadQuery,
 }: {
   storageKey: string;
   /** Read-only built-in presets shown above the saved ones. */
   basePresets?: { id: string; name: string }[];
   onSelectBase?: (id: string) => void;
+  /** For tools whose current document is not synchronized to the address bar. */
+  getQuery?: () => string;
+  onLoadQuery?: (query: string) => void;
 }) {
   const t = useTranslations('Presets');
   const lsKey = `hios-presets-${storageKey}`;
@@ -44,7 +49,7 @@ export function UrlPresets({
   const confirmSave = () => {
     const name = draftName.trim();
     if (!name) return;
-    const query = window.location.search.replace(/^\?/, '');
+    const query = getQuery ? getQuery() : window.location.search.replace(/^\?/, '');
     const next = [
       ...presets.filter((p) => p.name !== name),
       { id: `${Date.now()}`, name, query },
@@ -54,6 +59,7 @@ export function UrlPresets({
   };
 
   const load = (preset: Preset) => {
+    if (onLoadQuery) { onLoadQuery(preset.query); return; }
     window.location.assign(`${window.location.pathname}?${preset.query}`);
   };
 
@@ -108,11 +114,11 @@ export function UrlPresets({
 
   return (
     <>
-      <Button icon={<SaveOutlined />} onClick={openNaming} style={{ borderRadius: 10 }}>
+      <Button icon={<SaveOutlined aria-hidden="true" />} onClick={openNaming} style={{ borderRadius: 10 }}>
         {t('save')}
       </Button>
       <Dropdown menu={menu} trigger={['click']}>
-        <Button icon={<StarOutlined />} style={{ borderRadius: 10 }}>
+        <Button icon={<StarOutlined aria-hidden="true" />} style={{ borderRadius: 10 }}>
           {t('presets')}
           {presets.length ? ` (${presets.length})` : ''}
         </Button>
