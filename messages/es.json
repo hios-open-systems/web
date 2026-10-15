@@ -2746,7 +2746,9 @@
                 "title": "Alcance actual",
                 "body": "La aplicación permite solicitar tonos de prueba. El control remoto de volumen y ecualización, el monitoreo de batería y las actualizaciones OTA están pendientes. La aplicación Android se distribuye como código fuente para compilar con Android Studio o Gradle."
             }
-        }
+        },
+        "usage": "Así se usa",
+        "flash": "Cargalo en tu ESP32"
     },
     "HomeQuickAccess": {
         "workbench": {
@@ -3004,5 +3006,50 @@
         },
         "localPreview": "Datos que se guardan en este navegador",
         "presetPrivacy": "Esta configuración y sus datos se guardan en este navegador."
+    },
+    "ProjectGettingStarted": {
+        "usage": "Así se usa",
+        "flash": "Cargalo en tu ESP32",
+        "software": "Explorar el software",
+        "requirements": "Instalá Git y PlatformIO Core en tu computadora.",
+        "wiring": "Ver cableado y alimentación",
+        "commands": "Cloná el repositorio completo y ejecutá estos comandos. COM5 es un ejemplo: reemplazalo por el puerto de tu placa.",
+        "ports": "Windows: COM5 u otro COM. Linux: /dev/ttyUSB0 o /dev/ttyACM0. macOS: /dev/cu.usbserial-… . Usá pio device list para identificarlo. Estos parámetros reemplazan el puerto de platformio.ini.",
+        "firmware": "Abrir código del firmware",
+        "buildConfig": "Configuración de compilación",
+        "fullGuide": "Guía completa y diagnóstico",
+        "pad": {
+            "intro": "El PAD organiza atajos en capas y muestra sus etiquetas en pantalla. USB o BLE transportan teclado, mouse y controles multimedia; el companion suma edición web y estado real del equipo.",
+            "steps": {
+                "1": "Conectá el USB nativo del ESP32-S3 a la PC para HID, o emparejá por BLE. Probá Copiar y Pegar en un documento de prueba.",
+                "2": "Presioná el encoder para abrir el menú, giralo para recorrer grupos y elegí una capa con una tecla. El encoder cambia de función según la capa; el joystick mueve el puntero.",
+                "3": "Iniciá el companion en la misma red que el PAD. Abrí el editor, cambiá una etiqueta o acción y usá Guardar + reiniciar para enviarla al dispositivo."
+            },
+            "appLink": "Código y guía del companion",
+            "board": "Para ESP32-S3-DevKitC-1 N16R8 (16 MB flash y 8 MB PSRAM OPI) con pantalla ILI9488. Conservá la configuración del proyecto; no uses este firmware en el ESP32 clásico del DAC.",
+            "connect": "Con el pack 2S conectado, abrí SW-CELDAS antes de enchufar USB. Usá UART/CH343 para flashear y leer logs; el USB nativo se usa para HID.",
+            "success": "Al arrancar, el monitor serie muestra el token API/OTA: guardalo para configurar el companion. Probá luego los controles por USB nativo. Para OTA y recuperación consultá la guía completa.",
+            "deviceAlt": "Foto real de la pantalla del PAD en la capa Edición.",
+            "deviceCaption": "PAD físico: foto real del prototipo en modo Edición. Las etiquetas dependen de la configuración.",
+            "mirrorAlt": "Captura del espejo web del companion con la capa Edición y datos de ejemplo.",
+            "mirrorCaption": "Espejo del companion: captura de su interfaz real con datos simulados. Representa el estado del PAD; no es una foto de su pantalla ni una conexión en vivo.",
+            "editorAlt": "Captura del editor real del companion con etiquetas y acciones de ejemplo.",
+            "editorCaption": "Editor del companion: UI real con configuración de ejemplo para acciones, variantes Windows/Linux, macros y textos.",
+            "demoTitle": "Probar una mini demo del PAD",
+            "demoDescription": "Elegí Edición, Multimedia o Dev. Pulsá teclas y mové el volumen para explorar el espejo. Simulación local basada en el render del companion, con datos de ejemplo: no ejecuta atajos, no controla hardware y no emula el firmware completo. Los controles de la demo están en español.",
+            "companionSetup": "Para usarlo de verdad: en projects/pad/companion ejecutá npm install y npm run build; copiá config.example.json a config.json y configurá host y token. Iniciá con npm start. Con el puerto predeterminado, el espejo abre en http://localhost:8787 y el editor en http://localhost:8787/admin.html. Hay proveedores para Windows y Linux; macOS está pendiente."
+        },
+        "btdac": {
+            "intro": "El DAC recibe música por Bluetooth A2DP y la entrega por el PCM5102 como audio estéreo de línea. La app Android usa otro canal BLE para pedir tonos de prueba.",
+            "steps": {
+                "1": "Conectá la salida de línea a un amplificador o parlantes activos y encendé el DAC. Empezá con volumen bajo.",
+                "2": "Buscá HIOS BTDAC en Bluetooth desde el teléfono o la PC, emparejalo y reproducí música. La conexión de audio no necesita la app Android.",
+                "3": "Compilá android/ con Android Studio, otorgá permisos Bluetooth y conectá desde la app. Detené la música antes de pedir un tono; dura unos dos segundos."
+            },
+            "appLink": "Código y guía de la app Android",
+            "board": "Para ESP32 clásico (configuración esp32dev / WROOM-32) con PCM5102. No uses un ESP32-S3 como reemplazo para este firmware A2DP.",
+            "connect": "Revisá la alimentación y el cableado del PCM5102 antes de conectar el USB de programación de la placa ESP32.",
+            "success": "Después de cargar, abrí el monitor serie a 115200 y buscá HIOS BTDAC desde Bluetooth. Si conecta pero no suena, seguí el diagnóstico de SCK, XSMT e I2S de la guía completa. La app Android se compila desde código; esta sección no ofrece APK ni binarios de firmware."
+        }
     }
 }
