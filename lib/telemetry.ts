@@ -1,6 +1,6 @@
 /**
- * Browser telemetry preference. Enabled by default; an explicit "off" setting
- * or Do Not Track disables it. Signed-in events can be linked to the account.
+ * Browser telemetry preference. Disabled until an explicit opt-in.
+ * Do Not Track overrides opt-in. Signed-in events can be linked to the account.
  * See /api/usage/events for the event fields stored by the server.
  */
 
@@ -10,7 +10,7 @@ export const TELEMETRY_STORAGE_KEY = 'hios-telemetry';
 
 export function isTelemetryEnabled(): boolean {
     const setting = readRaw(TELEMETRY_STORAGE_KEY);
-    if (setting === 'off') return false;
+    if (setting !== 'on') return false;
     if (typeof navigator !== 'undefined' && (navigator.doNotTrack === '1' || (window as unknown as { doNotTrack?: string }).doNotTrack === '1')) {
         return false;
     }

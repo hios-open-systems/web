@@ -1,3 +1,4 @@
+import { requireExternalConsent } from '@/lib/workbench/externalConsent';
 import { checkRateLimit } from '@/lib/rateLimit';
 import {
   dnsRecordTypes,
@@ -55,6 +56,8 @@ function parseDnsAnswer(type: DnsRecordType, answer: GoogleDnsAnswer): DnsAnswer
 
 
 export async function GET(request: Request) {
+  const denied = requireExternalConsent(request);
+  if (denied) return denied;
   // Proxy saliente (dns.google): limitado para no ser vector de abuso.
   const limited = checkRateLimit(request, 'dns', { limit: 30, windowMs: 60_000 });
   if (limited) return limited;

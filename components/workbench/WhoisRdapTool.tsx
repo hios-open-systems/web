@@ -32,7 +32,7 @@ export function WhoisRdapTool() {
     setError(null);
 
     try {
-      const response = await fetch(`/api/workbench/rdap?domain=${encodeURIComponent(target)}`, { cache: 'no-store' });
+      const response = await fetch(`/api/workbench/rdap?domain=${encodeURIComponent(target)}`, { headers: { 'x-hios-external-consent': '1' }, cache: 'no-store' });
       const payload = (await response.json()) as RdapLookupResponse | ApiError;
       if (!response.ok) throw new Error('error' in payload ? payload.error || 'RDAP lookup failed' : 'RDAP lookup failed');
       setResult(payload as RdapLookupResponse);

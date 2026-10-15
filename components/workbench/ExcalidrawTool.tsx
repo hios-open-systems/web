@@ -16,6 +16,7 @@ import { useTheme } from '@/lib/ThemeContext';
 import { downloadBlob } from '@/lib/workbench/download';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
+import { useLocalEditorFiles } from '@/lib/hooks/useLocalEditorFiles';
 
 declare global {
   interface Window { EXCALIDRAW_ASSET_PATH?: string; }
@@ -55,7 +56,7 @@ function readScene(): StoredScene | null {
         version: 1,
         elements: parsed.elements as ExcalidrawElement[],
         appState: { viewBackgroundColor: parsed.appState.viewBackgroundColor, scrollX: parsed.appState.scrollX, scrollY: parsed.appState.scrollY, zoom: parsed.appState.zoom },
-        files: parsed.files as BinaryFiles,
+        files: Object.fromEntries(Object.entries(parsed.files).filter(([, file]) => file.dataURL?.startsWith('data:image/'))) as BinaryFiles,
       };
     }
     return null;
@@ -70,8 +71,11 @@ function writeScene(scene: StoredScene): void {
 
 export function ExcalidrawTool() {
   const t = useTranslations('Workbench.excalidraw');
+  const privacy = useTranslations('Workbench.toolHeader');
+  const editorHost = useRef<HTMLDivElement>(null);
   const { mode } = useTheme();
   const [messageApi, contextHolder] = message.useMessage();
+  useLocalEditorFiles(editorHost, () => { messageApi.warning(privacy('localResourcesOnly')); });
   const [booted, setBooted] = useState(false);
   const [editorKey, setEditorKey] = useState(0);
   const [hasScene, setHasScene] = useState(false);
@@ -152,12 +156,20 @@ export function ExcalidrawTool() {
       />
 
       <Card className={`${styles.sectionCard} ${styles.canvasCard}`} styles={{ body: { padding: 0 } }}>
-        <div style={{ height: 'min(74vh, 760px)', minHeight: 520 }}>
+        <div ref={editorHost} style={{ height: 'min(74vh, 760px)', minHeight: 520 }}>
           {booted ? (
             <ExcalidrawCanvas
               key={editorKey}
               theme={mode}
               validateEmbeddable={() => false}
+              onPaste={(data) => {
+                if (data.mixedContent?.some(item => item.type === 'imageUrl') ||
+                  Object.values(data.files ?? {}).some(file => !file.dataURL.startsWith('data:image/'))) {
+                  messageApi.warning(privacy('localResourcesOnly'));
+                  return false;
+                }
+                return true;
+              }}
               initialData={initialDataRef.current}
               onChange={(elements, appState, files) => {
                 const next: StoredScene = { version: 1, elements: [...elements], appState: { viewBackgroundColor: appState.viewBackgroundColor, scrollX: appState.scrollX, scrollY: appState.scrollY, zoom: appState.zoom }, files };
