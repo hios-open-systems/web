@@ -555,6 +555,7 @@
         "quantity": "Quantity",
         "notes": "Notes",
         "technical_files": "Project files",
+        "view_3d": "View in 3D",
         "technical_files_description": "Open, download or preview design files, firmware and documentation.",
         "no_technical_files": "No technical files are available.",
         "download_file": "Download",
@@ -2099,6 +2100,8 @@
             "localLabel": "Local processing",
             "localHint": "This tool performs its main processing in the browser.",
             "networkLabel": "Network request",
+            "externalConsent": "Allow sending the queried domain to {provider} when I run the query. No files are sent.",
+            "captchaConsent": "Load external Cloudflare Turnstile verification (shares your IP with Cloudflare)",
             "networkHint": "This tool needs a network connection to query data."
         },
         "jwtPlayground": {

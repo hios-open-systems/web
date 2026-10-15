@@ -8,7 +8,6 @@ import {
   DownloadOutlined,
   GithubOutlined,
   DoubleRightOutlined,
-  EyeOutlined,
   LinkOutlined,
   FileOutlined,
   PrinterOutlined,
@@ -22,6 +21,7 @@ import remarkGfm from 'remark-gfm';
 import { useLocale, useTranslations } from 'next-intl';
 import { ImageCarousel } from '@/components/common/ImageCarousel';
 import { ProjectComponents } from '@/components/projects/ProjectComponents';
+import { ProjectStlPreview } from '@/components/projects/ProjectStlPreview';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -41,11 +41,6 @@ export function ProjectDetailClient({ project, slug, gettingStarted }: ProjectDe
   const secondaryColor = 'var(--hios-text-secondary)';
   const mutedColor = 'var(--hios-text-muted)';
   const cardBorder = '1px solid var(--hios-border)';
-
-  const viewerByKind: Record<string, (assetPath: string) => string> = {
-    '3d': (assetPath) => `https://3dviewer.net/#model=${encodeURIComponent(`${window.location.origin}${assetPath}`)}`,
-    pcb: (assetPath) => `https://kicanvas.org/?url=${encodeURIComponent(`${window.location.origin}${assetPath}`)}`,
-  };
 
   const groupedAssets =
     project.technicalAssets?.reduce<Record<string, typeof project.technicalAssets>>((acc, asset) => {
@@ -551,20 +546,8 @@ export function ProjectDetailClient({ project, slug, gettingStarted }: ProjectDe
                                 {t('open')}
                               </Button>
                             )}
-                            {asset.path && viewerByKind[asset.kind] && (
-                              <Button
-                                size="small"
-                                icon={<EyeOutlined />}
-                                onClick={() =>
-                                  window.open(
-                                    viewerByKind[asset.kind](asset.path as string),
-                                    '_blank',
-                                    'noopener,noreferrer',
-                                  )
-                                }
-                              >
-                                Viewer
-                              </Button>
+                            {asset.path && asset.ext.toLowerCase() === 'stl' && (
+                              <ProjectStlPreview url={asset.path} name={asset.name} />
                             )}
                             {asset.path && (
                               <Button size="small" icon={<DownloadOutlined />} href={asset.path} target="_blank">
