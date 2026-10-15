@@ -21,7 +21,9 @@ const LS_KEY = 'hios-patterns';
 // Sandboxed runner: no allow-same-origin -> the user's code cannot touch the
 // site DOM, our localStorage, cookies or session. It runs isolated, logs are
 // collected for ~1.2s (covers setTimeout-based examples) and posted back.
-const RUNNER_SRCDOC = `<!doctype html><meta charset="utf-8"><script>
+const RUNNER_SRCDOC = `<!doctype html><meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<script>
 const logs = [];
 const fmt = (a) => a.map(x => {
   try { return typeof x === 'string' ? x : JSON.stringify(x); } catch { return String(x); }
@@ -31,7 +33,10 @@ addEventListener('message', (e) => {
   if (!e.data || e.data.type !== 'run') return;
   logs.length = 0;
   try {
-    (0, eval)('(async () => {\\n' + e.data.code + '\\n})()');
+    const script = document.createElement('script');
+    script.textContent = '(async () => {\\n' + e.data.code + '\\n})().catch(error => console.error(String(error)))';
+    document.body.appendChild(script);
+    script.remove();
   } catch (err) {
     logs.push('Error: ' + (err && err.message ? err.message : String(err)));
   }

@@ -51,7 +51,7 @@ export function DnsLookupTool() {
 
     try {
       const response = await fetch(`/api/workbench/dns?domain=${encodeURIComponent(targetDomain)}&type=${targetType}`, {
-        cache: 'no-store',
+        headers: { 'x-hios-external-consent': '1' }, cache: 'no-store',
       });
       const payload = (await response.json()) as DnsLookupResponse | ApiError;
 

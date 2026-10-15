@@ -10,6 +10,7 @@ for (const [slug, endpoint] of [
   }) => {
     const requests: string[] = [];
     await page.route(`**/api/workbench/${endpoint}?**`, (route) => {
+      expect(route.request().headers()['x-hios-external-consent']).toBe('1');
       requests.push(route.request().url());
       return route.fulfill({ status: 400, json: { error: "Test response" } });
     });

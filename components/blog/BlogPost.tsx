@@ -4,6 +4,7 @@ import React from 'react';
 import { PageIntro } from '@/components/ui/PageIntro';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
+import { LocalMarkdownImage } from '@/components/common/LocalMarkdownImage';
 import remarkGfm from 'remark-gfm';
 import { useTranslations } from 'next-intl';
 import { ArrowLeftOutlined } from '@ant-design/icons';
@@ -59,6 +60,7 @@ export function BlogPost({ post, locale }: { post: Post; locale: string }) {
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
+              img: LocalMarkdownImage,
               h2: ({ children }) => <h2 id={slugifyHeading(nodeToText(children))}>{children}</h2>,
               table: ({ children }) => (
                 <div className={styles.tableWrap}>

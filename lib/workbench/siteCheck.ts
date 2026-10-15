@@ -18,7 +18,7 @@ export function normalizeSiteUrl(input: string, baseOrigin?: string) {
   }
 
   const fallbackOrigin = baseOrigin ?? (typeof window !== 'undefined' ? window.location.origin : 'https://openhios.dev');
-  const prefixed = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+  const prefixed = /^(https?:\/\/|\/)/i.test(raw) ? raw : `https://${raw}`;
 
   try {
     const parsed = new URL(prefixed, fallbackOrigin);
@@ -44,6 +44,7 @@ export async function runClientSiteCheck(url: string, timeoutMs: number): Promis
 
   const target = new URL(normalizedUrl);
   const sameOrigin = typeof window !== 'undefined' && target.origin === window.location.origin;
+  if (!sameOrigin) throw new Error('Only URLs on this site can be checked. External requests are disabled.');
   const controller = new AbortController();
   const startedAt = performance.now();
   const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
@@ -51,9 +52,9 @@ export async function runClientSiteCheck(url: string, timeoutMs: number): Promis
   try {
     const response = await fetch(normalizedUrl, {
       cache: 'no-store',
-      redirect: 'follow',
+      redirect: 'error',
       signal: controller.signal,
-      mode: sameOrigin ? 'cors' : 'no-cors',
+      mode: 'same-origin',
     });
     const latencyMs = Math.round(performance.now() - startedAt);
 

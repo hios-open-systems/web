@@ -709,7 +709,7 @@
         }
     },
     "Auth": {
-        "signIn": "Sign in",
+        "signIn": "Sign in with GitHub",
         "signOut": "Sign out",
         "admin": "Admin"
     },
@@ -1516,13 +1516,13 @@
                 "tip": "Great for diffing an API response before vs after a change."
             },
             "siteChecker": {
-                "intro": "Check URLs periodically through network requests from your browser.",
+                "intro": "Check URLs on this site from the browser. Enable periodic checks explicitly for each visit.",
                 "steps": [
                     "Add the URL you want to check.",
                     "Allow notifications if you want alerts.",
-                    "Keep the tab open for periodic checks."
+                    "Enable periodic checks of saved URLs during this visit"
                 ],
-                "tip": "Monitoring stops when the tab closes. An opaque response does not reveal the HTTP status, so it cannot confirm that the site is working correctly."
+                "tip": "Only URLs on this site can be checked. No external servers or redirects are followed. Saved monitors start paused."
             }
         },
         "signals": {
@@ -1766,7 +1766,7 @@
             },
             "site-checker": {
                 "title": "Website status",
-                "description": "Check web addresses with network requests and browser notifications."
+                "description": "Check URLs on this site from the browser. Enable periodic checks explicitly for each visit."
             },
             "snippets": {
                 "title": "Code snippets",
@@ -2016,13 +2016,16 @@
             "subtitle": "Check web addresses with network requests and browser notifications.",
             "loadExample": "Load local example",
             "clientOnly": "Checks run while this tab remains open.",
+            "sameOriginOnly": "Only URLs on this site can be checked. No external servers or redirects are followed. Saved monitors start paused.",
+            "paused": "Paused",
+            "enableMonitoring": "Enable periodic checks of saved URLs during this visit",
             "corsNote": "Requests to other sites use no-cors mode. The browser cannot read the HTTP status of those responses: receiving a response does not confirm that the site is working correctly.",
             "url": "URL",
             "interval": "Interval",
             "timeout": "Timeout",
             "notifications": "Desktop notifications",
             "addMonitor": "Add monitor",
-            "monitors": "Active monitors",
+            "monitors": "Saved monitors",
             "empty": "No monitors yet. Add one to start checking from this browser.",
             "healthy": "Healthy",
             "reachable": "Reachable",
@@ -2100,6 +2103,7 @@
             "localLabel": "Local processing",
             "localHint": "This tool performs its main processing in the browser.",
             "networkLabel": "Network request",
+            "localResourcesOnly": "Use local files or embedded images. This view does not load linked images or resources.",
             "externalConsent": "Allow sending the queried domain to {provider} when I run the query. No files are sent.",
             "captchaConsent": "Load external Cloudflare Turnstile verification (shares your IP with Cloudflare)",
             "networkHint": "This tool needs a network connection to query data."
@@ -2824,7 +2828,7 @@
         "title": "Data settings",
         "intro": "Review telemetry, storage in this browser and your account options.",
         "telemetryTitle": "Usage statistics",
-        "telemetryHint": "Telemetry is enabled by default. It records page visits and tool openings, together with the path, language, browser information, referring page and request information. When signed in, the event is linked to your account. Totals appear on the Statistics page. You can disable telemetry here; Do Not Track also disables it.",
+        "telemetryHint": "Off by default. If enabled, OpenHIOS stores page visits and tool openings on its own server, including the path, language, browser and request details. Tool contents are not sent. Signed-in events are associated with your account. Do Not Track disables it.",
         "telemetryOn": "Enabled",
         "telemetryOff": "Disabled",
         "localTitle": "Browser storage",
@@ -2850,7 +2854,7 @@
     "PublicStats": {
         "kicker": "HIOS usage",
         "title": "Statistics",
-        "intro": "A summary of page views, tool openings and guestbook messages. Charts count events, not people. Telemetry is enabled by default and can be disabled in Settings; Do Not Track also disables it.",
+        "intro": "Visits and tool openings from people who enabled usage statistics. Charts count events, not people. Telemetry is off by default and can be enabled in Settings.",
         "pageViews": "Page views",
         "toolOpens": "Tool openings",
         "guestbook": "Published messages",

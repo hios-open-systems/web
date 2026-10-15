@@ -1,4 +1,5 @@
 'use client';
+import { isLocalResource } from '@/lib/localResource';
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { GithubOutlined } from '@ant-design/icons';
@@ -68,7 +69,7 @@ export function UserMenu({ inDrawer = false, onNavigate }: { inDrawer?: boolean;
                 aria-expanded={open}
                 aria-label={display}
             >
-                {me.avatar_url ? (
+                {me.avatar_url && isLocalResource(me.avatar_url) ? (
                     /* eslint-disable-next-line @next/next/no-img-element */
                     <img src={me.avatar_url} alt="" className={styles.avatar} />
                 ) : (

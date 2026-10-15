@@ -709,7 +709,7 @@
         }
     },
     "Auth": {
-        "signIn": "Iniciar sesión",
+        "signIn": "Iniciar sesión con GitHub",
         "signOut": "Cerrar sesión",
         "admin": "Admin"
     },
@@ -1516,13 +1516,13 @@
                 "tip": "Compará, por ejemplo, la respuesta de una API antes y después de un cambio."
             },
             "siteChecker": {
-                "intro": "Comprobá direcciones web mediante consultas periódicas desde el navegador.",
+                "intro": "Comprobá URLs de este mismo sitio desde el navegador. Las comprobaciones periódicas se activan expresamente para cada visita.",
                 "steps": [
                     "Agregá la URL que querés vigilar.",
                     "Permití notificaciones si querés alertas.",
-                    "Dejá la pestaña abierta; los chequeos corren del lado cliente en un intervalo."
+                    "Activar las comprobaciones periódicas de las URLs guardadas durante esta visita"
                 ],
-                "tip": "Las comprobaciones se detienen al cerrar la pestaña. Una respuesta opaca no permite verificar el estado HTTP del sitio."
+                "tip": "Solo se comprueban URLs de este mismo sitio. No se consultan servidores externos ni se siguen redirecciones. Los monitores guardados arrancan en pausa."
             }
         },
         "signals": {
@@ -2013,16 +2013,19 @@
         "siteChecker": {
             "badge": "Consultas de red",
             "title": "Estado de sitios web",
-            "subtitle": "Consultá direcciones web periódicamente desde esta pestaña. Cada comprobación envía una solicitud al sitio indicado.",
+            "subtitle": "Comprobá URLs de este mismo sitio desde el navegador. Las comprobaciones periódicas se activan expresamente para cada visita.",
             "loadExample": "Cargar ejemplo local",
             "clientOnly": "Las comprobaciones se ejecutan mientras esta pestaña permanece abierta.",
+            "sameOriginOnly": "Solo se comprueban URLs de este mismo sitio. No se consultan servidores externos ni se siguen redirecciones. Los monitores guardados arrancan en pausa.",
+            "paused": "En pausa",
+            "enableMonitoring": "Activar las comprobaciones periódicas de las URLs guardadas durante esta visita",
             "corsNote": "Las consultas a otros sitios usan el modo no-cors. El navegador no permite leer el estado HTTP de esas respuestas: recibir una respuesta no confirma que el sitio funcione correctamente.",
             "url": "URL",
             "interval": "Intervalo",
             "timeout": "Tiempo de espera máximo",
             "notifications": "Notificaciones de escritorio",
             "addMonitor": "Agregar monitor",
-            "monitors": "Monitores activos",
+            "monitors": "Monitores guardados",
             "empty": "Todavía no hay monitores. Agregá uno para empezar a comprobar desde este navegador.",
             "healthy": "Responde correctamente",
             "reachable": "Accesible",
@@ -2100,6 +2103,7 @@
             "localLabel": "Procesamiento local",
             "localHint": "El procesamiento principal de esta herramienta se realiza en el navegador.",
             "networkLabel": "Consulta de red",
+            "localResourcesOnly": "Usá archivos locales o imágenes incluidas en el archivo. Esta vista no carga imágenes ni recursos enlazados.",
             "externalConsent": "Autorizo enviar el dominio consultado a {provider} al ejecutar la consulta. No se envían archivos.",
             "captchaConsent": "Cargar verificación externa de Cloudflare Turnstile (comparte tu IP con Cloudflare)",
             "networkHint": "Esta herramienta necesita una conexión de red para consultar datos."
@@ -2824,7 +2828,7 @@
         "title": "Configuración de datos",
         "intro": "Revisá la telemetría, el almacenamiento de este navegador y las opciones de tu cuenta.",
         "telemetryTitle": "Estadísticas de uso",
-        "telemetryHint": "La telemetría está activada por defecto. Registra visitas y aperturas de herramientas, junto con la ruta, el idioma, datos del navegador, la página de origen y datos de la solicitud. Si hay sesión, el evento se asocia a la cuenta. Los totales se publican en Estadísticas. Podés desactivarla acá; Do Not Track también la desactiva.",
+        "telemetryHint": "Desactivada por defecto. Si la activás, OpenHIOS guarda visitas y aperturas de herramientas en su propio servidor, junto con la ruta, idioma, navegador y datos de la solicitud. No envía el contenido de tus herramientas. Con sesión, el evento se asocia a tu cuenta. Do Not Track la desactiva.",
         "telemetryOn": "Activada",
         "telemetryOff": "Desactivada",
         "localTitle": "Almacenamiento del navegador",
@@ -2850,7 +2854,7 @@
     "PublicStats": {
         "kicker": "Uso de HIOS",
         "title": "Estadísticas",
-        "intro": "Resumen de visitas, aperturas de herramientas y mensajes del libro de visitas. Los gráficos cuentan eventos, no personas. La telemetría está activada por defecto y se puede desactivar en Configuración; Do Not Track también la desactiva.",
+        "intro": "Resumen de visitas y aperturas de herramientas de quienes activaron las estadísticas de uso. Los gráficos cuentan eventos, no personas. La telemetría está desactivada por defecto; se activa en Configuración.",
         "pageViews": "Vistas de página",
         "toolOpens": "Aperturas de herramientas",
         "guestbook": "Mensajes publicados",
