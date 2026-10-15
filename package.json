@@ -14,6 +14,8 @@
     "cf-typegen": "wrangler types --env-interface CloudflareEnv",
     "test": "node scripts/run-selftests.mjs",
     "shots": "node scripts/shots.mjs",
+    "gen:pad-demo": "node scripts/gen-pad-demo.mjs",
+    "shots:pad-companion": "node scripts/capture-pad-companion.mjs",
     "test:jwt": "node --experimental-strip-types scripts/jwt-selftest.ts",
     "test:calc": "node --experimental-strip-types scripts/calc-selftest.ts",
     "test:auth": "node --experimental-strip-types scripts/auth-selftest.ts",
