@@ -180,7 +180,14 @@ const nextConfig = {
 			});
 		}
 
-		return [{ source: '/:path*', headers: securityHeaders }];
+		return [
+      { source: '/:path*', headers: securityHeaders },
+      {
+        source: '/:locale(en|es|de|it)/:path*',
+        // Prevent CDN-injected analytics. Never mark authenticated pages public.
+        headers: [{ key: 'Cache-Control', value: 'private, no-cache, no-store, must-revalidate, no-transform' }],
+      },
+    ];
 	},
 };
 
