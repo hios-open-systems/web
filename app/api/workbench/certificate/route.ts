@@ -1,3 +1,4 @@
+import { requireExternalConsent } from '@/lib/workbench/externalConsent';
 import { checkRateLimit } from '@/lib/rateLimit';
 import {
   formatNetworkError,
@@ -88,6 +89,8 @@ async function inspectCertificate(hostname: string, port: number) {
 
 
 export async function GET(request: Request) {
+  const denied = requireExternalConsent(request);
+  if (denied) return denied;
   // Proxy saliente: limitado para no ser vector de abuso.
   const limited = checkRateLimit(request, 'cert', { limit: 10, windowMs: 60_000 });
   if (limited) return limited;

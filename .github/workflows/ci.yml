@@ -79,7 +79,10 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Verify tool content and hydration
-        run: npx playwright test tests/tool-content.spec.ts tests/project-software.spec.ts tests/section-navigation.spec.ts tests/project-stl.spec.ts tests/network-locality.spec.ts --project=chromium --workers=1
+        run: npx playwright test tests/tool-content.spec.ts tests/project-software.spec.ts tests/section-navigation.spec.ts tests/project-stl.spec.ts tests/network-locality.spec.ts tests/local-inputs.spec.ts --project=chromium --workers=1
+
+      - name: Audit implicit outbound traffic on every public route
+        run: npx playwright test tests/site-locality.spec.ts --project=chromium --workers=3
 
       - name: Verify mobile layouts and interactions
         run: npx playwright test tests/mobile-responsive.spec.ts tests/mobile-usability.spec.ts tests/mobile-section-access.spec.ts --project=mobile-360 --project=mobile-390 --project=tablet-768 --workers=2

@@ -42,7 +42,7 @@ export function CertificateCheckTool() {
 
     try {
       const response = await fetch(`/api/workbench/certificate?hostname=${encodeURIComponent(targetHostname)}&port=${targetPort}`, {
-        cache: 'no-store',
+        headers: { 'x-hios-external-consent': '1' }, cache: 'no-store',
       });
       const payload = (await response.json()) as CertificateLookupResponse | ApiError;
 

@@ -709,7 +709,7 @@
         }
     },
     "Auth": {
-        "signIn": "Accedi",
+        "signIn": "Accedi con GitHub",
         "signOut": "Esci",
         "admin": "Admin"
     },
@@ -1516,13 +1516,13 @@
                 "tip": "Ottimo per fare il diff di una risposta API prima/dopo una modifica."
             },
             "siteChecker": {
-                "intro": "Controlla periodicamente gli URL con richieste di rete dal browser.",
+                "intro": "Controlla URL di questo sito dal browser. Attiva esplicitamente i controlli periodici per ogni visita.",
                 "steps": [
                     "Aggiungi l’URL da controllare.",
                     "Consenti le notifiche se vuoi ricevere avvisi.",
-                    "Lascia aperta la scheda per i controlli periodici."
+                    "Attiva controlli periodici degli URL salvati durante questa visita"
                 ],
-                "tip": "Il monitoraggio termina quando chiudi la scheda. Una risposta opaca non mostra lo stato HTTP e non conferma quindi che il sito funzioni correttamente."
+                "tip": "Si controllano solo URL di questo sito. Nessun server esterno o reindirizzamento. I monitor salvati iniziano in pausa."
             }
         },
         "signals": {
@@ -1766,7 +1766,7 @@
             },
             "site-checker": {
                 "title": "Stato dei siti web",
-                "description": "Verifica gli indirizzi web con richieste di rete e notifiche del browser."
+                "description": "Controlla URL di questo sito dal browser. Attiva esplicitamente i controlli periodici per ogni visita."
             },
             "snippets": {
                 "title": "Frammenti di codice",
@@ -2016,13 +2016,16 @@
             "subtitle": "Verifica gli indirizzi web con richieste di rete e notifiche del browser.",
             "loadExample": "Carica esempio locale",
             "clientOnly": "I controlli vengono eseguiti mentre questa scheda resta aperta.",
+            "sameOriginOnly": "Si controllano solo URL di questo sito. Nessun server esterno o reindirizzamento. I monitor salvati iniziano in pausa.",
+            "paused": "In pausa",
+            "enableMonitoring": "Attiva controlli periodici degli URL salvati durante questa visita",
             "corsNote": "Le richieste verso altri siti usano la modalità no-cors. Il browser non può leggere lo stato HTTP di queste risposte: ricevere una risposta non conferma che il sito funzioni correttamente.",
             "url": "URL",
             "interval": "Intervallo",
             "timeout": "Timeout",
             "notifications": "Notifiche desktop",
             "addMonitor": "Aggiungi monitor",
-            "monitors": "Monitor attivi",
+            "monitors": "Monitor salvati",
             "empty": "Non ci sono ancora monitor. Aggiungine uno per iniziare i controlli da questo browser.",
             "healthy": "Sano",
             "reachable": "Raggiungibile",
@@ -2100,6 +2103,7 @@
             "localLabel": "Elaborazione locale",
             "localHint": "L’elaborazione principale di questo strumento avviene nel browser.",
             "networkLabel": "Richiesta di rete",
+            "localResourcesOnly": "Usa file locali o immagini incorporate. Questa vista non carica immagini o risorse collegate.",
             "externalConsent": "Autorizzo l’invio del dominio a {provider} quando eseguo la ricerca. Nessun file viene inviato.",
             "captchaConsent": "Carica la verifica esterna Cloudflare Turnstile (condivide il tuo IP con Cloudflare)",
             "networkHint": "Questo strumento richiede una connessione di rete per consultare i dati."
@@ -2824,7 +2828,7 @@
         "title": "Impostazioni dei dati",
         "intro": "Controlla la telemetria, i dati memorizzati in questo browser e le opzioni del tuo account.",
         "telemetryTitle": "Statistiche di utilizzo",
-        "telemetryHint": "La telemetria è attiva per impostazione predefinita. Registra visite e aperture degli strumenti, insieme a percorso, lingua, informazioni sul browser, pagina di provenienza e dati della richiesta. Dopo l’accesso, l’evento viene associato all’account. I totali sono pubblicati nella pagina Statistiche. Puoi disattivarla qui; anche Do Not Track la disattiva.",
+        "telemetryHint": "Disattivata per impostazione predefinita. Se attivata, OpenHIOS registra visite e aperture degli strumenti sul proprio server, inclusi percorso, lingua, browser e dati della richiesta. Il contenuto degli strumenti non viene inviato. Con accesso effettuato, gli eventi sono associati all’account. Do Not Track la disattiva.",
         "telemetryOn": "Attiva",
         "telemetryOff": "Disattivata",
         "localTitle": "Archiviazione del browser",
@@ -2850,7 +2854,7 @@
     "PublicStats": {
         "kicker": "Utilizzo di HIOS",
         "title": "Statistiche",
-        "intro": "Riepilogo di visualizzazioni, aperture degli strumenti e messaggi nel libro degli ospiti. I grafici contano eventi, non persone. La telemetria è attiva per impostazione predefinita e può essere disattivata nelle Impostazioni; anche Do Not Track la disattiva.",
+        "intro": "Visite e aperture degli strumenti di chi ha attivato le statistiche d’uso. I grafici contano eventi, non persone. La telemetria è disattivata per impostazione predefinita e si attiva in Impostazioni.",
         "pageViews": "Visualizzazioni di pagina",
         "toolOpens": "Aperture degli strumenti",
         "guestbook": "Messaggi pubblicati",

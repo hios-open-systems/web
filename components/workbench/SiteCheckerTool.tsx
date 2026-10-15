@@ -45,14 +45,14 @@ export function SiteCheckerTool() {
   const t = useTranslations('Workbench.siteChecker');
   const { mode } = useTheme();
   const [messageApi, contextHolder] = message.useMessage();
-  const [urlInput, setUrlInput] = useState('openhios.dev/en/workbench');
+  const [urlInput, setUrlInput] = useState('');
   const [intervalSeconds, setIntervalSeconds] = useState(60);
   const [timeoutMs, setTimeoutMs] = useState(6000);
   const [notifyOnFailure, setNotifyOnFailure] = useState(true);
   const [monitors, setMonitors] = useState<SiteMonitor[]>([]);
   const [notificationPermission, setNotificationPermission] = useState<'default' | 'granted' | 'denied' | 'unsupported'>('default');
   const monitorsRef = useRef<SiteMonitor[]>([]);
-  const bootstrapped = useRef(false);
+  const [monitoringEnabled, setMonitoringEnabled] = useState(false);
 
   useEffect(() => {
     monitorsRef.current = monitors;
@@ -63,6 +63,7 @@ export function SiteCheckerTool() {
       return;
     }
 
+    setUrlInput(window.location.origin);
     setNotificationPermission('Notification' in window ? Notification.permission : 'unsupported');
 
     const raw = readRaw(STORAGE_KEY);
@@ -107,7 +108,9 @@ export function SiteCheckerTool() {
   const executeMonitorCheck = useCallback(async (monitor: SiteMonitor) => {
     setMonitors((current) => current.map((entry) => entry.id === monitor.id ? { ...entry, checking: true } : entry));
     const previousStatus = monitor.lastResult?.status;
-    const nextResult = await runClientSiteCheck(monitor.url, monitor.timeoutMs);
+    let nextResult: SiteCheckResult;
+    try { nextResult = await runClientSiteCheck(monitor.url, monitor.timeoutMs); }
+    catch { nextResult = { status: 'down', checkedAt: new Date().toISOString(), latencyMs: null, detail: t('sameOriginOnly'), finalUrl: monitor.url, corsVisible: false }; }
     applyMonitorResult(monitor.id, nextResult);
 
     const previousHealthy = previousStatus ? isHealthySiteStatus(previousStatus) : null;
@@ -130,21 +133,8 @@ export function SiteCheckerTool() {
     await executeMonitorCheck(currentMonitor);
   }, [executeMonitorCheck]);
 
-  useEffect(() => {
-    if (bootstrapped.current || monitors.length === 0) {
-      return;
-    }
-
-    bootstrapped.current = true;
-    monitors.forEach((monitor) => {
-      if (!monitor.lastResult) {
-        void runMonitorCheck(monitor.id);
-      }
-    });
-  }, [monitors, runMonitorCheck]);
-
-  useEffect(() => {
-    if (monitors.length === 0) {
+useEffect(() => {
+    if (!monitoringEnabled || monitors.length === 0) {
       return;
     }
 
@@ -153,7 +143,7 @@ export function SiteCheckerTool() {
     }, Math.max(15, monitor.intervalSeconds) * 1000));
 
     return () => timers.forEach((timer) => window.clearInterval(timer));
-  }, [monitors, runMonitorCheck]);
+  }, [monitors, runMonitorCheck, monitoringEnabled]);
 
   const requestNotifications = async () => {
     if (typeof window === 'undefined' || !('Notification' in window)) {
@@ -174,8 +164,8 @@ export function SiteCheckerTool() {
 
   const addMonitor = async () => {
     const normalizedUrl = normalizeSiteUrl(urlInput);
-    if (!normalizedUrl) {
-      messageApi.error(t('urlInvalid'));
+    if (!normalizedUrl || new URL(normalizedUrl).origin !== window.location.origin) {
+      messageApi.error(t('sameOriginOnly'));
       return;
     }
 
@@ -244,8 +234,9 @@ export function SiteCheckerTool() {
         }
       />
       <div className={styles.helperTextBlock}>
-        <Text>{t('clientOnly')}</Text>
-        <Text>{t('corsNote')}</Text>
+        <Text>{t('sameOriginOnly')}</Text>
+        <Checkbox checked={monitoringEnabled} onChange={event => setMonitoringEnabled(event.target.checked)}>{t('enableMonitoring')}</Checkbox>
+
       </div>
 
       <Row gutter={[20, 20]}>
@@ -293,7 +284,7 @@ export function SiteCheckerTool() {
                           <Text className={styles.subtleText}>{monitor.intervalSeconds}s · {monitor.timeoutMs}ms</Text>
                         </div>
                         <Space wrap>
-                          <Tag color={getStatusColor(status)}>{status === 'up' ? t('healthy') : status === 'opaque' ? t('reachable') : status === 'down' ? t('down') : t('checking')}</Tag>
+                          <Tag color={getStatusColor(status)}>{status === 'up' ? t('healthy') : status === 'opaque' ? t('reachable') : status === 'down' ? t('down') : status === 'idle' ? t('paused') : t('checking')}</Tag>
                           <Button size="small" icon={<ReloadOutlined />} onClick={() => void runMonitorCheck(monitor.id)}>{t('runNow')}</Button>
                           <Button size="small" icon={<DeleteOutlined />} onClick={() => setMonitors((current) => current.filter((entry) => entry.id !== monitor.id))}>{t('remove')}</Button>
                         </Space>

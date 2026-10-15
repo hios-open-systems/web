@@ -18,6 +18,7 @@ import { ToolHeader } from './ToolHeader';
 import { PresetControls } from './PresetControls';
 import { useToolBridge } from '@/lib/hooks/useToolBridge';
 import styles from './workbench.module.css';
+import { hasDiagramResources } from '@/lib/workbench/localDiagram';
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -39,6 +40,7 @@ function safeWrite(code: string) {
 
 export function MermaidTool() {
   const t = useTranslations('Workbench.mermaid');
+  const privacy = useTranslations('Workbench.toolHeader');
   const { mode } = useTheme();
   const searchParams = useSearchParams();
   const hydratedFromUrl = useRef(false);
@@ -79,10 +81,13 @@ export function MermaidTool() {
     let cancelled = false;
     const handle = setTimeout(async () => {
       try {
+        if (hasDiagramResources(code)) throw new Error(privacy('localResourcesOnly'));
         const mermaid = (await import('mermaid')).default;
         mermaid.initialize({
           startOnLoad: false,
           securityLevel: 'strict',
+          suppressErrorRendering: true,
+          flowchart: { htmlLabels: false },
           theme: mode === 'dark' ? 'dark' : 'default',
         });
         await mermaid.parse(code);
@@ -100,7 +105,7 @@ export function MermaidTool() {
       cancelled = true;
       clearTimeout(handle);
     };
-  }, [code, mode, t]);
+  }, [code, mode, t, privacy]);
 
   const themeVars = useMemo(
     () =>

@@ -17,6 +17,7 @@ import { ProjectMeta } from '@/lib/projects';
 import { getPrintsByProject } from '@/config/prints';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
+import { LocalMarkdownImage } from '@/components/common/LocalMarkdownImage';
 import remarkGfm from 'remark-gfm';
 import { useLocale, useTranslations } from 'next-intl';
 import { ImageCarousel } from '@/components/common/ImageCarousel';
@@ -162,6 +163,7 @@ export function ProjectDetailClient({ project, slug, gettingStarted }: ProjectDe
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
+              img: LocalMarkdownImage,
               h2: ({ children }) => (
                 <Title
                   level={2}

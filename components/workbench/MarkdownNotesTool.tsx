@@ -5,6 +5,7 @@ import { Button, Card, Col, Input, Row, Space, Typography } from 'antd';
 import { DownloadOutlined, PlusOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import ReactMarkdown from 'react-markdown';
+import { LocalMarkdownImage } from '@/components/common/LocalMarkdownImage';
 import remarkGfm from 'remark-gfm';
 import { useTheme } from '@/lib/ThemeContext';
 import { NotesList } from './NotesList';
@@ -91,6 +92,7 @@ export function MarkdownNotesTool() {
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   components={{
+              img: LocalMarkdownImage,
                     code: ({ children, className }) => {
                       const isBlock = Boolean(className);
                       if (isBlock) {
