@@ -1,4 +1,5 @@
 'use client';
+import { PageIntro } from '@/components/ui/PageIntro';
 
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
@@ -13,23 +14,26 @@ const BUILDS = [
 export function PinoutsIntro() {
   const t = useTranslations('Pinouts');
   const locale = useLocale();
-  return (<>
-<header className={styles.pageHead}>
-        <span className={styles.eyebrow}>{t('eyebrow')}</span>
-        <h1 className={styles.pageTitle}>{t('title')}</h1>
-        <p className={styles.pageSubtitle}>{t('subtitle')}</p>
-      </header>
+  return (
+    <>
+      <PageIntro eyebrow={t('eyebrow')} title={t('title')} description={t('subtitle')} area="maker" />
 
       <section className={styles.builds}>
         <div className={styles.buildsTitle}>{t('builds_title')}</div>
         <div className={styles.buildsGrid}>
           {BUILDS.map((build) => (
-            <Link key={build.slug} href={`/${locale}/pinouts/${build.slug}`} prefetch={false} className={styles.buildCard}>
+            <Link
+              key={build.slug}
+              href={`/${locale}/pinouts/${build.slug}`}
+              prefetch={false}
+              className={styles.buildCard}
+            >
               <span className={styles.buildName}>{build.label}</span>
               <span className={styles.buildHint}>{t('builds_hint')}</span>
             </Link>
           ))}
         </div>
       </section>
-  </>);
+    </>
+  );
 }

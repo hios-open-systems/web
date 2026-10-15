@@ -1,7 +1,7 @@
 .showcase {
-  max-width: 1180px;
+  max-width: 1296px;
   margin: 0 auto;
-  padding: 24px 24px 72px;
+  padding: 64px 28px;
 }
 
 .showcaseHeader {
@@ -32,10 +32,93 @@
 .showcaseTitle {
   margin: 0;
   font-family: var(--font-stack-display);
-  font-size: 1.35rem;
+  font-size: clamp(1.8rem, 3.5vw, 2.7rem);
   font-weight: 700;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.045em;
   color: var(--hios-text);
+}
+.tools {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--hios-border);
+}
+.tool {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 18px;
+  padding: 24px 16px;
+  border-bottom: 1px solid var(--hios-border);
+  color: var(--hios-text);
+  text-decoration: none;
+  transition: background 0.25s;
+}
+.tool:nth-child(odd) {
+  border-right: 1px solid var(--hios-border);
+}
+.tool:hover {
+  background: color-mix(in srgb, var(--accent) 5%, var(--hios-bg-elevated));
+  color: var(--hios-text);
+}
+.toolIndex {
+  color: var(--hios-text-muted);
+  font: 10px var(--font-stack-mono);
+}
+.toolIcon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+.toolCopy {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+.toolCopy strong {
+  font-size: 13px;
+  font-weight: 600;
+}
+.toolCopy > span {
+  font-size: 11px;
+  color: var(--hios-text-secondary);
+  line-height: 1.6;
+}
+.tool > :last-child {
+  font-size: 12px;
+  color: var(--hios-text-muted);
+  transition: transform 0.2s;
+}
+.tool:hover > :last-child {
+  transform: translateX(4px);
+}
+.random {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--accent-text);
+  font-size: 12px;
+  padding: 12px 16px;
+  border: 1px solid var(--hios-border);
+  border-radius: 8px;
+}
+@media (max-width: 700px) {
+  .tools {
+    grid-template-columns: 1fr;
+  }
+  .tool:nth-child(odd) {
+    border-right: 0;
+  }
+  .tool {
+    padding-inline: 0;
+    gap: 14px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tool,
+  .tool > :last-child {
+    transition: none;
+  }
 }
 
 .showcaseSubtitle {

@@ -3051,5 +3051,51 @@
             "connect": "Check power and PCM5102 wiring before connecting the ESP32 programming USB port.",
             "success": "After uploading, open the serial monitor at 115200 and find HIOS BTDAC over Bluetooth. If it connects without sound, follow the full guide’s SCK, XSMT and I2S checks. Build Android from source; no APK or firmware binary is provided here."
         }
+    },
+    "Landing": {
+        "eyebrow": "HIOS · Electronics and open-source software",
+        "title": "Wires",
+        "titleAccent": "and code.",
+        "subtitle": "This is where I share what I’m building: a programmable PAD, a Bluetooth audio receiver and experiments with ESP32. There are also web tools you can use for your own projects.",
+        "tryIt": "Change the wave and adjust the frequency",
+        "manifesto": "Projects, tools and development notes.",
+        "scroll": "Explore the site",
+        "directory": "By topic",
+        "exploreTitle": "What’s here",
+        "exploreSubtitle": "Electronics, audio, data and local AI. Each area brings together its tools and projects.",
+        "projectsTitle": "Projects with ESP32",
+        "projectsSubtitle": "Prototype photos, wiring, firmware and assembly instructions.",
+        "projectCta": "View project",
+        "toolsTitle": "Tools in your browser",
+        "toolsSubtitle": "Check data, calculate component values or try out sounds. Pick a tool to open it.",
+        "activities": {
+            "development": "Edit JSON, generate TypeScript types and inspect your data structure.",
+            "maker": "Look up connections, calculate resistance and explore the PAD hardware.",
+            "audio": "A tuner, a metronome and a chiptune composer for experimenting with sound.",
+            "ai": "Estimate memory and tokens, and connect an ESP32 to a model on your local network.",
+            "knowledge": "Development notes, a Markdown editor and files for 3D printing.",
+            "software": "PAD and DAC firmware, with their applications and usage instructions."
+        },
+        "signal": {
+            "simulation": "SIMULATION",
+            "title": "Wave viewer",
+            "pause": "Pause animation",
+            "resume": "Resume animation",
+            "shape": "Waveform",
+            "sine": "Sine",
+            "square": "Square",
+            "triangle": "Triangle",
+            "frequency": "Frequency",
+            "hint": "Visual only · no audio",
+            "open": "Open generator"
+        }
+    },
+    "SignalScope": {
+        "title": "Signal viewer",
+        "active": "Playing",
+        "idle": "No signal",
+        "pause": "Pause viewer",
+        "resume": "Resume viewer",
+        "hint": "Shows audio generated in this browser, after the volume control. Each window spans 10 ms. Pausing the viewer does not stop the sound."
     }
 }

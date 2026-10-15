@@ -3051,5 +3051,51 @@
             "connect": "Prüfe Stromversorgung und PCM5102-Verkabelung vor dem Anschließen des USB-Programmierports.",
             "success": "Öffne nach dem Upload den seriellen Monitor mit 115200 Baud und suche HIOS BTDAC per Bluetooth. Bei Verbindung ohne Ton prüfe SCK, XSMT und I2S gemäß Anleitung. Android wird aus Quellcode gebaut; keine APK oder Firmware-Binärdatei verfügbar."
         }
+    },
+    "Landing": {
+        "eyebrow": "HIOS · Elektronik und Open-Source-Software",
+        "title": "Kabel",
+        "titleAccent": "und Code.",
+        "subtitle": "Hier teile ich meine Projekte: ein programmierbares PAD, einen Bluetooth-Audioempfänger und Versuche mit ESP32. Dazu gibt es Webtools für deine eigenen Projekte.",
+        "tryIt": "Wellenform wählen und Frequenz ändern",
+        "manifesto": "Projekte, Werkzeuge und Entwicklungsnotizen.",
+        "scroll": "Website erkunden",
+        "directory": "Nach Thema",
+        "exploreTitle": "Was es hier gibt",
+        "exploreSubtitle": "Elektronik, Audio, Daten und lokale KI. Jeder Bereich bündelt die passenden Werkzeuge und Projekte.",
+        "projectsTitle": "Projekte mit ESP32",
+        "projectsSubtitle": "Fotos der Prototypen, Anschlüsse, Firmware und Bauanleitungen.",
+        "projectCta": "Projekt ansehen",
+        "toolsTitle": "Werkzeuge im Browser",
+        "toolsSubtitle": "Daten prüfen, Bauteilwerte berechnen oder Klänge ausprobieren. Wähle ein Werkzeug aus.",
+        "activities": {
+            "development": "JSON bearbeiten, TypeScript-Typen erzeugen und Datenstrukturen prüfen.",
+            "maker": "Anschlüsse nachschlagen, Widerstände berechnen und die PAD-Hardware kennenlernen.",
+            "audio": "Ein Stimmgerät, ein Metronom und ein Chiptune-Komponist zum Experimentieren mit Klang.",
+            "ai": "Speicher und Tokens abschätzen und einen ESP32 mit einem Modell im lokalen Netzwerk verbinden.",
+            "knowledge": "Entwicklungsnotizen, ein Markdown-Editor und Dateien für den 3D-Druck.",
+            "software": "Firmware für PAD und DAC mit den zugehörigen Anwendungen und Anleitungen."
+        },
+        "signal": {
+            "simulation": "SIMULATION",
+            "title": "Wellenanzeige",
+            "pause": "Animation pausieren",
+            "resume": "Animation fortsetzen",
+            "shape": "Wellenform",
+            "sine": "Sinus",
+            "square": "Rechteck",
+            "triangle": "Dreieck",
+            "frequency": "Frequenz",
+            "hint": "Nur visuell · ohne Ton",
+            "open": "Generator öffnen"
+        }
+    },
+    "SignalScope": {
+        "title": "Signalanzeige",
+        "active": "Wiedergabe",
+        "idle": "Kein Signal",
+        "pause": "Anzeige pausieren",
+        "resume": "Anzeige fortsetzen",
+        "hint": "Zeigt das im Browser erzeugte Audio nach dem Lautstärkeregler. Jedes Fenster umfasst 10 ms. Das Pausieren der Anzeige stoppt den Ton nicht."
     }
 }
