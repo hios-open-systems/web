@@ -43,7 +43,8 @@ test("drawing editor loads self-hosted fonts without third-party requests", asyn
     )
       external.push(request.url());
   });
-  await page.goto("/es/workbench/excalidraw");
+  const response = await page.goto("/es/workbench/excalidraw");
+  expect(response?.headers()['cache-control']).toContain('no-transform');
   await expect(page.locator(".excalidraw canvas").first()).toBeVisible();
   await page.keyboard.press("t");
   await page
