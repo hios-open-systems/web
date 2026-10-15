@@ -1,4 +1,5 @@
 'use client';
+import { PageIntro } from '@/components/ui/PageIntro';
 
 import { useCallback, useEffect, useState } from 'react';
 import { Button, Card, Empty, Input, Space, Typography, message } from 'antd';
@@ -102,12 +103,7 @@ export function GuestbookClient() {
       style={{ width: '100%', maxWidth: 760, margin: '0 auto', padding: '24px 16px' }}
     >
       {contextHolder}
-      <div>
-        <Title level={2} style={{ marginBottom: 4 }}>
-          {t('title')}
-        </Title>
-        <Text type="secondary">{t('subtitle')}</Text>
-      </div>
+      <PageIntro eyebrow="HIOS / GUESTBOOK" title={t('title')} description={t('subtitle')} area="knowledge" compact />
 
       <Card size="small" title={t('signTitle')}>
         <Space direction="vertical" size={12} style={{ width: '100%' }}>
@@ -126,12 +122,7 @@ export function GuestbookClient() {
             onChange={(e) => setBody(e.target.value)}
           />
           {turnstileEnabled() ? <TurnstileWidget onToken={setToken} /> : null}
-          <Button
-            type="primary"
-            loading={sending}
-            onClick={submit}
-            disabled={!name.trim() || !body.trim()}
-          >
+          <Button type="primary" loading={sending} onClick={submit} disabled={!name.trim() || !body.trim()}>
             {sending ? t('submitting') : t('submit')}
           </Button>
         </Space>

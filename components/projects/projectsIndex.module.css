@@ -1,0 +1,15 @@
+.page {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 48px var(--layout-gutter) 88px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--studio-gap);
+}
+@media (max-width: 700px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

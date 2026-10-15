@@ -11,94 +11,107 @@ const { Footer: AntFooter } = Layout;
 const { Text, Link } = Typography;
 
 export function Footer() {
-    const locale = useLocale();
-    const t = useTranslations('Header');
-    const copy = useTranslations('Footer');
+  const locale = useLocale();
+  const t = useTranslations('Header');
+  const copy = useTranslations('Footer');
 
-    const label = (key: string, fallback: string) => {
-        const value = t(key);
-        return value === key || value === `Header.${key}` ? fallback : value;
-    };
+  const label = (key: string, fallback: string) => {
+    const value = t(key);
+    return value === key || value === `Header.${key}` ? fallback : value;
+  };
 
-    const navLinks = [
-        { href: `/${locale}/projects`, label: label('projects', 'Proyectos') },
-        { href: `/${locale}/tools`, label: t('tools') },
-        { href: `/${locale}/workbench`, label: t('workbench') },
-        { href: `/${locale}/pinouts`, label: label('pinouts', 'Pinouts') },
-        { href: `/${locale}/calculators`, label: label('calculators', 'Calculadoras') },
-        { href: `/${locale}/composer`, label: t('sections.composer') },
-        { href: `/${locale}/prints`, label: copy('prints') },
-        { href: `/${locale}/blog`, label: copy('blog') },
-        { href: `/${locale}/stats`, label: copy('stats') },
-        { href: `/${locale}/guestbook`, label: label('guestbook', 'Guestbook') },
-        { href: `/${locale}/colophon`, label: copy('about') },
-    ];
+  const navLinks = [
+    { href: `/${locale}/projects`, label: label('projects', 'Proyectos') },
+    { href: `/${locale}/tools`, label: t('tools') },
+    { href: `/${locale}/workbench`, label: t('workbench') },
+    { href: `/${locale}/pinouts`, label: label('pinouts', 'Pinouts') },
+    { href: `/${locale}/calculators`, label: label('calculators', 'Calculadoras') },
+    { href: `/${locale}/composer`, label: t('sections.composer') },
+    { href: `/${locale}/prints`, label: copy('prints') },
+    { href: `/${locale}/blog`, label: copy('blog') },
+    { href: `/${locale}/stats`, label: copy('stats') },
+    { href: `/${locale}/guestbook`, label: label('guestbook', 'Guestbook') },
+    { href: `/${locale}/colophon`, label: copy('about') },
+  ];
 
-    const socialLinks = [
-        {
-            icon: <GithubOutlined />,
-            href: 'https://github.com/hios-open-systems/web',
-            label: 'GitHub',
-        },
-        {
-            icon: <MailOutlined />,
-            href: 'mailto:devsolutionsar@gmail.com',
-            label: 'Email',
-        },
-    ];
+  const socialLinks = [
+    {
+      icon: <GithubOutlined />,
+      href: 'https://github.com/hios-open-systems/web',
+      label: 'GitHub',
+    },
+    {
+      icon: <MailOutlined />,
+      href: 'mailto:devsolutionsar@gmail.com',
+      label: 'Email',
+    },
+  ];
 
-    return (
-        <AntFooter
-            style={{
-                textAlign: 'center',
-                padding: '48px 24px',
-                background: 'var(--hios-bg-secondary)',
-                borderTop: '1px solid var(--hios-border)',
-            }}
-        >
-            <div>
-                <Space direction="vertical" size="large">
-                    <nav className={styles.nav} aria-label={copy('navigation')}>
-                        {navLinks.map((link) => (
-                            <NextLink key={link.href} href={link.href} prefetch={false} className={styles.navLink}>
-                                {link.label}
-                            </NextLink>
-                        ))}
-                    </nav>
+  return (
+    <AntFooter
+      className={styles.footer}
+      style={{
+        textAlign: 'center',
+        padding: '48px 24px',
+        background: 'var(--hios-bg-secondary)',
+        borderTop: '1px solid var(--hios-border)',
+      }}
+    >
+      <div>
+        <div className={styles.signature}>
+          <span>
+            HIOS<span className={styles.dot}>.</span>
+          </span>
+          <span>
+            HI OPEN SYSTEMS
+            <br />
+            HARDWARE / SOFTWARE
+          </span>
+        </div>
+        <Space direction="vertical" size="large">
+          <nav className={styles.nav} aria-label={copy('navigation')}>
+            {navLinks.map((link) => (
+              <NextLink key={link.href} href={link.href} prefetch={false} className={styles.navLink}>
+                {link.label}
+              </NextLink>
+            ))}
+          </nav>
 
-                    <Space size="large">
-                        {socialLinks.map((link) => (
-                            <div key={link.label}>
-                                <Link
-                                    href={link.href}
-                                    target={link.href.startsWith('http') ? '_blank' : undefined}
-                                    style={{
-                                        color: 'var(--hios-text-muted)',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '6px',
-                                        fontSize: '14px',
-                                        transition: 'color 0.2s ease',
-                                    }}
-                                    aria-label={link.label}
-                                >
-                                    <span style={{ fontSize: '20px' }}>{link.icon}</span>
-                                </Link>
-                            </div>
-                        ))}
-                    </Space>
+          <Space size="large">
+            {socialLinks.map((link) => (
+              <div key={link.label}>
+                <Link
+                  href={link.href}
+                  target={link.href.startsWith('http') ? '_blank' : undefined}
+                  style={{
+                    color: 'var(--hios-text-muted)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    fontSize: '14px',
+                    transition: 'color 0.2s ease',
+                  }}
+                  aria-label={link.label}
+                >
+                  <span style={{ fontSize: '20px' }}>{link.icon}</span>
+                </Link>
+              </div>
+            ))}
+          </Space>
 
-                    <div>
-                        <Text style={{
-                            color: 'var(--hios-text-muted)',
-                            fontSize: '13px',
-                            display: 'block',
-                        }}>
-                            {copy('description')}
-                        </Text>
-                    </div>
-                </Space>
-            </div>
-        </AntFooter>
-    );
+          <div>
+            <Text
+              style={{
+                color: 'var(--hios-text-muted)',
+                fontSize: '13px',
+                display: 'block',
+              }}
+            >
+              {copy('description')}
+            </Text>
+          </div>
+        </Space>
+      </div>
+    </AntFooter>
+  );
 }

@@ -3,9 +3,9 @@
 import Link from 'next/link';
 import { ThunderboltOutlined } from '@ant-design/icons';
 import { useLocale, useTranslations } from 'next-intl';
-import { workbenchTools } from '@/config/workbench';
-import { ToolGrid } from '@/components/workbench/ToolGrid';
-import wb from '@/components/workbench/workbench.module.css';
+import { workbenchTools, type WorkbenchTool } from '@/config/workbench';
+import { getWorkbenchIcon } from '@/components/workbench/workbenchIcons';
+import { ArrowRightOutlined } from '@ant-design/icons';
 import styles from './toolShowcase.module.css';
 
 const ALL_TOOLS = workbenchTools.filter((tool) => !tool.external);
@@ -19,7 +19,7 @@ const HIGHLIGHTED_IDS = [
   'tone-generator',
   'payload',
   'resistor-color-code',
-  'chiptune'
+  'chiptune',
 ];
 
 const TOOLS = ALL_TOOLS.filter((tool) => HIGHLIGHTED_IDS.includes(tool.id));
@@ -32,30 +32,58 @@ const TOOLS = ALL_TOOLS.filter((tool) => HIGHLIGHTED_IDS.includes(tool.id));
 export function ToolShowcase() {
   const locale = useLocale();
   const t = useTranslations('Hero');
+  const lab = useTranslations('Landing');
 
   return (
     <section className={styles.showcase} id="tools">
       <div className={styles.showcaseHeader}>
         <div className={styles.showcaseHeadings}>
-          <span className={styles.showcaseKicker} aria-hidden>02 / Workbench</span>
-          <h2 className={styles.showcaseTitle}>{t('showcaseTitle')}</h2>
-          <p className={styles.showcaseSubtitle}>
-            {ALL_TOOLS.length} {t('showcaseToolCount')} · {t('showcaseSubtitle')}
-          </p>
+          <span className={styles.showcaseKicker} aria-hidden>
+            03 / WORKBENCH
+          </span>
+          <h2 className={styles.showcaseTitle}>{lab('toolsTitle')}</h2>
+          <p className={styles.showcaseSubtitle}>{lab('toolsSubtitle')}</p>
         </div>
-        <Link href={`/${locale}?tool=random`} className={wb.heroPrimaryCta}>
+        <Link href={`/${locale}?tool=random`} className={styles.random}>
           {t('showcaseRandomCta')} <ThunderboltOutlined />
         </Link>
       </div>
-      <ToolGrid tools={TOOLS} />
+      <div className={styles.tools}>
+        {TOOLS.map((tool, index) => (
+          <ShowcaseTool key={tool.id} tool={tool} index={index} />
+        ))}
+      </div>
       <div style={{ textAlign: 'center', marginTop: 24 }}>
         <Link
           href={`/${locale}/workbench`}
-          style={{ color: 'var(--accent-text)', fontWeight: 500, textDecoration: 'none', fontSize: 15 }}
+          style={{
+            color: 'var(--accent-text)',
+            fontWeight: 500,
+            textDecoration: 'none',
+            fontSize: 15,
+          }}
         >
           {t('showcaseSeeAll')} ({ALL_TOOLS.length}) →
         </Link>
       </div>
     </section>
+  );
+}
+
+function ShowcaseTool({ tool, index }: { tool: WorkbenchTool; index: number }) {
+  const locale = useLocale();
+  const packs = useTranslations('Workbench.packs');
+  return (
+    <Link href={`/${locale}${tool.href}`} className={styles.tool}>
+      <span className={styles.toolIndex}>{String(index + 1).padStart(2, '0')}</span>
+      <span className={styles.toolIcon} style={{ color: tool.accent }}>
+        {getWorkbenchIcon(tool.icon)}
+      </span>
+      <span className={styles.toolCopy}>
+        <strong>{packs(`${tool.id}.title`)}</strong>
+        <span>{packs(`${tool.id}.description`)}</span>
+      </span>
+      <ArrowRightOutlined />
+    </Link>
   );
 }

@@ -1,4 +1,5 @@
 'use client';
+import { PageIntro } from '@/components/ui/PageIntro';
 
 import React, { useEffect } from 'react';
 import Link from 'next/link';
@@ -33,20 +34,22 @@ export function WorkbenchLanding() {
 
   return (
     <div className={styles.page}>
-      <header className={styles.landingHeaderCompact}>
-        <div className={styles.landingHeaderRow}>
-          <div className={styles.landingHeaderLeft}>
-            <h1 className={styles.pageTitleCompact}>{t('landing.title')}</h1>
-            <span className={styles.pageMetaInline}>
-              {visibleTools.length} {t('sectionToolCount')}
-            </span>
-          </div>
+      <PageIntro
+        eyebrow="HIOS / WORKBENCH"
+        title={t('landing.title')}
+        description={t('landing.subtitle')}
+        area="development"
+        meta={
+          <span>
+            {visibleTools.length} {t('sectionToolCount')}
+          </span>
+        }
+        actions={
           <Link href={randomHref} className={styles.heroPrimaryCta}>
             {t('landing.randomCta')} <ThunderboltOutlined />
           </Link>
-        </div>
-        <p className={styles.pageSubtitle}>{t('landing.subtitle')}</p>
-      </header>
+        }
+      />
 
       <WorkspaceAccess />
       <DiscoveryCatalog />

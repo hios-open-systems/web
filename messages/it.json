@@ -3051,5 +3051,51 @@
             "connect": "Controlla alimentazione e cablaggio PCM5102 prima di collegare la USB di programmazione.",
             "success": "Dopo il caricamento apri il monitor seriale a 115200 e cerca HIOS BTDAC tramite Bluetooth. Se si connette senza audio, controlla SCK, XSMT e I2S nella guida completa. Android si compila dal codice; qui non sono disponibili APK o binari firmware."
         }
+    },
+    "Landing": {
+        "eyebrow": "HIOS · Elettronica e software open source",
+        "title": "Tra cavi",
+        "titleAccent": "e codice.",
+        "subtitle": "Qui condivido i progetti che sto costruendo: un PAD programmabile, un ricevitore audio Bluetooth e prove con ESP32. Ci sono anche strumenti web per i tuoi progetti.",
+        "tryIt": "Cambia la forma d’onda e la frequenza",
+        "manifesto": "Progetti, strumenti e note di sviluppo.",
+        "scroll": "Esplora il sito",
+        "directory": "Per argomento",
+        "exploreTitle": "Cosa trovi qui",
+        "exploreSubtitle": "Elettronica, audio, dati e IA locale. Ogni area raccoglie i suoi strumenti e progetti.",
+        "projectsTitle": "Progetti con ESP32",
+        "projectsSubtitle": "Foto dei prototipi, collegamenti, firmware e istruzioni di montaggio.",
+        "projectCta": "Vedi il progetto",
+        "toolsTitle": "Strumenti nel browser",
+        "toolsSubtitle": "Per controllare dati, calcolare componenti o provare suoni. Scegli uno strumento e aprilo.",
+        "activities": {
+            "development": "Modifica JSON, genera tipi TypeScript e controlla la struttura dei tuoi dati.",
+            "maker": "Consulta i collegamenti, calcola resistenze e scopri l’hardware del PAD.",
+            "audio": "Un accordatore, un metronomo e un compositore chiptune per sperimentare con il suono.",
+            "ai": "Stima memoria e token e collega un ESP32 a un modello sulla tua rete locale.",
+            "knowledge": "Note di sviluppo, un editor Markdown e file per la stampa 3D.",
+            "software": "Firmware del PAD e del DAC, con le relative applicazioni e istruzioni d’uso."
+        },
+        "signal": {
+            "simulation": "SIMULAZIONE",
+            "title": "Visualizzatore di onde",
+            "pause": "Pausa animazione",
+            "resume": "Riprendi animazione",
+            "shape": "Forma d’onda",
+            "sine": "Sinusoidale",
+            "square": "Quadra",
+            "triangle": "Triangolare",
+            "frequency": "Frequenza",
+            "hint": "Solo visivo · senza audio",
+            "open": "Apri generatore"
+        }
+    },
+    "SignalScope": {
+        "title": "Visualizzatore del segnale",
+        "active": "In riproduzione",
+        "idle": "Nessun segnale",
+        "pause": "Pausa visualizzazione",
+        "resume": "Riprendi visualizzazione",
+        "hint": "Mostra l’audio generato nel browser, dopo il controllo del volume. Ogni finestra copre 10 ms. Mettere in pausa il visualizzatore non interrompe il suono."
     }
 }

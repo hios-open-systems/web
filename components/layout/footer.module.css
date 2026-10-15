@@ -3,19 +3,56 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 8px 22px;
-  max-width: 720px;
+  max-width: 1000px;
   margin: 0 auto;
 }
 
 .navLink {
   display: inline-flex;
   align-items: center;
-  min-height: 32px;
+  min-height: 44px;
   font-size: 13px;
   font-weight: 500;
   text-decoration: none;
   color: var(--hios-text-secondary);
   transition: color 0.18s ease;
+}
+.footer {
+  position: relative;
+  overflow: hidden;
+}
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 12%;
+  width: 76%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+.signature {
+  max-width: 1000px;
+  margin: 0 auto 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  text-align: left;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--hios-border);
+}
+.signature > :first-child {
+  font: 800 clamp(48px, 9vw, 96px)/1 var(--font-stack-display);
+  letter-spacing: -0.07em;
+  color: var(--hios-text);
+}
+.dot {
+  color: var(--accent-text);
+}
+.signature > :last-child {
+  font: 10px/1.9 var(--font-stack-mono);
+  color: var(--hios-text-secondary);
+  letter-spacing: 0.12em;
 }
 
 .navLink:hover {

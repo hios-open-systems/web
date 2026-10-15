@@ -1,4 +1,5 @@
 'use client';
+import { PageIntro } from '@/components/ui/PageIntro';
 
 import Link from 'next/link';
 import { ArrowLeftOutlined } from '@ant-design/icons';
@@ -36,12 +37,14 @@ export function WiringGuideHeader() {
       <Link href={`/${locale}/pinouts`} className={styles.backLink}>
         <ArrowLeftOutlined /> {t('backToPinouts')}
       </Link>
-      <span className={styles.eyebrow}>{t('eyebrow')}</span>
-      <div className={styles.titleRow}>
-        <h1 className={styles.title}>{meta.title}</h1>
-        <span className={styles.rev}>rev {meta.rev}</span>
-      </div>
-      <p className={styles.subtitle}>{meta.subtitle}</p>
+      <PageIntro
+        eyebrow={t('eyebrow')}
+        title={meta.title}
+        description={meta.subtitle}
+        area="maker"
+        compact
+        meta={<span className={styles.rev}>rev {meta.rev}</span>}
+      />
       <p className={styles.source}>
         {meta.mcu} · <code className={styles.mono}>{meta.source}</code>
       </p>

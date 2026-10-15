@@ -1,3 +1,4 @@
+import { PageIntro } from '@/components/ui/PageIntro';
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { softwareProjects, softwarePath, type SoftwareProjectSlug } from '@/config/project-software';
@@ -15,24 +16,38 @@ export async function ProjectSoftwarePage({ locale, slug }: { locale: string; sl
   const path = softwarePath(slug);
   return (
     <main className={styles.page}>
-      <PageTrail locale={locale} inContent items={[
-        { name: header('home'), path: '' }, { name: header('projects'), path: '/projects' },
-        { name: project.name, path: `/projects/${slug}` }, { name: labels('label'), path },
-      ]} />
+      <PageTrail
+        locale={locale}
+        inContent
+        items={[
+          { name: header('home'), path: '' },
+          { name: header('projects'), path: '/projects' },
+          { name: project.name, path: `/projects/${slug}` },
+          { name: labels('label'), path },
+        ]}
+      />
       <JsonLd data={createProjectPageData(locale, path, t('title'), t('description'))} />
-      <header className={styles.hero}>
-        <p className={styles.eyebrow}>{project.name} / {labels('label')}</p>
-        <h1>{t('title')}</h1>
-        <p className={styles.lead}>{t('description')}</p>
+      <PageIntro
+        eyebrow={project.name + ' / ' + labels('label')}
+        title={t('title')}
+        description={t('description')}
+        area="software"
+      >
         <nav className={styles.links} aria-label={labels('sections')}>
-          {project.sections.map((section) => <a key={section} href={`#${section}`}>{t(`${section}.title`)}</a>)}
+          {project.sections.map((section) => (
+            <a key={section} href={'#' + section}>
+              {t(section + '.title')}
+            </a>
+          ))}
         </nav>
-      </header>
+      </PageIntro>
       <SoftwareShowcase locale={locale} slug={slug} />
       <div className={styles.grid}>
         {project.sections.map((section, index) => (
           <section className={styles.card} id={section} key={section}>
-            <span className={styles.eyebrow} aria-hidden="true">0{index + 1}</span>
+            <span className={styles.eyebrow} aria-hidden="true">
+              0{index + 1}
+            </span>
             <h2>{t(`${section}.title`)}</h2>
             <p>{t(`${section}.body`)}</p>
           </section>

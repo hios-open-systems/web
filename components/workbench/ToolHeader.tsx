@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useContext } from 'react';
-import { Space, Typography } from 'antd';
+import { Space } from 'antd';
+import { PageIntro } from '@/components/ui/PageIntro';
+import { activityFor } from '@/lib/workbench/discovery';
 import { LocalityBadge, type Locality } from './LocalityBadge';
 import { ToolGuide } from './ToolGuide';
 import { FeedbackButton } from '@/components/feedback/FeedbackButton';
@@ -10,8 +12,6 @@ import styles from './workbench.module.css';
 import { usePathname } from 'next/navigation';
 import { workbenchTools } from '@/config/workbench';
 import { SaveToSpace } from './SaveToSpace';
-
-const { Title, Paragraph } = Typography;
 
 interface ToolHeaderProps {
   eyebrow: string;
@@ -29,35 +29,34 @@ interface ToolHeaderProps {
  * tools visually consistent and lets the catalog grow without each tool
  * hand-rolling its own header slab.
  */
-export function ToolHeader({
-  eyebrow,
-  title,
-  description,
-  locality,
-  actions,
-  guideId,
-}: ToolHeaderProps) {
+export function ToolHeader({ eyebrow, title, description, locality, actions, guideId }: ToolHeaderProps) {
   const headerRendered = useContext(ToolHeaderRenderedContext);
   const pathname = usePathname();
-  const tool = workbenchTools.find(item => pathname.endsWith(item.href));
+  const tool = workbenchTools.find((item) => pathname.endsWith(item.href));
   if (headerRendered) {
     return actions ? <div className={styles.toolHeaderActions}>{actions}</div> : null;
   }
   return (
-    <header className={styles.toolHeader}>
-      <div className={styles.toolHeaderTopRow}>
-        <span className={styles.toolHeaderEyebrow}>{eyebrow}</span>
-        <Space size={8}>
+    <PageIntro
+      compact
+      eyebrow={eyebrow}
+      title={title}
+      description={description}
+      area={tool ? activityFor(tool) : 'development'}
+      meta={
+        <Space size={8} wrap>
           <LocalityBadge kind={locality} />
           <FeedbackButton />
         </Space>
-      </div>
-      <Title level={1} className={styles.toolHeaderTitle}>
-        {title}
-      </Title>
-      <Paragraph className={styles.toolHeaderDescription}>{description}</Paragraph>
-      <div className={styles.toolHeaderActions}>{tool ? <SaveToSpace resourceId={`tool:${tool.id}`} /> : null}{actions}</div>
+      }
+      actions={
+        <>
+          {tool ? <SaveToSpace resourceId={`tool:${tool.id}`} /> : null}
+          {actions}
+        </>
+      }
+    >
       {guideId ? <ToolGuide guideId={guideId} /> : null}
-    </header>
+    </PageIntro>
   );
 }

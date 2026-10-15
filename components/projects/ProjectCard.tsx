@@ -1,197 +1,71 @@
 'use client';
-
-import React from 'react';
-import { Card, Typography, Tag } from 'antd';
-import Image from 'next/image';
 import Link from 'next/link';
-import { BookOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import Image from 'next/image';
+import { ArrowRightOutlined, ArrowUpOutlined } from '@ant-design/icons';
 import { useLocale, useTranslations } from 'next-intl';
-import { Project, statusConfig } from '@/config/projects';
-import { colors } from '@/config/theme';
+import type { Project } from '@/config/projects';
+import styles from './projectCard.module.css';
 
-const { Title, Paragraph, Text } = Typography;
-
-interface ProjectCardProps {
-    project: Project;
-    index?: number;
+export function ProjectCard({
+  project,
+  index = 0,
+  details = false,
+}: {
+  project: Project;
+  index?: number;
+  details?: boolean;
+}) {
+  const t = useTranslations('Projects');
+  const lab = useTranslations('Landing');
+  const locale = useLocale();
+  return (
+    <Link data-reveal className={styles.project} href={`/${locale}/projects/${project.slug}`}>
+      <ProjectArtwork project={project} index={index} />
+      <div className={styles.projectInfo}>
+        <div>
+          <h3>{project.name}</h3>
+          <p>{t(`cards.${project.slug}.description`)}</p>
+        </div>
+        <span className={styles.projectArrow}>
+          <ArrowUpOutlined rotate={45} />
+        </span>
+      </div>
+      {details && (
+        <div className={styles.technologies}>
+          {(t.raw('cards.' + project.slug + '.technologies') as string[]).map((item) => (
+            <span key={item}>{item}</span>
+          ))}
+        </div>
+      )}
+      <span className={styles.projectCta}>
+        {lab('projectCta')} <ArrowRightOutlined />
+      </span>
+    </Link>
+  );
 }
 
-export function ProjectCard({ project, index = 0 }: ProjectCardProps) {
-    const locale = useLocale();
-    const t = useTranslations('Projects');
-    const technologies = t.raw(`cards.${project.slug}.technologies`) as string[];
-
-    const status = {
-        ...statusConfig[project.status],
-        label: t(`status_${project.status}`),
-        icon: project.status === 'prototype' ? <CheckCircleOutlined style={{ marginRight: 4 }} /> : undefined,
-    };
-
-    const taglineKey = `tagline_${project.slug}`;
-
-    return (
-        <div className="card-hover-lift" style={{ height: '100%' }}>
-            <Link href={`/${locale}/projects/${project.slug}`} prefetch={false} style={{ textDecoration: 'none', display: 'block', height: '100%' }}>
-                <Card
-                    hoverable
-                    className="glass-card"
-                    style={{
-                        height: '100%',
-                        border: '1px solid var(--hios-border)',
-                        borderRadius: '16px',
-                        overflow: 'hidden',
-                        transition: 'box-shadow 0.3s ease, border-color 0.3s ease',
-                    }}
-                    styles={{
-                        body: {
-                            padding: '24px',
-                        }
-                    }}
-                    cover={
-                        project.image ? (
-                            <div style={{
-                                position: 'relative',
-                                width: '100%',
-                                aspectRatio: '16/10',
-                                overflow: 'hidden',
-                                borderBottom: '1px solid var(--hios-border)',
-                            }}>
-                                <Image
-                                    src={project.image}
-                                    alt={project.name}
-                                    fill
-                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
-                                    quality={85}
-                                    priority={index === 0}
-                                    style={{
-                                        objectFit: 'cover',
-                                        transition: 'transform 0.5s ease',
-                                    }}
-                                    className="image-zoom-hover"
-                                />
-                            </div>
-                        ) : (
-                            <div style={{
-                                width: '100%',
-                                aspectRatio: '16/10',
-                                background:
-                                    'linear-gradient(to right, var(--hios-grid-line) 1px, transparent 1px), ' +
-                                    'linear-gradient(to bottom, var(--hios-grid-line) 1px, transparent 1px), ' +
-                                    'var(--hios-bg-secondary)',
-                                backgroundSize: '24px 24px, 24px 24px, auto',
-                                borderBottom: '1px solid var(--hios-border)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                flexDirection: 'column',
-                                gap: '8px',
-                            }}>
-                                <Text
-                                    className="tech-label"
-                                    style={{ color: 'var(--hios-text-muted)' }}
-                                >
-                                    {t('in_development')}
-                                </Text>
-                            </div>
-                        )
-                    }
-                >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
-                        <Title
-                            level={3}
-                            style={{
-                                margin: 0,
-                                color: 'var(--hios-text)',
-                                fontSize: '20px',
-                                fontWeight: 700,
-                            }}
-                        >
-                            {project.name}
-                        </Title>
-                        <Tag
-                            color={status.color}
-                            style={{
-                                margin: 0,
-                                fontFamily: 'var(--font-stack-mono)',
-                                fontSize: '11px',
-                                fontWeight: 500,
-                                textTransform: 'uppercase',
-                                letterSpacing: '0.08em',
-                                display: 'flex',
-                                alignItems: 'center',
-                            }}
-                            className={status.glow ? 'pulse-subtle' : ''}
-                        >
-                            {status.icon}
-                            {status.label}
-                        </Tag>
-                    </div>
-
-                    {t.has(taglineKey) && (
-                        <Paragraph
-                            style={{
-                                color: colors.accentText,
-                                marginBottom: '12px',
-                                fontFamily: 'var(--font-stack-mono)',
-                                fontSize: '13px',
-                            }}
-                        >
-                            {t(taglineKey)}
-                        </Paragraph>
-                    )}
-
-                    <Paragraph
-                        style={{
-                            color: 'var(--hios-text-secondary)',
-                            marginBottom: project.learnings ? '16px' : '8px',
-                            fontSize: '15px',
-                            lineHeight: 1.6,
-                        }}
-                    >
-                        {t(`cards.${project.slug}.description`)}
-                    </Paragraph>
-
-                    {project.stats && (
-                        <Text style={{ display: 'block', color: 'var(--hios-text-muted)', fontSize: 12, marginBottom: 16 }}>
-                            <BookOutlined /> {t('cardResources')}
-                        </Text>
-                    )}
-
-                    {technologies.length > 0 && (
-                        <div>
-                            <Text
-                                className="tech-label"
-                                style={{
-                                    color: 'var(--hios-text-muted)',
-                                    display: 'block',
-                                    marginBottom: '8px',
-                                }}
-                            >
-                                {t('learnings')}
-                            </Text>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                                {technologies.map((learning) => (
-                                    <Tag
-                                        key={learning}
-                                        style={{
-                                            margin: 0,
-                                            background: 'var(--hios-bg-secondary)',
-                                            border: '1px solid var(--hios-border)',
-                                            color: 'var(--hios-text-secondary)',
-                                            fontFamily: 'var(--font-stack-mono)',
-                                            fontSize: '11px',
-                                            borderRadius: '4px',
-                                            cursor: 'default',
-                                        }}
-                                    >
-                                        {learning}
-                                    </Tag>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                </Card>
-            </Link>
+function ProjectArtwork({ project, index }: { project: Project; index: number }) {
+  const t = useTranslations('Projects');
+  return (
+    <div className={styles.projectImage}>
+      {project.slug === 'hios-node-ai' ? (
+        <div className={styles.projectDiagram} aria-hidden="true">
+          <span>ESP32</span>
+          <span>↔</span>
+          <span>OLLAMA</span>
+          <small>LOCAL NETWORK / HTTP / OLED</small>
         </div>
-    );
+      ) : (
+        <Image
+          src={project.image}
+          alt={project.name}
+          fill
+          sizes="(max-width: 700px) 100vw, 600px"
+          style={{ objectFit: 'cover' }}
+        />
+      )}
+      <span className={styles.projectNumber}>HI—0{index + 1}</span>
+      <span className={styles.projectStatus}>{t(`status_${project.status}`)}</span>
+    </div>
+  );
 }

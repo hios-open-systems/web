@@ -8,7 +8,14 @@ import workbenchStyles from '../workbench.module.css';
 import styles from './audioTools.module.css';
 import { SignalGeneratorControls } from './SignalGeneratorControls';
 import { SignalGeneratorReadout } from './SignalGeneratorReadout';
-import { createNoiseBuffer, getChannelPan, type ChannelTarget, type NoiseKind, type SignalMode } from './signalGeneratorCore';
+import { SignalScope } from './SignalScope';
+import {
+  createNoiseBuffer,
+  getChannelPan,
+  type ChannelTarget,
+  type NoiseKind,
+  type SignalMode,
+} from './signalGeneratorCore';
 
 export function ToneGeneratorTool() {
   const [mode, setMode] = useState<SignalMode>('tone');
@@ -21,6 +28,7 @@ export function ToneGeneratorTool() {
   const [sweepDuration, setSweepDuration] = useState(8);
   const [channel, setChannel] = useState<ChannelTarget>('left');
   const [playing, setPlaying] = useState(false);
+  const [analyser, setAnalyser] = useState<AnalyserNode | null>(null);
   const contextRef = useRef<AudioContext | null>(null);
   const sourceRef = useRef<AudioScheduledSourceNode | null>(null);
   const oscillatorRef = useRef<OscillatorNode | null>(null);
@@ -44,6 +52,7 @@ export function ToneGeneratorTool() {
     gainRef.current = null;
     pannerRef.current = null;
     setPlaying(false);
+    setAnalyser(null);
   }, []);
 
   useEffect(() => {
@@ -67,7 +76,10 @@ export function ToneGeneratorTool() {
   const connect = (source: AudioScheduledSourceNode, gainNode: GainNode, context: AudioContext) => {
     const panner = context.createStereoPanner();
     panner.pan.value = mode === 'channel' ? getChannelPan(channel) : 0;
-    source.connect(gainNode).connect(panner).connect(context.destination);
+    const scope = context.createAnalyser();
+    scope.fftSize = 2048;
+    source.connect(gainNode).connect(scope).connect(panner).connect(context.destination);
+    setAnalyser(scope);
     pannerRef.current = panner;
   };
 
@@ -109,7 +121,20 @@ export function ToneGeneratorTool() {
 
   return (
     <Space direction="vertical" size={20} className={workbenchStyles.stackFull}>
-      <ToolPresetBinding toolId="tone-generator" fields={{ channel: textField(channel, setChannel, ['left','center','right'], false), mode: textField(mode, setMode, ['tone','noise','sweep'], false), frequency: numberField(frequency, setFrequency, 20, 20000), gain: numberField(gain, setGain, 0, 1), waveform: textField(waveform, setWaveform, ['sine','square','sawtooth','triangle'], false), noise: textField(noise, setNoise, ['pink','white','brown'], false), sweepStart: numberField(sweepStart, setSweepStart, 20, 20000), sweepEnd: numberField(sweepEnd, setSweepEnd, 20, 20000), sweepDuration: numberField(sweepDuration, setSweepDuration, 1, 120) }} />
+      <ToolPresetBinding
+        toolId="tone-generator"
+        fields={{
+          channel: textField(channel, setChannel, ['left', 'center', 'right'], false),
+          mode: textField(mode, setMode, ['tone', 'noise', 'sweep'], false),
+          frequency: numberField(frequency, setFrequency, 20, 20000),
+          gain: numberField(gain, setGain, 0, 1),
+          waveform: textField(waveform, setWaveform, ['sine', 'square', 'sawtooth', 'triangle'], false),
+          noise: textField(noise, setNoise, ['pink', 'white', 'brown'], false),
+          sweepStart: numberField(sweepStart, setSweepStart, 20, 20000),
+          sweepEnd: numberField(sweepEnd, setSweepEnd, 20, 20000),
+          sweepDuration: numberField(sweepDuration, setSweepDuration, 1, 120),
+        }}
+      />
       <ToolHeader
         eyebrow="Audio Lab"
         title="Generador de señal"
@@ -141,19 +166,22 @@ export function ToneGeneratorTool() {
             onChannelChange={setChannel}
           />
         </Card>
-        <Card className={`${workbenchStyles.sectionCard} ${styles.readoutCard}`}>
-          <SignalGeneratorReadout
-            mode={mode}
-            frequency={frequency}
-            gain={gain}
-            waveform={waveform}
-            noise={noise}
-            sweepStart={sweepStart}
-            sweepEnd={sweepEnd}
-            sweepDuration={sweepDuration}
-            channel={channel}
-          />
-        </Card>
+        <div style={{ display: 'grid', gap: 20, minWidth: 0 }}>
+          <SignalScope analyser={analyser} />
+          <Card className={`${workbenchStyles.sectionCard} ${styles.readoutCard}`}>
+            <SignalGeneratorReadout
+              mode={mode}
+              frequency={frequency}
+              gain={gain}
+              waveform={waveform}
+              noise={noise}
+              sweepStart={sweepStart}
+              sweepEnd={sweepEnd}
+              sweepDuration={sweepDuration}
+              channel={channel}
+            />
+          </Card>
+        </div>
       </div>
     </Space>
   );
