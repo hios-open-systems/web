@@ -1,11 +1,20 @@
 'use client';
 
 import React from 'react';
+import { ProjectDetailHeader } from '@/components/projects/ProjectDetailHeader';
 import { Typography, Tag, Row, Col, Card, Button, Space, Empty } from 'antd';
-import { ArrowLeftOutlined, DownloadOutlined, GithubOutlined, DoubleRightOutlined, EyeOutlined, LinkOutlined, FileOutlined, PrinterOutlined } from '@ant-design/icons';
+import {
+  ArrowLeftOutlined,
+  DownloadOutlined,
+  GithubOutlined,
+  DoubleRightOutlined,
+  EyeOutlined,
+  LinkOutlined,
+  FileOutlined,
+  PrinterOutlined,
+} from '@ant-design/icons';
 import { useTheme } from '@/lib/ThemeContext';
 import { ProjectMeta } from '@/lib/projects';
-import { WIRING_GUIDE_SLUGS } from '@/config/pinouts/guides';
 import { getPrintsByProject } from '@/config/prints';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
@@ -17,645 +26,631 @@ import { ProjectComponents } from '@/components/projects/ProjectComponents';
 const { Title, Paragraph, Text } = Typography;
 
 interface ProjectDetailClientProps {
-    project: ProjectMeta & { readme: string; gallery?: string[] };
-    slug: string;
-    gettingStarted?: React.ReactNode;
+  project: ProjectMeta & { readme: string; gallery?: string[] };
+  slug: string;
+  gettingStarted?: React.ReactNode;
 }
-
-
 
 export function ProjectDetailClient({ project, slug, gettingStarted }: ProjectDetailClientProps) {
-    const { mode } = useTheme();
-    const locale = useLocale();
-    const t = useTranslations('ProjectDetail');
-    const startLabels = useTranslations('ProjectGettingStarted');
-    const accentColor = 'var(--accent-text)';
-    const bgColor = 'var(--hios-bg)';
-    const textColor = 'var(--hios-text)';
-    const secondaryColor = 'var(--hios-text-secondary)';
-    const mutedColor = 'var(--hios-text-muted)';
-    const cardBorder = '1px solid var(--hios-border)';
+  const { mode } = useTheme();
+  const locale = useLocale();
+  const t = useTranslations('ProjectDetail');
+  const accentColor = 'var(--accent-text)';
+  const bgColor = 'var(--hios-bg)';
+  const textColor = 'var(--hios-text)';
+  const secondaryColor = 'var(--hios-text-secondary)';
+  const mutedColor = 'var(--hios-text-muted)';
+  const cardBorder = '1px solid var(--hios-border)';
 
-    const viewerByKind: Record<string, (assetPath: string) => string> = {
-        '3d': (assetPath) => `https://3dviewer.net/#model=${encodeURIComponent(`${window.location.origin}${assetPath}`)}`,
-        'pcb': (assetPath) => `https://kicanvas.org/?url=${encodeURIComponent(`${window.location.origin}${assetPath}`)}`,
-    };
+  const viewerByKind: Record<string, (assetPath: string) => string> = {
+    '3d': (assetPath) => `https://3dviewer.net/#model=${encodeURIComponent(`${window.location.origin}${assetPath}`)}`,
+    pcb: (assetPath) => `https://kicanvas.org/?url=${encodeURIComponent(`${window.location.origin}${assetPath}`)}`,
+  };
 
-    const groupedAssets = project.technicalAssets?.reduce<Record<string, typeof project.technicalAssets>>((acc, asset) => {
-        if (!acc[asset.kind]) acc[asset.kind] = [];
-        acc[asset.kind].push(asset);
-        return acc;
+  const groupedAssets =
+    project.technicalAssets?.reduce<Record<string, typeof project.technicalAssets>>((acc, asset) => {
+      if (!acc[asset.kind]) acc[asset.kind] = [];
+      acc[asset.kind].push(asset);
+      return acc;
     }, {}) || {};
 
-    const kindLabel: Record<string, string> = {
-        '3d': '3D / STL',
-        cad: 'CAD',
-        pcb: 'PCB / KiCad',
-        doc: t('asset_documentation'),
-        firmware: t('asset_firmware'),
-        data: t('asset_data'),
-    };
+  const kindLabel: Record<string, string> = {
+    '3d': '3D / STL',
+    cad: 'CAD',
+    pcb: 'PCB / KiCad',
+    doc: t('asset_documentation'),
+    firmware: t('asset_firmware'),
+    data: t('asset_data'),
+  };
 
-    const tProjects = useTranslations('Projects');
+  const tProjects = useTranslations('Projects');
 
-    // Piezas 3D imprimibles asociadas a este proyecto (config/prints.ts).
-    const projectPrints = getPrintsByProject(slug);
+  // Piezas 3D imprimibles asociadas a este proyecto (config/prints.ts).
+  const projectPrints = getPrintsByProject(slug);
 
-    // Define the Story interface locally
-    interface Story {
-        moment: string;
-        struggle?: string;
-        whatWorks?: string[];
-        whatDoesnt?: string[];
-        resources?: { name: string; url: string }[];
-        bom?: { component: string; qty: number; notes?: string }[];
-        specs?: { label: string; value: string }[];
-        futureFeatures?: string[];
+  // Define the Story interface locally
+  interface Story {
+    moment: string;
+    struggle?: string;
+    whatWorks?: string[];
+    whatDoesnt?: string[];
+    resources?: { name: string; url: string }[];
+    bom?: { component: string; qty: number; notes?: string }[];
+    specs?: { label: string; value: string }[];
+    futureFeatures?: string[];
+  }
+
+  // Try to get the story from translations.
+  // We check if the key exists by seeing if t.raw returns an object, not a string (key fallback).
+  let story: Story | null = null;
+  try {
+    const rawStory = tProjects.raw(slug);
+    if (rawStory && typeof rawStory === 'object' && 'moment' in rawStory) {
+      story = rawStory as Story;
     }
+  } catch {
+    // Fallback for missing translation keys
+    story = null;
+  }
 
-    // Try to get the story from translations.
-    // We check if the key exists by seeing if t.raw returns an object, not a string (key fallback).
-    let story: Story | null = null;
-    try {
-        const rawStory = tProjects.raw(slug);
-        if (rawStory && typeof rawStory === 'object' && 'moment' in rawStory) {
-            story = rawStory as Story;
-        }
-    } catch {
-        // Fallback for missing translation keys
-        story = null;
-    }
+  return (
+    <div style={{ background: bgColor, minHeight: '100vh', paddingBottom: '80px' }}>
+      {/* Header / Back navigation */}
+      <nav
+        style={{
+          maxWidth: 900,
+          margin: '0 auto',
+          padding: '24px',
+          display: 'flex',
+          alignItems: 'center',
+        }}
+      >
+        <Link href={`/${locale}/projects`} passHref>
+          <Button type="text" icon={<ArrowLeftOutlined />} style={{ color: secondaryColor }}>
+            {t('back')}
+          </Button>
+        </Link>
+      </nav>
 
-    return (
-        <div style={{ background: bgColor, minHeight: '100vh', paddingBottom: '80px' }}>
-            {/* Header / Back navigation */}
-            <nav style={{
-                maxWidth: 900,
-                margin: '0 auto',
-                padding: '24px',
-                display: 'flex',
-                alignItems: 'center',
-            }}>
-                <Link href={`/${locale}/projects`} passHref>
-                    <Button
-                        type="text"
-                        icon={<ArrowLeftOutlined />}
-                        style={{ color: secondaryColor }}
-                    >
-                        {t('back')}
-                    </Button>
-                </Link>
-            </nav>
+      <section style={{ maxWidth: 1000, margin: '0 auto', padding: '0 24px 24px' }}>
+        <ProjectDetailHeader project={project} slug={slug} hasGuide={!!gettingStarted} />
+      </section>
 
-            {/* Hero Section */}
-            <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 60px' }}>
-                <div>
-                    <Tag
-                        color={project.status === 'prototype' ? 'green' : 'orange'}
-                        style={{
-                            marginBottom: '16px',
-                            borderRadius: '4px',
-                            fontFamily: 'var(--font-stack-mono)',
-                            fontSize: '11px',
-                            fontWeight: 500,
-                            letterSpacing: '0.08em',
-                        }}
-                    >
-                        {tProjects(`status_${project.status}`)}
-                    </Tag>
-                    <Title level={1} style={{
-                        fontSize: 'clamp(2.5rem, 6vw, 3.5rem)',
-                        color: textColor,
-                        marginBottom: '16px',
-                        fontWeight: 700,
-                    }}>
-                        {project.name}
-                    </Title>
-                    <Paragraph style={{ fontSize: '1.25rem', color: secondaryColor, maxWidth: 650, lineHeight: 1.6 }}>
-                        {project.description}
-                    </Paragraph>
+      {/* Gallery — los visuales primero */}
+      {project.gallery && project.gallery.length > 0 && (
+        <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 48px' }}>
+          <ImageCarousel images={project.gallery} alt={project.name} />
+        </section>
+      )}
 
-                    <Space size="middle" style={{ marginTop: '24px' }} wrap>
-                        {gettingStarted && <>
-                            <Button href="#usage">{startLabels('usage')}</Button>
-                            <Button href="#flash" type="primary">{startLabels('flash')}</Button>
-                        </>}
-                        {project.files.map((file) => (
-                            <Button key={file.name} type="primary" icon={<DownloadOutlined />} href={file.path} target="_blank">
-                                {file.name}
-                            </Button>
-                        ))}
-                        {WIRING_GUIDE_SLUGS.includes(slug) && (
-                            <Link href={`/${locale}/pinouts/${slug}`}>
-                                <Button icon={<LinkOutlined />} style={{ borderColor: accentColor, color: accentColor }}>
-                                    {t('wiring_guide')}
-                                </Button>
-                            </Link>
-                        )}
-                    </Space>
-                </div>
-            </section>
+      {gettingStarted}
 
-            {/* Gallery — los visuales primero */}
-            {project.gallery && project.gallery.length > 0 && (
-                <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 48px' }}>
-                    <ImageCarousel images={project.gallery} alt={project.name} />
-                </section>
-            )}
-
-            {gettingStarted}
-
-            {/* Story / Breakthrough - THE MAGIC */}
-            {story && (
-                <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 60px' }}>
-                    <div>
-                        <Card
-                            style={{
-                                background: 'var(--hios-bg-secondary)',
-                                border: cardBorder,
-                                borderRadius: '16px',
-                                overflow: 'hidden'
-                            }}
-                            styles={{ body: { padding: '40px' } }}
-                        >
-                            <Text
-                                className="tech-label"
-                                style={{
-                                    color: accentColor,
-                                    display: 'block',
-                                    marginBottom: '16px'
-                                }}
-                            >
-                                {t('moment')}
-                            </Text>
-                            <Paragraph style={{ color: textColor, marginBottom: '24px', fontSize: '20px', lineHeight: 1.5 }}>
-                                {story.moment}
-                            </Paragraph>
-                            {story.struggle && (
-                                <Paragraph style={{ color: secondaryColor, fontSize: '16px', lineHeight: 1.8 }}>
-                                    {story.struggle}
-                                </Paragraph>
-                            )}
-                        </Card>
-                    </div>
-                </section>
-            )}
-
-            {/* Main Content (Markdown README) */}
-            <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 60px' }}>
-                <div className="markdown-content" style={{ color: textColor }}>
-                    <ReactMarkdown
-                        remarkPlugins={[remarkGfm]}
-                        components={{
-                            h2: ({ children }) => (
-                                <Title level={2} style={{ color: textColor, marginTop: '48px', marginBottom: '24px', borderBottom: cardBorder, paddingBottom: '12px' }}>
-                                    {children}
-                                </Title>
-                            ),
-                            h3: ({ children }) => (
-                                <Title level={3} style={{ color: textColor, marginTop: '32px', marginBottom: '16px' }}>
-                                    {children}
-                                </Title>
-                            ),
-                            p: ({ children }) => (
-                                <Paragraph style={{ color: secondaryColor, fontSize: '16px', lineHeight: 1.8, marginBottom: '20px' }}>
-                                    {children}
-                                </Paragraph>
-                            ),
-                            li: ({ children }) => (
-                                <li style={{ color: secondaryColor, fontSize: '16px', lineHeight: 1.8, marginBottom: '8px' }}>
-                                    {children}
-                                </li>
-                            ),
-                            code: ({ children }) => (
-                                <code style={{
-                                    background: mode === 'dark' ? '#1a1a1a' : '#f5f5f5',
-                                    color: mode === 'dark' ? '#4096ff' : '#0066cc',
-                                    padding: '2px 6px',
-                                    borderRadius: '4px',
-                                    fontSize: '0.9em'
-                                }}>
-                                    {children}
-                                </code>
-                            ),
-                        }}
-                    >
-                        {project.readme}
-                    </ReactMarkdown>
-                </div>
-            </section>
-
-            {/* Specifications */}
-            {story?.specs && (
-                <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 40px' }}>
-                    <Title level={3} style={{ color: textColor, marginBottom: '20px' }}>
-                        {t('specifications')}
-                    </Title>
-                    <Row gutter={[16, 8]}>
-                        {story.specs.map((spec, idx) => (
-                            <Col xs={24} sm={12} key={idx}>
-                                <div style={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    padding: '12px 16px',
-                                    background: mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
-                                    borderRadius: '8px',
-                                    marginBottom: '4px',
-                                }}>
-                                    <Text style={{ color: mutedColor }}>{spec.label}</Text>
-                                    <Text style={{ color: textColor, fontWeight: 500 }}>{spec.value}</Text>
-                                </div>
-                            </Col>
-                        ))}
-                    </Row>
-                </section>
-            )}
-
-            {story?.bom && <ProjectComponents items={story.bom} />}
-
-            {/* Future Features */}
-            {story?.futureFeatures && (
-                <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 40px' }}>
-                    <Card
-                        style={{
-                            background: mode === 'dark' ? 'rgba(139,92,246,0.08)' : 'rgba(139,92,246,0.05)',
-                            border: `1px solid ${mode === 'dark' ? 'rgba(139,92,246,0.2)' : 'rgba(139,92,246,0.15)'}`,
-                            borderRadius: '12px',
-                        }}
-                        styles={{ body: { padding: '20px' } }}
-                    >
-                        <Text style={{
-                            color: '#8b5cf6',
-                            fontWeight: 600,
-                            fontSize: '13px',
-                            textTransform: 'uppercase',
-                            letterSpacing: '1px',
-                            display: 'block',
-                            marginBottom: '16px',
-                        }}>
-                            {t('coming_soon')}
-                        </Text>
-                        <Space wrap size="small">
-                            {story.futureFeatures.map((feature, idx) => (
-                                <span
-                                    key={idx}
-                                    style={{
-                                        display: 'inline-block',
-                                        padding: '6px 12px',
-                                        background: mode === 'dark' ? 'rgba(139,92,246,0.15)' : 'rgba(139,92,246,0.1)',
-                                        borderRadius: '6px',
-                                        fontSize: '13px',
-                                        color: mode === 'dark' ? '#c4b5fd' : '#6d28d9',
-                                    }}
-                                >
-                                    {feature}
-                                </span>
-                            ))}
-                        </Space>
-                    </Card>
-                </section>
-            )}
-
-            {/* What Works / What Doesn't */}
-            {story && (story.whatWorks || story.whatDoesnt) && (
-                <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 40px' }}>
-                    <Row gutter={[16, 16]}>
-                        {story.whatWorks && (
-                            <Col xs={24} md={12}>
-                                <div>
-                                    <Card
-                                        style={{
-                                            background: mode === 'dark' ? 'rgba(16,185,129,0.08)' : 'rgba(16,185,129,0.05)',
-                                            border: `1px solid ${mode === 'dark' ? 'rgba(16,185,129,0.2)' : 'rgba(16,185,129,0.15)'}`,
-                                            borderRadius: '12px',
-                                        }}
-                                        styles={{ body: { padding: '20px' } }}
-                                    >
-                                        <Text style={{
-                                            color: '#10b981',
-                                            fontWeight: 600,
-                                            fontSize: '13px',
-                                            textTransform: 'uppercase',
-                                            letterSpacing: '1px',
-                                            display: 'block',
-                                            marginBottom: '16px'
-                                        }}>
-                                            {t('what_works')}
-                                        </Text>
-                                        <ul style={{ margin: 0, paddingLeft: '18px' }}>
-                                            {story.whatWorks.map((item, idx) => (
-                                                <li key={idx} style={{
-                                                    color: mode === 'dark' ? '#a7f3d0' : '#047857',
-                                                    marginBottom: '8px',
-                                                    fontSize: '14px'
-                                                }}>
-                                                    {item}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </Card>
-                                </div>
-                            </Col>
-                        )}
-                        {story.whatDoesnt && (
-                            <Col xs={24} md={12}>
-                                <div>
-                                    <Card
-                                        style={{
-                                            background: mode === 'dark' ? 'rgba(249,115,22,0.08)' : 'rgba(249,115,22,0.05)',
-                                            border: `1px solid ${mode === 'dark' ? 'rgba(249,115,22,0.2)' : 'rgba(249,115,22,0.15)'}`,
-                                            borderRadius: '12px',
-                                        }}
-                                        styles={{ body: { padding: '20px' } }}
-                                    >
-                                        <Text style={{
-                                            color: '#f97316',
-                                            fontWeight: 600,
-                                            fontSize: '13px',
-                                            textTransform: 'uppercase',
-                                            letterSpacing: '1px',
-                                            display: 'block',
-                                            marginBottom: '16px'
-                                        }}>
-                                            {t('what_needs_improvement')}
-                                        </Text>
-                                        <ul style={{ margin: 0, paddingLeft: '18px' }}>
-                                            {story.whatDoesnt.map((item, idx) => (
-                                                <li key={idx} style={{
-                                                    color: mode === 'dark' ? '#fdba74' : '#9a3412',
-                                                    marginBottom: '8px',
-                                                    fontSize: '14px'
-                                                }}>
-                                                    {item}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </Card>
-                                </div>
-                            </Col>
-                        )}
-                    </Row>
-                </section>
-            )}
-
-            {/* Resources Only */}
-            {story?.resources && (
-                <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 40px' }}>
-                    <div>
-                        <Card
-                            style={{
-                                background: mode === 'dark' ? 'rgba(14,165,233,0.08)' : 'rgba(14,165,233,0.05)',
-                                border: `1px solid ${mode === 'dark' ? 'rgba(14,165,233,0.2)' : 'rgba(14,165,233,0.15)'}`,
-                                borderRadius: '12px',
-                            }}
-                            styles={{ body: { padding: '20px' } }}
-                        >
-                            <Text style={{
-                                color: '#0ea5e9',
-                                fontWeight: 600,
-                                fontSize: '13px',
-                                textTransform: 'uppercase',
-                                letterSpacing: '1px',
-                                display: 'block',
-                                marginBottom: '16px',
-                            }}>
-                                {t('resources')}
-                            </Text>
-                            <Space direction="vertical" size="small" style={{ width: '100%' }}>
-                                {story.resources.map((resource, idx) => (
-                                    <a
-                                        key={idx}
-                                        href={resource.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'space-between',
-                                            padding: '8px 12px',
-                                            background: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
-                                            borderRadius: '8px',
-                                            textDecoration: 'none',
-                                            transition: 'background 0.2s',
-                                        }}
-                                    >
-                                        <Text style={{ color: mode === 'dark' ? '#7dd3fc' : '#0284c7', fontWeight: 500 }}>
-                                            {resource.name}
-                                        </Text>
-                                        <DoubleRightOutlined style={{ fontSize: '10px', color: mode === 'dark' ? '#262626' : '#d9d9d9' }} />
-                                    </a>
-                                ))}
-                            </Space>
-                        </Card>
-                    </div>
-                </section>
-            )}
-
-            {/* Download Gallery / Final CTA */}
-            <section
-                style={{
-                    maxWidth: 900,
-                    margin: '60px auto 0',
-                    padding: '60px 24px',
-                    textAlign: 'center',
-                    background: 'var(--hios-bg-secondary)',
-                    borderRadius: '16px',
-                    border: cardBorder,
-                }}
+      {/* Story / Breakthrough - THE MAGIC */}
+      {story && (
+        <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 60px' }}>
+          <div>
+            <Card
+              style={{
+                background: 'var(--hios-bg-secondary)',
+                border: cardBorder,
+                borderRadius: '16px',
+                overflow: 'hidden',
+              }}
+              styles={{ body: { padding: '40px' } }}
             >
-                <Title level={2} style={{ color: textColor, marginBottom: '24px' }}>
-                    {t('want_one')}
-                </Title>
-                <Paragraph style={{ color: secondaryColor, fontSize: '1.2rem', maxWidth: 600, margin: '0 auto 40px' }}>
-                    {t.rich('build_your_own', {
-                        strongWhite: (chunks) => <strong style={{ color: 'var(--hios-text)' }}>{chunks}</strong>,
-                        br: () => <br />
-                    })}
+              <Text
+                className="tech-label"
+                style={{
+                  color: accentColor,
+                  display: 'block',
+                  marginBottom: '16px',
+                }}
+              >
+                {t('moment')}
+              </Text>
+              <Paragraph style={{ color: textColor, marginBottom: '24px', fontSize: '20px', lineHeight: 1.5 }}>
+                {story.moment}
+              </Paragraph>
+              {story.struggle && (
+                <Paragraph style={{ color: secondaryColor, fontSize: '16px', lineHeight: 1.8 }}>
+                  {story.struggle}
                 </Paragraph>
+              )}
+            </Card>
+          </div>
+        </section>
+      )}
 
-                <Space size="large" wrap style={{ justifyContent: 'center' }}>
-                    {project.files[0] && (
-                        <Button
-                            type="primary"
-                            size="large"
-                            icon={<DownloadOutlined />}
-                            href={project.files[0]?.path}
-                            target="_blank"
-                        >
-                            {t('view_documentation')}
-                        </Button>
-                    )}
-                    <Button
-                        size="large"
-                        icon={<GithubOutlined />}
-                        href={`https://github.com/hios-open-systems/web/tree/main/projects/${slug}`}
-                        target="_blank"
-                        style={{
-                            borderColor: mode === 'dark' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.15)',
-                        }}
-                    >
-                        {t('view_on_github')}
-                    </Button>
-                </Space>
-            </section>
+      {/* Main Content (Markdown README) */}
+      <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 60px' }}>
+        <div className="markdown-content" style={{ color: textColor }}>
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            components={{
+              h2: ({ children }) => (
+                <Title
+                  level={2}
+                  style={{
+                    color: textColor,
+                    marginTop: '48px',
+                    marginBottom: '24px',
+                    borderBottom: cardBorder,
+                    paddingBottom: '12px',
+                  }}
+                >
+                  {children}
+                </Title>
+              ),
+              h3: ({ children }) => (
+                <Title level={3} style={{ color: textColor, marginTop: '32px', marginBottom: '16px' }}>
+                  {children}
+                </Title>
+              ),
+              p: ({ children }) => (
+                <Paragraph style={{ color: secondaryColor, fontSize: '16px', lineHeight: 1.8, marginBottom: '20px' }}>
+                  {children}
+                </Paragraph>
+              ),
+              li: ({ children }) => (
+                <li style={{ color: secondaryColor, fontSize: '16px', lineHeight: 1.8, marginBottom: '8px' }}>
+                  {children}
+                </li>
+              ),
+              code: ({ children }) => (
+                <code
+                  style={{
+                    background: mode === 'dark' ? '#1a1a1a' : '#f5f5f5',
+                    color: mode === 'dark' ? '#4096ff' : '#0066cc',
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    fontSize: '0.9em',
+                  }}
+                >
+                  {children}
+                </code>
+              ),
+            }}
+          >
+            {project.readme}
+          </ReactMarkdown>
+        </div>
+      </section>
 
-            {/* Project Toolbox — archivos técnicos al final (de apéndice, no manda la página) */}
-            <section style={{ maxWidth: 900, margin: '60px auto 0', padding: '0 24px 48px' }}>
-                <Card
+      {/* Specifications */}
+      {story?.specs && (
+        <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 40px' }}>
+          <Title level={3} style={{ color: textColor, marginBottom: '20px' }}>
+            {t('specifications')}
+          </Title>
+          <Row gutter={[16, 8]}>
+            {story.specs.map((spec, idx) => (
+              <Col xs={24} sm={12} key={idx}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    padding: '12px 16px',
+                    background: mode === 'dark' ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
+                    borderRadius: '8px',
+                    marginBottom: '4px',
+                  }}
+                >
+                  <Text style={{ color: mutedColor }}>{spec.label}</Text>
+                  <Text style={{ color: textColor, fontWeight: 500 }}>{spec.value}</Text>
+                </div>
+              </Col>
+            ))}
+          </Row>
+        </section>
+      )}
+
+      {story?.bom && <ProjectComponents items={story.bom} />}
+
+      {/* Future Features */}
+      {story?.futureFeatures && (
+        <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 40px' }}>
+          <Card
+            style={{
+              background: mode === 'dark' ? 'rgba(139,92,246,0.08)' : 'rgba(139,92,246,0.05)',
+              border: `1px solid ${mode === 'dark' ? 'rgba(139,92,246,0.2)' : 'rgba(139,92,246,0.15)'}`,
+              borderRadius: '12px',
+            }}
+            styles={{ body: { padding: '20px' } }}
+          >
+            <Text
+              style={{
+                color: '#8b5cf6',
+                fontWeight: 600,
+                fontSize: '13px',
+                textTransform: 'uppercase',
+                letterSpacing: '1px',
+                display: 'block',
+                marginBottom: '16px',
+              }}
+            >
+              {t('coming_soon')}
+            </Text>
+            <Space wrap size="small">
+              {story.futureFeatures.map((feature, idx) => (
+                <span
+                  key={idx}
+                  style={{
+                    display: 'inline-block',
+                    padding: '6px 12px',
+                    background: mode === 'dark' ? 'rgba(139,92,246,0.15)' : 'rgba(139,92,246,0.1)',
+                    borderRadius: '6px',
+                    fontSize: '13px',
+                    color: mode === 'dark' ? '#c4b5fd' : '#6d28d9',
+                  }}
+                >
+                  {feature}
+                </span>
+              ))}
+            </Space>
+          </Card>
+        </section>
+      )}
+
+      {/* What Works / What Doesn't */}
+      {story && (story.whatWorks || story.whatDoesnt) && (
+        <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 40px' }}>
+          <Row gutter={[16, 16]}>
+            {story.whatWorks && (
+              <Col xs={24} md={12}>
+                <div>
+                  <Card
                     style={{
-                        background: mode === 'dark' ? '#141414' : '#fafafa',
-                        border: cardBorder,
-                        borderRadius: '14px',
+                      background: mode === 'dark' ? 'rgba(16,185,129,0.08)' : 'rgba(16,185,129,0.05)',
+                      border: `1px solid ${mode === 'dark' ? 'rgba(16,185,129,0.2)' : 'rgba(16,185,129,0.15)'}`,
+                      borderRadius: '12px',
                     }}
                     styles={{ body: { padding: '20px' } }}
-                >
-                    <Space direction="vertical" size={16} style={{ width: '100%' }}>
-                        <div>
-                            <Title level={4} style={{ color: textColor, marginBottom: 6 }}>
-                                {t('technical_files')}
-                            </Title>
-                            <Text style={{ color: secondaryColor }}>
-                                {t('technical_files_description')}
-                            </Text>
-                        </div>
-
-                        {Object.keys(groupedAssets).length === 0 ? (
-                            <Empty
-                                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                                description={<span style={{ color: secondaryColor }}>{t('no_technical_files')}</span>}
-                            />
-                        ) : (
-                            <Space direction="vertical" size={12} style={{ width: '100%' }}>
-                                {Object.entries(groupedAssets).map(([kind, assets]) => (
-                                    <Card
-                                        key={kind}
-                                        size="small"
-                                        title={<span style={{ color: textColor }}>{kindLabel[kind] || kind.toUpperCase()}</span>}
-                                        style={{
-                                            background: mode === 'dark' ? '#101010' : '#fff',
-                                            border: cardBorder,
-                                            borderRadius: '10px',
-                                        }}
-                                        styles={{ body: { padding: '10px 12px' } }}
-                                    >
-                                        <Space direction="vertical" size={8} style={{ width: '100%' }}>
-                                            {assets.map((asset) => (
-                                                <div
-                                                    key={`${asset.source}-${asset.name}`}
-                                                    style={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'space-between',
-                                                        flexWrap: 'wrap',
-                                                        gap: '10px',
-                                                        padding: '8px 6px',
-                                                        borderBottom: mode === 'dark' ? '1px solid #1f1f1f' : '1px solid #f0f0f0',
-                                                    }}
-                                                >
-                                                    <Space size={8} wrap style={{ minWidth: 0, flex: '1 1 240px' }}>
-                                                        <FileOutlined style={{ color: accentColor }} />
-                                                        <Text style={{ color: textColor, overflowWrap: 'anywhere' }}>
-                                                            {asset.name}
-                                                        </Text>
-                                                        <Tag style={{ border: 'none', fontSize: 10 }}>
-                                                            {t(asset.source === 'download' ? 'download_file' : 'source_file')}
-                                                        </Tag>
-                                                    </Space>
-
-                                                    <Space size={6} wrap>
-                                                        {asset.path && (
-                                                            <Button size="small" icon={<LinkOutlined />} href={asset.path} target="_blank">
-                                                                {t('open')}
-                                                            </Button>
-                                                        )}
-                                                        {asset.path && viewerByKind[asset.kind] && (
-                                                            <Button
-                                                                size="small"
-                                                                icon={<EyeOutlined />}
-                                                                onClick={() => window.open(viewerByKind[asset.kind](asset.path as string), '_blank', 'noopener,noreferrer')}
-                                                            >
-                                                                Viewer
-                                                            </Button>
-                                                        )}
-                                                        {asset.path && (
-                                                            <Button size="small" icon={<DownloadOutlined />} href={asset.path} target="_blank">
-                                                                {t('download')}
-                                                            </Button>
-                                                        )}
-                                                    </Space>
-                                                </div>
-                                            ))}
-                                        </Space>
-                                    </Card>
-                                ))}
-                            </Space>
-                        )}
-                    </Space>
-                </Card>
-            </section>
-
-            {/* Piezas 3D imprimibles — link al catálogo Maker, solo si el proyecto tiene piezas */}
-            {projectPrints.length > 0 && (
-                <section style={{ maxWidth: 900, margin: '24px auto 0', padding: '0 24px' }}>
-                    <Card
-                        style={{
-                            background: mode === 'dark' ? '#141414' : '#fafafa',
-                            border: cardBorder,
-                            borderRadius: '14px',
-                        }}
-                        styles={{ body: { padding: '20px' } }}
+                  >
+                    <Text
+                      style={{
+                        color: '#10b981',
+                        fontWeight: 600,
+                        fontSize: '13px',
+                        textTransform: 'uppercase',
+                        letterSpacing: '1px',
+                        display: 'block',
+                        marginBottom: '16px',
+                      }}
                     >
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
-                                <PrinterOutlined style={{ color: accentColor, fontSize: 22 }} />
-                                <div>
-                                    <Text
-                                        className="tech-label"
-                                        style={{ color: accentColor, display: 'block', marginBottom: 4 }}
-                                    >
-                                        MAKER / PRINTS
-                                    </Text>
-                                    <Text style={{ color: textColor, fontWeight: 600, fontSize: 15, display: 'block' }}>
-                                        {t('printable_parts')}
-                                    </Text>
-                                    <Text style={{ color: secondaryColor, fontSize: 13 }}>
-                                        {t('printable_parts_description', { count: projectPrints.length })}
-                                    </Text>
-                                </div>
-                            </div>
-                            <Link
-                                href={`/${locale}/prints#prints-${slug}`}
-                                style={{ color: accentColor, fontWeight: 600, fontSize: 14, whiteSpace: 'nowrap' }}
-                            >
-                                {t('view_in_maker')} →
-                            </Link>
-                        </div>
-                    </Card>
-                </section>
+                      {t('what_works')}
+                    </Text>
+                    <ul style={{ margin: 0, paddingLeft: '18px' }}>
+                      {story.whatWorks.map((item, idx) => (
+                        <li
+                          key={idx}
+                          style={{
+                            color: mode === 'dark' ? '#a7f3d0' : '#047857',
+                            marginBottom: '8px',
+                            fontSize: '14px',
+                          }}
+                        >
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </Card>
+                </div>
+              </Col>
             )}
-
-            {/* Footer note */}
-            <section style={{
-                maxWidth: 900,
-                margin: '0 auto',
-                padding: '24px',
-                borderTop: cardBorder,
-                marginTop: '60px'
-            }}>
-                <Text style={{ color: mutedColor, fontSize: '14px', display: 'block', textAlign: 'center' }}>
-                    {t.rich('prototype_functional', {
-                        highlight: (chunks) => <span style={{ color: 'var(--accent-text)' }}>{chunks}</span>
-                    })}<br />
-                    <a
-                        href={`mailto:devsolutionsar@gmail.com?subject=${encodeURIComponent(`HIOS ${slug} — ${t('want_me_to_build')}`)}`}
-                        style={{ color: mode === 'dark' ? '#0ea5e9' : '#0284c7', textDecoration: 'underline' }}
+            {story.whatDoesnt && (
+              <Col xs={24} md={12}>
+                <div>
+                  <Card
+                    style={{
+                      background: mode === 'dark' ? 'rgba(249,115,22,0.08)' : 'rgba(249,115,22,0.05)',
+                      border: `1px solid ${mode === 'dark' ? 'rgba(249,115,22,0.2)' : 'rgba(249,115,22,0.15)'}`,
+                      borderRadius: '12px',
+                    }}
+                    styles={{ body: { padding: '20px' } }}
+                  >
+                    <Text
+                      style={{
+                        color: '#f97316',
+                        fontWeight: 600,
+                        fontSize: '13px',
+                        textTransform: 'uppercase',
+                        letterSpacing: '1px',
+                        display: 'block',
+                        marginBottom: '16px',
+                      }}
                     >
-                        {t('want_me_to_build')}
-                    </a>
-                </Text>
-            </section>
-        </div>
-    );
+                      {t('what_needs_improvement')}
+                    </Text>
+                    <ul style={{ margin: 0, paddingLeft: '18px' }}>
+                      {story.whatDoesnt.map((item, idx) => (
+                        <li
+                          key={idx}
+                          style={{
+                            color: mode === 'dark' ? '#fdba74' : '#9a3412',
+                            marginBottom: '8px',
+                            fontSize: '14px',
+                          }}
+                        >
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </Card>
+                </div>
+              </Col>
+            )}
+          </Row>
+        </section>
+      )}
+
+      {/* Resources Only */}
+      {story?.resources && (
+        <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 40px' }}>
+          <div>
+            <Card
+              style={{
+                background: mode === 'dark' ? 'rgba(14,165,233,0.08)' : 'rgba(14,165,233,0.05)',
+                border: `1px solid ${mode === 'dark' ? 'rgba(14,165,233,0.2)' : 'rgba(14,165,233,0.15)'}`,
+                borderRadius: '12px',
+              }}
+              styles={{ body: { padding: '20px' } }}
+            >
+              <Text
+                style={{
+                  color: '#0ea5e9',
+                  fontWeight: 600,
+                  fontSize: '13px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '1px',
+                  display: 'block',
+                  marginBottom: '16px',
+                }}
+              >
+                {t('resources')}
+              </Text>
+              <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                {story.resources.map((resource, idx) => (
+                  <a
+                    key={idx}
+                    href={resource.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '8px 12px',
+                      background: mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
+                      borderRadius: '8px',
+                      textDecoration: 'none',
+                      transition: 'background 0.2s',
+                    }}
+                  >
+                    <Text style={{ color: mode === 'dark' ? '#7dd3fc' : '#0284c7', fontWeight: 500 }}>
+                      {resource.name}
+                    </Text>
+                    <DoubleRightOutlined style={{ fontSize: '10px', color: mode === 'dark' ? '#262626' : '#d9d9d9' }} />
+                  </a>
+                ))}
+              </Space>
+            </Card>
+          </div>
+        </section>
+      )}
+
+      {/* Download Gallery / Final CTA */}
+      <section
+        style={{
+          maxWidth: 900,
+          margin: '60px auto 0',
+          padding: '60px 24px',
+          textAlign: 'center',
+          background: 'var(--hios-bg-secondary)',
+          borderRadius: '16px',
+          border: cardBorder,
+        }}
+      >
+        <Title level={2} style={{ color: textColor, marginBottom: '24px' }}>
+          {t('want_one')}
+        </Title>
+        <Paragraph style={{ color: secondaryColor, fontSize: '1.2rem', maxWidth: 600, margin: '0 auto 40px' }}>
+          {t.rich('build_your_own', {
+            strongWhite: (chunks) => <strong style={{ color: 'var(--hios-text)' }}>{chunks}</strong>,
+            br: () => <br />,
+          })}
+        </Paragraph>
+
+        <Space size="large" wrap style={{ justifyContent: 'center' }}>
+          {project.files[0] && (
+            <Button
+              type="primary"
+              size="large"
+              icon={<DownloadOutlined />}
+              href={project.files[0]?.path}
+              target="_blank"
+            >
+              {t('view_documentation')}
+            </Button>
+          )}
+          <Button
+            size="large"
+            icon={<GithubOutlined />}
+            href={`https://github.com/hios-open-systems/web/tree/main/projects/${slug}`}
+            target="_blank"
+            style={{
+              borderColor: mode === 'dark' ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.15)',
+            }}
+          >
+            {t('view_on_github')}
+          </Button>
+        </Space>
+      </section>
+
+      {/* Project Toolbox — archivos técnicos al final (de apéndice, no manda la página) */}
+      <section style={{ maxWidth: 900, margin: '60px auto 0', padding: '0 24px 48px' }}>
+        <Card
+          style={{
+            background: mode === 'dark' ? '#141414' : '#fafafa',
+            border: cardBorder,
+            borderRadius: '14px',
+          }}
+          styles={{ body: { padding: '20px' } }}
+        >
+          <Space direction="vertical" size={16} style={{ width: '100%' }}>
+            <div>
+              <Title level={4} style={{ color: textColor, marginBottom: 6 }}>
+                {t('technical_files')}
+              </Title>
+              <Text style={{ color: secondaryColor }}>{t('technical_files_description')}</Text>
+            </div>
+
+            {Object.keys(groupedAssets).length === 0 ? (
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description={<span style={{ color: secondaryColor }}>{t('no_technical_files')}</span>}
+              />
+            ) : (
+              <Space direction="vertical" size={12} style={{ width: '100%' }}>
+                {Object.entries(groupedAssets).map(([kind, assets]) => (
+                  <Card
+                    key={kind}
+                    size="small"
+                    title={<span style={{ color: textColor }}>{kindLabel[kind] || kind.toUpperCase()}</span>}
+                    style={{
+                      background: mode === 'dark' ? '#101010' : '#fff',
+                      border: cardBorder,
+                      borderRadius: '10px',
+                    }}
+                    styles={{ body: { padding: '10px 12px' } }}
+                  >
+                    <Space direction="vertical" size={8} style={{ width: '100%' }}>
+                      {assets.map((asset) => (
+                        <div
+                          key={`${asset.source}-${asset.name}`}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            flexWrap: 'wrap',
+                            gap: '10px',
+                            padding: '8px 6px',
+                            borderBottom: mode === 'dark' ? '1px solid #1f1f1f' : '1px solid #f0f0f0',
+                          }}
+                        >
+                          <Space size={8} wrap style={{ minWidth: 0, flex: '1 1 240px' }}>
+                            <FileOutlined style={{ color: accentColor }} />
+                            <Text style={{ color: textColor, overflowWrap: 'anywhere' }}>{asset.name}</Text>
+                            <Tag style={{ border: 'none', fontSize: 10 }}>
+                              {t(asset.source === 'download' ? 'download_file' : 'source_file')}
+                            </Tag>
+                          </Space>
+
+                          <Space size={6} wrap>
+                            {asset.path && (
+                              <Button size="small" icon={<LinkOutlined />} href={asset.path} target="_blank">
+                                {t('open')}
+                              </Button>
+                            )}
+                            {asset.path && viewerByKind[asset.kind] && (
+                              <Button
+                                size="small"
+                                icon={<EyeOutlined />}
+                                onClick={() =>
+                                  window.open(
+                                    viewerByKind[asset.kind](asset.path as string),
+                                    '_blank',
+                                    'noopener,noreferrer',
+                                  )
+                                }
+                              >
+                                Viewer
+                              </Button>
+                            )}
+                            {asset.path && (
+                              <Button size="small" icon={<DownloadOutlined />} href={asset.path} target="_blank">
+                                {t('download')}
+                              </Button>
+                            )}
+                          </Space>
+                        </div>
+                      ))}
+                    </Space>
+                  </Card>
+                ))}
+              </Space>
+            )}
+          </Space>
+        </Card>
+      </section>
+
+      {/* Piezas 3D imprimibles — link al catálogo Maker, solo si el proyecto tiene piezas */}
+      {projectPrints.length > 0 && (
+        <section style={{ maxWidth: 900, margin: '24px auto 0', padding: '0 24px' }}>
+          <Card
+            style={{
+              background: mode === 'dark' ? '#141414' : '#fafafa',
+              border: cardBorder,
+              borderRadius: '14px',
+            }}
+            styles={{ body: { padding: '20px' } }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: 16,
+                flexWrap: 'wrap',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
+                <PrinterOutlined style={{ color: accentColor, fontSize: 22 }} />
+                <div>
+                  <Text className="tech-label" style={{ color: accentColor, display: 'block', marginBottom: 4 }}>
+                    MAKER / PRINTS
+                  </Text>
+                  <Text style={{ color: textColor, fontWeight: 600, fontSize: 15, display: 'block' }}>
+                    {t('printable_parts')}
+                  </Text>
+                  <Text style={{ color: secondaryColor, fontSize: 13 }}>
+                    {t('printable_parts_description', { count: projectPrints.length })}
+                  </Text>
+                </div>
+              </div>
+              <Link
+                href={`/${locale}/prints#prints-${slug}`}
+                style={{ color: accentColor, fontWeight: 600, fontSize: 14, whiteSpace: 'nowrap' }}
+              >
+                {t('view_in_maker')} →
+              </Link>
+            </div>
+          </Card>
+        </section>
+      )}
+
+      {/* Footer note */}
+      <section
+        style={{
+          maxWidth: 900,
+          margin: '0 auto',
+          padding: '24px',
+          borderTop: cardBorder,
+          marginTop: '60px',
+        }}
+      >
+        <Text style={{ color: mutedColor, fontSize: '14px', display: 'block', textAlign: 'center' }}>
+          {t.rich('prototype_functional', {
+            highlight: (chunks) => <span style={{ color: 'var(--accent-text)' }}>{chunks}</span>,
+          })}
+          <br />
+          <a
+            href={`mailto:devsolutionsar@gmail.com?subject=${encodeURIComponent(`HIOS ${slug} — ${t('want_me_to_build')}`)}`}
+            style={{ color: mode === 'dark' ? '#0ea5e9' : '#0284c7', textDecoration: 'underline' }}
+          >
+            {t('want_me_to_build')}
+          </a>
+        </Text>
+      </section>
+    </div>
+  );
 }
-
-

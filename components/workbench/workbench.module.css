@@ -26,11 +26,11 @@
   box-shadow: 0 16px 32px rgba(15, 23, 42, 0.05);
 }
 
-:global([data-theme="dark"]) .heroCopy,
-:global([data-theme="dark"]) .heroPanel,
-:global([data-theme="dark"]) .sectionHeroCard,
-:global([data-theme="dark"]) .principleCard,
-:global([data-theme="dark"]) .sectionGroup {
+:global([data-theme='dark']) .heroCopy,
+:global([data-theme='dark']) .heroPanel,
+:global([data-theme='dark']) .sectionHeroCard,
+:global([data-theme='dark']) .principleCard,
+:global([data-theme='dark']) .sectionGroup {
   background: rgba(15, 23, 42, 0.68);
   box-shadow: 0 18px 36px rgba(2, 6, 23, 0.26);
 }
@@ -41,11 +41,10 @@
   gap: 14px;
   padding: 24px;
   background:
-    radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 16%, transparent), transparent 42%),
-    #ffffff;
+    radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 16%, transparent), transparent 42%), #ffffff;
 }
 
-:global([data-theme="dark"]) .heroCopy {
+:global([data-theme='dark']) .heroCopy {
   background:
     radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 22%, transparent), transparent 42%),
     rgba(15, 23, 42, 0.74);
@@ -92,7 +91,10 @@
   border-radius: 999px;
   font-size: 13px;
   font-weight: 600;
-  transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease;
+  transition:
+    transform 0.18s ease,
+    background-color 0.18s ease,
+    border-color 0.18s ease;
 }
 
 .heroPrimaryCta {
@@ -164,7 +166,10 @@
   border: 1px solid var(--hios-border);
   background: var(--hios-bg-secondary);
   color: inherit;
-  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .entryPanelCard:hover {
@@ -353,10 +358,13 @@
   background: #ffffff;
   text-decoration: none;
   color: inherit;
-  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
-:global([data-theme="dark"]) .toolCard {
+:global([data-theme='dark']) .toolCard {
   background: rgba(15, 23, 42, 0.6);
 }
 
@@ -366,7 +374,7 @@
   box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
 }
 
-:global([data-theme="dark"]) .toolCard:hover {
+:global([data-theme='dark']) .toolCard:hover {
   box-shadow: 0 14px 32px rgba(2, 6, 23, 0.4);
 }
 
@@ -509,7 +517,7 @@
   box-shadow: none;
   padding: 8px 0;
 }
-:global([data-theme="dark"]) .principlesMuted .principleCard {
+:global([data-theme='dark']) .principlesMuted .principleCard {
   background: transparent;
   border-color: transparent;
 }
@@ -546,14 +554,8 @@
 }
 
 .sectionCard {
+  composes: studio-panel from global;
   min-width: 0;
-  border-radius: 14px;
-  border: 1px solid var(--hios-border);
-  background: #ffffff;
-}
-
-:global([data-theme="dark"]) .sectionCard {
-  background: rgba(15, 23, 42, 0.6);
 }
 
 .textArea {
@@ -566,65 +568,6 @@
 /* ============================================================
  * Shared tool header
  * ============================================================ */
-.toolHeader {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 24px;
-  border-radius: 18px;
-  border: 1px solid var(--hios-border);
-  background:
-    radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 16%, transparent), transparent 44%),
-    #ffffff;
-  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.05);
-}
-
-:global([data-theme="dark"]) .toolHeader {
-  background:
-    radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 20%, transparent), transparent 44%),
-    rgba(15, 23, 42, 0.7);
-  box-shadow: 0 18px 36px rgba(2, 6, 23, 0.26);
-}
-
-.toolHeaderTopRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.toolHeaderEyebrow {
-  display: inline-flex;
-  align-items: center;
-  width: fit-content;
-  min-height: 28px;
-  padding: 0 12px;
-  border-radius: 6px;
-  background: color-mix(in srgb, var(--accent) 14%, transparent);
-  color: var(--hios-text);
-  font-family: var(--font-stack-mono);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.toolHeaderTitle {
-  margin: 0 !important;
-  font-family: var(--font-stack-display) !important;
-  font-size: clamp(1.6rem, 3vw, 2.2rem) !important;
-  color: var(--hios-text) !important;
-}
-
-.toolHeaderDescription {
-  margin: 0 !important;
-  max-width: 720px;
-  font-size: 15px;
-  line-height: 1.6;
-  color: var(--hios-text-secondary) !important;
-}
-
 .toolHeaderActions {
   display: flex;
   gap: 8px;
@@ -656,11 +599,11 @@
   border-color: rgba(245, 158, 11, 0.3);
 }
 
-:global([data-theme="dark"]) .localityLocal {
+:global([data-theme='dark']) .localityLocal {
   color: #6ee7b7;
 }
 
-:global([data-theme="dark"]) .localityNetwork {
+:global([data-theme='dark']) .localityNetwork {
   color: #fcd34d;
 }
 
@@ -878,7 +821,7 @@
   gap: 12px;
 }
 
-:global([data-theme="dark"]) .monitorCard {
+:global([data-theme='dark']) .monitorCard {
   background: rgba(15, 23, 42, 0.6);
 }
 
@@ -936,11 +879,10 @@
   border-radius: 14px;
   border: 1px solid var(--hios-border);
   background:
-    radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 14%, transparent), transparent 42%),
-    #f8fafc;
+    radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 14%, transparent), transparent 42%), #f8fafc;
 }
 
-:global([data-theme="dark"]) .snippetComposer {
+:global([data-theme='dark']) .snippetComposer {
   background:
     radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 18%, transparent), transparent 42%),
     rgba(15, 23, 42, 0.82);
@@ -992,14 +934,12 @@
 .snippetCard {
   border-radius: 12px;
   border: 1px solid var(--hios-border);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.98));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.98));
   box-shadow: 0 14px 30px rgba(15, 23, 42, 0.05);
 }
 
-:global([data-theme="dark"]) .snippetCard {
-  background:
-    linear-gradient(180deg, rgba(15, 23, 42, 0.84), rgba(2, 6, 23, 0.82));
+:global([data-theme='dark']) .snippetCard {
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.84), rgba(2, 6, 23, 0.82));
   box-shadow: 0 18px 36px rgba(2, 6, 23, 0.28);
 }
 
@@ -1043,7 +983,7 @@
   font-weight: 600;
 }
 
-:global([data-theme="dark"]) .snippetUpdatedPill {
+:global([data-theme='dark']) .snippetUpdatedPill {
   background: color-mix(in srgb, var(--accent) 18%, rgba(255, 255, 255, 0.06));
 }
 
@@ -1139,13 +1079,25 @@
 }
 
 /* Editors must shrink within their cards before switching to a single column. */
-.editorGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
-.editorGrid > * { min-width: 0; }
+.editorGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+.editorGrid > * {
+  min-width: 0;
+}
 @media (max-width: 720px) {
-  .editorGrid { grid-template-columns: minmax(0, 1fr); }
+  .editorGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 @media (max-width: 480px) {
-  .canvasCard { width: calc(100% + 48px); margin-inline: -24px; border-radius: 0; }
+  .canvasCard {
+    width: calc(100% + 48px);
+    margin-inline: -24px;
+    border-radius: 0;
+  }
 }
 
 /* Reusable "How to use" guide — collapsible, rendered by ToolHeader. */
@@ -1234,7 +1186,9 @@
   background: var(--hios-bg-secondary);
   color: inherit;
   text-decoration: none;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
 }
 .toolPagerNext {
   justify-content: flex-end;
@@ -1281,9 +1235,7 @@
   padding: 18px;
   border: 1px solid var(--hios-border);
   border-radius: 14px;
-  background:
-    linear-gradient(90deg, color-mix(in srgb, var(--group-accent) 7%, transparent), transparent 38%),
-    #ffffff;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--group-accent) 7%, transparent), transparent 38%), #ffffff;
   box-shadow: 0 14px 28px rgba(15, 23, 42, 0.04);
 }
 :global([data-theme='dark']) .wbMenuSectionGroup {

@@ -23,9 +23,9 @@ const baseTokens = {
     fontFamily: FONT_SANS,
     fontFamilyCode: FONT_MONO,
     fontSize: 14,
-    borderRadius: 8,
+    borderRadius: 10,
     borderRadiusSM: 6,
-    borderRadiusLG: 12,
+    borderRadiusLG: 18,
 };
 
 interface SkinPalette {
@@ -111,10 +111,9 @@ export function getAntdTheme(
     const palette = SKIN_PALETTES[skin][mode];
     const terminal = skin === 'terminal';
     return {
-        // Tokens como CSS vars con key fija: el hash de clase de antd deja de
-        // depender del tema, así que el HTML del SSR (dark/datasheet) sigue
-        // matcheando cuando el cliente hidrata con otro modo o skin.
-        cssVar: { key: 'hios' },
+        // ThemeLayout hydrates with the server theme before applying preferences.
+        // Separate scopes prevent extracted dark CSS from overriding live tokens.
+        cssVar: { key: `hios-${mode}-${skin}-${accent.replace('#', '')}` },
         algorithm: dark ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
         token: {
             ...baseTokens,
@@ -144,7 +143,9 @@ export function getAntdTheme(
                 colorBgContainer: dark ? palette.bgSecondary : palette.bgElevated,
             },
             Button: {
-                fontWeight: 500,
+                fontWeight: 600,
+                controlHeight: 38,
+                controlHeightLG: 46,
             },
         },
     };

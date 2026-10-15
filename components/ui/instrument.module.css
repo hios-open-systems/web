@@ -1,0 +1,230 @@
+.instrument {
+  --signal: #b8f36d;
+  position: relative;
+  background: #141a20;
+  color: #f4f5ef;
+  border: 1px solid #3c464b;
+  border-radius: 22px;
+  padding: 22px;
+  box-shadow:
+    0 32px 80px #0005,
+    0 2px 0 #ffffff0d inset;
+  transform: rotate(2deg);
+}
+.instrument::before,
+.instrument::after {
+  content: '+';
+  position: absolute;
+  bottom: 8px;
+  font: 12px var(--font-stack-mono);
+  color: #687778;
+}
+.instrument::before {
+  left: 10px;
+}
+.instrument::after {
+  right: 10px;
+}
+.rail {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #ffffff1a;
+  font: 10px var(--font-stack-mono);
+  letter-spacing: 0.08em;
+  color: #acb5bb;
+}
+.status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.status::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--signal);
+  box-shadow: 0 0 12px #b8f36d66;
+}
+.instrumentHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0 12px;
+}
+.label {
+  font: 11px var(--font-stack-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #acb5bb;
+}
+.instrumentHeader p {
+  margin: 4px 0 0;
+  font: 48px var(--font-stack-mono);
+  line-height: 1.1;
+  letter-spacing: -0.06em;
+}
+.instrumentHeader p span {
+  font-size: 17px;
+  color: #b8f36d;
+  letter-spacing: 0;
+}
+.pause {
+  color: #bcc6cc;
+  background: #212a30;
+  border: 1px solid #ffffff25;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.screen {
+  position: relative;
+  border: 1px solid #4a5a44;
+  border-radius: 10px;
+  background-color: #0b1510;
+  background-image:
+    linear-gradient(#b8f36d0c 1px, transparent 1px), linear-gradient(90deg, #b8f36d0c 1px, transparent 1px);
+  background-size: 24px 24px;
+  overflow: hidden;
+}
+.screenLabel {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  font: 9px var(--font-stack-mono);
+  letter-spacing: 0.12em;
+  color: #8baf7c;
+}
+.scope {
+  width: 100%;
+  display: block;
+  padding: 14px 0;
+}
+.scope path {
+  fill: none;
+  stroke-linejoin: round;
+}
+.axis {
+  stroke: #b8f36d30;
+  stroke-dasharray: 3 6;
+}
+.wave {
+  stroke: var(--signal);
+  stroke-width: 2;
+}
+.glow {
+  stroke: var(--signal);
+  stroke-width: 9;
+  opacity: 0.1;
+  filter: blur(4px);
+}
+.tracer {
+  stroke: #f5ffdc;
+  stroke-width: 3;
+  stroke-dasharray: 35 1300;
+  animation: signalTravel 5s linear infinite;
+}
+.screenFooter {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 12px 10px;
+  color: #83987c;
+  font: 8px var(--font-stack-mono);
+  letter-spacing: 0.04em;
+}
+.controls {
+  display: flex;
+  gap: 8px;
+  margin: 18px 0;
+}
+.controls button {
+  min-height: 44px;
+  flex: 1;
+  padding: 10px 4px;
+  color: #acb5bb;
+  background: #1b242a;
+  border: 1px solid #344148;
+  border-radius: 7px;
+  cursor: pointer;
+  font: 11px var(--font-stack-mono);
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.controls button[aria-pressed='true'] {
+  background: var(--signal);
+  border-color: var(--signal);
+  color: #192315;
+}
+.frequency {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  font: 10px var(--font-stack-mono);
+  color: #b7c3c8;
+}
+.frequency input {
+  flex: 1;
+  min-width: 60px;
+  width: 80px;
+  accent-color: #b8f36d;
+  cursor: pointer;
+}
+.frequency output {
+  min-width: 52px;
+  text-align: right;
+}
+.instrumentFooter {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+  padding: 14px 0 2px;
+  border-top: 1px solid #ffffff14;
+  font-size: 10px;
+  color: #9ba8af;
+}
+.instrumentFooter a {
+  color: #b8f36d;
+  text-decoration: none;
+}
+.instrument button:focus-visible,
+.instrument input:focus-visible,
+.instrument a:focus-visible {
+  outline: 2px solid #b8f36d;
+  outline-offset: 4px;
+}
+.instrument[data-paused='true'] .tracer {
+  animation-play-state: paused;
+}
+@keyframes signalTravel {
+  to {
+    stroke-dashoffset: -1335;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tracer {
+    animation: none;
+  }
+  .controls button {
+    transition: none;
+  }
+}
+@media (max-width: 600px) {
+  .instrument {
+    padding: 16px;
+    transform: none;
+    border-radius: 16px;
+  }
+  .instrumentHeader p {
+    font-size: 38px;
+  }
+  .instrumentFooter {
+    font-size: 11px;
+  }
+}

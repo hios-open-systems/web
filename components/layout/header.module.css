@@ -7,14 +7,14 @@
   min-height: var(--layout-header-height);
   padding: 0 max(20px, env(safe-area-inset-right)) 0 max(20px, env(safe-area-inset-left)) !important;
   line-height: normal;
-  background: rgba(9, 12, 18, 0.85);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  background: color-mix(in srgb, var(--hios-bg) 92%, transparent);
+  border-bottom: 1px solid var(--hios-border);
   backdrop-filter: blur(10px);
 }
 
 :global([data-theme="dark"]) .header {
-  background: rgba(9, 12, 18, 0.72);
-  border-bottom-color: rgba(255, 255, 255, 0.07);
+  background: color-mix(in srgb, var(--hios-bg) 92%, transparent);
+  border-bottom-color: var(--hios-border);
 }
 
 .shell {
@@ -54,7 +54,7 @@
   font-weight: 600;
   font-size: 15px;
   letter-spacing: 0.14em;
-  color: #f8fafc;
+  color: var(--hios-text);
 }
 
 .nav {
@@ -75,31 +75,31 @@
   font-size: 13px;
   font-weight: 500;
   text-decoration: none;
-  color: #94a3b8;
+  color: var(--hios-text-secondary);
   transition: color 0.18s ease, background-color 0.18s ease;
 }
 
 :global([data-theme="dark"]) .navLink {
-  color: #94a3b8;
+  color: var(--hios-text-secondary);
 }
 
 .navLink:hover {
-  color: #f1f5f9;
-  background: rgba(255, 255, 255, 0.04);
+  color: var(--hios-text);
+  background: color-mix(in srgb, var(--hios-text) 5%, transparent);
 }
 
 :global([data-theme="dark"]) .navLink:hover {
-  color: #f1f5f9;
-  background: rgba(255, 255, 255, 0.04);
+  color: var(--hios-text);
+  background: color-mix(in srgb, var(--hios-text) 5%, transparent);
 }
 
 .navLinkPrimary {
   font-weight: 600;
-  color: #f1f5f9;
+  color: var(--hios-text);
 }
 
 :global([data-theme="dark"]) .navLinkPrimary {
-  color: #f1f5f9;
+  color: var(--hios-text);
 }
 
 .navLinkSecondary {
@@ -107,13 +107,13 @@
 }
 
 .navLinkActive {
-  color: #f8fafc;
-  background: rgba(255, 255, 255, 0.06);
+  color: var(--hios-text);
+  background: color-mix(in srgb, var(--hios-text) 7%, transparent);
 }
 
 :global([data-theme="dark"]) .navLinkActive {
-  color: #f8fafc;
-  background: rgba(255, 255, 255, 0.06);
+  color: var(--hios-text);
+  background: color-mix(in srgb, var(--hios-text) 7%, transparent);
 }
 
 .navLinkActive::after {
@@ -173,7 +173,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #94a3b8 !important;
+  color: var(--hios-text-secondary) !important;
 }
 
 .iconLink {
@@ -184,7 +184,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 8px;
-  color: #94a3b8;
+  color: var(--hios-text-secondary);
   text-decoration: none;
   font-size: 16px;
   transition: color 0.18s ease, background-color 0.18s ease;
@@ -207,31 +207,31 @@
 }
 
 :global([data-theme="dark"]) .iconLink {
-  color: #94a3b8;
+  color: var(--hios-text-secondary);
 }
 
 .iconLink:hover {
-  color: #f1f5f9;
-  background: rgba(255, 255, 255, 0.04);
+  color: var(--hios-text);
+  background: color-mix(in srgb, var(--hios-text) 5%, transparent);
 }
 
 :global([data-theme="dark"]) .iconLink:hover {
-  color: #f1f5f9;
-  background: rgba(255, 255, 255, 0.04);
+  color: var(--hios-text);
+  background: color-mix(in srgb, var(--hios-text) 5%, transparent);
 }
 
 :global([data-theme="dark"]) .iconButton {
-  color: #94a3b8 !important;
+  color: var(--hios-text-secondary) !important;
 }
 
 .iconButton:hover {
-  color: #f1f5f9 !important;
-  background: rgba(255, 255, 255, 0.04) !important;
+  color: var(--hios-text) !important;
+  background: color-mix(in srgb, var(--hios-text) 5%, transparent) !important;
 }
 
 :global([data-theme="dark"]) .iconButton:hover {
-  color: #f1f5f9 !important;
-  background: rgba(255, 255, 255, 0.04) !important;
+  color: var(--hios-text) !important;
+  background: color-mix(in srgb, var(--hios-text) 5%, transparent) !important;
 }
 
 @media (max-width: 1240px) {
@@ -378,8 +378,8 @@
 }
 
 :global([data-theme='dark']) .drawerLink:hover {
-  color: #f1f5f9;
-  background: rgba(255, 255, 255, 0.06);
+  color: var(--hios-text);
+  background: color-mix(in srgb, var(--hios-text) 7%, transparent);
 }
 
 :global([data-theme='dark']) .drawerLinkActive {

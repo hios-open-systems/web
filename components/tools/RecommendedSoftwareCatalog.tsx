@@ -1,4 +1,5 @@
 'use client';
+import { PageIntro } from '@/components/ui/PageIntro';
 
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
@@ -34,16 +35,9 @@ export function RecommendedSoftwareCatalog() {
 
   return (
     <main className={styles.page}>
-      <section className={styles.header}>
-        <h1 className={styles.title}>{t('title')}</h1>
-        <p className={styles.subtitle}>{t('subtitle')}</p>
-        <p
-          className={styles.openNote}
-          dangerouslySetInnerHTML={{
-            __html: t('open_source_note'),
-          }}
-        />
-      </section>
+      <PageIntro eyebrow="HIOS / SOFTWARE" title={t('title')} description={t('subtitle')} area="software">
+        <p className={styles.openNote} dangerouslySetInnerHTML={{ __html: t('open_source_note') }} />
+      </PageIntro>
 
       <section className={styles.filterRow}>
         <Segmented
@@ -60,9 +54,16 @@ export function RecommendedSoftwareCatalog() {
         </span>
       </section>
 
-      <section className={styles.grid}>
+      <section key={filter} className={`${styles.grid} studio-results`}>
         {visible.map((tool) => (
-          <a key={tool.name} href={tool.url} target="_blank" rel="noopener noreferrer" className={styles.card}>
+          <a
+            key={tool.name}
+            href={tool.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`${styles.card} studio-card`}
+            data-area={tool.category === 'hardware' ? 'maker' : 'software'}
+          >
             <div className={styles.cardHead}>
               <span className={styles.logoWrap}>
                 {tool.logo ? (
@@ -79,9 +80,7 @@ export function RecommendedSoftwareCatalog() {
 
             <div className={styles.cardFooter}>
               {tool.projectsUsing > 0 ? (
-                <span className={styles.badge}>
-                  {t('used_in_projects', { count: tool.projectsUsing })}
-                </span>
+                <span className={styles.badge}>{t('used_in_projects', { count: tool.projectsUsing })}</span>
               ) : (
                 <span />
               )}
