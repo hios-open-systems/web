@@ -1,13 +1,14 @@
 'use client';
 import { ToolPresetBinding, textField } from '@/components/workbench/ToolPresetBinding';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Button, Card, Col, Input, Row, Select, Space, Tag, Typography, message } from 'antd';
 import { CopyOutlined, ReloadOutlined, SearchOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { dnsRecordTypes, type DnsLookupResponse, type DnsRecordType } from '@/lib/workbench/network';
 import { ToolHeader } from './ToolHeader';
+import { ExternalQueryConsent } from './ExternalQueryConsent';
 import { useRunHotkey } from '@/lib/hooks/useRunHotkey';
 import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import styles from './workbench.module.css';
@@ -39,10 +40,12 @@ export function DnsLookupTool() {
   const [result, setResult] = useState<DnsLookupResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [externalAllowed, setExternalAllowed] = useState(false);
 
   const resultText = useMemo(() => (result ? JSON.stringify(result, null, 2) : ''), [result]);
 
   const runLookup = async (targetDomain = domain, targetType = recordType) => {
+    if (!externalAllowed) return;
     setLoading(true);
     setError(null);
 
@@ -65,39 +68,12 @@ export function DnsLookupTool() {
     }
   };
 
-  useEffect(() => {
-    const bootstrap = async () => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const response = await fetch(`/api/workbench/dns?domain=${encodeURIComponent(defaultDomain)}&type=${defaultType}`, {
-          cache: 'no-store',
-        });
-        const payload = (await response.json()) as DnsLookupResponse | ApiError;
-
-        if (!response.ok) {
-          throw new Error('error' in payload ? payload.error || 'DNS lookup failed' : 'DNS lookup failed');
-        }
-
-        setResult(payload as DnsLookupResponse);
-      } catch (lookupError) {
-        setResult(null);
-        setError(lookupError instanceof Error ? lookupError.message : 'DNS lookup failed');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    void bootstrap();
-  }, []);
-
   const handleCopy = useCopyToClipboard(messageApi);
 
   const loadExample = () => {
     const nextDomain = exampleDomains[recordType];
     setDomain(nextDomain);
-    void runLookup(nextDomain, recordType);
+
   };
 
   const themeVars = {
@@ -115,6 +91,7 @@ export function DnsLookupTool() {
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
       {contextHolder}
+      <ExternalQueryConsent provider="Google Public DNS" checked={externalAllowed} onChange={setExternalAllowed} />
       <ToolPresetBinding toolId="dns-lookup" fields={{ domain: textField(domain, setDomain), recordType: textField(recordType, setRecordType, ['A','AAAA','CNAME','MX','TXT','NS'], false) }} />
       <ToolHeader
         eyebrow={t('badge')}

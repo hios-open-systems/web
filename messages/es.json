@@ -555,6 +555,7 @@
         "quantity": "Cantidad",
         "notes": "Notas",
         "technical_files": "Archivos del proyecto",
+        "view_3d": "Ver en 3D",
         "technical_files_description": "Archivos de diseño, firmware y documentación del proyecto.",
         "no_technical_files": "No hay archivos técnicos disponibles.",
         "download_file": "Descargar",
@@ -2099,6 +2100,8 @@
             "localLabel": "Procesamiento local",
             "localHint": "El procesamiento principal de esta herramienta se realiza en el navegador.",
             "networkLabel": "Consulta de red",
+            "externalConsent": "Autorizo enviar el dominio consultado a {provider} al ejecutar la consulta. No se envían archivos.",
+            "captchaConsent": "Cargar verificación externa de Cloudflare Turnstile (comparte tu IP con Cloudflare)",
             "networkHint": "Esta herramienta necesita una conexión de red para consultar datos."
         },
         "jwtPlayground": {

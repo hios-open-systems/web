@@ -1,12 +1,13 @@
 'use client';
 import { ToolPresetBinding, textField } from '@/components/workbench/ToolPresetBinding';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Button, Card, Input, Space, Tag, Typography, message } from 'antd';
 import { CopyOutlined, ReloadOutlined, SearchOutlined } from '@ant-design/icons';
 import type { RdapLookupResponse } from '@/lib/workbench/network';
 import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import { ToolHeader } from './ToolHeader';
+import { ExternalQueryConsent } from './ExternalQueryConsent';
 import styles from './workbench.module.css';
 
 const { Text } = Typography;
@@ -22,9 +23,11 @@ export function WhoisRdapTool() {
   const [result, setResult] = useState<RdapLookupResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [externalAllowed, setExternalAllowed] = useState(false);
   const resultText = useMemo(() => (result ? JSON.stringify(result, null, 2) : ''), [result]);
 
   const runLookup = useCallback(async (target: string) => {
+    if (!externalAllowed) return;
     setLoading(true);
     setError(null);
 
@@ -39,11 +42,7 @@ export function WhoisRdapTool() {
     } finally {
       setLoading(false);
     }
-  }, []);
-
-  useEffect(() => {
-    void runLookup(defaultDomain);
-  }, [runLookup]);
+  }, [externalAllowed]);
 
   const copyRaw = useCopyToClipboard(messageApi);
   const copyResult = () => copyRaw(resultText, 'Resultado copiado');
@@ -51,6 +50,7 @@ export function WhoisRdapTool() {
   return (
     <Space direction="vertical" size={20} className={styles.stackFull}>
       {contextHolder}
+      <ExternalQueryConsent provider="rdap.org / RDAP registry" checked={externalAllowed} onChange={setExternalAllowed} />
       <ToolPresetBinding toolId="whois-rdap" fields={{ domain: textField(domain, setDomain) }} />
       <ToolHeader
         eyebrow="Network Lab"
@@ -62,7 +62,7 @@ export function WhoisRdapTool() {
             <Button icon={<SearchOutlined />} loading={loading} onClick={() => void runLookup(domain)}>Consultar</Button>
             <Button icon={<ReloadOutlined />} onClick={() => {
               setDomain(defaultDomain);
-              void runLookup(defaultDomain);
+
             }}>Ejemplo</Button>
             {result ? <Button icon={<CopyOutlined />} onClick={copyResult}>Copiar JSON</Button> : null}
           </Space>
