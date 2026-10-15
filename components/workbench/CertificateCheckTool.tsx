@@ -1,13 +1,14 @@
 'use client';
 import { ToolPresetBinding, textField, numberField } from '@/components/workbench/ToolPresetBinding';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Button, Card, Col, Input, InputNumber, Row, Space, Tag, Typography, message } from 'antd';
 import { CopyOutlined, ReloadOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
 import { type CertificateLookupResponse } from '@/lib/workbench/network';
 import { ToolHeader } from './ToolHeader';
+import { ExternalQueryConsent } from './ExternalQueryConsent';
 import { useRunHotkey } from '@/lib/hooks/useRunHotkey';
 import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import styles from './workbench.module.css';
@@ -30,10 +31,12 @@ export function CertificateCheckTool() {
   const [result, setResult] = useState<CertificateLookupResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [externalAllowed, setExternalAllowed] = useState(false);
 
   const resultText = useMemo(() => (result ? JSON.stringify(result, null, 2) : ''), [result]);
 
   const inspectCertificate = async (targetHostname = hostname, targetPort = port) => {
+    if (!externalAllowed) return;
     setLoading(true);
     setError(null);
 
@@ -56,33 +59,6 @@ export function CertificateCheckTool() {
     }
   };
 
-  useEffect(() => {
-    const bootstrap = async () => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const response = await fetch(`/api/workbench/certificate?hostname=${encodeURIComponent(defaultHostname)}&port=${defaultPort}`, {
-          cache: 'no-store',
-        });
-        const payload = (await response.json()) as CertificateLookupResponse | ApiError;
-
-        if (!response.ok) {
-          throw new Error('error' in payload ? payload.error || 'Certificate inspection failed' : 'Certificate inspection failed');
-        }
-
-        setResult(payload as CertificateLookupResponse);
-      } catch (inspectionError) {
-        setResult(null);
-        setError(inspectionError instanceof Error ? inspectionError.message : 'Certificate inspection failed');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    void bootstrap();
-  }, []);
-
   const handleCopy = useCopyToClipboard(messageApi);
 
   const themeVars = {
@@ -103,6 +79,7 @@ export function CertificateCheckTool() {
   return (
     <Space direction="vertical" size={20} style={themeVars} className={styles.stackFull}>
       {contextHolder}
+      <ExternalQueryConsent provider="Qualys SSL Labs" checked={externalAllowed} onChange={setExternalAllowed} />
       <ToolPresetBinding toolId="certificate-check" fields={{ hostname: textField(hostname, setHostname), port: numberField(port, setPort, 1, 65535) }} />
       <ToolHeader
         eyebrow={t('badge')}
@@ -116,7 +93,7 @@ export function CertificateCheckTool() {
             <Button icon={<ReloadOutlined />} onClick={() => {
               setHostname(defaultHostname);
               setPort(defaultPort);
-              void inspectCertificate(defaultHostname, defaultPort);
+
             }}>{t('loadExample')}</Button>
             {result ? <Button icon={<CopyOutlined />} onClick={() => handleCopy(resultText)}>{t('copyResult')}</Button> : null}
           </Space>

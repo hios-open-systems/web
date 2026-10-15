@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 // Widget de Cloudflare Turnstile, feature-flagged por NEXT_PUBLIC_TURNSTILE_SITEKEY.
 // Si la var no está seteada, NO renderiza nada y el form sigue funcionando sin
@@ -27,11 +28,13 @@ export function turnstileEnabled(): boolean {
 }
 
 export function TurnstileWidget({ onToken }: { onToken: (token: string | null) => void }) {
+  const [allowed, setAllowed] = useState(false);
+  const t = useTranslations('Workbench.toolHeader');
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!SITEKEY) return;
+    if (!SITEKEY || !allowed) return;
 
     const render = () => {
       if (!window.turnstile || !containerRef.current || widgetIdRef.current) return;
@@ -71,8 +74,9 @@ export function TurnstileWidget({ onToken }: { onToken: (token: string | null) =
         widgetIdRef.current = null;
       }
     };
-  }, [onToken]);
+  }, [onToken, allowed]);
 
   if (!SITEKEY) return null;
+  if (!allowed) return <button type="button" onClick={() => setAllowed(true)}>{t('captchaConsent')}</button>;
   return <div ref={containerRef} style={{ minHeight: 65 }} />;
 }

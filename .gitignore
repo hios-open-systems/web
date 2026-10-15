@@ -68,3 +68,4 @@ PENDING.md
 # Local Cloudflare runtime state
 /.wrangler/
 /.next-workspaces/
+/public/vendor/excalidraw/

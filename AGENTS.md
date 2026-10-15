@@ -50,6 +50,9 @@ Projects are loaded at build time from `projects/` directory:
 
 ## Code Standards
 
+- Local-first: process files and tool inputs in the browser. Reuse self-hosted viewers; never send files or file URLs to third-party viewers.
+- No implicit third-party requests (including backend proxies, fonts, telemetry, and embeds). Any necessary external connection must name its destination and data before an explicit user action. Loading a page or an example must not trigger it.
+
 - TypeScript strict mode, no `any` types
 - Components max 150 lines, functions max 50 lines
 - Separate data fetching from presentation (use custom hooks)

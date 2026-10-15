@@ -92,6 +92,7 @@ export default async function RootLayout({ children, params }: Props) {
   return (
     <html lang={locale} data-theme="dark" data-skin="datasheet" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: "window.EXCALIDRAW_ASSET_PATH='/vendor/excalidraw/';" }} />
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP_SCRIPT }} />
         <meta name="source" content="https://github.com/hios-open-systems/web" />
         <link rel="author" href="/humans.txt" />

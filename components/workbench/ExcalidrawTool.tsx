@@ -17,8 +17,15 @@ import { downloadBlob } from '@/lib/workbench/download';
 import { ToolHeader } from './ToolHeader';
 import styles from './workbench.module.css';
 
+declare global {
+  interface Window { EXCALIDRAW_ASSET_PATH?: string; }
+}
+
 const ExcalidrawCanvas = dynamic(
-  () => import('@excalidraw/excalidraw').then((mod) => mod.Excalidraw),
+  () => {
+    window.EXCALIDRAW_ASSET_PATH = '/vendor/excalidraw/';
+    return import('@excalidraw/excalidraw').then((mod) => mod.Excalidraw);
+  },
   { ssr: false },
 );
 
@@ -150,6 +157,7 @@ export function ExcalidrawTool() {
             <ExcalidrawCanvas
               key={editorKey}
               theme={mode}
+              validateEmbeddable={() => false}
               initialData={initialDataRef.current}
               onChange={(elements, appState, files) => {
                 const next: StoredScene = { version: 1, elements: [...elements], appState: { viewBackgroundColor: appState.viewBackgroundColor, scrollX: appState.scrollX, scrollY: appState.scrollY, zoom: appState.zoom }, files };

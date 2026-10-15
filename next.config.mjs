@@ -1,4 +1,6 @@
 import { execSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+import './scripts/prepare-local-assets.mjs';
 import createNextIntlPlugin from 'next-intl/plugin';
 import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
 
@@ -27,6 +29,14 @@ function resolveDeployVersion() {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  webpack(config) {
+    config.module.rules.push({
+      test: /@excalidraw[\\/]excalidraw[\\/]dist[\\/].*\.js$/,
+      enforce: 'pre',
+      use: [{ loader: fileURLToPath(new URL('./scripts/local-excalidraw-fonts.cjs', import.meta.url)) }],
+    });
+    return config;
+  },
 	distDir: process.env.HIOS_LOCAL_D1 === '1' ? '.next-workspaces' : '.next',
 	transpilePackages: ['antd', '@ant-design/icons', 'next-intl'],
 
@@ -103,13 +113,12 @@ const nextConfig = {
 			"frame-ancestors 'self'",
 			"form-action 'self'",
 			// challenges.cloudflare.com = Turnstile (script + iframe del widget).
-			// static.cloudflareinsights.com = beacon de Cloudflare Web Analytics (lo
-			// inyecta CF automáticamente; sin esto el CSP lo bloqueaba y llenaba la consola).
-			`script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://static.cloudflareinsights.com${isDev ? " 'unsafe-eval'" : ''}`,
+			// Turnstile loads only after an explicit opt-in in the form.
+			`script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com${isDev ? " 'unsafe-eval'" : ''}`,
 			"style-src 'self' 'unsafe-inline'",
-			"img-src 'self' data: blob: https:",
+			"img-src 'self' data: blob:",
 			"font-src 'self' data:",
-			`connect-src 'self' https://challenges.cloudflare.com https://cloudflareinsights.com${isDev ? ' ws:' : ''}`,
+			`connect-src 'self' https://challenges.cloudflare.com${isDev ? ' ws:' : ''}`,
 			"frame-src 'self' https://challenges.cloudflare.com",
 			"worker-src 'self' blob:",
 			"manifest-src 'self'",
