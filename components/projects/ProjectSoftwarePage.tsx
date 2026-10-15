@@ -47,6 +47,8 @@ export async function ProjectSoftwarePage({ locale, slug }: { locale: string; sl
             </a>
           ))}
           <Link href={`/${locale}/projects/${slug}`}>{labels('hardware')} →</Link>
+          <Link href={`/${locale}/projects/${slug}#usage`}>{labels('usage')} →</Link>
+          <Link href={`/${locale}/projects/${slug}#flash`}>{labels('flash')} →</Link>
           <Link href={`/${locale}/pinouts/${slug}`}>{labels('wiring')} →</Link>
         </div>
       </footer>

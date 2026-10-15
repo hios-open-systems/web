@@ -2746,7 +2746,9 @@
                 "title": "Current scope",
                 "body": "The app lets you request test tones. Remote volume and equalization, battery monitoring and OTA updates are planned. The Android app is distributed as source code to build with Android Studio or Gradle."
             }
-        }
+        },
+        "usage": "How to use it",
+        "flash": "Flash your ESP32"
     },
     "HomeQuickAccess": {
         "workbench": {
@@ -3004,5 +3006,50 @@
         },
         "localPreview": "Data saved in this browser",
         "presetPrivacy": "This configuration and its data are saved in this browser."
+    },
+    "ProjectGettingStarted": {
+        "usage": "How to use it",
+        "flash": "Flash your ESP32",
+        "software": "Explore the software",
+        "requirements": "Install Git and PlatformIO Core on your computer.",
+        "wiring": "Wiring and power guide",
+        "commands": "Clone the entire repository and run these commands. Replace COM5 with your board’s port.",
+        "ports": "Windows: COM5 or another COM port. Linux: /dev/ttyUSB0 or /dev/ttyACM0. macOS: /dev/cu.usbserial-… . Run pio device list to find it. These arguments override the port in platformio.ini.",
+        "firmware": "Open firmware source",
+        "buildConfig": "Build configuration",
+        "fullGuide": "Full guide and troubleshooting",
+        "pad": {
+            "intro": "The PAD groups shortcuts into layers and displays their labels. USB or BLE carries keyboard, mouse and media controls; the companion adds web editing and real computer state.",
+            "steps": {
+                "1": "Connect the ESP32-S3 native USB port to your PC for HID, or pair over BLE. Try Copy and Paste in a test document.",
+                "2": "Press the encoder to open the menu, turn it to browse groups and press a key to select a layer. Its function changes with the layer; the joystick moves the pointer.",
+                "3": "Start the companion on the same network as the PAD. Open the editor, change a label or action and choose Save + restart to send it to the device."
+            },
+            "appLink": "Companion source and guide",
+            "board": "For ESP32-S3-DevKitC-1 N16R8 (16 MB flash, 8 MB OPI PSRAM) with an ILI9488 display. Keep the project configuration; this firmware is not for the DAC’s classic ESP32.",
+            "connect": "With the 2S battery pack connected, open SW-CELDAS before plugging in USB. Use UART/CH343 for flashing and logs; native USB is used for HID.",
+            "success": "At startup, the serial monitor prints the API/OTA token: keep it for companion configuration. Then test controls over native USB. See the full guide for OTA and recovery.",
+            "deviceAlt": "Real photo of the PAD screen in the Editing layer.",
+            "deviceCaption": "Physical PAD: real prototype photo in Editing mode. Labels depend on configuration.",
+            "mirrorAlt": "Companion web mirror screenshot with sample Editing layer data.",
+            "mirrorCaption": "Companion mirror: actual interface with simulated data. It represents PAD state, not a photograph of the screen or a live connection.",
+            "editorAlt": "Actual companion editor screenshot with sample labels and actions.",
+            "editorCaption": "Companion editor: actual UI with sample actions, Windows/Linux variants, macros and text.",
+            "demoTitle": "Try a mini PAD demo",
+            "demoDescription": "Choose Editing, Media or Dev, press keys and adjust volume. A local simulation using the companion renderer and sample data: no shortcuts, hardware control or full firmware emulation. Demo controls use the original Spanish UI.",
+            "companionSetup": "For real use: run npm install and npm run build in projects/pad/companion, copy config.example.json to config.json and set host and token. Run npm start. Default URLs: http://localhost:8787 for the mirror and http://localhost:8787/admin.html for the editor. Windows and Linux providers are implemented; macOS is pending."
+        },
+        "btdac": {
+            "intro": "The DAC receives music over Bluetooth A2DP and sends stereo line audio through PCM5102. The Android app uses a separate BLE channel for test tones.",
+            "steps": {
+                "1": "Connect the line output to an amplifier or powered speakers and turn on the DAC. Start at low volume.",
+                "2": "Find HIOS BTDAC in your phone or PC Bluetooth settings, pair and play music. Audio playback does not need the Android app.",
+                "3": "Build android/ with Android Studio, grant Bluetooth permissions and connect in the app. Stop music before requesting a tone; it lasts about two seconds."
+            },
+            "appLink": "Android app source and guide",
+            "board": "For classic ESP32 (esp32dev / WROOM-32) with PCM5102. ESP32-S3 is not a replacement for this A2DP firmware.",
+            "connect": "Check power and PCM5102 wiring before connecting the ESP32 programming USB port.",
+            "success": "After uploading, open the serial monitor at 115200 and find HIOS BTDAC over Bluetooth. If it connects without sound, follow the full guide’s SCK, XSMT and I2S checks. Build Android from source; no APK or firmware binary is provided here."
+        }
     }
 }

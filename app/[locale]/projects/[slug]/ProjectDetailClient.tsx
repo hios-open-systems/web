@@ -19,14 +19,16 @@ const { Title, Paragraph, Text } = Typography;
 interface ProjectDetailClientProps {
     project: ProjectMeta & { readme: string; gallery?: string[] };
     slug: string;
+    gettingStarted?: React.ReactNode;
 }
 
 
 
-export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps) {
+export function ProjectDetailClient({ project, slug, gettingStarted }: ProjectDetailClientProps) {
     const { mode } = useTheme();
     const locale = useLocale();
     const t = useTranslations('ProjectDetail');
+    const startLabels = useTranslations('ProjectGettingStarted');
     const accentColor = 'var(--accent-text)';
     const bgColor = 'var(--hios-bg)';
     const textColor = 'var(--hios-text)';
@@ -134,6 +136,10 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                     </Paragraph>
 
                     <Space size="middle" style={{ marginTop: '24px' }} wrap>
+                        {gettingStarted && <>
+                            <Button href="#usage">{startLabels('usage')}</Button>
+                            <Button href="#flash" type="primary">{startLabels('flash')}</Button>
+                        </>}
                         {project.files.map((file) => (
                             <Button key={file.name} type="primary" icon={<DownloadOutlined />} href={file.path} target="_blank">
                                 {file.name}
@@ -156,6 +162,8 @@ export function ProjectDetailClient({ project, slug }: ProjectDetailClientProps)
                     <ImageCarousel images={project.gallery} alt={project.name} />
                 </section>
             )}
+
+            {gettingStarted}
 
             {/* Story / Breakthrough - THE MAGIC */}
             {story && (
