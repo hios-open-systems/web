@@ -49,6 +49,12 @@ inline float voiceSample(uint8_t instr, float ph, float prog, float tSec,
       float env = expf(-tSec / (kick ? 0.10f : 0.03f));
       return noiseWave(rng) * env * (kick ? 0.9f : 0.5f);
     }
+    case songfmt::INSTR_GUITAR:
+      return (0.6f * pulseWave(ph, 0.25f) + 0.4f * triWave(ph)) * expf(-4.5f * prog);
+    case songfmt::INSTR_STRINGS:
+      return sawWave(ph) * 0.7f * (0.8f + 0.2f * expf(-0.8f * prog));
+    case songfmt::INSTR_CHOIR:
+      return (0.7f * triWave(ph) + 0.3f * pulseWave(ph, 0.5f)) * (0.85f + 0.15f * expf(-1.0f * prog));
     default:
       return pulseWave(ph, 0.25f) * expf(-3.5f * prog);
   }

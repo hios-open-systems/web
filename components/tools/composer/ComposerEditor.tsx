@@ -8,6 +8,8 @@ import styles from './composer.module.css';
 import { MusicAssist } from './MusicAssist';
 import { DEFAULT_SCALE, nearestScalePitch } from '@/lib/workbench/chiptuneMusic';
 
+import { INSTRUMENTS } from '@/lib/workbench/chiptune';
+
 export function ComposerEditor({ c }: { c: ComposerState }) {
   const [zoom, setZoom] = useState(1);
   const [duration, setDuration] = useState(240);
@@ -23,8 +25,32 @@ export function ComposerEditor({ c }: { c: ComposerState }) {
   return (
     <section className={styles.editor} aria-label="Editor de notas">
       <div className={styles.editorHeading}>
-        <h2>{track?.name ?? 'Piano roll'}</h2>
-        <span className={styles.hint}>{track?.notes.length ?? 0} notas · grilla de 1/16</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+          <h2>{track?.name ?? 'Piano roll'}</h2>
+          {track && (
+            <span
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 4,
+                padding: '2px 10px',
+                borderRadius: 999,
+                fontSize: 12,
+                fontWeight: 600,
+                background: `${INSTRUMENTS[track.instrument]?.color ?? '#6366f1'}22`,
+                border: `1px solid ${INSTRUMENTS[track.instrument]?.color ?? '#6366f1'}66`,
+                color: INSTRUMENTS[track.instrument]?.color ?? 'inherit',
+              }}
+            >
+              {track.instrument === 'noise-perc' ? '🥁 Batería / Drum Machine' : INSTRUMENTS[track.instrument]?.label}
+            </span>
+          )}
+        </div>
+        <span className={styles.hint}>
+          {track?.instrument === 'noise-perc'
+            ? `${track.notes.length} golpes · grilla 1/16 · Bombo (36), Caja (38), Hi-Hat (42/46), Crash (49)`
+            : `${track?.notes.length ?? 0} notas · grilla de 1/16`}
+        </span>
       </div>
       <div className={styles.actions}>
         <Segmented

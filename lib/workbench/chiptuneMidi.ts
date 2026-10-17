@@ -18,6 +18,9 @@ const PROGRAMS: Record<InstrumentId, ProgramInfo> = {
   'saw-lead': { program: 81, percussion: false }, // Lead 2 (sawtooth)
   'snes-lead': { program: 89, percussion: false }, // Pad 2 (warm)
   'noise-perc': { program: 0, percussion: true },
+  'chiptune-guitar': { program: 29, percussion: false }, // Overdriven Guitar
+  'synth-strings': { program: 48, percussion: false }, // String Ensemble 1
+  'synth-choir': { program: 52, percussion: false }, // Choir Aahs
 };
 
 const clampByte = (value: number): number => Math.max(0, Math.min(127, Math.round(value)));

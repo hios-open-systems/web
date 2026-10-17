@@ -76,7 +76,10 @@ El índice es el `i` del formato wire (el orden es el contrato; ver `SongFormat.
 | 2 | `triangle-bass`  | triángulo cálido (bajo) |
 | 3 | `saw-lead`       | sierra brillante |
 | 4 | `snes-lead`      | mezcla triángulo+pulso, cálida |
-| 5 | `noise-perc`     | ruido; **el pitch elige el golpe**: grave (≤45) = bombo, agudo = hi-hat |
+| 5 | `noise-perc`     | batería/percusión GM (bombo 36, caja 38, hi-hat 42/46, crash 49, toms 45/48/50) |
+| 6 | `chiptune-guitar`| guitarra retro con ataque punteado y decay rápido |
+| 7 | `synth-strings`  | conjunto de cuerdas / pad armónico envolvente |
+| 8 | `synth-choir`    | sintetizador coral con formantes vocales |
 
 ---
 
