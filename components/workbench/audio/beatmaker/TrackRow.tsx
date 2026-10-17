@@ -4,6 +4,7 @@ import React from 'react';
 import { Button, Tooltip } from 'antd';
 import { PlayCircleOutlined } from '@ant-design/icons';
 import { SOUND_META, type BeatTrack } from '@/lib/workbench/beatmaker.ts';
+import { NOTE_NAMES } from '@/lib/workbench/noteFreq.ts';
 import styles from './beatmaker.module.css';
 
 interface TrackRowProps {
@@ -11,6 +12,7 @@ interface TrackRowProps {
   currentStep: number;
   isPlaying: boolean;
   onToggleStep: (stepIndex: number) => void;
+  onCycleStepDetail?: (stepIndex: number) => void;
   onPreview: () => void;
   onToggleMute: () => void;
   onToggleSolo: () => void;
@@ -21,6 +23,7 @@ export function TrackRow({
   currentStep,
   isPlaying,
   onToggleStep,
+  onCycleStepDetail,
   onPreview,
   onToggleMute,
   onToggleSolo,
@@ -96,18 +99,31 @@ export function TrackRow({
                 borderColor: st.active ? meta.color : undefined,
               }}
               onClick={() => onToggleStep(i)}
+              onContextMenu={(e) => {
+                e.preventDefault();
+                onCycleStepDetail?.(i);
+              }}
+              title="Click: activar/desactivar | Click derecho: cambiar roll o nota"
               aria-label={`${track.name} paso ${i + 1} ${st.active ? 'activo' : 'inactivo'}`}
             >
               {st.active && (
                 <span
                   style={{
-                    width: 6,
-                    height: 6,
-                    borderRadius: '50%',
-                    background: '#fff',
-                    boxShadow: '0 0 4px #fff',
+                    fontSize: 9,
+                    fontWeight: 800,
+                    color: '#fff',
+                    textShadow: '0 1px 2px rgba(0,0,0,0.8)',
+                    lineHeight: 1,
+                    pointerEvents: 'none',
+                    userSelect: 'none',
                   }}
-                />
+                >
+                  {track.sound === 'hihat' && st.roll && st.roll > 1
+                    ? `${st.roll}x`
+                    : (track.sound === '808' || track.sound === 'melody') && st.pitch
+                    ? `${NOTE_NAMES[st.pitch % 12]}${Math.floor(st.pitch / 12) - 1}`
+                    : '•'}
+                </span>
               )}
             </button>
           );
