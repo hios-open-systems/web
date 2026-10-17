@@ -1656,6 +1656,10 @@
                 "title": "Generatore di segnali audio",
                 "description": "Genera toni, rumore e scansioni di frequenza per provare altoparlanti, DAC e collegamenti audio."
             },
+            "qpsk-modulator": {
+                "title": "Oscilloscopio e modulatore QPSK",
+                "description": "Simula la modulazione digitale in quadratura (I/Q), analizza il diagramma di costellazione con rumore AWGN e demodula trame in tempo reale."
+            },
             "guitar-tuner": {
                 "title": "Accordatore",
                 "description": "Accorda gli strumenti dal microfono con una frequenza di riferimento regolabile."

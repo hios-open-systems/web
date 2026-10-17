@@ -56,6 +56,7 @@ const TOOLS: Partial<Record<WorkbenchToolId, ComponentType>> = {
   'voice-ai-latency': dynamic(() => import('@/components/workbench/VoiceAiLatencyTool').then((m) => m.VoiceAiLatencyTool), { ssr: false }),
   'llm-grammar-generator': dynamic(() => import('@/components/workbench/LlmGrammarTool').then((m) => m.LlmGrammarTool), { ssr: false }),
   'token-inspector': dynamic(() => import('@/components/workbench/TokenizerTool').then((m) => m.TokenizerTool), { ssr: false }),
+  'qpsk-modulator': dynamic(() => import('@/components/workbench/QpskModulatorTool').then((m) => m.QpskModulatorTool), { ssr: false }),
 };
 
 export function ToolRenderer({ toolId, headerRendered = false }: { toolId: WorkbenchToolId; headerRendered?: boolean }) {

@@ -21,4 +21,5 @@ export const toolAliases: Partial<Record<WorkbenchToolId, string>> = {
   'ipv6-expand': 'ip ipv6 expand network red',
   'resistor-color-code': 'resistencia resistor colores resistance',
   'ohms-law': 'resistencia voltaje corriente resistance voltage current',
+  'qpsk-modulator': 'qpsk dsp modulacion modulation constelacion constellation iq awgn osciloscopio rf fase phase quadrature',
 };

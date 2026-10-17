@@ -167,7 +167,7 @@ export function ToneGeneratorTool() {
           />
         </Card>
         <div style={{ display: 'grid', gap: 20, minWidth: 0 }}>
-          <SignalScope analyser={analyser} />
+          <SignalScope analyser={analyser} onRequestStart={start} />
           <Card className={`${workbenchStyles.sectionCard} ${styles.readoutCard}`}>
             <SignalGeneratorReadout
               mode={mode}
