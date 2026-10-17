@@ -57,20 +57,42 @@ export default async function ProjectPage({ params }: PageProps) {
     const header = await getTranslations({ locale, namespace: 'Header' });
     const software = await getTranslations({ locale, namespace: 'ProjectSoftware' });
     const path = `/projects/${encodeURIComponent(slug)}` as const;
+    const softwareBanner = isSoftwareProject(slug) ? (
+        <aside
+            style={{
+                maxWidth: 900,
+                margin: '0 auto 28px',
+                padding: '18px 22px',
+                border: '1px solid var(--hios-border)',
+                borderLeft: '3px solid var(--accent)',
+                borderRadius: 12,
+                background: 'var(--hios-bg-secondary)',
+            }}
+        >
+            <Link
+                href={`/${locale}${softwarePath(slug)}`}
+                style={{ color: 'var(--accent-text)', fontSize: 18, fontWeight: 600, textDecoration: 'none' }}
+            >
+                {software(`${slug}.title`)} →
+            </Link>
+            <p style={{ color: 'var(--hios-text-secondary)', margin: '6px 0 0', fontSize: 14, lineHeight: 1.55 }}>
+                {software(`${slug}.description`)}
+            </p>
+        </aside>
+    ) : undefined;
+
     return <>
         <PageTrail locale={locale} items={[
             { name: header('home'), path: '' }, { name: header('projects'), path: '/projects' },
             { name: project.name, path },
         ]} />
         <JsonLd data={createProjectPageData(locale, path, project.name, description)} />
-        {isSoftwareProject(slug) && <aside style={{ maxWidth: 1132, margin: '16px auto', padding: '20px 24px', border: '1px solid var(--hios-border)', borderRadius: 12 }}>
-            <Link href={`/${locale}${softwarePath(slug)}`} style={{ color: 'var(--accent-text)', fontSize: 20 }}>
-                {software(`${slug}.title`)} →
-            </Link>
-            <p style={{ color: 'var(--hios-text-secondary)', marginBottom: 0 }}>{software(`${slug}.description`)}</p>
-        </aside>}
-        <ProjectDetailClient project={projectWithGallery} slug={slug}
-            gettingStarted={isSoftwareProject(slug) ? <ProjectGettingStarted locale={locale} slug={slug} /> : undefined} />
+        <ProjectDetailClient
+            project={projectWithGallery}
+            slug={slug}
+            softwareBanner={softwareBanner}
+            gettingStarted={isSoftwareProject(slug) ? <ProjectGettingStarted locale={locale} slug={slug} /> : undefined}
+        />
         <RelatedResources resourceId={`project:${slug}`} toolIds={['serial-monitor', 'ohms-law', 'resistor-color-code']}
             pinout={['pad', 'btdac', 'speaker'].includes(slug) ? slug : undefined} />
     </>;

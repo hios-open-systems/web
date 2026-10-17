@@ -354,64 +354,128 @@
             ]
         },
         "pad": {
-            "moment": "HIOS PAD ordnet Tastenkürzel, Mediensteuerung und Mausaktionen in Ebenen an. Zehn Aktionstasten, zwei ALT-Tasten, ein Drehgeber und ein Joystick ermöglichen die Auswahl und Ausführung von Aktionen mit einer Übersicht auf dem Display.",
-            "struggle": "USB und Bluetooth BLE übertragen HID-Aktionen. WLAN dient zur Konfiguration, für Updates und zur Kommunikation mit dem Companion. Dieses optionale Programm sendet den Computerstatus an das PAD und ermöglicht unter anderem die systemweite Mikrofonstummschaltung.",
+            "moment": "HIOS PAD ist ein programmierbarer Tischcontroller auf Basis des ESP32-S3 N16R8 mit 4-Zoll-TFT-Display (480 × 320), entkoppelter 2 × 5-Diodenmatrix (echtes N-Key-Rollover), 2 momentanen ALT-Tasten, Drehencoder mit Beschleunigung, analogem Daumen-Joystick, I2S-Stereo-Audio und 8 NeoPixel-LEDs in 2 Zonen.",
+            "struggle": "Dieselbe Hardware unterstützt zwei Firmware-Profile: als Desktop-Control-Deck (16 Shortcut-Ebenen, Makros, Mauszeiger, WiZ/OpenRGB-Steuerung und 4 Live-PC-Telemetrieansichten mit Sparklines über pad-companion) oder als Einhand-Gaming-Keypad / HID-Gamepad (360°-Analogstick oder WASD am Daumen, Diodenmatrix ohne Ghosting und Genre-Profile auf dem Display).",
             "whatWorks": [
-                "Tastatur-, Maus- und Medienaktionen über USB und BLE",
-                "Ebenen und Gruppen mit Navigation über das Display",
-                "Joystick als Maus und ebenenabhängige Drehgeberfunktionen",
-                "JSON-Konfiguration und Webeditor im Companion",
-                "Computerstatus und systemweite Stummschaltung über den Companion",
-                "Vom PAD bereitgestellte Weboberfläche mit virtuellen Bedienelementen und einfacher Bearbeitung"
+                "Kombinierte Tastatur-, Maus- und Medien-HID-Aktionen über natives USB (TinyUSB) und Bluetooth BLE (NimBLE) mit Auto-Switch",
+                "2 × 5-Matrix mit 1N4148-Dioden (NKRO ohne Ghosting), 2 momentane ALT-Tasten (Launcher & Macros) und 2200-Hz-I2S-Klick",
+                "3,3-V-Analogstick mit quadratischer Zeigerbeschleunigung, Tipp=Linksklick, Doppeltipp=Rechtsklick und NVS-Kalibrierung",
+                "Drehencoder mit dynamischer Beschleunigung und Live-Moduswechsel per Doppeltipp (Ebene, Lautstärke, Scroll, Zoom, Tabs)",
+                "RGB565-Theme-System (Dark/Light-Modus + 7 globale Akzentfarben + Ebenenfarbe auf Display und 2-Zonen-NeoPixel)",
+                "4 Vollbild-Telemetrieansichten (General, Red, Núcleos, Disco) mit 56-Sample-Sparklines und flackerfreiem Teil-Rendering",
+                "pad-companion-Dienst (Windows/Linux) mit globalem OS-Mikrofon-Mute, UDP-WiZ-Lichtsteuerung, SSE-Mirror und LittleFS-Webeditor",
+                "Direkt vom ESP32-S3 bereitgestellte PROGMEM-PWA (http://hiospad.local) mit virtuellem 2 × 5-Pad",
+                "Unterstützung für zwei Firmware-Editionen: Control-Deck und Gaming-Keypad / HID-Gamepad auf derselben Hardware"
             ],
             "whatDoesnt": [
-                "Tatsächlicher Computerstatus und systemweite Stummschaltung erfordern den Companion und eine Netzwerkverbindung",
-                "Der Companion hat Implementierungen für Windows und Linux; macOS ist nicht implementiert",
-                "Die direkte Weboberfläche wurde mit einem simulierten Gerät getestet; das Anwenden von Änderungen auf der Hardware muss noch geprüft werden",
-                "Die Akkumessung ist in der Firmware deaktiviert; der frühere GPIO wird für den NeoPixel verwendet"
+                "Echtzeit-Telemetrie, WiZ-Lichtsteuerung und globaler Mikrofon-Mute erfordern pad-companion im lokalen Netzwerk",
+                "Der Companion bietet native Provider für Windows und Linux; macOS ist noch offen",
+                "Die ADC-Akkumessung an GPIO9 ist zugunsten der NeoPixel-Datenleitung deaktiviert (die 2S-Spannung zeigt das LM2596S-Display)"
+            ],
+            "bom": [
+                {
+                    "component": "ESP32-S3-DevKitC-1 N16R8",
+                    "qty": 1,
+                    "notes": "16 MB Quad-SPI-Flash + 8 MB Octal-PSRAM (natives USB-HID + CH343-UART)"
+                },
+                {
+                    "component": "4,0\" ILI9488 TFT-Display (480×320)",
+                    "qty": 1,
+                    "notes": "27 MHz HSPI + 8-Bit-LEDC-PWM-Hintergrundbeleuchtung"
+                },
+                {
+                    "component": "Schließer-Taster + 1N4148-Dioden",
+                    "qty": 12,
+                    "notes": "10 in 2×5-Diodenmatrix (NKRO) + 2 direkte ALT-Tasten"
+                },
+                {
+                    "component": "HW-504 Analog-Joystick",
+                    "qty": 1,
+                    "notes": "3,3 V am 12-Bit-ADC1 + integrierter Taster STICK_SW"
+                },
+                {
+                    "component": "KY-040 Drehencoder",
+                    "qty": 1,
+                    "notes": "A/B-Quadratur mit Beschleunigung + Taster ENC_SW"
+                },
+                {
+                    "component": "MAX98357A I2S-Verstärker + Lautsprecher",
+                    "qty": 2,
+                    "notes": "Stereo am gemeinsamen I2S-Bus (L: SD an Vin, R: SD über 390 kΩ an Vin)"
+                },
+                {
+                    "component": "WS2812B-NeoPixel-Platinen (2×4 LEDs)",
+                    "qty": 2,
+                    "notes": "8 verkettete Pixel an GPIO9 über 330 Ω, aufgeteilt in 2 Zonen"
+                },
+                {
+                    "component": "2S-18650-Pack + USB-C-BMS + LM2596S-Buck",
+                    "qty": 1,
+                    "notes": "Geregelt auf 5,0 V mit integriertem Voltmeter und Trennschalter SW-CELDAS"
+                }
             ],
             "specs": [
                 {
                     "label": "Mikrocontroller",
-                    "value": "ESP32-S3 N16R8"
+                    "value": "ESP32-S3 N16R8 (Dual-Core LX7 240 MHz, 16 MB Flash, 8 MB OPI PSRAM)"
                 },
                 {
-                    "label": "Display",
-                    "value": "ILI9488, 480 × 320, SPI"
+                    "label": "Display & UI",
+                    "value": "4,0\" ILI9488 (480 × 320 SPI 27 MHz) mit Dirty-Check-Teilrendering"
                 },
                 {
-                    "label": "Eingaben",
-                    "value": "10 Aktionstasten, 2 ALT-Tasten, Drehgeber und Joystick"
+                    "label": "Bedienelemente",
+                    "value": "2 × 5-Diodenmatrix (NKRO), 2 ALT, KY-040-Encoder & HW-504-Stick (3,3 V)"
                 },
                 {
-                    "label": "HID-Aktionen",
-                    "value": "USB und Bluetooth BLE"
+                    "label": "Theme-System",
+                    "value": "RGB565-Palette (Dunkel / Hell) + 7 globale Akzente + Ebenenfarbe"
                 },
                 {
-                    "label": "Netzwerk",
-                    "value": "WLAN für Konfiguration, OTA und Companion"
+                    "label": "Beleuchtung & Audio",
+                    "value": "8 × WS2812B-NeoPixel (2 Zonen an GPIO9) + 2 × MAX98357A Stereo-I2S"
                 },
                 {
-                    "label": "Firmware",
-                    "value": "Arduino und FreeRTOS"
+                    "label": "HID-Transport",
+                    "value": "Natives USB (TinyUSB) + Bluetooth BLE 5 (NimBLE) mit Auto-Switch"
+                },
+                {
+                    "label": "Ebenen & Monitore",
+                    "value": "16 Ebenen in 6 Gruppen + 4 Sparkline-Monitore (General, Red, Núcleos, Disco)"
+                },
+                {
+                    "label": "Companion & WebUI",
+                    "value": "Win/Linux-Daemon (/api/state), SSE-Mirror, LittleFS-Editor & PROGMEM-PWA"
+                },
+                {
+                    "label": "Speicher",
+                    "value": "NVS (Einstellungen, Token, Kalibrierung) + LittleFS (config.json)"
+                },
+                {
+                    "label": "Firmware-Profile",
+                    "value": "Control-Deck (Produktivität/Telemetrie) & Gaming-Keypad / HID-Gamepad"
                 }
             ],
             "futureFeatures": [
-                "Prüfung von Änderungen über die direkte Weboberfläche am Gerät",
-                "Konfigurierbare zusätzliche Gesten"
+                "Schnellwahl für Gaming-Keypad-Profile (FPS, MOBA, Simulator-Button-Box)",
+                "Konfigurierbare zusätzliche Gesten im Webeditor"
             ],
             "resources": [
                 {
+                    "name": "Interaktive Verdrahtungs- und Pinout-Anleitung (/pinouts/pad)",
+                    "url": "/pinouts/pad"
+                },
+                {
+                    "name": "Software-Architektur, Editor und Companion (/projects/pad/software)",
+                    "url": "/projects/pad/software"
+                },
+                {
+                    "name": "3D-Druckteile in Maker (/prints#prints-pad)",
+                    "url": "/prints#prints-pad"
+                },
+                {
                     "name": "Printed stick cap (Thingiverse)",
                     "url": "https://www.thingiverse.com/thing:6189483"
-                },
-                {
-                    "name": "NimBLE-Arduino",
-                    "url": "https://github.com/h2zero/NimBLE-Arduino"
-                },
-                {
-                    "name": "TFT_eSPI",
-                    "url": "https://github.com/Bodmer/TFT_eSPI"
                 }
             ]
         },
