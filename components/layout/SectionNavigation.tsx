@@ -5,81 +5,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { DownOutlined } from '@ant-design/icons';
-import {
-  isRouteActive,
-  sectionLinks,
-  useNavGroups,
-  type NavGroupConfig,
-} from './navConfig';
+import { isRouteActive, sectionLinks, useNavGroups } from './navConfig';
 import styles from './sectionNavigation.module.css';
 
 export { sectionLinks };
-
-function DropdownGroup({
-  group,
-  isOpen,
-  pathname,
-  locale,
-  onEnter,
-  onLeave,
-  onToggle,
-  onClose,
-}: {
-  group: NavGroupConfig;
-  isOpen: boolean;
-  pathname: string | null;
-  locale: string;
-  onEnter: () => void;
-  onLeave: () => void;
-  onToggle: () => void;
-  onClose: () => void;
-}) {
-  const hasActiveChild = group.items.some((i) => isRouteActive(pathname, i.href, locale));
-  const panelId = `nav-panel-${group.id}`;
-
-  return (
-    <div className={styles.dropdownGroup} onMouseEnter={onEnter} onMouseLeave={onLeave}>
-      <button
-        type="button"
-        aria-expanded={isOpen}
-        aria-controls={panelId}
-        onClick={onToggle}
-        className={`${styles.navTrigger} ${hasActiveChild ? styles.navTriggerActive : ''}`}
-      >
-        <span>{group.label}</span>
-        <DownOutlined className={`${styles.chevron} ${isOpen ? styles.chevronOpen : ''}`} />
-      </button>
-      <div
-        id={panelId}
-        aria-hidden={!isOpen}
-        className={`${styles.dropdownPanel} ${isOpen ? styles.dropdownPanelOpen : ''}`}
-      >
-        <div className={styles.panelKicker}>{group.kicker}</div>
-        <div className={styles.panelList}>
-          {group.items.map((item) => {
-            const active = isRouteActive(pathname, item.href, locale);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                prefetch={false}
-                tabIndex={isOpen ? 0 : -1}
-                onClick={onClose}
-                aria-current={active ? 'page' : undefined}
-                className={`${styles.panelItem} ${active ? styles.panelItemActive : ''}`}
-              >
-                <span className={styles.panelItemLabel}>{item.label}</span>
-                <span className={styles.panelBadge} aria-hidden="true">
-                  {item.badge}
-                </span>
-              </Link>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export function DesktopHeaderNav() {
   const locale = useLocale();
@@ -87,23 +16,20 @@ export function DesktopHeaderNav() {
   const t = useTranslations('Header');
   const sec = useTranslations('Header.sections');
   const ws = useTranslations('Workspace');
-  const groups = useNavGroups();
-  const [openId, setOpenId] = useState<string | null>(null);
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const hoverOpenedRef = useRef<{ id: string; time: number }>({ id: '', time: 0 });
+  const [open, setOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    setOpenId(null);
+    setOpen(false);
   }, [pathname]);
 
   useEffect(() => {
-    if (!openId) return;
+    if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpenId(null);
+      if (e.key === 'Escape') setOpen(false);
     };
     const onClick = (e: MouseEvent) => {
-      if (!navRef.current?.contains(e.target as Node)) setOpenId(null);
+      if (!navRef.current?.contains(e.target as Node)) setOpen(false);
     };
     document.addEventListener('keydown', onKey);
     document.addEventListener('mousedown', onClick);
@@ -111,68 +37,109 @@ export function DesktopHeaderNav() {
       document.removeEventListener('keydown', onKey);
       document.removeEventListener('mousedown', onClick);
     };
-  }, [openId]);
+  }, [open]);
 
-  const devlogHref = `/${locale}/blog`;
-  const spacesHref = `/${locale}/workbench/spaces`;
+  const directLinks = [
+    { href: `/${locale}/workbench`, label: t('workbench') },
+    { href: `/${locale}/projects`, label: t('projects') },
+    { href: `/${locale}/pinouts`, label: sec('pinouts') },
+    { href: `/${locale}/calculators`, label: sec('calculators') },
+    { href: `/${locale}/blog`, label: sec('devlog') },
+  ];
+
+  const labItems = [
+    { href: `/${locale}/explore`, label: ws('explore') },
+    { href: `/${locale}/prints`, label: sec('maker') },
+    { href: `/${locale}/composer`, label: sec('composer') },
+    { href: `/${locale}/tools`, label: sec('software') },
+  ];
+
+  const systemItems = [
+    { href: `/${locale}/workbench/spaces`, label: ws('mySpaces') },
+    { href: `/${locale}/stats`, label: sec('stats') },
+    { href: `/${locale}/guestbook`, label: sec('guestbook') },
+    { href: `/${locale}/colophon`, label: sec('about') },
+  ];
+
+  const allDropdownItems = [...labItems, ...systemItems];
+  const hasActiveDropdown = allDropdownItems.some((i) => isRouteActive(pathname, i.href, locale));
 
   return (
     <nav ref={navRef} className={styles.desktopNav} aria-label={t('primaryNavigation')}>
-      {groups.map((group) => (
-        <DropdownGroup
-          key={group.id}
-          group={group}
-          isOpen={openId === group.id}
-          pathname={pathname}
-          locale={locale}
-          onEnter={() => {
-            if (closeTimer.current) clearTimeout(closeTimer.current);
-            setOpenId((prev) => {
-              if (prev !== group.id) {
-                hoverOpenedRef.current = { id: group.id, time: Date.now() };
-              }
-              return group.id;
-            });
-          }}
-          onLeave={() => {
-            closeTimer.current = setTimeout(() => setOpenId(null), 130);
-          }}
-          onToggle={() => {
-            setOpenId((prev) => {
-              if (
-                prev === group.id &&
-                hoverOpenedRef.current.id === group.id &&
-                Date.now() - hoverOpenedRef.current.time < 400
-              ) {
-                return group.id;
-              }
-              return prev === group.id ? null : group.id;
-            });
-          }}
-          onClose={() => setOpenId(null)}
-        />
-      ))}
-      <Link
-        href={devlogHref}
-        prefetch={false}
-        aria-current={isRouteActive(pathname, devlogHref, locale) ? 'page' : undefined}
-        className={`${styles.directLink} ${
-          isRouteActive(pathname, devlogHref, locale) ? styles.navTriggerActive : ''
-        }`}
-      >
-        {sec('devlog')}
-      </Link>
-      <Link
-        href={spacesHref}
-        prefetch={false}
-        aria-current={isRouteActive(pathname, spacesHref, locale) ? 'page' : undefined}
-        className={`${styles.spacesPill} ${
-          isRouteActive(pathname, spacesHref, locale) ? styles.spacesPillActive : ''
-        }`}
-      >
-        <span className={styles.spacesDot} aria-hidden="true" />
-        {ws('mySpaces')}
-      </Link>
+      {directLinks.map((item) => {
+        const active = isRouteActive(pathname, item.href, locale);
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            prefetch={false}
+            aria-current={active ? 'page' : undefined}
+            className={`${styles.directLink} ${active ? styles.navTriggerActive : ''}`}
+          >
+            {item.label}
+          </Link>
+        );
+      })}
+
+      <div className={styles.dropdownGroup}>
+        <button
+          type="button"
+          aria-expanded={open}
+          aria-controls="nav-panel-more"
+          onClick={() => setOpen((prev) => !prev)}
+          className={`${styles.navTrigger} ${hasActiveDropdown ? styles.navTriggerActive : ''}`}
+        >
+          <span>{sec('label')}</span>
+          <DownOutlined className={`${styles.chevron} ${open ? styles.chevronOpen : ''}`} />
+        </button>
+
+        <div
+          id="nav-panel-more"
+          aria-hidden={!open}
+          className={`${styles.dropdownPanel} ${open ? styles.dropdownPanelOpen : ''}`}
+        >
+          <div className={styles.panelColumns}>
+            <div className={styles.panelCol}>
+              <div className={styles.panelKicker}>01 / LAB</div>
+              {labItems.map((item) => {
+                const active = isRouteActive(pathname, item.href, locale);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    prefetch={false}
+                    tabIndex={open ? 0 : -1}
+                    onClick={() => setOpen(false)}
+                    aria-current={active ? 'page' : undefined}
+                    className={`${styles.panelItem} ${active ? styles.panelItemActive : ''}`}
+                  >
+                    <span className={styles.panelItemLabel}>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+            <div className={styles.panelCol}>
+              <div className={styles.panelKicker}>02 / SISTEMA</div>
+              {systemItems.map((item) => {
+                const active = isRouteActive(pathname, item.href, locale);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    prefetch={false}
+                    tabIndex={open ? 0 : -1}
+                    onClick={() => setOpen(false)}
+                    aria-current={active ? 'page' : undefined}
+                    className={`${styles.panelItem} ${active ? styles.panelItemActive : ''}`}
+                  >
+                    <span className={styles.panelItemLabel}>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
     </nav>
   );
 }
@@ -207,9 +174,6 @@ export function SectionNavigation({
                 className={styles.drawerItem}
               >
                 <span>{item.label}</span>
-                <span className={styles.panelBadge} aria-hidden="true">
-                  {item.badge}
-                </span>
               </Link>
             );
           })}

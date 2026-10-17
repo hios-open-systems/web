@@ -106,62 +106,63 @@
   position: relative;
   min-width: 0;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--area) 22%, var(--hios-border));
-  background: color-mix(in srgb, var(--area) 5%, var(--hios-bg-elevated));
-  border-radius: 14px;
-  padding: 24px;
+  border: 1px solid var(--hios-border);
+  background: var(--hios-bg-elevated);
+  border-radius: 12px;
+  padding: 20px;
   color: var(--hios-text);
   transition:
-    transform 0.3s,
-    border-color 0.3s,
-    box-shadow 0.3s;
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 .activityCard[data-activity='maker'] {
-  --area: #ffb05c;
+  --area: #f59e0b;
 }
 .activityCard[data-activity='audio'] {
-  --area: #d3a0ff;
+  --area: #c084fc;
 }
 .activityCard[data-activity='ai'] {
-  --area: #8bdbb7;
+  --area: #34d399;
 }
 .activityCard[data-activity='knowledge'] {
-  --area: #efb0bd;
+  --area: #f472b6;
 }
 .activityCard[data-activity='software'] {
-  --area: #a7b8ff;
+  --area: #38bdf8;
 }
 .activityCard::before {
   content: '';
   position: absolute;
   top: 0;
-  left: 24px;
-  height: 3px;
-  width: 46px;
-  border-radius: 0 0 3px 3px;
+  left: 20px;
+  height: 2px;
+  width: 36px;
+  border-radius: 0 0 2px 2px;
   background: var(--area);
-  transition: width 0.35s;
+  transition: width 0.28s ease;
 }
 .activityCard:hover {
-  transform: translateY(-6px);
-  border-color: color-mix(in srgb, var(--area) 60%, var(--hios-border));
-  box-shadow: 0 18px 40px #00000018;
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--area) 50%, var(--hios-border));
+  box-shadow: var(--hios-shadow-md);
 }
 .activityCard:hover::before {
-  width: calc(100% - 48px);
+  width: calc(100% - 40px);
 }
 .cardTop {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 12px;
   color: var(--hios-text-muted);
-  font: 9px var(--font-stack-mono);
-  letter-spacing: 0.09em;
+  font: 600 9.5px var(--font-stack-mono);
+  letter-spacing: 0.1em;
 }
 .cardTop > :last-child {
   color: var(--area);
-  font-size: 16px;
-  transition: transform 0.3s;
+  font-size: 13px;
+  transition: transform 0.2s ease;
 }
 .activityCard:hover .cardTop > :last-child {
   transform: rotate(45deg);
@@ -169,34 +170,38 @@
 .graphic {
   display: block;
   width: 100%;
-  height: 108px;
-  margin: 16px 0 12px;
-  color: color-mix(in srgb, var(--area) 65%, var(--hios-text));
-  transition: transform 0.5s;
+  height: 68px;
+  margin: 12px 0 10px;
+  padding: 6px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--hios-bg-secondary) 75%, transparent);
+  border: 1px solid var(--hios-border);
+  color: color-mix(in srgb, var(--area) 75%, var(--hios-text));
+  transition: border-color 0.25s ease;
 }
-
 .activityCard:hover .graphic {
-  transform: translateY(-3px) scale(1.035);
+  border-color: color-mix(in srgb, var(--area) 35%, var(--hios-border));
 }
 .activityCard h3 {
-  margin: 0 0 10px;
+  margin: 0 0 6px;
   font-family: var(--font-stack-display);
-  font-size: 21px;
-  letter-spacing: -0.025em;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 .cardDescription {
-  margin: 0 0 20px;
-  min-height: 44px;
+  margin: 0 0 14px;
+  min-height: 38px;
   color: var(--hios-text-secondary);
   font-size: 12px;
-  line-height: 1.8;
+  line-height: 1.65;
 }
 .entry {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   border-top: 1px solid var(--hios-border);
-  min-height: 52px;
+  min-height: 40px;
 }
 .entry > a {
   flex: 1;
@@ -205,19 +210,24 @@
   justify-content: space-between;
   gap: 10px;
   min-width: 0;
-  padding: 12px 0;
-  font-size: 12px;
-  line-height: 1.5;
+  padding: 8px 0;
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1.4;
   text-decoration: none;
   color: var(--hios-text);
+  transition: color 0.15s ease;
+}
+.entry > a:hover {
+  color: var(--accent-text);
 }
 .entry > a > :last-child {
   color: var(--hios-text-muted);
   font-size: 10px;
-  opacity: 0.4;
+  opacity: 0.45;
   transition:
-    transform 0.2s,
-    opacity 0.2s;
+    transform 0.18s ease,
+    opacity 0.18s ease;
 }
 .entry > a:hover > :last-child {
   transform: translateX(3px);
@@ -225,23 +235,46 @@
 }
 .entry :global(.ant-btn) {
   flex-shrink: 0;
-  width: 36px;
-  height: 36px;
-  color: var(--hios-text-secondary);
-  border: 1px solid var(--hios-border);
-  border-radius: 50%;
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  padding: 0 !important;
+  color: var(--hios-text-muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  opacity: 0.65;
+  transition: opacity 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+}
+.entry:hover :global(.ant-btn),
+.entry :global(.ant-btn):focus-visible {
+  opacity: 1;
+  border-color: var(--hios-border);
 }
 .entry :global(.ant-btn):hover {
-  background: color-mix(in srgb, var(--area) 18%, transparent) !important;
+  background: color-mix(in srgb, var(--area) 14%, transparent) !important;
+  border-color: color-mix(in srgb, var(--area) 40%, var(--hios-border)) !important;
   color: var(--hios-text) !important;
 }
 .externalLink {
   display: inline-flex;
   align-items: center;
-  gap: 18px;
-  margin-top: 26px;
+  gap: 10px;
+  margin-top: 24px;
+  padding: 8px 14px;
+  border: 1px solid var(--hios-border);
+  border-radius: 7px;
+  background: var(--hios-bg-elevated);
   color: var(--hios-text-secondary);
-  font-size: 12px;
+  font-family: var(--font-stack-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: border-color 0.16s ease, color 0.16s ease;
+}
+.externalLink:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--hios-border));
+  color: var(--hios-text);
 }
 .homeBody a:focus-visible {
   outline: 2px solid var(--accent-text);
@@ -260,7 +293,7 @@
 .projectGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px;
+  gap: 20px;
 }
 @media (max-width: 700px) {
   .projectGrid {
@@ -290,10 +323,10 @@
     margin-top: 18px;
   }
   .activityCard {
-    padding: 22px;
+    padding: 18px;
   }
   .graphic {
-    height: 92px;
+    height: 64px;
   }
   .explore {
     padding-top: 44px;
@@ -324,53 +357,9 @@
   .entry > a > :last-child {
     transition: none;
   }
-  .activityCard:hover,
-  .activityCard:hover .graphic {
+  .activityCard:hover {
     transform: none;
   }
-}
-
-.activityCard[data-activity='development'] {
-  background: #142638;
-  --hios-text: #eef6ff;
-  --hios-text-secondary: #b8c9da;
-  --hios-text-muted: #92abc4;
-  --hios-border: #ffffff24;
-}
-.activityCard[data-activity='maker'] {
-  background: #efd5b1;
-  --area: #94500e;
-  --hios-text: #30251b;
-  --hios-text-secondary: #65523e;
-  --hios-text-muted: #725a42;
-  --hios-border: #30251b30;
-}
-.activityCard[data-activity='audio'] {
-  background: #292138;
-  --hios-text: #f4edff;
-  --hios-text-secondary: #c7bbdb;
-  --hios-text-muted: #b0a0c9;
-  --hios-border: #ffffff24;
-}
-.activityCard[data-activity='ai'] {
-  background: #c7dbbf;
-  --area: #3b6442;
-  --hios-text: #213425;
-  --hios-text-secondary: #435e49;
-  --hios-text-muted: #4d6653;
-  --hios-border: #21342530;
-}
-.activityCard[data-activity='software'] {
-  background: #142c2c;
-  --area: #8dd3ca;
-  --hios-text: #e9f6f4;
-  --hios-text-secondary: #b4cdca;
-  --hios-text-muted: #93b7b2;
-  --hios-border: #ffffff24;
-}
-.entry :global(.ant-btn) {
-  width: 44px;
-  height: 44px;
 }
 .quickAccess {
   border-top: 1px solid var(--hios-border);
