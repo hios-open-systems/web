@@ -16,6 +16,7 @@ export interface NavEntry {
   href: string;
   label: string;
   badge: string;
+  desktopDirect?: boolean;
 }
 
 export interface NavGroupConfig {
@@ -45,7 +46,7 @@ export function useNavGroups(): NavGroupConfig[] {
       items: [
         { href: `/${locale}/workbench`, label: t('workbench'), badge: 'LAB' },
         { href: `/${locale}/explore`, label: ws('explore'), badge: 'CAT' },
-        { href: `/${locale}/workbench/spaces`, label: ws('mySpaces'), badge: 'SYNC' },
+        { href: `/${locale}/workbench/spaces`, label: ws('mySpaces'), badge: 'SYNC', desktopDirect: true },
         { href: `/${locale}/calculators`, label: sec('calculators'), badge: 'RCL' },
         { href: `/${locale}/composer`, label: sec('composer'), badge: '8-BIT' },
       ],
@@ -65,6 +66,7 @@ export function useNavGroups(): NavGroupConfig[] {
       kicker: '03 / PLATAFORMA',
       label: sec('label'),
       items: [
+        { href: `/${locale}/blog`, label: sec('devlog'), badge: 'DOCS', desktopDirect: true },
         { href: `/${locale}/tools`, label: sec('software'), badge: 'STACK' },
         { href: `/${locale}/guestbook`, label: sec('guestbook'), badge: 'LOG' },
         { href: `/${locale}/stats`, label: sec('stats'), badge: 'DATA' },

@@ -11,6 +11,8 @@ import { useFeedback } from '@/components/feedback/FeedbackProvider';
 import styles from './userMenu.module.css';
 
 function UserPanel({
+  open,
+  inDrawer,
   me,
   display,
   locale,
@@ -19,6 +21,8 @@ function UserPanel({
   onClose,
   onLogout,
 }: {
+  open: boolean;
+  inDrawer: boolean;
   me: { name: string | null; login: string; isOwner?: boolean } | null;
   display: string;
   locale: string;
@@ -32,7 +36,11 @@ function UserPanel({
   const tSettings = useTranslations('Settings');
 
   return (
-    <div id="hios-user-panel" className={styles.menu}>
+    <div
+      id={inDrawer ? 'hios-user-panel-drawer' : 'hios-user-panel'}
+      aria-hidden={!open}
+      className={`${styles.menu} ${open ? styles.menuOpen : ''}`}
+    >
       <div className={styles.menuHeader}>
         {me ? (
           <>
@@ -40,28 +48,56 @@ function UserPanel({
             <span className={styles.menuLogin}>@{me.login}</span>
           </>
         ) : (
-          <a href={`/api/auth/github/start?next=${nextUrl}`} className={styles.signInAction}>
-            <GithubOutlined /> {t('signIn')}
+          <a
+            href={`/api/auth/github/start?next=${nextUrl}`}
+            aria-label={t('signIn')}
+            className={styles.signInAction}
+          >
+            <GithubOutlined aria-hidden="true" /> <span>{t('signIn')}</span>
           </a>
         )}
       </div>
-      <Link href={`/${locale}/workbench/settings`} prefetch={false} className={styles.menuItem} onClick={onClose}>
-        <SettingOutlined /> <span>{tSettings('title')}</span>
-      </Link>
-      <Link href={`/${locale}/workbench/feedback`} prefetch={false} className={styles.menuItem} onClick={onClose}>
-        <BellOutlined /> <span>{tFeedback('title')}</span>
-        {unreadCount > 0 ? <span className={styles.unreadBadge}>{unreadCount}</span> : null}
-      </Link>
-      <a href="https://github.com/hios-open-systems/web" target="_blank" rel="noreferrer" className={styles.menuItem} onClick={onClose}>
-        <GithubOutlined /> <span>GitHub</span>
-      </a>
+      {!inDrawer ? (
+        <>
+          <Link
+            href={`/${locale}/workbench/settings`}
+            prefetch={false}
+            className={styles.menuItem}
+            onClick={onClose}
+          >
+            <SettingOutlined aria-hidden="true" /> <span>{tSettings('title')}</span>
+          </Link>
+          <Link
+            href={`/${locale}/workbench/feedback`}
+            prefetch={false}
+            className={styles.menuItem}
+            onClick={onClose}
+          >
+            <BellOutlined aria-hidden="true" /> <span>{tFeedback('title')}</span>
+            {unreadCount > 0 ? <span className={styles.unreadBadge}>{unreadCount}</span> : null}
+          </Link>
+          <a
+            href="https://github.com/hios-open-systems/web"
+            target="_blank"
+            rel="noreferrer"
+            className={styles.menuItem}
+            onClick={onClose}
+          >
+            <GithubOutlined aria-hidden="true" /> <span>GitHub</span>
+          </a>
+        </>
+      ) : null}
       {me?.isOwner ? (
         <Link href={`/${locale}/admin`} className={styles.menuItem} onClick={onClose}>
           <span>{t('admin')}</span>
         </Link>
       ) : null}
       {me ? (
-        <button type="button" className={`${styles.menuItem} ${styles.menuItemDanger}`} onClick={onLogout}>
+        <button
+          type="button"
+          className={`${styles.menuItem} ${styles.menuItemDanger}`}
+          onClick={onLogout}
+        >
           {t('signOut')}
         </button>
       ) : null}
@@ -69,12 +105,18 @@ function UserPanel({
   );
 }
 
-export function UserMenu({ inDrawer = false, onNavigate }: { inDrawer?: boolean; onNavigate?: () => void }) {
+export function UserMenu({
+  inDrawer = false,
+  onNavigate,
+}: {
+  inDrawer?: boolean;
+  onNavigate?: () => void;
+}) {
   const t = useTranslations('Auth');
   const tSettings = useTranslations('Settings');
   const locale = useLocale();
   const pathname = usePathname() ?? '/';
-  const { user: me, isLoading } = useCurrentUser();
+  const { user: me } = useCurrentUser();
   const { unreadCount } = useFeedback();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -105,13 +147,15 @@ export function UserMenu({ inDrawer = false, onNavigate }: { inDrawer?: boolean;
     }
   }, []);
 
-  if (isLoading) return <div className={styles.skeleton} aria-hidden />;
-
   const nextUrl = encodeURIComponent(pathname);
   if (inDrawer && !me) {
     return (
-      <a className={`${styles.loginButton} ${styles.drawerLogin}`} href={`/api/auth/github/start?next=${nextUrl}`}>
-        <GithubOutlined /> <span className={styles.loginLabel}>{t('signIn')}</span>
+      <a
+        className={`${styles.loginButton} ${styles.drawerLogin}`}
+        href={`/api/auth/github/start?next=${nextUrl}`}
+        aria-label={t('signIn')}
+      >
+        <GithubOutlined aria-hidden="true" /> <span className={styles.loginLabel}>{t('signIn')}</span>
       </a>
     );
   }
@@ -125,7 +169,7 @@ export function UserMenu({ inDrawer = false, onNavigate }: { inDrawer?: boolean;
         className={`${styles.trigger} ${unreadCount > 0 ? styles.triggerDot : ''}`}
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        aria-controls="hios-user-panel"
+        aria-controls={inDrawer ? 'hios-user-panel-drawer' : 'hios-user-panel'}
         aria-label={display}
       >
         {me ? (
@@ -136,18 +180,25 @@ export function UserMenu({ inDrawer = false, onNavigate }: { inDrawer?: boolean;
             <span className={styles.avatarFallback}>{display.charAt(0).toUpperCase()}</span>
           )
         ) : (
-          <span className={styles.guestAvatar}><UserOutlined /></span>
+          <span className={styles.guestAvatar}>
+            <UserOutlined />
+          </span>
         )}
         {inDrawer && me ? <span>{display}</span> : null}
       </button>
-      {open ? (
+      {!inDrawer || open ? (
         <UserPanel
+          open={open}
+          inDrawer={inDrawer}
           me={me ?? null}
           display={display}
           locale={locale}
           nextUrl={nextUrl}
           unreadCount={unreadCount}
-          onClose={() => { setOpen(false); onNavigate?.(); }}
+          onClose={() => {
+            setOpen(false);
+            onNavigate?.();
+          }}
           onLogout={handleLogout}
         />
       ) : null}
