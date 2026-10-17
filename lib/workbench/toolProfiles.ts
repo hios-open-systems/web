@@ -22,4 +22,5 @@ export const toolAliases: Partial<Record<WorkbenchToolId, string>> = {
   'resistor-color-code': 'resistencia resistor colores resistance',
   'ohms-law': 'resistencia voltaje corriente resistance voltage current',
   'qpsk-modulator': 'qpsk dsp modulacion modulation constelacion constellation iq awgn osciloscopio rf fase phase quadrature',
+  'jam-station': 'jam station backing tracks guitarra guitarrista escalas acordes solos fretboard diapason blues rock funk synthwave improvisar',
 };

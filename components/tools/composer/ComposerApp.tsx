@@ -6,6 +6,7 @@ import { TrackPanel } from '@/components/workbench/audio/chiptune/TrackPanel';
 import { useComposerState } from './useComposerState';
 import { SongPanel, SongLibrary, SongDownloads } from './SongPanel';
 import { SongGenerator } from './SongGenerator';
+import { MidiToolbar } from './MidiToolbar';
 import { ComposerEditor } from './ComposerEditor';
 import { ArrangementPanel } from './ArrangementPanel';
 import styles from './composer.module.css';
@@ -25,6 +26,7 @@ export function ComposerApp() {
       <section className={styles.panel} aria-label="Canción y reproducción">
         <SongPanel c={c} />
         <TransportBar c={c} />
+        <MidiToolbar c={c} />
         {c.playbackError && <Alert type="error" message={c.playbackError} showIcon />}
       </section>
 

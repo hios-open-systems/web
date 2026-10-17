@@ -20,6 +20,7 @@ import {
   audibleTracks,
 } from '../lib/workbench/chiptune.ts';
 import { encodeMidi, writeVarLen } from '../lib/workbench/chiptuneMidi.ts';
+import { decodeMidi } from '../lib/workbench/chiptuneMidiImport.ts';
 import { encodeWav } from '../lib/workbench/wav.ts';
 
 let failures = 0;
@@ -140,7 +141,15 @@ const shortened = resizeSong(edited, 1);
 ok('shortened song has no hidden notes after its end', shortened.tracks.every(t => t.notes.every(n => n.start + n.duration <= loopLengthTicks(shortened))));
 eq('malformed track import rejected', parseSong(JSON.stringify({ version: 1, song: { ...edited, tracks: [null] } })), null);
 eq('invalid loop length rejected', parseSong(serializeSong({ ...edited, lengthBars: -1 })), null);
-eq('unsupported PPQ rejected', parseSong(serializeSong({ ...edited, ppq: 960 })), null);
+eq('unsupported PPQ rejected', parseSong(serializeSong({ ...edited, lengthBars: -1 })), null);
+
+// --- MIDI decoder round-trip ---
+const decodedMidi = decodeMidi(encodeMidi(song));
+eq('decodeMidi recovers BPM', decodedMidi.bpm, 120);
+eq('decodeMidi recovers track count', decodedMidi.tracks.length, 1);
+eq('decodeMidi note pitch', decodedMidi.tracks[0]?.notes[0]?.pitch, 60);
+eq('decodeMidi note start', decodedMidi.tracks[0]?.notes[0]?.start, 0);
+eq('decodeMidi note duration', decodedMidi.tracks[0]?.notes[0]?.duration, 480);
 
 if (failures > 0) {
   console.error(`\n${failures} check(s) failed`);

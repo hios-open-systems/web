@@ -1724,6 +1724,10 @@
                 "title": "QPSK-Oszilloskop & Modulator",
                 "description": "Simuliere Quadratur-Phasenumtastung (I/Q), analysiere das Konstellationsdiagramm unter AWGN-Rauschen und demoduliere Rahmen in Echtzeit."
             },
+            "jam-station": {
+                "title": "Jam Station & Backing Tracks",
+                "description": "Prozeduraler Backing-Track-Generator und interaktives Gitarrengriffbrett für Musiker. Übe Improvisation, Tonleitern und Soli in Echtzeit."
+            },
             "guitar-tuner": {
                 "title": "Stimmgerät",
                 "description": "Stimme Instrumente über das Mikrofon mit einer einstellbaren Referenzfrequenz."
