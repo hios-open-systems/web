@@ -1,163 +1,752 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>HIOS PAD · Espejo</title>
+<meta charset="utf-8" />
+<title>HIOS Pad · Mirror</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <style>
-  :root{--bg:#0d1117;--panel:#161b22;--bd:#30363d;--tx:#e6edf3;--mut:#8b949e;--cy:#1fe0e0;--gn:#3ddc84;
-    /* design tokens del pad (skin-ready: una skin solo cambia estas variables) */
-    --pad-radius:14px;--key-w:86px;--key-h:98px;--key-gap:8px;--key-radius:12px}
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--tx);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-    min-height:100vh;display:flex;flex-direction:column;align-items:center;gap:14px;padding:18px}
-  h1{font-size:16px;margin:0;font-weight:700;display:flex;gap:8px;align-items:center}
-  h1 .tag{font-size:11px;background:#1f6feb;color:#fff;padding:2px 7px;border-radius:20px}
-  #conn{font-size:12px;color:var(--mut)}
-  #conn.on{color:var(--gn)} #conn.off{color:#f85149}
-  /* La pantalla del pad: 480x320 escalada */
-  .wrap{--s:1.15;width:calc(480px*var(--s));height:calc(320px*var(--s))}
-  @media(max-width:580px){.wrap{--s:.74}}
-  .pad{width:480px;height:320px;transform:scale(var(--s));transform-origin:top left;
-    background:#0a0d12;border:1px solid var(--bd);border-radius:var(--pad-radius);overflow:hidden;position:relative;font-family:ui-monospace,Menlo,monospace}
-  .hdr{height:50px;display:flex;align-items:center;gap:10px;padding:0 14px;border-bottom:2px solid var(--accent,#1fe0e0)}
-  .ldot{width:14px;height:14px;border-radius:50%;background:var(--accent,#1fe0e0);box-shadow:0 0 8px var(--accent,#1fe0e0)}
-  .lname{font-size:18px;font-weight:700}
-  .lgrp{font-size:11px;color:var(--mut)}
-  .altbadge{display:none;font-size:11px;font-weight:800;padding:2px 7px;border-radius:6px;color:#04121a;margin-left:4px}
-  .altbadge.on{display:inline-block}
-  .hsp{flex:1}
-  .badge{font-size:11px;padding:3px 8px;border-radius:7px;border:1px solid var(--bd);color:var(--mut)}
-  .badge.on{color:var(--gn);border-color:var(--gn)} .badge.warn{color:#f0a020;border-color:#f0a020} .badge.bad{color:#f85149;border-color:#f85149}
-  .keys{position:absolute;top:54px;left:9px;display:flex;flex-wrap:wrap;width:462px;gap:var(--key-gap)}
-  .key{width:var(--key-w);height:var(--key-h);border-radius:var(--key-radius);background:var(--panel);border:1px solid var(--bd);
-    display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:7px 6px;position:relative;transition:.06s}
-  .key .num{position:absolute;top:6px;left:8px;font-size:11px;color:var(--mut);font-weight:700}
-  .key .well{width:38px;height:38px;border-radius:50%;background:#0e1319;border:1px solid var(--bd);margin-top:6px}
-  .key .lbl{font-size:12px;font-weight:600;text-align:center;line-height:1.1;word-break:break-word}
-  .key.down{background:var(--accent,#1fe0e0);color:#04121a;border-color:var(--accent)}
-  .key.down .num{color:#04121a} .key.down .well{background:rgba(0,0,0,.18);border-color:rgba(0,0,0,.25)}
-  .strip{position:absolute;left:9px;right:9px;bottom:8px;height:46px;display:flex;gap:8px}
-  .seg{background:var(--panel);border:1px solid var(--bd);border-radius:10px;display:flex;align-items:center;gap:8px;padding:0 12px;font-size:13px}
-  .seg .k{color:var(--mut);font-size:11px}
-  .vol{flex:1;display:flex;align-items:center;gap:8px}
-  .volbar{flex:1;height:8px;border-radius:5px;background:#0e1319;border:1px solid var(--bd);overflow:hidden}
-  .volfill{height:100%;background:var(--accent,#1fe0e0);width:0%}
-  .empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:14px;text-align:center;padding:20px}
-  .note{font-size:11.5px;color:var(--mut);max-width:480px;text-align:center}
+  :root {
+    --bg: #080c10;
+    --surface: #101820;
+    --elevated: #182430;
+    --border: #243444;
+    --fg: #f8fafc;
+    --fgDim: #94a3b8;
+    --muted: #526478;
+    --accent: #00d8ff;
+    --ok: #22d37a;
+    --warn: #fbbf24;
+    --danger: #f43f5e;
+    --shadow: #040608;
+  }
+  body[data-theme="light"] {
+    --bg: #f0f4f8;
+    --surface: #ffffff;
+    --elevated: #dce4ec;
+    --border: #b8c4d0;
+    --fg: #0c141c;
+    --fgDim: #485868;
+    --muted: #8494a4;
+    --shadow: #c8d2dc;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Inter", "Segoe UI", system-ui, sans-serif; }
+  body {
+    background: #05070a;
+    color: var(--fg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 20px;
+  }
+  .frame {
+    width: 480px;
+    height: 320px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 24px 60px rgba(0,0,0,.7), 0 0 0 4px #0e151d;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    user-select: none;
+  }
+  .header {
+    height: 38px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    gap: 8px;
+    font-size: 12px;
+    position: relative;
+    z-index: 3;
+  }
+  .wordmark {
+    font-weight: 800;
+    font-size: 12px;
+    letter-spacing: .04em;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+  .h-sep {
+    width: 1px;
+    height: 18px;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+  .lname {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--fg);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .lidx { color: var(--muted); font-size: 11px; font-family: ui-monospace, monospace; }
+  .pill {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: var(--fgDim);
+    background: var(--elevated);
+    line-height: 1.2;
+  }
+  .alt-pill { background: var(--warn); color: #080c10; border-color: var(--warn); }
+  .wiz-pill.on { background: var(--warn); color: #080c10; border-color: var(--warn); }
+  .spacer { flex: 1; }
+  .clock {
+    font-weight: 800;
+    font-size: 15px;
+    color: var(--fg);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: .02em;
+    margin-right: 4px;
+  }
+  .status-cluster {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .status-cluster svg { display: block; }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+  .grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(5, 84px);
+    grid-template-rows: repeat(2, 100px);
+    gap: 8px;
+    padding: 8px 14px 0 14px;
+  }
+  .key {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 2px 2px 0 var(--shadow);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 8px 4px 9px;
+    transition: transform 60ms ease, background 60ms ease, border-color 60ms ease;
+    color: var(--fg);
+  }
+  .key .num {
+    position: absolute;
+    top: 5px;
+    left: 7px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--muted);
+    line-height: 1;
+  }
+  .key .well {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--accent) 16%, var(--surface));
+    border: 1px solid color-mix(in srgb, var(--accent) 55%, var(--border));
+    margin-bottom: auto;
+    margin-top: 8px;
+    display: grid;
+    place-items: center;
+    color: var(--accent);
+  }
+  .key .well svg {
+    width: 22px;
+    height: 22px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .key .lbl {
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    color: var(--fg);
+    max-width: 76px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.1;
+  }
+  .key.empty {
+    background: var(--bg);
+    border-color: color-mix(in srgb, var(--border) 60%, var(--bg));
+    box-shadow: none;
+  }
+  .key.empty .well { display: none; }
+  .key.empty .lbl { color: var(--muted); }
+  .key.pressed {
+    background: var(--accent);
+    color: #080c10;
+    border-color: #ffffff;
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 var(--shadow);
+  }
+  .key.pressed .lbl, .key.pressed .num { color: #080c10; }
+  .key.pressed .well {
+    background: rgba(8, 12, 16, 0.22);
+    border-color: #080c10;
+    color: #080c10;
+  }
+  .bottom {
+    height: 58px;
+    padding: 8px 14px 8px;
+    display: grid;
+    grid-template-columns: 107px 85px 108px 128px;
+    gap: 8px;
+  }
+  .seg {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 5px 8px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+  }
+  .seg-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    flex: 1;
+  }
+  .seg-tag {
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: .04em;
+    line-height: 1.1;
+  }
+  .seg-val {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--fg);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+  }
+  .seg-sub {
+    font-size: 10px;
+    color: var(--fgDim);
+    font-family: ui-monospace, monospace;
+    line-height: 1.1;
+  }
+  .comp-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--ok);
+    box-shadow: 0 0 8px var(--ok);
+    flex-shrink: 0;
+  }
+  .comp-dot.off { background: var(--muted); box-shadow: none; }
+  .vol-seg {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 5px;
+  }
+  .vol-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .vol-num-wrap {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--fg);
+    font-variant-numeric: tabular-nums;
+  }
+  .volbar {
+    height: 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .volbar > div {
+    height: 100%;
+    background: var(--accent);
+    transition: width 80ms linear;
+  }
+  /* Overlays for Control Center (Menu.cpp) and Monitors (monitor.cpp) */
+  .overlay-screen {
+    position: absolute;
+    inset: 0;
+    background: var(--bg);
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+  }
+  .overlay-screen[hidden] { display: none !important; }
+  .ov-tabs {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 4px;
+    padding: 6px 10px 4px;
+  }
+  .ov-tab {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--fgDim);
+    text-align: center;
+    padding: 4px 2px;
+  }
+  .ov-tab.active {
+    background: var(--accent);
+    color: #080c10;
+    border-color: #ffffff;
+  }
+  .ov-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 6px;
+    padding: 4px 10px 10px;
+  }
+  .ov-tile {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 6px 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+  }
+  .ov-tile.current { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+  .ov-tile .t-num { font-size: 9px; color: var(--muted); position: absolute; top: 4px; left: 6px; }
+  .ov-tile .t-well {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--t-col, var(--accent)) 18%, var(--surface));
+    border: 1px solid var(--t-col, var(--accent));
+    display: grid;
+    place-items: center;
+    color: var(--t-col, var(--accent));
+    margin-left: 8px;
+    flex-shrink: 0;
+  }
+  .ov-tile .t-well svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .ov-tile .t-lbl { font-size: 11px; font-weight: 700; color: var(--fg); }
+  .ov-tile .t-sub { font-size: 9px; color: var(--muted); }
+  .mon-body {
+    flex: 1;
+    padding: 8px 10px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .mon-gauges {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    height: 122px;
+  }
+  .mon-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 7px 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .mon-card-head { display: flex; justify-content: space-between; font-size: 10px; font-weight: 700; color: var(--fgDim); }
+  .mon-big { font-size: 20px; font-weight: 800; color: var(--fg); font-variant-numeric: tabular-nums; }
+  .mon-bar { height: 6px; background: var(--elevated); border-radius: 3px; overflow: hidden; }
+  .mon-bar > div { height: 100%; border-radius: 3px; }
+  .mon-tiles {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .toolbar { display: flex; gap: 12px; align-items: center; font-size: 13px; color: var(--fgDim); }
+  .toolbar a {
+    color: var(--accent);
+    text-decoration: none;
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    border-radius: 6px;
+    background: var(--surface);
+  }
+  .toolbar a:hover { background: var(--elevated); }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--danger); display: inline-block; margin-right: 6px; }
+  .status-dot.ok { background: var(--ok); }
 </style>
 </head>
 <body>
-  <h1>🪞 HIOS PAD <span class="tag">espejo</span> · <a href="/admin.html" style="color:#1fe0e0;font-size:13px;text-decoration:none">🛠️ Config</a></h1>
-  <div id="conn">conectando…</div>
-  <div class="wrap"><div class="pad" id="pad">
-    <div class="empty" id="empty">Esperando al pad…<br><small>(abrí esto con el companion corriendo y el pad encendido)</small></div>
-    <div class="hdr" id="hdr" style="display:none">
-      <span class="ldot" id="ldot"></span>
-      <span><span class="lname" id="lname">—</span> <span class="lgrp" id="lgrp"></span> <span class="altbadge" id="altbadge"></span></span>
-      <span class="hsp"></span>
-      <span class="badge" id="bMic">mic</span>
-      <span class="badge" id="bLink">—</span>
-      <span class="badge" id="bBat">bat</span>
-      <span class="badge" id="bOs">os</span>
+  <div class="frame" id="frame">
+    <div class="header">
+      <span class="wordmark">HIOS PAD</span>
+      <span class="h-sep"></span>
+      <span class="lname" id="lname">—</span>
+      <span class="lidx" id="lidx">[0/0]</span>
+      <span class="pill alt-pill" id="altb" hidden>ALT1</span>
+      <span class="pill wiz-pill on" id="wizb" hidden>WiZ ON</span>
+      <span class="spacer"></span>
+      <span class="clock" id="clock">18:32</span>
+      <div class="status-cluster" aria-hidden="true">
+        <svg id="bat-svg" width="22" height="12" viewBox="0 0 22 12">
+          <rect x="1" y="1" width="18" height="10" rx="2" stroke="#94a3b8" stroke-width="1.5" fill="none"/>
+          <rect x="19.5" y="3.5" width="2" height="5" rx="1" fill="#94a3b8"/>
+          <rect id="bat-fill" x="3" y="3" width="14" height="6" rx="1" fill="#22d37a"/>
+        </svg>
+        <svg id="wifi-svg" width="16" height="12" viewBox="0 0 16 12">
+          <rect x="1" y="8" width="2.5" height="3" rx=".5" fill="#22d37a"/>
+          <rect x="4.8" y="6" width="2.5" height="5" rx=".5" fill="#22d37a"/>
+          <rect x="8.6" y="3.5" width="2.5" height="7.5" rx=".5" fill="#22d37a"/>
+          <rect x="12.4" y="1" width="2.5" height="10" rx=".5" fill="#22d37a"/>
+        </svg>
+        <svg id="mic-svg" width="14" height="14" viewBox="0 0 14 14">
+          <rect id="mic-capsule" x="4.5" y="1.5" width="5" height="7" rx="2.5" stroke="#22d37a" stroke-width="1.6" fill="none"/>
+          <path id="mic-arc" d="M2.5 6.5a4.5 4.5 0 0 0 9 0" stroke="#22d37a" stroke-width="1.5" fill="none"/>
+          <line x1="7" y1="11" x2="7" y2="13" stroke="#22d37a" stroke-width="1.5"/>
+          <line id="mic-slash" x1="2" y1="2" x2="12" y2="12" stroke="#f43f5e" stroke-width="2" visibility="hidden"/>
+        </svg>
+      </div>
+      <span class="sr-only" id="tp">USB</span>
+      <span class="sr-only" id="os">?</span>
+      <span class="sr-only" id="bat">BAT</span>
+      <span class="sr-only" id="mic">MIC</span>
     </div>
-    <div class="keys" id="keys"></div>
-    <div class="strip" id="strip" style="display:none">
-      <div class="seg" id="encSeg"><span class="k">ENC</span> <span id="encMode">capa</span></div>
-      <div class="seg vol"><span class="k">VOL</span><div class="volbar"><div class="volfill" id="volfill"></div></div><span id="volnum">—</span></div>
+
+    <div class="grid" id="grid"></div>
+
+    <div class="bottom">
+      <div class="seg" title="Encoder rotativo (doble-tap cambia modo)">
+        <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
+          <circle cx="15" cy="15" r="13" fill="#080c10" stroke="var(--border)" stroke-width="1.5"/>
+          <circle cx="15" cy="15" r="11" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-opacity=".55"/>
+          <line id="enc-needle" x1="15" y1="15" x2="15" y2="6" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"/>
+          <circle cx="15" cy="15" r="2.2" fill="var(--fg)"/>
+        </svg>
+        <div class="seg-col">
+          <span class="seg-tag">ENC</span>
+          <span class="seg-val" id="enc">Capa</span>
+        </div>
+      </div>
+
+      <div class="seg" title="Estado del daemon pad-companion">
+        <span class="comp-dot" id="comp-dot"></span>
+        <div class="seg-col">
+          <span class="seg-val" id="comp-state">live</span>
+          <span class="seg-tag">COMP</span>
+        </div>
+      </div>
+
+      <div class="seg" title="Joystick analógico HW-504 (puntero / click)">
+        <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
+          <circle id="stick-ring" cx="14" cy="14" r="12" fill="#080c10" stroke="var(--border)" stroke-width="1.4"/>
+          <line x1="4" y1="14" x2="24" y2="14" stroke="var(--border)" stroke-width="1"/>
+          <line x1="14" y1="4" x2="14" y2="24" stroke="var(--border)" stroke-width="1"/>
+          <circle id="stick-dot" cx="14" cy="14" r="3" fill="var(--accent)"/>
+        </svg>
+        <div class="seg-col">
+          <span class="seg-tag">STICK</span>
+          <span class="seg-sub" id="stick-xy">+0 +0</span>
+        </div>
+      </div>
+
+      <div class="seg vol-seg" title="Volumen maestro de la PC">
+        <div class="vol-top">
+          <span class="seg-tag">VOL</span>
+          <span class="vol-num-wrap"><span id="volnum">0</span>%</span>
+        </div>
+        <div class="volbar"><div id="volfill" style="width:0%"></div></div>
+      </div>
     </div>
-  </div></div>
-  <div class="note">Espejo en vivo de la pantalla del pad (Fase 1, funcional). El render fiel en Canvas (mismo Layout/iconos/colores que el firmware) viene en el próximo paso.</div>
+
+    <div class="overlay-screen" id="ov-screen" hidden></div>
+  </div>
+
+  <div class="toolbar">
+    <span><span class="status-dot" id="sdot"></span><span id="conn">Conectando al pad…</span></span>
+    <a href="/admin.html">Abrir editor de configuración →</a>
+  </div>
 
 <script>
-  const ENC_MODES = ["capa","Volumen","Scroll","Zoom","Pestañas"];
-  // RGB565 -> #rrggbb
-  function rgb565(c){
-    const r=(c>>11)&0x1F,g=(c>>5)&0x3F,b=c&0x1F;
-    const R=Math.round(r*255/31),G=Math.round(g*255/63),B=Math.round(b*255/31);
-    return "#"+[R,G,B].map(x=>x.toString(16).padStart(2,"0")).join("");
+const EM_NAMES = ['Capa', 'Vol', 'Scroll', 'Zoom', 'Tab'];
+const TP_NAMES = ['—', 'USB', 'BLE', 'USB*', 'BLE*', 'USB+BLE'];
+let encAngle = -90;
+
+function rgb565ToHex(c) {
+  const r = ((c >> 11) & 0x1f) * 255 / 31;
+  const g = ((c >> 5)  & 0x3f) * 255 / 63;
+  const b = ( c        & 0x1f) * 255 / 31;
+  return '#' + [r,g,b].map(x => Math.round(x).toString(16).padStart(2,'0')).join('');
+}
+
+// Vector icons matching firmware src/ui/IconKit.h 1:1
+function svgGlyphFor(label) {
+  const l = (label || '').trim();
+  switch (l) {
+    case 'Copiar':
+      return '<svg viewBox="0 0 24 24"><rect x="4" y="8" width="11" height="12" rx="2"/><rect x="9" y="3" width="11" height="12" rx="2"/></svg>';
+    case 'Pegar':
+      return '<svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="16" rx="2"/><path d="M9 3h6v4H9z"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="14" y2="16"/></svg>';
+    case 'Cortar':
+      return '<svg viewBox="0 0 24 24"><circle cx="7" cy="17" r="3"/><circle cx="17" cy="17" r="3"/><line x1="9" y1="15" x2="18" y2="4"/><line x1="15" y1="15" x2="6" y2="4"/></svg>';
+    case 'Deshacer':
+    case 'Reabrir':
+      return '<svg viewBox="0 0 24 24"><path d="M9 7 4 12l5 5"/><path d="M4 12h11a5 5 0 0 1 0 10h-3"/></svg>';
+    case 'Rehacer':
+      return '<svg viewBox="0 0 24 24"><path d="m15 7 5 5-5 5"/><path d="M20 12H9a5 5 0 0 0 0 10h3"/></svg>';
+    case 'Email':
+      return '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>';
+    case 'Sel.todo':
+    case 'Formatear':
+      return '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><rect x="7" y="7" width="10" height="10" rx="1.5" fill="currentColor"/></svg>';
+    case 'Guardar':
+      return '<svg viewBox="0 0 24 24"><path d="M5 3h11l4 4v14H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M8 3v6h8V3"/><rect x="7" y="13" width="10" height="6" rx="1"/></svg>';
+    case 'Anterior':
+    case '-10s':
+      return '<svg viewBox="0 0 24 24"><line x1="6" y1="5" x2="6" y2="19"/><polygon points="18,5 8,12 18,19" fill="currentColor"/></svg>';
+    case 'Play':
+      return '<svg viewBox="0 0 24 24"><polygon points="7,4 20,12 7,20" fill="currentColor"/></svg>';
+    case 'Pausa':
+      return '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" fill="currentColor"/><rect x="14" y="4" width="4" height="16" fill="currentColor"/></svg>';
+    case 'Siguiente':
+    case '+10s':
+      return '<svg viewBox="0 0 24 24"><polygon points="6,5 16,12 6,19" fill="currentColor"/><line x1="18" y1="5" x2="18" y2="19"/></svg>';
+    case 'Mute':
+      return '<svg viewBox="0 0 24 24"><polygon points="3,9 8,9 13,4 13,20 8,15 3,15" fill="currentColor"/><line x1="16" y1="9" x2="21" y2="15"/><line x1="21" y1="9" x2="16" y2="15"/></svg>';
+    case 'Stop':
+    case 'Cerrar tab':
+      return '<svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5" fill="currentColor"/></svg>';
+    case 'Terminal':
+      return '<svg viewBox="0 0 24 24"><polyline points="4,7 10,12 4,17"/><line x1="12" y1="17" x2="20" y2="17"/></svg>';
+    case 'Paleta':
+    case 'Buscar':
+    case 'Ir a archivo':
+    case 'Lupa':
+      return '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><line x1="15.5" y1="15.5" x2="20" y2="20"/></svg>';
+    case 'Comentar':
+    case 'Renombrar':
+      return '<svg viewBox="0 0 24 24"><line x1="9" y1="4" x2="5" y2="20"/><line x1="19" y1="4" x2="15" y2="20"/></svg>';
+    case 'Run':
+      return '<svg viewBox="0 0 24 24"><polygon points="8,5 19,12 8,19" fill="currentColor"/></svg>';
+    case 'Build':
+      return '<svg viewBox="0 0 24 24"><path d="m14 6 4 4"/><path d="M5 19 15 9"/><path d="m12 4 8 8-3 3-8-8z"/></svg>';
+    case 'Simbolo':
+      return '<svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="10" rx="5"/><line x1="10" y1="7" x2="10" y2="17"/><line x1="14" y1="7" x2="14" y2="17"/></svg>';
+    case 'Escritorio':
+    case 'Minimizar':
+      return '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg>';
+    case 'Esc <-':
+    case 'Atras':
+    case '-Vel':
+      return '<svg viewBox="0 0 24 24"><polyline points="14,6 7,12 14,18"/><line x1="7" y1="12" x2="20" y2="12"/></svg>';
+    case 'Esc ->':
+    case 'Adelante':
+    case '+Vel':
+      return '<svg viewBox="0 0 24 24"><polyline points="10,6 17,12 10,18"/><line x1="4" y1="12" x2="17" y2="12"/></svg>';
+    case 'Recargar':
+    case 'Reemplazar':
+    case 'Cambiar':
+      return '<svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2 5.3"/><polyline points="20,4 20,11 13,11"/></svg>';
+    case 'Nueva tab':
+      return '<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+    case 'Marcadores':
+      return '<svg viewBox="0 0 24 24"><path d="M6 4h12v16l-6-4-6 4z"/></svg>';
+    case 'Mic':
+      return '<svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="10" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="17" x2="12" y2="21"/></svg>';
+    case 'Camara':
+    case 'Capturar':
+      return '<svg viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2"/><polygon points="16,10 21,7 21,17 16,14" fill="currentColor"/></svg>';
+    case 'Pantalla':
+    case 'Maximizar':
+      return '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><polygon points="10,8 15,10.5 10,13" fill="currentColor"/><line x1="8" y1="20" x2="16" y2="20"/></svg>';
+    case 'Mano':
+    case 'Reaccion':
+      return '<svg viewBox="0 0 24 24"><path d="M8 13V5a1.5 1.5 0 0 1 3 0v6m0-7a1.5 1.5 0 0 1 3 0v7m0-5.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-12 0v-4a1.5 1.5 0 0 1 3 0z"/></svg>';
+    case 'Chat':
+    case 'Subtitulos':
+      return '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="3"/><polygon points="7,17 11,17 6,21" fill="currentColor"/><line x1="7" y1="9" x2="17" y2="9"/><line x1="7" y1="13" x2="13" y2="13"/></svg>';
+    case 'Particip':
+    case 'Grilla':
+      return '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>';
+    case 'Off':
+    case 'On/Off':
+    case 'Salir':
+    case 'Colgar':
+      return '<svg viewBox="0 0 24 24"><line x1="12" y1="3" x2="12" y2="12"/><path d="M7 6.5a8 8 0 1 0 10 0"/></svg>';
+    case 'Cuarto':
+    case 'Calido':
+    case 'Frio':
+    case 'Luz':
+      return '<svg viewBox="0 0 24 24"><circle cx="12" cy="10" r="6"/><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="21" x2="14" y2="21"/></svg>';
+    case 'Bloquear':
+    case 'Incognito':
+      return '<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+    case 'Historial':
+      return '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12,7 12,12 16,14"/></svg>';
+    default:
+      if (l.startsWith('App')) {
+        return '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg>';
+      }
+      return '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>';
   }
-  let layer = null;   // cache del descriptor de capa (llega solo al cambiar)
-  const $=id=>document.getElementById(id);
-  const keysEl=$("keys");
-  const NKEYS=10;                 // 10 acciones en doble fila (2x5), igual que el pad
-  for(let i=0;i<NKEYS;i++){
-    const k=document.createElement("div"); k.className="key";
-    k.innerHTML=`<span class="num">${i+1}</span><div class="well"></div><span class="lbl" id="lbl${i}"></span>`;
-    keysEl.appendChild(k);
+}
+
+const grid = document.getElementById('grid');
+const cells = [];
+for (let i = 0; i < 10; i++) {
+  const el = document.createElement('div');
+  el.className = 'key';
+  el.innerHTML = `<span class="num">${i+1}</span><div class="well"></div><div class="lbl">—</div>`;
+  grid.appendChild(el);
+  cells.push(el);
+}
+
+function render(f) {
+  const lay = f.layer || { n: '?', color: 0x07ff, count: 0, labels: [] };
+  const accent = rgb565ToHex(lay.color || 0x07ff);
+  document.documentElement.style.setProperty('--accent', accent);
+  document.getElementById('lname').textContent = lay.n || '—';
+  document.getElementById('lidx').textContent  = `[${(f.lay ?? 0) + 1}/${lay.count || 16}]`;
+  document.getElementById('tp').textContent    = TP_NAMES[f.tp] || '—';
+  document.getElementById('os').textContent    = f.os || '?';
+
+  const altb = document.getElementById('altb');
+  const alt1 = (f.b & (1 << 10)) !== 0;
+  const alt2 = (f.b & (1 << 11)) !== 0;
+  if (alt1 || alt2) {
+    altb.hidden = false;
+    altb.textContent = alt1 ? 'ALT1' : 'ALT2';
+  } else {
+    altb.hidden = true;
   }
 
-  let gotLive=false;
-  function render(ui){
-    gotLive=true;
-    $("empty").style.display="none";
-    $("hdr").style.display="flex";
-    $("strip").style.display="flex";
-    if(ui.layer) layer = ui.layer;          // actualizar cache solo si vino el descriptor
-    const accent = layer ? rgb565(layer.color) : "#1fe0e0";
-    $("pad").style.setProperty("--accent", accent);
-    $("hdr").style.borderBottomColor = accent;
-    $("ldot").style.background = accent;
-    $("lname").textContent = layer ? layer.n : "—";
-    $("lgrp").textContent = layer ? `capa ${ (ui.lay??0)+1 }/${layer.count||"?"}` : "";
-    const ab=$("altbadge");
-    if(ui.alt){ ab.textContent="ALT"+ui.alt; ab.style.background=accent; ab.classList.add("on"); }
-    else ab.classList.remove("on");
+  const wizb = document.getElementById('wizb');
+  if (f.lay === 4 || lay.n === 'Luces') {
+    wizb.hidden = false;
+    const wizOn = f.wiz !== false;
+    wizb.textContent = wizOn ? 'WiZ ON' : 'WiZ OFF';
+    wizb.classList.toggle('on', wizOn);
+  } else {
+    wizb.hidden = true;
+  }
 
-    // keycaps (10, doble fila)
-    const labels = layer ? (layer.labels||[]) : [];
-    for(let i=0;i<NKEYS;i++){
-      $("lbl"+i).textContent = labels[i] || "";
-      const k=keysEl.children[i];
-      k.classList.toggle("down", !!(ui.b & (1<<i)));
+  const batPct = (f.bat === undefined || f.bat === 255) ? 86 : f.bat;
+  document.getElementById('bat').textContent = `${batPct}%`;
+  const batFill = document.getElementById('bat-fill');
+  if (batFill) {
+    batFill.setAttribute('width', String(Math.max(2, Math.round(14 * batPct / 100))));
+    batFill.setAttribute('fill', batPct < 20 ? '#f43f5e' : (batPct < 45 ? '#fbbf24' : '#22d37a'));
+  }
+
+  const micEl = document.getElementById('mic');
+  const muted = Boolean(f.mic);
+  micEl.textContent = muted ? 'MUTE' : 'MIC ON';
+  const micCol = muted ? '#f43f5e' : '#22d37a';
+  document.getElementById('mic-capsule')?.setAttribute('stroke', micCol);
+  document.getElementById('mic-arc')?.setAttribute('stroke', micCol);
+  const slash = document.getElementById('mic-slash');
+  if (slash) slash.setAttribute('visibility', muted ? 'visible' : 'hidden');
+
+  for (let i = 0; i < 10; i++) {
+    const lbl = (lay.labels && lay.labels[i]) || '';
+    const pressed = ((f.b >> i) & 1) === 1;
+    cells[i].classList.toggle('empty', lbl.length === 0);
+    cells[i].classList.toggle('pressed', pressed);
+    cells[i].querySelector('.lbl').textContent = lbl || '—';
+    const well = cells[i].querySelector('.well');
+    if (lbl.length > 0) {
+      well.innerHTML = svgGlyphFor(lbl);
+    } else {
+      well.innerHTML = '';
     }
-    // status badges
-    setBadge("bMic", ui.mic?"MIC OFF":"mic", ui.mic?"bad":"");
-    const tp=ui.tp||0, link = (tp&1)?"USB":(tp&2)?"BLE":"—";
-    setBadge("bLink", link + ((tp&4)?" · wifi":""), (tp&3)?"on":"");
-    const bat = ui.bat;
-    setBadge("bBat", (bat===255||bat==null)?"bat —":bat+"%", bat===255?"":(bat<20?"bad":bat<40?"warn":"on"));
-    setBadge("bOs", ui.os||"—", ui.os?"on":"");
-    // strip
-    $("encMode").textContent = ENC_MODES[ui.em||0] || "capa";
-    const v = ui.vol==null?0:ui.vol;
-    $("volfill").style.width = v+"%";
-    $("volnum").textContent = (ui.vol==null?"—":v);
-  }
-  function setBadge(id,txt,cls){ const e=$(id); e.textContent=txt; e.className="badge"+(cls?" "+cls:""); }
-
-  // Preview desde el NavModel (cfg.navigation/views del companion): muestra la
-  // homeView como pad virtual cuando todavía no llegó un frame en vivo del pad.
-  // Un frame real (gotLive) siempre tiene prioridad sobre el preview.
-  async function previewFromNav(){
-    if(gotLive) return;
-    try{
-      const r=await fetch("/api/config"); if(!r.ok) return;
-      const data=await r.json(), edit=data.edit; if(gotLive||!edit||!Array.isArray(edit.views)) return;
-      const nav=edit.navigation||{}, byId=new Map(edit.views.map(v=>[v.id,v]));
-      const home=byId.get(nav.homeView)||edit.views[0]; if(!home) return;
-      $("empty").style.display="none"; $("hdr").style.display="flex"; $("strip").style.display="flex";
-      const accent=rgb565(home.color||0x07ff);
-      $("pad").style.setProperty("--accent",accent);
-      $("hdr").style.borderBottomColor=accent; $("ldot").style.background=accent;
-      $("lname").textContent=home.label||home.id;
-      $("lgrp").textContent="preview · "+(nav.generated?"generado":"editable");
-      const slots=[]; (home.cards||[]).forEach(c=>{ slots[Number(c.slot)]=c.label||""; });
-      for(let i=0;i<NKEYS;i++) $("lbl"+i).textContent=slots[i]||"";
-      setBadge("bOs","preview","warn");
-    }catch(e){}
   }
 
-  // SSE
-  const conn=$("conn");
-  function connect(){
-    const es=new EventSource("/events");
-    es.onopen=()=>{conn.textContent="conectado al companion ✓";conn.className="on";};
-    es.onerror=()=>{conn.textContent="sin conexión al companion (reintentando)…";conn.className="off";};
-    es.onmessage=e=>{ try{ render(JSON.parse(e.data)); }catch(err){} };
+  document.getElementById('enc').textContent = EM_NAMES[f.em] || 'Capa';
+  const needle = document.getElementById('enc-needle');
+  if (needle) {
+    const rad = (encAngle * Math.PI) / 180;
+    needle.setAttribute('x2', (15 + 9 * Math.cos(rad)).toFixed(1));
+    needle.setAttribute('y2', (15 + 9 * Math.sin(rad)).toFixed(1));
   }
-  connect();
-  setTimeout(previewFromNav, 700);   // si en 700ms no hubo frame en vivo, mostrar el modelo
+
+  const compLive = f.comp !== false;
+  document.getElementById('comp-dot')?.classList.toggle('off', !compLive);
+  const compState = document.getElementById('comp-state');
+  if (compState) compState.textContent = compLive ? 'live' : 'sin PC';
+
+  const sx = f.sx || 0;
+  const sy = f.sy || 0;
+  const sdot = document.getElementById('stick-dot');
+  if (sdot) {
+    sdot.setAttribute('cx', String(14 + Math.max(-8, Math.min(8, sx))));
+    sdot.setAttribute('cy', String(14 + Math.max(-8, Math.min(8, sy))));
+  }
+  const sxy = document.getElementById('stick-xy');
+  if (sxy) {
+    sxy.textContent = f.sclk ? 'CLICK' : `${sx >= 0 ? '+' : ''}${sx} ${sy >= 0 ? '+' : ''}${sy}`;
+  }
+
+  const v = Math.max(0, Math.min(100, f.vol ?? 0));
+  document.getElementById('volnum').textContent = v;
+  document.getElementById('volfill').style.width = v + '%';
+}
+
+function connect() {
+  const es = new EventSource('/api/events');
+  const connEl = document.getElementById('conn');
+  const dotEl = document.getElementById('sdot');
+  es.onopen = () => {
+    dotEl.classList.add('ok');
+    connEl.textContent = 'Conectado al pad';
+  };
+  es.onmessage = (ev) => {
+    encAngle = (encAngle + 18) % 360;
+    render(JSON.parse(ev.data));
+  };
+  if (typeof es.addEventListener === 'function') {
+    es.addEventListener('hello', (ev) => {
+      const d = JSON.parse(ev.data);
+      dotEl.classList.add('ok');
+      connEl.textContent = `Pad @ ${d.padHost}`;
+      if (d.lastFrame) render(d.lastFrame);
+    });
+    es.addEventListener('pad-state', (ev) => {
+      encAngle = (encAngle + 18) % 360;
+      render(JSON.parse(ev.data));
+    });
+  }
+  es.onerror = () => {
+    dotEl.classList.remove('ok');
+    connEl.textContent = 'Reconectando…';
+  };
+}
+connect();
 </script>
 </body>
 </html>
