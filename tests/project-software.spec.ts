@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 test('software pages expose their features without JavaScript', async ({ browser, baseURL }) => {
   const context = await browser.newContext({ javaScriptEnabled: false, baseURL });
   const page = await context.newPage();
-  for (const slug of ['pad', 'btdac']) {
+  for (const slug of ['pad', 'btdac', 'speaker']) {
     await page.goto(`/es/projects/${slug}/software`);
     await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
     await expect(page.locator('#setup')).toBeVisible();
@@ -29,13 +29,14 @@ test('PAD project links to software and the page fits mobile screens', async ({ 
 test('project onboarding exposes board-specific flashing and source links', async ({ browser, baseURL }) => {
   const context = await browser.newContext({ javaScriptEnabled: false, baseURL });
   const page = await context.newPage();
-  for (const slug of ['pad', 'btdac']) {
+  for (const slug of ['pad', 'btdac', 'speaker']) {
     await page.goto(`/es/projects/${slug}`);
     await expect(page.locator('#usage')).toBeVisible();
     await expect(page.locator('#flash')).toContainText(slug === 'pad' ? 'N16R8' : 'WROOM-32');
     await expect(page.locator('#flash pre')).toContainText('pio run -t upload --upload-port COM5');
+    const sourcePath = slug === 'pad' ? 'src/main.cpp' : slug === 'btdac' ? 'src/HIOS_BTDAC.ino' : 'src/main.ino';
     await expect(page.getByRole('link', { name: 'Abrir código del firmware' })).toHaveAttribute('href',
-      `https://github.com/hios-open-systems/web/blob/main/projects/${slug}/${slug === 'pad' ? 'src/main.cpp' : 'src/HIOS_BTDAC.ino'}`);
+      `https://github.com/hios-open-systems/web/blob/main/projects/${slug}/${sourcePath}`);
   }
   await context.close();
 });

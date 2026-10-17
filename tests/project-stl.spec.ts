@@ -51,3 +51,14 @@ for (const width of [1440, 390]) {
     ).toBeVisible();
   });
 }
+
+test('all three hardware projects expose #models-3d section with STL downloads', async ({ page }) => {
+  for (const slug of ['pad', 'btdac', 'speaker']) {
+    await page.goto(`/es/projects/${slug}`);
+    const modelsSection = page.locator('#models-3d');
+    await expect(modelsSection).toBeVisible();
+    await expect(modelsSection.locator('[role="tablist"]')).toBeVisible();
+    await expect(modelsSection.locator('a[download]').first()).toHaveAttribute('href', /\.stl$/i);
+  }
+});
+

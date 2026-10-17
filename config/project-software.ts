@@ -15,6 +15,14 @@ export const softwareProjects = {
       { label: 'Android', path: 'btdac/android' },
     ],
   },
+  speaker: {
+    name: 'HIOS Speaker',
+    sections: ['modes', 'streaming', 'setup', 'availability'],
+    sources: [
+      { label: 'Firmware', path: 'speaker' },
+      { label: 'Testbench', path: 'speaker/testbench' },
+    ],
+  },
 } as const;
 
 export type SoftwareProjectSlug = keyof typeof softwareProjects;

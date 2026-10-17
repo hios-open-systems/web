@@ -489,6 +489,10 @@ export function ProjectDetailClient({
             externalLinks={
               slug === 'pad'
                 ? [{ name: 'Tapa impresa del stick (Thingiverse #6189483)', url: 'https://www.thingiverse.com/thing:6189483' }]
+                : slug === 'btdac'
+                ? [{ name: 'Gabinetes para ESP32 + DAC (Printables)', url: 'https://www.printables.com/search/models?q=esp32+pcm5102' }]
+                : slug === 'speaker'
+                ? [{ name: 'Cajas acústicas para parlantes 40mm (Thingiverse)', url: 'https://www.thingiverse.com/search?q=speaker+40mm+enclosure' }]
                 : []
             }
           />

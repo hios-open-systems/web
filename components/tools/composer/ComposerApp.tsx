@@ -1,5 +1,6 @@
 'use client';
-import { Alert } from 'antd';
+import { Alert, Button } from 'antd';
+import { PlayCircleOutlined, SoundOutlined } from '@ant-design/icons';
 import { ToolHeader } from '@/components/workbench/ToolHeader';
 import { TransportBar } from '@/components/workbench/audio/chiptune/TransportBar';
 import { TrackPanel } from '@/components/workbench/audio/chiptune/TrackPanel';
@@ -22,6 +23,16 @@ export function ComposerApp() {
         description="Creá música retro y synthwave, generá ideas procedurales, editalas en el piano-roll y descargalas. Todo en tu navegador."
         locality="local"
         guideId="composer"
+        actions={
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            <Button size="small" icon={<PlayCircleOutlined />} href="/workbench/jam-station">
+              Jam Station
+            </Button>
+            <Button size="small" icon={<SoundOutlined />} href="/workbench/guitar-tuner">
+              Afinador
+            </Button>
+          </div>
+        }
       />
       <section className={styles.panel} aria-label="Canción y reproducción">
         <SongPanel c={c} />

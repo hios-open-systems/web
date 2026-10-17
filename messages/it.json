@@ -2826,6 +2826,26 @@
                 "body": "L’app permette di richiedere toni di prova. Controllo remoto di volume ed equalizzazione, monitoraggio della batteria e aggiornamenti OTA sono previsti. L’app Android è distribuita come codice sorgente da compilare con Android Studio o Gradle."
             }
         },
+        "speaker": {
+            "title": "Speaker: radio WiFi, streaming e audio stereo I2S",
+            "description": "Il firmware dello Speaker riproduce radio WiFi, audio di YouTube e Bluetooth A2DP tramite I2S verso due amplificatori MAX98357A in stereo, con controllo web locale e supporto per chiptune.",
+            "modes": {
+                "title": "Radio WiFi, Bluetooth A2DP e lettore Chiptune",
+                "body": "L'ESP32 commuta senza interruzioni tra stazioni radio in streaming HTTP, audio Bluetooth Classic A2DP e riproduzione diretta di brani .device.json esportati dal Chiptune Composer di HIOS."
+            },
+            "streaming": {
+                "title": "Controllo web locale e configurazione wireless",
+                "body": "Una volta connesso alla rete locale, il dispositivo offre una dashboard di controllo su http://hios-speaker.local per cambiare stazione, regolare il volume e caricare nuovi brani tramite HTTP POST /api/song. Supporta anche la configurazione WiFi tramite terminale Bluetooth Serial."
+            },
+            "setup": {
+                "title": "Come iniziare",
+                "body": "Regola il convertitore buck LM2596 su 5.0 V con un multimetro prima di collegare i moduli. Esegui prima il flashing dei firmware di diagnostica del testbench per verificare il bus I2S e la separazione stereo, quindi compila e carica src/main.ino con PlatformIO."
+            },
+            "availability": {
+                "title": "Stato attuale",
+                "body": "Uscita stereo nativa a 44.1 kHz / 16-bit tramite due amplificatori in classe D MAX98357A con selezione hardware del canale L/R mediante resistori sui pin SD. Il display LCD 16×2 collegato su I2C mostra lo stato della connessione, l'indirizzo IP assegnato e il titolo in riproduzione senza servizi cloud esterni."
+            }
+        },
         "usage": "Come si usa",
         "flash": "Caricalo sul tuo ESP32"
     },
@@ -3129,6 +3149,18 @@
             "board": "Per ESP32 classico (esp32dev / WROOM-32) con PCM5102. ESP32-S3 non è un sostituto per questo firmware A2DP.",
             "connect": "Controlla alimentazione e cablaggio PCM5102 prima di collegare la USB di programmazione.",
             "success": "Dopo il caricamento apri il monitor seriale a 115200 e cerca HIOS BTDAC tramite Bluetooth. Se si connette senza audio, controlla SCK, XSMT e I2S nella guida completa. Android si compila dal codice; qui non sono disponibili APK o binari firmware."
+        },
+        "speaker": {
+            "intro": "L'altoparlante riproduce stream radio via WiFi, audio Bluetooth A2DP e chiptune dal Composer, con uscita stereo via I2S verso due amplificatori MAX98357A e un display LCD 16×2.",
+            "steps": {
+                "1": "Regola il convertitore buck LM2596 su 5.0 V con un multimetro prima di collegare i moduli. Verifica la continuità di GND su tutto il circuito.",
+                "2": "Carica prima 01_power_i2s_smoke.ino per convalidare il bus I2S e poi 02_channel_check_lr.ino per verificare la separazione dei canali L e R.",
+                "3": "Carica src/main.ino, apri http://hios-speaker.local nel browser e configura le tue radio preferite o associa il tuo telefono tramite Bluetooth A2DP."
+            },
+            "appLink": "Banco di prova e diagnostica",
+            "board": "Per ESP32 classico (configurazione esp32dev / WROOM-32) con 2× MAX98357A e LCD 16×2. Non utilizzare ESP32-S3 in quanto privo di Bluetooth Classic A2DP.",
+            "connect": "Collega il bus I2S condiviso: DIN a GPIO25, BCLK a GPIO26 e LRC a GPIO27. Verifica i resistori sul pin SD (100 kΩ a sinistra, 220 kΩ a destra) e l'alimentazione pulita a 5V.",
+            "success": "All'avvio, l'LCD 16×2 mostra l'indirizzo IP assegnato e la modalità attiva. Controlla riproduzione e volume da http://hios-speaker.local o da terminale seriale."
         }
     },
     "Landing": {
