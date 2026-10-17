@@ -55,7 +55,8 @@ export type WorkbenchToolId =
   | 'token-inspector'
   | 'embedded'
   | 'serial-monitor'
-  | 'qpsk-modulator';
+  | 'qpsk-modulator'
+  | 'jam-station';
 
 export type WorkbenchIcon = 'audio' | 'data' | 'notes' | 'circuits' | 'shield' | 'spark' | 'compare' | 'network' | 'chip' | 'table';
 
@@ -516,6 +517,15 @@ export const workbenchTools: WorkbenchTool[] = [
     sectionId: 'audio',
     href: '/workbench/audio-convert',
     accent: '#0ea5e9',
+    icon: 'audio',
+    featured: true,
+  },
+  {
+    id: 'jam-station',
+    locality: 'local',
+    sectionId: 'audio',
+    href: '/workbench/jam-station',
+    accent: '#f59e0b',
     icon: 'audio',
     featured: true,
   },

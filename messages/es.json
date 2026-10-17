@@ -1724,6 +1724,10 @@
                 "title": "Osciloscopio y modulador QPSK",
                 "description": "Simulá modulación digital en cuadratura (I/Q), analizá el diagrama de constelación bajo ruido AWGN y demodulá tramas en tiempo real."
             },
+            "jam-station": {
+                "title": "Jam Station y bases de improvisación",
+                "description": "Generador de bases rítmicas y diapasón interactivo para guitarristas y músicos. Practicá improvisación, escalas y solos en tiempo real."
+            },
             "guitar-tuner": {
                 "title": "Afinador de instrumentos",
                 "description": "Afiná instrumentos desde el micrófono con una frecuencia de referencia ajustable."
