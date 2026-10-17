@@ -58,6 +58,7 @@ const TOOLS: Partial<Record<WorkbenchToolId, ComponentType>> = {
   'token-inspector': dynamic(() => import('@/components/workbench/TokenizerTool').then((m) => m.TokenizerTool), { ssr: false }),
   'qpsk-modulator': dynamic(() => import('@/components/workbench/QpskModulatorTool').then((m) => m.QpskModulatorTool), { ssr: false }),
   'jam-station': dynamic(() => import('@/components/workbench/audio/JamStationTool').then((m) => m.JamStationTool), { ssr: false }),
+  'beatmaker': dynamic(() => import('@/components/workbench/audio/BeatmakerTool').then((m) => m.BeatmakerTool), { ssr: false }),
 };
 
 export function ToolRenderer({ toolId, headerRendered = false }: { toolId: WorkbenchToolId; headerRendered?: boolean }) {

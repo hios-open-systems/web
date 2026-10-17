@@ -69,3 +69,19 @@ export function startTone(context: AudioContext, frequency: number, options: Pla
     oscillator.stop(t + 0.06);
   };
 }
+
+let sharedAudioCtx: AudioContext | null = null;
+
+/**
+ * Returns a lazily instantiated shared AudioContext for browser playback.
+ */
+export function getSharedAudioContext(): AudioContext {
+  if (typeof window === 'undefined') {
+    throw new Error('AudioContext is only available in the browser');
+  }
+  if (!sharedAudioCtx || sharedAudioCtx.state === 'closed') {
+    const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    sharedAudioCtx = new Ctx();
+  }
+  return sharedAudioCtx;
+}

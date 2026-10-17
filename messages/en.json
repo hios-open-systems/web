@@ -1741,6 +1741,10 @@
                 "title": "Jam Station & Backing Tracks",
                 "description": "Procedural backing track generator and interactive guitar fretboard for musicians. Practice improvisation, scales, and solos in real time."
             },
+            "beatmaker": {
+                "title": "Beatmaker & Looper DAW",
+                "description": "Browser-based urban loop station for Trap, BoomBap, Rap and Freestyle. Create beats, fork community versions and export audio with zero installation."
+            },
             "guitar-tuner": {
                 "title": "Instrument tuner",
                 "description": "Tune instruments using your microphone and an adjustable reference frequency."
