@@ -43,6 +43,9 @@ enum Instrument : uint8_t {
   INSTR_SAW_LEAD,        // saw-lead
   INSTR_SNES_LEAD,       // snes-lead
   INSTR_NOISE_PERC,      // noise-perc
+  INSTR_GUITAR,          // chiptune-guitar
+  INSTR_STRINGS,         // synth-strings
+  INSTR_CHOIR,           // synth-choir
   INSTR_COUNT
 };
 

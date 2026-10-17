@@ -11,19 +11,20 @@ export function SongGenerator({ c }: { c: ComposerState }) {
   const [style, setStyle] = useState<SongStyle>('adventure');
   const [root, setRoot] = useState(0);
   const [bars, setBars] = useState(4);
+  const [trackCount, setTrackCount] = useState(0);
   const [seed, setSeed] = useState('hios');
-  const isMinor = style === 'arcade' || style === 'synthwave' || style === 'cyberpunk';
+  const isMinor = style === 'arcade' || style === 'synthwave' || style === 'cyberpunk' || style === 'hiphop';
 
   const generate = (nextSeed: string) => {
     setSeed(nextSeed);
-    c.resetTo(generateSong({ seed: nextSeed, style, root, bars }));
+    c.resetTo(generateSong({ seed: nextSeed, style, root, bars, trackCount: trackCount || undefined }));
   };
 
   return (
     <div className={styles.generator}>
       <p>
-        Generador procedural retro y synth: compone melodía, bajo galopante, arpegio y percusión de forma
-        100% matemática y reproducible en tu navegador.
+        Generador procedural retro y synth: compone guitarra/melodía, bajo, batería, arpegios, strings y coros
+        de forma 100% matemática y reproducible en tu navegador.
       </p>
       <div className={styles.fields}>
         <label>
@@ -54,6 +55,21 @@ export function SongGenerator({ c }: { c: ComposerState }) {
             value={bars}
             onChange={setBars}
             options={[2, 4, 8, 16].map((value) => ({ value, label: `${value} compases` }))}
+          />
+        </label>
+        <label>
+          Instrumentación
+          <Select
+            aria-label="Cantidad de pistas e instrumentación"
+            value={trackCount}
+            onChange={setTrackCount}
+            options={[
+              { value: 0, label: 'Auto (3 a 6 pistas)' },
+              { value: 3, label: '3 pistas: Guitarra, Bajo, Batería' },
+              { value: 4, label: '4 pistas: + Arpegio' },
+              { value: 5, label: '5 pistas: + Strings / Pad' },
+              { value: 6, label: '6 pistas: Ensamble completo (+ Coro)' },
+            ]}
           />
         </label>
         <label>

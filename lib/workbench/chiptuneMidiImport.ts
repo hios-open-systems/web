@@ -20,7 +20,10 @@ function readVarLen(bytes: Uint8Array, offset: { pos: number }): number {
 
 function resolveInstrument(channel: number, program: number): InstrumentId {
   if (channel === 9) return 'noise-perc';
+  if (program >= 24 && program <= 31) return 'chiptune-guitar';
   if (program >= 32 && program <= 39) return 'triangle-bass';
+  if (program >= 40 && program <= 51) return 'synth-strings';
+  if (program >= 52 && program <= 55) return 'synth-choir';
   if (program >= 88 && program <= 95) return 'snes-lead';
   if (program >= 80 && program <= 87) return 'saw-lead';
   return 'pulse-lead';
