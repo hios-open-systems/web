@@ -68,15 +68,25 @@ export function JamControls({
         />
       </label>
 
-      <label style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-        <span style={{ fontSize: 13, opacity: 0.8 }}>Tono:</span>
+      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+        <span style={{ fontSize: 13, opacity: 0.8, marginRight: 2 }}>Tono:</span>
         <Select
           value={keyRoot}
-          style={{ width: 85 }}
+          style={{ width: 75 }}
           onChange={onSelectKeyRoot}
           options={NOTE_NAMES.map((name, idx) => ({ value: idx, label: name }))}
         />
-      </label>
+        {[9, 4, 2, 7, 0].map((k) => (
+          <Button
+            key={k}
+            size="small"
+            type={keyRoot === k ? 'primary' : 'default'}
+            onClick={() => onSelectKeyRoot(k)}
+          >
+            {NOTE_NAMES[k]}
+          </Button>
+        ))}
+      </div>
 
       <label style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
         <span style={{ fontSize: 13, opacity: 0.8 }}>Escala:</span>
