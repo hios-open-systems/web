@@ -54,7 +54,8 @@ export type WorkbenchToolId =
   | 'llm-grammar-generator'
   | 'token-inspector'
   | 'embedded'
-  | 'serial-monitor';
+  | 'serial-monitor'
+  | 'qpsk-modulator';
 
 export type WorkbenchIcon = 'audio' | 'data' | 'notes' | 'circuits' | 'shield' | 'spark' | 'compare' | 'network' | 'chip' | 'table';
 
@@ -605,6 +606,15 @@ export const workbenchTools: WorkbenchTool[] = [
     sectionId: 'electronics',
     href: '/workbench/serial-monitor',
     accent: '#3b82f6',
+    icon: 'circuits',
+    featured: true,
+  },
+  {
+    id: 'qpsk-modulator',
+    locality: 'local',
+    sectionId: 'electronics',
+    href: '/workbench/qpsk-modulator',
+    accent: '#10b981',
     icon: 'circuits',
     featured: true,
   },
