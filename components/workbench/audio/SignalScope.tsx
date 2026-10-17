@@ -33,16 +33,15 @@ function useScopeTrace(analyser: AnalyserNode | null, paused: boolean) {
   return path;
 }
 
-export function SignalScope({ analyser }: { analyser: AnalyserNode | null }) {
+export function SignalScope({
+  analyser,
+  onRequestStart,
+}: {
+  analyser: AnalyserNode | null;
+  onRequestStart?: () => void;
+}) {
   const t = useTranslations('SignalScope');
   const [paused, setPaused] = useState(false);
-  useEffect(() => {
-    const media = matchMedia('(prefers-reduced-motion: reduce)');
-    const update = () => setPaused(media.matches);
-    update();
-    media.addEventListener('change', update);
-    return () => media.removeEventListener('change', update);
-  }, []);
   const path = useScopeTrace(analyser, paused);
   return (
     <section className={styles.instrument} style={{ transform: 'none' }} aria-label={t('title')} data-live-scope>
@@ -54,11 +53,18 @@ export function SignalScope({ analyser }: { analyser: AnalyserNode | null }) {
         <h2 className={styles.label}>{t('title')}</h2>
         <button
           className={styles.pause}
-          onClick={() => setPaused(!paused)}
+          onClick={() => {
+            if (!analyser && onRequestStart) {
+              setPaused(false);
+              onRequestStart();
+              return;
+            }
+            setPaused(!paused);
+          }}
           aria-label={t(paused ? 'resume' : 'pause')}
           aria-pressed={paused}
         >
-          {paused ? <CaretRightOutlined /> : <PauseOutlined />}
+          {!analyser || paused ? <CaretRightOutlined /> : <PauseOutlined />}
         </button>
       </div>
       <div className={styles.screen}>

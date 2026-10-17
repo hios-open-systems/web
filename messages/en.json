@@ -1656,6 +1656,10 @@
                 "title": "Audio signal generator",
                 "description": "Generate tones, noise and frequency sweeps to test speakers, DACs and audio connections."
             },
+            "qpsk-modulator": {
+                "title": "QPSK oscilloscope & modulator",
+                "description": "Simulate quadrature phase-shift keying (I/Q), inspect the constellation diagram under AWGN noise and demodulate frames in real time."
+            },
             "guitar-tuner": {
                 "title": "Instrument tuner",
                 "description": "Tune instruments using your microphone and an adjustable reference frequency."
