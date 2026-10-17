@@ -44,27 +44,19 @@ export function ToolShowcase() {
           <h2 className={styles.showcaseTitle}>{lab('toolsTitle')}</h2>
           <p className={styles.showcaseSubtitle}>{lab('toolsSubtitle')}</p>
         </div>
-        <Link href={`/${locale}?tool=random`} className={styles.random}>
-          {t('showcaseRandomCta')} <ThunderboltOutlined />
-        </Link>
+        <div className={styles.showcaseActions}>
+          <Link href={`/${locale}?tool=random`} className={styles.random}>
+            {t('showcaseRandomCta')} <ThunderboltOutlined />
+          </Link>
+          <Link href={`/${locale}/workbench`} className={styles.seeAll}>
+            {t('showcaseSeeAll')} ({ALL_TOOLS.length}) <ArrowRightOutlined />
+          </Link>
+        </div>
       </div>
       <div className={styles.tools}>
         {TOOLS.map((tool, index) => (
           <ShowcaseTool key={tool.id} tool={tool} index={index} />
         ))}
-      </div>
-      <div style={{ textAlign: 'center', marginTop: 24 }}>
-        <Link
-          href={`/${locale}/workbench`}
-          style={{
-            color: 'var(--accent-text)',
-            fontWeight: 500,
-            textDecoration: 'none',
-            fontSize: 15,
-          }}
-        >
-          {t('showcaseSeeAll')} ({ALL_TOOLS.length}) →
-        </Link>
       </div>
     </section>
   );
