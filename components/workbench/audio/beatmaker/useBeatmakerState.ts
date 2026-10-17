@@ -79,12 +79,41 @@ export function useBeatmakerState() {
     message.info('Patrón vaciado');
   };
 
+  const cycleStepDetail = (sound: BeatSound, stepIdx: number) => {
+    setProject((prev) => ({
+      ...prev,
+      tracks: prev.tracks.map((tr) => {
+        if (tr.sound !== sound) return tr;
+        const steps = [...tr.steps];
+        const current = steps[stepIdx];
+        if (!current.active) {
+          steps[stepIdx] = { ...current, active: true };
+          return { ...tr, steps };
+        }
+        if (sound === 'hihat') {
+          const nextRoll = (((current.roll ?? 1) % 4) + 1) as 1 | 2 | 3 | 4;
+          steps[stepIdx] = { ...current, roll: nextRoll };
+        } else if (sound === '808') {
+          const scale = [36, 39, 41, 43, 44, 46];
+          const currIdx = scale.indexOf(current.pitch ?? 36);
+          steps[stepIdx] = { ...current, pitch: scale[(currIdx + 1) % scale.length] };
+        } else if (sound === 'melody') {
+          const scale = [60, 63, 65, 67, 70, 72];
+          const currIdx = scale.indexOf(current.pitch ?? 60);
+          steps[stepIdx] = { ...current, pitch: scale[(currIdx + 1) % scale.length] };
+        }
+        return { ...tr, steps };
+      }),
+    }));
+  };
+
   return {
     project,
     setProject,
     shareOpen,
     setShareOpen,
     toggleStep,
+    cycleStepDetail,
     toggleMute,
     toggleSolo,
     selectPreset,

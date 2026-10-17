@@ -60,19 +60,42 @@ export function createEmptyStep(): BeatStep {
   return { active: false, velocity: 100, roll: 1 };
 }
 
-export function createTrack(sound: BeatSound, name?: string, activeIndices: number[] = [], pitches?: number[]): BeatTrack {
+export function createTrack(
+  sound: BeatSound,
+  name?: string,
+  activeIndices: number[] = [],
+  pitches?: Record<number, number> | number[],
+  rolls?: Record<number, 1 | 2 | 3 | 4>,
+  velocities?: Record<number, number>
+): BeatTrack {
   const meta = SOUND_META[sound];
   const steps: BeatStep[] = Array.from({ length: 16 }, (_, i) => {
     const active = activeIndices.includes(i);
-    const pitch = pitches && pitches[i] !== undefined ? pitches[i] : meta.defaultPitch;
-    return { active, velocity: active ? 100 : 80, pitch, roll: 1 };
+    let pitch = meta.defaultPitch;
+    if (pitches) {
+      if (Array.isArray(pitches)) {
+        if (pitches.length === 16) {
+          pitch = pitches[i];
+        } else {
+          const activeIdx = activeIndices.indexOf(i);
+          if (activeIdx !== -1 && pitches[activeIdx] !== undefined) {
+            pitch = pitches[activeIdx];
+          }
+        }
+      } else if (pitches[i] !== undefined) {
+        pitch = pitches[i];
+      }
+    }
+    const roll = (rolls && rolls[i]) ?? 1;
+    const velocity = (velocities && velocities[i]) ?? (active ? 100 : 80);
+    return { active, velocity, pitch, roll };
   });
   return {
     id: sound,
     name: name ?? meta.label,
     sound,
     steps,
-    volume: sound === '808' ? 0.9 : 0.8,
+    volume: sound === '808' ? 0.95 : 0.8,
     muted: false,
     solo: false,
   };
@@ -94,17 +117,31 @@ export const BEAT_PRESETS: BeatPreset[] = [
     name: 'Trap 808 Dark Flow',
     genre: 'Trap',
     bpm: 140,
-    swing: 0.05,
-    description: 'Bajos 808 pesados con slides, hi-hat rolls frenéticos y caja cortante.',
+    swing: 0.04,
+    description: 'Bajos 808 pesados con slides melódicos, hi-hat rolls frenéticos y caja cortante en half-time (tiempo 3).',
     tracks: () => [
-      createTrack('808', '808 Sub', [0, 6, 10, 14], [36, 36, 41, 39]),
-      createTrack('kick', 'Kick Punch', [0, 8, 10]),
-      createTrack('snare', 'Trap Snare', [4, 12]),
-      createTrack('clap', 'Clap Layer', [12]),
-      createTrack('hihat', 'Rolling Hi-Hat', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]),
-      createTrack('openhat', 'Open Hat', [2, 10]),
-      createTrack('perc', 'Rimshot Accent', [7, 15]),
-      createTrack('melody', 'Dark Bell Chops', [0, 3, 6, 12], [60, 63, 65, 67]),
+      createTrack(
+        '808',
+        '808 Sub Bass',
+        [0, 6, 8, 11, 14],
+        { 0: 36, 6: 39, 8: 41, 11: 43, 14: 39 },
+        undefined,
+        { 0: 120, 6: 105, 8: 115, 11: 110, 14: 105 }
+      ),
+      createTrack('kick', 'Kick Punch', [0, 7, 10], undefined, undefined, { 0: 125, 7: 105, 10: 115 }),
+      createTrack('snare', 'Trap Snare', [8], undefined, undefined, { 8: 125 }),
+      createTrack('clap', 'Clap Layer', [8], undefined, undefined, { 8: 110 }),
+      createTrack(
+        'hihat',
+        'Rolling Hi-Hat',
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+        undefined,
+        { 6: 2, 11: 3, 14: 4 },
+        { 0: 115, 2: 105, 4: 110, 6: 95, 8: 115, 10: 100, 11: 90, 12: 110, 14: 95 }
+      ),
+      createTrack('openhat', 'Open Hat', [6, 14], undefined, undefined, { 6: 95, 14: 100 }),
+      createTrack('perc', 'Rimshot Accent', [4, 12], undefined, undefined, { 4: 75, 12: 80 }),
+      createTrack('melody', 'Dark Bells', [0, 3, 6, 10, 12], { 0: 60, 3: 63, 6: 67, 10: 65, 12: 63 }),
     ],
   },
   {
@@ -112,17 +149,38 @@ export const BEAT_PRESETS: BeatPreset[] = [
     name: 'BoomBap 90s Golden Era',
     genre: 'BoomBap / Hip-Hop',
     bpm: 90,
-    swing: 0.22,
-    description: 'Groove clásico con bombo pesado, caja con crunch y swing neoyorquino.',
+    swing: 0.24,
+    description: 'Groove clásico con bombo pesado (1, 2-and, 3-and), caja con crunch en 2 y 4, y swing neoyorquino profundo.',
     tracks: () => [
-      createTrack('808', 'Warm Sub', [0, 8, 11], [36, 36, 38]),
-      createTrack('kick', 'Boom Kick', [0, 3, 8, 11]),
-      createTrack('snare', 'Bap Snare', [4, 12]),
+      createTrack(
+        '808',
+        'Warm Sub',
+        [0, 3, 8, 10],
+        { 0: 36, 3: 36, 8: 41, 10: 38 },
+        undefined,
+        { 0: 110, 3: 95, 8: 105, 10: 95 }
+      ),
+      createTrack('kick', 'Boom Kick', [0, 3, 10], undefined, undefined, { 0: 122, 3: 105, 10: 115 }),
+      createTrack('snare', 'Bap Crack', [4, 12], undefined, undefined, { 4: 122, 12: 125 }),
       createTrack('clap', 'Clap Layer', []),
-      createTrack('hihat', 'Swingy Hat', [0, 2, 4, 6, 8, 10, 12, 14]),
-      createTrack('openhat', 'Open Hat', [6, 14]),
-      createTrack('perc', 'Vinyl Shaker', [1, 3, 5, 7, 9, 11, 13, 15]),
-      createTrack('melody', 'Rhodes Chords', [0, 6, 10], [58, 62, 65]),
+      createTrack(
+        'hihat',
+        'Swingy Hat',
+        [0, 2, 4, 6, 8, 10, 12, 14],
+        undefined,
+        undefined,
+        { 0: 115, 2: 70, 4: 110, 6: 72, 8: 115, 10: 70, 12: 110, 14: 75 }
+      ),
+      createTrack('openhat', 'Open Hat', [14], undefined, undefined, { 14: 90 }),
+      createTrack(
+        'perc',
+        'Vinyl Shaker',
+        [1, 3, 5, 7, 9, 11, 13, 15],
+        undefined,
+        undefined,
+        { 1: 65, 3: 85, 5: 65, 7: 85, 9: 65, 11: 85, 13: 65, 15: 85 }
+      ),
+      createTrack('melody', 'Rhodes Chords', [0, 6, 10], { 0: 58, 6: 62, 10: 65 }),
     ],
   },
   {
@@ -130,17 +188,31 @@ export const BEAT_PRESETS: BeatPreset[] = [
     name: 'Latin Trap / Dembow Flow',
     genre: 'Latin Trap',
     bpm: 96,
-    swing: 0.1,
-    description: 'Sincopación bailable con bajo sub envolvente y ritmo caribeño moderno.',
+    swing: 0.08,
+    description: 'Sincopación bailable con bombo 4-on-the-floor, caja en tresillo dembow (3, 6, 11, 14) y bajo envolvente.',
     tracks: () => [
-      createTrack('808', '808 Sub Bajo', [0, 6, 10], [38, 41, 36]),
-      createTrack('kick', 'Bombo Dembow', [0, 4, 8, 12]),
-      createTrack('snare', 'Caja Sincopada', [3, 6, 11, 14]),
-      createTrack('clap', 'Clap Golpe', [4, 12]),
-      createTrack('hihat', 'Hi-Hat Flow', [0, 2, 4, 6, 8, 10, 12, 14]),
-      createTrack('openhat', 'Open Hat', [6, 14]),
-      createTrack('perc', 'Palo / Rim', [3, 11]),
-      createTrack('melody', 'Sintetizador Menor', [0, 8], [62, 65]),
+      createTrack(
+        '808',
+        '808 Sub Bajo',
+        [0, 6, 10, 14],
+        { 0: 38, 6: 41, 10: 36, 14: 38 },
+        undefined,
+        { 0: 115, 6: 105, 10: 110, 14: 105 }
+      ),
+      createTrack('kick', 'Bombo Dembow', [0, 4, 8, 12], undefined, undefined, { 0: 125, 4: 120, 8: 125, 12: 120 }),
+      createTrack('snare', 'Caja Sincopada', [3, 6, 11, 14], undefined, undefined, { 3: 115, 6: 120, 11: 115, 14: 120 }),
+      createTrack('clap', 'Clap Golpe', [4, 12], undefined, undefined, { 4: 110, 12: 115 }),
+      createTrack(
+        'hihat',
+        'Hi-Hat Flow',
+        [0, 2, 4, 6, 8, 10, 12, 14],
+        undefined,
+        { 10: 2, 14: 2 },
+        { 0: 105, 2: 80, 4: 105, 6: 80, 8: 105, 10: 95, 12: 105, 14: 95 }
+      ),
+      createTrack('openhat', 'Open Hat', [2, 10], undefined, undefined, { 2: 90, 10: 95 }),
+      createTrack('perc', 'Palo / Timbal', [3, 11], undefined, undefined, { 3: 110, 11: 110 }),
+      createTrack('melody', 'Piano Menor', [0, 6, 12], { 0: 62, 6: 65, 12: 60 }),
     ],
   },
   {
@@ -148,17 +220,31 @@ export const BEAT_PRESETS: BeatPreset[] = [
     name: 'UK / NY Drill Stutter',
     genre: 'Drill',
     bpm: 142,
-    swing: 0.08,
-    description: 'Hi-hats con saltos en tresillos, caja desplazada en el tercer tiempo y 808s dinámicos.',
+    swing: 0.06,
+    description: 'Hi-hats con stutter en tresillos, caja desplazada en contratiempo (tiempos 6 y 14) y 808s con saltos de octava.',
     tracks: () => [
-      createTrack('808', 'Gliding 808', [0, 6, 11], [34, 41, 36]),
-      createTrack('kick', 'Drill Kick', [0, 7, 10]),
-      createTrack('snare', 'Offbeat Snare', [6, 14]),
-      createTrack('clap', 'Clap Snappy', [6]),
-      createTrack('hihat', 'Drill Hat Stutter', [0, 2, 3, 5, 8, 10, 11, 13]),
-      createTrack('openhat', 'Open Shimmer', [14]),
-      createTrack('perc', 'Counter Snare', [2, 10]),
-      createTrack('melody', 'Ethereal Flute', [0, 4, 8, 12], [65, 68, 70, 72]),
+      createTrack(
+        '808',
+        'Gliding 808',
+        [0, 6, 9, 12],
+        { 0: 34, 6: 41, 9: 46, 12: 36 },
+        undefined,
+        { 0: 120, 6: 110, 9: 115, 12: 110 }
+      ),
+      createTrack('kick', 'Drill Kick', [0, 7, 10], undefined, undefined, { 0: 125, 7: 110, 10: 115 }),
+      createTrack('snare', 'Delayed Snare', [6, 14], undefined, undefined, { 6: 125, 14: 125 }),
+      createTrack('clap', 'Clap Snappy', [14], undefined, undefined, { 14: 100 }),
+      createTrack(
+        'hihat',
+        'Drill Stutter',
+        [0, 2, 3, 5, 8, 10, 11, 13, 14],
+        undefined,
+        { 3: 3, 11: 3, 14: 2 },
+        { 0: 110, 2: 90, 3: 85, 5: 90, 8: 110, 10: 90, 11: 85, 13: 90, 14: 95 }
+      ),
+      createTrack('openhat', 'Open Hat', [14], undefined, undefined, { 14: 95 }),
+      createTrack('perc', 'Counter Snare', [2, 10], undefined, undefined, { 2: 95, 10: 95 }),
+      createTrack('melody', 'Dark Strings / Pad', [0, 4, 8, 12], { 0: 65, 4: 68, 8: 70, 12: 67 }),
     ],
   },
 ];

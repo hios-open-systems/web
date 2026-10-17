@@ -21,6 +21,7 @@ export function BeatmakerTool() {
     shareOpen,
     setShareOpen,
     toggleStep,
+    cycleStepDetail,
     toggleMute,
     toggleSolo,
     selectPreset,
@@ -98,6 +99,7 @@ export function BeatmakerTool() {
         currentStep={playback.currentStep}
         isPlaying={playback.isPlaying}
         onToggleStep={toggleStep}
+        onCycleStepDetail={cycleStepDetail}
         onPreview={playback.previewSound}
         onToggleMute={toggleMute}
         onToggleSolo={toggleSolo}

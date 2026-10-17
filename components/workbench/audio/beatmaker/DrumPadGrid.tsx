@@ -10,6 +10,7 @@ interface DrumPadGridProps {
   currentStep: number;
   isPlaying: boolean;
   onToggleStep: (sound: BeatSound, stepIndex: number) => void;
+  onCycleStepDetail?: (sound: BeatSound, stepIndex: number) => void;
   onPreview: (sound: BeatSound) => void;
   onToggleMute: (sound: BeatSound) => void;
   onToggleSolo: (sound: BeatSound) => void;
@@ -20,6 +21,7 @@ export function DrumPadGrid({
   currentStep,
   isPlaying,
   onToggleStep,
+  onCycleStepDetail,
   onPreview,
   onToggleMute,
   onToggleSolo,
@@ -54,6 +56,7 @@ export function DrumPadGrid({
             currentStep={currentStep}
             isPlaying={isPlaying}
             onToggleStep={(stepIdx) => onToggleStep(track.sound, stepIdx)}
+            onCycleStepDetail={(stepIdx) => onCycleStepDetail?.(track.sound, stepIdx)}
             onPreview={() => onPreview(track.sound)}
             onToggleMute={() => onToggleMute(track.sound)}
             onToggleSolo={() => onToggleSolo(track.sound)}
