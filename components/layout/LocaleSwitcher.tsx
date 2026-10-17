@@ -27,14 +27,13 @@ export function LocaleSwitcher({ className }: LocaleSwitcherProps) {
             value={locale}
             onChange={handleLocaleChange}
             variant="borderless"
-            suffixIcon={<GlobalOutlined style={{ fontSize: '14px', color: '#f59e0b' }} />}
-            style={{ color: '#f59e0b' }}
+            suffixIcon={<GlobalOutlined style={{ fontSize: '13px', color: 'var(--hios-text-secondary)' }} />}
             popupMatchSelectWidth={false}
             options={[
-                { value: 'en', label: 'English' },
-                { value: 'es', label: 'Español' },
-                { value: 'de', label: 'Deutsch' },
-                { value: 'it', label: 'Italiano' },
+                { value: 'en', label: 'EN · English' },
+                { value: 'es', label: 'ES · Español' },
+                { value: 'de', label: 'DE · Deutsch' },
+                { value: 'it', label: 'IT · Italiano' },
             ]}
         />
     );

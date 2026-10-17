@@ -25,7 +25,7 @@ export function ProjectsGrid() {
         </header>
         <div className={styles.projectGrid}>
           {ordered.map((project, i) => (
-            <ProjectCard key={project.slug} project={project} index={i} />
+            <ProjectCard key={project.slug} project={project} index={i} details />
           ))}
         </div>
         <Link className={styles.externalLink} href={`/${locale}/projects`}>

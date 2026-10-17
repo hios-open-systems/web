@@ -6,10 +6,10 @@
   height: var(--layout-header-height) !important;
   min-height: var(--layout-header-height);
   padding: 0 max(20px, env(safe-area-inset-right)) 0 max(20px, env(safe-area-inset-left)) !important;
-  line-height: normal;
+  line-height: 1.4 !important;
   background: color-mix(in srgb, var(--hios-bg) 92%, transparent);
   border-bottom: 1px solid var(--hios-border);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
 }
 
 :global([data-theme="dark"]) .header {
@@ -20,11 +20,12 @@
 .shell {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
   height: 100%;
+  line-height: 1.4;
 }
 
 .brandLink {
@@ -33,13 +34,15 @@
   gap: 8px;
   text-decoration: none;
   flex-shrink: 0;
+  padding-inline-end: 12px;
+  border-inline-end: 1px solid var(--hios-border);
 }
 
 /* Cuadradito silkscreen con el accent del usuario */
 .brandLink::before {
   content: '';
-  width: 9px;
-  height: 9px;
+  width: 8px;
+  height: 8px;
   border-radius: 2px;
   background: var(--accent);
   transition: transform 0.15s ease;
@@ -51,8 +54,8 @@
 
 .brand {
   font-family: var(--font-stack-mono);
-  font-weight: 600;
-  font-size: 15px;
+  font-weight: 700;
+  font-size: 14px;
   letter-spacing: 0.14em;
   color: var(--hios-text);
 }
@@ -130,15 +133,15 @@
 .controls {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   margin-left: auto;
   flex-shrink: 0;
 }
 
 .localeSelect {
-  min-width: 80px;
-  height: 32px;
-  max-width: 118px;
+  min-width: 68px;
+  height: 30px;
+  max-width: 128px;
 }
 
 .localeSelect :global(.ant-select) {
@@ -146,14 +149,19 @@
 }
 
 .localeSelect :global(.ant-select-selector) {
-  min-height: 32px !important;
-  height: 32px !important;
+  min-height: 30px !important;
+  height: 30px !important;
   display: inline-flex !important;
   align-items: center !important;
   background: transparent !important;
-  border: none !important;
+  border: 1px solid transparent !important;
+  border-radius: 6px !important;
   box-shadow: none !important;
-  padding-inline: 8px !important;
+  padding-inline: 8px 24px !important;
+}
+
+.localeSelect:hover :global(.ant-select-selector) {
+  background: color-mix(in srgb, var(--hios-text) 5%, transparent) !important;
 }
 
 .localeSelect :global(.ant-select-selection-item) {
@@ -162,17 +170,21 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  line-height: 1.1;
-  font-size: 13px;
+  line-height: 1.2 !important;
+  padding-inline-end: 14px !important;
+  color: var(--hios-text-secondary) !important;
+  font-family: var(--font-stack-mono);
+  font-size: 11.5px;
   font-weight: 500;
 }
 
 .iconButton {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  border-radius: 6px !important;
   color: var(--hios-text-secondary) !important;
 }
 
@@ -287,8 +299,12 @@
     height: var(--touch-target) !important;
     min-width: var(--touch-target) !important;
   }
-  .brandLink { min-height: var(--touch-target); }
-  .brand { font-size: 17px; }
+  .brandLink {
+    min-height: var(--touch-target);
+    padding-inline-end: 0;
+    border-inline-end: none;
+  }
+  .brand { font-size: 16px; }
 }
 
 .hamburger {
@@ -412,33 +428,35 @@
 
 .searchButton {
   width: auto;
-  height: 32px !important;
+  height: 30px !important;
   padding-inline: 10px !important;
   border: 1px solid var(--hios-border) !important;
-  border-radius: 8px !important;
-  background: color-mix(in srgb, var(--hios-bg-secondary) 75%, transparent) !important;
+  border-radius: 6px !important;
+  background: color-mix(in srgb, var(--hios-bg-secondary) 70%, transparent) !important;
   color: var(--hios-text-secondary) !important;
+  line-height: 1 !important;
   transition: border-color 0.16s ease, color 0.16s ease, background-color 0.16s ease !important;
 }
 .searchButton:hover {
-  border-color: color-mix(in srgb, var(--accent) 50%, var(--hios-border)) !important;
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--hios-border)) !important;
   color: var(--hios-text) !important;
 }
 .searchLabel {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 12.5px;
+  font-size: 12px;
+  line-height: 1;
 }
 .searchLabel kbd {
-  padding: 1px 5px;
+  padding: 2px 5px;
   border: 1px solid var(--hios-border);
   border-radius: 4px;
   background: var(--hios-bg);
   color: var(--hios-text-muted);
   font-family: var(--font-stack-mono);
-  font-size: 10.5px;
-  line-height: 1.3;
+  font-size: 10px;
+  line-height: 1;
 }
 .mobileSpaceLink { display: none; }
 @media (max-width: 1024px) {

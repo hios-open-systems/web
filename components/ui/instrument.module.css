@@ -1,23 +1,22 @@
 .instrument {
   --signal: #b8f36d;
   position: relative;
-  background: #141a20;
+  background: #10161d;
   color: #f4f5ef;
-  border: 1px solid #3c464b;
-  border-radius: 22px;
-  padding: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+  padding: 20px;
   box-shadow:
-    0 32px 80px #0005,
-    0 2px 0 #ffffff0d inset;
-  transform: rotate(2deg);
+    0 24px 60px rgba(0, 0, 0, 0.45),
+    0 1px 0 rgba(255, 255, 255, 0.06) inset;
 }
 .instrument::before,
 .instrument::after {
   content: '+';
   position: absolute;
   bottom: 8px;
-  font: 12px var(--font-stack-mono);
-  color: #687778;
+  font: 11px var(--font-stack-mono);
+  color: #526068;
 }
 .instrument::before {
   left: 10px;
@@ -29,11 +28,11 @@
   display: flex;
   justify-content: space-between;
   gap: 10px;
-  padding-bottom: 18px;
-  border-bottom: 1px solid #ffffff1a;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   font: 10px var(--font-stack-mono);
   letter-spacing: 0.08em;
-  color: #acb5bb;
+  color: #94a3b8;
 }
 .status {
   display: flex;
@@ -46,45 +45,53 @@
   height: 6px;
   border-radius: 50%;
   background: var(--signal);
-  box-shadow: 0 0 12px #b8f36d66;
+  box-shadow: 0 0 10px #b8f36d66;
 }
 .instrumentHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 0 12px;
+  padding: 16px 0 12px;
 }
 .label {
-  font: 11px var(--font-stack-mono);
+  font: 10px var(--font-stack-mono);
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: #acb5bb;
+  color: #94a3b8;
 }
 .instrumentHeader p {
   margin: 4px 0 0;
-  font: 48px var(--font-stack-mono);
-  line-height: 1.1;
-  letter-spacing: -0.06em;
+  font: 600 38px var(--font-stack-mono);
+  line-height: 1.05;
+  letter-spacing: -0.05em;
 }
 .instrumentHeader p span {
-  font-size: 17px;
+  font-size: 15px;
   color: #b8f36d;
   letter-spacing: 0;
 }
 .pause {
-  color: #bcc6cc;
-  background: #212a30;
-  border: 1px solid #ffffff25;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #cbd5e1;
+  background: #19222c;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.pause:hover {
+  border-color: var(--signal);
+  background: #1f2a36;
 }
 .screen {
   position: relative;
-  border: 1px solid #4a5a44;
-  border-radius: 10px;
-  background-color: #0b1510;
+  border: 1px solid #304234;
+  border-radius: 8px;
+  background-color: #08110c;
   background-image:
     linear-gradient(#b8f36d0c 1px, transparent 1px), linear-gradient(90deg, #b8f36d0c 1px, transparent 1px);
   background-size: 24px 24px;
@@ -92,8 +99,8 @@
 }
 .screenLabel {
   position: absolute;
-  top: 12px;
-  left: 14px;
+  top: 10px;
+  left: 12px;
   font: 9px var(--font-stack-mono);
   letter-spacing: 0.12em;
   color: #8baf7c;
@@ -101,7 +108,7 @@
 .scope {
   width: 100%;
   display: block;
-  padding: 14px 0;
+  padding: 12px 0;
 }
 .scope path {
   fill: none;
@@ -130,42 +137,51 @@
 .screenFooter {
   display: flex;
   justify-content: space-between;
-  padding: 0 12px 10px;
+  padding: 0 12px 8px;
   color: #83987c;
   font: 8px var(--font-stack-mono);
   letter-spacing: 0.04em;
 }
 .controls {
-  display: flex;
-  gap: 8px;
-  margin: 18px 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+  margin: 14px 0;
+  padding: 3px;
+  background: #0a0f14;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
 }
 .controls button {
-  min-height: 44px;
-  flex: 1;
-  padding: 10px 4px;
-  color: #acb5bb;
-  background: #1b242a;
-  border: 1px solid #344148;
-  border-radius: 7px;
+  min-height: 30px;
+  padding: 5px 8px;
+  color: #94a3b8;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 5px;
   cursor: pointer;
-  font: 11px var(--font-stack-mono);
+  font: 500 11px var(--font-stack-mono);
   transition:
-    background 0.2s,
-    color 0.2s;
+    background 0.16s ease,
+    border-color 0.16s ease,
+    color 0.16s ease;
+}
+.controls button:hover {
+  color: #e2e8f0;
 }
 .controls button[aria-pressed='true'] {
-  background: var(--signal);
-  border-color: var(--signal);
-  color: #192315;
+  background: rgba(184, 243, 109, 0.14);
+  border-color: rgba(184, 243, 109, 0.45);
+  color: var(--signal);
+  font-weight: 600;
 }
 .frequency {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 12px;
-  font: 10px var(--font-stack-mono);
-  color: #b7c3c8;
+  gap: 10px;
+  font: 10.5px var(--font-stack-mono);
+  color: #94a3b8;
 }
 .frequency input {
   flex: 1;
@@ -177,20 +193,23 @@
 .frequency output {
   min-width: 52px;
   text-align: right;
+  color: #e2e8f0;
 }
 .instrumentFooter {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 20px;
-  padding: 14px 0 2px;
-  border-top: 1px solid #ffffff14;
-  font-size: 10px;
-  color: #9ba8af;
+  margin-top: 16px;
+  padding: 12px 0 2px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 10.5px;
+  color: #94a3b8;
 }
 .instrumentFooter a {
   color: #b8f36d;
+  font-family: var(--font-stack-mono);
+  font-weight: 600;
   text-decoration: none;
 }
 .instrument button:focus-visible,
