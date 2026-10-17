@@ -2826,6 +2826,26 @@
                 "body": "The app lets you request test tones. Remote volume and equalization, battery monitoring and OTA updates are planned. The Android app is distributed as source code to build with Android Studio or Gradle."
             }
         },
+        "speaker": {
+            "title": "Speaker: WiFi radio, streaming and I2S stereo audio",
+            "description": "The Speaker firmware plays WiFi radio, YouTube audio and Bluetooth A2DP over I2S to dual MAX98357A amplifiers in stereo, with local web control and chiptune song playback.",
+            "modes": {
+                "title": "WiFi Radio, Bluetooth A2DP and Chiptune Player",
+                "body": "The ESP32 switches seamlessly between HTTP radio streams, Bluetooth Classic A2DP audio, and direct chiptune playback using .device.json files exported from the HIOS Chiptune Composer."
+            },
+            "streaming": {
+                "title": "Local Web Control and Wireless Configuration",
+                "body": "Once connected to your local network, the device serves a web control dashboard at http://hios-speaker.local to change stations, adjust volume, and upload new songs via HTTP POST /api/song. It also supports WiFi configuration via Bluetooth Serial terminal."
+            },
+            "setup": {
+                "title": "Getting started",
+                "body": "Adjust the LM2596 buck converter to 5.0 V with a multimeter before connecting modules. Flash the testbench diagnostic firmwares first to verify the I2S bus and stereo separation, then compile and flash src/main.ino with PlatformIO."
+            },
+            "availability": {
+                "title": "Current scope",
+                "body": "Native stereo output at 44.1 kHz / 16-bit using dual MAX98357A class-D amplifiers with hardware L/R channel selection via resistors on SD pins. The 16×2 LCD connected over I2C displays connection status, IP address, and current title without external cloud services."
+            }
+        },
         "usage": "How to use it",
         "flash": "Flash your ESP32"
     },
@@ -3129,6 +3149,18 @@
             "board": "For classic ESP32 (esp32dev / WROOM-32) with PCM5102. ESP32-S3 is not a replacement for this A2DP firmware.",
             "connect": "Check power and PCM5102 wiring before connecting the ESP32 programming USB port.",
             "success": "After uploading, open the serial monitor at 115200 and find HIOS BTDAC over Bluetooth. If it connects without sound, follow the full guide’s SCK, XSMT and I2S checks. Build Android from source; no APK or firmware binary is provided here."
+        },
+        "speaker": {
+            "intro": "The speaker plays WiFi radio streams, Bluetooth A2DP audio, and chiptunes from the Composer, outputting stereo I2S audio to dual MAX98357A amplifiers and a 16×2 LCD.",
+            "steps": {
+                "1": "Adjust the LM2596 buck converter to 5.0 V with a multimeter before connecting modules. Check GND continuity across all boards.",
+                "2": "Flash 01_power_i2s_smoke.ino first to validate the I2S bus, then 02_channel_check_lr.ino to verify left and right channel separation.",
+                "3": "Flash src/main.ino, open http://hios-speaker.local in your browser to configure your stations or pair your phone over Bluetooth A2DP."
+            },
+            "appLink": "Testbench and diagnostics",
+            "board": "For classic ESP32 (esp32dev / WROOM-32 configuration) with 2× MAX98357A and 16×2 LCD. Do not use ESP32-S3 as it lacks Bluetooth Classic A2DP.",
+            "connect": "Wire the shared I2S bus: DIN to GPIO25, BCLK to GPIO26, and LRC to GPIO27. Verify SD pin resistors (100 kΩ for left, 220 kΩ for right) and clean 5V power.",
+            "success": "On boot, the 16×2 LCD displays the assigned IP address and active mode. Control playback and volume from http://hios-speaker.local or over serial."
         }
     },
     "Landing": {

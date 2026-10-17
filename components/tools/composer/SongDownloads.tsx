@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import { Button } from 'antd';
 import { DownloadOutlined } from '@ant-design/icons';
 import { serializeSong } from '@/lib/workbench/chiptune';
@@ -49,7 +50,11 @@ export function SongDownloads({ c }: { c: ComposerState }) {
         </Button>
       </div>
       <span className={styles.hint}>
-        El proyecto conserva timbres y secciones. MIDI y el parlante usan sus propios sonidos.
+        El proyecto conserva timbres y secciones. El archivo <code>.device.json</code> se carga vía HTTP al{' '}
+        <Link href="/projects/speaker" style={{ color: 'var(--accent-primary)', textDecoration: 'underline' }}>
+          HIOS Speaker (ESP32)
+        </Link>{' '}
+        para reproducir por hardware I2S.
       </span>
     </div>
   );
