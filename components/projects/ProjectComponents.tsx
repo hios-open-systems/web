@@ -6,7 +6,7 @@ interface ComponentItem { component: string; qty: number; notes?: string }
 export function ProjectComponents({ items }: { items: ComponentItem[] }) {
   const t = useTranslations('ProjectDetail');
   return (
-    <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 40px' }}>
+    <section style={{ maxWidth: 'min(100%, 1240px)', width: '100%', margin: '0 auto', padding: '0 24px 40px' }}>
       <h3>{t('bom')}</h3>
       <div className={styles.card} style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>

@@ -153,7 +153,7 @@ export function PrintsCatalog() {
     gap: 16,
   };
   const h2: React.CSSProperties = { color: textColor, fontSize: 20, fontWeight: 600, margin: '0 0 16px' };
-  const section: React.CSSProperties = { maxWidth: 980, margin: '0 auto', padding: '0 24px 48px' };
+  const section: React.CSSProperties = { maxWidth: 'min(100%, 1400px)', width: '100%', margin: '0 auto', padding: '0 24px 48px' };
   const groupLink: React.CSSProperties = {
     color: accentText,
     fontSize: 13,
@@ -168,7 +168,7 @@ export function PrintsCatalog() {
 
   return (
     <main style={{ background: 'var(--hios-bg)', minHeight: '100vh', paddingTop: 8 }}>
-      <section style={{ maxWidth: 980, margin: '0 auto', padding: '24px 24px 32px' }}>
+      <section style={{ maxWidth: 'min(100%, 1400px)', width: '100%', margin: '0 auto', padding: '24px 24px 32px' }}>
         <PageIntro
           eyebrow="HIOS / 3D"
           title={t('maker')}

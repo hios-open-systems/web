@@ -20,6 +20,8 @@ interface Props {
   zoom?: number;
   drawDuration?: number;
   mode?: 'draw' | 'select';
+  showGhostNotes?: boolean;
+  onActivateTrack?: (id: string) => void;
   onRange?: (range: { startTick: number; endTick: number } | null) => void;
   onSelectNote: (id: string | null) => void;
   onChangeNote: (id: string, patch: Partial<ChiptuneNote>) => void;
@@ -41,6 +43,8 @@ export function PianoRoll({
   zoom = 1,
   drawDuration = TICKS_PER_STEP * 2,
   mode = 'draw',
+  showGhostNotes = false,
+  onActivateTrack,
   onRange,
   onSelectNote,
   onChangeNote,
@@ -149,8 +153,18 @@ export function PianoRoll({
               onPointerCancel={onGridPointerCancel}
             >
               {scale && <ScaleRows scale={scale} rowH={rowH} />}
-              <PianoRollTracks song={song} activeTrackId={activeTrackId} selectedNoteId={selectedNoteId}
-                stepW={stepW} rowH={rowH} onSelectNote={onSelectNote} onChangeNote={onChangeNote} onDeleteNote={onDeleteNote} />
+              <PianoRollTracks
+                song={song}
+                activeTrackId={activeTrackId}
+                selectedNoteId={selectedNoteId}
+                stepW={stepW}
+                rowH={rowH}
+                showGhostNotes={showGhostNotes}
+                onActivateTrack={onActivateTrack}
+                onSelectNote={onSelectNote}
+                onChangeNote={onChangeNote}
+                onDeleteNote={onDeleteNote}
+              />
               {selectedRange && selectedRange.endTick > selectedRange.startTick && (
                 <div
                   className={styles.rollRange}

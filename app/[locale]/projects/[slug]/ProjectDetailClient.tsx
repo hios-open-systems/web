@@ -92,6 +92,7 @@ export function ProjectDetailClient({
 
   // Strip leading H1 from README so the page has a single H1 in ProjectDetailHeader
   const readmeBody = project.readme.replace(/^#\s+[^\n]+\n+/, '');
+  const sectionContainer: React.CSSProperties = { maxWidth: 'min(100%, 1240px)', width: '100%', margin: '0 auto' };
 
   const renderAssetRow = (asset: ProjectMeta['technicalAssets'][number]) => (
     <div
@@ -144,8 +145,7 @@ export function ProjectDetailClient({
       {/* Header / Back navigation */}
       <nav
         style={{
-          maxWidth: 900,
-          margin: '0 auto',
+          ...sectionContainer,
           padding: '20px 24px 12px',
           display: 'flex',
           alignItems: 'center',
@@ -158,7 +158,7 @@ export function ProjectDetailClient({
         </Link>
       </nav>
 
-      <section style={{ maxWidth: 1000, margin: '0 auto', padding: '0 24px 20px' }}>
+      <section style={{ ...sectionContainer, padding: '0 24px 20px' }}>
         <ProjectDetailHeader project={project} slug={slug} hasGuide={!!gettingStarted} />
       </section>
 
@@ -166,14 +166,14 @@ export function ProjectDetailClient({
 
       {/* Gallery */}
       {project.gallery && project.gallery.length > 0 && (
-        <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 36px' }}>
+        <section style={{ ...sectionContainer, padding: '0 24px 36px' }}>
           <ImageCarousel images={project.gallery} alt={project.name} />
         </section>
       )}
 
       {/* Technical Summary Card */}
       {story && (
-        <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 32px' }}>
+        <section style={{ ...sectionContainer, padding: '0 24px 32px' }}>
           <Card
             style={{
               background: 'var(--hios-bg-secondary)',
@@ -207,7 +207,7 @@ export function ProjectDetailClient({
 
       {/* Datasheet Specifications */}
       {story?.specs && (
-        <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 36px' }}>
+        <section style={{ ...sectionContainer, padding: '0 24px 36px' }}>
           <Title level={3} style={{ color: textColor, marginBottom: '16px' }}>
             {t('specifications')}
           </Title>
@@ -252,7 +252,7 @@ export function ProjectDetailClient({
 
       {/* What Works / Scope & Requirements */}
       {story && (story.whatWorks || story.whatDoesnt) && (
-        <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 36px' }}>
+        <section style={{ ...sectionContainer, padding: '0 24px 36px' }}>
           <Row gutter={[16, 16]}>
             {story.whatWorks && (
               <Col xs={24} md={14}>
@@ -348,7 +348,7 @@ export function ProjectDetailClient({
       {gettingStarted}
 
       {/* Full Technical Documentation (Markdown README) */}
-      <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 48px' }}>
+      <section style={{ ...sectionContainer, padding: '0 24px 48px' }}>
         <div className="markdown-content" style={{ color: textColor }}>
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
@@ -477,7 +477,7 @@ export function ProjectDetailClient({
 
       {/* Printable 3D Parts & Inline STL Viewer */}
       {projectPrints.length > 0 && (
-        <div style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px' }}>
+        <div style={{ ...sectionContainer, padding: '0 24px' }}>
           <ProjectPrintsShowcase
             prints={projectPrints}
             locale={locale}
@@ -501,14 +501,14 @@ export function ProjectDetailClient({
 
       {/* Real Firmware & App Source Code Explorer */}
       {project.firmwareFiles && project.firmwareFiles.length > 0 && (
-        <div style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px' }}>
+        <div style={{ ...sectionContainer, padding: '0 24px' }}>
           <ProjectFirmwareExplorer files={project.firmwareFiles} slug={slug} />
         </div>
       )}
 
       {/* References & Documentation Links */}
       {story?.resources && (
-        <section style={{ maxWidth: 900, margin: '0 auto 24px', padding: '0 24px' }}>
+        <section style={{ ...sectionContainer, margin: '0 auto 24px', padding: '0 24px' }}>
           <Card
             style={{
               background: mode === 'dark' ? 'rgba(14,165,233,0.06)' : 'rgba(14,165,233,0.04)',
@@ -581,7 +581,7 @@ export function ProjectDetailClient({
       )}
 
       {/* Technical Files & 3D Assets */}
-      <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 32px' }}>
+      <section style={{ ...sectionContainer, padding: '0 24px 32px' }}>
         <Card
           style={{
             background: mode === 'dark' ? '#141414' : '#fafafa',
