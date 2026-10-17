@@ -38,7 +38,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
         <JsonLd data={createArticleData(locale, path, post)} />
         <BlogPost post={post} locale={locale} />
         <RelatedResources resourceId={`article:${slug}`} toolIds={/ia|llm|ollama|tinyml|esp32/.test(post.tags.join(' '))
-            ? ['llm-vram-calc', 'token-inspector', 'esp32-llm-bridge'] : /audio|music/.test(post.tags.join(' '))
+            ? ['llm-vram-calc', 'token-inspector', 'esp32-llm-bridge'] : /dsp|qpsk|rf/.test(post.tags.join(' '))
+            ? ['tone-generator', 'spectrum-analyzer', 'ohms-law'] : /audio|music/.test(post.tags.join(' '))
             ? ['guitar-tuner', 'note-frequency', 'chiptune'] : ['notes', 'patterns', 'payload']} />
     </>;
 }

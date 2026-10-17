@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import dynamic from 'next/dynamic';
 import { PageIntro } from '@/components/ui/PageIntro';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
@@ -12,9 +13,37 @@ import type { Post } from '@/lib/blog';
 import { extractH2Toc, nodeToText, slugifyHeading } from './markdownToc';
 import styles from './blog.module.css';
 
+const QpskSimulator = dynamic(
+  () => import('@/components/dsp/QpskSimulator').then((m) => m.QpskSimulator),
+  { ssr: false },
+);
+
+const QPSK_MARKER = '<!-- interactive:qpsk-simulator -->';
+
+function MarkdownSection({ content }: { content: string }) {
+  return (
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
+      components={{
+        img: LocalMarkdownImage,
+        h2: ({ children }) => <h2 id={slugifyHeading(nodeToText(children))}>{children}</h2>,
+        table: ({ children }) => (
+          <div className={styles.tableWrap}>
+            <table>{children}</table>
+          </div>
+        ),
+      }}
+    >
+      {content}
+    </ReactMarkdown>
+  );
+}
+
 export function BlogPost({ post, locale }: { post: Post; locale: string }) {
   const t = useTranslations('Blog');
   const toc = extractH2Toc(post.content);
+  const hasMarker = post.content.includes(QPSK_MARKER);
+  const segments = hasMarker ? post.content.split(QPSK_MARKER) : [post.content];
 
   return (
     <main className={styles.page}>
@@ -31,8 +60,11 @@ export function BlogPost({ post, locale }: { post: Post; locale: string }) {
           compact
           meta={<span>{post.date}</span>}
         >
-          {post.tags.length > 0 && (
+          {(post.tags.length > 0 || post.interactive) && (
             <div className={styles.tags}>
+              {post.interactive ? (
+                <span className={styles.interactiveBadge}>LAB INTERACTIVO</span>
+              ) : null}
               {post.tags.map((tag) => (
                 <span key={tag} className={styles.tag}>
                   {tag}
@@ -56,21 +88,22 @@ export function BlogPost({ post, locale }: { post: Post; locale: string }) {
             </ol>
           </nav>
         ) : null}
+        {post.interactive === 'qpsk-simulator' && !hasMarker ? (
+          <div className={styles.interactiveBreakout}>
+            <QpskSimulator />
+          </div>
+        ) : null}
         <div className={`markdown-content ${styles.prose}`}>
-          <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
-            components={{
-              img: LocalMarkdownImage,
-              h2: ({ children }) => <h2 id={slugifyHeading(nodeToText(children))}>{children}</h2>,
-              table: ({ children }) => (
-                <div className={styles.tableWrap}>
-                  <table>{children}</table>
+          {segments.map((segment, idx) => (
+            <React.Fragment key={idx}>
+              <MarkdownSection content={segment} />
+              {idx < segments.length - 1 ? (
+                <div className={styles.interactiveBreakout}>
+                  <QpskSimulator />
                 </div>
-              ),
-            }}
-          >
-            {post.content}
-          </ReactMarkdown>
+              ) : null}
+            </React.Fragment>
+          ))}
         </div>
       </article>
     </main>

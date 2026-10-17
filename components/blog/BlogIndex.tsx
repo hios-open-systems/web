@@ -28,8 +28,11 @@ function DocRow({ post, code, locale }: { post: PostMeta; code: string; locale: 
       <span className={styles.rowMain} lang={post.lang}>
         <span className={styles.rowTitle}>{post.title}</span>
         {post.summary ? <span className={styles.rowSummary}>{post.summary}</span> : null}
-        {post.tags.length > 0 ? (
+        {post.tags.length > 0 || post.interactive ? (
           <span className={styles.tags}>
+            {post.interactive ? (
+              <span className={styles.interactiveBadge}>LAB INTERACTIVO</span>
+            ) : null}
             {post.tags.map((t) => (
               <span key={t} className={styles.tag}>
                 {t}
