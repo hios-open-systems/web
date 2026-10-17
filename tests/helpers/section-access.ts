@@ -28,7 +28,10 @@ export async function openDesktopLinkIfNeeded(page: Page, href: string) {
   const group = page.locator('header [class*="dropdownGroup"]').filter({
     has: page.locator(`a[href="${href}"]`),
   });
-  await group.locator('button[aria-controls]').click();
+  const trigger = group.locator('button[aria-controls]');
+  if ((await trigger.getAttribute('aria-expanded')) !== 'true') {
+    await trigger.click();
+  }
   return group.locator(`a[href="${href}"]:visible`).first();
 }
 
