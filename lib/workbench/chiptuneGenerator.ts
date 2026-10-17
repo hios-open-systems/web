@@ -43,7 +43,7 @@ function buildTracks(styleKey: SongStyle, count: number): ChiptuneTrack[] {
     leadInst = 'chiptune-guitar';
     bassInst = 'triangle-bass';
     arpInst = 'chiptune-guitar';
-  } else if (styleKey === 'synthwave') {
+  } else if (styleKey === 'synthwave' || styleKey === 'cyberpunk') {
     leadName = 'Lead Sintetizador';
     leadInst = 'saw-lead';
     bassInst = 'saw-lead';
@@ -98,6 +98,7 @@ function populateRockBar(
   start: number,
   chord: number,
   root: number,
+  random: () => number,
 ) {
   const isLastBar = bar === bars - 1;
   const chordRoot = 36 + root + chord;
@@ -116,10 +117,11 @@ function populateRockBar(
     bass.notes.push(createNote(notePitch, t, (PPQ / 2) * 0.8, s % 2 === 0 ? 100 : 85));
   }
 
-  const riffSteps = [0, 3, 5, 6];
-  for (const s of riffSteps) {
+  const riffPattern = random() > 0.5 ? [0, 2, 4, 6] : [0, 3, 5, 6];
+  for (const s of riffPattern) {
     const t = start + (s * PPQ) / 2;
-    lead.notes.push(createNote(60 + root + chord + (s === 3 ? 3 : s === 5 ? 5 : 0), t, (PPQ / 2) * 0.9, 105));
+    const offset = s === 3 || s === 2 ? 3 : s === 5 || s === 4 ? 5 : 0;
+    lead.notes.push(createNote(60 + root + chord + offset, t, (PPQ / 2) * 0.9, 105));
     if (arp) {
       arp.notes.push(createNote(chordRoot + 12, t, (PPQ / 2) * 0.9, 85));
       arp.notes.push(createNote(chordRoot + 19, t, (PPQ / 2) * 0.9, 80));
@@ -142,6 +144,7 @@ function populateSynthwaveBar(
   start: number,
   chord: number,
   root: number,
+  random: () => number,
 ) {
   const chordRoot = 36 + root + chord;
 
@@ -167,10 +170,12 @@ function populateSynthwaveBar(
     }
   }
 
+  const motifOffsets = random() > 0.5 ? [0, 7, 10] : [0, 5, 8];
   const leadSteps = bar % 2 === 0 ? [0, 3, 6] : [0, 4];
-  for (const s of leadSteps) {
+  for (let i = 0; i < leadSteps.length; i++) {
+    const s = leadSteps[i];
     const t = start + (s * PPQ) / 2;
-    lead.notes.push(createNote(60 + root + chord + (s === 3 ? 7 : s === 6 ? 9 : 0), t, PPQ * 1.3, 100));
+    lead.notes.push(createNote(60 + root + chord + motifOffsets[i % motifOffsets.length], t, PPQ * 1.3, 100));
   }
 
   if (strings) {
@@ -188,6 +193,7 @@ function populateTrapBar(
   start: number,
   chord: number,
   root: number,
+  random: () => number,
 ) {
   const chordRoot = 36 + root + chord;
 
@@ -198,9 +204,10 @@ function populateTrapBar(
     if (s === 4) drums.notes.push(createNote(38, t, PPQ / 3, 120));
   }
 
+  const rollStep = 10 + Math.floor(random() * 4);
   for (let s = 0; s < 16; s++) {
     const t = start + (s * PPQ) / 4;
-    if (s === 11 || s === 14) {
+    if (s === rollStep || s === 14) {
       drums.notes.push(createNote(42, t, PPQ / 8, 90));
       drums.notes.push(createNote(42, t + PPQ / 8, PPQ / 8, 95));
     } else {
@@ -210,13 +217,16 @@ function populateTrapBar(
 
   bass.notes.push(createNote(chordRoot, start, PPQ * 1.8, 110));
   if (bar % 2 === 1) {
-    bass.notes.push(createNote(chordRoot + 3, start + PPQ * 2.5, PPQ * 1.2, 105));
+    const bassHop = random() > 0.5 ? 3 : 5;
+    bass.notes.push(createNote(chordRoot + bassHop, start + PPQ * 2.5, PPQ * 1.2, 105));
   }
 
+  const bellOffsets = random() > 0.5 ? [0, 3, 7] : [0, 2, 5];
   const bellSteps = [0, 3, 6];
-  for (const s of bellSteps) {
+  for (let i = 0; i < bellSteps.length; i++) {
+    const s = bellSteps[i];
     const t = start + (s * PPQ) / 2;
-    lead.notes.push(createNote(60 + root + chord + (s === 3 ? 3 : s === 6 ? 1 : 0), t, PPQ * 0.8, 105));
+    lead.notes.push(createNote(60 + root + chord + bellOffsets[i], t, PPQ * 0.8, 105));
   }
 
   if (strings) {
@@ -234,12 +244,14 @@ function populateDreamBar(
   start: number,
   chord: number,
   root: number,
+  random: () => number,
 ) {
   const chordRoot = 36 + root + chord;
   drums.notes.push(createNote(36, start, PPQ / 3, 65));
   drums.notes.push(createNote(42, start + PPQ * 2, PPQ / 4, 50));
   bass.notes.push(createNote(chordRoot, start, PPQ * 3.8, 85));
-  lead.notes.push(createNote(60 + root + chord + 7, start + PPQ * 0.5, PPQ * 2.5, 80));
+  const leadOff = random() > 0.5 ? 7 : 4;
+  lead.notes.push(createNote(60 + root + chord + leadOff, start + PPQ * 0.5, PPQ * 2.5, 80));
 
   if (strings) {
     strings.notes.push(createNote(48 + root + chord, start, PPQ * 3.9, 75));
@@ -317,17 +329,17 @@ export function generateSong(options: GeneratorOptions): ChiptuneSong {
 
     switch (options.style) {
       case 'rock':
-        populateRockBar(lead, bass, arp, drums, strings, bar, bars, start, chord, root);
+        populateRockBar(lead, bass, arp, drums, strings, bar, bars, start, chord, root, random);
         break;
       case 'synthwave':
       case 'cyberpunk':
-        populateSynthwaveBar(lead, bass, arp, drums, strings, bar, start, chord, root);
+        populateSynthwaveBar(lead, bass, arp, drums, strings, bar, start, chord, root, random);
         break;
       case 'hiphop':
-        populateTrapBar(lead, bass, drums, strings, bar, start, chord, root);
+        populateTrapBar(lead, bass, drums, strings, bar, start, chord, root, random);
         break;
       case 'dream':
-        populateDreamBar(lead, bass, drums, strings, choir, start, chord, root);
+        populateDreamBar(lead, bass, drums, strings, choir, start, chord, root, random);
         break;
       case 'arcade':
       case 'adventure':
