@@ -69,7 +69,9 @@ function DropdownGroup({
                 className={`${styles.panelItem} ${active ? styles.panelItemActive : ''}`}
               >
                 <span className={styles.panelItemLabel}>{item.label}</span>
-                <span className={styles.panelBadge}>{item.badge}</span>
+                <span className={styles.panelBadge} aria-hidden="true">
+                  {item.badge}
+                </span>
               </Link>
             );
           })}
@@ -88,6 +90,7 @@ export function DesktopHeaderNav() {
   const groups = useNavGroups();
   const [openId, setOpenId] = useState<string | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hoverOpenedRef = useRef<{ id: string; time: number }>({ id: '', time: 0 });
   const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -124,12 +127,28 @@ export function DesktopHeaderNav() {
           locale={locale}
           onEnter={() => {
             if (closeTimer.current) clearTimeout(closeTimer.current);
-            setOpenId(group.id);
+            setOpenId((prev) => {
+              if (prev !== group.id) {
+                hoverOpenedRef.current = { id: group.id, time: Date.now() };
+              }
+              return group.id;
+            });
           }}
           onLeave={() => {
             closeTimer.current = setTimeout(() => setOpenId(null), 130);
           }}
-          onToggle={() => setOpenId((prev) => (prev === group.id ? null : group.id))}
+          onToggle={() => {
+            setOpenId((prev) => {
+              if (
+                prev === group.id &&
+                hoverOpenedRef.current.id === group.id &&
+                Date.now() - hoverOpenedRef.current.time < 400
+              ) {
+                return group.id;
+              }
+              return prev === group.id ? null : group.id;
+            });
+          }}
           onClose={() => setOpenId(null)}
         />
       ))}
@@ -188,7 +207,9 @@ export function SectionNavigation({
                 className={styles.drawerItem}
               >
                 <span>{item.label}</span>
-                <span className={styles.panelBadge}>{item.badge}</span>
+                <span className={styles.panelBadge} aria-hidden="true">
+                  {item.badge}
+                </span>
               </Link>
             );
           })}
