@@ -27,15 +27,18 @@ export function useBeatmakerPlayback(project: BeatProject) {
     if (ctxRef.current) return ctxRef.current;
     const ctx = getSharedAudioContext();
     const master = ctx.createGain();
-    const limiter = ctx.createDynamicsCompressor();
+    const compressor = ctx.createDynamicsCompressor();
     const analyser = ctx.createAnalyser();
 
     analyser.fftSize = 128;
     master.gain.value = masterVolume;
-    limiter.threshold.value = -2;
-    limiter.ratio.value = 12;
+    compressor.threshold.value = -12;
+    compressor.knee.value = 6;
+    compressor.ratio.value = 4.5;
+    compressor.attack.value = 0.004;
+    compressor.release.value = 0.12;
 
-    master.connect(limiter).connect(analyser).connect(ctx.destination);
+    master.connect(compressor).connect(analyser).connect(ctx.destination);
     ctxRef.current = ctx;
     masterGainRef.current = master;
     analyserRef.current = analyser;
@@ -115,8 +118,14 @@ export function useBeatmakerPlayback(project: BeatProject) {
     const totalDuration = baseStep * 16 * totalBars;
     const offline = new OfflineAudioContext(2, Math.ceil(totalDuration * sampleRate), sampleRate);
     const master = offline.createGain();
-    master.gain.value = 0.85;
-    master.connect(offline.destination);
+    const compressor = offline.createDynamicsCompressor();
+    compressor.threshold.value = -12;
+    compressor.knee.value = 6;
+    compressor.ratio.value = 4.5;
+    compressor.attack.value = 0.004;
+    compressor.release.value = 0.12;
+    master.gain.value = 0.95;
+    master.connect(compressor).connect(offline.destination);
 
     for (let bar = 0; bar < totalBars; bar++) {
       const barStart = bar * 16 * baseStep;
