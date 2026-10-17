@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Card, Typography } from 'antd';
+import { Button, Card, Typography } from 'antd';
+import { SoundOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { ToolHeader } from '../ToolHeader.tsx';
 import { useJamPlayback } from '@/lib/workbench/useJamPlayback.ts';
 import { getChordDetails } from '@/lib/workbench/jamStyles.ts';
@@ -16,6 +17,9 @@ export function JamStationTool() {
   const jam = useJamPlayback();
   const activeChord = jam.style.bars[jam.currentBar % jam.style.bars.length];
   const { chordTones } = getChordDetails(jam.keyRoot, activeChord);
+  const rootName = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'][jam.keyRoot];
+  const rootFret6 = (jam.keyRoot - 4 + 12) % 12;
+  const fretDesc = rootFret6 === 0 ? 'traste 0 (al aire) o traste 12' : `traste ${rootFret6}`;
 
   return (
     <div className={styles.jamContainer}>
@@ -24,6 +28,16 @@ export function JamStationTool() {
         title="Jam Station & Backing Tracks"
         description="Generador de bases rítmicas e improvisación para guitarristas y músicos. Practicá solos y escalas sobre progresiones reales en tiempo real."
         locality="local"
+        actions={
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            <Button size="small" icon={<SoundOutlined />} href="/workbench/guitar-tuner">
+              Afinador de guitarra
+            </Button>
+            <Button size="small" icon={<ThunderboltOutlined />} href="/composer">
+              Compositor retro
+            </Button>
+          </div>
+        }
       />
 
       <JamControls
@@ -72,7 +86,8 @@ export function JamStationTool() {
         <Text type="secondary" style={{ fontSize: 13, display: 'block', lineHeight: 1.6 }}>
           1. <strong>Notas del acorde (Target Notes):</strong> Las notas resaltadas en celeste son las notas del acorde que suena en cada compás. Terminar tus frases en una de esas notas hace que el solo suene conectado a la armonía.<br />
           2. <strong>Tónica (Root):</strong> El punto de máxima estabilidad está marcado en dorado. Ideal para iniciar y resolver frases.<br />
-          3. <strong>Blue Note:</strong> Si usás la escala de blues, la nota rosa (quinta disminuida / tritono) aporta el toque de tensión característico.
+          3. <strong>Blue Note:</strong> Si usás la escala de blues, la nota rosa (quinta disminuida / tritono) aporta el toque de tensión característico.<br />
+          4. <strong>Patrón de digitación:</strong> La Posición 1 de {rootName} arranca con la tónica en la 6ª cuerda ({fretDesc}).
         </Text>
       </Card>
     </div>

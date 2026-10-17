@@ -163,6 +163,9 @@ export function GuitarTunerTool() {
             >
               {active ? t('micStop') : t('micStart')}
             </Button>
+            <Button icon={<PlayCircleOutlined />} href="/workbench/jam-station">
+              Jam Station
+            </Button>
           </Space>
         }
       />
