@@ -17,8 +17,8 @@ export function ComposerApp() {
       {c.contextHolder}
       <ToolHeader
         eyebrow="Audio Lab"
-        title="Compositor Chiptune"
-        description="Creá una idea de música retro, hacela tuya y descargala. Todo en tu navegador."
+        title="Compositor Chiptune & Retro Synth"
+        description="Creá música retro y synthwave, generá ideas procedurales, editalas en el piano-roll y descargalas. Todo en tu navegador."
         locality="local"
         guideId="composer"
       />
@@ -27,10 +27,12 @@ export function ComposerApp() {
         <TransportBar c={c} />
         {c.playbackError && <Alert type="error" message={c.playbackError} showIcon />}
       </section>
-      <details className={styles.details}>
-        <summary>Generar una idea musical</summary>
+
+      <section className={styles.panel} aria-label="Generador de ideas musicales">
+        <h2 style={{ fontSize: 16, margin: '0 0 10px', color: 'var(--text-primary)' }}>Generar una idea musical</h2>
         <SongGenerator c={c} />
-      </details>
+      </section>
+
       <div className={styles.workspace}>
         <aside className={styles.panel} aria-label="Pistas">
           <h2>Pistas</h2>
@@ -51,18 +53,21 @@ export function ComposerApp() {
         </aside>
         <ComposerEditor c={c} />
       </div>
+
       <section className={styles.panel} aria-label="Descargar canción">
         <h2>Descargar tu música</h2>
         <SongDownloads c={c} />
       </section>
-      <details className={styles.details}>
-        <summary>Biblioteca, guardar y abrir proyectos</summary>
+
+      <section className={styles.panel} aria-label="Biblioteca, guardar y abrir proyectos">
+        <h2 style={{ fontSize: 16, margin: '0 0 10px', color: 'var(--text-primary)' }}>Biblioteca, guardar y abrir proyectos</h2>
         <SongLibrary c={c} />
-      </details>
-      <details className={styles.details}>
-        <summary>Secciones y arreglo · avanzado</summary>
+      </section>
+
+      <section className={styles.panel} aria-label="Secciones y arreglo · avanzado">
+        <h2 style={{ fontSize: 16, margin: '0 0 10px', color: 'var(--text-primary)' }}>Secciones y arreglo · avanzado</h2>
         <ArrangementPanel c={c} />
-      </details>
+      </section>
     </div>
   );
 }
