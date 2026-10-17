@@ -1,68 +1,248 @@
-.bar {
-  position: sticky;
-  top: var(--layout-header-height);
-  z-index: 990;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 4px 16px;
-  padding: 4px 20px;
-  border-bottom: 1px solid var(--hios-border);
-  background: var(--hios-bg-secondary);
-}
-.bar a,
-.drawer a {
-  position: relative;
+.desktopNav {
   display: flex;
   align-items: center;
-  min-height: 44px;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.dropdownGroup {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.navTrigger,
+.directLink {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
   color: var(--hios-text-secondary);
   text-decoration: none;
-  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.16s ease, background-color 0.16s ease, border-color 0.16s ease;
 }
-.bar a::after {
-  content: '';
-  position: absolute;
-  bottom: 2px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: var(--accent-text);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.25s var(--studio-ease);
+
+.navTrigger:hover,
+.directLink:hover,
+.navTrigger[aria-expanded='true'] {
+  color: var(--hios-text);
+  background: color-mix(in srgb, var(--hios-text) 6%, transparent);
 }
-.bar a:hover::after,
-.bar a[aria-current]::after {
-  transform: scaleX(1);
-}
-@media (prefers-reduced-motion: reduce) {
-  .bar a::after {
-    transition: none;
-  }
-}
-.bar a:hover,
-.drawer a:hover,
-.bar a[aria-current],
-.drawer a[aria-current] {
-  color: var(--accent-text);
-}
-.bar a:focus-visible,
-.drawer a:focus-visible {
+
+.navTrigger:focus-visible,
+.directLink:focus-visible,
+.spacesPill:focus-visible,
+.panelItem:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
+.navTriggerActive {
+  color: var(--hios-text);
+  font-weight: 600;
+}
+
+.navTriggerActive::after {
+  content: '';
+  position: absolute;
+  inset-inline: 12px;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+.chevron {
+  font-size: 10px;
+  color: var(--hios-text-muted);
+  transition: transform 0.18s ease, color 0.18s ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+  color: var(--accent-text);
+}
+
+.dropdownPanel {
+  position: absolute;
+  top: calc(100% + 8px);
+  inset-inline-start: 0;
+  min-width: 248px;
+  padding: 8px;
+  border: 1px solid var(--hios-border);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--hios-bg-secondary) 96%, #000);
+  backdrop-filter: blur(14px);
+  box-shadow:
+    0 18px 40px rgba(2, 6, 23, 0.48),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  z-index: 1100;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity 0.14s ease-out, transform 0.14s ease-out, visibility 0.14s;
+}
+
+.dropdownPanelOpen {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.panelKicker {
+  padding: 4px 10px 6px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--hios-border);
+  color: var(--accent-text);
+  font-family: var(--font-stack-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.panelList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.panelItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 36px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: var(--hios-text-secondary);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: color 0.14s ease, background-color 0.14s ease;
+}
+
+.panelItem:hover,
+.panelItemActive {
+  color: var(--hios-text);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.panelItemActive {
+  color: var(--accent-text);
+  font-weight: 600;
+}
+
+.panelItemLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.panelBadge {
+  padding: 1px 6px;
+  border: 1px solid var(--hios-border);
+  border-radius: 4px;
+  background: var(--hios-bg);
+  color: var(--hios-text-muted);
+  font-family: var(--font-stack-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+
+.spacesPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 32px;
+  padding: 0 11px;
+  margin-inline-start: 6px;
+  border: 1px solid var(--hios-border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--hios-bg-secondary) 80%, transparent);
+  color: var(--hios-text);
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: border-color 0.16s ease, background-color 0.16s ease;
+}
+
+.spacesPill:hover,
+.spacesPillActive {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--hios-border));
+  background: color-mix(in srgb, var(--accent) 10%, var(--hios-bg-secondary));
+  color: var(--accent-text);
+}
+
+.spacesDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+}
+
+/* Mobile Drawer Categorized Sections */
 .drawer {
-  display: grid;
-  border-top: 1px solid var(--hios-border);
-  margin-top: 8px;
-  padding: 8px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 8px 20px 16px;
 }
-.drawer a {
-  font-size: 15px;
+
+.drawerGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
+
+.drawerGroupKicker {
+  padding: 4px 8px 6px;
+  color: var(--accent-text);
+  font-family: var(--font-stack-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.drawerItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 42px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  color: var(--hios-text-secondary);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.drawerItem:hover,
+.drawerItem[aria-current='page'] {
+  color: var(--accent-text);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
 @media (max-width: 1024px) {
-  .bar {
+  .desktopNav {
     display: none;
   }
 }

@@ -3,19 +3,33 @@ import es from '../messages/es.json';
 import en from '../messages/en.json';
 import de from '../messages/de.json';
 import it from '../messages/it.json';
-import { checkSectionAccess, checkAccountAccess, translations } from './helpers/section-access';
+import {
+  checkSectionAccess,
+  checkAccountAccess,
+  openDesktopLinkIfNeeded,
+  translations,
+} from './helpers/section-access';
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-for (const [locale, copy] of Object.entries({ es, en, de, it })) {
+for (const [locale] of Object.entries({ es, en, de, it })) {
   test(`${locale}: all sections remain accessible from the desktop navigation`, async ({ page }) => {
     await page.goto(`/${locale}/explore`);
-    const nav = page.getByRole('navigation', { name: copy.Header.sections.label, exact: true });
-    for (const [key, path] of Object.entries({ maker: 'prints', devlog: 'blog', pinouts: 'pinouts', calculators: 'calculators', composer: 'composer', software: 'tools', stats: 'stats', guestbook: 'guestbook', about: 'colophon' })) {
-      const label = copy.Header.sections[key as keyof typeof copy.Header.sections];
-      const link = nav.getByRole('link', { name: label, exact: true });
+    for (const [, path] of Object.entries({
+      maker: 'prints',
+      devlog: 'blog',
+      pinouts: 'pinouts',
+      calculators: 'calculators',
+      composer: 'composer',
+      software: 'tools',
+      stats: 'stats',
+      guestbook: 'guestbook',
+      about: 'colophon',
+    })) {
+      const href = `/${locale}/${path}`;
+      const link = await openDesktopLinkIfNeeded(page, href);
       await expect(link).toBeVisible();
-      await expect(link).toHaveAttribute('href', `/${locale}/${path}`);
+      await expect(link).toHaveAttribute('href', href);
     }
   });
 }
@@ -69,7 +83,8 @@ test('recognizable section names and search destinations remain available', asyn
 
 test('Maker navigation reaches working STL viewer and Devlog remains searchable', async ({ page }) => {
   await page.goto('/es/explore');
-  await page.getByRole('navigation', { name: es.Header.sections.label }).getByRole('link', { name: es.Header.sections.maker }).click();
+  const makerLink = await openDesktopLinkIfNeeded(page, '/es/prints');
+  await makerLink.click();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(es.Header.sections.maker);
   await page.getByRole('button', { name: 'Ver en 3D', exact: true }).first().click();
   await expect(page.getByRole('button', { name: 'Cerrar', exact: true })).toBeVisible();

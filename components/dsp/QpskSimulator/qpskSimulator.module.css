@@ -1,0 +1,462 @@
+.instrumentChassis {
+  --bg-chassis: #12151a;
+  --bg-panel: #1b2028;
+  --bg-screen: #070b0e;
+  --grid-color: rgba(0, 255, 170, 0.12);
+  --grid-axis: rgba(0, 255, 170, 0.3);
+  --ch1-color: #00e5ff;
+  --ch2-color: #ffab00;
+  --ch3-color: #00ff66;
+  --text-main: #e2e8f0;
+  --text-muted: #94a3b8;
+  --accent: #38bdf8;
+
+  container-type: inline-size;
+  container-name: qpsk-chassis;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  background: var(--bg-chassis);
+  border: 2px solid #2d3748;
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  padding: clamp(12px, 2.5vw, 20px);
+  box-sizing: border-box;
+  color: var(--text-main);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.instrumentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #2d3748;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.brandBadge {
+  background: #0284c7;
+  color: #ffffff;
+  font-weight: 800;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  padding: 4px 10px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.brandTitle {
+  font-size: clamp(0.88rem, 0.75rem + 0.6vw, 1.05rem);
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.statusIndicators {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+}
+
+.indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.led {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #00ff66;
+  box-shadow: 0 0 8px #00ff66;
+  transition: all 0.2s ease;
+}
+
+.ledPaused {
+  background: #ffab00;
+  box-shadow: 0 0 8px #ffab00;
+}
+
+/* Selector de vista para mobile / contenedores estrechos */
+.mobileViewBar {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+  background: #0d1014;
+  padding: 4px;
+  border-radius: 8px;
+  border: 1px solid #262f3d;
+}
+
+.viewTabBtn {
+  flex: 1;
+  min-height: 36px;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 4px 8px;
+}
+
+.viewTabBtnActive {
+  background: #1e293b;
+  color: var(--accent);
+  border-color: #334155;
+}
+
+@media (min-width: 860px) {
+  .mobileViewBar {
+    display: none;
+  }
+}
+
+@supports (container-type: inline-size) {
+  @container qpsk-chassis (min-width: 820px) {
+    .mobileViewBar {
+      display: none;
+    }
+  }
+  @container qpsk-chassis (max-width: 819px) {
+    .mobileViewBar {
+      display: flex;
+    }
+  }
+}
+
+.screensGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+@media (min-width: 860px) {
+  .screensGrid {
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+  }
+}
+
+@supports (container-type: inline-size) {
+  @container qpsk-chassis (max-width: 819px) {
+    .screensGrid {
+      grid-template-columns: 1fr;
+    }
+    .hiddenOnMobileTab {
+      display: none;
+    }
+  }
+  @container qpsk-chassis (min-width: 820px) {
+    .screensGrid {
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+    }
+    .hiddenOnMobileTab {
+      display: flex;
+    }
+  }
+}
+
+.crtContainer {
+  background: var(--bg-screen);
+  border: 3px solid #262f3d;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+}
+
+.crtBezelBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(13, 18, 24, 0.92);
+  border-bottom: 1px solid rgba(0, 255, 170, 0.14);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.74rem;
+  flex-wrap: wrap;
+  gap: 6px;
+  z-index: 2;
+}
+
+.chTagsGroup {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.chTag {
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.65);
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.ch1 {
+  color: var(--ch1-color);
+  border: 1px solid var(--ch1-color);
+}
+
+.ch2 {
+  color: var(--ch2-color);
+  border: 1px solid var(--ch2-color);
+}
+
+.ch3 {
+  color: var(--ch3-color);
+  border: 1px solid var(--ch3-color);
+}
+
+.bezelHint {
+  color: #94a3b8;
+  font-size: 0.72rem;
+}
+
+.scopeCanvas {
+  display: block;
+  width: 100%;
+  height: 270px;
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+.constellationCanvas {
+  display: block;
+  width: 100%;
+  height: 270px;
+  touch-action: manipulation;
+}
+
+@media (min-width: 860px) {
+  .scopeCanvas,
+  .constellationCanvas {
+    height: 360px;
+  }
+}
+
+@supports (container-type: inline-size) {
+  @container qpsk-chassis (min-width: 820px) {
+    .scopeCanvas,
+    .constellationCanvas {
+      height: 360px;
+    }
+  }
+}
+
+.controlsPanel {
+  background: var(--bg-panel);
+  border: 1px solid #2d3748;
+  border-radius: 8px;
+  padding: clamp(12px, 2vw, 18px);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+  gap: 18px;
+}
+
+.controlGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.controlLabelRow {
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--text-muted);
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.sliderField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.labelValue {
+  color: var(--accent);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.sliderInput {
+  accent-color: var(--accent);
+  width: 100%;
+  height: 24px;
+  cursor: pointer;
+  margin: 0;
+}
+
+.bitInputWrapper {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 6px;
+}
+
+@supports (container-type: inline-size) {
+  @container qpsk-chassis (max-width: 420px) {
+    .bitInputWrapper {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+}
+
+.dibitBtn {
+  background: #0f172a;
+  border: 1px solid #334155;
+  color: #38bdf8;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.88rem;
+  font-weight: bold;
+  min-height: 44px;
+  padding: 4px 4px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  touch-action: manipulation;
+}
+
+.dibitBtn:hover,
+.dibitBtn:focus-visible {
+  background: #1e293b;
+  border-color: #38bdf8;
+  outline: none;
+}
+
+.dibitBtn:active {
+  transform: scale(0.97);
+}
+
+.dibitPhase {
+  font-size: 0.68rem;
+  color: #94a3b8;
+  font-weight: normal;
+}
+
+.btnRow {
+  display: flex;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.actionBtn {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  min-height: 40px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  cursor: pointer;
+  flex: 1;
+  transition: background 0.15s ease-in-out;
+  text-align: center;
+  touch-action: manipulation;
+}
+
+.actionBtn:hover {
+  background: #1d4ed8;
+}
+
+.actionBtnSecondary {
+  background: #334155;
+  color: #f1f5f9;
+}
+
+.actionBtnSecondary:hover {
+  background: #475569;
+}
+
+.actionBtnWarning {
+  background: #d97706;
+  color: #ffffff;
+}
+
+.actionBtnWarning:hover {
+  background: #b45309;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: var(--text-main);
+  cursor: pointer;
+  min-height: 32px;
+}
+
+.checkboxLabel input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+}
+
+.legendFooter {
+  margin-top: 16px;
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 12px 16px;
+  border-radius: 6px;
+  border-left: 3px solid var(--accent);
+}
+
+.legendFooter code {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  color: #38bdf8;
+  font-size: 0.85em;
+}
+
+.grayRefBox {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  line-height: 1.45;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 6px 8px;
+  border-radius: 4px;
+  border: 1px solid #334155;
+}

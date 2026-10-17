@@ -1,5 +1,22 @@
 [
   {
+    "slug": "ref-modulacion-qpsk",
+    "title": "Modulación QPSK: fase en cuadratura, constelación y degradación OSNR",
+    "date": "2026-10-17",
+    "summary": "Cómo funciona el mapeo Gray en cuadratura I/Q, por qué los saltos de 180° cruzan por amplitud cero dando origen a OQPSK, y cómo el ruido AWGN dispara el Pre-FEC BER.",
+    "tags": [
+      "dsp",
+      "qpsk",
+      "rf",
+      "optica",
+      "modulacion",
+      "referencia"
+    ],
+    "lang": "es",
+    "category": "referencia",
+    "interactive": "qpsk-simulator"
+  },
+  {
     "slug": "2026-09-22-ollama-esp32-bridge",
     "title": "Conectar HIOS Node AI con Ollama por WiFi",
     "date": "2026-09-24",

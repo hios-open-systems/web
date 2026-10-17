@@ -16,6 +16,7 @@ function postsForLocale(locale) {
             const source = locale !== 'es' && fs.existsSync(translated) ? translated : path.join(DIR, f);
             const { data } = matter(fs.readFileSync(source, 'utf8'));
             if (!data.title || !data.date) return null;
+            const interactive = data.interactive === 'qpsk-simulator' ? 'qpsk-simulator' : undefined;
             return {
                 slug: f.replace(/\.md$/, ''),
                 title: String(data.title),
@@ -25,6 +26,7 @@ function postsForLocale(locale) {
                 lang: String(data.lang ?? 'es'),
                 // 'devlog' (bitácora) | 'referencia' (doc técnico permanente); default devlog.
                 category: data.category === 'referencia' ? 'referencia' : 'devlog',
+                ...(interactive ? { interactive } : {}),
             };
         })
         .filter(Boolean)
