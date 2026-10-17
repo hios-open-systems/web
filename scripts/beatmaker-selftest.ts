@@ -75,6 +75,20 @@ ok('forkBeat genera id nuevo', forked.id !== def.id);
 eq('parseBeat(null/vacío) retorna null', parseBeat(''), null);
 eq('parseBeat(string basura) retorna null', parseBeat('xyz-invalid-123'), null);
 
+// 7. Autenticidad rítmica y tímbrica
+const trap = createProjectFromPreset(BEAT_PRESETS.find((p) => p.id === 'trap-808-dark')!);
+const trapSnare = trap.tracks.find((t) => t.sound === 'snare')!;
+ok('Trap snare está en step 8 (half-time tiempo 3)', trapSnare.steps[8].active);
+const trapHats = trap.tracks.find((t) => t.sound === 'hihat')!;
+ok('Trap hi-hats tienen rolls (>1)', trapHats.steps.some((s) => s.roll && s.roll > 1));
+const trap808 = trap.tracks.find((t) => t.sound === '808')!;
+const trap808Pitches = trap808.steps.filter((s) => s.active).map((s) => s.pitch);
+ok('Trap 808 tiene variedad melódica de notas', new Set(trap808Pitches).size > 1);
+
+const boombap = createProjectFromPreset(BEAT_PRESETS.find((p) => p.id === 'boombap-90s')!);
+const bapSnare = boombap.tracks.find((t) => t.sound === 'snare')!;
+ok('BoomBap snare está en tiempos 4 y 12 (2 y 4 full-time)', bapSnare.steps[4].active && bapSnare.steps[12].active);
+
 if (failures > 0) {
   console.error(`\n${failures} check(s) failed`);
   process.exit(1);
