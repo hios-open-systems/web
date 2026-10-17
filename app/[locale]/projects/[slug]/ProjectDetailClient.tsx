@@ -10,7 +10,6 @@ import {
   DoubleRightOutlined,
   LinkOutlined,
   FileOutlined,
-  PrinterOutlined,
 } from '@ant-design/icons';
 import { useTheme } from '@/lib/ThemeContext';
 import { ProjectMeta } from '@/lib/projects';
@@ -23,6 +22,8 @@ import { useLocale, useTranslations } from 'next-intl';
 import { ImageCarousel } from '@/components/common/ImageCarousel';
 import { ProjectComponents } from '@/components/projects/ProjectComponents';
 import { ProjectStlPreview } from '@/components/projects/ProjectStlPreview';
+import { ProjectPrintsShowcase } from '@/components/projects/ProjectPrintsShowcase';
+import { ProjectFirmwareExplorer } from '@/components/projects/ProjectFirmwareExplorer';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -116,6 +117,11 @@ export function ProjectDetailClient({
       </Space>
 
       <Space size={6} wrap>
+        {asset.githubUrl && (
+          <Button size="small" icon={<GithubOutlined />} href={asset.githubUrl} target="_blank">
+            GitHub
+          </Button>
+        )}
         {asset.path && (
           <Button size="small" icon={<LinkOutlined />} href={asset.path} target="_blank">
             {t('open')}
@@ -134,7 +140,7 @@ export function ProjectDetailClient({
   );
 
   return (
-    <div style={{ background: bgColor, minHeight: '100vh', paddingBottom: '64px' }}>
+    <div style={{ background: bgColor, minHeight: '100vh', paddingBottom: '64px', overflowX: 'hidden' }}>
       {/* Header / Back navigation */}
       <nav
         style={{
@@ -469,49 +475,31 @@ export function ProjectDetailClient({
         </div>
       </section>
 
-      {/* Printable 3D Parts Link */}
+      {/* Printable 3D Parts & Inline STL Viewer */}
       {projectPrints.length > 0 && (
-        <section style={{ maxWidth: 900, margin: '0 auto 24px', padding: '0 24px' }}>
-          <Card
-            style={{
-              background: mode === 'dark' ? '#141414' : '#fafafa',
-              border: cardBorder,
-              borderRadius: '14px',
-            }}
-            styles={{ body: { padding: '20px' } }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: 16,
-                flexWrap: 'wrap',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
-                <PrinterOutlined style={{ color: accentColor, fontSize: 22 }} />
-                <div>
-                  <Text className="tech-label" style={{ color: accentColor, display: 'block', marginBottom: 4 }}>
-                    MAKER / PRINTS
-                  </Text>
-                  <Text style={{ color: textColor, fontWeight: 600, fontSize: 15, display: 'block' }}>
-                    {t('printable_parts')}
-                  </Text>
-                  <Text style={{ color: secondaryColor, fontSize: 13 }}>
-                    {t('printable_parts_description', { count: projectPrints.length })}
-                  </Text>
-                </div>
-              </div>
-              <Link
-                href={`/${locale}/prints#prints-${slug}`}
-                style={{ color: accentColor, fontWeight: 600, fontSize: 14, whiteSpace: 'nowrap' }}
-              >
-                {t('view_in_maker')} →
-              </Link>
-            </div>
-          </Card>
-        </section>
+        <div style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px' }}>
+          <ProjectPrintsShowcase
+            prints={projectPrints}
+            locale={locale}
+            slug={slug}
+            title={t('printable_parts')}
+            description={t('printable_parts_description', { count: projectPrints.length })}
+            downloadLabel={t('download')}
+            makerLabel={t('view_in_maker')}
+            externalLinks={
+              slug === 'pad'
+                ? [{ name: 'Tapa impresa del stick (Thingiverse #6189483)', url: 'https://www.thingiverse.com/thing:6189483' }]
+                : []
+            }
+          />
+        </div>
+      )}
+
+      {/* Real Firmware & App Source Code Explorer */}
+      {project.firmwareFiles && project.firmwareFiles.length > 0 && (
+        <div style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px' }}>
+          <ProjectFirmwareExplorer files={project.firmwareFiles} slug={slug} />
+        </div>
       )}
 
       {/* References & Documentation Links */}
