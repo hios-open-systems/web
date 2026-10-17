@@ -17,7 +17,8 @@ export function ComposerEditor({ c }: { c: ComposerState }) {
   const track = c.song.tracks.find((t) => t.id === c.activeTrackId);
   const scale = c.song.scale ?? DEFAULT_SCALE;
   const melodic = track?.instrument !== 'noise-perc';
-  const pitchForEdit = (pitch: number) => snap && melodic ? nearestScalePitch(pitch, scale) : pitch;
+  const pitchForEdit = (pitch: number) => (snap && melodic ? nearestScalePitch(pitch, scale) : pitch);
+
   return (
     <section className={styles.editor} aria-label="Editor de notas">
       <div className={styles.editorHeading}>
@@ -40,18 +41,10 @@ export function ComposerEditor({ c }: { c: ComposerState }) {
           onChange={setDuration}
           options={NOTE_LENGTHS}
         />
-        <Button
-          aria-label="Alejar piano"
-          disabled={zoom <= 0.5}
-          onClick={() => setZoom((z) => Math.max(0.5, z / 1.25))}
-        >
+        <Button aria-label="Alejar piano" disabled={zoom <= 0.5} onClick={() => setZoom((z) => Math.max(0.5, z / 1.25))}>
           −
         </Button>
-        <Button
-          aria-label="Acercar piano"
-          disabled={zoom >= 2.5}
-          onClick={() => setZoom((z) => Math.min(2.5, z * 1.25))}
-        >
+        <Button aria-label="Acercar piano" disabled={zoom >= 2.5} onClick={() => setZoom((z) => Math.min(2.5, z * 1.25))}>
           +
         </Button>
       </div>
@@ -75,18 +68,19 @@ export function ComposerEditor({ c }: { c: ComposerState }) {
         onSelectNote={c.selectNote}
         onChangeNote={(id, patch) => c.onChangeNote(id, patch.pitch === undefined ? patch : { ...patch, pitch: pitchForEdit(patch.pitch) })}
         onDeleteNote={c.onDeleteNote}
-        onAddNote={note => c.onAddNote({ ...note, pitch: pitchForEdit(note.pitch) })}
+        onAddNote={(note) => c.onAddNote({ ...note, pitch: pitchForEdit(note.pitch) })}
         onSeek={c.seek}
         getPlayheadTicks={c.getPlayheadTicks}
         isPlaying={c.isPlaying}
       />
       <NoteInspector c={c} />
-      <details className={styles.details}>
-        <summary>Repetir y rellenar</summary>
-        <p className={styles.hint}>
-          Se aplica al rango seleccionado o a toda la pista. Rellenar usa el tono de la nota seleccionada (Do4
-          si no hay selección).
-        </p>
+      <div style={{ marginTop: 12, padding: '10px 12px', background: 'var(--bg-elevated)', borderRadius: 8, border: '1px solid var(--border-color)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginBottom: 6 }}>
+          <strong style={{ fontSize: 13, color: 'var(--text-primary)' }}>Herramientas de patrón y pista</strong>
+          <span className={styles.hint} style={{ margin: 0 }}>
+            Aplica al rango seleccionado o a toda la pista.
+          </span>
+        </div>
         <div className={styles.actions}>
           <Button onClick={c.repeatSelection} disabled={!track?.notes.length}>
             Repetir frase
@@ -99,7 +93,7 @@ export function ComposerEditor({ c }: { c: ComposerState }) {
             Vaciar pista
           </Button>
         </div>
-      </details>
+      </div>
     </section>
   );
 }
