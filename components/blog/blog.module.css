@@ -159,6 +159,38 @@
   text-transform: lowercase;
 }
 
+.interactiveBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border: 1px solid color-mix(in srgb, #00ff66 45%, var(--hios-border));
+  border-radius: 3px;
+  background: rgba(0, 255, 102, 0.08);
+  color: #00ff66;
+  font-family: var(--font-stack-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.interactiveBadge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00ff66;
+  box-shadow: 0 0 6px #00ff66;
+}
+
+.interactiveBreakout {
+  width: min(1160px, calc(100vw - (2 * var(--layout-gutter))));
+  margin-left: 50%;
+  transform: translateX(-50%);
+  margin-block: clamp(24px, 4vw, 40px);
+}
+
 .empty {
   color: var(--hios-text-muted);
   font-family: var(--font-stack-mono);

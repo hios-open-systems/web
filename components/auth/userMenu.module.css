@@ -14,8 +14,6 @@
   background: rgba(255, 255, 255, 0.06);
 }
 
-/* Vive en el header (siempre oscuro en ambos temas): colores fijos
-   light-on-dark, como los nav links — NO variables que sigan el tema. */
 .loginButton {
   display: inline-flex;
   align-items: center;
@@ -41,21 +39,38 @@
 }
 
 .trigger {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 32px;
   height: 32px;
   padding: 0;
-  border: none;
+  border: 1px solid var(--hios-border);
   border-radius: 50%;
-  background: transparent;
+  background: color-mix(in srgb, var(--hios-bg-secondary) 85%, transparent);
+  color: var(--hios-text-secondary);
   cursor: pointer;
-  transition: box-shadow 0.18s ease;
+  transition: box-shadow 0.18s ease, border-color 0.18s ease, color 0.18s ease;
 }
 
-.trigger:hover {
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 60%, transparent);
+.trigger:hover,
+.trigger[aria-expanded='true'] {
+  color: var(--hios-text);
+  border-color: color-mix(in srgb, var(--accent) 60%, var(--hios-border));
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+.triggerDot::after {
+  content: '';
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ef4444;
+  border: 2px solid var(--hios-bg);
 }
 
 .avatar {
@@ -78,28 +93,32 @@
   font-weight: 700;
 }
 
+.guestAvatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
 .menu {
   position: absolute;
-  top: calc(100% + 6px);
-  right: 0;
-  min-width: 200px;
+  top: calc(100% + 8px);
+  inset-inline-end: 0;
+  min-width: 224px;
   padding: 6px;
   border-radius: 10px;
   border: 1px solid var(--hios-border);
-  background: var(--hios-bg);
-  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.12);
+  background: color-mix(in srgb, var(--hios-bg-secondary) 96%, #000);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 18px 40px rgba(2, 6, 23, 0.45);
   z-index: 1100;
-}
-
-:global([data-theme="dark"]) .menu {
-  background: var(--hios-bg-secondary);
-  box-shadow: 0 18px 36px rgba(2, 6, 23, 0.5);
 }
 
 .menuHeader {
   display: flex;
   flex-direction: column;
   padding: 8px 10px 10px;
+  margin-bottom: 4px;
   border-bottom: 1px solid var(--hios-border);
 }
 
@@ -114,24 +133,72 @@
   color: var(--hios-text-secondary);
 }
 
+.signInAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #0f172a;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
 .menuItem {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   width: 100%;
-  padding: 8px 10px;
-  margin-top: 4px;
+  min-height: 36px;
+  padding: 6px 10px;
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: var(--hios-text);
+  color: var(--hios-text-secondary);
   font-size: 13px;
+  font-weight: 500;
   text-align: left;
   cursor: pointer;
   text-decoration: none;
-  transition: background-color 0.18s ease;
+  transition: background-color 0.16s ease, color 0.16s ease;
 }
 
-.drawerAccount { display: block; width: 100%; margin-bottom: 12px; }
-.drawerAccount .trigger, .loginButton.drawerLogin {
+.menuItem:hover {
+  color: var(--hios-text);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.menuItemDanger {
+  margin-top: 4px;
+  border-top: 1px solid var(--hios-border);
+  border-radius: 0 0 6px 6px;
+  padding-top: 8px;
+  color: #f87171;
+}
+
+.unreadBadge {
+  margin-inline-start: auto;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: #ef4444;
+  color: #ffffff;
+  font-family: var(--font-stack-mono);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.drawerAccount {
+  display: block;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.drawerAccount .trigger,
+.loginButton.drawerLogin {
   display: flex;
   width: 100%;
   min-height: 44px;
@@ -143,44 +210,17 @@
   color: var(--hios-text);
   text-align: left;
 }
-.drawerAccount .trigger span:last-child { overflow-wrap: anywhere; }
-.drawerAccount .menu { position: static; min-width: 0; margin-top: 8px; }
-.drawerLogin { margin-bottom: 12px; }
-.drawerLogin .loginLabel { display: inline; }
 
-.menuItem:hover {
-  background: rgba(15, 23, 42, 0.06);
-}
-
-:global([data-theme="dark"]) .menuItem:hover {
-  background: rgba(255, 255, 255, 0.06);
+.drawerAccount .menu {
+  position: static;
+  min-width: 0;
+  margin-top: 8px;
 }
 
 @media (max-width: 1024px) {
-  .loginButton {
-    width: var(--touch-target);
-    height: var(--touch-target);
-    justify-content: center;
-    padding: 0;
-  }
-
-  .loginLabel {
-    display: none;
-  }
-
   .trigger,
   .skeleton {
     width: var(--touch-target);
     height: var(--touch-target);
   }
-
-  .menu {
-    position: fixed;
-    top: calc(var(--layout-header-height) + 8px);
-    right: max(12px, env(safe-area-inset-right));
-    left: max(12px, env(safe-area-inset-left));
-    min-width: 0;
-  }
-
-  .menuItem { min-height: var(--touch-target); }
 }

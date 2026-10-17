@@ -7,6 +7,8 @@ const BLOG_DIR = path.join(process.cwd(), 'content', 'blog');
 /** Taxonomía del devlog: 'devlog' = bitácora, 'referencia' = doc técnico permanente. */
 export type PostCategory = 'devlog' | 'referencia';
 
+export type InteractiveWidgetId = 'qpsk-simulator';
+
 export interface PostMeta {
     slug: string;
     title: string;
@@ -15,10 +17,15 @@ export interface PostMeta {
     tags: string[];
     lang: string;
     category: PostCategory;
+    interactive?: InteractiveWidgetId;
 }
 
 export interface Post extends PostMeta {
     content: string;
+}
+
+function parseInteractive(value: unknown): InteractiveWidgetId | undefined {
+    return value === 'qpsk-simulator' ? 'qpsk-simulator' : undefined;
 }
 
 function parseFile(file: string, locale: string): Post | null {
@@ -31,6 +38,7 @@ function parseFile(file: string, locale: string): Post | null {
     const raw = fs.readFileSync(sourcePath, 'utf8');
     const { data, content } = matter(raw);
     if (!data.title || !data.date) return null;
+    const interactive = parseInteractive(data.interactive);
     return {
         slug: file.replace(/\.md$/, ''),
         title: String(data.title),
@@ -39,6 +47,7 @@ function parseFile(file: string, locale: string): Post | null {
         tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
         lang: String(data.lang ?? 'es'),
         category: data.category === 'referencia' ? 'referencia' : 'devlog',
+        ...(interactive ? { interactive } : {}),
         content,
     };
 }
@@ -62,6 +71,7 @@ export function getAllPostMeta(locale = 'es'): PostMeta[] {
         tags: p.tags,
         lang: p.lang,
         category: p.category,
+        ...(p.interactive ? { interactive: p.interactive } : {}),
     }));
 }
 
