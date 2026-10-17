@@ -5,10 +5,11 @@ import type { SoftwareProjectSlug } from '@/config/project-software';
 import styles from './project-software.module.css';
 
 const repository = 'https://github.com/hios-open-systems/web';
-const sourceFiles = {
+const sourceFiles: Record<SoftwareProjectSlug, string> = {
   pad: 'src/main.cpp',
   btdac: 'src/HIOS_BTDAC.ino',
-} as const;
+  speaker: 'src/main.ino',
+};
 
 export async function ProjectGettingStarted({ locale, slug }: { locale: string; slug: SoftwareProjectSlug }) {
   const t = await getTranslations({ locale, namespace: `ProjectGettingStarted.${slug}` });
@@ -31,7 +32,7 @@ export async function ProjectGettingStarted({ locale, slug }: { locale: string; 
         {slug === 'pad' && <PadVisualReferences locale={locale} />}
         <div className={styles.links}>
           <Link href={`/${locale}/projects/${slug}/software`}>{labels('software')} →</Link>
-          <a href={`${source}/${slug === 'pad' ? 'companion' : 'android'}`}>{t('appLink')} ↗</a>
+          <a href={`${source}/${slug === 'pad' ? 'companion' : slug === 'btdac' ? 'android' : 'testbench'}`}>{t('appLink')} ↗</a>
         </div>
       </section>
       <section className={styles.showcase} id="flash" aria-labelledby="flash-title">

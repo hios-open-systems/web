@@ -103,6 +103,8 @@ const FIRMWARE_HIGHLIGHTS: Record<string, { path: string; title: string; role: s
     speaker: [
         { path: 'src/main.ino', title: 'main.ino', role: 'Firmware multimodo ESP32: Radio WiFi, Streaming HTTP, Bluetooth A2DP, Web Server y LCD 16×2 I2C', language: 'cpp' },
         { path: 'platformio.ini', title: 'platformio.ini', role: 'Configuración de compilación y librerías I2S (ESP32-audioI2S, ESP32-A2DP, ESPAsyncWebServer)', language: 'ini' },
+        { path: 'testbench/firmware/01_power_i2s_smoke.ino', title: '01_power_i2s_smoke.ino', role: 'Diagnóstico DMA I2S directo a MAX98357A a 44.1 kHz sin librerías externas', language: 'cpp' },
+        { path: 'testbench/firmware/02_channel_check_lr.ino', title: '02_channel_check_lr.ino', role: 'Comprobación de balance y separación estéreo L/R (440 Hz canal izquierdo / 660 Hz derecho)', language: 'cpp' },
         { path: 'tests/test_basic.ino', title: 'test_basic.ino', role: 'Prueba de diagnóstico de amplificadores MAX98357A y pantalla LCD I2C', language: 'cpp' },
     ],
     'hios-node-ai': [

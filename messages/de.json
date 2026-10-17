@@ -2826,6 +2826,26 @@
                 "body": "Die App kann Testtöne anfordern. Fernsteuerung von Lautstärke und Equalizer, Akkuüberwachung und OTA-Updates sind noch geplant. Die Android-App wird als Quellcode zum Kompilieren mit Android Studio oder Gradle bereitgestellt."
             }
         },
+        "speaker": {
+            "title": "Speaker: WLAN-Radio, Streaming und I2S-Stereo-Audio",
+            "description": "Die Speaker-Firmware spielt WLAN-Radios, YouTube-Audio und Bluetooth A2DP über I2S an zwei MAX98357A-Verstärker in Stereo ab, mit lokaler Websteuerung und Chiptune-Unterstützung.",
+            "modes": {
+                "title": "WLAN-Radio, Bluetooth A2DP und Chiptune-Player",
+                "body": "Der ESP32 schaltet nahtlos zwischen HTTP-Audiostreams, Bluetooth Classic A2DP und der direkten Wiedergabe von .device.json-Dateien um, die aus dem HIOS Chiptune Composer exportiert wurden."
+            },
+            "streaming": {
+                "title": "Lokale Websteuerung und kabellose Einrichtung",
+                "body": "Im lokalen Netzwerk stellt das Gerät eine Steuerungsoberfläche unter http://hios-speaker.local bereit, um Sender zu wechseln, die Lautstärke zu regeln und Songs per HTTP POST /api/song hochzuladen. WLAN-Zugangsdaten können auch per Bluetooth-Serial-Terminal konfiguriert werden."
+            },
+            "setup": {
+                "title": "Erste Schritte",
+                "body": "Stellen Sie den LM2596-Abwärtswandler vor dem Anschließen der Module mit einem Multimeter auf 5,0 V ein. Flashen Sie zuerst die Testbench-Diagnosefirmware, um den I2S-Bus und die Stereokanaltrennung zu prüfen, und laden Sie anschließend src/main.ino mit PlatformIO hoch."
+            },
+            "availability": {
+                "title": "Aktueller Funktionsumfang",
+                "body": "Nativer Stereoausgang mit 44,1 kHz / 16 Bit über zwei Klasse-D-Verstärker MAX98357A mit Kanalwahl über SD-Widerstände. Das über I2C angebundene 16×2-LCD zeigt Verbindungsstatus, IP-Adresse und Titel ohne externe Cloud-Dienste an."
+            }
+        },
         "usage": "So funktioniert es",
         "flash": "Firmware auf den ESP32 laden"
     },
@@ -3129,6 +3149,18 @@
             "board": "Für klassischen ESP32 (esp32dev / WROOM-32) mit PCM5102. ESP32-S3 ist kein Ersatz für diese A2DP-Firmware.",
             "connect": "Prüfe Stromversorgung und PCM5102-Verkabelung vor dem Anschließen des USB-Programmierports.",
             "success": "Öffne nach dem Upload den seriellen Monitor mit 115200 Baud und suche HIOS BTDAC per Bluetooth. Bei Verbindung ohne Ton prüfe SCK, XSMT und I2S gemäß Anleitung. Android wird aus Quellcode gebaut; keine APK oder Firmware-Binärdatei verfügbar."
+        },
+        "speaker": {
+            "intro": "Der Lautsprecher gibt WLAN-Radiostreams, Bluetooth-A2DP-Audio und Chiptunes aus dem Composer über I2S an zwei MAX98357A-Verstärker und ein 16×2-LCD aus.",
+            "steps": {
+                "1": "Stellen Sie den LM2596-Abwärtswandler mit einem Multimeter auf 5,0 V ein, bevor Sie Module verbinden. Prüfen Sie den GND-Durchgang im gesamten Aufbau.",
+                "2": "Flashen Sie zuerst 01_power_i2s_smoke.ino zur I2S-Prüfung und danach 02_channel_check_lr.ino, um die Trennung des linken und rechten Kanals zu überprüfen.",
+                "3": "Flashen Sie src/main.ino, öffnen Sie http://hios-speaker.local im Browser und richten Sie Ihre Lieblingssender ein oder koppeln Sie Ihr Smartphone per Bluetooth A2DP."
+            },
+            "appLink": "Testbench und Diagnose",
+            "board": "Für klassischen ESP32 (esp32dev / WROOM-32) mit 2× MAX98357A und 16×2-LCD. Verwenden Sie keinen ESP32-S3, da dieser kein Bluetooth Classic A2DP unterstützt.",
+            "connect": "Verdrahten Sie den gemeinsamen I2S-Bus: DIN an GPIO25, BCLK an GPIO26 und LRC an GPIO27. Prüfen Sie die SD-Widerstände (100 kΩ links, 220 kΩ rechts) und saubere 5V-Versorgung.",
+            "success": "Beim Start zeigt das 16×2-LCD die zugewiesene IP-Adresse und den aktuellen Modus an. Steuern Sie Wiedergabe und Lautstärke über http://hios-speaker.local oder die serielle Konsole."
         }
     },
     "Landing": {
