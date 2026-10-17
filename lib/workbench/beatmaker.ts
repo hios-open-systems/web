@@ -118,7 +118,7 @@ export const BEAT_PRESETS: BeatPreset[] = [
     genre: 'Trap',
     bpm: 140,
     swing: 0.04,
-    description: 'Bajos 808 pesados con slides melódicos, hi-hat rolls frenéticos y caja cortante en half-time (tiempo 3).',
+    description: 'Bajos 808 pesados con saturación valvular, hi-hat rolls frenéticos y caja cortante en half-time (tiempo 3).',
     tracks: () => [
       createTrack(
         '808',
@@ -126,22 +126,22 @@ export const BEAT_PRESETS: BeatPreset[] = [
         [0, 6, 8, 11, 14],
         { 0: 36, 6: 39, 8: 41, 11: 43, 14: 39 },
         undefined,
-        { 0: 120, 6: 105, 8: 115, 11: 110, 14: 105 }
+        { 0: 125, 6: 110, 8: 120, 11: 115, 14: 110 }
       ),
-      createTrack('kick', 'Kick Punch', [0, 7, 10], undefined, undefined, { 0: 125, 7: 105, 10: 115 }),
-      createTrack('snare', 'Trap Snare', [8], undefined, undefined, { 8: 125 }),
-      createTrack('clap', 'Clap Layer', [8], undefined, undefined, { 8: 110 }),
+      createTrack('kick', 'Kick Punch', [0, 7, 10, 13], undefined, undefined, { 0: 127, 7: 115, 10: 120, 13: 110 }),
+      createTrack('snare', 'Trap Snare', [8], undefined, undefined, { 8: 127 }),
+      createTrack('clap', 'Clap Layer', [8], undefined, undefined, { 8: 115 }),
       createTrack(
         'hihat',
         'Rolling Hi-Hat',
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
         undefined,
-        { 6: 2, 11: 3, 14: 4 },
-        { 0: 115, 2: 105, 4: 110, 6: 95, 8: 115, 10: 100, 11: 90, 12: 110, 14: 95 }
+        { 2: 2, 6: 3, 11: 4, 14: 3 },
+        { 0: 115, 1: 85, 2: 100, 3: 85, 4: 110, 5: 85, 6: 95, 7: 85, 8: 115, 9: 85, 10: 100, 11: 90, 12: 110, 13: 85, 14: 95, 15: 85 }
       ),
       createTrack('openhat', 'Open Hat', [6, 14], undefined, undefined, { 6: 95, 14: 100 }),
       createTrack('perc', 'Rimshot Accent', [4, 12], undefined, undefined, { 4: 75, 12: 80 }),
-      createTrack('melody', 'Dark Bells', [0, 3, 6, 10, 12], { 0: 60, 3: 63, 6: 67, 10: 65, 12: 63 }),
+      createTrack('melody', 'Dark Bells', [0, 3, 6, 10, 12, 14], { 0: 60, 3: 63, 6: 67, 10: 65, 12: 63, 14: 62 }),
     ],
   },
   {

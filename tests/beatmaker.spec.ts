@@ -10,7 +10,7 @@ test.describe('Beatmaker & Looper DAW', () => {
     await expect(playBtn).toBeVisible();
 
     // Verify 8 tracks are present via audition buttons
-    const auditionButtons = page.getByRole('button', { name: 'play-circle' });
+    const auditionButtons = page.getByRole('button', { name: /^Probar/ });
     await expect(auditionButtons).toHaveCount(8);
 
     // Verify 128 step buttons exist (8 tracks x 16 steps)
@@ -24,7 +24,7 @@ test.describe('Beatmaker & Looper DAW', () => {
     await expect(page.getByRole('button', { name: /Play Loop/i })).toBeVisible();
 
     // Toggle step 2 of first track
-    const step2 = page.getByRole('button', { name: /808 Sub paso 2/i });
+    const step2 = page.getByRole('button', { name: /808.*paso 2/i });
     await expect(step2).toContainText('');
     await step2.click();
 
