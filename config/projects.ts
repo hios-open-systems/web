@@ -40,7 +40,7 @@ export const projects: Project[] = [
         name: 'HIOS PAD',
         description: "Control programable con teclas, encoder, joystick y pantalla. Permite organizar atajos en capas, usar teclado y mouse por USB o Bluetooth y editar la configuración desde una interfaz web.",
         status: 'prototype',
-        image: '/images/pad/pad-1-overview.jpg',
+        image: '/images/pad/pad-5-rev09-top.jpg',
         learnings: ["ESP32-S3","USB y Bluetooth HID","Editor web","Companion para PC"],
     },
     {

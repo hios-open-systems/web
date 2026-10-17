@@ -122,9 +122,13 @@ pio device monitor -b 115200
 ```
 
 1. **Token de seguridad (`token API/OTA`):** en el primer arranque el firmware genera un token aleatorio único en NVS y lo imprime por el monitor serie. Copialo en `companion/config.json` para autenticar `POST /api/state`, `/api/config` y las actualizaciones OTA.
-2. **Precaución eléctrica al conectar USB:** con el pack 2S conectado, **abrí siempre `SW-CELDAS` antes de enchufar el cable USB** para no unir `VBUS` con la salida de `5.0 V` del buck LM2596S. Para actualizar sin tocar cables, usá **OTA por WiFi**:
+2. **Precaución eléctrica al conectar USB:** con el pack 2S conectado, **abrí siempre `SW-CELDAS` antes de enchufar el cable USB** para no unir `VBUS` con la salida de `5.0 V` del buck LM2596S. Para actualizar sin tocar cables, usá **OTA por WiFi** (requiere el token de seguridad impreso al boot):
    ```bash
-   pio run -e ota -t upload --upload-port hiospad.local
+   # Vía PlatformIO directo con el token impreso por serial:
+   pio run -e ota -t upload --upload-port 192.168.1.43 --upload-flags="--auth=<TOKEN>"
+
+   # O usando el script con soporte para WSL2 / Linux:
+   ./flash-ota.sh 192.168.1.43 <TOKEN>
    ```
 3. **Flasheo desde WSL (Windows Subsystem for Linux):** el puerto UART (`CH343`) requiere adjuntarse desde PowerShell con `usbipd list` → `usbipd attach --wsl --busid <id>` para aparecer como `/dev/ttyACM0` en Linux. El puerto USB nativo del S3 (`303a:1001`) queda dedicado al transporte HID.
 

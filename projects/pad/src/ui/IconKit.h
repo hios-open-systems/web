@@ -26,7 +26,8 @@ enum class Glyph : uint8_t {
   SWATCH_R, SWATCH_G, SWATCH_B, SWATCH_W, POWER,
   MIC, CAMERA, SCREEN, HAND, SPEAKER,
   DIAL, POINTER, LINK,
-  RELOAD, PLUS, BOOKMARK, WIFI
+  RELOAD, PLUS, BOOKMARK, WIFI,
+  CUT, SAVE, SELECT_ALL, BULB, CHAT, GRID, LOCK
 };
 
 // --- helpers de trazo (2px) ---
@@ -65,45 +66,77 @@ inline void strokeArc(G& g, int cx, int cy, int r, float a0, float a1, uint16_t 
 // Mapea la label de un binding a su glifo.
 inline Glyph glyphFor(const char* label) {
   if (!label) return Glyph::GENERIC;
-  if (!strcmp(label, "Copiar"))     return Glyph::COPY;
-  if (!strcmp(label, "Pegar"))      return Glyph::PASTE;
-  if (!strcmp(label, "Deshacer"))   return Glyph::UNDO;
-  if (!strcmp(label, "Rehacer"))    return Glyph::REDO;
-  if (!strcmp(label, "Email"))      return Glyph::MAIL;
-  if (!strcmp(label, "Anterior"))   return Glyph::PREV;
-  if (!strcmp(label, "Play"))       return Glyph::PLAY;
-  if (!strcmp(label, "Siguiente"))  return Glyph::NEXT;
-  if (!strcmp(label, "Mute"))       return Glyph::MUTE;
-  if (!strcmp(label, "Stop"))       return Glyph::STOP;
-  if (!strcmp(label, "Terminal"))   return Glyph::TERMINAL;
-  if (!strcmp(label, "Paleta"))     return Glyph::COMMAND;
-  if (!strcmp(label, "Comentar"))   return Glyph::COMMENT;
-  if (!strcmp(label, "Run"))        return Glyph::RUN;
-  if (!strcmp(label, "Build"))      return Glyph::BUILD;
-  if (!strncmp(label, "App", 3))    return Glyph::APP;
-  if (!strcmp(label, "Escritorio")) return Glyph::DESKTOP;
-  if (!strcmp(label, "Esc <-"))     return Glyph::LEFT;
-  if (!strcmp(label, "Esc ->"))     return Glyph::RIGHT;
-  if (!strcmp(label, "Rojo"))       return Glyph::SWATCH_R;
-  if (!strcmp(label, "Verde"))      return Glyph::SWATCH_G;
-  if (!strcmp(label, "Azul"))       return Glyph::SWATCH_B;
-  if (!strcmp(label, "Blanco"))     return Glyph::SWATCH_W;
-  if (!strcmp(label, "Off"))        return Glyph::POWER;
-  if (!strcmp(label, "Mic"))        return Glyph::MIC;
-  if (!strcmp(label, "Camara"))     return Glyph::CAMERA;
-  if (!strcmp(label, "Pantalla"))   return Glyph::SCREEN;
-  if (!strcmp(label, "Mano"))       return Glyph::HAND;
-  if (!strcmp(label, "Altavoz"))    return Glyph::SPEAKER;
-  if (!strcmp(label, "Atras"))      return Glyph::LEFT;
-  if (!strcmp(label, "Adelante"))   return Glyph::RIGHT;
-  if (!strcmp(label, "Recargar"))   return Glyph::RELOAD;
-  if (!strcmp(label, "Nueva tab"))  return Glyph::PLUS;
-  if (!strcmp(label, "Marcadores")) return Glyph::BOOKMARK;
-  if (!strcmp(label, "-10s"))       return Glyph::PREV;   // seek atras (YouTube/Netflix)
-  if (!strcmp(label, "+10s"))       return Glyph::NEXT;   // seek adelante
-  if (!strcmp(label, "Salir"))      return Glyph::POWER;  // salir/colgar llamada
-  if (!strcmp(label, "Colgar"))     return Glyph::POWER;
-  if (!strcmp(label, "Buscar"))     return Glyph::COMMAND;
+  if (!strcmp(label, "Copiar"))       return Glyph::COPY;
+  if (!strcmp(label, "Pegar"))        return Glyph::PASTE;
+  if (!strcmp(label, "Cortar"))       return Glyph::CUT;
+  if (!strcmp(label, "Deshacer"))     return Glyph::UNDO;
+  if (!strcmp(label, "Rehacer"))      return Glyph::REDO;
+  if (!strcmp(label, "Sel.todo"))     return Glyph::SELECT_ALL;
+  if (!strcmp(label, "Guardar"))      return Glyph::SAVE;
+  if (!strcmp(label, "Email"))        return Glyph::MAIL;
+  if (!strcmp(label, "Anterior"))     return Glyph::PREV;
+  if (!strcmp(label, "Play"))         return Glyph::PLAY;
+  if (!strcmp(label, "Pausa"))        return Glyph::PAUSE;
+  if (!strcmp(label, "Siguiente"))    return Glyph::NEXT;
+  if (!strcmp(label, "Mute"))         return Glyph::MUTE;
+  if (!strcmp(label, "Stop"))         return Glyph::STOP;
+  if (!strcmp(label, "Terminal"))     return Glyph::TERMINAL;
+  if (!strcmp(label, "Paleta"))       return Glyph::COMMAND;
+  if (!strcmp(label, "Comentar"))     return Glyph::COMMENT;
+  if (!strcmp(label, "Run"))          return Glyph::RUN;
+  if (!strcmp(label, "Build"))        return Glyph::BUILD;
+  if (!strcmp(label, "Ir a archivo")) return Glyph::COMMAND;
+  if (!strcmp(label, "Simbolo"))      return Glyph::LINK;
+  if (!strcmp(label, "Formatear"))    return Glyph::SELECT_ALL;
+  if (!strcmp(label, "Renombrar"))    return Glyph::COMMENT;
+  if (!strncmp(label, "App", 3))      return Glyph::APP;
+  if (!strcmp(label, "Escritorio"))   return Glyph::DESKTOP;
+  if (!strcmp(label, "Esc <-"))       return Glyph::LEFT;
+  if (!strcmp(label, "Esc ->"))       return Glyph::RIGHT;
+  if (!strcmp(label, "Cambiar"))      return Glyph::RELOAD;
+  if (!strcmp(label, "Maximizar"))    return Glyph::SCREEN;
+  if (!strcmp(label, "Minimizar"))    return Glyph::DESKTOP;
+  if (!strcmp(label, "Capturar"))     return Glyph::CAMERA;
+  if (!strcmp(label, "Lupa"))         return Glyph::COMMAND;
+  if (!strcmp(label, "Bloquear"))     return Glyph::LOCK;
+  if (!strcmp(label, "Rojo"))         return Glyph::SWATCH_R;
+  if (!strcmp(label, "Verde"))        return Glyph::SWATCH_G;
+  if (!strcmp(label, "Azul"))         return Glyph::SWATCH_B;
+  if (!strcmp(label, "Blanco"))       return Glyph::SWATCH_W;
+  if (!strcmp(label, "Off"))          return Glyph::POWER;
+  if (!strcmp(label, "On/Off"))       return Glyph::POWER;
+  if (!strcmp(label, "Cuarto"))       return Glyph::BULB;
+  if (!strcmp(label, "Calido"))       return Glyph::BULB;
+  if (!strcmp(label, "Frio"))         return Glyph::BULB;
+  if (!strcmp(label, "Luz"))          return Glyph::BULB;
+  if (!strcmp(label, "Mic"))          return Glyph::MIC;
+  if (!strcmp(label, "Camara"))       return Glyph::CAMERA;
+  if (!strcmp(label, "Pantalla"))     return Glyph::SCREEN;
+  if (!strcmp(label, "Mano"))         return Glyph::HAND;
+  if (!strcmp(label, "Altavoz"))      return Glyph::SPEAKER;
+  if (!strcmp(label, "Chat"))         return Glyph::CHAT;
+  if (!strcmp(label, "Particip"))     return Glyph::GRID;
+  if (!strcmp(label, "Grilla"))       return Glyph::GRID;
+  if (!strcmp(label, "Hablante"))     return Glyph::SPEAKER;
+  if (!strcmp(label, "Reaccion"))     return Glyph::HAND;
+  if (!strcmp(label, "Atras"))        return Glyph::LEFT;
+  if (!strcmp(label, "Adelante"))     return Glyph::RIGHT;
+  if (!strcmp(label, "Recargar"))     return Glyph::RELOAD;
+  if (!strcmp(label, "Nueva tab"))    return Glyph::PLUS;
+  if (!strcmp(label, "Cerrar tab"))   return Glyph::STOP;
+  if (!strcmp(label, "Reabrir"))      return Glyph::UNDO;
+  if (!strcmp(label, "Marcadores"))   return Glyph::BOOKMARK;
+  if (!strcmp(label, "Historial"))    return Glyph::DIAL;
+  if (!strcmp(label, "Incognito"))    return Glyph::LOCK;
+  if (!strcmp(label, "Subtitulos"))   return Glyph::CHAT;
+  if (!strcmp(label, "-10s"))         return Glyph::PREV;
+  if (!strcmp(label, "+10s"))         return Glyph::NEXT;
+  if (!strcmp(label, "-Vel"))         return Glyph::LEFT;
+  if (!strcmp(label, "+Vel"))         return Glyph::RIGHT;
+  if (!strcmp(label, "Salir"))        return Glyph::POWER;
+  if (!strcmp(label, "Colgar"))       return Glyph::POWER;
+  if (!strcmp(label, "Buscar"))       return Glyph::COMMAND;
+  if (!strcmp(label, "Reemplazar"))   return Glyph::RELOAD;
   return Glyph::GENERIC;
 }
 
@@ -283,6 +316,43 @@ void icon(G& g, Glyph gl, int cx, int cy, uint16_t col) {
         int bh = 4 + b * 4;                        // 4,8,12,16
         g.fillRect(cx - 9 + b * 5, cy + 8 - bh, 3, bh, col);
       }
+      break;
+    case Glyph::CUT:                               // tijera: dos aros + hojas cruzadas
+      g.drawCircle(cx - 5, cy + 6, 3, col);
+      g.drawCircle(cx + 5, cy + 6, 3, col);
+      ln(g, cx - 3, cy + 4, cx + 6, cy - 8, col);
+      ln(g, cx + 3, cy + 4, cx - 6, cy - 8, col);
+      break;
+    case Glyph::SAVE:                              // disquete / guardar
+      g.drawRoundRect(cx - 9, cy - 9, 18, 18, 2, col);
+      g.drawRect(cx - 5, cy - 9, 10, 6, col);
+      g.fillRoundRect(cx - 6, cy + 1, 12, 8, 1, col);
+      break;
+    case Glyph::SELECT_ALL:                        // recuadro punteado con bloque interno
+      g.drawRoundRect(cx - 9, cy - 9, 18, 18, 2, col);
+      g.fillRoundRect(cx - 5, cy - 5, 10, 10, 2, col);
+      break;
+    case Glyph::BULB:                              // lampara WiZ: bulbo + base
+      g.drawCircle(cx, cy - 2, 7, col);
+      hln(g, cx - 4, cy + 6, 8, col);
+      hln(g, cx - 3, cy + 9, 6, col);
+      break;
+    case Glyph::CHAT:                              // burbuja de chat / subtitulos
+      g.drawRoundRect(cx - 10, cy - 8, 20, 14, 3, col);
+      g.fillTriangle(cx - 5, cy + 6, cx - 1, cy + 6, cx - 6, cy + 10, col);
+      hln(g, cx - 6, cy - 3, 12, col);
+      hln(g, cx - 6, cy + 1, 8, col);
+      break;
+    case Glyph::GRID:                              // grilla 2x2 (participantes / vista)
+      g.drawRoundRect(cx - 9, cy - 9, 8, 8, 2, col);
+      g.drawRoundRect(cx + 1, cy - 9, 8, 8, 2, col);
+      g.drawRoundRect(cx - 9, cy + 1, 8, 8, 2, col);
+      g.drawRoundRect(cx + 1, cy + 1, 8, 8, 2, col);
+      break;
+    case Glyph::LOCK:                              // candado (bloquear / incognito)
+      g.drawRoundRect(cx - 8, cy - 1, 16, 11, 2, col);
+      strokeArc(g, cx, cy - 2, 5, -3.14f, 0.0f, col);
+      g.fillCircle(cx, cy + 4, 2, col);
       break;
     default:
       g.drawCircle(cx, cy, 9, col);
