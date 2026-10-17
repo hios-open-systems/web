@@ -1724,6 +1724,10 @@
                 "title": "QPSK oscilloscope & modulator",
                 "description": "Simulate quadrature phase-shift keying (I/Q), inspect the constellation diagram under AWGN noise and demodulate frames in real time."
             },
+            "jam-station": {
+                "title": "Jam Station & Backing Tracks",
+                "description": "Procedural backing track generator and interactive guitar fretboard for musicians. Practice improvisation, scales, and solos in real time."
+            },
             "guitar-tuner": {
                 "title": "Instrument tuner",
                 "description": "Tune instruments using your microphone and an adjustable reference frequency."

@@ -1,0 +1,101 @@
+.jamContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+  min-width: 0;
+}
+
+.controlsPanel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--hios-bg-secondary, rgba(255, 255, 255, 0.03));
+  border: 1px solid var(--hios-border, rgba(255, 255, 255, 0.08));
+}
+
+.fretboardWrapper {
+  overflow-x: auto;
+  padding: 16px 8px;
+  border-radius: 12px;
+  background: #11141a;
+  border: 1px solid var(--hios-border, rgba(255, 255, 255, 0.1));
+}
+
+.fretboardSvg {
+  display: block;
+  min-width: 820px;
+  width: 100%;
+  height: auto;
+  user-select: none;
+}
+
+.chordTrack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.chordCard {
+  flex: 1 1 70px;
+  min-width: 60px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+  transition: all 0.15s ease-in-out;
+}
+
+.chordCardActive {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: #f59e0b;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+  transform: translateY(-2px);
+}
+
+.beatDots {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.beatDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.beatDotActive {
+  background: #f59e0b;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.badgeDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
