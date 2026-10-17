@@ -14,6 +14,7 @@ export function ComposerEditor({ c }: { c: ComposerState }) {
   const [mode, setMode] = useState<'draw' | 'select'>('draw');
   const [showScale, setShowScale] = useState(true);
   const [snap, setSnap] = useState(false);
+  const [showGhostNotes, setShowGhostNotes] = useState(false);
   const track = c.song.tracks.find((t) => t.id === c.activeTrackId);
   const scale = c.song.scale ?? DEFAULT_SCALE;
   const melodic = track?.instrument !== 'noise-perc';
@@ -41,6 +42,14 @@ export function ComposerEditor({ c }: { c: ComposerState }) {
           onChange={setDuration}
           options={NOTE_LENGTHS}
         />
+        <Button
+          aria-pressed={showGhostNotes}
+          type={showGhostNotes ? 'primary' : 'default'}
+          onClick={() => setShowGhostNotes(!showGhostNotes)}
+          title="Muestra u oculta las notas de las otras pistas como referencia armónica"
+        >
+          {showGhostNotes ? 'Ocultar otras pistas' : 'Ver otras pistas'}
+        </Button>
         <Button aria-label="Alejar piano" disabled={zoom <= 0.5} onClick={() => setZoom((z) => Math.max(0.5, z / 1.25))}>
           −
         </Button>
@@ -63,6 +72,8 @@ export function ComposerEditor({ c }: { c: ComposerState }) {
         zoom={zoom}
         drawDuration={duration}
         mode={mode}
+        showGhostNotes={showGhostNotes}
+        onActivateTrack={c.setActiveTrackId}
         scale={showScale && melodic ? scale : undefined}
         onRange={c.setSelectedRange}
         onSelectNote={c.selectNote}

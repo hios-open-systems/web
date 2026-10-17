@@ -5,7 +5,7 @@
   /* Responsive layout system */
   --layout-gutter: clamp(16px, 4vw, 32px);
   --layout-section-space: clamp(40px, 8vw, 88px);
-  --layout-content: 1180px;
+  --layout-content: min(100%, 1680px);
   --layout-reading: 760px;
   --layout-header-height: 64px;
   --touch-target: 44px;

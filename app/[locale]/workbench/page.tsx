@@ -20,7 +20,7 @@ export default async function WorkbenchPage({ params }: PageProps) {
   setRequestLocale(locale);
 
   return (
-    <main style={{ maxWidth: 1440, margin: '0 auto', padding: '32px 24px 56px' }}>
+    <main style={{ maxWidth: 'min(100%, 1720px)', width: '100%', margin: '0 auto', padding: '32px 24px 56px' }}>
       <Suspense fallback={null}>
         <WorkbenchLanding />
       </Suspense>

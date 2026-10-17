@@ -100,7 +100,7 @@ export const INSTRUMENTS: Record<InstrumentId, InstrumentMeta> = {
   'triangle-bass': { label: 'Triángulo (bajo)', color: '#38bdf8' },
   'saw-lead': { label: 'Sierra', color: '#facc15' },
   'snes-lead': { label: 'SNES lead', color: '#34d399' },
-  'noise-perc': { label: 'Ruido (perc)', color: '#94a3b8' },
+  'noise-perc': { label: 'Ruido (perc)', color: '#fb7185' },
 };
 
 export const INSTRUMENT_IDS = Object.keys(INSTRUMENTS) as InstrumentId[];

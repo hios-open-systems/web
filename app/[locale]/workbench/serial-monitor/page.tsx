@@ -15,7 +15,7 @@ export default async function SerialMonitorPage({ params }: PageProps) {
   setRequestLocale(locale);
 
   return (
-    <main style={{ maxWidth: 1180, margin: '0 auto', padding: '32px 24px 56px' }}>
+    <main style={{ maxWidth: 'min(100%, 1720px)', width: '100%', margin: '0 auto', padding: '32px 24px 56px' }}>
       <ToolUsageTracker toolId="serial-monitor" />
       <header style={{ marginBottom: 32 }}>
         <h1 style={{ fontSize: 32, margin: '0 0 8px 0', color: 'var(--hios-text)', fontFamily: 'var(--font-stack-display)' }}>

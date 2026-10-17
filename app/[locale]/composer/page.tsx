@@ -22,7 +22,7 @@ export default async function ComposerPage({ params }: PageProps) {
   setRequestLocale(locale);
 
   return (
-    <main style={{ maxWidth: 1180, margin: '0 auto', padding: 'clamp(24px, 5vw, 40px) var(--layout-gutter, 24px) 72px' }}>
+    <main style={{ maxWidth: 'min(100%, 1780px)', width: '100%', margin: '0 auto', padding: 'clamp(20px, 4vw, 36px) var(--layout-gutter, 24px) 72px' }}>
       <Suspense fallback={null}>
         <ComposerClient />
       </Suspense>
