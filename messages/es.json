@@ -354,64 +354,128 @@
             ]
         },
         "pad": {
-            "moment": "HIOS PAD organiza atajos de teclado, controles multimedia y acciones de mouse en capas. Diez teclas de acción, dos ALT, un encoder y un joystick permiten elegir y ejecutar acciones con una referencia visual en pantalla.",
-            "struggle": "USB y Bluetooth BLE transportan las acciones HID. WiFi se utiliza para configuración, actualizaciones y comunicación con el companion. Este programa opcional envía al PAD el estado del equipo y habilita funciones como el mute global del micrófono.",
+            "moment": "HIOS PAD es una plataforma de control programable con ESP32-S3 N16R8, pantalla TFT de 4 pulgadas (480 × 320), matriz 2 × 5 con diodos (N-Key Rollover real), 2 teclas ALT momentáneas, encoder rotativo con aceleración, joystick analógico de pulgar, audio estéreo I2S y 8 LEDs NeoPixel en 2 zonas.",
+            "struggle": "El mismo hardware admite dos personalidades de firmware: como Control-Deck de escritorio (16 capas de atajos, macros, mouse, domótica WiZ/OpenRGB y 4 vistas de telemetría de PC con sparklines vía pad-companion) o como Gaming Keypad / Gamepad HID de una mano (movimiento 360° o WASD en el stick de pulgar, matriz sin ghosting y perfiles por género en pantalla).",
             "whatWorks": [
-                "Acciones de teclado, mouse y multimedia por USB y BLE",
-                "Capas y grupos navegables desde la pantalla",
-                "Joystick como mouse y encoder con funciones según la capa",
-                "Configuración JSON y editor web en el companion",
-                "Estado del equipo y mute global mediante el companion",
-                "Interfaz web servida por el PAD con controles virtuales y edición básica"
+                "Teclado, mouse y multimedia HID compuestos por USB nativo (TinyUSB) y Bluetooth BLE (NimBLE) con auto-switch",
+                "Matriz 2 × 5 con diodos 1N4148 (NKRO sin ghosting), 2 ALT momentáneos (Launcher y Macros) y click acústico I2S a 2200 Hz",
+                "Joystick analógico a 3.3 V con curva cuadrática de puntero, tap=click izq, doble-tap=click der y calibración en NVS",
+                "Encoder rotativo con aceleración dinámica y doble-tap para alternar en vivo entre Capa, Volumen, Scroll, Zoom y Pestañas",
+                "Sistema de Themes en RGB565 (Modo Oscuro/Claro + 7 colores de acento globales + color por capa en pantalla y NeoPixel B-Zone)",
+                "4 vistas de Monitor a pantalla completa (General, Red, Núcleos, Disco) con sparklines de 56 muestras y render parcial sin parpadeo",
+                "Daemon pad-companion (Windows/Linux) con mute global de micrófono OS, control UDP de luces WiZ, espejo SSE y editor web en caliente (LittleFS)",
+                "PWA embebida en el propio ESP32-S3 (http://hiospad.local) con pad virtual 2 × 5 y edición rápida sin PC",
+                "Soporte de variante de firmware Gaming Keypad / Gamepad sobre el mismo hardware físico"
             ],
             "whatDoesnt": [
-                "El estado real del equipo y el mute global requieren el companion y una conexión de red",
-                "El companion tiene proveedores para Windows y Linux; macOS no está implementado",
-                "La interfaz web directa tiene pruebas con un dispositivo simulado; queda validar la aplicación de cambios en el hardware",
-                "La medición de batería del firmware está deshabilitada; el GPIO anterior se usa para el NeoPixel"
+                "Las 4 vistas de telemetría real, el control WiZ y el mute global de micrófono requieren pad-companion corriendo en red local",
+                "El companion cuenta con proveedores nativos para Windows y Linux; el soporte para macOS está pendiente",
+                "La medición de batería por ADC en GPIO9 se deshabilitó a favor del bus NeoPixel (la tensión real del pack 2S se lee en el display del buck LM2596S)"
+            ],
+            "bom": [
+                {
+                    "component": "ESP32-S3-DevKitC-1 N16R8",
+                    "qty": 1,
+                    "notes": "16 MB Flash Quad SPI + 8 MB PSRAM Octal (USB nativo HID + UART CH343)"
+                },
+                {
+                    "component": "Display TFT 4.0\" ILI9488 480×320",
+                    "qty": 1,
+                    "notes": "Interfaz HSPI a 27 MHz + control de brillo PWM LEDC de 8 bits"
+                },
+                {
+                    "component": "Pulsadores NA + Diodos 1N4148",
+                    "qty": 12,
+                    "notes": "10 en matriz 2×5 con diodos (cátodo a fila, NKRO) + 2 ALT directos"
+                },
+                {
+                    "component": "Joystick Analógico HW-504",
+                    "qty": 1,
+                    "notes": "Alimentado a 3.3 V en ADC1 de 12 bits + pulsador integrado STICK_SW"
+                },
+                {
+                    "component": "Encoder Rotativo KY-040",
+                    "qty": 1,
+                    "notes": "Cuadratura A/B con aceleración dinámica + pulsador ENC_SW"
+                },
+                {
+                    "component": "Amplificador I2S MAX98357A + Parlantes",
+                    "qty": 2,
+                    "notes": "Estéreo en bus I2S compartido (L: SD a Vin, R: SD por 390 kΩ a Vin)"
+                },
+                {
+                    "component": "Placas NeoPixel WS2812B (2×4 LEDs)",
+                    "qty": 2,
+                    "notes": "8 píxeles encadenados en GPIO9 vía 330 Ω, divididos en 2 zonas"
+                },
+                {
+                    "component": "Pack 2S 18650 + BMS USB-C + Buck LM2596S",
+                    "qty": 1,
+                    "notes": "Regulado a 5.0 V con voltímetro integrado y llave de corte SW-CELDAS"
+                }
             ],
             "specs": [
                 {
                     "label": "Microcontrolador",
-                    "value": "ESP32-S3 N16R8"
+                    "value": "ESP32-S3 N16R8 (Dual-Core LX7 240 MHz, 16 MB Flash, 8 MB PSRAM OPI)"
                 },
                 {
-                    "label": "Pantalla",
-                    "value": "ILI9488, 480 × 320, SPI"
+                    "label": "Pantalla y UI",
+                    "value": "ILI9488 4.0\" (480 × 320 SPI 27 MHz) con render parcial dirty-check"
                 },
                 {
-                    "label": "Entradas",
-                    "value": "10 teclas de acción, 2 ALT, encoder y joystick"
+                    "label": "Controles físicos",
+                    "value": "Matriz 2 × 5 con diodos (NKRO), 2 ALT, encoder KY-040 y stick HW-504 (3.3 V)"
                 },
                 {
-                    "label": "Acciones HID",
-                    "value": "USB y Bluetooth BLE"
+                    "label": "Sistema de Themes",
+                    "value": "Paleta RGB565 (Oscuro / Claro) + 7 acentos globales + color por capa"
                 },
                 {
-                    "label": "Red",
-                    "value": "WiFi para configuración, OTA y companion"
+                    "label": "Iluminación y Audio",
+                    "value": "8 × WS2812B NeoPixel (2 zonas en GPIO9) + 2 × MAX98357A I2S estéreo"
                 },
                 {
-                    "label": "Firmware",
-                    "value": "Arduino y FreeRTOS"
+                    "label": "Transporte HID",
+                    "value": "USB nativo (TinyUSB) + Bluetooth BLE 5 (NimBLE) con auto-switch"
+                },
+                {
+                    "label": "Capas y Monitores",
+                    "value": "16 capas en 6 grupos + 4 monitores con sparklines (General, Red, Núcleos, Disco)"
+                },
+                {
+                    "label": "Companion y WebUI",
+                    "value": "Daemon Win/Linux (/api/state), Mirror SSE, Editor LittleFS y PWA en PROGMEM"
+                },
+                {
+                    "label": "Almacenamiento",
+                    "value": "NVS (preferencias, token, calibración) + LittleFS (config.json editable)"
+                },
+                {
+                    "label": "Perfiles de Firmware",
+                    "value": "Control-Deck (Productividad/Telemetría) y Gaming Keypad / Gamepad HID"
                 }
             ],
             "futureFeatures": [
-                "Validación de cambios desde la interfaz web directa en el dispositivo",
-                "Gestos secundarios configurables"
+                "Selector rápido de perfiles en el firmware Gaming Keypad (FPS, MOBA, Simulación / Button Box)",
+                "Gestos secundarios configurables por tecla desde el editor web"
             ],
             "resources": [
                 {
+                    "name": "Guía interactiva de cableado y pines (/pinouts/pad)",
+                    "url": "/pinouts/pad"
+                },
+                {
+                    "name": "Arquitectura de software, editor y companion (/projects/pad/software)",
+                    "url": "/projects/pad/software"
+                },
+                {
+                    "name": "Piezas 3D imprimibles en Maker (/prints#prints-pad)",
+                    "url": "/prints#prints-pad"
+                },
+                {
                     "name": "Tapa impresa del stick (Thingiverse)",
                     "url": "https://www.thingiverse.com/thing:6189483"
-                },
-                {
-                    "name": "NimBLE-Arduino",
-                    "url": "https://github.com/h2zero/NimBLE-Arduino"
-                },
-                {
-                    "name": "TFT_eSPI",
-                    "url": "https://github.com/Bodmer/TFT_eSPI"
                 }
             ]
         },
@@ -2718,24 +2782,24 @@
             "title": "Software del PAD: controles, editor y companion",
             "description": "Configurá las acciones del PAD y organizalas por contexto. El firmware ofrece controles USB y Bluetooth; el companion agrega edición web y comunicación con Windows o Linux.",
             "controls": {
-                "title": "Capas, atajos y control del mouse",
-                "body": "Diez teclas de acción y dos ALT organizan los atajos por contexto. El encoder controla funciones como volumen, desplazamiento o zoom según la capa; el joystick mueve el puntero. USB y BLE envían acciones de teclado, mouse y multimedia. WiFi se utiliza para configuración y comunicación con el companion."
+                "title": "Controles, Themes RGB565 y Modo Gaming Keypad",
+                "body": "La matriz 2 × 5 con diodos 1N4148 ofrece N-Key Rollover real sin ghosting junto a 2 teclas ALT momentáneas (Launcher y Macros), click acústico I2S a 2200 Hz, encoder rotativo con aceleración dinámica (doble-tap para alternar entre Capa, Volumen, Scroll, Zoom y Pestañas) y stick analógico a 3.3 V con curva cuadrática de puntero. La interfaz incluye motor de Themes RGB565 (Modo Oscuro/Claro + 7 acentos globales + color por capa reflejado en las 2 zonas NeoPixel). El mismo hardware admite además la variante de firmware Gaming Keypad / Gamepad HID para juegos (stick 360° o WASD, perfiles FPS/MOBA/Simulación y HUD en pantalla)."
             },
             "editor": {
-                "title": "Tu configuración, sin recompilar",
-                "body": "El editor web del companion permite cambiar capas, acciones, textos y macros, con variantes de atajos para Windows y Linux. Guarda la configuración editable y envía al PAD la variante del sistema actual. El espejo web muestra la interfaz del dispositivo. Podés adaptar el mismo hardware a edición, desarrollo, navegador o reuniones."
+                "title": "Tu configuración en LittleFS y PWA directa, sin recompilar",
+                "body": "El editor web del companion (localhost:8787/admin.html) permite modificar las 16 capas, etiquetas, colores, macros multi-paso y textos rápidos con variantes por sistema operativo (Windows / Linux), enviando el JSON en caliente a LittleFS (POST /api/config) junto con un espejo en vivo por SSE. Además, el propio ESP32-S3 sirve una PWA desde PROGMEM (http://hiospad.local) con pad virtual 2 × 5 y edición rápida sin depender de la PC."
             },
             "companion": {
-                "title": "El estado real del equipo",
-                "body": "El companion consulta volumen y estado del micrófono, además de carga y temperatura de CPU/GPU cuando los sensores están disponibles. Envía ese feedback al PAD por la red local. Permite alternar el mute global del micrófono; los controles de cámara y ciertos atajos de reunión dependen de la aplicación activa."
+                "title": "Telemetría en 4 monitores, mute global OS y domótica WiZ",
+                "body": "El daemon headless pad-companion (Windows y Linux) consulta volumen maestro, estado de micrófono (Core Audio / PipeWire), temperatura y carga de CPU/GPU, RPM de coolers, carga de hasta 24 núcleos, RAM/VRAM y tasas de red y disco, alimentando las 4 vistas de Monitor a pantalla completa con sparklines (General, Red, Núcleos, Disco). También ejecuta comandos bidireccionales del PAD: mute global de micrófono a nivel OS, lanzamiento de apps y control local UDP de luces inteligentes WiZ."
             },
             "setup": {
                 "title": "Cómo empezar",
-                "body": "Primero usá el PAD por USB o BLE con sus capas de firmware. Para sumar feedback y edición web, compilá el companion siguiendo su README, configurá la dirección del PAD y el token generado por el firmware, y ejecutalo en la misma red. En Windows hay instalación al inicio de sesión; en Linux se documenta un servicio de usuario systemd."
+                "body": "Primero usá el PAD por USB nativo o BLE con sus capas de firmware. Para sumar telemetría, control WiZ y edición web, compilá el companion siguiendo su README, copiá el token API/OTA impreso por serial en config.json y ejecutalo en la misma red. En Windows incluye instalador nativo en %LOCALAPPDATA%\\pad-companion (Tarea Programada al iniciar sesión) y en Linux unidad systemd --user."
             },
             "availability": {
                 "title": "Qué funciona de forma independiente",
-                "body": "Los atajos y controles HID funcionan sin companion ni WiFi. El feedback real y el mute global requieren el companion. Windows y Linux tienen proveedores implementados; macOS todavía no. Las lecturas de sensores dependen del equipo. La cámara no tiene un mute global implementado en el companion."
+                "body": "Todos los atajos HID (teclado, mouse, multimedia, macros y temas locales) y la PWA en http://hiospad.local funcionan sin companion. Las 4 vistas de telemetría real, el control WiZ y el mute global de micrófono requieren pad-companion activo en la LAN (si se desconecta, el PAD vuelve al estado estimado en 5 segundos)."
             }
         },
         "btdac": {
