@@ -133,7 +133,7 @@
     min-height: 36px;
   }
   .fields {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 .assistOptions { display: grid; gap: 8px; }
