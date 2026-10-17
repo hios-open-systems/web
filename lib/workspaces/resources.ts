@@ -17,6 +17,6 @@ export const resources = [
 export const templates: Record<string, string[]> = {
   development: ['tool:payload', 'tool:object-to-types', 'tool:object-compare', 'tool:json-schema'],
   maker: ['project:pad', 'pinout:pad', 'tool:ohms-law', 'tool:serial-monitor', 'page:calculators'],
-  audio: ['tool:guitar-tuner', 'tool:metronome', 'tool:tone-generator', 'tool:audio-convert', 'tool:chiptune'],
+  audio: ['tool:guitar-tuner', 'tool:metronome', 'tool:tone-generator', 'tool:audio-convert', 'tool:chiptune', 'tool:beatmaker'],
   ai: ['tool:llm-vram-calc', 'tool:token-inspector', 'tool:llm-grammar-generator', 'tool:esp32-llm-bridge'],
 };
