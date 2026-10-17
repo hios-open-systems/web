@@ -9,6 +9,7 @@ import {
   type TrackTimbre,
 } from '@/lib/workbench/chiptune';
 import { TimbreEditor } from './TimbreEditor';
+import { TrackCard } from './TrackCard';
 import styles from './chiptune.module.css';
 
 interface Props {
@@ -30,17 +31,33 @@ export function TrackPanel(p: Props) {
   const track = p.song.tracks.find((t) => t.id === p.activeTrackId);
   return (
     <div className={styles.tracks}>
-      <Select
-        aria-label="Pista activa"
-        value={p.activeTrackId}
-        onChange={p.onActivate}
-        options={p.song.tracks.map((t) => ({
-          value: t.id,
-          label: `${t.name}${t.muted ? ' · silenciada' : ''}${t.solo ? ' · solo' : ''}`,
-        }))}
-      />
+      <div className={styles.trackList} aria-label="Lista de pistas">
+        {p.song.tracks.map((t) => (
+          <TrackCard
+            key={t.id}
+            track={t}
+            isActive={t.id === p.activeTrackId}
+            onActivate={p.onActivate}
+            onMute={p.onMute}
+            onSolo={p.onSolo}
+          />
+        ))}
+      </div>
+
+      <div style={{ position: 'absolute', width: 1, height: 1, opacity: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+        <Select
+          aria-label="Pista activa"
+          value={p.activeTrackId}
+          onChange={p.onActivate}
+          options={p.song.tracks.map((t) => ({
+            value: t.id,
+            label: `${t.name}${t.muted ? ' · silenciada' : ''}${t.solo ? ' · solo' : ''}`,
+          }))}
+        />
+      </div>
+
       {track && (
-        <>
+        <div className={styles.activeTrackInspector}>
           <Input
             aria-label="Nombre de pista"
             value={track.name}
@@ -94,7 +111,7 @@ export function TrackPanel(p: Props) {
               Borrar pista
             </Button>
           </div>
-        </>
+        </div>
       )}
     </div>
   );

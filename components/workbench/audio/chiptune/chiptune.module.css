@@ -31,6 +31,112 @@
   background: color-mix(in srgb, var(--accent, #a855f7) 10%, transparent);
 }
 
+.trackList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.trackCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--hios-bg, rgba(255, 255, 255, 0.04));
+  border: 1px solid var(--hios-border, rgba(128, 128, 128, 0.22));
+  border-left-width: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.trackCard:hover {
+  border-color: rgba(128, 128, 128, 0.45);
+}
+
+.trackCardActive {
+  background: color-mix(in srgb, var(--accent, #a855f7) 12%, var(--hios-bg, #1e1e28));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent, #a855f7) 50%, transparent);
+}
+
+.trackCardInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.trackCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.trackCardTitle {
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.trackCardMeta {
+  font-size: 11px;
+  color: var(--hios-text-secondary, #94a3b8);
+}
+
+.trackQuickBtns {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.quickBtn {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  background: transparent;
+  color: var(--hios-text-secondary, #94a3b8);
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.quickBtn:hover {
+  border-color: var(--hios-text, #fff);
+  color: var(--hios-text, #fff);
+}
+
+.quickBtnSoloActive {
+  background: #facc15;
+  color: #000;
+  border-color: #facc15;
+}
+
+.quickBtnMuteActive {
+  background: #ef4444;
+  color: #fff;
+  border-color: #ef4444;
+}
+
+.activeTrackInspector {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--hios-border, rgba(128, 128, 128, 0.22));
+}
+
 .trackDot {
   width: 12px;
   height: 12px;
@@ -113,8 +219,18 @@
 .noteGhost {
   position: absolute;
   border-radius: 3px;
-  opacity: 0.26;
-  pointer-events: none;
+  border: 1px dashed;
+  opacity: 0.6;
+  cursor: pointer;
+  padding: 0;
+  box-sizing: border-box;
+  transition: opacity 0.15s ease, box-shadow 0.15s ease;
+  z-index: 1;
+}
+
+.noteGhost:hover {
+  opacity: 0.95;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.45);
 }
 
 .noteResize {
