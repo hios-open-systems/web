@@ -23,4 +23,5 @@ export const toolAliases: Partial<Record<WorkbenchToolId, string>> = {
   'ohms-law': 'resistencia voltaje corriente resistance voltage current',
   'qpsk-modulator': 'qpsk dsp modulacion modulation constelacion constellation iq awgn osciloscopio rf fase phase quadrature',
   'jam-station': 'jam station backing tracks guitarra guitarrista escalas acordes solos fretboard diapason blues rock funk synthwave improvisar',
+  'beatmaker': 'beatmaker looper daw trap rap hiphop boombap drill 808 sub bass drums bateria loops beats freestyle improvisar',
 };

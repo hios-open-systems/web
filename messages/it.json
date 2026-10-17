@@ -1741,6 +1741,10 @@
                 "title": "Jam Station & basi per improvvisazione",
                 "description": "Generatore di basi musicali e tastiera per chitarra interattiva per musicisti. Esercitati nell'improvvisazione, scale e assoli in tempo reale."
             },
+            "beatmaker": {
+                "title": "Beatmaker & Looper DAW",
+                "description": "Stazione di loop urbani nel browser per Trap, BoomBap, Rap e Freestyle. Crea beat, forka versioni della community ed esporta audio senza installare nulla."
+            },
             "guitar-tuner": {
                 "title": "Accordatore",
                 "description": "Accorda gli strumenti dal microfono con una frequenza di riferimento regolabile."

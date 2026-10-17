@@ -56,7 +56,8 @@ export type WorkbenchToolId =
   | 'embedded'
   | 'serial-monitor'
   | 'qpsk-modulator'
-  | 'jam-station';
+  | 'jam-station'
+  | 'beatmaker';
 
 export type WorkbenchIcon = 'audio' | 'data' | 'notes' | 'circuits' | 'shield' | 'spark' | 'compare' | 'network' | 'chip' | 'table';
 
@@ -526,6 +527,15 @@ export const workbenchTools: WorkbenchTool[] = [
     sectionId: 'audio',
     href: '/workbench/jam-station',
     accent: '#f59e0b',
+    icon: 'audio',
+    featured: true,
+  },
+  {
+    id: 'beatmaker',
+    locality: 'local',
+    sectionId: 'audio',
+    href: '/workbench/beatmaker',
+    accent: '#ef4444',
     icon: 'audio',
     featured: true,
   },

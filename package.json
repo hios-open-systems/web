@@ -52,6 +52,7 @@
     "test:song": "node --experimental-strip-types scripts/song-selftest.ts",
     "test:patternops": "node --experimental-strip-types scripts/patternops-selftest.ts",
     "test:arrange": "node --experimental-strip-types scripts/arrange-selftest.ts",
+    "test:beatmaker": "node --experimental-strip-types scripts/beatmaker-selftest.ts",
     "db:migrate": "wrangler d1 migrations apply hios-playground --remote",
     "db:migrate:local": "wrangler d1 migrations apply hios-playground --local",
     "test:e2e": "playwright test",
