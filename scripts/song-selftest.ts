@@ -74,7 +74,7 @@ const DIVERGENCE: { id: string; reason: string }[] = [];
 const declared = new Set(DIVERGENCE.map((d) => d.id));
 
 const enumIds = enumWebIds(fw);
-eq('el enum expone 6 instrumentos con // <web-id>', enumIds.length, INSTRUMENT_IDS.length);
+eq(`el enum expone ${INSTRUMENT_IDS.length} instrumentos con // <web-id>`, enumIds.length, INSTRUMENT_IDS.length);
 
 // (a) missing: todo InstrumentId de la web esta en el enum (salvo declarado)
 const missing = INSTRUMENT_IDS.filter((id) => !enumIds.includes(id) && !declared.has(id));

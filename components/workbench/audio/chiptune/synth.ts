@@ -28,6 +28,9 @@ export const RECIPES: Record<InstrumentId, VoiceRecipe> = {
   'saw-lead': { kind: 'osc', oscType: 'sawtooth', filterType: 'lowpass', filterHz: 4000, attack: 0.004, decay: 0.05, sustain: 0.7, release: 0.07, peak: 0.16 },
   'snes-lead': { kind: 'dual', oscType: 'triangle', detune: 6, filterType: 'lowpass', filterHz: 2600, attack: 0.02, decay: 0.08, sustain: 0.7, release: 0.12, peak: 0.16 },
   'noise-perc': { kind: 'noise', filterType: 'bandpass', filterHz: 2000, attack: 0.001, decay: 0.02, sustain: 0, release: 0.08, peak: 0.28 },
+  'chiptune-guitar': { kind: 'pulse', duty: 0.25, attack: 0.002, decay: 0.16, sustain: 0.15, release: 0.08, peak: 0.26 },
+  'synth-strings': { kind: 'dual', oscType: 'sawtooth', detune: 8, filterType: 'lowpass', filterHz: 2800, attack: 0.08, decay: 0.2, sustain: 0.85, release: 0.22, peak: 0.16 },
+  'synth-choir': { kind: 'dual', oscType: 'triangle', detune: 5, filterType: 'bandpass', filterHz: 1200, attack: 0.1, decay: 0.2, sustain: 0.8, release: 0.24, peak: 0.18 },
 };
 
 const pulseCache = new WeakMap<BaseAudioContext, Map<number, PeriodicWave>>();
@@ -88,11 +91,13 @@ export function scheduleVoice(
   const recipe = override ? { ...RECIPES[instrument], ...override } : RECIPES[instrument];
   const amp = ctx.createGain();
   const stopAt = applyEnvelope(amp.gain, start, dur, recipe, gain);
-  const filterHz = recipe.kind === 'noise' ? (override?.filterHz ?? Math.min(12000, Math.max(400, freq * 6))) : recipe.filterHz;
+  const filterHz = recipe.kind === 'noise'
+    ? (override?.filterHz ?? (freq <= 70 ? 800 : freq <= 85 ? 2400 : freq <= 106 ? 8500 : 6500))
+    : recipe.filterHz;
   let filter: BiquadFilterNode | undefined;
   if (filterHz) {
     filter = ctx.createBiquadFilter();
-    filter.type = recipe.filterType ?? 'lowpass';
+    filter.type = recipe.filterType ?? (recipe.kind === 'noise' && freq > 85 ? 'highpass' : 'lowpass');
     filter.frequency.value = filterHz;
     filter.Q.value = recipe.kind === 'noise' ? 1.2 : 0.7;
     amp.connect(filter).connect(dest);
@@ -113,7 +118,7 @@ export function scheduleVoice(
     nodes.push(osc);
   };
 
-  if (recipe.kind === 'noise' && freq <= 110) {
+  if (recipe.kind === 'noise' && freq <= 70) {
     const kick = ctx.createOscillator();
     kick.type = 'sine';
     kick.frequency.setValueAtTime(150, start);
@@ -122,6 +127,22 @@ export function scheduleVoice(
     kick.start(start);
     kick.stop(stopAt);
     nodes.push(kick);
+  } else if (recipe.kind === 'noise' && freq <= 85) {
+    const snareTone = ctx.createOscillator();
+    snareTone.type = 'triangle';
+    snareTone.frequency.setValueAtTime(180, start);
+    snareTone.frequency.exponentialRampToValueAtTime(80, start + 0.05);
+    snareTone.connect(amp);
+    snareTone.start(start);
+    snareTone.stop(stopAt);
+    nodes.push(snareTone);
+    const source = ctx.createBufferSource();
+    source.buffer = noiseBuffer(ctx);
+    source.loop = true;
+    source.connect(amp);
+    source.start(start);
+    source.stop(stopAt);
+    nodes.push(source);
   } else if (recipe.kind === 'noise') {
     const source = ctx.createBufferSource();
     source.buffer = noiseBuffer(ctx);
