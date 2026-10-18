@@ -28,19 +28,25 @@ interface LastGeneration {
   trackIds: string[];
 }
 
+const SOUND_OPTIONS = [
+  { value: 'real', label: 'Real (samples)' },
+  { value: 'retro', label: 'Retro (synth)' },
+];
+
 export function SongGenerator({ c }: { c: ComposerState }) {
   const [style, setStyle] = useState<SongStyle>('adventure');
   const [root, setRoot] = useState(0);
   const [bars, setBars] = useState(8);
   const [trackCount, setTrackCount] = useState(0);
   const [complexity, setComplexity] = useState<Complexity>('normal');
+  const [sound, setSound] = useState<'real' | 'retro'>('real');
   const [seed, setSeed] = useState('hios');
   const [last, setLast] = useState<LastGeneration | null>(null);
   const isMinor = SONG_STYLES[style].mode === 'minor';
 
   const generate = (nextSeed: string) => {
     setSeed(nextSeed);
-    const options: GeneratorOptions = { seed: nextSeed, style, root, bars, trackCount: trackCount || undefined, complexity };
+    const options: GeneratorOptions = { seed: nextSeed, style, root, bars, trackCount: trackCount || undefined, complexity, sound };
     const song = generateSong(options);
     c.resetTo(song);
     setLast({ options, trackIds: song.tracks.map((t) => t.id) });
@@ -64,7 +70,8 @@ export function SongGenerator({ c }: { c: ComposerState }) {
     <div className={styles.generator}>
       <p>
         Cada idea arma secciones (intro, verso, estribillo, puente), elige progresiones, motivos melódicos, groove y
-        bajo según el género. Todo es matemático y reproducible en tu navegador.
+        bajo según el género. Con sonido Real, cada estilo usa instrumentos sampleados (piano, guitarras, cuerdas, batería
+        acústica); Retro deja todo en synth chiptune.
       </p>
       <div className={styles.fields}>
         <label>
@@ -102,6 +109,10 @@ export function SongGenerator({ c }: { c: ComposerState }) {
             onChange={setComplexity}
             options={Object.entries(COMPLEXITY_LABELS).map(([value, label]) => ({ value, label }))}
           />
+        </label>
+        <label>
+          Sonido
+          <Select aria-label="Tipo de sonido" value={sound} onChange={setSound} options={SOUND_OPTIONS} />
         </label>
         <label>
           Instrumentación

@@ -1,4 +1,5 @@
 import { INSTRUMENT_IDS, PPQ, type ChiptuneSong } from './chiptune.ts';
+import { isSampledSoundId } from './sampledSounds.ts';
 
 const object = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -20,6 +21,7 @@ function validTracks(value: unknown): boolean {
       !number(track.volume, 0, 1) ||
       (track.solo !== undefined && typeof track.solo !== 'boolean') ||
       (track.timbre !== undefined && !object(track.timbre)) ||
+      (track.sound !== undefined && !isSampledSoundId(track.sound)) ||
       !Array.isArray(track.notes) ||
       track.notes.length > 8192
     )

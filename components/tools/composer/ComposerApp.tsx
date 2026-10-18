@@ -55,6 +55,7 @@ export function ComposerApp() {
               activeTrackId={c.activeTrackId}
               onActivate={c.setActiveTrackId}
               onInstrument={c.onInstrument}
+              onSound={c.onSound}
               onMute={c.onMute}
               onSolo={c.onSolo}
               onVolume={c.onVolume}

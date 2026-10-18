@@ -7,6 +7,7 @@ import {
   type ChiptuneTrack,
   type InstrumentId,
 } from './chiptune.ts';
+import { SAMPLED_SOUND_IDS, SAMPLED_SOUNDS, type SampledSoundId } from './sampledSounds.ts';
 
 function readVarLen(bytes: Uint8Array, offset: { pos: number }): number {
   let val = 0;
@@ -27,6 +28,13 @@ function resolveInstrument(channel: number, program: number): InstrumentId {
   if (program >= 88 && program <= 95) return 'snes-lead';
   if (program >= 80 && program <= 87) return 'saw-lead';
   return 'pulse-lead';
+}
+
+/** Sonido sampleado con ese programa GM exacto (así un .mid exportado vuelve con su sonido).
+ * El programa 0 se ignora: es el default de cualquier archivo sin program change. */
+function resolveSound(channel: number, program: number): SampledSoundId | undefined {
+  if (channel === 9 || program === 0) return undefined;
+  return SAMPLED_SOUND_IDS.find((id) => !SAMPLED_SOUNDS[id].drums && SAMPLED_SOUNDS[id].program === program);
 }
 
 interface RawTrackEvent {
@@ -111,6 +119,8 @@ export function decodeMidi(input: Uint8Array | ArrayBuffer): ChiptuneSong {
       if (parsed.bpm) bpm = parsed.bpm;
       if (parsed.track.events.length > 0) {
         const trk = createTrack(parsed.track.name.trim() || `Pista ${tracks.length + 1}`, resolveInstrument(parsed.track.channel, parsed.track.program));
+        const sound = resolveSound(parsed.track.channel, parsed.track.program);
+        if (sound) trk.sound = sound;
         trk.notes = parsed.track.events.map((e) => createNote(e.pitch, scaleTick(e.startTick), Math.max(30, scaleTick(e.duration)), e.velocity));
         tracks.push(trk);
       }
