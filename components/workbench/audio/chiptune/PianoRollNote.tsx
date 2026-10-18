@@ -1,7 +1,7 @@
 'use client';
 import { useRef } from 'react';
 import type { PointerEvent as ReactPointerEvent } from 'react';
-import { TICKS_PER_STEP, clamp, type ChiptuneNote } from '@/lib/workbench/chiptune';
+import { TICKS_PER_STEP, clamp, noteOnset, type ChiptuneNote } from '@/lib/workbench/chiptune';
 import { NOTE_NAMES } from '@/lib/workbench/noteFreq';
 import { ROW_H, STEP_W, PITCH_MIN, PITCH_MAX, pitchToY, tickToX, durToWidth } from './grid';
 import styles from './chiptune.module.css';
@@ -74,7 +74,8 @@ export function PianoRollNote({
       aria-pressed={selected}
       className={`${styles.note} ${selected ? styles.noteSelected : ''}`}
       style={{
-        left: tickToX(note.start, stepW),
+        // Se dibuja donde suena (con micro-timing); el drag sigue ajustando a la grilla.
+        left: tickToX(noteOnset(note), stepW),
         top: pitchToY(note.pitch, rowH),
         width: Math.max(stepW - 2, durToWidth(note.duration, stepW) - 2),
         height: rowH - 2,

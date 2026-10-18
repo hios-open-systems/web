@@ -6,9 +6,12 @@ import { NoteInspector, NOTE_LENGTHS } from './NoteInspector';
 import type { ComposerState } from './useComposerState';
 import styles from './composer.module.css';
 import { MusicAssist } from './MusicAssist';
+import { PatternTools } from './PatternTools';
+import type { LaneKind } from '@/components/workbench/audio/chiptune/NoteLane';
 import { DEFAULT_SCALE, nearestScalePitch } from '@/lib/workbench/chiptuneMusic';
 
-import { INSTRUMENTS } from '@/lib/workbench/chiptune';
+import { EditorHeading } from './EditorHeading';
+import { DrumStepGrid } from './DrumStepGrid';
 
 export function ComposerEditor({ c }: { c: ComposerState }) {
   const [zoom, setZoom] = useState(1);
@@ -17,41 +20,28 @@ export function ComposerEditor({ c }: { c: ComposerState }) {
   const [showScale, setShowScale] = useState(true);
   const [snap, setSnap] = useState(false);
   const [showGhostNotes, setShowGhostNotes] = useState(false);
+  const [lane, setLane] = useState<LaneKind | 'none'>('velocity');
+  const [drumView, setDrumView] = useState(true);
   const track = c.song.tracks.find((t) => t.id === c.activeTrackId);
   const scale = c.song.scale ?? DEFAULT_SCALE;
   const melodic = track?.instrument !== 'noise-perc';
+  const showGrid = !melodic && drumView;
   const pitchForEdit = (pitch: number) => (snap && melodic ? nearestScalePitch(pitch, scale) : pitch);
 
   return (
     <section className={styles.editor} aria-label="Editor de notas">
-      <div className={styles.editorHeading}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-          <h2>{track?.name ?? 'Piano roll'}</h2>
-          {track && (
-            <span
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 4,
-                padding: '2px 10px',
-                borderRadius: 999,
-                fontSize: 12,
-                fontWeight: 600,
-                background: `${INSTRUMENTS[track.instrument]?.color ?? '#6366f1'}22`,
-                border: `1px solid ${INSTRUMENTS[track.instrument]?.color ?? '#6366f1'}66`,
-                color: INSTRUMENTS[track.instrument]?.color ?? 'inherit',
-              }}
-            >
-              {track.instrument === 'noise-perc' ? '🥁 Batería / Drum Machine' : INSTRUMENTS[track.instrument]?.label}
-            </span>
-          )}
-        </div>
-        <span className={styles.hint}>
-          {track?.instrument === 'noise-perc'
-            ? `${track.notes.length} golpes · grilla 1/16 · Bombo (36), Caja (38), Hi-Hat (42/46), Crash (49)`
-            : `${track?.notes.length ?? 0} notas · grilla de 1/16`}
-        </span>
-      </div>
+      <EditorHeading track={track} drumView={drumView} onDrumView={setDrumView} />
+      {track && showGrid ? (
+        <DrumStepGrid
+          track={track}
+          steps={c.song.lengthBars * c.song.beatsPerBar * 4}
+          stepsPerBar={c.song.beatsPerBar * 4}
+          getPlayheadTicks={c.getPlayheadTicks}
+          onNotes={(notes) => c.replaceTrackNotes(track.id, notes)}
+          onPreview={(pitch) => c.previewNote(pitch, track)}
+        />
+      ) : (
+        <>
       <div className={styles.actions}>
         <Segmented
           aria-label="Modo de edición"
@@ -76,6 +66,17 @@ export function ComposerEditor({ c }: { c: ComposerState }) {
         >
           {showGhostNotes ? 'Ocultar otras pistas' : 'Ver otras pistas'}
         </Button>
+        <Segmented
+          aria-label="Carril bajo el piano roll"
+          value={lane}
+          onChange={setLane}
+          options={[
+            { value: 'velocity', label: 'Intensidad' },
+            { value: 'pan', label: 'Paneo' },
+            { value: 'offset', label: 'Retraso' },
+            { value: 'none', label: 'Sin carril' },
+          ]}
+        />
         <Button aria-label="Alejar piano" disabled={zoom <= 0.5} onClick={() => setZoom((z) => Math.max(0.5, z / 1.25))}>
           −
         </Button>
@@ -86,15 +87,21 @@ export function ComposerEditor({ c }: { c: ComposerState }) {
       <p className={styles.hint}>
         {mode === 'draw'
           ? 'Tocá una celda para agregar una nota. Deslizá el fondo para recorrer el piano.'
-          : 'Arrastrá sobre el piano para marcar un rango. Volvé a Dibujar para desplazarte.'}{' '}
-        Tocá un compás para escuchar desde ahí.
+          : 'Arrastrá sobre el piano para seleccionar las notas de un rango y editarlas juntas.'}{' '}
+        En la regla: tocá para escuchar desde ahí, arrastrá para marcar el loop. En el carril de abajo, arrastrá
+        sobre las barras para dibujar intensidad, paneo o retraso.
       </p>
       <MusicAssist c={c} showScale={showScale} snap={snap} onShowScale={setShowScale} onSnap={setSnap} />
       <PianoRoll
         song={c.song}
         activeTrackId={c.activeTrackId}
         selectedNoteId={c.selectedNoteId}
+        selectedNoteIds={c.selectedNoteIds}
         selectedRange={c.selectedRange}
+        lane={lane === 'none' ? undefined : lane}
+        loopActive={c.loop}
+        onLoopRegion={c.setLoopRegion}
+        onChangeNotes={c.onChangeNotes}
         zoom={zoom}
         drawDuration={duration}
         mode={mode}
@@ -111,26 +118,9 @@ export function ComposerEditor({ c }: { c: ComposerState }) {
         isPlaying={c.isPlaying}
       />
       <NoteInspector c={c} />
-      <div style={{ marginTop: 12, padding: '10px 12px', background: 'var(--bg-elevated)', borderRadius: 8, border: '1px solid var(--border-color)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginBottom: 6 }}>
-          <strong style={{ fontSize: 13, color: 'var(--text-primary)' }}>Herramientas de patrón y pista</strong>
-          <span className={styles.hint} style={{ margin: 0 }}>
-            Aplica al rango seleccionado o a toda la pista.
-          </span>
-        </div>
-        <div className={styles.actions}>
-          <Button onClick={c.repeatSelection} disabled={!track?.notes.length}>
-            Repetir frase
-          </Button>
-          <Button onClick={() => c.fillActiveTrack(duration)}>
-            Rellenar con {NOTE_LENGTHS.find((n) => n.value === duration)?.label.split(' · ')[0]}
-          </Button>
-          {c.selectedRange && <Button onClick={() => c.setSelectedRange(null)}>Quitar rango</Button>}
-          <Button danger onClick={c.clearActiveTrack} disabled={!track?.notes.length}>
-            Vaciar pista
-          </Button>
-        </div>
-      </div>
+        </>
+      )}
+      <PatternTools c={c} duration={duration} />
     </section>
   );
 }

@@ -1,13 +1,13 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { message } from 'antd';
 import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import {
   createSong,
   createTrack,
-  createNote,
+  copyNote,
   readSong,
   writeSong,
   serializeDeviceSong,
@@ -18,6 +18,7 @@ import {
   type ChiptuneTrack,
   type ChiptunePattern,
   type InstrumentId,
+  type LoopRegion,
   type TrackTimbre,
 } from '@/lib/workbench/chiptune';
 import { compileArrangement } from '@/lib/workbench/arrange';
@@ -30,6 +31,7 @@ import { repeatRange, fillSubdivision } from '@/lib/workbench/patternOps';
 import { encodeShare, decodeShare } from './registry';
 import { fitNote, resizeSong } from '@/lib/workbench/chiptuneEditing';
 import { transposeTrack, varyMelody, type MusicalScale } from '@/lib/workbench/chiptuneMusic';
+import { soundsFor, type SampledSoundId } from '@/lib/workbench/sampledSounds';
 
 const uid = (): string =>
   typeof crypto !== 'undefined' && 'randomUUID' in crypto
@@ -118,6 +120,17 @@ export function useComposerState() {
     bumpHist((t) => t + 1);
   }, []);
 
+  // Selección efectiva: las notas de la pista activa que arrancan en el rango, o la nota tocada.
+  const activeNotes = song.tracks.find((t) => t.id === activeTrackId)?.notes;
+  const selectedNoteIds = useMemo(() => {
+    if (selectedRange && selectedRange.endTick > selectedRange.startTick) {
+      return (activeNotes ?? [])
+        .filter((n) => n.start >= selectedRange.startTick && n.start < selectedRange.endTick)
+        .map((n) => n.id);
+    }
+    return selectedNoteId && activeNotes?.some((n) => n.id === selectedNoteId) ? [selectedNoteId] : [];
+  }, [activeNotes, selectedRange, selectedNoteId]);
+
   const patchActiveNotes = useCallback(
     (fn: (notes: ChiptuneNote[]) => ChiptuneNote[], coalesce = false) =>
       update((song) => withTrack(song, activeTrackId, (track) => ({ ...track, notes: fn(track.notes) })), coalesce),
@@ -129,7 +142,7 @@ export function useComposerState() {
     patchActiveNotes((notes) => [...notes, note]);
     setSelectedNoteId(note.id);
     const track = songRef.current.tracks.find((t) => t.id === activeTrackId);
-    if (track) previewNote(note.pitch, track.instrument, track.timbre);
+    if (track) previewNote(note.pitch, track);
   }, [patchActiveNotes, activeTrackId, previewNote]);
 
   // Seleccionar una nota (tap/drag) también la hace sonar (con su timbre).
@@ -138,7 +151,7 @@ export function useComposerState() {
     if (!id) return;
     for (const track of songRef.current.tracks) {
       const note = track.notes.find((n) => n.id === id);
-      if (note) { previewNote(note.pitch, track.instrument, track.timbre); return; }
+      if (note) { previewNote(note.pitch, track); return; }
     }
   }, [previewNote]);
   const onChangeNote = useCallback(
@@ -150,12 +163,42 @@ export function useComposerState() {
     (id: string) => patchActiveNotes((notes) => notes.filter((note) => note.id !== id)),
     [patchActiveNotes],
   );
+  // Edición en lote: mismas props para varias notas (selección por rango).
+  const onChangeNotes = useCallback(
+    (ids: string[], patch: Partial<ChiptuneNote>) => {
+      const set = new Set(ids);
+      patchActiveNotes((notes) => notes.map((note) => (set.has(note.id) ? fitNote({ ...note, ...patch }, songRef.current) : note)), true);
+    },
+    [patchActiveNotes],
+  );
+  // Reemplaza las notas de una pista (p. ej. regenerar solo esa parte del generador).
+  const replaceTrackNotes = useCallback((trackId: string, notes: ChiptuneNote[]) => {
+    update((song) => withTrack(song, trackId, (track) => ({ ...track, notes })));
+    setSelectedNoteId(null);
+    setSelectedRange(null);
+  }, [update]);
+  const onDeleteNotes = useCallback((ids: string[]) => {
+    const set = new Set(ids);
+    patchActiveNotes((notes) => notes.filter((note) => !set.has(note.id)));
+    setSelectedNoteId(null);
+    setSelectedRange(null);
+  }, [patchActiveNotes]);
+  const setLoopRegion = useCallback((region: LoopRegion | null) => {
+    update((song) => {
+      const next = { ...song };
+      if (region && region.end > region.start) next.loopRegion = region;
+      else delete next.loopRegion;
+      return next;
+    });
+    if (region && !loop) toggleLoop();
+  }, [update, loop, toggleLoop]);
+
   const duplicateNote = useCallback(() => {
     if (!selectedNoteId) return;
     const track = songRef.current.tracks.find((t) => t.id === activeTrackId);
     const note = track?.notes.find((n) => n.id === selectedNoteId);
     if (!note) return;
-    const copy = fitNote(createNote(note.pitch, note.start + note.duration, note.duration, note.velocity), songRef.current);
+    const copy = fitNote(copyNote(note, { start: note.start + note.duration }), songRef.current);
     patchActiveNotes((notes) => [...notes, copy]);
     setSelectedNoteId(copy.id);
   }, [selectedNoteId, activeTrackId, patchActiveNotes]);
@@ -209,7 +252,20 @@ export function useComposerState() {
   }, [activeTrackId, selectedRange, selectedNoteId, patchActiveNotes]);
 
   const onInstrument = useCallback(
-    (id: string, instrument: InstrumentId) => update((song) => withTrack(song, id, (track) => ({ ...track, instrument }))),
+    (id: string, instrument: InstrumentId) => update((song) => withTrack(song, id, (track) => {
+      const next = { ...track, instrument };
+      // Un sonido de batería no sirve en una pista melódica (ni al revés).
+      if (next.sound && !soundsFor(instrument === 'noise-perc').includes(next.sound)) delete next.sound;
+      return next;
+    })),
+    [update],
+  );
+  const onSound = useCallback(
+    (id: string, sound: SampledSoundId | undefined) => update((song) => withTrack(song, id, (track) => {
+      const next = { ...track, sound };
+      if (!sound) delete next.sound;
+      return next;
+    })),
     [update],
   );
   const onMute = useCallback(
@@ -426,10 +482,9 @@ export function useComposerState() {
       } else if (event.key.toLowerCase() === 'm') {
         toggleMetronome();
       } else if (event.key === 'Delete' || event.key === 'Backspace') {
-        if (!selectedNoteId) return;
+        if (!selectedNoteIds.length) return;
         event.preventDefault();
-        onDeleteNote(selectedNoteId);
-        setSelectedNoteId(null);
+        onDeleteNotes(selectedNoteIds);
       } else if (selectedNoteId && event.key.startsWith('Arrow')) {
         event.preventDefault();
         if (event.key === 'ArrowUp') nudgeNote(1, 0);
@@ -440,7 +495,7 @@ export function useComposerState() {
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [isPlaying, play, stop, toggleLoop, toggleMetronome, undo, redo, duplicateNote, nudgeNote, onDeleteNote, selectedNoteId]);
+  }, [isPlaying, play, stop, toggleLoop, toggleMetronome, undo, redo, duplicateNote, nudgeNote, onDeleteNotes, selectedNoteId, selectedNoteIds]);
 
   const changeActiveTrack = useCallback((id: string) => {
     setActiveTrackId(id);
@@ -468,13 +523,14 @@ export function useComposerState() {
   return {
     song, activeTrackId, selectedNoteId, rendering, deviceCopied, contextHolder,
     setScale, transpose, varyActiveMelody,
-    isPlaying, loop, play, stop, toggleLoop, metronome, toggleMetronome, getPlayheadTicks, seek, playbackError,
+    isPlaying, loop, play, stop, toggleLoop, metronome, toggleMetronome, getPlayheadTicks, seek, playbackError, previewNote,
     masterVolume, setMasterVolume,
     canUndo: past.current.length > 0, canRedo: future.current.length > 0, undo, redo,
     setActiveTrackId: changeActiveTrack, setSelectedNoteId, selectNote,
     selectedRange, setSelectedRange, repeatSelection, fillActiveTrack, clearActiveTrack,
     onAddNote, onChangeNote, onDeleteNote, duplicateNote,
-    onInstrument, onMute, onSolo, onVolume, onRenameTrack, onTimbre, onResetTimbre,
+    selectedNoteIds, onChangeNotes, onDeleteNotes, setLoopRegion, replaceTrackNotes,
+    onInstrument, onSound, onMute, onSolo, onVolume, onRenameTrack, onTimbre, onResetTimbre,
     onAddTrack, onRemoveTrack,
     saveAsPattern, loadPattern, deletePattern, addClip, removeClip, setClipBar, compileArrangementNow,
     setName, setBpm, setLength,
