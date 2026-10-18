@@ -46,7 +46,7 @@ export function ExploreActivities({ heading = true }: { heading?: boolean }) {
     <section className={styles.explore} id="explore">
       <header className={styles.sectionHeader}>
         <div>
-          <span className={styles.kicker}>01 / {lab('directory')}</span>
+          <span className={styles.kicker}>02 / {lab('directory')}</span>
           {heading ? <h2>{lab('exploreTitle')}</h2> : null}
         </div>
         <p>{lab('exploreSubtitle')}</p>
