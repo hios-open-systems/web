@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-HIOS (HI Open Systems) web platform - showcases open hardware projects with documentation. Built with Next.js 14 App Router, TypeScript, Ant Design, and next-intl for internationalization.
+HIOS (HI Open Systems) web platform - showcases open hardware projects with documentation and engineering workbench tools. Built with Next.js 15 App Router (Edge runtime via OpenNext), React 19, TypeScript strict, Ant Design, and next-intl for internationalization (en, es, de, it).
+
+**AI Context & Internal Notes:** See `docs/ai-context/` for design specs and prompts.
 
 **Live site:** https://openhios.dev/
 
