@@ -8,11 +8,12 @@
 [![License: MIT](https://img.shields.io/badge/Code-MIT-yellow.svg)](LICENSE)
 [![Hardware: CERN-OHL-S](https://img.shields.io/badge/Hardware-CERN--OHL--S%20v2-lightgrey.svg)](LICENSE)
 [![i18n](https://img.shields.io/badge/i18n-4%20idiomas-informational)](messages/)
+[![Tráfico Público](https://img.shields.io/badge/Métricas%20en%20vivo-openhios.dev%2Fes%2Fstats-2ba640)](https://openhios.dev/es/stats)
 
 **Ecosistema de hardware abierto, firmware embebido ESP32 y simuladores de ingeniería electrónica y telecomunicaciones.**  
 *Open hardware ecosystem, ESP32 embedded firmware, and interactive DSP / telecommunications engineering simulators.*
 
-🌐 **Live:** [openhios.dev](https://openhios.dev) · 4 idiomas (`en` default, `es`, `de`, `it`) · Local-first
+🌐 **Live:** [openhios.dev](https://openhios.dev) · 📊 **Métricas públicas de uso en vivo:** [openhios.dev/es/stats](https://openhios.dev/es/stats) · 4 idiomas (`en` default, `es`, `de`, `it`) · Local-first
 
 </div>
 

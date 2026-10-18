@@ -52,11 +52,11 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
       </React.Suspense>
       <HeroSection />
       <ScrollReveal>
+        <ProjectsGrid />
         <div className={styles.homeBody}>
           <WorkbenchReturn />
           <ExploreActivities />
         </div>
-        <ProjectsGrid />
         <ToolShowcase />
         <HomeQuickAccess />
       </ScrollReveal>

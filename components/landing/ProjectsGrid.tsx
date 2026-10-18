@@ -18,7 +18,7 @@ export function ProjectsGrid() {
       <div className={styles.projectContainer}>
         <header className={styles.sectionHeader}>
           <div>
-            <span className={styles.kicker}>02 / HARDWARE</span>
+            <span className={styles.kicker}>01 / HARDWARE & FIRMWARE C++</span>
             <h2>{lab('projectsTitle')}</h2>
           </div>
           <p>{lab('projectsSubtitle')}</p>
