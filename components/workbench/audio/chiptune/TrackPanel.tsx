@@ -8,6 +8,7 @@ import {
   type InstrumentId,
   type TrackTimbre,
 } from '@/lib/workbench/chiptune';
+import { SAMPLED_SOUNDS, soundsFor, type SampledSoundId } from '@/lib/workbench/sampledSounds';
 import { TimbreEditor } from './TimbreEditor';
 import { TrackCard } from './TrackCard';
 import styles from './chiptune.module.css';
@@ -17,6 +18,7 @@ interface Props {
   activeTrackId: string;
   onActivate: (id: string) => void;
   onInstrument: (id: string, instrument: InstrumentId) => void;
+  onSound: (id: string, sound: SampledSoundId | undefined) => void;
   onMute: (id: string) => void;
   onSolo: (id: string) => void;
   onVolume: (id: string, volume: number) => void;
@@ -68,6 +70,18 @@ export function TrackPanel(p: Props) {
             value={track.instrument}
             onChange={(value) => p.onInstrument(track.id, value)}
             options={INSTRUMENT_IDS.map((value) => ({ value, label: INSTRUMENTS[value].label }))}
+          />
+          <Select<SampledSoundId | 'synth'>
+            aria-label="Sonido"
+            value={track.sound ?? 'synth'}
+            onChange={(value) => p.onSound(track.id, value === 'synth' ? undefined : value)}
+            options={[
+              { value: 'synth', label: 'Sonido: synth retro' },
+              ...soundsFor(track.instrument === 'noise-perc').map((value) => ({
+                value,
+                label: `Sonido: ${SAMPLED_SOUNDS[value].label}`,
+              })),
+            ]}
           />
           <div className={styles.trackActions}>
             <Button

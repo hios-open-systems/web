@@ -31,6 +31,8 @@ export interface GeneratorOptions {
   complexity?: Complexity;
   /** Semilla propia por rol: regenera una pista sin tocar la armonía ni las demás. */
   partSeeds?: Partial<Record<PartRole, string>>;
+  /** 'real' (por defecto) usa los samples del estilo; 'retro' deja todo en synth. */
+  sound?: 'real' | 'retro';
 }
 
 export function trackRoles(count: number): PartRole[] {
@@ -40,7 +42,7 @@ export function trackRoles(count: number): PartRole[] {
   return roles;
 }
 
-function buildTrack(role: PartRole, style: StyleDef): ChiptuneTrack {
+function buildTrack(role: PartRole, style: StyleDef, real: boolean): ChiptuneTrack {
   const { instruments: i, names } = style;
   const spec: Record<PartRole, [string, ChiptuneTrack['instrument'], number]> = {
     lead: [names.lead, i.lead, 0.8],
@@ -53,6 +55,8 @@ function buildTrack(role: PartRole, style: StyleDef): ChiptuneTrack {
   const [name, instrument, volume] = spec[role];
   const track = createTrack(name, instrument);
   track.volume = volume;
+  const sound = real ? style.sounds[role] : undefined;
+  if (sound) track.sound = sound;
   return track;
 }
 
@@ -125,7 +129,7 @@ export function generateSong(options: GeneratorOptions): ChiptuneSong {
   const bpm = Math.round((lo + harmony() * (hi - lo)) / 2) * 2;
 
   const roles = trackRoles(count);
-  const tracks = roles.map((role) => buildTrack(role, style));
+  const tracks = roles.map((role) => buildTrack(role, style, options.sound !== 'retro'));
   const notesOf = (role: PartRole): ChiptuneNote[] | undefined => tracks[roles.indexOf(role)]?.notes;
   const ctx = (role: PartRole): PartContext => ({ scale, random: rng(role), complexity, swing: style.swing });
 

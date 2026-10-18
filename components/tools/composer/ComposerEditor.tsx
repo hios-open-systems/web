@@ -38,7 +38,7 @@ export function ComposerEditor({ c }: { c: ComposerState }) {
           stepsPerBar={c.song.beatsPerBar * 4}
           getPlayheadTicks={c.getPlayheadTicks}
           onNotes={(notes) => c.replaceTrackNotes(track.id, notes)}
-          onPreview={(pitch) => c.previewNote(pitch, track.instrument, track.timbre)}
+          onPreview={(pitch) => c.previewNote(pitch, track)}
         />
       ) : (
         <>

@@ -31,6 +31,7 @@ import { repeatRange, fillSubdivision } from '@/lib/workbench/patternOps';
 import { encodeShare, decodeShare } from './registry';
 import { fitNote, resizeSong } from '@/lib/workbench/chiptuneEditing';
 import { transposeTrack, varyMelody, type MusicalScale } from '@/lib/workbench/chiptuneMusic';
+import { soundsFor, type SampledSoundId } from '@/lib/workbench/sampledSounds';
 
 const uid = (): string =>
   typeof crypto !== 'undefined' && 'randomUUID' in crypto
@@ -141,7 +142,7 @@ export function useComposerState() {
     patchActiveNotes((notes) => [...notes, note]);
     setSelectedNoteId(note.id);
     const track = songRef.current.tracks.find((t) => t.id === activeTrackId);
-    if (track) previewNote(note.pitch, track.instrument, track.timbre);
+    if (track) previewNote(note.pitch, track);
   }, [patchActiveNotes, activeTrackId, previewNote]);
 
   // Seleccionar una nota (tap/drag) también la hace sonar (con su timbre).
@@ -150,7 +151,7 @@ export function useComposerState() {
     if (!id) return;
     for (const track of songRef.current.tracks) {
       const note = track.notes.find((n) => n.id === id);
-      if (note) { previewNote(note.pitch, track.instrument, track.timbre); return; }
+      if (note) { previewNote(note.pitch, track); return; }
     }
   }, [previewNote]);
   const onChangeNote = useCallback(
@@ -251,7 +252,20 @@ export function useComposerState() {
   }, [activeTrackId, selectedRange, selectedNoteId, patchActiveNotes]);
 
   const onInstrument = useCallback(
-    (id: string, instrument: InstrumentId) => update((song) => withTrack(song, id, (track) => ({ ...track, instrument }))),
+    (id: string, instrument: InstrumentId) => update((song) => withTrack(song, id, (track) => {
+      const next = { ...track, instrument };
+      // Un sonido de batería no sirve en una pista melódica (ni al revés).
+      if (next.sound && !soundsFor(instrument === 'noise-perc').includes(next.sound)) delete next.sound;
+      return next;
+    })),
+    [update],
+  );
+  const onSound = useCallback(
+    (id: string, sound: SampledSoundId | undefined) => update((song) => withTrack(song, id, (track) => {
+      const next = { ...track, sound };
+      if (!sound) delete next.sound;
+      return next;
+    })),
     [update],
   );
   const onMute = useCallback(
@@ -516,7 +530,7 @@ export function useComposerState() {
     selectedRange, setSelectedRange, repeatSelection, fillActiveTrack, clearActiveTrack,
     onAddNote, onChangeNote, onDeleteNote, duplicateNote,
     selectedNoteIds, onChangeNotes, onDeleteNotes, setLoopRegion, replaceTrackNotes,
-    onInstrument, onMute, onSolo, onVolume, onRenameTrack, onTimbre, onResetTimbre,
+    onInstrument, onSound, onMute, onSolo, onVolume, onRenameTrack, onTimbre, onResetTimbre,
     onAddTrack, onRemoveTrack,
     saveAsPattern, loadPattern, deletePattern, addClip, removeClip, setClipBar, compileArrangementNow,
     setName, setBpm, setLength,

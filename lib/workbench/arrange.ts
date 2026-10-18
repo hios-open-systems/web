@@ -47,6 +47,7 @@ export function compileArrangement(
         dest = createTrack(track.name, track.instrument);
         dest.volume = track.volume;
         if (track.timbre) dest.timbre = { ...track.timbre };
+        if (track.sound) dest.sound = track.sound;
         merged.set(track.instrument, dest);
       }
       for (const note of track.notes) {

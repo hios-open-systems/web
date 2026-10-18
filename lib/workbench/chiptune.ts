@@ -8,6 +8,7 @@
 import { readRaw, writeRaw } from '../storage/safeLocalStorage.ts';
 import { isValidSong } from './chiptuneValidation.ts';
 import type { MusicalScale } from './chiptuneMusic.ts';
+import type { SampledSoundId } from './sampledSounds.ts';
 
 export const PPQ = 480;
 export const STEPS_PER_BEAT = 4;
@@ -70,6 +71,8 @@ export interface ChiptuneTrack {
   volume: number; // 0..1
   solo?: boolean;
   timbre?: TrackTimbre;
+  /** Sonido sampleado que pisa al synth en el navegador (el device lo ignora). */
+  sound?: SampledSoundId;
 }
 
 /** Sección reusable (mini-canción). Se compila a la canción plana antes de tocar/exportar. */

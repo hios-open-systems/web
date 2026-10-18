@@ -1,13 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { midiToFreq } from '@/lib/workbench/noteFreq';
-import {
-  loopLengthTicks,
-  type ChiptuneSong,
-  type InstrumentId,
-  type TrackTimbre,
-} from '@/lib/workbench/chiptune';
+import { loopLengthTicks, type ChiptuneSong } from '@/lib/workbench/chiptune';
 import { PlaybackEngine } from './playbackEngine';
-import { scheduleVoice } from './synth';
+import { loadSongSounds, songSounds } from './sampler';
+import { scheduleTrackNote, type VoiceTrack } from './voices';
+
+/** Cuánto espera Reproducir a los samples antes de arrancar con el synth de respaldo. */
+const SAMPLE_WAIT_MS = 2500;
 
 export function usePlayback(song: ChiptuneSong) {
   const [isPlaying, setPlaying] = useState(false);
@@ -36,6 +34,7 @@ export function usePlayback(song: ChiptuneSong) {
       const audio = ctx.current ?? new AudioContext();
       ctx.current = audio;
       await audio.resume();
+      await Promise.race([loadSongSounds(current.current.song), new Promise((done) => setTimeout(done, SAMPLE_WAIT_MS))]);
       if (id !== request.current) return;
       engine.current?.stop();
       const state = current.current;
@@ -57,6 +56,11 @@ export function usePlayback(song: ChiptuneSong) {
   useEffect(() => {
     engine.current?.update(song);
   }, [song]);
+  // Precarga los sonidos sampleados en cuanto la canción los usa.
+  const sounds = songSounds(song).join();
+  useEffect(() => {
+    if (sounds) void loadSongSounds(current.current.song);
+  }, [sounds]);
   useEffect(() => {
     engine.current?.setLoop(loop);
   }, [loop]);
@@ -67,7 +71,7 @@ export function usePlayback(song: ChiptuneSong) {
     engine.current?.setVolume(masterVolume);
   }, [masterVolume]);
 
-  const previewNote = useCallback(async (pitch: number, instrument: InstrumentId, timbre?: TrackTimbre) => {
+  const previewNote = useCallback(async (pitch: number, track: VoiceTrack) => {
     try {
       const audio = ctx.current ?? new AudioContext();
       ctx.current = audio;
@@ -76,16 +80,7 @@ export function usePlayback(song: ChiptuneSong) {
       const gain = audio.createGain();
       gain.gain.value = current.current.masterVolume;
       gain.connect(audio.destination);
-      const nodes = scheduleVoice(
-        audio,
-        gain,
-        instrument,
-        midiToFreq(pitch),
-        audio.currentTime + 0.01,
-        0.18,
-        0.9,
-        timbre,
-      );
+      const nodes = scheduleTrackNote(audio, gain, track, pitch, audio.currentTime + 0.01, track.sound ? 0.35 : 0.18, 0.9);
       let remaining = nodes.length;
       nodes.forEach((node) =>
         node.addEventListener(
