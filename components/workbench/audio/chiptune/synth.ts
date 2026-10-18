@@ -192,6 +192,24 @@ function scheduleStringsVoice(
   filter.connect(amp).connect(dest);
 }
 
+const TOM_PITCHES = new Set([41, 43, 45, 47, 48, 50]);
+
+/** Tom: seno con caída de afinación, como un tom de batería electrónica. */
+function scheduleTomVoice(ctx: BaseAudioContext, dest: AudioNode, hz: number, start: number, gain: number, nodes: AudioScheduledSourceNode[]) {
+  const body = ctx.createOscillator();
+  body.type = 'sine';
+  body.frequency.setValueAtTime(hz * 1.6, start);
+  body.frequency.exponentialRampToValueAtTime(hz, start + 0.06);
+  const amp = ctx.createGain();
+  amp.gain.setValueAtTime(0.001, start);
+  amp.gain.linearRampToValueAtTime(0.42 * gain, start + 0.004);
+  amp.gain.exponentialRampToValueAtTime(0.0001, start + 0.32);
+  body.connect(amp).connect(dest);
+  body.start(start);
+  body.stop(start + 0.34);
+  nodes.push(body);
+}
+
 function scheduleDrumVoice(
   ctx: BaseAudioContext,
   dest: AudioNode,
@@ -200,7 +218,13 @@ function scheduleDrumVoice(
   gain: number,
   nodes: AudioScheduledSourceNode[],
 ) {
-  if (freq <= 70) {
+  // El rol sale del número de nota GM (no de la frecuencia): así los toms suenan a tom.
+  const pitch = Math.round(69 + 12 * Math.log2(freq / 440));
+  if (TOM_PITCHES.has(pitch)) {
+    scheduleTomVoice(ctx, dest, 70 + (pitch - 41) * 14, start, gain, nodes);
+    return;
+  }
+  if (pitch <= 36) {
     // Kick drum: punchy sine sweep (165Hz -> 48Hz) + click
     const kick = ctx.createOscillator();
     kick.type = 'sine';
@@ -227,7 +251,7 @@ function scheduleDrumVoice(
     click.start(start);
     click.stop(start + 0.015);
     nodes.push(click);
-  } else if (freq <= 85) {
+  } else if (pitch <= 40) {
     // Snare drum: body triangle (240Hz -> 105Hz) + wire crack noise
     const body = ctx.createOscillator();
     body.type = 'triangle';
@@ -253,7 +277,7 @@ function scheduleDrumVoice(
     noise.start(start);
     noise.stop(start + 0.2);
     nodes.push(noise);
-  } else if (freq >= 130) {
+  } else if (pitch >= 49) {
     // Crash cymbal: shimmering metallic explosion with 0.85s decay
     const noise = ctx.createBufferSource();
     noise.buffer = noiseBuffer(ctx);
@@ -268,7 +292,7 @@ function scheduleDrumVoice(
     noise.start(start);
     noise.stop(start + 0.88);
     nodes.push(noise);
-  } else if (freq >= 106) {
+  } else if (pitch === 46) {
     // Open hi-hat
     const noise = ctx.createBufferSource();
     noise.buffer = noiseBuffer(ctx);
@@ -381,5 +405,29 @@ export function scheduleVoice(
     node.disconnect();
     if (--remaining === 0) { amp.disconnect(); filter?.disconnect(); }
   }, { once: true }));
+  return nodes;
+}
+
+/** scheduleVoice con paneo estéreo por nota; sin pan (o pan 0) es idéntico. */
+export function schedulePannedVoice(
+  ctx: BaseAudioContext,
+  dest: AudioNode,
+  instrument: InstrumentId,
+  freq: number,
+  start: number,
+  dur: number,
+  gain: number,
+  override?: Partial<VoiceRecipe>,
+  pan = 0,
+): AudioScheduledSourceNode[] {
+  if (!pan) return scheduleVoice(ctx, dest, instrument, freq, start, dur, gain, override);
+  const panner = ctx.createStereoPanner();
+  panner.pan.value = Math.max(-1, Math.min(1, pan));
+  panner.connect(dest);
+  const nodes = scheduleVoice(ctx, panner, instrument, freq, start, dur, gain, override);
+  let remaining = nodes.length;
+  nodes.forEach((node) =>
+    node.addEventListener('ended', () => { if (--remaining === 0) panner.disconnect(); }, { once: true }),
+  );
   return nodes;
 }

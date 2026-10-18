@@ -4,10 +4,10 @@
  * componentes, así corre en el navegador y bajo `node --experimental-strip-types`
  * (self-test) y lo puede reusar un futuro mini-DAW.
  *
- * Toda nota generada pasa por createNote (id nuevo): nunca clonar ids, porque la
+ * Toda nota generada pasa por createNote/copyNote (id nuevo): nunca clonar ids, porque la
  * selección y el render usan note.id como key.
  */
-import { createNote, snapTick, type ChiptuneNote } from './chiptune.ts';
+import { copyNote, createNote, snapTick, type ChiptuneNote } from './chiptune.ts';
 
 /** Notas cuyo inicio cae en [startTick, endTick). */
 export function notesInRange(notes: ChiptuneNote[], startTick: number, endTick: number): ChiptuneNote[] {
@@ -16,7 +16,7 @@ export function notesInRange(notes: ChiptuneNote[], startTick: number, endTick: 
 
 /** Copia las notas desplazadas en deltaTick (ids nuevos). */
 export function shiftNotes(notes: ChiptuneNote[], deltaTick: number): ChiptuneNote[] {
-  return notes.map((n) => createNote(n.pitch, Math.max(0, n.start + deltaTick), n.duration, n.velocity));
+  return notes.map((n) => copyNote(n, { start: Math.max(0, n.start + deltaTick) }));
 }
 
 /**
@@ -37,7 +37,7 @@ export function repeatRange(
     for (const n of src) {
       const start = base + (n.start - startTick);
       if (start >= untilTick) continue;
-      out.push(createNote(n.pitch, start, n.duration, n.velocity));
+      out.push(copyNote(n, { start }));
     }
   }
   return out;

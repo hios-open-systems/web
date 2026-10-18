@@ -50,6 +50,8 @@
     "test:pitch": "node --experimental-strip-types scripts/pitch-selftest.ts",
     "test:chiptune": "node --experimental-strip-types scripts/chiptune-selftest.ts",
     "test:song": "node --experimental-strip-types scripts/song-selftest.ts",
+    "test:generator": "node --experimental-strip-types scripts/generator-selftest.ts",
+    "test:samples": "node --experimental-strip-types scripts/samples-selftest.ts",
     "test:patternops": "node --experimental-strip-types scripts/patternops-selftest.ts",
     "test:arrange": "node --experimental-strip-types scripts/arrange-selftest.ts",
     "test:beatmaker": "node --experimental-strip-types scripts/beatmaker-selftest.ts",

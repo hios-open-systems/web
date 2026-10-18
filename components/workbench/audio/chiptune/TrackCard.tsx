@@ -1,6 +1,7 @@
 'use client';
 import { Tag } from 'antd';
 import { INSTRUMENTS, type ChiptuneTrack } from '@/lib/workbench/chiptune';
+import { SAMPLED_SOUNDS } from '@/lib/workbench/sampledSounds';
 import styles from './chiptune.module.css';
 
 interface Props {
@@ -44,7 +45,7 @@ export function TrackCard({ track, isActive, onActivate, onMute, onSolo }: Props
               background: `color-mix(in srgb, ${meta.color} 12%, transparent)`,
             }}
           >
-            {meta.label}
+            {track.sound ? SAMPLED_SOUNDS[track.sound].label : meta.label}
           </Tag>
         </div>
         <span className={styles.trackCardMeta}>

@@ -1,12 +1,12 @@
-import { audibleTracks, loopLengthTicks, secondsPerTick, type ChiptuneSong } from '@/lib/workbench/chiptune';
-import { midiToFreq } from '@/lib/workbench/noteFreq';
+import { audibleTracks, loopLengthTicks, noteOnset, playRange, secondsPerTick, type ChiptuneSong, type LoopRegion } from '@/lib/workbench/chiptune';
 import { scheduleClick } from '@/lib/workbench/audioClick';
-import { scheduleVoice } from './synth';
+import { createMasterBus, scheduleTrackNote } from './voices';
 
 const AHEAD = 0.1;
 
 export class PlaybackEngine {
   private master: GainNode | null = null;
+  private bus: AudioNode | null = null;
   private nodes = new Set<AudioScheduledSourceNode>();
   private timer: number | null = null;
   private base = 0;
@@ -24,10 +24,15 @@ export class PlaybackEngine {
     this.song = song;
   }
 
+  /** Con Loop activo se repite la región (o la canción); sin Loop, la canción entera una vez. */
+  private range(song = this.song): LoopRegion {
+    return this.loop ? playRange(song) : { start: 0, end: loopLengthTicks(song) };
+  }
+
   get tick(): number {
-    const length = loopLengthTicks(this.song);
-    const tick = Math.max(0, this.ctx.currentTime - this.base) / secondsPerTick(this.song.bpm, this.song.ppq);
-    return this.loop ? tick % length : Math.min(tick, length);
+    const { start, end } = this.range();
+    const elapsed = Math.max(0, this.ctx.currentTime - this.base) / secondsPerTick(this.song.bpm, this.song.ppq);
+    return this.loop ? start + (elapsed % (end - start)) : Math.min(start + elapsed, end);
   }
 
   setVolume(value: number) {
@@ -54,18 +59,22 @@ export class PlaybackEngine {
     }
     this.nodes.clear();
     this.master?.disconnect();
+    this.bus?.disconnect();
     this.master = null;
+    this.bus = null;
   }
 
   start(song: ChiptuneSong, tick = 0) {
     this.stop();
     this.song = song;
-    const offset = Math.max(0, Math.min(tick, loopLengthTicks(song) - 1));
-    this.master = this.ctx.createGain();
-    this.master.gain.value = this.volume;
-    this.master.connect(this.ctx.destination);
+    const range = this.range(song);
+    const offset = tick >= range.start && tick < range.end ? tick : range.start;
+    const bus = createMasterBus(this.ctx, this.volume);
+    this.master = bus.input;
+    this.bus = bus.output;
+    this.bus.connect(this.ctx.destination);
     this.through = this.ctx.currentTime + 0.02;
-    this.base = this.through - offset * secondsPerTick(song.bpm, song.ppq);
+    this.base = this.through - (offset - range.start) * secondsPerTick(song.bpm, song.ppq);
     this.resumeSustained(offset);
     this.poll();
     this.timer = window.setInterval(() => this.poll(), 25);
@@ -77,13 +86,14 @@ export class PlaybackEngine {
       song.bpm === this.song.bpm &&
       song.ppq === this.song.ppq &&
       song.beatsPerBar === this.song.beatsPerBar &&
-      song.lengthBars === this.song.lengthBars
+      song.lengthBars === this.song.lengthBars &&
+      song.loopRegion?.start === this.song.loopRegion?.start &&
+      song.loopRegion?.end === this.song.loopRegion?.end
     ) {
       this.song = song;
       return;
     }
-    const tick = this.tick;
-    this.start(song, tick % loopLengthTicks(song));
+    this.start(song, this.tick);
   }
 
   setLoop(value: boolean) {
@@ -94,21 +104,22 @@ export class PlaybackEngine {
 
   private resumeSustained(tick: number) {
     const scale = secondsPerTick(this.song.bpm, this.song.ppq);
-    const end = loopLengthTicks(this.song);
+    const { start, end } = this.range();
     for (const track of audibleTracks(this.song)) {
       for (const note of track.notes) {
-        const remaining = Math.min(end, note.start + note.duration) - tick;
-        if (note.start >= tick || remaining <= 0) continue;
+        const onset = noteOnset(note);
+        const remaining = Math.min(end, onset + note.duration) - tick;
+        if (onset >= tick || onset < start || remaining <= 0) continue;
         this.track(
-          scheduleVoice(
+          scheduleTrackNote(
             this.ctx,
             this.master!,
-            track.instrument,
-            midiToFreq(note.pitch),
+            track,
+            note.pitch,
             this.through,
             remaining * scale,
             (track.volume * note.velocity) / 127,
-            track.timbre,
+            note.pan,
           ),
         );
       }
@@ -118,35 +129,39 @@ export class PlaybackEngine {
   private scheduleCycle(base: number, from: number, to: number) {
     const song = this.song;
     const scale = secondsPerTick(song.bpm, song.ppq);
-    const end = loopLengthTicks(song);
+    const { start, end } = this.range();
     for (const track of audibleTracks(song)) {
       for (const note of track.notes) {
-        const when = base + note.start * scale;
-        if (note.start >= end || when < from || when >= to) continue;
+        const onset = noteOnset(note);
+        const when = base + (onset - start) * scale;
+        if (onset < start || onset >= end || when < from || when >= to) continue;
         this.track(
-          scheduleVoice(
+          scheduleTrackNote(
             this.ctx,
             this.master!,
-            track.instrument,
-            midiToFreq(note.pitch),
+            track,
+            note.pitch,
             when,
-            Math.min(note.duration, end - note.start) * scale,
+            Math.min(note.duration, end - onset) * scale,
             (track.volume * note.velocity) / 127,
-            track.timbre,
+            note.pan,
           ),
         );
       }
     }
     if (!this.metronome) return;
-    const beat = 60 / song.bpm;
-    const first = Math.max(0, Math.ceil((from - base) / beat));
-    for (let i = first; i < song.lengthBars * song.beatsPerBar && base + i * beat < to; i++) {
-      this.track([scheduleClick(this.ctx, this.master!, base + i * beat, i % song.beatsPerBar === 0)]);
+    // Clicks en los pulsos absolutos de la canción que caen dentro del rango.
+    for (let beat = Math.ceil(start / song.ppq); beat * song.ppq < end; beat++) {
+      const when = base + (beat * song.ppq - start) * scale;
+      if (when < from) continue;
+      if (when >= to) break;
+      this.track([scheduleClick(this.ctx, this.master!, when, beat % song.beatsPerBar === 0)]);
     }
   }
 
   private poll() {
-    const duration = loopLengthTicks(this.song) * secondsPerTick(this.song.bpm, this.song.ppq);
+    const { start, end } = this.range();
+    const duration = (end - start) * secondsPerTick(this.song.bpm, this.song.ppq);
     const now = this.ctx.currentTime;
     if (!this.loop && now >= this.base + duration) {
       this.stop();

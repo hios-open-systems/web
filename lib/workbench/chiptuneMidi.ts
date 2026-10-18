@@ -2,9 +2,11 @@
  * Standard MIDI File (SMF, format 1) encoder for the Chiptune Composer. Pure and
  * DOM-free (unit-testable). Uses only `import type` from ./chiptune so the type
  * imports are erased under `node --experimental-strip-types` and this module has
- * no runtime dependency to resolve. Note pitches are already MIDI numbers.
+ * no runtime dependency to resolve (sampledSounds.ts is plain data, imported with
+ * its extension). Note pitches are already MIDI numbers.
  */
-import type { ChiptuneSong, ChiptuneTrack, InstrumentId } from './chiptune';
+import type { ChiptuneNote, ChiptuneSong, ChiptuneTrack, InstrumentId } from './chiptune';
+import { SAMPLED_SOUNDS } from './sampledSounds.ts';
 
 interface ProgramInfo {
   program: number; // General MIDI program 0..127
@@ -24,6 +26,8 @@ const PROGRAMS: Record<InstrumentId, ProgramInfo> = {
 };
 
 const clampByte = (value: number): number => Math.max(0, Math.min(127, Math.round(value)));
+// Copia local de noteOnset: este módulo no tiene imports en runtime (ver cabecera).
+const noteOnset = (note: ChiptuneNote): number => Math.max(0, note.start + (note.offset ?? 0));
 
 /** Variable-length quantity (7 bits per byte, high bit set on all but the last). */
 export function writeVarLen(value: number): number[] {
@@ -82,25 +86,49 @@ function tempoTrack(bpm: number, name: string): number[] {
 
 interface MidiEvent {
   tick: number;
-  rank: number; // ordering at equal tick: program(0) < note-off(1) < note-on(2)
+  rank: number; // ordering at equal tick: program(0) < note-off(1) < pan CC(2) < note-on(3)
   data: number[];
 }
 
-function instrumentTrack(track: ChiptuneTrack, channel: number): number[] {
+/** Pan -1..1 -> CC10 0..127 (64 = centro). */
+const panToCc = (pan = 0): number => clampByte(64 + pan * 64);
+
+/** El pan por nota viaja como CC10 antes de cada note-on; se omiten los CC repetidos. */
+function dropRedundantPan(events: MidiEvent[]): MidiEvent[] {
+  let last = 64;
+  return events.filter((event) => {
+    if (event.rank !== 2) return true;
+    if (event.data[2] === last) return false;
+    last = event.data[2];
+    return true;
+  });
+}
+
+/** Programa GM de la pista: el del sonido sampleado si lo tiene, si no el del instrumento. */
+function programOf(track: ChiptuneTrack): ProgramInfo {
   const info = PROGRAMS[track.instrument];
+  const sound = track.sound ? SAMPLED_SOUNDS[track.sound] : undefined;
+  return sound && !sound.drums && !info.percussion ? { program: sound.program, percussion: false } : info;
+}
+
+function instrumentTrack(track: ChiptuneTrack, channel: number): number[] {
+  const info = programOf(track);
   const events: MidiEvent[] = [];
   if (!info.percussion) events.push({ tick: 0, rank: 0, data: [0xc0 | channel, info.program] });
+  const panned = track.notes.some((note) => note.pan);
   for (const note of track.notes) {
     const pitch = clampByte(note.pitch);
     const velocity = Math.max(1, clampByte(note.velocity));
-    events.push({ tick: note.start, rank: 2, data: [0x90 | channel, pitch, velocity] });
-    events.push({ tick: note.start + note.duration, rank: 1, data: [0x80 | channel, pitch, 0] });
+    const onset = noteOnset(note);
+    if (panned) events.push({ tick: onset, rank: 2, data: [0xb0 | channel, 10, panToCc(note.pan)] });
+    events.push({ tick: onset, rank: 3, data: [0x90 | channel, pitch, velocity] });
+    events.push({ tick: onset + note.duration, rank: 1, data: [0x80 | channel, pitch, 0] });
   }
   events.sort((a, b) => a.tick - b.tick || a.rank - b.rank);
 
   const w = new ByteWriter();
   let prevTick = 0;
-  for (const event of events) {
+  for (const event of dropRedundantPan(events)) {
     w.varLen(event.tick - prevTick);
     for (const byte of event.data) w.u8(byte);
     prevTick = event.tick;
