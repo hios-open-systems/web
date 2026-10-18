@@ -4,7 +4,9 @@ This file provides guidance to Codex (Codex.ai/code) when working with code in t
 
 ## Project Overview
 
-HIOS (HI Open Systems) web platform - showcases open hardware projects with documentation. Built with Next.js 14 App Router, TypeScript, Ant Design, and next-intl for internationalization.
+HIOS (HI Open Systems) web platform - showcases open hardware projects with documentation and engineering workbench tools. Built with Next.js 15 App Router (Edge runtime via OpenNext), React 19, TypeScript strict, Ant Design, and next-intl for internationalization (en, es, de, it).
+
+**AI Context & Internal Notes:** See `docs/ai-context/` for design specs and prompts.
 
 **Live site:** https://openhios.dev/
 
@@ -64,4 +66,6 @@ Projects are loaded at build time from `projects/` directory:
 | Slug | Description |
 |------|-------------|
 | btdac | Bluetooth DAC with ESP32 and PCM5102 |
+| pad | ESP32 macro-pad / hardware controller |
+| hios-node-ai | Embedded local LLM node companion |
 | speaker | WiFi speaker (work in progress) |

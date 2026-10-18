@@ -1,128 +1,115 @@
 # HIOS — openhios.dev
 
-> Mi mesa de trabajo. Herramientas que uso a diario.
-> _My workbench. Tools I use every day._
+<div align="center">
 
-🌐 **Live:** **[openhios.dev](https://openhios.dev/)** · Local-first · Open source · 4 idiomas (en / es / de / it)
+[![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)](https://nextjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?logo=typescript)](https://www.typescriptlang.org)
+[![Cloudflare](https://img.shields.io/badge/Cloudflare-Pages%20%2B%20D1-F38020?logo=cloudflare)](https://pages.cloudflare.com)
+[![License: MIT](https://img.shields.io/badge/Code-MIT-yellow.svg)](LICENSE)
+[![Hardware: CERN-OHL-S](https://img.shields.io/badge/Hardware-CERN--OHL--S%20v2-lightgrey.svg)](LICENSE)
+[![i18n](https://img.shields.io/badge/i18n-4%20idiomas-informational)](messages/)
 
-HIOS (HI Open Systems) empezó como una vitrina de hardware abierto y se volvió lo que de verdad uso: un **patio de herramientas para desarrolladores** —pequeñas, rápidas, sin login— más la documentación honesta del hardware que voy construyendo mientras aprendo electrónica.
+**Ecosistema de hardware abierto, firmware embebido ESP32 y simuladores de ingeniería electrónica y telecomunicaciones.**  
+*Open hardware ecosystem, ESP32 embedded firmware, and interactive DSP / telecommunications engineering simulators.*
 
-No es una demo linda. Es un sitio al que vuelvo durante el día de trabajo.
+🌐 **Live:** [openhios.dev](https://openhios.dev) · 4 idiomas (`en` default, `es`, `de`, `it`) · Local-first
 
----
-
-## Qué hay adentro
-
-### 🛠️ Workbench — `/workbench`
-
-Diez herramientas locales, sin gate de categorías, sin servidor de por medio salvo cuando se avisa:
-
-| Tool | Qué hace | Datos |
-|---|---|---|
-| **Payload Lab** | Formatear / validar / compartir JSON por URL | local |
-| **Type Checker** | ¿Un JSON es asignable a un tipo TypeScript? | local |
-| **JWT Playground** | Decodificar / firmar / verificar JWT (HS/RS/ES) | local |
-| **Object → Types** | JSON real → interfaces TypeScript | local |
-| **Object Comparator** | Diff estructural de dos JSON | local |
-| **Random String** | Tokens / IDs / secrets con entropía en vivo | local |
-| **Snippets Shelf** | Guardar y reusar snippets (sync opcional) | local |
-| **DNS Inspector** | Registros DNS en vivo (A/AAAA/MX/TXT/NS/CNAME) | red |
-| **Certificate Expiry** | Validez / issuer / riesgo de expiración TLS | red |
-| **Site Checker** | Monitoreo de URLs con notificaciones cliente | red |
-
-Sistemas reusables que atraviesan todas las tools:
-
-- **Tutoriales in-tool** — panel "Cómo se usa" colapsable, i18n-driven, estado en `localStorage`.
-- **Command palette** — `Ctrl/Cmd+K` global para saltar a cualquier tool o página.
-- **Presets local-first** — guardar/cargar estados nombrados sin cuenta.
-- **Tool chaining** — mandar la salida de una tool a otra ("Send to →").
-- **Deep-links** — `?tool=<id>` y `?tool=random` abren una tool directo.
-
-### 🔢 Calculators — `/calculators`
-
-Calculadoras embebidas para diseño electrónico, todo client-side con estado compartible por URL: resistencia para LED, capacitor por ripple, potencia/térmica, consumo/autonomía, laboratorio de resistencias (bandas ↔ valor), divisor ADC, filtros **RC / RL / RCL serie** (con esquemáticos SVG y curvas de Bode), ganancia de amplificador, clocks I2S. Incluye **normalización E12/E24** (valor estándar más cercano).
-
-### 🔌 Pinouts — `/pinouts`
-
-Visor interactivo de pinouts de módulos.
-
-### 🔧 Hardware — `/projects`
-
-Proyectos de hardware abierto, documentados con los errores incluidos:
-
-| Proyecto | Estado | Descripción |
-|---|---|---|
-| **BTDAC** | ✅ Funciona | DAC Bluetooth con ESP32 + PCM5102 |
-| **WiFi Speaker** | 🚧 WIP | Parlante WiFi con ESP32 + amp I2S MAX98357 |
+</div>
 
 ---
 
-## Filosofía
+## 🇪🇸 Español
 
-- **Local-first.** Payloads, notas y estados quedan en tu navegador siempre que tenga sentido. El login (GitHub OAuth) es un backup opcional, nunca un requisito.
-- **Compartible.** Cuando un flujo importa, se comparte por URL en vez de explicar diez pasos.
-- **Honesto.** Las herramientas de red dicen que son de red. Los proyectos documentan lo que no funciona.
-- **Abierto.** Código MIT, hardware CERN-OHL-S, docs CC BY-SA.
+### Qué es
+HIOS (HI Open Systems) reúne proyectos de **hardware abierto con firmware en C++**, simuladores interactivos de **procesamiento digital de señales (DSP), filtros analógicos y telecomunicaciones**, complementados con una mesa de trabajo (*workbench*) de utilidades de ingeniería local-first sin login ni intermediación de servidores.
 
-## Stack
+---
 
-- **Next.js 14** (App Router) · **TypeScript** estricto · runtime **edge**
-- **Ant Design 5** + CSS Modules + variables de tema (dark/light)
-- **next-intl** — 4 locales (`en` default, `es`, `de`, `it`)
-- **Cloudflare Pages** + **D1** (SQLite) para auth/snippets opcionales — _no Vercel_
-- Framer Motion, mermaid, MDX para contenido de proyectos
+### 1. 🔌 Hardware Abierto y Firmware Embebido C++ (En primer plano)
+Proyectos físicos documentados de punta a punta, con esquemáticos, guías de soldadura paso a paso, archivos PlatformIO y firmware modular:
 
-## Empezar
+| Proyecto | Microcontrolador | Estado | Descripción técnica |
+|---|---|:---:|---|
+| **HIOS PAD** | ESP32 | ✅ Operativo | Controlador físico / macro-pad con teclas mecánicas, comunicación serie USB y Bluetooth LE, con companion daemon local. |
+| **BTDAC** | ESP32 + PCM5102A | ✅ Operativo | Receptor DAC de audio Bluetooth de alta resolución; transmisión I2S de bajo jitter y filtrado analógico de salida. |
+| **HIOS Node AI** | ESP32-S3 | 🚧 En desarrollo | Nodo satélite físico para interfaz y control con servidores locales de LLM (LM Studio / Ollama). |
+| **WiFi Speaker** | ESP32 + MAX98357A | 🚧 En desarrollo | Parlante inalámbrico conectado por red con amplificador digital I2S clase D de alta eficiencia. |
+
+---
+
+### 2. 📡 Simuladores de Ingeniería, Telecomunicaciones y Audio DSP
+Herramientas matemáticas y gráficas ejecutadas 100% en el cliente mediante Web Audio API, Canvas y SVG dinámico:
+
+- **Modulador digital y constelación QPSK:** Simulación en tiempo real de modulación por desplazamiento de fase en cuadratura (QPSK / 4-QAM), con visualización del diagrama de constelación, dispersión por ruido gaussiano (AWGN) y error de fase.
+- **Filtros analógicos con diagramas de Bode:** Cálculo interactivo y trazado de curvas de magnitud (dB) y fase (grados) para filtros pasivos **RC, RL y RCL serie** (pasabajos, pasaaltos, pasabanda), con esquemáticos vectoriales SVG generados al vuelo.
+- **Suite de Audio DSP:**
+  - *Chiptune Synthesizer:* Generador de síntesis sustractiva por software con formas de onda clásicas (cuadrada, pulso con modulación de ciclo, sierra, ruido blanco).
+  - *Analizador de espectro FFT:* Medición en tiempo real por transformadas rápidas de Fourier desde entrada de audio o micrófono.
+  - *Afinador cromático y frecuencímetro:* Detección de frecuencia fundamental ($f_0$) y precisión en cents.
+- **Calculadoras de diseño electrónico:**
+  - Normalización automática a series de precisión estándar **E12 y E24** (componente comercial más cercano).
+  - Cálculo térmico y disipación de potencia ($P = I^2 R$).
+  - Estimación de rizado (*ripple voltage*) para filtros capacitivos de fuentes.
+  - Divisor resistivo adaptado a impedancia de entrada ADC de microcontroladores.
+
+---
+
+### 3. 🛠️ Workbench de Desarrollo (Utilidades complementarias)
+Suite de más de 50 herramientas cliente para el flujo de trabajo diario de software e infraestructura:
+- **Criptografía e identidad:** Decodificador, firmador y verificador de tokens JWT (HS256, RS256, ES256); generador de strings y UUIDv4 con entropía criptográfica real (`crypto.getRandomValues`).
+- **Inspección de red e infraestructura:** Consultas directas DNS (A, AAAA, MX, TXT, CNAME), verificador de certificados TLS y vigencia, evaluador de expresiones Cron.
+- **Modelado y tipos:** Validador y generador de interfaces TypeScript a partir de JSON en vivo (`Object → Types`), comparador estructural (diff) de JSON y esquemas JSON Schema.
+- **Diagramación:** Entorno local integrado con Mermaid.js y Excalidraw sin envío de diagramas a servicios de terceros.
+
+---
+
+### Capturas
+| Hardware y Firmware C++ | Simulador QPSK y Diagramas de Bode |
+|:---:|:---:|
+| ![Hardware ESP32](docs/screenshots/hardware-firmware.png) | ![Simulador QPSK](docs/screenshots/simulador-qpsk-bode.png) |
+| **Sintetizador Chiptune y Audio DSP** | **Workbench de Desarrollo** |
+| ![Audio DSP](docs/screenshots/audio-dsp-synth.png) | ![Dev Workbench](docs/screenshots/dev-workbench.png) |
+
+---
+
+## 🇬🇧 English
+
+### Overview
+HIOS is an open-source hub bringing together **open hardware projects with C++ firmware**, interactive simulators for **digital signal processing (DSP), analog filters, and telecommunications**, complemented by an edge-hosted developer workbench designed around privacy and local-first execution.
+
+### Key Pillars
+1. **Open Hardware & ESP32 Firmware:** Production schematics, PlatformIO projects, and soldering guides for audio DACs (PCM5102), macro controllers, and wireless audio streamers.
+2. **Interactive Engineering Simulators:** Real-time QPSK constellation mapper with noise modulation, dynamic Bode magnitude/phase plots for RC/RL/RCL filters, FFT audio spectral analyzer, and E12/E24 electronic tolerance calculators.
+3. **Developer Workbench:** 50+ client-side utilities (JWT crypto sandbox, TypeScript type extractors, DNS inspectors, Mermaid/Excalidraw canvas).
+
+---
+
+## Stack y Arquitectura
+
+- **Framework:** Next.js 15 (App Router), React 19, TypeScript estricto.
+- **Runtime:** Cloudflare Pages (Edge runtime con `@opennextjs/cloudflare`) y base de datos Cloudflare D1 (SQLite) para sincronización opcional de snippets.
+- **Diseño:** Ant Design 5 + CSS Modules con sistema de temas claro/oscuro.
+- **Internacionalización:** `next-intl` con soporte nativo para 4 idiomas (`en`, `es`, `de`, `it`).
+- **Embebidos:** C++ / PlatformIO para microcontroladores ESP32 / ESP32-S3.
+
+## Puesta en marcha
 
 ```bash
+# Instalar dependencias
 npm install
+
+# Servidor de desarrollo
 npm run dev        # http://localhost:3000
-npm run build      # build de producción
+
+# Verificaciones
 npm run lint       # ESLint
+npm run test:calc  # Pruebas matemáticas de calculadoras electrónicas y filtros
+npm run test:jwt   # Matriz criptográfica del JWT Playground
+npm run build      # Compilación de producción
 ```
 
-## Tests
-
-Sin test runner pesado a propósito. La red contra regresiones son **self-tests sin dependencias** (Node ≥ 22, `--experimental-strip-types`) más smoke E2E con Playwright:
-
-```bash
-npm run test:calc    # matemática de calculators (calc.ts + curvas)
-npm run test:jwt     # matriz cripto del JWT Playground
-npm run test:auth    # sanitización de redirect de OAuth
-npm run test:e2e     # smoke Playwright (golden paths)
-npm run test:e2e:auth # smoke autenticado en Cloudflare Pages + D1 local
-```
-
-El smoke autenticado usa un config Playwright aparte: buildea la app, siembra un dataset D1 local determinístico (user/session/snippet/theme) y arranca con `wrangler pages dev`. Necesita un runtime Wrangler que pueda lanzar `workerd` (en Linux, `glibc` del host suficientemente nuevo).
-
-## Estructura
-
-```
-app/[locale]/        Rutas (locale-prefixed): workbench, calculators, pinouts, projects, print
-  api/               Routes edge: auth (GitHub OAuth), snippets, user, workbench (dns/cert)
-components/
-  workbench/         Tools, ToolGrid/ToolCard compartido, ToolGuide, ToolPager
-  landing/           Hero, ToolShowcase, ProjectsGrid
-  tools/calculators/ Calculadoras + viz (esquemáticos SVG, plots, E-series)
-  common/            CommandPalette, UrlPresets, SendToMenu
-lib/                 auth, snippets, workbench (jwt/network), i18n helpers
-config/workbench.ts  Catálogo único de tools (id, href, accent, icon, locality)
-messages/            i18n: en/es/de/it.json
-projects/            Fuentes de hardware (README, pics, firmware) — btdac, speaker
-scripts/             Self-tests zero-dep (jwt/calc/auth)
-tests/               Playwright smoke
-```
-
-## Deploy
-
-Se deploya en **Cloudflare Pages** desde `main` (push = deploy). Runtime edge en todas las rutas; auth/snippets sobre Cloudflare D1. La carpeta `.vercel` es legacy — el deploy real es Cloudflare.
-
-## Licencia
+## Licencias
 
 - **Código:** MIT
-- **Diseños de hardware:** CERN-OHL-S v2
-- **Documentación:** CC BY-SA 4.0
-
----
-
-_Construyendo y aprendiendo en público. Compartiendo todo, errores incluidos._
+- **Diseños de Hardware:** CERN-OHL-S v2
+- **Documentación y Guías:** CC BY-SA 4.0
