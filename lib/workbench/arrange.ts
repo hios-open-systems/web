@@ -3,11 +3,11 @@
  *
  * Todo lo de abajo (playback, render WAV, MIDI, serializeDeviceSong) consume la
  * canción plana `tracks[].notes[]`. Este compilador es el único puente: por cada
- * clip offsetea las notas por su compás de inicio, re-mint ids con createNote, y
+ * clip offsetea las notas por su compás de inicio, re-mint ids con copyNote, y
  * mergea pistas por instrumento. Puro (sin DOM), reusable y testeable.
  */
 import {
-  createNote,
+  copyNote,
   createTrack,
   PPQ,
   type ArrangementClip,
@@ -50,7 +50,7 @@ export function compileArrangement(
         merged.set(track.instrument, dest);
       }
       for (const note of track.notes) {
-        dest.notes.push(createNote(note.pitch, note.start + offset, note.duration, note.velocity));
+        dest.notes.push(copyNote(note, { start: note.start + offset }));
       }
     }
   }

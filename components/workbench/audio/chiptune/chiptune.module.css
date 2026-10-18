@@ -371,3 +371,73 @@
 .scaleRows { position: absolute; inset: 0; pointer-events: none; }
 .scaleRow, .scaleRoot { position: absolute; left: 0; right: 0; background: color-mix(in srgb, var(--accent, #a855f7) 7%, transparent); }
 .scaleRoot { background: color-mix(in srgb, var(--accent, #a855f7) 18%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--accent, #a855f7) 35%, transparent); }
+
+/* Región de loop (regla + sombra en la grilla) y carriles por nota. */
+.rulerLoop {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: color-mix(in srgb, var(--accent, #f472b6) 38%, transparent);
+  border-left: 2px solid var(--accent, #f472b6);
+  border-right: 2px solid var(--accent, #f472b6);
+  pointer-events: none;
+}
+.rulerLoopOff {
+  background: color-mix(in srgb, var(--accent, #f472b6) 12%, transparent);
+  border-style: dashed;
+}
+.rollLoop {
+  position: absolute;
+  top: 0;
+  background: color-mix(in srgb, var(--accent, #f472b6) 7%, transparent);
+  pointer-events: none;
+}
+.laneScroll {
+  display: flex;
+  /* Scroll propio (sin barra) sincronizado con el del roll en ambos sentidos. */
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  border-top: 1px solid rgba(128, 128, 128, 0.24);
+}
+.laneLabel {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  flex: 0 0 46px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 2px 6px 2px 0;
+  font-size: 9px;
+  opacity: 0.75;
+  background: var(--hios-surface, rgba(20, 20, 28, 0.92));
+  border-right: 1px solid rgba(128, 128, 128, 0.22);
+}
+.laneLabel strong {
+  font-size: 9px;
+  writing-mode: horizontal-tb;
+}
+.lane {
+  position: relative;
+  flex: 0 0 auto;
+  cursor: ns-resize;
+  touch-action: none;
+  background: rgba(128, 128, 128, 0.05);
+}
+.laneCenter {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  border-top: 1px dashed rgba(128, 128, 128, 0.4);
+  pointer-events: none;
+}
+.laneBar {
+  position: absolute;
+  width: 6px;
+  border-radius: 2px;
+  pointer-events: none;
+}
+.laneScroll::-webkit-scrollbar { display: none; }
