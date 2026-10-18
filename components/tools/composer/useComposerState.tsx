@@ -170,6 +170,12 @@ export function useComposerState() {
     },
     [patchActiveNotes],
   );
+  // Reemplaza las notas de una pista (p. ej. regenerar solo esa parte del generador).
+  const replaceTrackNotes = useCallback((trackId: string, notes: ChiptuneNote[]) => {
+    update((song) => withTrack(song, trackId, (track) => ({ ...track, notes })));
+    setSelectedNoteId(null);
+    setSelectedRange(null);
+  }, [update]);
   const onDeleteNotes = useCallback((ids: string[]) => {
     const set = new Set(ids);
     patchActiveNotes((notes) => notes.filter((note) => !set.has(note.id)));
@@ -503,13 +509,13 @@ export function useComposerState() {
   return {
     song, activeTrackId, selectedNoteId, rendering, deviceCopied, contextHolder,
     setScale, transpose, varyActiveMelody,
-    isPlaying, loop, play, stop, toggleLoop, metronome, toggleMetronome, getPlayheadTicks, seek, playbackError,
+    isPlaying, loop, play, stop, toggleLoop, metronome, toggleMetronome, getPlayheadTicks, seek, playbackError, previewNote,
     masterVolume, setMasterVolume,
     canUndo: past.current.length > 0, canRedo: future.current.length > 0, undo, redo,
     setActiveTrackId: changeActiveTrack, setSelectedNoteId, selectNote,
     selectedRange, setSelectedRange, repeatSelection, fillActiveTrack, clearActiveTrack,
     onAddNote, onChangeNote, onDeleteNote, duplicateNote,
-    selectedNoteIds, onChangeNotes, onDeleteNotes, setLoopRegion,
+    selectedNoteIds, onChangeNotes, onDeleteNotes, setLoopRegion, replaceTrackNotes,
     onInstrument, onMute, onSolo, onVolume, onRenameTrack, onTimbre, onResetTimbre,
     onAddTrack, onRemoveTrack,
     saveAsPattern, loadPattern, deletePattern, addClip, removeClip, setClipBar, compileArrangementNow,
