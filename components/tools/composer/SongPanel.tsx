@@ -1,11 +1,6 @@
 'use client';
 import { Button, Input, Select, Tooltip } from 'antd';
-import {
-  UndoOutlined,
-  RedoOutlined,
-  ShareAltOutlined,
-  ApiOutlined,
-} from '@ant-design/icons';
+import { ShareAltOutlined, ApiOutlined } from '@ant-design/icons';
 import { FAMOUS_SONGS } from '@/lib/workbench/chiptuneSongs';
 import type { ComposerState } from './useComposerState';
 import styles from './composer.module.css';
@@ -27,22 +22,6 @@ export function SongPanel({ c }: { c: ComposerState }) {
         className={styles.songName}
         style={{ minWidth: 160, flex: '1 1 200px' }}
       />
-      <Tooltip title="Deshacer (Ctrl+Z)">
-        <Button
-          aria-label="Deshacer"
-          icon={<UndoOutlined aria-hidden="true" />}
-          disabled={!c.canUndo}
-          onClick={c.undo}
-        />
-      </Tooltip>
-      <Tooltip title="Rehacer (Ctrl+Shift+Z)">
-        <Button
-          aria-label="Rehacer"
-          icon={<RedoOutlined aria-hidden="true" />}
-          disabled={!c.canRedo}
-          onClick={c.redo}
-        />
-      </Tooltip>
       <Select
         aria-label="Cargar tema clásico"
         placeholder="Cargar tema clásico…"

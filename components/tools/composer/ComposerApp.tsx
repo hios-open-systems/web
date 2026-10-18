@@ -8,6 +8,7 @@ import { useComposerState } from './useComposerState';
 import { SongPanel, SongLibrary, SongDownloads } from './SongPanel';
 import { SongGenerator } from './SongGenerator';
 import { MidiToolbar } from './MidiToolbar';
+import { QuickExport } from './QuickExport';
 import { ComposerEditor } from './ComposerEditor';
 import { ArrangementPanel } from './ArrangementPanel';
 import styles from './composer.module.css';
@@ -34,38 +35,45 @@ export function ComposerApp() {
           </div>
         }
       />
-      <section className={styles.panel} aria-label="Canción y reproducción">
-        <SongPanel c={c} />
-        <TransportBar c={c} />
-        <MidiToolbar c={c} />
-        {c.playbackError && <Alert type="error" message={c.playbackError} showIcon />}
-      </section>
-
       <section className={styles.panel} aria-label="Generador de ideas musicales">
         <h2 style={{ fontSize: 16, margin: '0 0 10px', color: 'var(--text-primary)' }}>Generar una idea musical</h2>
         <SongGenerator c={c} />
       </section>
 
-      <div className={styles.workspace}>
-        <aside className={styles.panel} aria-label="Pistas">
-          <h2>Pistas</h2>
-          <TrackPanel
-            song={c.song}
-            activeTrackId={c.activeTrackId}
-            onActivate={c.setActiveTrackId}
-            onInstrument={c.onInstrument}
-            onMute={c.onMute}
-            onSolo={c.onSolo}
-            onVolume={c.onVolume}
-            onRename={c.onRenameTrack}
-            onTimbre={c.onTimbre}
-            onResetTimbre={c.onResetTimbre}
-            onAddTrack={c.onAddTrack}
-            onRemoveTrack={c.onRemoveTrack}
-          />
-        </aside>
-        <ComposerEditor c={c} />
+      {/* Reproducción pegada al generador y al piano roll; queda fija al hacer scroll. */}
+      <div className={styles.studio}>
+        <section className={`${styles.panel} ${styles.transportSticky}`} aria-label="Reproducción">
+          <TransportBar c={c} />
+          {c.playbackError && <Alert type="error" message={c.playbackError} showIcon />}
+        </section>
+
+        <div className={styles.workspace}>
+          <aside className={styles.panel} aria-label="Pistas">
+            <h2>Pistas</h2>
+            <TrackPanel
+              song={c.song}
+              activeTrackId={c.activeTrackId}
+              onActivate={c.setActiveTrackId}
+              onInstrument={c.onInstrument}
+              onMute={c.onMute}
+              onSolo={c.onSolo}
+              onVolume={c.onVolume}
+              onRename={c.onRenameTrack}
+              onTimbre={c.onTimbre}
+              onResetTimbre={c.onResetTimbre}
+              onAddTrack={c.onAddTrack}
+              onRemoveTrack={c.onRemoveTrack}
+            />
+          </aside>
+          <ComposerEditor c={c} />
+        </div>
       </div>
+
+      <section className={styles.panel} aria-label="Canción, compartir y MIDI">
+        <SongPanel c={c} />
+        <QuickExport c={c} />
+        <MidiToolbar c={c} />
+      </section>
 
       <section className={styles.panel} aria-label="Descargar canción">
         <h2>Descargar tu música</h2>

@@ -35,7 +35,9 @@ function validTracks(value: unknown): boolean {
         !Number.isInteger(note.pitch) ||
         !number(note.start, 0, PPQ * 8 * 256) ||
         !number(note.duration, 1, PPQ * 8 * 256) ||
-        !number(note.velocity, 1, 127)
+        !number(note.velocity, 1, 127) ||
+        (note.pan !== undefined && !number(note.pan, -1, 1)) ||
+        (note.offset !== undefined && !number(note.offset, -PPQ, PPQ))
       )
         return false;
       notes.add(note.id);
@@ -62,6 +64,16 @@ export function isValidSong(value: unknown): value is ChiptuneSong {
     !validTracks(value.tracks)
   )
     return false;
+  if (value.loopRegion !== undefined) {
+    const region = value.loopRegion;
+    if (
+      !object(region) ||
+      !number(region.start, 0, PPQ * 8 * 256) ||
+      !number(region.end, 1, PPQ * 8 * 256) ||
+      region.end <= region.start
+    )
+      return false;
+  }
   if (value.patterns !== undefined) {
     if (!Array.isArray(value.patterns) || value.patterns.length > 64) return false;
     for (const p of value.patterns) {

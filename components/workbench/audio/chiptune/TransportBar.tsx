@@ -1,8 +1,9 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { Button, InputNumber, Slider } from 'antd';
-import { PlayCircleOutlined, StopOutlined, ReloadOutlined, DeleteOutlined, DownloadOutlined } from '@ant-design/icons';
+import { PlayCircleOutlined, StopOutlined, ReloadOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useTapTempo } from '../useTapTempo';
+import { TransportExtras } from './TransportExtras';
 import type { ComposerState } from '@/components/tools/composer/useComposerState';
 import styles from '@/components/tools/composer/composer.module.css';
 
@@ -33,7 +34,6 @@ const BPM_PRESETS = [90, 120, 140, 160];
 
 export function TransportBar({ c }: { c: ComposerState }) {
   const tap = useTapTempo(c.setBpm);
-  const hasNotes = c.song.tracks.some((t) => t.notes.length > 0);
   return (
     <div className={styles.transport}>
       <div className={styles.actions}>
@@ -51,6 +51,7 @@ export function TransportBar({ c }: { c: ComposerState }) {
         <Button aria-pressed={c.metronome} onClick={c.toggleMetronome}>
           Metrónomo {c.metronome ? '✓' : ''}
         </Button>
+        <TransportExtras c={c} />
         <Button icon={<ReloadOutlined />} onClick={c.loadDemo} title="Carga la canción demo HIOS Adventure">
           Demo
         </Button>
@@ -113,18 +114,6 @@ export function TransportBar({ c }: { c: ComposerState }) {
         </label>
       </div>
 
-      <div className={styles.actions} style={{ borderTop: '1px solid var(--hios-border, rgba(255,255,255,0.06))', paddingTop: 8, marginTop: 4 }}>
-        <span style={{ fontSize: 12, opacity: 0.75, marginRight: 4 }}>Exportación rápida:</span>
-        <Button size="small" icon={<DownloadOutlined />} onClick={c.exportMidi} disabled={!hasNotes}>
-          .mid
-        </Button>
-        <Button size="small" icon={<DownloadOutlined />} loading={c.rendering} onClick={c.exportWav} disabled={!hasNotes || c.rendering}>
-          .wav
-        </Button>
-        <Button size="small" icon={<DownloadOutlined />} loading={c.rendering} onClick={c.exportMp3} disabled={!hasNotes || c.rendering}>
-          .mp3
-        </Button>
-      </div>
     </div>
   );
 }
