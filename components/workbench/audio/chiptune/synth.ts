@@ -383,3 +383,27 @@ export function scheduleVoice(
   }, { once: true }));
   return nodes;
 }
+
+/** scheduleVoice con paneo estéreo por nota; sin pan (o pan 0) es idéntico. */
+export function schedulePannedVoice(
+  ctx: BaseAudioContext,
+  dest: AudioNode,
+  instrument: InstrumentId,
+  freq: number,
+  start: number,
+  dur: number,
+  gain: number,
+  override?: Partial<VoiceRecipe>,
+  pan = 0,
+): AudioScheduledSourceNode[] {
+  if (!pan) return scheduleVoice(ctx, dest, instrument, freq, start, dur, gain, override);
+  const panner = ctx.createStereoPanner();
+  panner.pan.value = Math.max(-1, Math.min(1, pan));
+  panner.connect(dest);
+  const nodes = scheduleVoice(ctx, panner, instrument, freq, start, dur, gain, override);
+  let remaining = nodes.length;
+  nodes.forEach((node) =>
+    node.addEventListener('ended', () => { if (--remaining === 0) panner.disconnect(); }, { once: true }),
+  );
+  return nodes;
+}

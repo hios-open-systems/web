@@ -1,13 +1,13 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { message } from 'antd';
 import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import {
   createSong,
   createTrack,
-  createNote,
+  copyNote,
   readSong,
   writeSong,
   serializeDeviceSong,
@@ -18,6 +18,7 @@ import {
   type ChiptuneTrack,
   type ChiptunePattern,
   type InstrumentId,
+  type LoopRegion,
   type TrackTimbre,
 } from '@/lib/workbench/chiptune';
 import { compileArrangement } from '@/lib/workbench/arrange';
@@ -118,6 +119,17 @@ export function useComposerState() {
     bumpHist((t) => t + 1);
   }, []);
 
+  // Selección efectiva: las notas de la pista activa que arrancan en el rango, o la nota tocada.
+  const activeNotes = song.tracks.find((t) => t.id === activeTrackId)?.notes;
+  const selectedNoteIds = useMemo(() => {
+    if (selectedRange && selectedRange.endTick > selectedRange.startTick) {
+      return (activeNotes ?? [])
+        .filter((n) => n.start >= selectedRange.startTick && n.start < selectedRange.endTick)
+        .map((n) => n.id);
+    }
+    return selectedNoteId && activeNotes?.some((n) => n.id === selectedNoteId) ? [selectedNoteId] : [];
+  }, [activeNotes, selectedRange, selectedNoteId]);
+
   const patchActiveNotes = useCallback(
     (fn: (notes: ChiptuneNote[]) => ChiptuneNote[], coalesce = false) =>
       update((song) => withTrack(song, activeTrackId, (track) => ({ ...track, notes: fn(track.notes) })), coalesce),
@@ -150,12 +162,36 @@ export function useComposerState() {
     (id: string) => patchActiveNotes((notes) => notes.filter((note) => note.id !== id)),
     [patchActiveNotes],
   );
+  // Edición en lote: mismas props para varias notas (selección por rango).
+  const onChangeNotes = useCallback(
+    (ids: string[], patch: Partial<ChiptuneNote>) => {
+      const set = new Set(ids);
+      patchActiveNotes((notes) => notes.map((note) => (set.has(note.id) ? fitNote({ ...note, ...patch }, songRef.current) : note)), true);
+    },
+    [patchActiveNotes],
+  );
+  const onDeleteNotes = useCallback((ids: string[]) => {
+    const set = new Set(ids);
+    patchActiveNotes((notes) => notes.filter((note) => !set.has(note.id)));
+    setSelectedNoteId(null);
+    setSelectedRange(null);
+  }, [patchActiveNotes]);
+  const setLoopRegion = useCallback((region: LoopRegion | null) => {
+    update((song) => {
+      const next = { ...song };
+      if (region && region.end > region.start) next.loopRegion = region;
+      else delete next.loopRegion;
+      return next;
+    });
+    if (region && !loop) toggleLoop();
+  }, [update, loop, toggleLoop]);
+
   const duplicateNote = useCallback(() => {
     if (!selectedNoteId) return;
     const track = songRef.current.tracks.find((t) => t.id === activeTrackId);
     const note = track?.notes.find((n) => n.id === selectedNoteId);
     if (!note) return;
-    const copy = fitNote(createNote(note.pitch, note.start + note.duration, note.duration, note.velocity), songRef.current);
+    const copy = fitNote(copyNote(note, { start: note.start + note.duration }), songRef.current);
     patchActiveNotes((notes) => [...notes, copy]);
     setSelectedNoteId(copy.id);
   }, [selectedNoteId, activeTrackId, patchActiveNotes]);
@@ -426,10 +462,9 @@ export function useComposerState() {
       } else if (event.key.toLowerCase() === 'm') {
         toggleMetronome();
       } else if (event.key === 'Delete' || event.key === 'Backspace') {
-        if (!selectedNoteId) return;
+        if (!selectedNoteIds.length) return;
         event.preventDefault();
-        onDeleteNote(selectedNoteId);
-        setSelectedNoteId(null);
+        onDeleteNotes(selectedNoteIds);
       } else if (selectedNoteId && event.key.startsWith('Arrow')) {
         event.preventDefault();
         if (event.key === 'ArrowUp') nudgeNote(1, 0);
@@ -440,7 +475,7 @@ export function useComposerState() {
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [isPlaying, play, stop, toggleLoop, toggleMetronome, undo, redo, duplicateNote, nudgeNote, onDeleteNote, selectedNoteId]);
+  }, [isPlaying, play, stop, toggleLoop, toggleMetronome, undo, redo, duplicateNote, nudgeNote, onDeleteNotes, selectedNoteId, selectedNoteIds]);
 
   const changeActiveTrack = useCallback((id: string) => {
     setActiveTrackId(id);
@@ -474,6 +509,7 @@ export function useComposerState() {
     setActiveTrackId: changeActiveTrack, setSelectedNoteId, selectNote,
     selectedRange, setSelectedRange, repeatSelection, fillActiveTrack, clearActiveTrack,
     onAddNote, onChangeNote, onDeleteNote, duplicateNote,
+    selectedNoteIds, onChangeNotes, onDeleteNotes, setLoopRegion,
     onInstrument, onMute, onSolo, onVolume, onRenameTrack, onTimbre, onResetTimbre,
     onAddTrack, onRemoveTrack,
     saveAsPattern, loadPattern, deletePattern, addClip, removeClip, setClipBar, compileArrangementNow,

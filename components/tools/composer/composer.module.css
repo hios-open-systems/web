@@ -143,3 +143,18 @@
   .transpose { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .transpose :global(.ant-btn), .assistOptions :global(.ant-checkbox-wrapper) { min-height: 44px; }
 }
+.studio {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+/* En pantallas grandes la reproducción queda visible mientras editás. En mobile
+   ocuparía media pantalla, así que ahí fluye normal. */
+@media (min-width: 768px) {
+  .transportSticky {
+    position: sticky;
+    top: var(--layout-header-height, 64px);
+    z-index: 20;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  }
+}

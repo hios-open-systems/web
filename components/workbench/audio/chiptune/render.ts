@@ -4,9 +4,9 @@
  * OfflineAudioContext), so it never touches the server/edge bundle.
  */
 import { midiToFreq } from '@/lib/workbench/noteFreq';
-import { ticksToSeconds, loopLengthTicks, audibleTracks, type ChiptuneSong } from '@/lib/workbench/chiptune';
+import { ticksToSeconds, loopLengthTicks, audibleTracks, noteOnset, type ChiptuneSong } from '@/lib/workbench/chiptune';
 import { encodeWav } from '@/lib/workbench/wav';
-import { scheduleVoice } from './synth';
+import { schedulePannedVoice } from './synth';
 
 const SAMPLE_RATE = 44100;
 
@@ -24,11 +24,11 @@ export async function renderSongToBuffer(song: ChiptuneSong, volume = 0.85): Pro
 
   for (const track of audibleTracks(song)) {
     for (const note of track.notes) {
-      const when = ticksToSeconds(note.start, song.bpm, song.ppq);
+      const when = ticksToSeconds(noteOnset(note), song.bpm, song.ppq);
       if (when >= loopSec) continue;
       const dur = Math.min(ticksToSeconds(note.duration, song.bpm, song.ppq), loopSec - when);
       const gain = track.volume * (note.velocity / 127);
-      scheduleVoice(offline, master, track.instrument, midiToFreq(note.pitch), when, dur, gain, track.timbre);
+      schedulePannedVoice(offline, master, track.instrument, midiToFreq(note.pitch), when, dur, gain, track.timbre, note.pan);
     }
   }
 

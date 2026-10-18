@@ -6,6 +6,7 @@ interface Props {
   song: ChiptuneSong;
   activeTrackId: string;
   selectedNoteId: string | null;
+  selectedNoteIds?: string[];
   stepW: number;
   rowH: number;
   showGhostNotes?: boolean;
@@ -18,6 +19,7 @@ export function PianoRollTracks({
   song,
   activeTrackId,
   selectedNoteId,
+  selectedNoteIds = [],
   stepW,
   rowH,
   showGhostNotes = false,
@@ -38,7 +40,7 @@ export function PianoRollTracks({
               key={note.id}
               note={note}
               color={color}
-              selected={selectedNoteId === note.id}
+              selected={selectedNoteId === note.id || selectedNoteIds.includes(note.id)}
               stepW={stepW}
               rowH={rowH}
               onSelect={onSelectNote}

@@ -1,35 +1,24 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import type { MouseEvent as ReactMouseEvent } from 'react';
-import { TICKS_PER_STEP } from '@/lib/workbench/chiptune';
+import { INSTRUMENTS, TICKS_PER_STEP, loopLengthTicks } from '@/lib/workbench/chiptune';
 import { usePlayhead } from './usePlayhead';
 import { usePianoRollPointer } from './usePianoRollPointer';
 import { PianoRollTracks } from './PianoRollTracks';
 import { PianoRollGutter } from './PianoRollGutter';
-import { ROW_H, STEP_W, RULER_H, PITCH_COUNT, PITCH_MAX, tickToX, pitchToY } from './grid';
+import { PianoRollRuler } from './PianoRollRuler';
+import { NoteLaneStrip } from './NoteLane';
+import { ROW_H, STEP_W, RULER_H, PITCH_COUNT, PITCH_MAX, pitchToY } from './grid';
 import styles from './chiptune.module.css';
 import { ScaleRows } from './ScaleRows';
+import { RollOverlays } from './RollOverlays';
 import type { PianoRollProps } from './pianoRollTypes';
 
 export function PianoRoll({
-  song,
-  activeTrackId,
-  selectedNoteId,
-  selectedRange,
-  zoom = 1,
-  drawDuration = TICKS_PER_STEP * 2,
-  mode = 'draw',
-  showGhostNotes = false,
-  onActivateTrack,
-  onRange,
-  onSelectNote,
-  onChangeNote,
-  onDeleteNote,
-  onAddNote,
-  onSeek,
-  getPlayheadTicks,
-  scale,
+  song, activeTrackId, selectedNoteId, selectedNoteIds = [], selectedRange, loopActive = false, lane,
+  zoom = 1, drawDuration = TICKS_PER_STEP * 2, mode = 'draw', showGhostNotes = false,
+  onActivateTrack, onRange, onSelectNote, onChangeNote, onDeleteNote, onAddNote,
+  onSeek, onLoopRegion, onChangeNotes, getPlayheadTicks, scale,
 }: PianoRollProps) {
   const stepW = STEP_W * zoom;
   const rowH = ROW_H * zoom;
@@ -39,12 +28,13 @@ export function PianoRoll({
   const barWidth = stepW * song.beatsPerBar * 4;
   const playheadRef = usePlayhead(getPlayheadTicks, stepW);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const laneRef = useRef<HTMLDivElement>(null);
   const activeTrack = song.tracks.find(track => track.id === activeTrackId);
   const isDrumTrack = activeTrack?.instrument === 'noise-perc';
-  const centerPitch = isDrumTrack
-    ? (activeTrack?.notes.length ? Math.round(activeTrack.notes.reduce((total, note) => total + note.pitch, 0) / activeTrack.notes.length) : 42)
-    : activeTrack?.notes.length
-    ? Math.round(activeTrack.notes.reduce((total, note) => total + note.pitch, 0) / activeTrack.notes.length) : 60;
+  const notes = activeTrack?.notes ?? [];
+  const centerPitch = notes.length
+    ? Math.round(notes.reduce((total, note) => total + note.pitch, 0) / notes.length)
+    : isDrumTrack ? 42 : 60;
   const centerRef = useRef(centerPitch);
   centerRef.current = centerPitch;
   useEffect(() => {
@@ -53,7 +43,6 @@ export function PianoRoll({
   }, [activeTrackId, rowH]);
   const hasActiveTrack = song.tracks.some((track) => track.id === activeTrackId);
   const pitches = Array.from({ length: PITCH_COUNT }, (_, i) => PITCH_MAX - i);
-  const bars = Array.from({ length: song.lengthBars }, (_, i) => i);
 
   const { onGridPointerDown, onGridPointerUp, onGridPointerCancel } = usePianoRollPointer({
     hasActiveTrack,
@@ -66,16 +55,19 @@ export function PianoRoll({
     onAddNote,
   });
 
-  const onRulerClick = (event: ReactMouseEvent<HTMLDivElement>) => {
-    if (!onSeek) return;
-    const rect = event.currentTarget.getBoundingClientRect();
-    const tick = Math.max(0, ((event.clientX - rect.left) / stepW) * TICKS_PER_STEP);
-    onSeek(tick);
-  };
+  const region = song.loopRegion;
 
   return (
     <div className={styles.roll}>
-      <div className={styles.rollScroll} ref={scrollRef} aria-label="Piano roll" tabIndex={0}>
+      <div
+        className={styles.rollScroll}
+        ref={scrollRef}
+        aria-label="Piano roll"
+        tabIndex={0}
+        onScroll={(event) => {
+          if (laneRef.current) laneRef.current.scrollLeft = event.currentTarget.scrollLeft;
+        }}
+      >
         <div className={styles.rollInner} style={{ height: height + RULER_H }}>
           <PianoRollGutter
             height={height}
@@ -86,13 +78,18 @@ export function PianoRoll({
           />
 
           <div className={styles.rollGridWrap} style={{ width }}>
-            <div className={styles.rollRuler} style={{ width, height: RULER_H }} onClick={onRulerClick}>
-              {bars.map((i) => (
-                <span key={i} className={styles.rollBar} style={{ left: i * barWidth, width: barWidth }}>
-                  {i + 1}
-                </span>
-              ))}
-            </div>
+            <PianoRollRuler
+              width={width}
+              stepW={stepW}
+              bars={song.lengthBars}
+              barWidth={barWidth}
+              ppq={song.ppq}
+              songTicks={loopLengthTicks(song)}
+              loopRegion={region}
+              loopActive={loopActive}
+              onSeek={onSeek}
+              onLoopRegion={onLoopRegion}
+            />
 
             <div
               className={styles.rollGrid}
@@ -113,6 +110,7 @@ export function PianoRoll({
                 song={song}
                 activeTrackId={activeTrackId}
                 selectedNoteId={selectedNoteId}
+                selectedNoteIds={selectedNoteIds}
                 stepW={stepW}
                 rowH={rowH}
                 showGhostNotes={showGhostNotes}
@@ -121,21 +119,32 @@ export function PianoRoll({
                 onChangeNote={onChangeNote}
                 onDeleteNote={onDeleteNote}
               />
-              {selectedRange && selectedRange.endTick > selectedRange.startTick && (
-                <div
-                  className={styles.rollRange}
-                  style={{
-                    left: tickToX(selectedRange.startTick, stepW),
-                    width: tickToX(selectedRange.endTick - selectedRange.startTick, stepW),
-                    height,
-                  }}
-                />
-              )}
+              <RollOverlays
+                range={selectedRange}
+                loop={loopActive ? region : undefined}
+                stepW={stepW}
+                height={height}
+              />
               <div ref={playheadRef} className={styles.playhead} style={{ height }} />
             </div>
           </div>
         </div>
       </div>
+      {lane && activeTrack && onChangeNotes && (
+        <NoteLaneStrip
+          ref={laneRef}
+          onScrollX={(left) => {
+            if (scrollRef.current) scrollRef.current.scrollLeft = left;
+          }}
+          kind={lane}
+          notes={activeTrack.notes}
+          selectedIds={selectedNoteIds.length > 1 ? selectedNoteIds : []}
+          color={INSTRUMENTS[activeTrack.instrument].color}
+          stepW={stepW}
+          width={width}
+          onChangeNotes={onChangeNotes}
+        />
+      )}
     </div>
   );
 }

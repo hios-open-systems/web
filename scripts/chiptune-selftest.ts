@@ -18,6 +18,11 @@ import {
   serializeSong,
   parseSong,
   audibleTracks,
+  noteOnset,
+  playRange,
+  copyNote,
+  MAX_NOTE_OFFSET,
+  serializeDeviceSong,
 } from '../lib/workbench/chiptune.ts';
 import { encodeMidi, writeVarLen } from '../lib/workbench/chiptuneMidi.ts';
 import { decodeMidi } from '../lib/workbench/chiptuneMidiImport.ts';
@@ -150,6 +155,48 @@ eq('decodeMidi recovers track count', decodedMidi.tracks.length, 1);
 eq('decodeMidi note pitch', decodedMidi.tracks[0]?.notes[0]?.pitch, 60);
 eq('decodeMidi note start', decodedMidi.tracks[0]?.notes[0]?.start, 0);
 eq('decodeMidi note duration', decodedMidi.tracks[0]?.notes[0]?.duration, 480);
+
+// --- pan, micro-timing y región de loop ---
+const nudged = createNote(60, 480, 240, 100);
+eq('noteOnset sin offset = start', noteOnset(nudged), 480);
+eq('noteOnset suma offset', noteOnset({ ...nudged, offset: -60 }), 420);
+eq('noteOnset nunca negativo', noteOnset({ ...createNote(60, 0, 240), offset: -60 }), 0);
+const fittedRich = fitNote({ ...nudged, pan: 3, offset: 999 }, createSong());
+eq('fitNote recorta pan', fittedRich.pan, 1);
+eq('fitNote recorta offset', fittedRich.offset, MAX_NOTE_OFFSET);
+eq('fitNote no inventa pan', 'pan' in fitNote(nudged, createSong()), false);
+const copy = copyNote({ ...nudged, pan: -0.5, offset: 30 }, { start: 960 });
+ok('copyNote id nuevo', copy.id !== nudged.id);
+eq('copyNote conserva pan', copy.pan, -0.5);
+eq('copyNote conserva offset', copy.offset, 30);
+eq('copyNote aplica patch', copy.start, 960);
+
+const looped = { ...createSong(), loopRegion: { start: 1920, end: 3840 } };
+eq('playRange usa la región', JSON.stringify(playRange(looped)), JSON.stringify({ start: 1920, end: 3840 }));
+eq('playRange sin región = canción', JSON.stringify(playRange(createSong())), JSON.stringify({ start: 0, end: 7680 }));
+eq('playRange región fuera = canción', playRange({ ...looped, loopRegion: { start: 9000, end: 9600 } }).end, 7680);
+eq('playRange recorta el final', playRange({ ...looped, loopRegion: { start: 1920, end: 99999 } }).end, 7680);
+eq('resizeSong recorta la región', resizeSong({ ...looped, loopRegion: { start: 1920, end: 7680 } }, 3).loopRegion?.end, 5760);
+eq('resizeSong descarta región fuera', resizeSong(looped, 1).loopRegion, undefined);
+
+const rich = createSong();
+rich.loopRegion = { start: 0, end: 1920 };
+rich.tracks[0].notes.push({ ...createNote(64, 0, 240), pan: 0.25, offset: -20 });
+ok('parseSong acepta pan/offset/región', parseSong(serializeSong(rich)) !== null);
+eq('parseSong rechaza pan fuera de rango', parseSong(serializeSong({ ...rich, tracks: [{ ...rich.tracks[0], notes: [{ ...createNote(64, 0, 240), pan: 2 }] }] })), null);
+eq('parseSong rechaza región invertida', parseSong(serializeSong({ ...rich, loopRegion: { start: 960, end: 480 } })), null);
+eq('device wire aplica el micro-timing', JSON.parse(serializeDeviceSong({ ...rich, tracks: [{ ...rich.tracks[0], notes: [{ ...createNote(64, 480, 240), offset: -20 }] }] })).t[0].no[0][1], 460);
+
+const panSong = createSong();
+panSong.tracks = [createTrack('L', 'pulse-lead', [
+  { ...createNote(60, 0, 240), pan: -1 },
+  { ...createNote(62, 240, 240), pan: -1 },
+  createNote(64, 480, 240),
+])];
+const panHex = hex(encodeMidi(panSong));
+eq('MIDI pan izquierda = CC10 0', panHex.split('b00a00').length - 1, 1);
+eq('MIDI pan vuelve al centro = CC10 64', panHex.split('b00a40').length - 1, 1);
+ok('MIDI sin pan no emite CC10', !hex(encodeMidi(song)).includes('b00a'));
 
 if (failures > 0) {
   console.error(`\n${failures} check(s) failed`);

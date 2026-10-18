@@ -30,6 +30,17 @@ export interface ChiptuneNote {
   start: number; // ticks from song start
   duration: number; // ticks
   velocity: number; // 1..127
+  pan?: number; // -1 (izq) .. 1 (der); ausente = centro
+  offset?: number; // micro-timing en ticks (- adelanta, + atrasa), ±MAX_NOTE_OFFSET
+}
+
+/** Rango máximo del micro-timing por nota: ±1/16 (no reemplaza mover la nota). */
+export const MAX_NOTE_OFFSET = PPQ / 4;
+
+/** Región de loop en ticks [start, end) dentro de la canción. */
+export interface LoopRegion {
+  start: number;
+  end: number;
 }
 
 /**
@@ -90,6 +101,8 @@ export interface ChiptuneSong {
   // playback consumen SIEMPRE la canción plana (tracks); esto se compila a plano.
   patterns?: ChiptunePattern[];
   arrangement?: ArrangementClip[];
+  // Región de loop opcional: con el Loop activo, el playback repite solo este rango.
+  loopRegion?: LoopRegion;
 }
 
 export interface InstrumentMeta {
@@ -145,6 +158,19 @@ export const ticksToSeconds = (ticks: number, bpm: number, ppq = PPQ): number =>
 export const loopLengthTicks = (song: ChiptuneSong): number =>
   song.lengthBars * song.beatsPerBar * song.ppq;
 
+/** Tick en que la nota suena de verdad (inicio + micro-timing), nunca antes de 0. */
+export const noteOnset = (note: ChiptuneNote): number => Math.max(0, note.start + (note.offset ?? 0));
+
+/** Rango que reproduce el loop: la región si es válida, si no la canción entera. */
+export function playRange(song: ChiptuneSong): LoopRegion {
+  const length = loopLengthTicks(song);
+  const region = song.loopRegion;
+  if (region && region.start >= 0 && region.start < length && region.end > region.start) {
+    return { start: region.start, end: Math.min(region.end, length) };
+  }
+  return { start: 0, end: length };
+}
+
 /** Única fuente de "qué pistas suenan": excluye muteadas; si hay alguna en solo, solo esas. */
 export function audibleTracks(song: ChiptuneSong): ChiptuneTrack[] {
   const soloed = song.tracks.some((track) => track.solo);
@@ -160,6 +186,11 @@ function newId(): string {
 
 export function createNote(pitch: number, start: number, duration: number, velocity = 100): ChiptuneNote {
   return { id: newId(), pitch, start, duration, velocity };
+}
+
+/** Copia una nota con id nuevo, conservando pan/micro-timing (patch pisa campos). */
+export function copyNote(note: ChiptuneNote, patch: Partial<ChiptuneNote> = {}): ChiptuneNote {
+  return { ...note, ...patch, id: newId() };
 }
 
 export function createTrack(name: string, instrument: InstrumentId, notes: ChiptuneNote[] = []): ChiptuneTrack {
@@ -223,7 +254,8 @@ export function serializeSong(song: ChiptuneSong): string {
  *   - instrumento = índice entero en INSTRUMENT_IDS (el ORDEN de este archivo ES
  *     el contrato; SongFormat.h del firmware lo espeja, verificado por test:song).
  *   - volumen 0..1 -> 0..255.
- *   - nota = [pitch, start, duration, velocity] (se descarta el id).
+ *   - nota = [pitch, start, duration, velocity] (se descarta el id). El start ya
+ *     incluye el micro-timing; el pan no viaja (el parlante es mono).
  * Es el ÚNICO productor de este formato: la lógica vive acá para poder testearla.
  */
 export const DEVICE_WIRE_VERSION = 2;
@@ -240,7 +272,7 @@ export function serializeDeviceSong(song: ChiptuneSong): string {
       i: Math.max(0, INSTRUMENT_IDS.indexOf(track.instrument)),
       m: track.muted || (song.tracks.some(item => item.solo) && !track.solo) ? 1 : 0,
       vol: clamp(Math.round(track.volume * 255), 0, 255),
-      no: track.notes.map((note) => [note.pitch, note.start, note.duration, note.velocity]),
+      no: track.notes.map((note) => [note.pitch, noteOnset(note), note.duration, note.velocity]),
     })),
   });
 }
