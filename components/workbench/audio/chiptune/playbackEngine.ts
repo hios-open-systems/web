@@ -1,12 +1,12 @@
 import { audibleTracks, loopLengthTicks, noteOnset, playRange, secondsPerTick, type ChiptuneSong, type LoopRegion } from '@/lib/workbench/chiptune';
-import { midiToFreq } from '@/lib/workbench/noteFreq';
 import { scheduleClick } from '@/lib/workbench/audioClick';
-import { schedulePannedVoice } from './synth';
+import { createMasterBus, scheduleTrackNote } from './voices';
 
 const AHEAD = 0.1;
 
 export class PlaybackEngine {
   private master: GainNode | null = null;
+  private bus: AudioNode | null = null;
   private nodes = new Set<AudioScheduledSourceNode>();
   private timer: number | null = null;
   private base = 0;
@@ -59,7 +59,9 @@ export class PlaybackEngine {
     }
     this.nodes.clear();
     this.master?.disconnect();
+    this.bus?.disconnect();
     this.master = null;
+    this.bus = null;
   }
 
   start(song: ChiptuneSong, tick = 0) {
@@ -67,9 +69,10 @@ export class PlaybackEngine {
     this.song = song;
     const range = this.range(song);
     const offset = tick >= range.start && tick < range.end ? tick : range.start;
-    this.master = this.ctx.createGain();
-    this.master.gain.value = this.volume;
-    this.master.connect(this.ctx.destination);
+    const bus = createMasterBus(this.ctx, this.volume);
+    this.master = bus.input;
+    this.bus = bus.output;
+    this.bus.connect(this.ctx.destination);
     this.through = this.ctx.currentTime + 0.02;
     this.base = this.through - (offset - range.start) * secondsPerTick(song.bpm, song.ppq);
     this.resumeSustained(offset);
@@ -108,15 +111,14 @@ export class PlaybackEngine {
         const remaining = Math.min(end, onset + note.duration) - tick;
         if (onset >= tick || onset < start || remaining <= 0) continue;
         this.track(
-          schedulePannedVoice(
+          scheduleTrackNote(
             this.ctx,
             this.master!,
-            track.instrument,
-            midiToFreq(note.pitch),
+            track,
+            note.pitch,
             this.through,
             remaining * scale,
             (track.volume * note.velocity) / 127,
-            track.timbre,
             note.pan,
           ),
         );
@@ -134,15 +136,14 @@ export class PlaybackEngine {
         const when = base + (onset - start) * scale;
         if (onset < start || onset >= end || when < from || when >= to) continue;
         this.track(
-          schedulePannedVoice(
+          scheduleTrackNote(
             this.ctx,
             this.master!,
-            track.instrument,
-            midiToFreq(note.pitch),
+            track,
+            note.pitch,
             when,
             Math.min(note.duration, end - onset) * scale,
             (track.volume * note.velocity) / 127,
-            track.timbre,
             note.pan,
           ),
         );

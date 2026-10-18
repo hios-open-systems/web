@@ -2,9 +2,11 @@
  * Standard MIDI File (SMF, format 1) encoder for the Chiptune Composer. Pure and
  * DOM-free (unit-testable). Uses only `import type` from ./chiptune so the type
  * imports are erased under `node --experimental-strip-types` and this module has
- * no runtime dependency to resolve. Note pitches are already MIDI numbers.
+ * no runtime dependency to resolve (sampledSounds.ts is plain data, imported with
+ * its extension). Note pitches are already MIDI numbers.
  */
 import type { ChiptuneNote, ChiptuneSong, ChiptuneTrack, InstrumentId } from './chiptune';
+import { SAMPLED_SOUNDS } from './sampledSounds.ts';
 
 interface ProgramInfo {
   program: number; // General MIDI program 0..127
@@ -102,8 +104,15 @@ function dropRedundantPan(events: MidiEvent[]): MidiEvent[] {
   });
 }
 
-function instrumentTrack(track: ChiptuneTrack, channel: number): number[] {
+/** Programa GM de la pista: el del sonido sampleado si lo tiene, si no el del instrumento. */
+function programOf(track: ChiptuneTrack): ProgramInfo {
   const info = PROGRAMS[track.instrument];
+  const sound = track.sound ? SAMPLED_SOUNDS[track.sound] : undefined;
+  return sound && !sound.drums && !info.percussion ? { program: sound.program, percussion: false } : info;
+}
+
+function instrumentTrack(track: ChiptuneTrack, channel: number): number[] {
+  const info = programOf(track);
   const events: MidiEvent[] = [];
   if (!info.percussion) events.push({ tick: 0, rank: 0, data: [0xc0 | channel, info.program] });
   const panned = track.notes.some((note) => note.pan);
