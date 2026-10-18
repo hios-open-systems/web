@@ -95,6 +95,7 @@ export function EmbeddedCalculators() {
       <Space wrap className={styles.toolbar}>
         <UrlPresets
           storageKey="calculators"
+          getQuery={c.getQuery}
           basePresets={BASE_PRESET_IDS.map((id) => ({ id, name: t(PRESET_I18N[id]) }))}
           onSelectBase={(id) => c.applyPreset(id as PresetId)}
         />

@@ -3289,9 +3289,6 @@
         "rc": {
             "title": "RC-Oszilloskop",
             "description": "Eingangs- und Ausgangsspannung eines idealen RC-Tiefpasses mit gleichen Zeit- und Spannungsskalen.",
-            "frequency": "Eingangsfrequenz (Hz)",
-            "amplitude": "Eingangsamplitude (V Spitze)",
-            "atCutoff": "Eingang auf fc setzen",
             "hint": "Sinus im eingeschwungenen Zustand, ideale Quelle und unbelasteter Ausgang. Bei fc: −3.01 dB und −45°. Änderungen an R oder C berechnen den eingeschwungenen Zustand neu; Schalttransienten werden nicht modelliert."
         },
         "i2s": {
@@ -3303,6 +3300,23 @@
             "hint": "Stereobus: BCLK = fs × 2 × Slotbreite; WS = fs. Oben: BCLK. Unten: WS (0 = links, 1 = rechts). Logikpegel sind keine Spannungen. Dies ist eine lokale Simulation, keine Messung an der Platine.",
             "dataHint": "Die Slotbreite kann die Audiobittiefe übersteigen. DIN und MCLK werden nicht dargestellt. Bei Standard-I²S folgt das MSB des nächsten Wortes eine BCLK-Periode nach dem WS-Wechsel.",
             "reference": "I²S-Spezifikation (NXP)"
+        },
+        "excitation": {
+            "frequency": "Eingangsfrequenz (Hz)",
+            "amplitude": "Eingangsamplitude (V Spitze)",
+            "atCutoff": "Eingang auf fc setzen",
+            "atResonance": "Eingang auf f0 setzen"
+        },
+        "rl": {
+            "title": "RL-Oszilloskop",
+            "description": "Eingangsspannung und Ausgangsspannung über R eines idealen RL-Tiefpasses mit gleichen Zeit- und Spannungsskalen.",
+            "hint": "Vout wird über R gemessen: H = R / (R + jωL). Bei fc: −3.01 dB und −45°. Sinusförmiger eingeschwungener Zustand, ideale Quelle und keine zusätzliche Ausgangslast; Einschwingvorgänge und Spulenverluste werden nicht modelliert."
+        },
+        "rcl": {
+            "title": "Oszilloskop für RLC-Reihenschaltung",
+            "description": "Eingangsspannung und Ausgangsspannung über R einer idealen RLC-Reihenschaltung. Vout = VR, mit gleichen Zeit- und Spannungsskalen.",
+            "schematic": "RLC-Reihenschaltung: Eingang Vin, Ausgang Vout über R gegen Masse.",
+            "hint": "Vout = VR: H = R / [R + j(ωL − 1/ωC)]. Bandpassverhalten: Bei f0 ist |Z| minimal, Vout = Vin und φ = 0°. Unterhalb von f0 eilt der Ausgang voraus, oberhalb nach. Verwendet die Frequenz f des Rechners. Eingeschwungener Zustand mit R > 0, idealer Quelle und ohne zusätzliche Last; Einschwingvorgänge und parasitäre Verluste sind ausgeschlossen."
         }
     }
 }

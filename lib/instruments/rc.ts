@@ -1,4 +1,5 @@
-import type { ScopePoint } from '../../components/instruments/plotGeometry';
+import { sineModel } from './sine.ts';
+export { sineSamples as rcSineSamples } from './sine.ts';
 
 /** Ideal unloaded RC low-pass. C is entered in nF, amplitude is peak volts. */
 export function rcTransfer(rOhm: number, cNanoF: number, frequencyHz: number) {
@@ -10,19 +11,5 @@ export function rcTransfer(rOhm: number, cNanoF: number, frequencyHz: number) {
 }
 
 export function rcSineModel(rOhm: number, cNanoF: number, frequencyHz: number, peakVolts: number) {
-  const transfer = rcTransfer(rOhm, cNanoF, frequencyHz);
-  if (!transfer || !Number.isFinite(peakVolts * 1.2) || peakVolts <= 0 || !Number.isFinite(3 / frequencyHz)) return null;
-  return { ...transfer, frequencyHz, peakVolts, duration: 3 / frequencyHz };
-}
-
-/** Steady state only: changing R/C is not a transient circuit simulation. */
-export function rcSineSamples(model: NonNullable<ReturnType<typeof rcSineModel>>, animationPhase: number) {
-  const input: ScopePoint[] = [], output: ScopePoint[] = [];
-  for (let i = 0; i <= 480; i++) {
-    const time = model.duration * i / 480;
-    const angle = 2 * Math.PI * model.frequencyHz * time - animationPhase;
-    input.push([time, model.peakVolts * Math.sin(angle)]);
-    output.push([time, model.peakVolts * model.gain * Math.sin(angle + model.phase)]);
-  }
-  return { input, output };
+  return sineModel(rcTransfer(rOhm, cNanoF, frequencyHz), frequencyHz, peakVolts);
 }

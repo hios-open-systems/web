@@ -49,6 +49,7 @@ export function useCalculatorState() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const hydratedFromUrl = useRef(false);
+  const [urlReady, setUrlReady] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
   const copyRaw = useCopyToClipboard(messageApi);
 
@@ -173,11 +174,11 @@ export function useCalculatorState() {
     if (seriesParam && isESeries(seriesParam)) setESeries(seriesParam);
 
     hydratedFromUrl.current = true;
+    setUrlReady(true);
   }, [searchParams]);
 
-  useEffect(() => {
-    if (!hydratedFromUrl.current) return;
-
+  const getQuery = useCallback(() => {
+    if (!urlReady) return searchParams.toString();
     const params = new URLSearchParams();
     params.set('tab', activeTab);
     if (eSeries !== 'E24') params.set('eseries', eSeries);
@@ -186,11 +187,18 @@ export function useCalculatorState() {
       if (String(v) !== String(f.default)) params.set(f.key, String(v));
     }
 
-    const nextQuery = params.toString();
+    return params.toString();
+  }, [urlReady, searchParams, activeTab, eSeries, values]);
+
+  useEffect(() => {
+    // A ref set by the hydration effect is already true in the initial render's
+    // other effects. Wait for the render containing the restored state instead.
+    if (!urlReady) return;
+    const nextQuery = getQuery();
     if (nextQuery !== searchParams.toString()) {
       router.replace(`${pathname}?${nextQuery}`, { scroll: false });
     }
-  }, [searchParams, router, pathname, activeTab, eSeries, values]);
+  }, [urlReady, getQuery, searchParams, router, pathname]);
 
   const applyPreset = (value: PresetId) => {
     const patch = PRESET_PATCHES[value];
@@ -218,7 +226,7 @@ export function useCalculatorState() {
   const copySummary = () => copyRaw(summary, t('copy_ok'));
 
   const copyShareLink = () => {
-    const query = searchParams.toString();
+    const query = getQuery();
     const shareUrl = `${window.location.origin}${pathname}${query ? `?${query}` : ''}`;
     return copyRaw(shareUrl, t('share_ok'));
   };
@@ -229,7 +237,7 @@ export function useCalculatorState() {
     t, palette, contextHolder,
     calcCardStyle, calcCardBodyStyle, inputStyle,
     applyPreset, activeTab, setActiveTab, eSeries, setESeries,
-    copySummary, copyShareLink,
+    copySummary, copyShareLink, getQuery,
     get: (key: string) => values[key], set,
     // led
     supply: num('supply'), setSupply: setter('supply'),

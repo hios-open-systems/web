@@ -6,14 +6,17 @@ import de from '../messages/de.json';
 import it from '../messages/it.json';
 
 for (const [locale, copy] of Object.entries({ en, es, de, it })) {
-  test(`${locale}: RC and pinout instruments fit narrow screens and support keyboard controls`, async ({ page }, testInfo) => {
+  test(`${locale}: filter and pinout instruments fit narrow screens and support keyboard controls`, async ({ page }, testInfo) => {
     if (testInfo.project.name === 'mobile-360') await page.setViewportSize({ width: 320, height: 844 });
-    await page.goto(`/${locale}/calculators?tab=rc`);
-    const rc = page.locator('[data-rc-lab]');
-    await rc.getByRole('button', { name: copy.Instrument.rc.atCutoff, exact: true }).click();
-    await expect(rc.locator('[data-rc-readouts]')).toContainText('-45.0°');
-    await expect(rc.locator('[data-trace-id]')).toHaveCount(2);
-    expect(await page.evaluate(inspectMobileLayout)).toEqual([]);
+    for (const kind of ['rc', 'rl', 'rcl']) {
+      await page.goto(`/${locale}/calculators?tab=${kind}`);
+      const lab = page.locator(`[data-filter-lab="${kind}"]`);
+      const action = kind === 'rcl' ? copy.Instrument.excitation.atResonance : copy.Instrument.excitation.atCutoff;
+      await lab.getByRole('button', { name: action, exact: true }).click();
+      await expect(lab.locator('[data-filter-readouts]')).toContainText(kind === 'rcl' ? 'φ = 0.0°' : '-45.0°');
+      await expect(lab.locator('[data-trace-id]')).toHaveCount(2);
+      expect(await page.evaluate(inspectMobileLayout)).toEqual([]);
+    }
 
     await page.goto(`/${locale}/pinouts#pcm5102`);
     const lab = page.locator('[data-pinout-signal-lab]');

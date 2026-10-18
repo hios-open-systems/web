@@ -112,22 +112,25 @@ export function AdcSchematic({ rTopText, rBotText }: { rTopText: string; rBotTex
   );
 }
 
-export function RclSchematic({ rText, lText, cText }: { rText: string; lText: string; cText: string }) {
+export function RclSchematic({ rText, lText, cText, ariaLabel }: { rText: string; lText: string; cText: string; ariaLabel: string }) {
   return (
-    <Schematic ariaLabel="Series RLC circuit">
-      <Pin x={30} y={44} text="Vs" />
+    <Schematic ariaLabel={ariaLabel}>
+      <Pin x={30} y={44} text="Vin" />
       <Dot x={30} y={56} />
-      <Wire d="M30 56 H66" />
-      <ResistorH x={92} y={56} />
-      <Value x={92} y={40} text={rText} />
-      <Wire d="M114 56 H156" />
-      <InductorH x={180} y={56} />
-      <Value x={180} y={40} text={lText} />
-      <Wire d="M204 56 H252" />
-      <CapacitorH x={270} y={56} />
-      <Value x={270} y={40} text={cText} />
-      <Wire d="M284 56 H330 V120 H30 V56" />
-      <Ground x={180} y={120} />
+      <Wire d="M30 56 H76" />
+      <InductorH x={100} y={56} />
+      <Value x={100} y={40} text={lText} />
+      <Wire d="M124 56 H171" />
+      <CapacitorH x={185} y={56} />
+      <Value x={185} y={36} text={cText} />
+      <Wire d="M199 56 H322 M250 56 V70" />
+      <Dot x={250} y={56} />
+      <ResistorV x={250} y={92} />
+      <Value x={276} y={96} text={rText} anchor="start" />
+      <Wire d="M250 114 V120" />
+      <Dot x={322} y={56} />
+      <Pin x={310} y={44} text="Vout = VR" />
+      <Ground x={250} y={120} />
     </Schematic>
   );
 }

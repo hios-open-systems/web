@@ -3289,9 +3289,6 @@
         "rc": {
             "title": "Osciloscopio RC",
             "description": "Tensión de entrada y salida de un filtro RC pasabajos ideal, con las mismas escalas de tiempo y tensión.",
-            "frequency": "Frecuencia de entrada (Hz)",
-            "amplitude": "Amplitud de entrada (V pico)",
-            "atCutoff": "Llevar entrada a fc",
             "hint": "Senoidal en régimen permanente, fuente ideal y salida sin carga. En fc: −3.01 dB y −45°. Cambiar R o C recalcula el régimen permanente; no se modela el transitorio de conmutación."
         },
         "i2s": {
@@ -3303,6 +3300,23 @@
             "hint": "Bus estéreo: BCLK = fs × 2 × bits por ranura; WS = fs. Arriba: BCLK. Abajo: WS (0 = izquierdo, 1 = derecho). Los niveles lógicos no son voltajes. Es una simulación local, no una lectura de la placa.",
             "dataHint": "La ranura puede ser más ancha que la profundidad de audio. No se dibujan DIN ni MCLK. En I²S estándar, el MSB de la siguiente palabra aparece un período BCLK después del cambio de WS.",
             "reference": "Especificación I²S (NXP)"
+        },
+        "excitation": {
+            "frequency": "Frecuencia de entrada (Hz)",
+            "amplitude": "Amplitud de entrada (V pico)",
+            "atCutoff": "Llevar entrada a fc",
+            "atResonance": "Llevar entrada a f0"
+        },
+        "rl": {
+            "title": "Osciloscopio RL",
+            "description": "Tensión de entrada y salida sobre R de un filtro RL pasabajos ideal, con las mismas escalas de tiempo y tensión.",
+            "hint": "Vout se mide sobre R: H = R / (R + jωL). En fc: −3.01 dB y −45°. Senoidal en régimen permanente, fuente ideal y salida sin carga adicional; no se modelan transitorios ni pérdidas del inductor."
+        },
+        "rcl": {
+            "title": "Osciloscopio RCL serie",
+            "description": "Tensión de entrada y salida sobre R de un circuito RCL serie ideal. Vout = VR, con las mismas escalas de tiempo y tensión.",
+            "schematic": "Circuito RCL serie: entrada Vin, salida Vout sobre R respecto de masa.",
+            "hint": "Vout = VR: H = R / [R + j(ωL − 1/ωC)]. Es una respuesta pasabanda: en f0, |Z| es mínimo, Vout = Vin y φ = 0°. Por debajo de f0 la salida adelanta; por encima, atrasa. Usa la frecuencia f de la calculadora. Régimen permanente con R > 0, fuente ideal y sin carga adicional; no incluye transitorios ni pérdidas parásitas."
         }
     }
 }

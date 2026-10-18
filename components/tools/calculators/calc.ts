@@ -1,5 +1,7 @@
 /* Pure, framework-free calculator math + formatting helpers.
  * Kept outside React so it can be unit-tested and reused. */
+import { rlCutoff } from '../../../lib/instruments/rl.ts';
+import { rclImpedanceAt } from '../../../lib/instruments/rcl.ts';
 
 export const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
 
@@ -61,24 +63,14 @@ export const calc = {
     return { gain, gainDb };
   },
   rlFilter: (rOhm: number, lMilliH: number) => {
-    const l = lMilliH / 1000;
-    const valid = rOhm > 0 && l > 0;
-    return { fc: valid ? rOhm / (2 * Math.PI * l) : 0, valid };
+    const fc = rlCutoff(rOhm, lMilliH);
+    return { fc, valid: fc > 0 };
   },
   rlRequiredL: (fcHz: number, rOhm: number) =>
     fcHz > 0 && rOhm > 0 ? (rOhm / (2 * Math.PI * fcHz)) * 1000 : 0,
   rclSeries: (rOhm: number, lMilliH: number, cMicroF: number, freqHz: number) => {
-    const l = lMilliH / 1000;
-    const c = cMicroF / 1_000_000;
-    const valid = l > 0 && c > 0 && freqHz > 0;
-    if (!valid) return { xl: 0, xc: 0, z: 0, f0: 0, q: 0, valid: false };
-    const w = 2 * Math.PI * freqHz;
-    const xl = w * l;
-    const xc = 1 / (w * c);
-    const z = Math.sqrt(rOhm * rOhm + (xl - xc) * (xl - xc));
-    const f0 = 1 / (2 * Math.PI * Math.sqrt(l * c));
-    const q = rOhm > 0 ? (1 / rOhm) * Math.sqrt(l / c) : 0;
-    return { xl, xc, z, f0, q, valid: true };
+    const result = rclImpedanceAt(rOhm, lMilliH, cMicroF, freqHz);
+    return result ? { ...result, valid: true } : { xl: 0, xc: 0, z: 0, f0: 0, q: 0, valid: false };
   },
   i2sClocks: (sampleRate: number, bits: number, channels: number, mclkMultiplier: number) => {
     if (sampleRate <= 0 || bits <= 0 || channels <= 0 || mclkMultiplier <= 0) {

@@ -3289,9 +3289,6 @@
         "rc": {
             "title": "Oscilloscopio RC",
             "description": "Tensione di ingresso e uscita di un filtro RC passa-basso ideale, con le stesse scale di tempo e tensione.",
-            "frequency": "Frequenza di ingresso (Hz)",
-            "amplitude": "Ampiezza di ingresso (V picco)",
-            "atCutoff": "Imposta ingresso a fc",
             "hint": "Sinusoide a regime, sorgente ideale e uscita senza carico. A fc: −3.01 dB e −45°. Cambiare R o C ricalcola il regime; i transitori di commutazione non sono modellati."
         },
         "i2s": {
@@ -3303,6 +3300,23 @@
             "hint": "Bus stereo: BCLK = fs × 2 × bit per slot; WS = fs. Sopra: BCLK. Sotto: WS (0 = sinistro, 1 = destro). I livelli logici non sono tensioni. È una simulazione locale, non una lettura della scheda.",
             "dataHint": "Lo slot può essere più ampio della profondità audio. DIN e MCLK non sono disegnati. In I²S standard, l’MSB della parola successiva arriva un periodo BCLK dopo il cambio di WS.",
             "reference": "Specifica I²S (NXP)"
+        },
+        "excitation": {
+            "frequency": "Frequenza di ingresso (Hz)",
+            "amplitude": "Ampiezza di ingresso (V picco)",
+            "atCutoff": "Imposta ingresso a fc",
+            "atResonance": "Porta l’ingresso a f0"
+        },
+        "rl": {
+            "title": "Oscilloscopio RL",
+            "description": "Tensione d’ingresso e tensione d’uscita su R di un filtro RL passa-basso ideale, con le stesse scale di tempo e tensione.",
+            "hint": "Vout è misurata su R: H = R / (R + jωL). A fc: −3.01 dB e −45°. Regime sinusoidale permanente, sorgente ideale e nessun carico aggiuntivo in uscita; transitori e perdite dell’induttore non sono modellati."
+        },
+        "rcl": {
+            "title": "Oscilloscopio RLC serie",
+            "description": "Tensione d’ingresso e tensione d’uscita su R di un circuito RLC serie ideale. Vout = VR, con le stesse scale di tempo e tensione.",
+            "schematic": "Circuito RLC serie: ingresso Vin, uscita Vout su R rispetto a massa.",
+            "hint": "Vout = VR: H = R / [R + j(ωL − 1/ωC)]. Risposta passa-banda: a f0, |Z| è minima, Vout = Vin e φ = 0°. Sotto f0 l’uscita è in anticipo; sopra, in ritardo. Usa la frequenza f del calcolatore. Regime permanente con R > 0, sorgente ideale e nessun carico aggiuntivo; transitori e perdite parassite sono esclusi."
         }
     }
 }

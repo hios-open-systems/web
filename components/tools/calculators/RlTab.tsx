@@ -4,6 +4,7 @@ import { ResultBar, Field } from './Primitives';
 import { RlSchematic } from './viz/circuits';
 import { Plot } from './viz/Plot';
 import { rlLowpass } from './viz/responses';
+import { RlScope } from './RlScope';
 import type { CalculatorState } from './useCalculatorState';
 
 export function RlTab({ c }: { c: CalculatorState }) {
@@ -37,15 +38,16 @@ export function RlTab({ c }: { c: CalculatorState }) {
       </div>
       <div className={styles.fieldGrid}>
         <Field label={t('cards.rl.r')}>
-          <InputNumber value={c.rlR} onChange={(v) => c.setRlR(Number(v || 0))} min={1} style={c.inputStyle} />
+          <InputNumber aria-label={t('cards.rl.r')} value={c.rlR} onChange={(v) => c.setRlR(Number(v || 0))} min={1} style={c.inputStyle} />
         </Field>
         <Field label={t('cards.rl.l')}>
-          <InputNumber value={c.rlL} onChange={(v) => c.setRlL(Number(v || 0))} min={0.001} step={0.1} style={c.inputStyle} />
+          <InputNumber aria-label={t('cards.rl.l')} value={c.rlL} onChange={(v) => c.setRlL(Number(v || 0))} min={0.001} step={0.1} style={c.inputStyle} />
         </Field>
         <Field label={t('cards.rl.target')}>
-          <InputNumber value={c.rlTargetFc} onChange={(v) => c.setRlTargetFc(Number(v || 0))} min={1} style={c.inputStyle} />
+          <InputNumber aria-label={t('cards.rl.target')} value={c.rlTargetFc} onChange={(v) => c.setRlTargetFc(Number(v || 0))} min={1} style={c.inputStyle} />
         </Field>
       </div>
+      <RlScope c={c} />
     </Card>
   );
 }

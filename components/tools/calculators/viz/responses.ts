@@ -1,6 +1,8 @@
 /* Pure frequency-response samplers. Each returns log-spaced (freq, value)
  * points so the SVG Plot engine can draw them without knowing any physics. */
 import { rcTransfer } from '../../../../lib/instruments/rc.ts';
+import { rlCutoff, rlTransfer } from '../../../../lib/instruments/rl.ts';
+import { rclImpedanceAt, rclResonance } from '../../../../lib/instruments/rcl.ts';
 
 export type Point = [number, number];
 export interface Curve {
@@ -37,14 +39,13 @@ export function rcLowpass(rOhm: number, cNanoF: number): Curve {
 
 /** First-order RL low-pass (output across R): fc = R / (2πL). */
 export function rlLowpass(rOhm: number, lMilliH: number): Curve {
-  const l = lMilliH / 1000;
-  const fc = rOhm > 0 && l > 0 ? rOhm / (2 * Math.PI * l) : 0;
+  const fc = rlCutoff(rOhm, lMilliH);
   const mag: Point[] = [];
   const phase: Point[] = [];
   for (const f of sweep(fc)) {
-    const ratio = fc > 0 ? f / fc : 0;
-    mag.push([f, -10 * Math.log10(1 + ratio * ratio)]);
-    phase.push([f, -Math.atan(ratio) * (180 / Math.PI)]);
+    const transfer = rlTransfer(rOhm, lMilliH, f);
+    mag.push([f, transfer ? 20 * Math.log10(transfer.gain) : NaN]);
+    phase.push([f, transfer ? transfer.phase * (180 / Math.PI) : NaN]);
   }
   return { mag, phase, mark: fc };
 }
@@ -57,16 +58,11 @@ export function ampFlat(gainDb: number, centerHz = 1000): Curve {
 
 /** Series RLC magnitude of impedance |Z|(f), annotated at resonance f0. */
 export function rclImpedance(rOhm: number, lMilliH: number, cMicroF: number): Curve {
-  const l = lMilliH / 1000;
-  const c = cMicroF / 1_000_000;
-  const f0 = l > 0 && c > 0 ? 1 / (2 * Math.PI * Math.sqrt(l * c)) : 0;
+  const f0 = rclResonance(lMilliH, cMicroF);
   const mag: Point[] = [];
   for (const f of sweep(f0)) {
-    const w = 2 * Math.PI * f;
-    const xl = w * l;
-    const xc = w * c > 0 ? 1 / (w * c) : 0;
-    const z = Math.sqrt(rOhm * rOhm + (xl - xc) * (xl - xc));
-    mag.push([f, z]);
+    const impedance = rclImpedanceAt(rOhm, lMilliH, cMicroF, f);
+    mag.push([f, impedance?.z ?? NaN]);
   }
   return { mag, phase: [], mark: f0 };
 }

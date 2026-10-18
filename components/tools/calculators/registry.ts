@@ -136,8 +136,8 @@ export const CALCULATORS: CalcDef[] = [
       { key: 'rcR', default: 10000 },
       { key: 'rcC', default: 100 },
       { key: 'targetFc', default: 160 },
-        { key: 'rcInputHz', default: 160 },
-        { key: 'rcInputV', default: 1 },
+      { key: 'rcInputHz', default: 160 },
+      { key: 'rcInputV', default: 1 },
     ],
   },
   {
@@ -147,6 +147,8 @@ export const CALCULATORS: CalcDef[] = [
       { key: 'rlR', default: 1000 },
       { key: 'rlL', default: 100 },
       { key: 'rlTargetFc', default: 1000 },
+      { key: 'rlInputHz', default: 1000 },
+      { key: 'rlInputV', default: 1 },
     ],
   },
   {
@@ -157,6 +159,7 @@ export const CALCULATORS: CalcDef[] = [
       { key: 'rclL', default: 10 },
       { key: 'rclC', default: 1 },
       { key: 'rclF', default: 1000 },
+      { key: 'rclInputV', default: 1 },
     ],
   },
   {
