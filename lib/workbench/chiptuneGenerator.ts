@@ -1,17 +1,26 @@
-import { createNote, createTrack, PPQ, type ChiptuneSong, type ChiptuneTrack } from './chiptune.ts';
-import type { InstrumentId } from './chiptune.ts';
+/**
+ * Generador procedural de canciones. Con la misma semilla y ajustes devuelve la
+ * misma canción; con otra semilla cambian la forma (verso/estribillo/puente), la
+ * progresión de cada sección, los motivos melódicos, el groove, el bajo, el
+ * arpegio y el tempo. La teoría vive en generatorTheory, los estilos en
+ * generatorStyles y las partes en generatorRhythm / generatorMelody.
+ */
+import { createTrack, PPQ, type ChiptuneNote, type ChiptuneSong, type ChiptuneTrack } from './chiptune.ts';
+import type { MusicalScale } from './chiptuneMusic.ts';
+import { STYLES, type SongStyle, type StyleDef } from './generatorStyles.ts';
+import { chance, pick, planSections, seededRandom, voiceChord, type Rng, type Section } from './generatorTheory.ts';
+import { bassBar, drumBar, type BarContext, type PartContext } from './generatorRhythm.ts';
+import { arpBar, choirBar, makeMotif, melodyBar, padBar, varyMotif, type Motif } from './generatorMelody.ts';
 
-export const SONG_STYLES = {
-  adventure: { label: 'Aventura', bpm: 140, scale: [0, 2, 4, 5, 7, 9, 11], chords: [0, 4, 5, 3] },
-  arcade: { label: 'Arcade 8-Bit', bpm: 168, scale: [0, 2, 3, 5, 7, 8, 10], chords: [0, 5, 2, 6] },
-  dream: { label: 'Tranquilo / Lo-Fi', bpm: 82, scale: [0, 2, 4, 5, 7, 9, 11], chords: [0, 5, 3, 4] },
-  synthwave: { label: 'Synthwave 80s', bpm: 118, scale: [0, 2, 3, 5, 7, 8, 10], chords: [0, 5, 2, 6] },
-  cyberpunk: { label: 'Cyberpunk', bpm: 130, scale: [0, 2, 3, 5, 7, 8, 11], chords: [0, 1, 0, 4] },
-  rock: { label: 'Retro Rock (Guitarra)', bpm: 132, scale: [0, 3, 5, 6, 7, 10], chords: [0, 3, 4, 0] },
-  hiphop: { label: 'Trap / Hip-Hop', bpm: 140, scale: [0, 2, 3, 5, 7, 8, 10], chords: [0, 5, 2, 6] },
-} as const;
+export { type SongStyle } from './generatorStyles.ts';
+export const SONG_STYLES = STYLES;
 
-export type SongStyle = keyof typeof SONG_STYLES;
+export type Complexity = 'simple' | 'normal' | 'rich';
+export const COMPLEXITY_LABELS: Record<Complexity, string> = { simple: 'Simple', normal: 'Media', rich: 'Compleja' };
+const COMPLEXITY: Record<Complexity, number> = { simple: 0.2, normal: 0.55, rich: 0.85 };
+
+/** Rol de cada pista generada; el orden de pistas es fijo (lead, bajo, [arpegio], batería, [pad], [coro]). */
+export type PartRole = 'lead' | 'bass' | 'arp' | 'drums' | 'pad' | 'choir';
 
 export interface GeneratorOptions {
   seed: string;
@@ -19,342 +28,133 @@ export interface GeneratorOptions {
   root: number;
   bars: number;
   trackCount?: number;
+  complexity?: Complexity;
+  /** Semilla propia por rol: regenera una pista sin tocar la armonía ni las demás. */
+  partSeeds?: Partial<Record<PartRole, string>>;
 }
 
-function seededRandom(seed: string) {
-  let state = 2166136261;
-  for (const ch of seed) state = Math.imul(state ^ ch.charCodeAt(0), 16777619);
-  return () => {
-    state += 0x6d2b79f5;
-    let n = Math.imul(state ^ (state >>> 15), 1 | state);
-    n ^= n + Math.imul(n ^ (n >>> 7), 61 | n);
-    return ((n ^ (n >>> 14)) >>> 0) / 4294967296;
+export function trackRoles(count: number): PartRole[] {
+  const roles: PartRole[] = count === 3 ? ['lead', 'bass', 'drums'] : ['lead', 'bass', 'arp', 'drums'];
+  if (count >= 5) roles.push('pad');
+  if (count >= 6) roles.push('choir');
+  return roles;
+}
+
+function buildTrack(role: PartRole, style: StyleDef): ChiptuneTrack {
+  const { instruments: i, names } = style;
+  const spec: Record<PartRole, [string, ChiptuneTrack['instrument'], number]> = {
+    lead: [names.lead, i.lead, 0.8],
+    bass: ['Bajo', i.bass, 0.8],
+    arp: [names.arp, i.arp, 0.45],
+    drums: ['Batería', 'noise-perc', 0.68],
+    pad: [names.pad, i.pad, 0.4],
+    choir: ['Coro / Voces', i.choir, 0.35],
   };
+  const [name, instrument, volume] = spec[role];
+  const track = createTrack(name, instrument);
+  track.volume = volume;
+  return track;
 }
 
-function buildTracks(styleKey: SongStyle, count: number): ChiptuneTrack[] {
-  let leadName = 'Melodía';
-  let leadInst: InstrumentId = 'pulse-lead';
-  let bassInst: InstrumentId = 'triangle-bass';
-  let arpInst: InstrumentId = 'pulse-soft';
-
-  if (styleKey === 'rock') {
-    leadName = 'Guitarra Rítmica / Lead';
-    leadInst = 'chiptune-guitar';
-    bassInst = 'triangle-bass';
-    arpInst = 'chiptune-guitar';
-  } else if (styleKey === 'synthwave' || styleKey === 'cyberpunk') {
-    leadName = 'Lead Sintetizador';
-    leadInst = 'saw-lead';
-    bassInst = 'saw-lead';
-    arpInst = 'snes-lead';
-  } else if (styleKey === 'hiphop') {
-    leadName = 'Campanas / Flauta Trap';
-    leadInst = 'snes-lead';
-    bassInst = 'triangle-bass';
-    arpInst = 'pulse-soft';
-  } else if (styleKey === 'dream') {
-    leadName = 'Melodía Flotante';
-    leadInst = 'synth-choir';
-    bassInst = 'triangle-bass';
-    arpInst = 'snes-lead';
-  }
-
-  const lead = createTrack(leadName, leadInst);
-  const bass = createTrack('Bajo', bassInst);
-  const drums = createTrack('Batería', 'noise-perc');
-  lead.volume = 0.8;
-  bass.volume = styleKey === 'hiphop' ? 0.95 : 0.78;
-  drums.volume = 0.65;
-
-  if (count === 3) return [lead, bass, drums];
-
-  const arp = createTrack(styleKey === 'rock' ? 'Power Chords' : 'Arpegio', arpInst);
-  arp.volume = 0.45;
-  const tracks: ChiptuneTrack[] = [lead, bass, arp, drums];
-
-  if (count >= 5) {
-    const padName = styleKey === 'dream' ? 'Atmósfera / Pad' : 'Strings / Sintetizador';
-    const strings = createTrack(padName, 'synth-strings');
-    strings.volume = 0.4;
-    tracks.push(strings);
-  }
-  if (count >= 6) {
-    const choir = createTrack('Coro / Voces', 'synth-choir');
-    choir.volume = 0.35;
-    tracks.push(choir);
-  }
-  return tracks;
+/** Decisiones por letra de sección (A, B, C, I): todas las repeticiones las comparten. */
+interface SectionPlan {
+  progression: number[];
+  seventh: boolean;
+  motif: Motif;
+  variation: Motif;
+  groove: StyleDef['grooves'][number];
+  bass: StyleDef['bass'][number];
+  arp: StyleDef['arp'][number];
 }
 
-function populateRockBar(
-  lead: ChiptuneTrack,
-  bass: ChiptuneTrack,
-  arp: ChiptuneTrack | undefined,
-  drums: ChiptuneTrack,
-  strings: ChiptuneTrack | undefined,
-  bar: number,
-  bars: number,
-  start: number,
-  chord: number,
-  root: number,
-  random: () => number,
-) {
-  const isLastBar = bar === bars - 1;
-  const chordRoot = 36 + root + chord;
+function planLetters(sections: Section[], style: StyleDef, complexity: number, rng: (role: PartRole) => Rng, harmony: Rng) {
+  const plans = new Map<string, SectionPlan>();
+  const used = new Set<number>();
+  for (const section of sections) {
+    if (plans.has(section.letter)) continue;
+    let index = Math.floor(harmony() * style.progressions.length);
+    for (let tries = 0; used.has(index) && tries < 4; tries++) index = Math.floor(harmony() * style.progressions.length);
+    used.add(index);
+    const density = Math.min(0.95, style.leadDensity * (0.7 + complexity * 0.6) + (section.kind === 'chorus' ? 0.1 : 0));
+    const motif = makeMotif(rng('lead'), density);
+    plans.set(section.letter, {
+      progression: style.progressions[index],
+      seventh: complexity > 0.3 && chance(harmony, style.seventhChance),
+      motif,
+      variation: varyMotif(motif, rng('lead')),
+      groove: pick(rng('drums'), style.grooves),
+      bass: pick(rng('bass'), style.bass),
+      arp: pick(rng('arp'), style.arp),
+    });
+  }
+  return plans;
+}
 
-  for (let s = 0; s < 8; s++) {
-    const t = start + (s * PPQ) / 2;
-    if (bar === 0 && s === 0) drums.notes.push(createNote(49, t, PPQ, 105));
-    if (s === 0 || s === 4 || s === 5) drums.notes.push(createNote(36, t, PPQ / 4, 110));
-    if (s === 2 || s === 6) drums.notes.push(createNote(38, t, PPQ / 4, 105));
-    if (isLastBar && s >= 4) {
-      drums.notes.push(createNote(s === 4 ? 47 : s === 5 ? 45 : 43, t, PPQ / 4, 100));
-    } else {
-      drums.notes.push(createNote(s === 7 ? 46 : 42, t, PPQ / 5, s === 7 ? 85 : 75));
+function barContexts(sections: Section[], plans: Map<string, SectionPlan>, bars: number): (BarContext & { plan: SectionPlan })[] {
+  const out: (BarContext & { plan: SectionPlan })[] = [];
+  for (const section of sections)
+    for (let b = 0; b < section.bars; b++) {
+      const plan = plans.get(section.letter)!;
+      const bar = section.startBar + b;
+      out.push({
+        plan, section, barInSection: b, start: bar * PPQ * 4, seventh: plan.seventh,
+        degree: bar === bars - 1 ? 0 : plan.progression[b % plan.progression.length],
+        nextDegree: 0, sectionEnd: b === section.bars - 1, songEnd: bar === bars - 1,
+      });
     }
-    const notePitch = s === 6 ? chordRoot + 7 : chordRoot;
-    bass.notes.push(createNote(notePitch, t, (PPQ / 2) * 0.8, s % 2 === 0 ? 100 : 85));
-  }
-
-  const riffPattern = random() > 0.5 ? [0, 2, 4, 6] : [0, 3, 5, 6];
-  for (const s of riffPattern) {
-    const t = start + (s * PPQ) / 2;
-    const offset = s === 3 || s === 2 ? 3 : s === 5 || s === 4 ? 5 : 0;
-    lead.notes.push(createNote(60 + root + chord + offset, t, (PPQ / 2) * 0.9, 105));
-    if (arp) {
-      arp.notes.push(createNote(chordRoot + 12, t, (PPQ / 2) * 0.9, 85));
-      arp.notes.push(createNote(chordRoot + 19, t, (PPQ / 2) * 0.9, 80));
-    }
-  }
-
-  if (strings) {
-    strings.notes.push(createNote(chordRoot + 12, start, PPQ * 3.8, 70));
-    strings.notes.push(createNote(chordRoot + 19, start, PPQ * 3.8, 65));
-  }
-}
-
-function populateSynthwaveBar(
-  lead: ChiptuneTrack,
-  bass: ChiptuneTrack,
-  arp: ChiptuneTrack | undefined,
-  drums: ChiptuneTrack,
-  strings: ChiptuneTrack | undefined,
-  bar: number,
-  start: number,
-  chord: number,
-  root: number,
-  random: () => number,
-) {
-  const chordRoot = 36 + root + chord;
-
-  for (let s = 0; s < 8; s++) {
-    const t = start + (s * PPQ) / 2;
-    if (bar === 0 && s === 0) drums.notes.push(createNote(49, t, PPQ, 100));
-    if (s === 0 || s === 4) drums.notes.push(createNote(36, t, PPQ / 4, 110));
-    if (s === 2 || s === 6) drums.notes.push(createNote(38, t, PPQ / 3, 105));
-    drums.notes.push(createNote(42, t, PPQ / 5, 70));
-  }
-
-  for (let s = 0; s < 16; s++) {
-    const t = start + (s * PPQ) / 4;
-    const isHigh = s % 2 === 1;
-    bass.notes.push(createNote(chordRoot + (isHigh ? 12 : 0), t, (PPQ / 4) * 0.75, isHigh ? 80 : 100));
-  }
-
-  if (arp) {
-    const arpNotes = [0, 4, 7, 12, 7, 4];
-    for (let s = 0; s < 16; s++) {
-      const t = start + (s * PPQ) / 4;
-      arp.notes.push(createNote(60 + root + chord + arpNotes[s % arpNotes.length], t, (PPQ / 4) * 0.7, 65));
-    }
-  }
-
-  const motifOffsets = random() > 0.5 ? [0, 7, 10] : [0, 5, 8];
-  const leadSteps = bar % 2 === 0 ? [0, 3, 6] : [0, 4];
-  for (let i = 0; i < leadSteps.length; i++) {
-    const s = leadSteps[i];
-    const t = start + (s * PPQ) / 2;
-    lead.notes.push(createNote(60 + root + chord + motifOffsets[i % motifOffsets.length], t, PPQ * 1.3, 100));
-  }
-
-  if (strings) {
-    strings.notes.push(createNote(48 + root + chord, start, PPQ * 3.9, 75));
-    strings.notes.push(createNote(48 + root + chord + 7, start, PPQ * 3.9, 70));
-  }
-}
-
-function populateTrapBar(
-  lead: ChiptuneTrack,
-  bass: ChiptuneTrack,
-  drums: ChiptuneTrack,
-  strings: ChiptuneTrack | undefined,
-  bar: number,
-  start: number,
-  chord: number,
-  root: number,
-  random: () => number,
-) {
-  const chordRoot = 36 + root + chord;
-
-  for (let s = 0; s < 8; s++) {
-    const t = start + (s * PPQ) / 2;
-    if (bar === 0 && s === 0) drums.notes.push(createNote(49, t, PPQ, 95));
-    if (s === 0 || s === 5) drums.notes.push(createNote(36, t, PPQ / 4, 115));
-    if (s === 4) drums.notes.push(createNote(38, t, PPQ / 3, 120));
-  }
-
-  const rollStep = 10 + Math.floor(random() * 4);
-  for (let s = 0; s < 16; s++) {
-    const t = start + (s * PPQ) / 4;
-    if (s === rollStep || s === 14) {
-      drums.notes.push(createNote(42, t, PPQ / 8, 90));
-      drums.notes.push(createNote(42, t + PPQ / 8, PPQ / 8, 95));
-    } else {
-      drums.notes.push(createNote(42, t, PPQ / 6, s % 2 === 0 ? 80 : 65));
-    }
-  }
-
-  bass.notes.push(createNote(chordRoot, start, PPQ * 1.8, 110));
-  if (bar % 2 === 1) {
-    const bassHop = random() > 0.5 ? 3 : 5;
-    bass.notes.push(createNote(chordRoot + bassHop, start + PPQ * 2.5, PPQ * 1.2, 105));
-  }
-
-  const bellOffsets = random() > 0.5 ? [0, 3, 7] : [0, 2, 5];
-  const bellSteps = [0, 3, 6];
-  for (let i = 0; i < bellSteps.length; i++) {
-    const s = bellSteps[i];
-    const t = start + (s * PPQ) / 2;
-    lead.notes.push(createNote(60 + root + chord + bellOffsets[i], t, PPQ * 0.8, 105));
-  }
-
-  if (strings) {
-    strings.notes.push(createNote(48 + root + chord, start, PPQ * 3.8, 70));
-    strings.notes.push(createNote(48 + root + chord + 3, start, PPQ * 3.8, 65));
-  }
-}
-
-function populateDreamBar(
-  lead: ChiptuneTrack,
-  bass: ChiptuneTrack,
-  drums: ChiptuneTrack,
-  strings: ChiptuneTrack | undefined,
-  choir: ChiptuneTrack | undefined,
-  start: number,
-  chord: number,
-  root: number,
-  random: () => number,
-) {
-  const chordRoot = 36 + root + chord;
-  drums.notes.push(createNote(36, start, PPQ / 3, 65));
-  drums.notes.push(createNote(42, start + PPQ * 2, PPQ / 4, 50));
-  bass.notes.push(createNote(chordRoot, start, PPQ * 3.8, 85));
-  const leadOff = random() > 0.5 ? 7 : 4;
-  lead.notes.push(createNote(60 + root + chord + leadOff, start + PPQ * 0.5, PPQ * 2.5, 80));
-
-  if (strings) {
-    strings.notes.push(createNote(48 + root + chord, start, PPQ * 3.9, 75));
-    strings.notes.push(createNote(48 + root + chord + 7, start, PPQ * 3.9, 65));
-    strings.notes.push(createNote(48 + root + chord + 11, start, PPQ * 3.9, 60));
-  }
-
-  if (choir) {
-    choir.notes.push(createNote(60 + root + chord + 4, start + PPQ, PPQ * 2.8, 70));
-  }
-}
-
-function populateArcadeBar(
-  lead: ChiptuneTrack,
-  bass: ChiptuneTrack,
-  arp: ChiptuneTrack | undefined,
-  drums: ChiptuneTrack,
-  start: number,
-  chord: number,
-  root: number,
-  scaleNote: (deg: number) => number,
-  random: () => number,
-) {
-  const chordRoot = 36 + root + chord;
-
-  for (let s = 0; s < 8; s++) {
-    const t = start + (s * PPQ) / 2;
-    if (s === 0 || s === 4) drums.notes.push(createNote(36, t, PPQ / 4, 100));
-    if (s === 2 || s === 6) drums.notes.push(createNote(38, t, PPQ / 4, 95));
-    drums.notes.push(createNote(s === 3 || s === 7 ? 46 : 42, t, PPQ / 5, 70));
-  }
-
-  const walking = [0, 4, 7, 12];
-  for (let s = 0; s < 8; s += 2) {
-    const t = start + (s * PPQ) / 2;
-    bass.notes.push(createNote(chordRoot + walking[(s / 2) % 4], t, (PPQ / 2) * 0.75, 95));
-  }
-
-  if (arp) {
-    const pattern = [0, 4, 7, 12];
-    for (let s = 0; s < 16; s++) {
-      const t = start + (s * PPQ) / 4;
-      arp.notes.push(createNote(60 + root + chord + pattern[s % 4], t, (PPQ / 4) * 0.7, 65));
-    }
-  }
-
-  for (let s = 0; s < 8; s += 2) {
-    const t = start + (s * PPQ) / 2;
-    const deg = chord + Math.floor(random() * 5);
-    lead.notes.push(createNote(60 + root + scaleNote(deg), t, (PPQ / 2) * 0.8, 95));
-  }
+  out.forEach((bar, i) => (bar.nextDegree = out[i + 1]?.degree ?? 0));
+  return out;
 }
 
 export function generateSong(options: GeneratorOptions): ChiptuneSong {
-  const style = SONG_STYLES[options.style] ?? SONG_STYLES.adventure;
-  const random = seededRandom(`${options.seed}:${options.style}:${options.root}`);
+  const style: StyleDef = STYLES[options.style] ?? STYLES.adventure;
   const root = Math.max(0, Math.min(11, Math.round(options.root)));
   const bars = Math.max(1, Math.min(16, Math.round(options.bars)));
   const count = options.trackCount ? Math.max(3, Math.min(6, options.trackCount)) : 4;
-  const tracks = buildTracks(options.style, count);
-  const lead = tracks[0];
-  const bass = tracks[1];
-  const arp = count >= 4 ? tracks[2] : undefined;
-  const drums = count >= 4 ? tracks[3] : tracks[2];
-  const strings = count >= 5 ? tracks[4] : undefined;
-  const choir = count >= 6 ? tracks[5] : undefined;
+  const complexity = COMPLEXITY[options.complexity ?? 'normal'];
+  const scale: MusicalScale = { root, mode: style.mode };
+  const harmony = seededRandom(`${options.seed}:${options.style}:harmony`);
+  const randoms = new Map<PartRole, Rng>();
+  const rng = (role: PartRole) => {
+    if (!randoms.has(role)) randoms.set(role, seededRandom(`${options.partSeeds?.[role] ?? options.seed}:${options.style}:${role}`));
+    return randoms.get(role)!;
+  };
+  const sections = planSections(bars, harmony);
+  const plans = planLetters(sections, style, complexity, rng, harmony);
+  const [lo, hi] = style.bpm;
+  const bpm = Math.round((lo + harmony() * (hi - lo)) / 2) * 2;
 
-  const scaleLen = style.scale.length;
-  const scaleNote = (degree: number) =>
-    style.scale[((degree % scaleLen) + scaleLen) % scaleLen] + Math.floor(degree / scaleLen) * 12;
+  const roles = trackRoles(count);
+  const tracks = roles.map((role) => buildTrack(role, style));
+  const notesOf = (role: PartRole): ChiptuneNote[] | undefined => tracks[roles.indexOf(role)]?.notes;
+  const ctx = (role: PartRole): PartContext => ({ scale, random: rng(role), complexity, swing: style.swing });
 
-  for (let bar = 0; bar < bars; bar++) {
-    const chord = bar === bars - 1 ? 0 : style.chords[bar % 4];
-    const start = bar * PPQ * 4;
-
-    switch (options.style) {
-      case 'rock':
-        populateRockBar(lead, bass, arp, drums, strings, bar, bars, start, chord, root, random);
-        break;
-      case 'synthwave':
-      case 'cyberpunk':
-        populateSynthwaveBar(lead, bass, arp, drums, strings, bar, start, chord, root, random);
-        break;
-      case 'hiphop':
-        populateTrapBar(lead, bass, drums, strings, bar, start, chord, root, random);
-        break;
-      case 'dream':
-        populateDreamBar(lead, bass, drums, strings, choir, start, chord, root, random);
-        break;
-      case 'arcade':
-      case 'adventure':
-      default:
-        populateArcadeBar(lead, bass, arp, drums, start, chord, root, scaleNote, random);
-        break;
+  let leadDegree = 9;
+  let padVoicing: number[] | undefined;
+  let arpVoicing: number[] | undefined;
+  for (const bar of barContexts(sections, plans, bars)) {
+    const { plan, section } = bar;
+    drumBar(notesOf('drums')!, plan.groove, bar, ctx('drums'), options.style === 'hiphop');
+    bassBar(notesOf('bass')!, section.kind === 'intro' ? 'whole' : plan.bass, bar, ctx('bass'));
+    if (section.kind !== 'intro') {
+      const motif = bar.barInSection === 2 ? plan.variation : plan.motif;
+      leadDegree = melodyBar(notesOf('lead')!, motif, bar, ctx('lead'), leadDegree, section.kind === 'chorus' ? 2 : 0);
     }
+    padVoicing = voiceChord(scale, bar.degree, bar.seventh, 60, padVoicing);
+    arpVoicing = voiceChord(scale, bar.degree, bar.seventh, 67, arpVoicing);
+    const arp = notesOf('arp');
+    if (arp) arpBar(arp, plan.arp, arpVoicing, bar, ctx('arp'));
+    const pad = notesOf('pad');
+    if (pad) padBar(pad, padVoicing, bar);
+    const choir = notesOf('choir');
+    if (choir) choirBar(choir, voiceChord(scale, bar.degree, false, 72), bar);
   }
 
-  const isMinor = options.style === 'arcade' || options.style === 'synthwave' || options.style === 'cyberpunk' || options.style === 'hiphop';
   return {
     version: 1,
-    scale: { root, mode: isMinor ? 'minor' : 'major' },
+    scale,
     name: `${style.label} · ${options.seed}`,
-    bpm: style.bpm,
+    bpm,
     ppq: PPQ,
     beatsPerBar: 4,
     lengthBars: bars,
@@ -362,3 +162,6 @@ export function generateSong(options: GeneratorOptions): ChiptuneSong {
     updatedAt: 0,
   };
 }
+
+/** Rol de una pista de una canción generada con `count` pistas (por posición). */
+export const roleAt = (count: number, index: number): PartRole | undefined => trackRoles(count)[index];
