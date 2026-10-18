@@ -1,178 +1,92 @@
 import React from 'react';
-import type { Dibit } from './types';
-import { FORCED_180_DIBITS, getNextDibit, getRandomDibits, mapDibit } from './qpskMath';
+import { Button } from 'antd';
+import { useTranslations } from 'next-intl';
+import type { QpskSimConfig } from './types';
+import { GRAY_ORDER, mapDibit, symbolSnrDb, theoreticalBer } from './qpskMath';
+import { QpskSequence } from './QpskSequence';
 import styles from './qpskSimulator.module.css';
 
-interface QpskControlsProps {
-  dibits: Dibit[];
-  onDibitsChange: (dibits: Dibit[]) => void;
-  cyclesPerSymbol: number;
-  onCyclesChange: (val: number) => void;
-  noiseLevel: number;
-  onNoiseChange: (val: number) => void;
-  scrollSpeed: number;
-  onSpeedChange: (val: number) => void;
-  showReference: boolean;
-  onShowReferenceChange: (val: boolean) => void;
-  showTrajectories: boolean;
-  onShowTrajectoriesChange: (val: boolean) => void;
-  running: boolean;
-  onToggleRunning: () => void;
+type Props = { config: QpskSimConfig; onChange: (patch: Partial<QpskSimConfig>) => void };
+
+function RangeControl({ label, value, min, max, step, onChange, unit = '', digits = 1 }: {
+  label: string; value: number; min: number; max: number; step: number;
+  onChange: (value: number) => void; unit?: string; digits?: number;
+}) {
+  return (
+    <label className={styles.sliderField}>
+      <span className={styles.controlLabelRow}><span style={{ textTransform: 'none' }}>{label}</span>
+        <span className={styles.labelValue}>{value.toFixed(digits)}{unit}</span></span>
+      <input type="range" aria-label={label} min={min} max={max} step={step}
+        value={value} onChange={(e) => onChange(Number(e.target.value))} className={styles.sliderInput} />
+    </label>
+  );
 }
 
-export function QpskControls(props: QpskControlsProps) {
-  const {
-    dibits,
-    onDibitsChange,
-    cyclesPerSymbol,
-    onCyclesChange,
-    noiseLevel,
-    onNoiseChange,
-    scrollSpeed,
-    onSpeedChange,
-    showReference,
-    onShowReferenceChange,
-    showTrajectories,
-    onShowTrajectoriesChange,
-    running,
-    onToggleRunning,
-  } = props;
+function SignalControls({ config, onChange }: Props) {
+  const t = useTranslations('Qpsk');
+  const snr = symbolSnrDb(config.noiseLevel);
+  const ber = theoreticalBer(config.noiseLevel);
+  return (
+    <div className={styles.controlGroup}>
+      <RangeControl label={t('cycles')} value={config.cyclesPerSymbol} min={1} max={5} step={0.5}
+        unit={' ' + t('cyclesUnit')} onChange={(cyclesPerSymbol) => onChange({ cyclesPerSymbol })} />
+      <RangeControl label={t('noise')} value={config.noiseLevel} min={0} max={0.6} step={0.01}
+        digits={2} onChange={(noiseLevel) => onChange({ noiseLevel })} />
+      <div className={styles.grayRefBox} data-testid="qpsk-metrics">
+        <div>{t('snr')}: {Number.isFinite(snr) ? snr.toFixed(2) : '∞'} dB</div>
+        <div>{t('ber')}: {config.noiseLevel === 0 ? '0' : ber === 0 ? '< 10⁻³⁰⁰' : ber.toExponential(2)}</div>
+      </div>
+    </div>
+  );
+}
 
-  const handleDibitClick = (index: number) => {
-    const next = [...dibits];
-    next[index] = getNextDibit(next[index]);
-    onDibitsChange(next);
-  };
+function PlaybackControls({ config, onChange }: Props) {
+  const t = useTranslations('Qpsk');
+  return (
+    <div className={styles.controlGroup}>
+      <RangeControl label={t('speed')} value={config.scrollSpeed} min={0} max={3} step={0.2}
+        unit="x" onChange={(scrollSpeed) => onChange({ scrollSpeed })} />
+      <label className={styles.checkboxLabel}>
+        <input type="checkbox" checked={config.showReference}
+          onChange={(e) => onChange({ showReference: e.target.checked })} />
+        <span>{t('reference')}</span>
+      </label>
+      <label className={styles.checkboxLabel}>
+        <input type="checkbox" checked={config.showTrajectories}
+          onChange={(e) => onChange({ showTrajectories: e.target.checked })} />
+        <span>{t('connections')}</span>
+      </label>
+      <Button className={styles.actionBtn} onClick={() => onChange({ running: !config.running })}>
+        {t(config.running ? 'pause' : 'resume')}
+      </Button>
+      <span className={styles.bezelHint}>{t('pauseHint')}</span>
+    </div>
+  );
+}
 
+function GrayReference() {
+  const t = useTranslations('Qpsk');
+  return (
+    <div className={styles.controlGroup}>
+      <strong>{t('grayMapping')}</strong>
+      <div className={styles.grayRefBox}>
+        {GRAY_ORDER.map((dibit) => {
+          const { I, Q, phaseDeg } = mapDibit(dibit);
+          return <div key={dibit}>{dibit}: {phaseDeg}° ({I > 0 ? '+' : '−'}I, {Q > 0 ? '+' : '−'}Q)</div>;
+        })}
+      </div>
+      <span className={styles.bezelHint}>{t('bitConvention')}</span>
+    </div>
+  );
+}
+
+export function QpskControls({ config, onChange }: Props) {
   return (
     <div className={styles.controlsPanel}>
-      <div className={styles.controlGroup}>
-        <div className={styles.controlLabelRow}>
-          <span>Secuencia de Dibits (Click para rotar)</span>
-          <span className={styles.labelValue}>{dibits.length} símb.</span>
-        </div>
-        <div className={styles.bitInputWrapper}>
-          {dibits.map((dibit, idx) => {
-            const info = mapDibit(dibit);
-            return (
-              <button
-                key={idx}
-                type="button"
-                className={styles.dibitBtn}
-                onClick={() => handleDibitClick(idx)}
-                aria-label={`Símbolo ${idx + 1}: ${dibit}, fase ${info.phaseDeg} grados`}
-              >
-                <span>{dibit}</span>
-                <span className={styles.dibitPhase}>{info.phaseDeg}°</span>
-              </button>
-            );
-          })}
-        </div>
-        <div className={styles.btnRow}>
-          <button
-            type="button"
-            className={`${styles.actionBtn} ${styles.actionBtnSecondary}`}
-            onClick={() => onDibitsChange(getRandomDibits(dibits.length))}
-          >
-            Aleatoria
-          </button>
-          <button
-            type="button"
-            className={`${styles.actionBtn} ${styles.actionBtnSecondary}`}
-            onClick={() => onDibitsChange([...FORCED_180_DIBITS])}
-            title="Fuerza saltos de 180° (00 <-> 11)"
-          >
-            Forzar 180°
-          </button>
-        </div>
-      </div>
-
-      <div className={styles.controlGroup}>
-        <label className={styles.sliderField}>
-          <span className={styles.controlLabelRow}>
-            <span>Ciclos Portadora / Símbolo</span>
-            <span className={styles.labelValue}>{cyclesPerSymbol.toFixed(1)} c/s</span>
-          </span>
-          <input
-            type="range"
-            min="1"
-            max="5"
-            step="0.5"
-            value={cyclesPerSymbol}
-            onChange={(e) => onCyclesChange(parseFloat(e.target.value))}
-            className={styles.sliderInput}
-          />
-        </label>
-        <label className={styles.sliderField}>
-          <span className={styles.controlLabelRow}>
-            <span>Ruido de Canal (AWGN / OSNR)</span>
-            <span className={styles.labelValue}>{noiseLevel.toFixed(2)}</span>
-          </span>
-          <input
-            type="range"
-            min="0"
-            max="0.6"
-            step="0.02"
-            value={noiseLevel}
-            onChange={(e) => onNoiseChange(parseFloat(e.target.value))}
-            className={styles.sliderInput}
-          />
-        </label>
-      </div>
-
-      <div className={styles.controlGroup}>
-        <label className={styles.sliderField}>
-          <span className={styles.controlLabelRow}>
-            <span>Velocidad de Barrido</span>
-            <span className={styles.labelValue}>{scrollSpeed.toFixed(1)}x</span>
-          </span>
-          <input
-            type="range"
-            min="0"
-            max="3"
-            step="0.2"
-            value={scrollSpeed}
-            onChange={(e) => onSpeedChange(parseFloat(e.target.value))}
-            className={styles.sliderInput}
-          />
-        </label>
-        <label className={styles.checkboxLabel}>
-          <input
-            type="checkbox"
-            checked={showReference}
-            onChange={(e) => onShowReferenceChange(e.target.checked)}
-          />
-          <span>Portadora de referencia (0° gris)</span>
-        </label>
-        <label className={styles.checkboxLabel}>
-          <input
-            type="checkbox"
-            checked={showTrajectories}
-            onChange={(e) => onShowTrajectoriesChange(e.target.checked)}
-          />
-          <span>Transiciones vectoriales en X-Y</span>
-        </label>
-      </div>
-
-      <div className={styles.controlGroup} style={{ justifyContent: 'space-between' }}>
-        <div className={styles.controlLabelRow}>
-          <span>Control de Adquisición</span>
-        </div>
-        <button
-          type="button"
-          className={`${styles.actionBtn} ${!running ? styles.actionBtnWarning : ''}`}
-          onClick={onToggleRunning}
-        >
-          {running ? 'PAUSAR / SINGLE SHOT' : 'REANUDAR BARRIDO'}
-        </button>
-        <div className={styles.grayRefBox}>
-          <strong>Mapeo Gray:</strong>
-          <br />
-          00: 45° (+I,+Q) | 01: 135° (-I,+Q)
-          <br />
-          11: 225° (-I,-Q) | 10: 315° (+I,-Q)
-        </div>
-      </div>
+      <QpskSequence dibits={config.dibits} onChange={(dibits) => onChange({ dibits })} />
+      <SignalControls config={config} onChange={onChange} />
+      <PlaybackControls config={config} onChange={onChange} />
+      <GrayReference />
     </div>
   );
 }

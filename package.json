@@ -60,7 +60,9 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:auth": "playwright test -c playwright.cloudflare.config.ts",
-    "test:workspaces": "node --experimental-strip-types scripts/workspaces-selftest.ts"
+    "test:workspaces": "node --experimental-strip-types scripts/workspaces-selftest.ts",
+    "test:qpsk": "node --experimental-strip-types scripts/qpsk-selftest.ts",
+    "test:instruments": "node --experimental-strip-types scripts/instruments-selftest.ts"
   },
   "dependencies": {
     "@ant-design/cssinjs": "^1.18.0",

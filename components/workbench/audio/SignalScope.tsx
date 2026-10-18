@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { PauseOutlined, CaretRightOutlined } from '@ant-design/icons';
 import styles from '@/components/ui/instrument.module.css';
+import { InstrumentScreen } from '@/components/instruments/InstrumentScreen';
+import { SCOPE_COLORS } from '@/components/instruments/channels';
 
 const FLAT = 'M20 115H440';
 
@@ -67,16 +69,13 @@ export function SignalScope({
           {!analyser || paused ? <CaretRightOutlined /> : <PauseOutlined />}
         </button>
       </div>
-      <div className={styles.screen}>
-        <span className={styles.screenLabel}>WEB AUDIO / 10 ms</span>
+      <InstrumentScreen label="WEB AUDIO / 10 ms" status="−1 / 0 / +1"
+        channels={[{ id: 'audio', label: 'CH1 · Audio', color: SCOPE_COLORS[0] }]}>
         <svg viewBox="0 0 460 230" className={styles.scope} style={{ maxHeight: 300 }} aria-hidden="true">
           <path d="M20 115H440M230 20V210" className={styles.axis} />
-          <path ref={path} d={FLAT} className={styles.wave} data-live-trace />
+          <path ref={path} d={FLAT} className={styles.wave} style={{ stroke: SCOPE_COLORS[0] }} data-live-trace />
         </svg>
-        <span className={styles.screenFooter}>
-          −1 / 0 / +1 <span>HIOS AUDIO</span>
-        </span>
-      </div>
+      </InstrumentScreen>
       <p style={{ color: '#acb5bb', fontSize: 13, marginBottom: 0 }}>{t('hint')}</p>
     </section>
   );

@@ -8,6 +8,7 @@ import { RcSchematic } from './viz/circuits';
 import { Plot } from './viz/Plot';
 import { rcLowpass } from './viz/responses';
 import { ESeriesControl } from './ESeriesControl';
+import { RcScope } from './RcScope';
 import type { CalculatorState } from './useCalculatorState';
 
 export function RcTab({ c }: { c: CalculatorState }) {
@@ -32,7 +33,7 @@ export function RcTab({ c }: { c: CalculatorState }) {
       >
         <RcSchematic rText={formatOhm(c.rcR)} cText={`${c.rcC} nF`} />
         <Plot
-          series={[{ points: bode.mag, color: 'var(--accent-text)' }]}
+          series={[{ points: bode.mag }]}
           xLog
           xLabel="f"
           yLabel="|H|"
@@ -45,6 +46,7 @@ export function RcTab({ c }: { c: CalculatorState }) {
         <NumberField label={t('cards.rc.c')} value={c.rcC} onChange={c.setRcC} min={0.1} step={0.1} sliderMin={0.1} sliderMax={1000} sliderStep={0.1} />
         <NumberField label={t('cards.rc.target')} value={c.targetFc} onChange={c.setTargetFc} min={1} inputStyle={c.inputStyle} />
       </div>
+      <RcScope c={c} />
     </Card>
   );
 }

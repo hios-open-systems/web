@@ -129,6 +129,7 @@ export interface Breakout {
   jumpers?: BreakoutTable;
   usedBy?: string[];
   datasheetUrl?: string;
+  signalLab?: { kind: 'i2s-clocks'; clockPin: string; wordPin: string };
 }
 
 export const ROLE_LABEL: Record<PinRole, string> = {

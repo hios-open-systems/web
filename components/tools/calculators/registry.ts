@@ -136,6 +136,8 @@ export const CALCULATORS: CalcDef[] = [
       { key: 'rcR', default: 10000 },
       { key: 'rcC', default: 100 },
       { key: 'targetFc', default: 160 },
+        { key: 'rcInputHz', default: 160 },
+        { key: 'rcInputV', default: 1 },
     ],
   },
   {

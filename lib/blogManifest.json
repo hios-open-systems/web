@@ -1,16 +1,15 @@
 [
   {
     "slug": "ref-modulacion-qpsk",
-    "title": "Modulación QPSK: fase en cuadratura, constelación y degradación OSNR",
+    "title": "Modulación QPSK: convención I/Q, constelación y ruido AWGN",
     "date": "2026-10-17",
-    "summary": "Cómo funciona el mapeo Gray en cuadratura I/Q, por qué los saltos de 180° cruzan por amplitud cero dando origen a OQPSK, y cómo el ruido AWGN dispara el Pre-FEC BER.",
+    "summary": "Una convención coherente de bits, colores y fases; señal transmitida ideal, constelación con AWGN, BER teórica y límites de las guías geométricas.",
     "tags": [
       "dsp",
       "qpsk",
       "rf",
-      "optica",
-      "modulacion",
-      "referencia"
+      "modulation",
+      "reference"
     ],
     "lang": "es",
     "category": "referencia",

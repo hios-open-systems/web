@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import type { Dibit, QpskSimConfig, ScreenViewMode } from './types';
 import { getNextDibit, INITIAL_DIBITS } from './qpskMath';
 import { useQpskAnimation } from './useQpskAnimation';
@@ -15,77 +16,29 @@ export interface QpskSimulatorProps {
   className?: string;
 }
 
-export function QpskSimulator({
-  initialDibits = INITIAL_DIBITS,
-  className,
-}: QpskSimulatorProps) {
-  const [dibits, setDibits] = useState<Dibit[]>(initialDibits);
-  const [cyclesPerSymbol, setCyclesPerSymbol] = useState<number>(2.0);
-  const [noiseLevel, setNoiseLevel] = useState<number>(0.05);
-  const [scrollSpeed, setScrollSpeed] = useState<number>(0.8);
-  const [running, setRunning] = useState<boolean>(true);
-  const [showReference, setShowReference] = useState<boolean>(true);
-  const [showTrajectories, setShowTrajectories] = useState<boolean>(true);
+export function QpskSimulator({ initialDibits = INITIAL_DIBITS, className }: QpskSimulatorProps) {
+  const t = useTranslations('Qpsk');
+  const [config, setConfig] = useState<QpskSimConfig>(() => ({
+    dibits: initialDibits.length ? [...initialDibits] : [...INITIAL_DIBITS],
+    cyclesPerSymbol: 2, noiseLevel: 0.05, scrollSpeed: 0.8,
+    running: true, showReference: true, showTrajectories: true,
+  }));
   const [viewMode, setViewMode] = useState<ScreenViewMode>('both');
-
   const timeCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const constCanvasRef = useRef<HTMLCanvasElement | null>(null);
-
-  const config: QpskSimConfig = {
-    dibits,
-    cyclesPerSymbol,
-    noiseLevel,
-    scrollSpeed,
-    running,
-    showReference,
-    showTrajectories,
-  };
-
-  useQpskAnimation({
-    timeCanvasRef,
-    constCanvasRef,
-    config,
-  });
-
-  const handleSymbolTap = (index: number) => {
-    setDibits((prev) => {
-      const next = [...prev];
-      next[index] = getNextDibit(next[index]);
-      return next;
-    });
-  };
-
+  useQpskAnimation({ timeCanvasRef, constCanvasRef, config });
+  const onChange = (patch: Partial<QpskSimConfig>) => setConfig((prev) => ({ ...prev, ...patch }));
+  const onSymbolTap = (index: number) => setConfig((prev) => ({
+    ...prev, dibits: prev.dibits.map((dibit, i) => i === index ? getNextDibit(dibit) : dibit),
+  }));
   return (
-    <section
-      className={`${styles.instrumentChassis} ${className ?? ''}`}
-      aria-label="Simulador de Osciloscopio Digital y Analizador de Constelación QPSK"
-    >
-      <QpskHeader running={running} />
-      <QpskScreens
-        timeCanvasRef={timeCanvasRef}
-        constCanvasRef={constCanvasRef}
-        noiseLevel={noiseLevel}
-        numSymbols={dibits.length}
-        viewMode={viewMode}
-        onViewModeChange={setViewMode}
-        onSymbolTap={handleSymbolTap}
-      />
-      <QpskControls
-        dibits={dibits}
-        onDibitsChange={setDibits}
-        cyclesPerSymbol={cyclesPerSymbol}
-        onCyclesChange={setCyclesPerSymbol}
-        noiseLevel={noiseLevel}
-        onNoiseChange={setNoiseLevel}
-        scrollSpeed={scrollSpeed}
-        onSpeedChange={setScrollSpeed}
-        showReference={showReference}
-        onShowReferenceChange={setShowReference}
-        showTrajectories={showTrajectories}
-        onShowTrajectoriesChange={setShowTrajectories}
-        running={running}
-        onToggleRunning={() => setRunning((prev) => !prev)}
-      />
+    <section className={[styles.instrumentChassis, className].filter(Boolean).join(' ')}
+      aria-label={t('ariaLabel')}>
+      <QpskHeader running={config.running && config.scrollSpeed > 0} />
+      <QpskScreens timeCanvasRef={timeCanvasRef} constCanvasRef={constCanvasRef}
+        numSymbols={config.dibits.length} viewMode={viewMode}
+        onViewModeChange={setViewMode} onSymbolTap={onSymbolTap} />
+      <QpskControls config={config} onChange={onChange} />
       <QpskLegend />
     </section>
   );

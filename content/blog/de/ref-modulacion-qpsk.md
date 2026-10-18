@@ -1,52 +1,80 @@
 ---
-title: "QPSK-Modulation: Quadraturphase, Konstellation und OSNR-Degradation"
+title: "QPSK-Modulation: I/Q-Konvention, Konstellation und AWGN"
 date: "2026-10-17"
 lang: "de"
-summary: "Wie die Gray-Codierung I/Q-Quadraturkanäle abbildet, was I(t) und Q(t) bedeuten, warum 180°-Phasensprünge durch den Nullpunkt laufen (OQPSK) und wie AWGN-Rauschen die Pre-FEC-BER erhöht."
-tags: ["dsp", "qpsk", "rf", "optik", "modulation", "referencia"]
+summary: "Konsistente Bits, Farben und Phasen: ideales Sendesignal, AWGN-Konstellation, theoretische BER und Grenzen geometrischer Hilfslinien."
+tags: ["dsp", "qpsk", "rf", "modulation", "reference"]
 category: "referencia"
 interactive: "qpsk-simulator"
 ---
 
-Die **QPSK-Modulation (Quadrature Phase Shift Keying)** überträgt **2 Bits pro Symbol (Dibit)** in vier um **90°** getrennten Phasenzuständen. Durch die Orthogonalität zwischen Kosinusträger (**In-Phase `I(t)`**) und Sinusträger (**Quadratur `Q(t)`**) wird die doppelte Bitrate gegenüber BPSK bei gleicher Bandbreite erreicht.
+**QPSK (Quadrature Phase Shift Keying)** überträgt **2 Bits pro Symbol** mit vier um **90°** versetzten Phasen. Bei gleicher Symbolrate und Pulsformung werden doppelt so viele Bits wie bei BPSK übertragen. Dieses Lehrmodell zeigt die ideale Übertragung und Rauschen im Symbolraum, keinen vollständigen Empfänger oder optischen Übertragungskanal.
 
-## Was bedeuten `I(t)`, `Q(t)` und `s(t)`?
+## Kanäle, Farben und Bitreihenfolge
 
-* **`I(t)` — In-Phase-Kanal (CH1 gelb):** Überträgt die **geraden Bits (`b₁`)** als bipolare Pegel (`+1 V` für `0`, `−1 V` für `1`) und moduliert den Referenz-Kosinusträger `cos(ωc·t)` (`0°`). Im **X-Y**-Konstellationsdiagramm bildet `I(t)` die **horizontale X-Achse**.
-* **`Q(t)` — Quadratur-Kanal (CH2 cyan):** Überträgt die **ungeraden Bits (`b₀`)** und moduliert den um **90° (eine Viertelperiode)** verschobenen Sinusträger `sin(ωc·t)`. Durch die Orthogonalität beider Wellen lassen sich `I(t)` und `Q(t)` im Empfänger störungsfrei trennen. Im **X-Y**-Diagramm bildet `Q(t)` die **vertikale Y-Achse**.
-* **`s(t)` — Modulierter Träger (CH3 grün):** Das resultierende physikalische Sendesignal aus der Überlagerung beider Kanäle.
+Ein Dibit wird von links nach rechts als `b₁b₀` geschrieben. In dieser Konvention hängt **I vom zweiten Bit `b₀` und Q vom ersten Bit `b₁`** ab. Die Bezeichnungen „gerade/ungerade“ werden vermieden, da sie von der Nummerierung des Datenstroms abhängen.
 
-## Quadraturgleichung und Gray-Codierung
+* **CH1: I(t), Cyan:** dimensionslose Pegel `+1` für `b₀ = 0` und `−1` für `b₀ = 1`; horizontale Komponente der Konstellation.
+* **CH2: Q(t), Gelb:** Pegel `+1` für `b₁ = 0` und `−1` für `b₁ = 1`; vertikale Komponente. Im reellen Signal multipliziert sie `−sin(ωc·t)`, passend zur positiven Phasenkonvention.
+* **CH3: s(t), Grün:** ideales Sendesignal vor dem Rauschen und ohne Pulsformung. Der gestrichelte graue Kosinus ist die Phasenreferenz `0°`.
 
-Das Sendesignal pro Symboldauer `Ts` lautet:
+## Gleichung und Gray-Zuordnung
 
 ```text
-s(t) = (1 / √2) · [ I(t)·cos(ωc·t) − Q(t)·sin(ωc·t) ]
+I = 1 − 2b₀
+Q = 1 − 2b₁
+s(t) = [I·cos(ωc·t) − Q·sin(ωc·t)] / √2 = cos(ωc·t + φ)
+z = (I + jQ) / √2,  |z|² = Es = 1
 ```
 
-Durch **Gray-Codierung** unterscheiden sich benachbarte Quadranten in **nur einem einzigen Bit**:
+Die Normierung gibt der komplexen Darstellung `z` den Betrag und die Symbolenergie 1. CH3 erhält dadurch weder eine Volt-Skalierung noch eine physikalische Einheitsenergie: Ein reeller Kosinus mit Amplitude 1 hat die normierte mittlere Leistung 1/2. Ideale X-Y-Punkte liegen bei `(±1/√2, ±1/√2)`, während CH1 und CH2 die Pegel `±1` zeigen.
 
-| Dibit (`b₁b₀`) | Kanal `I(t)` (X-Achse) | Kanal `Q(t)` (Y-Achse) | Trägerphase | Quadrant |
-|---|---|---|---|---|
-| `00` | `+1` | `+1` | **45°** (`π/4`) | I |
-| `01` | `−1` | `+1` | **135°** (`3π/4`) | II |
-| `11` | `−1` | `−1` | **225°** (`5π/4`) | III |
-| `10` | `+1` | `−1` | **315°** (`7π/4`) | IV |
+| Dibit `b₁b₀` | I (Bit `b₀`) | Q (Bit `b₁`) | Phase φ |
+|---|---|---|---|
+| `00` | `+1` | `+1` | 45° |
+| `01` | `−1` | `+1` | 135° |
+| `11` | `−1` | `−1` | 225° |
+| `10` | `+1` | `−1` | 315° |
 
-## Interaktives Labor: Digitaloszilloskop & QPSK-Konstellation
+Benachbarte Konstellationspunkte unterscheiden sich in einem Bit: Das ist die Gray-Zuordnung. Beispielsweise ergibt `01` ein negatives I, ein positives Q und 135°. Eine Entscheidung im benachbarten Quadranten verursacht einen Bitfehler; das Rauschen muss den Punkt dazu nicht exakt um 90° drehen.
 
-Nutzen Sie das Instrument unten, um die Kanäle **`I(t)`**, **`Q(t)`**, das modulierte Signal **`s(t)`** sowie das **X-Y**-Konstellationsdiagramm in Echtzeit zu untersuchen:
+## Interaktives Labor
+
+Eine Spalte im Zeitdiagramm anklicken oder die Symboltasten verwenden, um `00 → 01 → 11 → 10` zu durchlaufen. Die Geschwindigkeit steuert die Animation, keine physikalische Baudrate. Der Trägerregler gibt Perioden pro Symbol an.
 
 <!-- interactive:qpsk-simulator -->
 
-## Experiment 1: 180°-Phasensprung, Nulldurchgang bei `(0,0)` und OQPSK
+## Experiment 1: Phasen vergleichen und Hilfslinien verstehen
 
-1. Klicken Sie auf **Forzar 180°** (`00` ↔ `11`) und anschließend auf **PAUSAR / SINGLE SHOT**.
-2. Auf dem linken Bildschirm markieren die **roten Punkte** auf **CH3** die abrupte Phasenumkehr an den Symbolgrenzen.
-3. Im **X-Y-Modus** rechts verläuft die Trajektorie zwischen `00 (45°)` und `11 (225°)` **exakt durch den Ursprung `(0,0)`**.
+1. **180° erzwingen** anklicken: Die Folge wechselt ausschließlich zwischen `00 ↔ 11`.
+2. **Pausieren** anklicken oder die Geschwindigkeit auf **0.0x** setzen. Animierte Phase und Zufallswerte werden eingefroren.
+3. 45° und 225° relativ zum grauen Kosinus vergleichen: **Zwischen den Symbolen liegen 180°**, nicht zwischen Signal und Referenz. Rote Markierungen kennzeichnen jeden Phasenwechsel; andere Muster können auch 90°-Sprünge enthalten.
+4. **Ideale Symbole verbinden (geometrische Hilfe)** ein- und ausschalten. Die Gerade zwischen gegenüberliegenden Symbolen verläuft durch `(0,0)`, stellt aber keinen berechneten zeitlichen Verlauf dar.
 
-Dieser kurzzeitige Einbruch auf Amplitude Null verursacht in gesättigten HF-Leistungsverstärkern spektrales Nachwachsen (ACLR), weshalb **OQPSK** den `Q`-Kanal um `Ts / 2` verzögert.
+Das Modell schaltet I/Q unmittelbar um. Es berechnet weder einen gefilterten Übergang noch ein Absinken der Hüllkurve auf null. Ein Nulldurchgang des reellen Signals ist ebenfalls kein Nulldurchgang der Hüllkurve. Mit Pulsformung können Übergänge zwischen gegenüberliegenden Symbolen Hüllkurveneinbrüche und Verzerrungen in einer nichtlinearen Stufe verursachen. Das Ergebnis hängt von Filter und Verstärker ab.
 
-## Experiment 2: OSNR-Degradation, AWGN und Pre-FEC-BER
+**OQPSK** verzögert einen Zweig um ein halbes Symbol (`Ts/2`), verhindert gleichzeitige I/Q-Zustandswechsel und begrenzt Phasensprünge zwischen Zuständen auf 90°. OQPSK, Filter und Verstärker sind in diesem Labor nicht implementiert.
 
-Erhöhen Sie den Regler **Ruido de Canal (AWGN / OSNR)** über `0.32`: sobald die grünen Punktwolken die Entscheidungsachsen (`I = 0, Q = 0`) überschreiten, steigen die **Pre-FEC-BER**-Symbolfehler rapide an.
+## Experiment 2: Komponentenrauschen und theoretische BER
+
+1. **AWGN-Rauschen: σ pro I/Q-Komponente** auf `0` setzen: Die Punkte liegen auf den idealen Symbolen; **Es/N₀ = ∞** und **theoretische BER = 0**.
+2. σ langsam erhöhen. Nur die Konstellation streut stärker; CH3 zeigt weiterhin das rauschfreie Sendesignal.
+3. Bei `σ = 0.35` ergibt das Modell etwa **Es/N₀ = 6.11 dB** und **theoretische BER = 0.0217 (2,17 %)**. Das ist keine universelle Schwelle: Die Fehlerwahrscheinlichkeit ändert sich kontinuierlich.
+
+```text
+rI = I/√2 + nI,  rQ = Q/√2 + nQ
+nI, nQ ~ N(0, σ²), unabhängig
+N₀ = 2σ²
+Es/N₀ [dB] = 10·log10(1/(2σ²))
+Pb = Qfunc(1/(√2·σ)) = ½·erfc(1/(2σ))
+```
+
+`Qfunc` ist die obere Verteilungsfunktion der Standardnormalverteilung, nicht der Q-Kanal. Die Formel setzt uncodierte Gray-QPSK, unabhängiges Gaußrauschen und ideale kohärente Quadrantenentscheidungen voraus. Die Achsen markieren diese Entscheidungsgrenzen; der Simulator gewinnt keine Bits aus CH3 zurück und zählt keine Fehler. Die angezeigte BER ist eine analytische Vorhersage, keine Messung der endlichen Punktwolke.
+
+Beim Bearbeiten von Symbolen oder σ im pausierten Zustand werden die Ansichten mit denselben eingefrorenen standardnormalverteilten Rauschwerten neu berechnet. Eine Größenänderung verändert nur die Darstellung, nicht die I/Q-Werte.
+
+## Modellgrenzen
+
+Das Rauschen wird direkt auf normierte Symbole angewendet; CH3 wird nicht demoduliert. **Es/N₀ ist keine optische OSNR**: Optische Leistung und Referenzbandbreite sind nicht definiert. FEC, Pre-FEC/Post-FEC-Messung, Taktrückgewinnung, Trägersynchronisation und Nichtlinearitäten werden nicht simuliert.
+
+Zur QPSK-Konvention und BER-Formel: [technische Dokumentation von MathWorks](https://www.mathworks.com/help/comm/ref/qpskmodulatorbaseband.html).

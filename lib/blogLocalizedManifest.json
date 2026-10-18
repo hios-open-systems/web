@@ -2,16 +2,15 @@
   "es": [
     {
       "slug": "ref-modulacion-qpsk",
-      "title": "Modulación QPSK: fase en cuadratura, constelación y degradación OSNR",
+      "title": "Modulación QPSK: convención I/Q, constelación y ruido AWGN",
       "date": "2026-10-17",
-      "summary": "Cómo funciona el mapeo Gray en cuadratura I/Q, por qué los saltos de 180° cruzan por amplitud cero dando origen a OQPSK, y cómo el ruido AWGN dispara el Pre-FEC BER.",
+      "summary": "Una convención coherente de bits, colores y fases; señal transmitida ideal, constelación con AWGN, BER teórica y límites de las guías geométricas.",
       "tags": [
         "dsp",
         "qpsk",
         "rf",
-        "optica",
-        "modulacion",
-        "referencia"
+        "modulation",
+        "reference"
       ],
       "lang": "es",
       "category": "referencia",
@@ -178,14 +177,13 @@
   "en": [
     {
       "slug": "ref-modulacion-qpsk",
-      "title": "QPSK Modulation: Quadrature Phase, Constellation & OSNR Degradation",
+      "title": "QPSK Modulation: I/Q Convention, Constellation and AWGN",
       "date": "2026-10-17",
-      "summary": "How Gray coding maps I/Q quadrature channels, why 180° phase reversals cross through zero amplitude leading to OQPSK, and how AWGN noise triggers Pre-FEC BER.",
+      "summary": "Consistent bits, colors and phases: ideal transmitted signal, AWGN constellation, theoretical BER and the limits of geometric guides.",
       "tags": [
         "dsp",
         "qpsk",
         "rf",
-        "optics",
         "modulation",
         "reference"
       ],
@@ -354,16 +352,15 @@
   "de": [
     {
       "slug": "ref-modulacion-qpsk",
-      "title": "QPSK-Modulation: Quadraturphase, Konstellation und OSNR-Degradation",
+      "title": "QPSK-Modulation: I/Q-Konvention, Konstellation und AWGN",
       "date": "2026-10-17",
-      "summary": "Wie die Gray-Codierung I/Q-Quadraturkanäle abbildet, warum 180°-Phasensprünge durch den Nullpunkt laufen (OQPSK) und wie AWGN-Rauschen die Pre-FEC-BER erhöht.",
+      "summary": "Konsistente Bits, Farben und Phasen: ideales Sendesignal, AWGN-Konstellation, theoretische BER und Grenzen geometrischer Hilfslinien.",
       "tags": [
         "dsp",
         "qpsk",
         "rf",
-        "optik",
         "modulation",
-        "referencia"
+        "reference"
       ],
       "lang": "de",
       "category": "referencia",
@@ -530,16 +527,15 @@
   "it": [
     {
       "slug": "ref-modulacion-qpsk",
-      "title": "Modulazione QPSK: fase in quadratura, costellazione e degradazione OSNR",
+      "title": "Modulazione QPSK: convenzione I/Q, costellazione e AWGN",
       "date": "2026-10-17",
-      "summary": "Come la codifica Gray mappa i canali I/Q, perché i salti di fase di 180° passano per ampiezza zero (OQPSK) e come il rumore AWGN innesca il Pre-FEC BER.",
+      "summary": "Bit, colori e fasi coerenti: segnale trasmesso ideale, costellazione AWGN, BER teorico e limiti delle guide geometriche.",
       "tags": [
         "dsp",
         "qpsk",
         "rf",
-        "ottica",
-        "modulazione",
-        "referencia"
+        "modulation",
+        "reference"
       ],
       "lang": "it",
       "category": "referencia",

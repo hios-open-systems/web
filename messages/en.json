@@ -1735,7 +1735,7 @@
             },
             "qpsk-modulator": {
                 "title": "QPSK oscilloscope & modulator",
-                "description": "Simulate quadrature phase-shift keying (I/Q), inspect the constellation diagram under AWGN noise and demodulate frames in real time."
+                "description": "Explore the transmitted QPSK signal, Gray mapping and an AWGN constellation with theoretical BER."
             },
             "jam-station": {
                 "title": "Jam Station & Backing Tracks",
@@ -3225,5 +3225,84 @@
         "pause": "Pause viewer",
         "resume": "Resume viewer",
         "hint": "Shows audio generated in this browser, after the volume control. Each window spans 10 ms. Pausing the viewer does not stop the sound."
+    },
+    "Qpsk": {
+        "ariaLabel": "QPSK simulator: transmitted signal and AWGN constellation",
+        "title": "QPSK MODULATION AND I/Q CONSTELLATION",
+        "running": "RUNNING",
+        "paused": "PAUSED",
+        "mode": "EDUCATIONAL MODEL",
+        "sequence": "Dibit sequence (click to cycle)",
+        "symbolCount": "{count} sym.",
+        "symbolLabel": "Symbol {index}: {dibit}, phase {phase} degrees",
+        "random": "Random",
+        "force180": "Force 180°",
+        "cycles": "Carrier cycles per symbol",
+        "cyclesUnit": "cycles/symbol",
+        "noise": "AWGN noise: σ per I/Q component",
+        "snr": "Model Es/N₀",
+        "ber": "Theoretical BER",
+        "speed": "Animation speed",
+        "reference": "Cosine reference (0°, gray)",
+        "connections": "Connect ideal symbols (geometric guide)",
+        "pause": "Pause",
+        "resume": "Resume",
+        "pauseHint": "Pause or 0.0x freezes phase and noise. Editing parameters recalculates the views using the same samples.",
+        "grayMapping": "Gray mapping",
+        "bitConvention": "Dibit b₁b₀: I = 1 − 2b₀; Q = 1 − 2b₁.",
+        "viewMode": "Simulator view",
+        "views": {
+            "both": "Both",
+            "time": "Time",
+            "constellation": "X-Y"
+        },
+        "transmitted": "Ideal TX · no noise",
+        "received": "Symbols + AWGN · Es = 1",
+        "constellationTitle": "X-Y: rI vs rQ",
+        "tapHint": "Click a column or use the symbol buttons to change the dibit.",
+        "timeCanvas": "I and Q channels and the ideal transmitted QPSK signal, without noise or filtering.",
+        "constellationCanvas": "Normalized symbol constellation with AWGN; connecting lines are geometric guides.",
+        "colors": {
+            "cyan": "cyan",
+            "amber": "yellow",
+            "green": "green"
+        },
+        "phaseExplanation": "00 → 11 changes from 45° to 225° relative to the gray cosine: a 180° difference between symbols, not relative to the reference. Red markers indicate any phase change, including 90°.",
+        "trajectoryExplanation": "The line joining opposite symbols passes through (0,0), but it is a geometric guide. It does not simulate a filtered transition or demonstrate that the CH3 envelope reaches zero.",
+        "noiseExplanation": "σ is the noise standard deviation in each normalized component. Es = 1, N₀ = 2σ² and theoretical BER = ½ erfc(1/(2σ)), assuming ideal quadrant decisions and no coding. There is no universal noise threshold.",
+        "modelLimits": "CH3 shows the ideal transmission; noise is applied only to constellation symbols. CH3 is not demodulated and BER is not measured. The model does not include optical OSNR, filters, FEC or amplifiers. At σ = 0, Es/N₀ = ∞ and theoretical BER = 0.",
+        "eyebrow": "DSP and communications",
+        "referenceTitle": "Mathematical reference (REF-006):",
+        "referenceDescription": "I/Q convention, Gray mapping, AWGN noise and model limitations.",
+        "readArticle": "Read technical article"
+    },
+    "Instrument": {
+        "simulated": "SIMULATED · SLOWED",
+        "paused": "SIMULATED · PAUSED",
+        "pause": "Pause display",
+        "resume": "Resume display",
+        "model": "IDEAL MODEL",
+        "frequencyResponse": "Frequency response",
+        "peak": "peak",
+        "invalid": "Enter positive, finite values to show the signal.",
+        "animationHint": "Animation is slowed for inspection; the time axis shows model time. Pause freezes motion; parameter changes still update the curves.",
+        "rc": {
+            "title": "RC oscilloscope",
+            "description": "Input and output voltage of an ideal RC low-pass filter, on the same time and voltage scales.",
+            "frequency": "Input frequency (Hz)",
+            "amplitude": "Input amplitude (V peak)",
+            "atCutoff": "Set input to fc",
+            "hint": "Sine-wave steady state, ideal source and unloaded output. At fc: −3.01 dB and −45°. Changes to R or C recalculate steady state; switching transients are not modeled."
+        },
+        "i2s": {
+            "title": "I²S clock laboratory",
+            "description": "Upper trace: bit clock. Lower trace: word select. Ideal logic levels 0 and 1, displayed on separate lanes.",
+            "sampleRate": "Sample rate fs (Hz)",
+            "slotBits": "Bits per channel slot",
+            "logic": "Logic 0 / 1",
+            "hint": "Stereo bus: BCLK = fs × 2 × slot bits; WS = fs. Upper lane: BCLK. Lower lane: WS (0 = left, 1 = right). Logic levels are not voltages. This is a local simulation, not a reading from the board.",
+            "dataHint": "Slot width can exceed audio bit depth. DIN and MCLK are not drawn. In standard I²S, the next word’s MSB follows the WS change by one BCLK period.",
+            "reference": "I²S specification (NXP)"
+        }
     }
 }

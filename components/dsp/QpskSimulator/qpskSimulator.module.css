@@ -4,9 +4,6 @@
   --bg-screen: #070b0e;
   --grid-color: rgba(0, 255, 170, 0.12);
   --grid-axis: rgba(0, 255, 170, 0.3);
-  --ch1-color: #00e5ff;
-  --ch2-color: #ffab00;
-  --ch3-color: #00ff66;
   --text-main: #e2e8f0;
   --text-muted: #94a3b8;
   --accent: #38bdf8;
@@ -164,7 +161,7 @@
     .screensGrid {
       grid-template-columns: 1fr;
     }
-    .hiddenOnMobileTab {
+    .crtContainer.hiddenOnMobileTab {
       display: none;
     }
   }
@@ -173,7 +170,7 @@
       grid-template-columns: 2fr 1fr;
       gap: 20px;
     }
-    .hiddenOnMobileTab {
+    .crtContainer.hiddenOnMobileTab {
       display: flex;
     }
   }
@@ -216,21 +213,6 @@
   background: rgba(0, 0, 0, 0.65);
   font-weight: bold;
   white-space: nowrap;
-}
-
-.ch1 {
-  color: var(--ch1-color);
-  border: 1px solid var(--ch1-color);
-}
-
-.ch2 {
-  color: var(--ch2-color);
-  border: 1px solid var(--ch2-color);
-}
-
-.ch3 {
-  color: var(--ch3-color);
-  border: 1px solid var(--ch3-color);
 }
 
 .bezelHint {

@@ -8,10 +8,10 @@ test('desktop search, selection and direct links cover the catalog', async ({ pa
   await expect(buttons).toHaveCount(15);
   for (let index = 0; index < 15; index++) {
     await buttons.nth(index).click();
-    await expect(page.locator('#pinout-detail svg')).toHaveCount(1);
+    await expect(page.locator('#pinout-detail [data-pinout-diagram] svg')).toHaveCount(1);
     const names = await page.locator('#pinout-detail [data-signal-name]').evaluateAll((nodes) => nodes.map((node) => node.getAttribute('data-signal-name')));
     if (names.length > 0) {
-      const references = await page.locator('#pinout-detail svg [data-pin-reference]').evaluateAll((nodes) => nodes.map((node) => node.getAttribute('data-pin-reference')));
+      const references = await page.locator('#pinout-detail [data-pinout-diagram] svg [data-pin-reference]').evaluateAll((nodes) => nodes.map((node) => node.getAttribute('data-pin-reference')));
       expect(references).toEqual(names);
     }
     await expect(list.locator('[aria-current="true"]')).toHaveCount(1);
@@ -28,6 +28,6 @@ test('all locales translate new diagram labels', async ({ page }) => {
     await page.goto(`/${locale}/pinouts#pcm5102`);
     await expect(page.locator('#pinout-detail h2')).toHaveText('PCM5102A DAC');
     await expect(page.locator('#pinout-detail')).not.toContainText('Pinouts.functionalDiagram');
-    await expect(page.locator('#pinout-detail svg')).toHaveCount(1);
+    await expect(page.locator('#pinout-detail [data-pinout-diagram] svg')).toHaveCount(1);
   }
 });

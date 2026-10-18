@@ -22,8 +22,7 @@ export function RcSchematic({ rText, cText }: { rText: string; cText: string }) 
       <Wire d="M210 56 H322" />
       <Dot x={322} y={56} />
       <Pin x={322} y={44} text="Vout" />
-      <Wire d="M30 56 V120 M322 56 V120 M30 120 H322" />
-      <Ground x={176} y={120} />
+      <Ground x={210} y={120} />
     </Schematic>
   );
 }
@@ -45,8 +44,7 @@ export function RlSchematic({ rText, lText }: { rText: string; lText: string }) 
       <Wire d="M210 56 H322" />
       <Dot x={322} y={56} />
       <Pin x={322} y={44} text="Vout" />
-      <Wire d="M30 56 V120 M322 56 V120 M30 120 H322" />
-      <Ground x={120} y={120} />
+      <Ground x={210} y={120} />
     </Schematic>
   );
 }

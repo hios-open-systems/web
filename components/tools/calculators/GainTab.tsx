@@ -25,7 +25,7 @@ export function GainTab({ c }: { c: CalculatorState }) {
           gainText={`${c.gain.gain.toFixed(2)}×`}
         />
         <Plot
-          series={[{ points: flat.mag, color: 'var(--accent-text)' }]}
+          series={[{ points: flat.mag }]}
           xLog
           xLabel="f"
           yLabel="Av"

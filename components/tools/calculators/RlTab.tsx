@@ -27,7 +27,7 @@ export function RlTab({ c }: { c: CalculatorState }) {
       >
         <RlSchematic rText={`${c.rlR} Ω`} lText={`${c.rlL} mH`} />
         <Plot
-          series={[{ points: bode.mag, color: 'var(--accent-text)' }]}
+          series={[{ points: bode.mag }]}
           xLog
           xLabel="f"
           yLabel="|H|"

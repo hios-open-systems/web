@@ -3,6 +3,7 @@ import type { Breakout } from './breakout';
 export const AUDIO_BREAKOUTS: Breakout[] = [
   {
     id: 'max98357a',
+    signalLab: { kind: 'i2s-clocks', clockPin: 'BCLK', wordPin: 'LRC' },
     name: 'MAX98357A',
     kind: 'amp',
     summary: 'Amplificador mono clase D con entrada I2S. Consultá la selección de canal y las conexiones de alimentación y parlante.',
@@ -65,6 +66,7 @@ export const AUDIO_BREAKOUTS: Breakout[] = [
   },
   {
     id: 'pcm5102',
+    signalLab: { kind: 'i2s-clocks', clockPin: 'BCK', wordPin: 'LRCK' },
     name: 'PCM5102A DAC',
     kind: 'dac',
     summary: 'DAC I2S 32-bit/384kHz (breakout GY-PCM5102). Salida de línea L/R.',

@@ -1735,7 +1735,7 @@
             },
             "qpsk-modulator": {
                 "title": "QPSK-Oszilloskop & Modulator",
-                "description": "Simuliere Quadratur-Phasenumtastung (I/Q), analysiere das Konstellationsdiagramm unter AWGN-Rauschen und demoduliere Rahmen in Echtzeit."
+                "description": "Erkunde das QPSK-Sendesignal, die Gray-Zuordnung und eine AWGN-Konstellation mit theoretischer BER."
             },
             "jam-station": {
                 "title": "Jam Station & Backing Tracks",
@@ -3225,5 +3225,84 @@
         "pause": "Anzeige pausieren",
         "resume": "Anzeige fortsetzen",
         "hint": "Zeigt das im Browser erzeugte Audio nach dem Lautstärkeregler. Jedes Fenster umfasst 10 ms. Das Pausieren der Anzeige stoppt den Ton nicht."
+    },
+    "Qpsk": {
+        "ariaLabel": "QPSK-Simulator: Sendesignal und Konstellation mit AWGN",
+        "title": "QPSK-MODULATION UND I/Q-KONSTELLATION",
+        "running": "LÄUFT",
+        "paused": "PAUSIERT",
+        "mode": "LEHRMODELL",
+        "sequence": "Dibit-Folge (zum Wechseln anklicken)",
+        "symbolCount": "{count} Symb.",
+        "symbolLabel": "Symbol {index}: {dibit}, Phase {phase} Grad",
+        "random": "Zufällig",
+        "force180": "180° erzwingen",
+        "cycles": "Trägerperioden pro Symbol",
+        "cyclesUnit": "Perioden/Symbol",
+        "noise": "AWGN-Rauschen: σ pro I/Q-Komponente",
+        "snr": "Es/N₀ des Modells",
+        "ber": "Theoretische BER",
+        "speed": "Animationsgeschwindigkeit",
+        "reference": "Kosinusreferenz (0°, grau)",
+        "connections": "Ideale Symbole verbinden (geometrische Hilfe)",
+        "pause": "Pausieren",
+        "resume": "Fortsetzen",
+        "pauseHint": "Pause oder 0.0x friert Phase und Rauschen ein. Parameteränderungen berechnen die Ansichten mit denselben Rauschwerten neu.",
+        "grayMapping": "Gray-Zuordnung",
+        "bitConvention": "Dibit b₁b₀: I = 1 − 2b₀; Q = 1 − 2b₁.",
+        "viewMode": "Simulatoransicht",
+        "views": {
+            "both": "Beide",
+            "time": "Zeit",
+            "constellation": "X-Y"
+        },
+        "transmitted": "Ideales TX · ohne Rauschen",
+        "received": "Symbole + AWGN · Es = 1",
+        "constellationTitle": "X-Y: rI vs rQ",
+        "tapHint": "Eine Spalte anklicken oder die Symboltasten verwenden, um das Dibit zu ändern.",
+        "timeCanvas": "I- und Q-Kanäle und ideales QPSK-Sendesignal ohne Rauschen oder Filterung.",
+        "constellationCanvas": "Normierte Symbolkonstellation mit AWGN; Verbindungslinien sind geometrische Hilfen.",
+        "colors": {
+            "cyan": "Cyan",
+            "amber": "Gelb",
+            "green": "Grün"
+        },
+        "phaseExplanation": "00 → 11 wechselt von 45° auf 225° relativ zum grauen Kosinus: 180° zwischen den Symbolen, nicht gegenüber der Referenz. Rote Markierungen kennzeichnen jeden Phasenwechsel, auch 90°.",
+        "trajectoryExplanation": "Die Gerade zwischen gegenüberliegenden Symbolen verläuft durch (0,0), ist aber nur eine geometrische Hilfe. Sie simuliert keinen gefilterten Übergang und belegt keinen Nulldurchgang der CH3-Hüllkurve.",
+        "noiseExplanation": "σ ist die Standardabweichung des Rauschens jeder normierten Komponente. Es = 1, N₀ = 2σ² und theoretische BER = ½ erfc(1/(2σ)), bei idealen Quadrantenentscheidungen ohne Codierung. Es gibt keine universelle Rauschschwelle.",
+        "modelLimits": "CH3 zeigt die ideale Übertragung; Rauschen wird nur den Konstellationssymbolen hinzugefügt. CH3 wird nicht demoduliert und die BER nicht gemessen. Optische OSNR, Filter, FEC und Verstärker sind nicht modelliert. Bei σ = 0 gilt Es/N₀ = ∞ und theoretische BER = 0.",
+        "eyebrow": "DSP und Kommunikation",
+        "referenceTitle": "Mathematische Referenz (REF-006):",
+        "referenceDescription": "I/Q-Konvention, Gray-Zuordnung, AWGN-Rauschen und Modellgrenzen.",
+        "readArticle": "Fachartikel lesen"
+    },
+    "Instrument": {
+        "simulated": "SIMULIERT · VERLANGSAMT",
+        "paused": "SIMULIERT · PAUSE",
+        "pause": "Anzeige pausieren",
+        "resume": "Anzeige fortsetzen",
+        "model": "IDEALES MODELL",
+        "frequencyResponse": "Frequenzgang",
+        "peak": "Spitze",
+        "invalid": "Positive, endliche Werte eingeben, um das Signal anzuzeigen.",
+        "animationHint": "Die Animation ist zur Betrachtung verlangsamt; die Zeitachse zeigt die Modellzeit. Pause hält die Bewegung an; Parameteränderungen aktualisieren weiterhin die Kurven.",
+        "rc": {
+            "title": "RC-Oszilloskop",
+            "description": "Eingangs- und Ausgangsspannung eines idealen RC-Tiefpasses mit gleichen Zeit- und Spannungsskalen.",
+            "frequency": "Eingangsfrequenz (Hz)",
+            "amplitude": "Eingangsamplitude (V Spitze)",
+            "atCutoff": "Eingang auf fc setzen",
+            "hint": "Sinus im eingeschwungenen Zustand, ideale Quelle und unbelasteter Ausgang. Bei fc: −3.01 dB und −45°. Änderungen an R oder C berechnen den eingeschwungenen Zustand neu; Schalttransienten werden nicht modelliert."
+        },
+        "i2s": {
+            "title": "I²S-Taktlabor",
+            "description": "Obere Spur: Bittakt. Untere Spur: Wortauswahl. Ideale Logikpegel 0 und 1, in getrennten Spuren.",
+            "sampleRate": "Abtastrate fs (Hz)",
+            "slotBits": "Bits pro Kanalslot",
+            "logic": "Logik 0 / 1",
+            "hint": "Stereobus: BCLK = fs × 2 × Slotbreite; WS = fs. Oben: BCLK. Unten: WS (0 = links, 1 = rechts). Logikpegel sind keine Spannungen. Dies ist eine lokale Simulation, keine Messung an der Platine.",
+            "dataHint": "Die Slotbreite kann die Audiobittiefe übersteigen. DIN und MCLK werden nicht dargestellt. Bei Standard-I²S folgt das MSB des nächsten Wortes eine BCLK-Periode nach dem WS-Wechsel.",
+            "reference": "I²S-Spezifikation (NXP)"
+        }
     }
 }

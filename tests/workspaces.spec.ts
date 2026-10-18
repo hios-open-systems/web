@@ -13,6 +13,8 @@ test('Explore saves a resource, exposes its destination and opens it after reloa
   await card.getByRole('button', { name: 'Add to space', exact: true }).click();
   await page.getByRole('menuitem', { name: 'New space', exact: true }).click();
   await expect(card.getByRole('button', { name: 'Saved', exact: true })).toBeVisible();
+  await page.getByRole('navigation', { name: en.Header.primaryNavigation })
+    .getByRole('button', { name: new RegExp(en.Header.sections.label) }).click();
   await page.getByRole('link', { name: 'My spaces', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'My space', exact: true })).toBeVisible();
   await page.reload();

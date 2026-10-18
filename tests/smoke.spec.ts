@@ -8,61 +8,49 @@
  *  - No prueban OAuth real — eso requiere credenciales y se valida en staging.
  */
 import { expect, test } from '@playwright/test';
+import es from '../messages/es.json';
+import de from '../messages/de.json';
+import it from '../messages/it.json';
+import { workbenchTools } from '../config/workbench';
 
-const ALL_TOOL_NAMES = [
-    'Payload Lab',
-    'Type Checker',
-    'JWT Playground',
-    'DNS Inspector',
-    'Certificate Expiry',
-    'Object to Types',
-    'Random String Generator',
-    'Object Comparator',
-    'Site Checker',
-    'Snippets Shelf',
-    'Hash & Digest',
-    'Encoder / Decoder',
-    'UUID / ULID',
-    'Regex Tester',
-    'Text Diff',
-    'Mermaid Diagrams',
-    'Markdown Notes',
-    'Pattern Lessons',
-];
+const packs: Record<string, { title: string }> = es.Workbench.packs;
 
 test.describe('Home', () => {
     test('renderiza el hero con la nueva copy', async ({ page }) => {
         await page.goto('/es');
-        await expect(page.getByRole('heading', { level: 1 })).toContainText('mesa de trabajo');
+        await expect(page.getByRole('heading', { level: 1 })).toHaveAccessibleName(`${es.Landing.title} ${es.Landing.titleAccent}`);
     });
 
-    test('box de tool al azar en el home con reroll', async ({ page }) => {
+    test('visor del home permite abrir el generador de señales', async ({ page }) => {
         await page.goto('/es');
-        await expect(page.getByText('Tool destacada').first()).toBeVisible();
-        const reroll = page.getByRole('button', { name: /Al azar/i });
-        await expect(reroll).toBeVisible();
-        await reroll.click();
-        await expect(page.getByRole('link', { name: /Abrir tool/i }).first()).toBeVisible();
+        await expect(page.getByRole('slider', { name: es.Landing.signal.frequency })).toHaveValue('440');
+        await page.getByRole('link', { name: new RegExp(es.Landing.signal.open) }).click();
+        await expect(page).toHaveURL(/\/es\/workbench\/tone-generator$/);
     });
 
     test('hero traducido en de e it (no claves crudas)', async ({ page }) => {
         await page.goto('/de');
-        await expect(page.getByRole('heading', { level: 1 })).toContainText('Werkbank');
+        await expect(page.getByRole('heading', { level: 1 })).toHaveAccessibleName(`${de.Landing.title} ${de.Landing.titleAccent}`);
         await page.goto('/it');
-        await expect(page.getByRole('heading', { level: 1 })).toContainText('banco di lavoro');
+        await expect(page.getByRole('heading', { level: 1 })).toHaveAccessibleName(`${it.Landing.title} ${it.Landing.titleAccent}`);
     });
 
     test('CTA primaria lleva al workbench', async ({ page }) => {
         await page.goto('/es');
-        await page.getByRole('link', { name: /Abrir Workbench/i }).first().click();
+        await page.getByRole('link', { name: new RegExp(es.Hero.cta) }).click();
         await expect(page).toHaveURL(/\/es\/workbench\/?$/);
     });
 
-    test('el showcase lista todas las tools en la home', async ({ page }) => {
+    test('el showcase destaca herramientas y enlaza el catálogo completo', async ({ page }) => {
         await page.goto('/es');
-        for (const name of ALL_TOOL_NAMES) {
-            await expect(page.getByText(name, { exact: true }).first()).toBeVisible();
+        const showcase = page.locator('#tools');
+        for (const id of ['qpsk-modulator', 'esp32-llm-bridge', 'llm-vram-calc', 'token-inspector',
+            'llm-grammar-generator', 'tone-generator', 'payload', 'chiptune']) {
+            const tool = workbenchTools.find((entry) => entry.id === id)!;
+            await expect(showcase.locator(`a[href="/es${tool.href}"]`)).toContainText(packs[id].title);
         }
+        await showcase.getByRole('link', { name: new RegExp(es.Hero.showcaseSeeAll) }).click();
+        await expect(page).toHaveURL(/\/es\/workbench$/);
     });
 
     test('botón al azar del showcase abre una tool', async ({ page }) => {
@@ -86,6 +74,7 @@ test.describe('Header', () => {
         await expect(header.getByRole('link', { name: /^Workbench$/ })).toBeVisible();
         await expect(header.getByRole('link', { name: /^Pinouts$/ })).toBeVisible();
         await expect(header.getByRole('link', { name: /^Calculadoras$/ })).toBeVisible();
+        await header.getByRole('button', { name: es.Settings.title, exact: true }).click();
         await expect(header.getByRole('link', { name: /Iniciar sesión/i })).toBeVisible();
     });
 });
@@ -94,29 +83,35 @@ test.describe('Workbench', () => {
     test('landing lista todas las tools', async ({ page }) => {
         await page.goto('/es/workbench');
         await expect(page.getByRole('heading', { name: 'Workbench', level: 1 })).toBeVisible();
-        for (const name of ALL_TOOL_NAMES) {
-            await expect(page.getByText(name, { exact: true }).first()).toBeVisible();
+        const catalog = page.getByRole('region', { name: es.Workspace.catalog });
+        for (const tool of workbenchTools) {
+            await expect(catalog.getByRole('heading', { name: packs[tool.id].title, exact: true })).toBeVisible();
         }
     });
 
-    test('menú agrupado por sección con navegación', async ({ page }) => {
+    test('catálogo filtra por actividad y permite abrir herramientas', async ({ page }) => {
         await page.goto('/es/workbench');
-        await expect(page.getByRole('heading', { name: 'Validación', level: 2 })).toBeVisible();
-        await expect(page.getByRole('heading', { name: 'Generación', level: 2 })).toBeVisible();
-        await expect(page.getByRole('heading', { name: 'Tests', level: 2 })).toBeVisible();
-        await page.getByRole('link', { name: /Payload Lab/i }).first().click();
+        const catalog = page.getByRole('region', { name: es.Workspace.catalog });
+        await catalog.getByRole('combobox', { name: es.Workspace.activity, exact: true }).press('ArrowDown');
+        await page.getByTitle(es.Workspace.activities.development, { exact: true }).click();
+        await expect(catalog.locator('article')).not.toHaveCount(0);
+        await expect(catalog.locator('article:not([data-area="development"])')).toHaveCount(0);
+        await catalog.getByRole('link', { name: packs.payload.title, exact: true }).click();
         await expect(page).toHaveURL(/\/es\/workbench\/payload/);
     });
 
-    test('pinned/recientes: usar una tool y fijarla', async ({ page }) => {
+    test('catálogo prioriza recientes y persiste favoritos', async ({ page }) => {
         await page.goto('/es/workbench/regex'); // registra uso
+        await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem('hios-tool-usage') ?? '{}').recent)).toContain('regex');
         await page.goto('/es/workbench');
-        await expect(page.getByRole('heading', { name: 'Usadas recientemente', level: 2 })).toBeVisible({
-            timeout: 10_000,
-        });
-        await page.getByRole('button', { name: /Fijar tool/i }).first().click();
-        await expect(page.getByRole('heading', { name: 'Fijadas', level: 2 })).toBeVisible();
-        await page.evaluate(() => window.localStorage.removeItem('hios-tool-usage'));
+        const catalog = page.getByRole('region', { name: es.Workspace.catalog });
+        await expect(catalog.locator('article').first()).toContainText(packs.regex.title);
+        const favorite = catalog.locator('article').filter({ hasText: packs.regex.title })
+            .getByRole('button', { name: es.Workspace.favorite, exact: true });
+        await favorite.click();
+        await expect(favorite).toHaveAttribute('aria-pressed', 'true');
+        await page.reload();
+        await expect(favorite).toHaveAttribute('aria-pressed', 'true');
     });
 
     test('rutas de sección viejas redirigen al workbench plano', async ({ page }) => {
@@ -150,25 +145,29 @@ test.describe('Workbench', () => {
     test('command palette (Ctrl+K) abre, filtra y navega', async ({ page }) => {
         await page.goto('/es/workbench');
         await page.keyboard.press('Control+k');
-        const search = page.getByPlaceholder(/Buscar tools/i);
+        const search = page.getByPlaceholder(es.CommandPalette.placeholder);
         await expect(search).toBeVisible();
         await search.fill('jwt');
-        await page.getByRole('button', { name: /JWT Playground/i }).first().click();
+        await page.getByRole('dialog').getByRole('button', { name: new RegExp(packs['jwt-decode'].title) }).click();
         await expect(page).toHaveURL(/\/es\/workbench\/jwt-decode/);
     });
 
     test('tool chaining: Payload Lab manda el JSON al Type Checker', async ({ page }) => {
         await page.goto('/es/workbench/payload');
-        await page.getByRole('button', { name: /Mandar a/i }).click();
+        await page.getByRole('textbox', { name: 'Entrada', exact: true }).fill('{"smokeHandoff":42}');
+        await page.getByRole('button', { name: new RegExp(es.Chain.sendTo) }).click();
         await page.getByRole('menuitem', { name: /como valor/i }).click();
-        await expect(page).toHaveURL(/\/es\/workbench\/type-checker\?value=/);
+        await expect(page).toHaveURL(/\/es\/workbench\/type-checker\?handoff=/);
+        await expect(page.getByPlaceholder(es.Workbench.typeChecker.valuePlaceholder)).toHaveValue(/"smokeHandoff":\s*42/);
     });
 
     test('tool chaining: Object→Types manda los tipos al Type Checker', async ({ page }) => {
         await page.goto('/es/workbench/object-to-types');
-        await page.getByRole('button', { name: /Mandar a/i }).click();
+        await page.getByPlaceholder(es.Workbench.objectToTypes.placeholder).fill('{"smokeHandoff":42}');
+        await page.getByRole('button', { name: new RegExp(es.Chain.sendTo) }).click();
         await page.getByRole('menuitem', { name: /como tipos/i }).click();
-        await expect(page).toHaveURL(/\/es\/workbench\/type-checker\?types=/);
+        await expect(page).toHaveURL(/\/es\/workbench\/type-checker\?handoff=/);
+        await expect(page.getByPlaceholder(es.Workbench.typeChecker.typePlaceholder)).toHaveValue(/smokeHandoff: number/);
     });
 
     test('guía "Cómo se usa" se expande con pasos', async ({ page }) => {
@@ -189,8 +188,7 @@ test.describe('Workbench', () => {
 
     test('Random string genera valores al cargar', async ({ page }) => {
         await page.goto('/es/workbench/random-string');
-        // Esperamos al menos un valor monoespaciado en la lista de resultados.
-        await expect(page.locator('text=/[A-Za-z0-9]{16,}/').first()).toBeVisible({ timeout: 10_000 });
+        await expect(page.getByRole('button', { name: /^Copiar: [A-Za-z0-9]{32}$/ })).toHaveCount(4);
     });
 
     test('Hash & Digest calcula SHA-256 del ejemplo', async ({ page }) => {
@@ -203,7 +201,7 @@ test.describe('Workbench', () => {
     test('Pattern Lessons: corre código en el sandbox', async ({ page }) => {
         await page.goto('/es/workbench/patterns');
         await page.getByText('Reducer / máquina de estados', { exact: true }).click();
-        await page.getByRole('button', { name: /Correr/i }).click();
+        await page.getByRole('button', { name: new RegExp(es.Workbench.patterns.run) }).click();
         await expect(page.getByTestId('patterns-output')).toContainText('final state: {"n":2}', {
             timeout: 15_000,
         });
@@ -222,9 +220,10 @@ test.describe('Workbench', () => {
         await page.goto('/es/workbench/notes');
         const preview = page.locator('[data-testid="notes-preview"]');
         await expect(preview).toBeVisible({ timeout: 10_000 });
-        await expect(preview.getByRole('heading', { name: /Hola/i })).toBeVisible();
+        await page.getByRole('textbox', { name: es.Workbench.notes.editorLabel, exact: true }).fill('# Smoke note\n\nTexto persistido.');
+        await expect(preview.getByRole('heading', { name: 'Smoke note', exact: true })).toBeVisible();
         await page.reload();
-        await expect(page.locator('[data-testid="notes-preview"]')).toBeVisible();
+        await expect(preview.getByRole('heading', { name: 'Smoke note', exact: true })).toBeVisible();
         await page.evaluate(() => window.localStorage.removeItem('hios-workbench-notes'));
     });
 
@@ -233,7 +232,7 @@ test.describe('Workbench', () => {
         await expect(page.getByRole('heading', { name: 'Compositor Chiptune', level: 1 })).toBeVisible({
             timeout: 10_000,
         });
-        await expect(page.getByRole('button', { name: '.mid' })).toBeVisible();
+        await expect(page.getByRole('button', { name: 'download .mid', exact: true })).toBeVisible();
         await expect(page.getByRole('button', { name: '.wav' })).toBeVisible();
         await page.getByRole('button', { name: 'Reproducir' }).click();
         await expect(page.getByRole('button', { name: 'Detener' })).toBeVisible({ timeout: 10_000 });
@@ -287,12 +286,12 @@ test.describe('Workbench', () => {
     test('Snippets: agregar y persistir tras reload', async ({ page }) => {
         await page.goto('/es/workbench/snippets');
 
-        const titleInput = page.getByPlaceholder('Título del snippet');
-        const bodyInput = page.getByPlaceholder(/comando, una receta, un payload/i);
+        const titleInput = page.getByPlaceholder(es.Workbench.snippets.titlePlaceholder);
+        const bodyInput = page.getByPlaceholder(es.Workbench.snippets.bodyPlaceholder);
 
         await titleInput.fill('Smoke test snippet');
         await bodyInput.fill('echo hello world');
-        await page.getByRole('button', { name: 'Guardar snippet' }).click();
+        await page.getByRole('button', { name: new RegExp(es.Workbench.snippets.save) }).click();
 
         await expect(page.getByText('Smoke test snippet')).toBeVisible();
         await expect(page.getByText('echo hello world')).toBeVisible();
@@ -368,10 +367,10 @@ test.describe('PWA', () => {
         expect(Array.isArray(m.icons) && m.icons.length > 0).toBeTruthy();
     });
 
-    test('service worker y offline fallback servibles', async ({ request }) => {
+    test('el service worker retirado se desregistra y el fallback sigue servible', async ({ request }) => {
         const sw = await request.get('/sw.js');
         expect(sw.status()).toBe(200);
-        expect(await sw.text()).toContain('hios-cache');
+        expect(await sw.text()).toContain('self.registration.unregister()');
         const off = await request.get('/offline.html');
         expect(off.status()).toBe(200);
         expect((await off.text()).toLowerCase()).toContain('offline');
@@ -390,8 +389,8 @@ test.describe('Feedback inbox', () => {
 
         // Seleccionar kind "bug" y completar
         await page.locator('[data-kind="bug"]').click();
-        await page.getByPlaceholder(/Resumen corto/).fill('Smoke entry');
-        await page.getByPlaceholder(/Contexto, pasos para reproducir/).fill('Test body');
+        await page.getByRole('textbox', { name: es.Feedback.titleField, exact: true }).fill('Smoke entry');
+        await page.getByRole('textbox', { name: es.Feedback.bodyField, exact: true }).fill('Test body');
         await page.getByRole('button', { name: 'Guardar', exact: true }).click();
 
         await expect(page.getByText('Smoke entry', { exact: true })).toBeVisible();
@@ -406,8 +405,8 @@ test.describe('Feedback inbox', () => {
     test('entradas manuales duplicadas se consolidan y cuentan ocurrencias', async ({ page }) => {
         await page.goto('/es/workbench/feedback');
 
-        const titleInput = page.getByPlaceholder(/Resumen corto/);
-        const bodyInput = page.getByPlaceholder(/Contexto, pasos para reproducir/);
+        const titleInput = page.getByRole('textbox', { name: es.Feedback.titleField, exact: true });
+        const bodyInput = page.getByRole('textbox', { name: es.Feedback.bodyField, exact: true });
 
         await page.locator('[data-kind="bug"]').click();
         await titleInput.fill('Entrada dedupe');
@@ -485,12 +484,12 @@ test.describe('Theme settings', () => {
         await page.evaluate(() => window.localStorage.removeItem('hios-theme-config'));
     });
 
-    test('temas guardables: guardar, aparece y borrar', async ({ page }) => {
+    test('temas guardables: guardar y persistir tras reload', async ({ page }) => {
         await page.goto('/es/workbench/settings');
         await expect(page.getByRole('heading', { name: 'Configuración', level: 1 })).toBeVisible();
         const name = page.getByTestId('saved-theme-name');
         await name.fill('Smoke tema');
-        await page.getByRole('button', { name: /Guardar actual/i }).click();
+        await page.getByRole('button', { name: es.Settings.savedSave, exact: true }).click();
         await expect(page.getByText(/Smoke tema/).first()).toBeVisible();
         await page.reload();
         await expect(page.getByText(/Smoke tema/).first()).toBeVisible();
@@ -552,19 +551,19 @@ test.describe('Calculators', () => {
 
     test('preset base (Plantillas) aplica valores', async ({ page }) => {
         await page.goto('/es/calculators?tab=runtime');
-        await page.getByRole('button', { name: /Presets/i }).click();
+        await page.getByRole('button', { name: es.Presets.presets, exact: true }).click();
         await page.getByRole('menuitem', { name: /Bajo Consumo/i }).click();
         await expect(page).toHaveURL(/avgCurrent=80/);
     });
 
     test('presets local-first: guardar y recargar restablece el estado', async ({ page }) => {
         await page.goto('/es/calculators?tab=rc&rcR=4700');
-        await page.getByRole('button', { name: /Guardar preset/i }).click();
-        await page.getByRole('dialog').getByRole('button', { name: /Guardar preset/i }).click();
+        await page.getByRole('button', { name: es.Presets.save, exact: true }).click();
+        await page.getByRole('dialog').getByRole('button', { name: es.Presets.save, exact: true }).click();
         // Cambiamos el estado y luego recargamos el preset guardado.
         await page.goto('/es/calculators?tab=rc&rcR=10');
-        await page.getByRole('button', { name: /Presets/i }).click();
-        await page.getByRole('menuitem', { name: /Preset 1/i }).click();
+        await page.getByRole('button', { name: es.Presets.presets, exact: true }).click();
+        await page.getByRole('menuitem', { name: new RegExp(es.Presets.defaultName.replace('{n}', '1')) }).click();
         await expect(page).toHaveURL(/rcR=4700/);
     });
 
@@ -577,7 +576,7 @@ test.describe('Calculators', () => {
     test('input inválido muestra aviso en vez de un 0 engañoso', async ({ page }) => {
         // Vs (1) <= Vf (2): la resistencia LED no tiene solución válida.
         await page.goto('/es/calculators?tab=led&supply=1&ledVf=2&ledCurrent=10');
-        await expect(page.getByText(/Revisá las entradas/i)).toBeVisible();
+        await expect(page.getByText('No se pudo calcular el resultado. Revisá los valores ingresados.', { exact: false })).toBeVisible();
     });
 
     test('el estado de cálculo se hidrata desde la URL', async ({ page }) => {

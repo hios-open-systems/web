@@ -16,7 +16,7 @@ export function DiagramFrame({ children, name }: { children: ReactNode; name: st
   const [expanded, setExpanded] = useState(false);
   const labels = LABELS[useLocale()] ?? LABELS.en;
   return (
-    <section className={styles.frame} aria-label={name}>
+    <section className={styles.frame} aria-label={name} data-pinout-diagram>
       <div className={styles.toolbar}>
         <Button size="small" aria-pressed={!expanded} onClick={() => setExpanded(false)}>{labels.fit}</Button>
         <Button size="small" aria-pressed={expanded} onClick={() => setExpanded(true)}>{labels.detail}</Button>

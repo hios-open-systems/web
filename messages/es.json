@@ -1735,7 +1735,7 @@
             },
             "qpsk-modulator": {
                 "title": "Osciloscopio y modulador QPSK",
-                "description": "Simulá modulación digital en cuadratura (I/Q), analizá el diagrama de constelación bajo ruido AWGN y demodulá tramas en tiempo real."
+                "description": "Explorá la señal QPSK transmitida, el mapeo Gray y una constelación con ruido AWGN y BER teórica."
             },
             "jam-station": {
                 "title": "Jam Station y bases de improvisación",
@@ -3225,5 +3225,84 @@
         "pause": "Pausar visor",
         "resume": "Reanudar visor",
         "hint": "Muestra el audio generado en este navegador, después del control de volumen. Cada ventana abarca 10 ms. Pausar el visor no detiene el sonido."
+    },
+    "Qpsk": {
+        "ariaLabel": "Simulador QPSK: señal transmitida y constelación con AWGN",
+        "title": "MODULACIÓN QPSK Y CONSTELACIÓN I/Q",
+        "running": "EN MARCHA",
+        "paused": "PAUSADO",
+        "mode": "MODELO DIDÁCTICO",
+        "sequence": "Secuencia de dibits (clic para rotar)",
+        "symbolCount": "{count} símb.",
+        "symbolLabel": "Símbolo {index}: {dibit}, fase {phase} grados",
+        "random": "Aleatoria",
+        "force180": "Forzar 180°",
+        "cycles": "Ciclos de portadora por símbolo",
+        "cyclesUnit": "ciclos/símbolo",
+        "noise": "Ruido AWGN: σ por componente I/Q",
+        "snr": "Es/N₀ del modelo",
+        "ber": "BER teórica",
+        "speed": "Velocidad de animación",
+        "reference": "Referencia coseno (0°, gris)",
+        "connections": "Unir símbolos ideales (guía geométrica)",
+        "pause": "Pausar",
+        "resume": "Reanudar",
+        "pauseHint": "Pausar o usar 0.0x congela fase y ruido. Editar parámetros recalcula las vistas con las mismas muestras.",
+        "grayMapping": "Mapeo Gray",
+        "bitConvention": "Dibit b₁b₀: I = 1 − 2b₀; Q = 1 − 2b₁.",
+        "viewMode": "Vista del simulador",
+        "views": {
+            "both": "Ambas",
+            "time": "Tiempo",
+            "constellation": "X-Y"
+        },
+        "transmitted": "TX ideal · sin ruido",
+        "received": "Símbolos + AWGN · Es = 1",
+        "constellationTitle": "X-Y: rI vs rQ",
+        "tapHint": "Tocá una columna o usá los botones de símbolos para cambiar el dibit.",
+        "timeCanvas": "Canales I y Q y señal QPSK transmitida ideal, sin ruido ni filtrado.",
+        "constellationCanvas": "Constelación de símbolos normalizados con ruido AWGN; las líneas son guías geométricas.",
+        "colors": {
+            "cyan": "cian",
+            "amber": "amarillo",
+            "green": "verde"
+        },
+        "phaseExplanation": "00 → 11 cambia de 45° a 225° respecto del coseno gris: son 180° entre símbolos, no respecto de la referencia. Los marcadores rojos señalan cualquier cambio de fase, incluido uno de 90°.",
+        "trajectoryExplanation": "La recta que une símbolos opuestos pasa por (0,0), pero es una guía geométrica. No simula una transición filtrada ni demuestra que la envolvente de CH3 llegue a cero.",
+        "noiseExplanation": "σ es la desviación estándar del ruido en cada componente normalizada. Es = 1, N₀ = 2σ² y BER teórica = ½ erfc(1/(2σ)), con decisiones ideales por cuadrante y sin codificación. No hay un umbral de ruido universal.",
+        "modelLimits": "CH3 muestra la transmisión ideal; el ruido se aplica solo a los símbolos de la constelación. No se demodula CH3 ni se mide BER. El modelo no incluye OSNR óptica, filtros, FEC ni amplificadores. A σ = 0, Es/N₀ = ∞ y BER teórica = 0.",
+        "eyebrow": "DSP y comunicaciones",
+        "referenceTitle": "Referencia matemática (REF-006):",
+        "referenceDescription": "Convención I/Q, mapeo Gray, ruido AWGN y límites del modelo.",
+        "readArticle": "Leer artículo técnico"
+    },
+    "Instrument": {
+        "simulated": "SIMULADO · LENTO",
+        "paused": "SIMULADO · PAUSA",
+        "pause": "Pausar visor",
+        "resume": "Reanudar visor",
+        "model": "MODELO IDEAL",
+        "frequencyResponse": "Respuesta en frecuencia",
+        "peak": "pico",
+        "invalid": "Ingresá valores positivos y finitos para mostrar la señal.",
+        "animationHint": "La animación está ralentizada para observarla; el eje muestra el tiempo del modelo. Pausar congela el movimiento; los cambios de parámetros siguen actualizando las curvas.",
+        "rc": {
+            "title": "Osciloscopio RC",
+            "description": "Tensión de entrada y salida de un filtro RC pasabajos ideal, con las mismas escalas de tiempo y tensión.",
+            "frequency": "Frecuencia de entrada (Hz)",
+            "amplitude": "Amplitud de entrada (V pico)",
+            "atCutoff": "Llevar entrada a fc",
+            "hint": "Senoidal en régimen permanente, fuente ideal y salida sin carga. En fc: −3.01 dB y −45°. Cambiar R o C recalcula el régimen permanente; no se modela el transitorio de conmutación."
+        },
+        "i2s": {
+            "title": "Laboratorio de relojes I²S",
+            "description": "Traza superior: reloj de bits. Traza inferior: selección de palabra. Niveles lógicos ideales 0 y 1, en carriles separados.",
+            "sampleRate": "Frecuencia de muestreo fs (Hz)",
+            "slotBits": "Bits por ranura de canal",
+            "logic": "Lógica 0 / 1",
+            "hint": "Bus estéreo: BCLK = fs × 2 × bits por ranura; WS = fs. Arriba: BCLK. Abajo: WS (0 = izquierdo, 1 = derecho). Los niveles lógicos no son voltajes. Es una simulación local, no una lectura de la placa.",
+            "dataHint": "La ranura puede ser más ancha que la profundidad de audio. No se dibujan DIN ni MCLK. En I²S estándar, el MSB de la siguiente palabra aparece un período BCLK después del cambio de WS.",
+            "reference": "Especificación I²S (NXP)"
+        }
     }
 }

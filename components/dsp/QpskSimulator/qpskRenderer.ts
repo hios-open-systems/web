@@ -1,5 +1,6 @@
 import type { Dibit, Point2D, QpskSimConfig } from './types';
-import { GRAY_ORDER, mapDibit } from './qpskMath';
+import { CHANNELS, GRAY_ORDER, carrierSample, mapDibit } from './qpskMath.ts';
+import { projectPoint } from './qpskSimulation.ts';
 
 /**
  * Dibuja la grilla reticular de osciloscopio CRT.
@@ -101,7 +102,7 @@ function drawReferenceWave(
   symbolWidth: number,
 ): void {
   ctx.save();
-  ctx.strokeStyle = 'rgba(148, 163, 184, 0.35)';
+  ctx.strokeStyle = 'rgba(148, 163, 184, 0.65)';
   ctx.lineWidth = 1.5;
   ctx.setLineDash([4, 4]);
   ctx.beginPath();
@@ -125,26 +126,20 @@ function drawCarrierWave(
   ampCarrier: number,
   cycles: number,
   timeOffset: number,
-  noiseLevel: number,
-  noiseBuffer: Float32Array,
 ): void {
   ctx.save();
-  ctx.strokeStyle = '#00ff66';
+  ctx.strokeStyle = CHANNELS[2].color;
   ctx.lineWidth = 2.2;
-  ctx.shadowColor = '#00ff66';
+  ctx.shadowColor = CHANNELS[2].color;
   ctx.shadowBlur = 8;
   ctx.beginPath();
 
-  const bufLen = noiseBuffer.length;
   for (let x = 0; x < w; x++) {
     const sIdx = Math.min(dibits.length - 1, Math.floor(x / symbolWidth));
-    const { I, Q } = mapDibit(dibits[sIdx]);
     const totalSym = x / symbolWidth;
     const wt = 2 * Math.PI * cycles * totalSym - timeOffset;
 
-    const cleanSignal = (I * Math.cos(wt) - Q * Math.sin(wt)) * Math.SQRT1_2;
-    const sampleNoise = bufLen > 0 ? noiseBuffer[x % bufLen] * noiseLevel * 0.6 : 0;
-    const y = yCh3 - (cleanSignal + sampleNoise) * ampCarrier;
+    const y = yCh3 - carrierSample(dibits[sIdx], wt) * ampCarrier;
 
     if (x === 0) ctx.moveTo(x, y);
     else ctx.lineTo(x, y);
@@ -183,7 +178,6 @@ export function drawTimeDomain(
   h: number,
   config: QpskSimConfig,
   timeOffset: number,
-  noiseBuffer: Float32Array,
 ): void {
   drawScopeGrid(ctx, w, h);
 
@@ -210,8 +204,8 @@ export function drawTimeDomain(
     drawReferenceWave(ctx, w, yCh3, ampCarrier, config.cyclesPerSymbol, timeOffset, symbolWidth);
   }
 
-  drawDigitalChannel(ctx, w, config.dibits, symbolWidth, yCh1, ampDigital, 'I', '#00e5ff');
-  drawDigitalChannel(ctx, w, config.dibits, symbolWidth, yCh2, ampDigital, 'Q', '#ffab00');
+  drawDigitalChannel(ctx, w, config.dibits, symbolWidth, yCh1, ampDigital, 'I', CHANNELS[0].color);
+  drawDigitalChannel(ctx, w, config.dibits, symbolWidth, yCh2, ampDigital, 'Q', CHANNELS[1].color);
   drawCarrierWave(
     ctx,
     w,
@@ -221,8 +215,6 @@ export function drawTimeDomain(
     ampCarrier,
     config.cyclesPerSymbol,
     timeOffset,
-    config.noiseLevel,
-    noiseBuffer,
   );
   drawPhaseJumpMarkers(ctx, config.dibits, symbolWidth, yCh3);
 }
@@ -308,12 +300,13 @@ function drawIdealTargets(
   ctx.restore();
 }
 
-function drawPhosphorCloud(ctx: CanvasRenderingContext2D, historyXY: Point2D[]): void {
+function drawPhosphorCloud(ctx: CanvasRenderingContext2D, historyXY: Point2D[], w: number, h: number): void {
   historyXY.forEach((pt, idx) => {
-    const alpha = (idx / historyXY.length) * 0.85;
+    const alpha = ((idx + 1) / historyXY.length) * 0.85;
     ctx.fillStyle = `rgba(0, 255, 102, ${alpha})`;
     ctx.beginPath();
-    ctx.arc(pt.x, pt.y, 2.5, 0, Math.PI * 2);
+    const pixel = projectPoint(pt, w, h);
+    ctx.arc(pixel.x, pixel.y, 2.5, 0, Math.PI * 2);
     ctx.fill();
   });
 }
@@ -341,5 +334,5 @@ export function drawConstellation(
   }
 
   drawIdealTargets(ctx, cx, cy, radius, w);
-  drawPhosphorCloud(ctx, historyXY);
+  drawPhosphorCloud(ctx, historyXY, w, h);
 }

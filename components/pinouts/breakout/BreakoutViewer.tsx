@@ -11,6 +11,7 @@ import { DiagramFrame } from './DiagramFrame';
 import { BreakoutPinList } from './BreakoutPinList';
 import { BreakoutTables } from './BreakoutTables';
 import { BreakoutNotes } from './BreakoutNotes';
+import { PinoutSignalLab } from './PinoutSignalLab';
 import styles from './breakout.module.css';
 
 export function BreakoutViewer({ breakout }: { breakout: Breakout }) {
@@ -34,6 +35,7 @@ export function BreakoutViewer({ breakout }: { breakout: Breakout }) {
       )}
       </DiagramFrame>
       <BreakoutPinList breakout={breakout} />
+      <PinoutSignalLab breakout={breakout} />
       {breakout.board ? <BoardPinTable board={breakout.board} /> : null}
       {tables.length > 0 ? <BreakoutTables tables={tables} /> : null}
       {breakout.notes && breakout.notes.length > 0 ? <BreakoutNotes notes={breakout.notes} /> : null}

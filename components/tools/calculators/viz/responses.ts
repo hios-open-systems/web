@@ -1,5 +1,6 @@
 /* Pure frequency-response samplers. Each returns log-spaced (freq, value)
  * points so the SVG Plot engine can draw them without knowing any physics. */
+import { rcTransfer } from '../../../../lib/instruments/rc.ts';
 
 export type Point = [number, number];
 export interface Curve {
@@ -27,9 +28,9 @@ export function rcLowpass(rOhm: number, cNanoF: number): Curve {
   const mag: Point[] = [];
   const phase: Point[] = [];
   for (const f of sweep(fc)) {
-    const ratio = fc > 0 ? f / fc : 0;
-    mag.push([f, -10 * Math.log10(1 + ratio * ratio)]);
-    phase.push([f, -Math.atan(ratio) * (180 / Math.PI)]);
+    const transfer = rcTransfer(rOhm, cNanoF, f);
+    mag.push([f, transfer ? 20 * Math.log10(transfer.gain) : NaN]);
+    phase.push([f, transfer ? transfer.phase * (180 / Math.PI) : NaN]);
   }
   return { mag, phase, mark: fc };
 }

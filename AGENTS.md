@@ -50,6 +50,11 @@ Projects are loaded at build time from `projects/` directory:
 - Translations in `messages/*.json`
 - Use `setRequestLocale(locale)` in server components
 
+## Local delivery workflow
+
+- Integrate each completed, verified task into local `main`.
+- Keep pushes to `main` and deployment for the end-of-day release; do not push or deploy after each task.
+
 ## Code Standards
 
 - Local-first: process files and tool inputs in the browser. Reuse self-hosted viewers; never send files or file URLs to third-party viewers.
