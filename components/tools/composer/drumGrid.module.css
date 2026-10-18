@@ -1,0 +1,66 @@
+.wrap {
+  overflow-x: auto;
+  border: 1px solid rgba(128, 128, 128, 0.22);
+  border-radius: 8px;
+  max-height: 520px;
+  overscroll-behavior: contain;
+}
+.inner {
+  position: relative;
+}
+.row {
+  display: flex;
+  height: 28px;
+}
+.label {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  flex: 0 0 110px;
+  padding: 0 8px;
+  text-align: left;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--hios-text, inherit);
+  background: var(--hios-surface, rgba(20, 20, 28, 0.95));
+  border: 0;
+  border-right: 1px solid rgba(128, 128, 128, 0.22);
+  border-bottom: 1px solid rgba(128, 128, 128, 0.12);
+  cursor: pointer;
+}
+.cell {
+  position: relative;
+  flex: 0 0 26px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-left: 1px solid rgba(128, 128, 128, 0.1);
+  border-bottom: 1px solid rgba(128, 128, 128, 0.12);
+  cursor: pointer;
+}
+.cell:hover {
+  background: rgba(128, 128, 128, 0.12);
+}
+.beat {
+  border-left-color: rgba(128, 128, 128, 0.28);
+}
+.bar {
+  border-left: 1px solid rgba(128, 128, 128, 0.55);
+}
+.hit {
+  position: absolute;
+  inset: 4px 3px;
+  border-radius: 4px;
+  pointer-events: none;
+}
+.playhead {
+  position: absolute;
+  top: 0;
+  left: 110px;
+  width: 2px;
+  background: var(--accent, #f472b6);
+  pointer-events: none;
+  opacity: 0;
+}
