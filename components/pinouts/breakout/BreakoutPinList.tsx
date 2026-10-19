@@ -10,7 +10,7 @@ function PinRow({ pin }: { pin: BreakoutPin }) {
       <RoleBadge role={pin.role} />
       <div className={styles.pinMeat}>
         <div className={styles.pinName}>
-          {pin.name}
+          {pin.label ?? pin.name}
           {pin.alt ? <span className={styles.pinAlt}> · {pin.alt}</span> : null}
         </div>
         {pin.to ? (

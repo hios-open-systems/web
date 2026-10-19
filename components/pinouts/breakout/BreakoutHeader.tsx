@@ -8,15 +8,13 @@ import styles from './breakout.module.css';
 export function BreakoutHeader({ breakout }: { breakout: Breakout }) {
   const t = useTranslations('Pinouts');
   const locale = useLocale();
-  const key = `Modules.${breakout.id}.description`;
-  const summary = t.has(key) ? t(key) : breakout.summary;
   return (
 <div className={styles.viewerHead}>
         <div className={styles.viewerTitleRow}>
           <h2 className={styles.viewerTitle}>{breakout.name}</h2>
           <span className={styles.kindChip}>{t(`Kinds.${breakout.kind}`)}</span>
         </div>
-        <p className={styles.viewerSummary}>{summary}</p>
+        <p className={styles.viewerSummary}>{breakout.summary}</p>
         <div className={styles.viewerMeta}>
           {breakout.form ? <span>{breakout.form}</span> : null}
           {breakout.iface ? <span>{breakout.iface}</span> : null}

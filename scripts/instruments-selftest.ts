@@ -2,7 +2,8 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { axisPosition, axisTicks, dataDomain, formatScopeValue, tracePath, validAxis } from '../components/instruments/plotGeometry.ts';
 import { rcSineModel, rcSineSamples, rcTransfer } from '../lib/instruments/rc.ts';
-import { i2sClockModel, i2sClockSamples, squareClock } from '../lib/instruments/i2s.ts';
+import { i2sBusModel, i2sClockModel, i2sClockSamples, squareClock } from '../lib/instruments/i2s.ts';
+import { calc } from '../components/tools/calculators/calc.ts';
 import { rcLowpass } from '../components/tools/calculators/viz/responses.ts';
 import { SCOPE_COLORS } from '../components/instruments/channels.ts';
 import { CHANNELS } from '../components/dsp/QpskSimulator/qpskMath.ts';
@@ -54,7 +55,7 @@ for (const value of [0, -1, Infinity, NaN]) {
 }
 
 console.log('Instruments: exact I²S edges, stereo slot ratio and named physical pins');
-for (const rate of [44100, 48000, 96000]) for (const bits of [16, 32]) {
+for (const rate of [44100, 48000, 96000]) for (const bits of [16, 24, 32]) {
   const model = i2sClockModel(rate, bits)!;
   near(model.bclk, rate * bits * 2);
   const { bclk, ws } = i2sClockSamples(model, 0);
@@ -70,6 +71,28 @@ for (const rate of [44100, 48000, 96000]) for (const bits of [16, 32]) {
 assert.equal(i2sClockModel(0, 32), null);
 assert.equal(i2sClockModel(48000, 17), null);
 assert.deepEqual(squareClock(Infinity, 1, 0), []);
+// Independent reference: 48 kHz × 2 slots × 32 bits = 3.072 MHz,
+// even when only one channel of 24-bit audio is consumed.
+const mono = i2sBusModel(48000, 32, 24, 1, 256)!;
+near(mono.bclk, 3_072_000);
+near(mono.mclk, 12_288_000);
+near(mono.payloadBitRateMbps, 1.152);
+near(mono.bitRateMbps, 3.072);
+const stereo = i2sBusModel(48000, 32, 24, 2, 256)!;
+near(stereo.payloadBitRateMbps, 2.304);
+assert.deepEqual(i2sClockSamples(mono, 0.2), i2sClockSamples(stereo, 0.2));
+assert.deepEqual(calc.i2sClocks(48000, 24, 1, 256, 32).model, mono);
+for (const invalid of [0, -1, NaN, Infinity]) {
+  assert.equal(i2sBusModel(invalid, 32, 24, 2, 256), null);
+  assert.equal(i2sBusModel(48000, 32, 24, invalid, 256), null);
+  assert.equal(i2sBusModel(48000, 32, 24, 2, invalid), null);
+}
+assert.equal(i2sBusModel(48000, 16, 24, 2, 256), null);
+assert.equal(i2sBusModel(48000, 32, 12, 2, 256), null);
+assert.equal(i2sBusModel(48000, 32, 24, 1.5, 256), null);
+assert.equal(i2sBusModel(48000, 32, 24, 2, 256.5), null);
+assert.equal(i2sBusModel(Number.MAX_VALUE, 32, 24, 2, 256), null);
+assert.equal(calc.i2sClocks(48000, 24, 2, 256, 16).valid, false);
 for (const breakout of AUDIO_BREAKOUTS) {
   assert.ok(breakout.signalLab);
   assert.ok(breakout.pins.some((pin) => pin.name === breakout.signalLab?.clockPin && pin.role === 'i2s'));

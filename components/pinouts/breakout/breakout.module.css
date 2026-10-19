@@ -493,6 +493,7 @@
   color: var(--bk-title);
 }
 
+.miniTable th,
 .miniTable td {
   overflow-wrap: anywhere;
 }
@@ -516,7 +517,7 @@
 .miniTable td:first-child {
   font-family: ui-monospace, Menlo, Consolas, monospace;
   color: var(--bk-title);
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .notes {

@@ -659,49 +659,763 @@
         "datasheet": "Datenblatt",
         "Modules": {
             "esp32-wroom-32": {
-                "description": "Mikrocontroller mit WLAN und Bluetooth 4.2. Platine mit zwei Reihen zu je 19 Pins."
+                "name": "ESP32-WROOM-32 DevKit",
+                "description": "Mikrocontroller mit WLAN und Bluetooth 4.2. Platine mit zwei Reihen zu je 19 Pins.",
+                "form": "DevKit mit 38 Pins",
+                "iface": "UART · SPI · I2C · I2S · ADC · DAC",
+                "voltage": "3.3V-Logik (5V über VIN/USB)",
+                "pins": [
+                    {
+                        "name": "3V3",
+                        "to": "Reglerausgang"
+                    },
+                    {
+                        "name": "5V / VIN",
+                        "to": "Versorgungseingang"
+                    },
+                    {
+                        "name": "GND",
+                        "to": "gemeinsame Masse"
+                    },
+                    {
+                        "name": "IO34 / IO35 / IO36 / IO39",
+                        "to": "**nur Eingang**: kein Ausgang und kein interner Pull-Widerstand",
+                        "note": "nur Eingang"
+                    },
+                    {
+                        "name": "IO25 / IO26",
+                        "to": "DAC1 / DAC2 (echter 8-Bit-Analogausgang)"
+                    },
+                    {
+                        "name": "IO21 / IO22",
+                        "to": "übliche SDA / SCL"
+                    },
+                    {
+                        "name": "IO1 / IO3",
+                        "to": "UART0 TX/RX (seriell + Flashen)"
+                    },
+                    {
+                        "name": "IO6–IO11",
+                        "to": "SPI-Flash im Modul — **NICHT verwenden**"
+                    },
+                    {
+                        "name": "IO0 / IO2 / IO12 / IO15",
+                        "to": "Strapping — legt den Bootmodus fest"
+                    },
+                    {
+                        "name": "ADC2",
+                        "to": "bei aktivem WiFi nicht lesbar (ADC1 verwenden)"
+                    },
+                    {
+                        "name": "demás IOxx",
+                        "label": "weitere IOxx",
+                        "to": "freier GPIO"
+                    }
+                ],
+                "notes": [
+                    {
+                        "title": "Pins nur für Eingänge",
+                        "body": "IO34/35/36/39 haben keine internen Pull-Widerstände und können keine Ausgänge sein. Für Sensoren/ADC geeignet, nicht zum Ansteuern von Lasten."
+                    },
+                    {
+                        "title": "ADC2 und WiFi",
+                        "body": "ADC2 funktioniert bei eingeschaltetem WiFi nicht. Für ADC mit WiFi **ADC1** (IO32–39) verwenden."
+                    }
+                ]
             },
             "esp32-s3-devkitc-1": {
-                "description": "Mikrocontroller mit USB OTG, WLAN 802.11 b/g/n und BLE 5. Zwei Reihen zu je 22 Pins."
+                "name": "ESP32-S3 DevKitC-1",
+                "description": "Mikrocontroller mit USB OTG, WLAN 802.11 b/g/n und BLE 5. Zwei Reihen zu je 22 Pins.",
+                "form": "DevKitC-1, 44 Pins (N16R8)",
+                "iface": "USB · UART · SPI · I2C · I2S · LCD",
+                "voltage": "3.3V-Logik (5V über USB/5V-Pin)",
+                "pins": [
+                    {
+                        "name": "3V3",
+                        "to": "3.3V-Schiene des Reglers; externe Versorgung gemäß Schaltplan der Platine ist ebenfalls möglich. Nicht mit USB/5V kombinieren."
+                    },
+                    {
+                        "name": "5V",
+                        "to": "Versorgungseingang (VBUS oder externer Abwärtswandler) → LDO → 3V3"
+                    },
+                    {
+                        "name": "GND",
+                        "to": "gemeinsame Masse"
+                    },
+                    {
+                        "name": "IO1–IO10",
+                        "to": "ADC1 — bei WiFi bevorzugt; ADC2 teilt Ressourcen mit WiFi"
+                    },
+                    {
+                        "name": "IO38 o IO48",
+                        "label": "IO38 oder IO48",
+                        "to": "integrierte WS2812-RGB-LED — **abhängig von der Revision**",
+                        "note": "v1.1 → IO38 · v1.0 → IO48. NIEMALS IO39. Vor Verwendung eines der beiden Pins den Platinenaufdruck prüfen."
+                    },
+                    {
+                        "name": "IO26–IO32",
+                        "to": "SPI-Flash im Modul — **NICHT verwenden**",
+                        "note": "für internen Flash reserviert"
+                    },
+                    {
+                        "name": "IO33–IO37",
+                        "to": "Octal-PSRAM (N16R8) — **NICHT verwenden**",
+                        "note": "bei Modulen mit R8-Suffix von der PSRAM belegt"
+                    },
+                    {
+                        "name": "IO19 / IO20",
+                        "to": "natives USB D−/D+ (HID) — reserviert"
+                    },
+                    {
+                        "name": "IO43 / IO44",
+                        "to": "UART0 TX/RX (seriell + Flashen per Kabel)"
+                    },
+                    {
+                        "name": "IO0 / IO3 / IO45 / IO46",
+                        "to": "Strapping (Boot) — vermeiden oder vorsichtig verwenden"
+                    },
+                    {
+                        "name": "demás IOxx",
+                        "label": "weitere IOxx",
+                        "to": "freier GPIO — I2C/SPI/I2S über die flexible GPIO-Matrix"
+                    }
+                ],
+                "notes": [
+                    {
+                        "title": "Nicht nutzbare PSRAM-/Flash-Pins",
+                        "body": "Beim **N16R8** belegt Flash die GPIOs **26–32** und Octal-PSRAM die GPIOs **33–37**: Diese Pins sind nicht nutzbar. Das allgemeine S3-Datenblatt führt sie trotzdem auf."
+                    },
+                    {
+                        "title": "I2S/SPI/I2C sind flexibel",
+                        "body": "Der S3 besitzt eine GPIO-Matrix: **Jeder** freie Pin kann I2S/SPI/I2C führen. Es gibt keinen einzelnen „I2S-Pin“. Die Verdrahtung des Pads steht in seiner Bauanleitung."
+                    }
+                ]
             },
             "max98357a": {
-                "description": "Mono-Class-D-Verstärker mit I2S-Eingang. Beachte Kanalwahl, Stromversorgung und Lautsprecheranschlüsse."
+                "name": "MAX98357A",
+                "description": "Mono-Class-D-Verstärker mit I2S-Eingang. Beachte Kanalwahl, Stromversorgung und Lautsprecheranschlüsse.",
+                "form": "Breakout-Platine ~14 × 16 mm",
+                "iface": "I2S",
+                "voltage": "2.5–5.5V (5V ≈ 3.2W @ 4Ω)",
+                "pins": [
+                    {
+                        "name": "LRC",
+                        "to": "Word-Select vom MCU (Bus, zu beiden Verstärkern)"
+                    },
+                    {
+                        "name": "BCLK",
+                        "to": "Bittakt vom MCU (Bus)"
+                    },
+                    {
+                        "name": "DIN",
+                        "to": "serielle Daten vom MCU (Bus)"
+                    },
+                    {
+                        "name": "GAIN",
+                        "to": "Verstärkung (siehe Tabelle). Unbeschaltet = 9 dB"
+                    },
+                    {
+                        "name": "SD",
+                        "to": "Abschaltung + Kanalwahl (siehe Tabelle)"
+                    },
+                    {
+                        "name": "GND",
+                        "to": "gemeinsame Masse"
+                    },
+                    {
+                        "name": "Vin",
+                        "to": "2.5–5.5V (5V für 3.2W)"
+                    },
+                    {
+                        "name": "SPK+",
+                        "to": "4–8Ω-Lautsprecher (direkt, ohne Filter)"
+                    },
+                    {
+                        "name": "SPK−",
+                        "to": "4–8Ω-Lautsprecher",
+                        "note": "Brückenausgang (BTL): KEIN Ausgang darf an GND"
+                    }
+                ],
+                "notes": [
+                    {
+                        "title": "Stereo mit 2 Modulen",
+                        "body": "Beide Verstärker nutzen **dieselben** 3 I2S-Leitungen (BCLK/LRC/DIN). Der jeweilige **SD**-Pin wählt L/R, nicht eine separate Datenleitung."
+                    },
+                    {
+                        "title": "Kanal wählen (SD messen)",
+                        "body": "Widerstand von SD→Vin anschließen und SD–GND messen: **>1,4V = links**, 0,77–1,4V = rechts. Links: SD→Vin direkt; rechts: SD→Vin über ~220–330k."
+                    },
+                    {
+                        "title": "Ausgang",
+                        "body": "4–8Ω-Lautsprecher direkt an SPK+/SPK− anschließen (Class D ohne Filter). Keinen Ausgang an GND anschließen."
+                    }
+                ],
+                "gain": {
+                    "head": [
+                        "GAIN-Anschluss",
+                        "Verstärkung"
+                    ],
+                    "rows": [
+                        [
+                            "offen (unbeschaltet)",
+                            "9 dB"
+                        ],
+                        [
+                            "direkt an GND",
+                            "12 dB"
+                        ],
+                        [
+                            "direkt an Vin",
+                            "6 dB"
+                        ],
+                        [
+                            "100k an GND",
+                            "15 dB"
+                        ],
+                        [
+                            "100k an Vin",
+                            "3 dB"
+                        ]
+                    ]
+                },
+                "channel": {
+                    "head": [
+                        "SD-Spannung (gegen GND messen)",
+                        "Ausgang"
+                    ],
+                    "rows": [
+                        [
+                            "< 0,16 V",
+                            "ausgeschaltet (Shutdown)"
+                        ],
+                        [
+                            "0,16 – 0,77 V",
+                            "(L+R)/2 mono"
+                        ],
+                        [
+                            "0,77 – 1,4 V",
+                            "Rechts"
+                        ],
+                        [
+                            "> 1,4 V",
+                            "Links"
+                        ]
+                    ]
+                }
             },
             "pcm5102": {
-                "description": "32-Bit/384kHz-I2S-DAC (GY-PCM5102 Breakout). L/R-Line-Ausgang."
+                "name": "PCM5102A DAC",
+                "description": "32-Bit/384kHz-I2S-DAC (GY-PCM5102 Breakout). L/R-Line-Ausgang.",
+                "form": "GY-PCM5102-Breakout-Platine",
+                "iface": "I2S",
+                "voltage": "3.3–5V (Regler auf der Platine)",
+                "pins": [
+                    {
+                        "name": "VIN",
+                        "to": "5V (der Modulregler senkt auf 3.3V ab)"
+                    },
+                    {
+                        "name": "GND",
+                        "to": "gemeinsame Masse"
+                    },
+                    {
+                        "name": "SCK",
+                        "to": "→ GND",
+                        "note": "an GND: Der PCM5102 erzeugt seinen Takt per PLL (kein Mastertakt vom MCU)"
+                    },
+                    {
+                        "name": "BCK",
+                        "to": "Bittakt vom MCU"
+                    },
+                    {
+                        "name": "DIN",
+                        "to": "serielle Daten vom MCU"
+                    },
+                    {
+                        "name": "LRCK",
+                        "to": "Word-Select vom MCU"
+                    },
+                    {
+                        "name": "3.3V",
+                        "to": "Reglerausgang — NICHT anschließen"
+                    },
+                    {
+                        "name": "OUT L",
+                        "to": "linker Line-Ausgang → Verstärker / Klinke"
+                    },
+                    {
+                        "name": "OUT R",
+                        "to": "rechter Line-Ausgang → Verstärker / Klinke"
+                    },
+                    {
+                        "name": "AGND",
+                        "to": "Masse des Analogausgangs"
+                    }
+                ],
+                "notes": [
+                    {
+                        "title": "SCK an GND",
+                        "body": "Die Breakout-Platine erhält keinen Mastertakt vom ESP32: **SCK mit GND** verbinden, damit der PCM5102 seinen Takt per PLL erzeugt."
+                    },
+                    {
+                        "title": "Lötbrücken",
+                        "body": "Auf der Rückseite. Mit allen 4 in ihrer Standardstellung gibt der DAC Audio im Standard-I2S-Format aus."
+                    }
+                ],
+                "jumpers": {
+                    "head": [
+                        "Lötbrücke (Rückseite)",
+                        "Zustand"
+                    ],
+                    "rows": [
+                        [
+                            "FLT (Filter)",
+                            "L = normale Latenz · H = niedrige Latenz"
+                        ],
+                        [
+                            "DEMP (Deemphasis)",
+                            "L = aus"
+                        ],
+                        [
+                            "XSMT (sanfte Stummschaltung)",
+                            "H = keine externe Stummschaltung · L = stumm"
+                        ],
+                        [
+                            "FMT (Format)",
+                            "L = Standard-I2S"
+                        ]
+                    ]
+                }
             },
             "lm2596": {
-                "description": "Einstellbarer DC-DC-Abwärtsregler. Der nutzbare Strom hängt vom Modul und seiner Kühlung ab."
+                "name": "LM2596 buck (step-down)",
+                "description": "Einstellbarer DC-DC-Abwärtsregler. Der nutzbare Strom hängt vom Modul und seiner Kühlung ab.",
+                "form": "LM2596-Modul",
+                "iface": "DC-DC",
+                "voltage": "4.5–40V Eingang → 1.2–37V Ausgang",
+                "pins": [
+                    {
+                        "name": "IN+",
+                        "to": "von Ladegerät/BMS P+ (muss ~1.5V über dem Ausgang liegen)"
+                    },
+                    {
+                        "name": "IN−",
+                        "to": "von Ladegerät/BMS P−"
+                    },
+                    {
+                        "name": "OUT+",
+                        "to": "5V-Schiene (mit Potentiometer auf 5.0V einstellen)"
+                    },
+                    {
+                        "name": "OUT−",
+                        "to": "gemeinsame Masse (identisch mit IN−)"
+                    }
+                ],
+                "notes": [
+                    {
+                        "title": "VOR dem Anschließen der Last einstellen",
+                        "body": "Vor dem Anschließen von ESP32/Verstärkern das Potentiometer drehen und **OUT+ mit dem Multimeter auf 5.0V einstellen**. Die 3A-Angabe des Chips garantiert nicht bei jedem Modul 3A Dauerstrom: Temperatur, Spannungsabfall und Strom unter Last prüfen."
+                    },
+                    {
+                        "title": "Nicht isolierte Masse",
+                        "body": "IN− und OUT− haben dieselbe Masse; Eingang und Ausgang sind nicht isoliert."
+                    }
+                ]
             },
             "jack-trs": {
-                "description": "Stereo-Buchse: Tip=L, Ring=R, Sleeve=GND."
+                "name": "3.5mm-TRS-Buchse (Stereo)",
+                "description": "Stereo-Buchse: Tip=L, Ring=R, Sleeve=GND.",
+                "form": "3.5mm-Klinkenbuchse",
+                "iface": "Analog-Audio",
+                "voltage": "passiv",
+                "pins": [
+                    {
+                        "name": "Tip",
+                        "to": "linker Kanal (L)"
+                    },
+                    {
+                        "name": "Ring",
+                        "to": "rechter Kanal (R)"
+                    },
+                    {
+                        "name": "Sleeve",
+                        "to": "Masse / Abschirmung"
+                    },
+                    {
+                        "name": "SW",
+                        "to": "Einsteckerkennung (optional, nicht bei jeder Buchse)"
+                    }
+                ],
+                "notes": [
+                    {
+                        "title": "Erkennung",
+                        "body": "Manche Buchsen haben einen zusätzlichen Kontakt, der beim Einstecken öffnet/schließt."
+                    },
+                    {
+                        "title": "Kontakte identifizieren",
+                        "body": "Tip/Ring/Sleeve bezeichnen die Audiokontakte, nicht die Reihenfolge der Lötanschlüsse. Bei eingestecktem Stecker und stromlosem Modul jeden Anschluss mit einer Durchgangsprüfung identifizieren."
+                    }
+                ]
             },
             "plug-trrs": {
-                "description": "Stecker mit Mikrofon, CTIA-Standard (moderne Handys)."
+                "name": "Plug 3.5mm TRRS (CTIA)",
+                "description": "Stecker mit Mikrofon, CTIA-Standard (moderne Handys).",
+                "form": "3.5mm-Klinkenstecker",
+                "iface": "Analog-Audio",
+                "voltage": "passiv",
+                "pins": [
+                    {
+                        "name": "Tip",
+                        "to": "linker Kanal (L)"
+                    },
+                    {
+                        "name": "Ring 1",
+                        "to": "rechter Kanal (R)"
+                    },
+                    {
+                        "name": "Ring 2",
+                        "to": "Masse (CTIA)"
+                    },
+                    {
+                        "name": "Sleeve",
+                        "to": "Mikrofon (CTIA)"
+                    }
+                ],
+                "notes": [
+                    {
+                        "title": "CTIA vs OMTP",
+                        "body": "CTIA: Ring2=GND, Sleeve=MIC. Bei OMTP sind sie vertauscht. Wenn das Mikrofon nicht funktioniert, kann der Standard die Ursache sein."
+                    }
+                ]
             },
             "ili9488": {
-                "description": "480×320-SPI-Display. Versorgung, Hintergrundbeleuchtung und Pegelanpassung hängen von der Modulvariante ab."
+                "name": "4-Zoll-TFT ILI9488 (SPI)",
+                "description": "480×320-SPI-Display. Versorgung, Hintergrundbeleuchtung und Pegelanpassung hängen von der Modulvariante ab.",
+                "form": "4-Zoll-SPI-Modul",
+                "iface": "SPI",
+                "voltage": "VCC je nach Variante / ESP32-Logik 3.3V",
+                "pins": [
+                    {
+                        "name": "VCC",
+                        "to": "5V bei der PAD-Variante mit Regler; Spannungsbereich des Moduls vor dem Anschließen prüfen"
+                    },
+                    {
+                        "name": "GND",
+                        "to": "gemeinsame Masse"
+                    },
+                    {
+                        "name": "CS",
+                        "to": "Chip-Auswahl"
+                    },
+                    {
+                        "name": "RESET",
+                        "to": "Reset"
+                    },
+                    {
+                        "name": "DC",
+                        "to": "Daten/Befehl"
+                    },
+                    {
+                        "name": "SDI",
+                        "to": "Daten MCU → TFT"
+                    },
+                    {
+                        "name": "SCK",
+                        "to": "SPI-Takt"
+                    },
+                    {
+                        "name": "LED",
+                        "to": "Hintergrundbeleuchtung / Helligkeitssteuerung (je nach Modul; siehe Hinweis)"
+                    },
+                    {
+                        "name": "SDO",
+                        "to": "NC (nur Schreiben)"
+                    },
+                    {
+                        "name": "T_CLK",
+                        "to": "Touch: Takt (im Pad unbenutzt)"
+                    },
+                    {
+                        "name": "T_CS",
+                        "to": "Touch: Chip-Auswahl (im Pad unbenutzt)"
+                    },
+                    {
+                        "name": "T_DIN",
+                        "to": "Touch: MOSI (im Pad unbenutzt)"
+                    },
+                    {
+                        "name": "T_DO",
+                        "to": "Touch: MISO (im Pad unbenutzt)"
+                    },
+                    {
+                        "name": "T_IRQ",
+                        "to": "Touch: IRQ (im Pad unbenutzt)"
+                    }
+                ],
+                "notes": [
+                    {
+                        "title": "Nur Schreiben",
+                        "body": "Im PAD bleibt MISO (SDO) unbeschaltet (`TFT_MISO=-1`). Je nach Platine ist LED ein Logikeingang oder die Versorgung der Hintergrundbeleuchtung: Schaltplan prüfen und bei Laststrom einen Treiber verwenden. Hintergrundbeleuchtung nicht direkt aus einem GPIO versorgen."
+                    },
+                    {
+                        "title": "Touch",
+                        "body": "Der Touch-Controller (T_CLK/T_CS/T_DIN/T_DO/T_IRQ) liegt am selben Header, wird vom Pad aber nicht verwendet. Manche Varianten haben zusätzlich einen microSD-Steckplatz mit separaten Pins."
+                    }
+                ]
             },
             "lcd1602-i2c": {
-                "description": "16×2-Zeichendisplay mit I2C-Backpack: nur 2 Datenpins."
+                "name": "LCD 16×2 I2C (HD44780 + PCF8574)",
+                "description": "16×2-Zeichendisplay mit I2C-Backpack: nur 2 Datenpins.",
+                "form": "LCD 1602 + Adapterplatine",
+                "iface": "I2C",
+                "voltage": "5V",
+                "pins": [
+                    {
+                        "name": "VCC",
+                        "to": "5V"
+                    },
+                    {
+                        "name": "GND",
+                        "to": "gemeinsame Masse"
+                    },
+                    {
+                        "name": "SDA",
+                        "to": "I2C-Daten vom MCU"
+                    },
+                    {
+                        "name": "SCL",
+                        "to": "I2C-Takt vom MCU"
+                    }
+                ],
+                "notes": [
+                    {
+                        "title": "I2C-Adresse",
+                        "body": "PCF8574: **0x20–0x27**; PCF8574A: **0x38–0x3F**. A0/A1/A2 legen die Adresse fest. Den Bus scannen, statt 0x27 anzunehmen."
+                    },
+                    {
+                        "title": "Kontrast",
+                        "body": "Blaues Potentiometer auf der Rückseite der Adapterplatine."
+                    },
+                    {
+                        "title": "I2C mit ESP32",
+                        "body": "Viele Adapterplatinen haben SDA/SCL-Pull-ups auf **5V**. Zwischen 5V-Adapterplatine und 3.3V-ESP32 einen bidirektionalen Pegelwandler verwenden. Leitungen mit 5V-Pull-ups nicht direkt an den MCU anschließen."
+                    }
+                ]
             },
             "ky-040": {
-                "description": "Inkrementaler Encoder mit Taster. Pull-ups an Bord."
+                "name": "KY-040-Drehgeber",
+                "description": "Inkrementaler Encoder mit Taster. Pull-ups an Bord.",
+                "form": "KY-040-Modul",
+                "iface": "GPIO (Quadratur)",
+                "voltage": "3.3–5V",
+                "pins": [
+                    {
+                        "name": "CLK",
+                        "to": "Kanal A (Interrupt)"
+                    },
+                    {
+                        "name": "DT",
+                        "to": "Kanal B (Interrupt)"
+                    },
+                    {
+                        "name": "SW",
+                        "to": "Taster → INPUT_PULLUP"
+                    },
+                    {
+                        "name": "+",
+                        "to": "3V3 (Pull-ups bestimmen den Ausgangspegel)"
+                    },
+                    {
+                        "name": "GND",
+                        "to": "gemeinsame Masse"
+                    }
+                ],
+                "notes": [
+                    {
+                        "title": "Am S3 mit 3V3 versorgen",
+                        "body": "Das Modul hat Pull-ups: Bei 5V-Versorgung liegen 5V an den GPIOs des ESP32-S3. **3V3** verwenden."
+                    },
+                    {
+                        "title": "Auslesen",
+                        "body": "CLK/DT in Quadratur; SW mit `INPUT_PULLUP` (aktiv LOW)."
+                    }
+                ]
             },
             "hw-504": {
-                "description": "Joystick im PlayStation-Stil: 2 analoge Achsen + Taster."
+                "name": "HW-504-Analogjoystick",
+                "description": "Joystick im PlayStation-Stil: 2 analoge Achsen + Taster.",
+                "form": "HW-504-Modul",
+                "iface": "ADC + GPIO",
+                "voltage": "3.3V (nicht 5V!)",
+                "pins": [
+                    {
+                        "name": "+5V",
+                        "to": "**3V3, NICHT 5V**",
+                        "note": "5V überlasten den S3-ADC mit Überspannung und koppeln die Achsen (diagonal)"
+                    },
+                    {
+                        "name": "GND",
+                        "to": "gemeinsame Masse"
+                    },
+                    {
+                        "name": "VRx",
+                        "to": "X-Achse → ADC1"
+                    },
+                    {
+                        "name": "VRy",
+                        "to": "Y-Achse → ADC1"
+                    },
+                    {
+                        "name": "SW",
+                        "to": "Taster → INPUT_PULLUP"
+                    }
+                ],
+                "notes": [
+                    {
+                        "title": "Mit 3V3 versorgen",
+                        "body": "Der Pin ist mit „+5V“ beschriftet, gehört am ESP32-S3 aber an **3V3**. Bei 5V übersteuert der Schleifer die ADC-Pins: Die Schutzdiode leitet und koppelt beide Achsen."
+                    }
+                ]
             },
             "ws2812": {
-                "description": "Verkettete adressierbare RGB-LEDs: der ganze Streifen nutzt 1 Datenpin."
+                "name": "WS2812-/SK6812-Streifen (NeoPixel)",
+                "description": "Verkettete adressierbare RGB-LEDs: der ganze Streifen nutzt 1 Datenpin.",
+                "form": "Streifen / Ring",
+                "iface": "Ein-Draht (800 kHz)",
+                "voltage": "5V",
+                "pins": [
+                    {
+                        "name": "DIN",
+                        "to": "MCU-Daten über **330Ω** in Reihe"
+                    },
+                    {
+                        "name": "5V",
+                        "to": "5V (≈60 mA/LED bei vollem Weiß)"
+                    },
+                    {
+                        "name": "GND",
+                        "to": "gemeinsame Masse mit dem MCU"
+                    },
+                    {
+                        "name": "DOUT",
+                        "to": "an DIN der nächsten LED (Verkettung)"
+                    }
+                ],
+                "notes": [
+                    {
+                        "title": "Pegelwandlung 3.3 → 5V",
+                        "body": "Bei einem **5V**-Streifen und einem **3.3V**-ESP32 DIN über einen **74AHCT125** anpassen. Schaltschwelle und Strom hängen von der LED-Revision ab; ein Wechsel von WS2812 zu SK6812 garantiert keine 3.3V-Kompatibilität."
+                    },
+                    {
+                        "title": "Versorgung",
+                        "body": "330Ω in Reihe an DIN + 470–1000µF-Kondensator an der 5V-Schiene des Streifens. Helligkeit begrenzen, um den Abwärtswandler zu schonen."
+                    }
+                ]
             },
             "ky-009": {
-                "description": "RGB-LED mit gemeinsamer Kathode. KEINE Widerstände an Bord."
+                "name": "KY-009 LED RGB (SMD)",
+                "description": "RGB-LED mit gemeinsamer Kathode. KEINE Widerstände an Bord.",
+                "form": "KY-009-Modul",
+                "iface": "PWM ×3",
+                "voltage": "3.3–5V",
+                "pins": [
+                    {
+                        "name": "R",
+                        "to": "→ 330Ω → GPIO (PWM)"
+                    },
+                    {
+                        "name": "G",
+                        "to": "→ 330Ω → GPIO (PWM)"
+                    },
+                    {
+                        "name": "B",
+                        "to": "→ 330Ω → GPIO (PWM)"
+                    },
+                    {
+                        "name": "−",
+                        "to": "gemeinsame Kathode → GND"
+                    }
+                ],
+                "notes": [
+                    {
+                        "title": "Keine Widerstände",
+                        "body": "Das Modul hat KEINE Widerstände: **330Ω in Reihe** für jede Farbe vorsehen, sonst wird die LED beschädigt."
+                    },
+                    {
+                        "title": "Gemeinsame Kathode",
+                        "body": "Der Pin `−` liegt gemeinsam an GND; die Farben werden mit aktivem HIGH-PWM angesteuert."
+                    }
+                ]
             },
             "charger-2s": {
-                "description": "Anschlussübersicht für 2S-Module. Laden, Balancieren und Schutz hängen vom konkreten Modell ab."
+                "name": "2S-USB-C-Ladegerät / BMS",
+                "description": "Anschlussübersicht für 2S-Module. Laden, Balancieren und Schutz hängen vom konkreten Modell ab.",
+                "form": "2S-USB-C-Modul",
+                "iface": "Laden + BMS",
+                "voltage": "8.4V voll (2S); Strom je nach Modul",
+                "pins": [
+                    {
+                        "name": "B+",
+                        "to": "Pack + (obere Zelle)"
+                    },
+                    {
+                        "name": "BM",
+                        "to": "Mittelabgriff zwischen Zellen (Balancierung)"
+                    },
+                    {
+                        "name": "B−",
+                        "to": "Pack − (untere Zelle)"
+                    },
+                    {
+                        "name": "P+",
+                        "to": "Lastausgang → IN+ des Abwärtswandlers (über SW-CELDAS)"
+                    },
+                    {
+                        "name": "P−",
+                        "to": "Lastausgang → IN− des Abwärtswandlers"
+                    }
+                ],
+                "notes": [
+                    {
+                        "title": "2S = Reihenschaltung",
+                        "body": "B+/BM/B− werden mit den 2 Zellen **in Reihe** verbunden (2S, 6.0–8.4V). BM (Balance) ist für gleichmäßiges Laden erforderlich."
+                    },
+                    {
+                        "title": "Ausgang",
+                        "body": "P+/P− sind die Lastanschlüsse des dargestellten Moduls. Nicht jedes BMS enthält Ladegerät, Balancierung oder gleichzeitiges Lastmanagement: Diese Funktionen in der Dokumentation des Modells prüfen. USB-C allein garantiert sie nicht."
+                    }
+                ]
             },
             "holder-2s": {
-                "description": "Halter für zwei 18650-Zellen in Reihe (2S). Prüfe die Reihenschaltung."
+                "name": "18650-2S-Zellhalter (Reihenschaltung)",
+                "description": "Halter für zwei 18650-Zellen in Reihe (2S). Prüfe die Reihenschaltung.",
+                "form": "Halter für 2× 18650",
+                "iface": "passiv (2 Zellen in Reihe)",
+                "voltage": "7.4V nominal · 8.4V voll (Li-Ion mit 4.2V/Zelle)",
+                "pins": [
+                    {
+                        "name": "+",
+                        "to": "Pack + → B+ des Ladegeräts/BMS"
+                    },
+                    {
+                        "name": "−",
+                        "to": "Pack − → B− des Ladegeräts/BMS"
+                    },
+                    {
+                        "name": "mid",
+                        "to": "Mittelabgriff zwischen Zellen → BM; nötig, wenn das BMS einen Balancieranschluss benötigt"
+                    }
+                ],
+                "notes": [
+                    {
+                        "title": "Reihe, nicht parallel",
+                        "body": "Für 2S werden die 2 Zellen **in Reihe** geschaltet (Spannungen addieren sich). Ein Parallelhalter würde 3.7V liefern, nicht 7.4V."
+                    },
+                    {
+                        "title": "Balancierung",
+                        "body": "Mittelabgriff an den BM-Pin des Ladegeräts führen, damit die Zellen gleichmäßig laden."
+                    }
+                ]
             }
         },
         "tables": {
@@ -726,6 +1440,26 @@
                 "title": "WiFi Speaker · Verdrahtungsanleitung | HIOS Platform",
                 "description": "Verdrahtungsanleitung für den WiFi-Lautsprecher: I2S vom ESP32 zu 2× MAX98357 in Stereo, 16×2-I2C-LCD, Kanalwahl per SD-Messung und 2S-Stromversorgung."
             }
+        },
+        "attribution": "Inspiriert von den Pinout-Ressourcen auf luisllamas.es",
+        "pin": "Pin",
+        "gpioFunctions": "GPIO / Funktionen",
+        "Functions": {
+            "power": "Versorgung",
+            "gnd": "GND",
+            "gpio": "GPIO",
+            "adc": "ADC",
+            "touch": "Berührung",
+            "spi": "SPI",
+            "i2c": "I2C",
+            "i2s": "I2S",
+            "uart": "UART",
+            "dac": "DAC",
+            "usb": "USB",
+            "strap": "Bootkonfiguration",
+            "rgb": "RGB",
+            "in": "Nur Eingang",
+            "nc": "Nicht nutzbar"
         }
     },
     "WiringGuide": {
@@ -2714,9 +3448,14 @@
                 "title": "I2S-Takte (ESP32 / DAC)",
                 "fs": "Sample-Rate (Hz)",
                 "bits": "Bits pro Sample",
-                "channels": "Kanäle",
+                "channels": "Audiokanäle",
                 "mclk": "MCLK-Multiplikator",
-                "rate": "Datenrate"
+                "rate": "Bus-Bitrate",
+                "slotBits": "Bits pro Kanalslot",
+                "payloadRate": "Audio-Nutzdaten",
+                "nominalMclk": "Nominaler MCLK",
+                "modelHint": "Der I²S-Bus behält auch bei Mono-Audio zwei Slots. Die Audioauflösung darf die Slotbreite nicht überschreiten. MCLK ist ein nominaler Rechenwert: Prüfe die von deinem Gerät unterstützten Formate und Taktverhältnisse.",
+                "invalid": "Werte prüfen: fs muss positiv sein, 8/16/24/32-Bit-Audio muss in 16/24/32-Bit-Slots passen, die Kanalzahl muss 1 oder 2 und der MCLK-Multiplikator eine positive ganze Zahl sein."
             }
         },
         "colors": {
@@ -3299,7 +4038,8 @@
             "logic": "Logik 0 / 1",
             "hint": "Stereobus: BCLK = fs × 2 × Slotbreite; WS = fs. Oben: BCLK. Unten: WS (0 = links, 1 = rechts). Logikpegel sind keine Spannungen. Dies ist eine lokale Simulation, keine Messung an der Platine.",
             "dataHint": "Die Slotbreite kann die Audiobittiefe übersteigen. DIN und MCLK werden nicht dargestellt. Bei Standard-I²S folgt das MSB des nächsten Wortes eine BCLK-Periode nach dem WS-Wechsel.",
-            "reference": "I²S-Spezifikation (NXP)"
+            "reference": "I²S-Spezifikation (NXP)",
+            "invalid": "Eine positive Abtastrate und Slots mit 16, 24 oder 32 Bit eingeben. Bei Audiokonfiguration muss die Auflösung in den Slot passen; auch die übrigen Parameter müssen gültig sein."
         },
         "excitation": {
             "frequency": "Eingangsfrequenz (Hz)",

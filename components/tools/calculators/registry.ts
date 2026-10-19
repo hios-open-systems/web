@@ -178,6 +178,7 @@ export const CALCULATORS: CalcDef[] = [
     fields: [
       { key: 'sampleRate', default: 44100 },
       { key: 'bitDepth', default: 16 },
+      { key: 'i2sSlotBits', default: 16 },
       { key: 'channels', default: 2 },
       { key: 'mclkMult', default: 256 },
     ],

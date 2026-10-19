@@ -38,8 +38,8 @@ const PRESET_PATCHES: Record<string, Record<string, number | string>> = {
   'rgb-led': { supply: 5, ledVf: 3.2, ledCurrent: 20 },
   'buck-3v3': { powerV: 3.3, powerI: 0.5, thetaJa: 40, ambient: 30, vinMax: 5, vadcMax: 3, rBottomK: 10 },
   'esp32-adc': { vinMax: 12, vadcMax: 3.1, rBottomK: 10, rcR: 10000, rcC: 100 },
-  'audio-44k': { sampleRate: 44100, bitDepth: 16, channels: 2, mclkMult: 256, rcR: 10000, rcC: 100, targetFc: 160 },
-  'audio-48k': { sampleRate: 48000, bitDepth: 24, channels: 2, mclkMult: 256, rcR: 6800, rcC: 100, targetFc: 234 },
+  'audio-44k': { sampleRate: 44100, bitDepth: 16, i2sSlotBits: 16, channels: 2, mclkMult: 256, rcR: 10000, rcC: 100, targetFc: 160 },
+  'audio-48k': { sampleRate: 48000, bitDepth: 24, i2sSlotBits: 32, channels: 2, mclkMult: 256, rcR: 6800, rcC: 100, targetFc: 234 },
   'low-power': { batteryMah: 2500, avgCurrent: 80, efficiency: 90, powerV: 3.3, powerI: 0.08 },
 };
 
@@ -103,7 +103,7 @@ export function useCalculatorState() {
   const rlRequiredValid = num('rlTargetFc') > 0 && num('rlR') > 0;
   const rcl = useMemo(() => calc.rclSeries(num('rclR'), num('rclL'), num('rclC'), num('rclF')), [num]);
   const gain = useMemo(() => calc.ampGain(num('rf'), num('rg')), [num]);
-  const i2s = useMemo(() => calc.i2sClocks(num('sampleRate'), num('bitDepth'), num('channels'), num('mclkMult')), [num]);
+  const i2s = useMemo(() => calc.i2sClocks(num('sampleRate'), num('bitDepth'), num('channels'), num('mclkMult'), num('i2sSlotBits')), [num]);
 
   const resistorValue = useMemo(
     () => (Number(str('band1')) * 10 + Number(str('band2'))) * Number(str('multiplierBand')),
@@ -162,6 +162,10 @@ export function useCalculatorState() {
         if (Number.isFinite(parsed)) next[f.key] = parsed;
       }
     }
+    // Older shared configurations used sample precision as their implicit slot width.
+    if (searchParams.has('bitDepth') && !searchParams.has('i2sSlotBits')) {
+      next.i2sSlotBits = Math.max(16, Number(next.bitDepth));
+    }
     if (!(ALLOWED_PACKAGES as string[]).includes(String(next.packageType))) {
       next.packageType = DEFAULTS.packageType;
     }
@@ -184,7 +188,8 @@ export function useCalculatorState() {
     if (eSeries !== 'E24') params.set('eseries', eSeries);
     for (const f of ALL_FIELDS) {
       const v = values[f.key];
-      if (String(v) !== String(f.default)) params.set(f.key, String(v));
+      const explicitI2sSlot = f.key === 'i2sSlotBits' && values.bitDepth !== DEFAULTS.bitDepth;
+      if (String(v) !== String(f.default) || explicitI2sSlot) params.set(f.key, String(v));
     }
 
     return params.toString();
@@ -216,11 +221,11 @@ export function useCalculatorState() {
       `ADC Divider: Rtop=${divider.rTopK.toFixed(1)} kOhm, ratio=${divider.ratio.toFixed(2)}:1`,
       `RC: fc=${cutoff.toFixed(1)} Hz, R@target=${requiredR.toFixed(0)} ohm`,
       gain.valid ? `Gain: ${gain.gain.toFixed(2)}x (${gain.gainDb.toFixed(2)} dB)` : `Gain: ${t('cards.invalid')}`,
-      `I2S: BCLK=${Math.round(i2s.bclk)} Hz, MCLK=${Math.round(i2s.mclk)} Hz, rate=${i2s.bitRateMbps.toFixed(3)} Mbps`,
+      i2s.valid ? `I2S: BCLK=${Math.round(i2s.bclk)} Hz, WS=${num('sampleRate')} Hz, MCLK=${Math.round(i2s.mclk)} Hz, bus=${i2s.bitRateMbps.toFixed(3)} Mbps, audio=${i2s.payloadBitRateMbps.toFixed(3)} Mbps` : `I2S: ${t('cards.invalid')}`,
     ].join('\n');
   }, [
     led, capacitor, thermal, runtime, resistorValue, resistorTolerance,
-    resistorMin, resistorMax, divider, cutoff, requiredR, gain, i2s, t,
+    resistorMin, resistorMax, divider, cutoff, requiredR, gain, i2s, t, num,
   ]);
 
   const copySummary = () => copyRaw(summary, t('copy_ok'));

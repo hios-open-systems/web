@@ -1,241 +1,46 @@
-# Pinouts Interactivos - Implementación
+# Pinouts e instrumentos compartidos
 
-## Descripción
+## Catálogo
 
-Se ha implementado una página interactiva para explorar los diagramas de pines (pinouts) de los módulos electrónicos utilizados en los proyectos HIOS.
+La página `app/[locale]/pinouts/page.tsx` muestra 15 módulos mediante componentes React y SVG locales. `PinoutsContent` reúne el selector móvil, la búsqueda, la navegación por hash y `BreakoutViewer`. Los diagramas se pueden ampliar con `DiagramFrame`.
 
-## Estructura Implementada
+`config/pinouts/modules/` conserva una única definición de cada módulo: identificador, pines, roles eléctricos, posición física, conexiones con proyectos y capacidades de simulación. Las MCU usan `BoardPinout` con el orden real de los headers. No ordenar los GPIO por número ni inferir la posición de las patillas a partir de un esquema funcional.
 
-### Arquitectura y Principios
+Los textos visibles del catálogo viven en `messages/{en,es,de,it}.json`, bajo `Pinouts.Modules.<id>`. `localizeBreakout` aplica el contrato `BreakoutCopy` antes de buscar y renderizar. Incluye nombre, descripción, características, conexiones, advertencias y tablas. Las leyendas están en `Pinouts.Functions`.
 
-La implementación sigue los principios de la guía técnica del proyecto:
+- `pins[].name` es la identidad estable del pin; debe coincidir con el catálogo físico.
+- `pins[].label` permite traducir una descripción como “demás IOxx” sin cambiar su identidad.
+- Las traducciones no cambian roles, geometría, perfiles de laboratorio ni gravedad de advertencias.
+- Las notas y filas de tablas siguen el orden de la definición compartida. Actualizar los cuatro idiomas al agregar contenido.
+- El contenido de referencia en español de los archivos de configuración no reemplaza la cobertura de traducciones: las pruebas exigen todas las entradas.
 
-- **SOLID**: Componentes pequeños con una única responsabilidad
-- **DRY**: Lógica centralizada y reutilizable
-- **Modular**: CSS separado en archivo module
-- **Tipado**: TypeScript strict sin `any`
-- **Accesible**: Soporte completo para teclado y semántica HTML
+Las guías de montaje de proyectos (`config/pinouts/{pad,btdac,speaker}.ts` y `components/wiring-guide/`) tienen su propio modelo. No confundir un pinout genérico de módulo con la asignación de GPIO de un proyecto.
 
-### Componentes Principales
+## Reutilización de I²S
 
-#### 1. **PinoutsContent** (`components/pinouts/PinoutsContent.tsx`)
-Contenedor principal que orquesta el flujo de la página.
-- Mantiene estado del módulo seleccionado
-- Renderiza grid de módulos disponibles
-- Renderiza el visor interactivo
+`lib/instruments/i2s.ts` es la fuente común del cálculo y las muestras:
 
-#### 2. **ModuleCard** (`components/pinouts/ModuleCard.tsx`)
-Tarjeta visual de un módulo individual.
-- Muestra nombre, descripción y categoría
-- Estilos hover y estado activo
-- Botones para seleccionar y acceder al HTML
-- Integrada con Ant Design
+- `i2sClockModel(fs, slotBits)` define dos ranuras por trama: `BCLK = fs × 2 × slotBits`, `WS = fs`.
+- `i2sBusModel` agrega profundidad de audio, canales de audio, datos útiles y MCLK nominal. Mono no elimina una ranura del bus. La profundidad no puede superar el ancho de ranura.
+- `i2sClockSamples` produce flancos digitales ideales, sin interpolar rampas. Los niveles 0/1 no representan voltajes medidos.
 
-#### 3. **ModuleSelector** (`components/pinouts/ModuleSelector.tsx`)
-Componente de búsqueda y filtrado (actualmente no usado, pero disponible para futuras mejoras).
-- Búsqueda por nombre/descripción
-- Filtrado por categoría
-- Grid responsivo
-- Accesibilidad con teclado
+`components/instruments/I2sScope.tsx` presenta las dos trazas, colores, unidades, leyendas, pausa y explicación. Usa `TimeScope`/`SignalPlot`. Recibe el modelo y los nombres físicos de BCLK y WS; no posee controles de cálculo ni persistencia.
 
-#### 4. **ModuleViewer** (`components/pinouts/ModuleViewer.tsx`)
-Visor interactivo del pinout HTML.
-- Tab para vista interactiva (iframe)
-- Tab para especificaciones técnicas
-- Loading state
-- Alto flexible
+Se comparte entre la calculadora I²S y los laboratorios PCM5102A (`BCK/LRCK`) y MAX98357A (`BCLK/LRC`). Los demás módulos no activan el instrumento. Para otra familia de señales, reutilizar el renderizador cuando tenga sentido y mantener la física en un modelo específico; no representar buses distintos como si fueran I²S.
 
-### Configuración de Módulos
+La calculadora guarda `i2sSlotBits` junto con el resto de sus valores. Conserva el valor predeterminado de 16 bits para enlaces antiguos; si un enlace anterior especificaba otra profundidad, se interpreta como su ancho implícito de ranura. Los nuevos enlaces con una profundidad no predeterminada incluyen el ancho explícito, incluso si coincide con el predeterminado. Las plantillas de audio usan 16/16 bits a 44.1 kHz y 24/32 bits a 48 kHz.
 
-Archivo: `config/modules.ts`
-
-Define la lista de módulos disponibles y sus metadatos:
-```typescript
-interface ModuleSpecs {
-  voltage?: string;
-  resolution?: string;
-  features?: string[];
-  interface?: string;
-  package?: string;
-}
-
-interface Module {
-  id: string;
-  name: string;
-  description: string;
-  category: 'microcontroller' | 'audio' | 'power' | 'amplifier';
-  image?: string;
-  htmlPath: string;
-  datasheetUrl?: string;
-  specs?: ModuleSpecs;
-}
-```
-
-Módulos configurados:
-- **ESP32 DevKit V1** - Microcontrolador (38 pines)
-- **ESP32-S3 DevKitC** - Microcontrolador (WiFi 6, BLE 5)
-- **PCM5102 DAC** - Audio (32-bit/192kHz)
-- **MAX98357 Amplifier** - Amplificador I2S (3.2W)
-- **LM2596 Buck Converter** - Alimentación (3A)
-
-### Estilos
-
-Archivo: `components/pinouts/pinouts.module.css`
-
-- CSS Modules para aislar estilos
-- Variables Ant Design para temas consistentes
-- Responsive design (mobile-first)
-- Animaciones suaves
-- Accesibilidad (contraste, focus states)
-
-### Página Next.js
-
-Archivo: `app/[locale]/pinouts/page.tsx`
-
-- Integrada con i18n
-- Metadata dinámico
-- Pre-renderizado estático
-- Soporta múltiples locales (en, es, de, it)
-
-## Estructura de Archivos
-
-```
-components/
-└── pinouts/
-    ├── ModuleCard.tsx          # Tarjeta de módulo
-    ├── ModuleSelector.tsx      # Búsqueda y filtro
-    ├── ModuleViewer.tsx        # Visor interactivo
-    ├── PinoutsContent.tsx      # Contenedor principal
-    ├── pinouts.module.css      # Estilos CSS
-    └── index.ts                # Re-exports
-
-config/
-└── modules.ts                  # Configuración de módulos
-
-app/[locale]/
-└── pinouts/
-    └── page.tsx                # Página Next.js
-
-public/pinouts/
-├── modules/
-│   ├── esp32-devkit-v1.html
-│   ├── esp32s3.html
-│   ├── pcm5102.html
-│   ├── max98357.html
-│   └── lm2596.html
-└── ...
-```
-
-## Características
-
-### ✅ Implementadas
-
-- [x] Página responsive con header y descripción
-- [x] Grid de tarjetas de módulos
-- [x] Visor interactivo de pinouts (iframe)
-- [x] Selector de módulo con selección visual
-- [x] Tab para vista de especificaciones
-- [x] Integración con tema Ant Design
-- [x] Soporte multi-idioma (i18n)
-- [x] CSS modular sin estilos globales
-- [x] TypeScript strict
-- [x] Accesibilidad (keyboard, ARIA)
-- [x] Responsive design
-- [x] Componentes reutilizables y pequeños
-
-### 🚀 Mejoras Futuras
-
-- [ ] Agregar más módulos (MAX98357, TPA2016D2, etc)
-- [ ] Imágenes de módulos en tarjetas
-- [ ] Vista de comparación entre módulos
-- [ ] Descargas de datasheets
-- [ ] Historial de módulos visitados
-- [ ] Búsqueda global en la aplicación
-- [ ] Integración con proyectos (mostrar módulos por proyecto)
-- [ ] Animaciones de zoom en pinouts
-- [ ] Exportación de pinouts como PDF
-
-## Uso
-
-### Para agregar un nuevo módulo:
-
-1. Crear archivo HTML del pinout en `public/pinouts/modules/`
-2. Agregar entrada en `config/modules.ts`:
-   ```typescript
-   {
-     id: 'nuevo-modulo',
-     name: 'Nombre del Módulo',
-     description: 'Descripción breve',
-     category: 'power',
-     htmlPath: '/pinouts/modules/nuevo-modulo.html',
-     datasheetUrl: 'https://example.com/datasheet.pdf',
-     specs: {
-       voltage: '3.3V - 5V',
-       features: ['Feature 1', 'Feature 2'],
-       interface: 'SPI, I2C',
-       package: 'QFN-16',
-     },
-   }
-   ```
-
-### Para customizar estilos:
-
-Editar `components/pinouts/pinouts.module.css` - está organizado en secciones:
-- Module Cards
-- Selector Styles
-- Viewer Styles
-- Page Container
-- Responsive Media Queries
-
-## Atribución
-
-Los pinouts interactivos están inspirados en el trabajo de [Luis Llamas](https://www.luisllamas.es/), especialmente su excelente recurso de [ESP32 Hardware Details & Pinout](https://www.luisllamas.es/en/esp32-hardware-details-pinout/).
-
-Características diferenciales de HIOS Pinouts:
-- Integración con proyectos HIOS
-- Especificaciones técnicas detalladas
-- Links directos a datasheets oficiales
-- Soporte multi-idioma (en, es, de, it)
-- Tema oscuro optimizado para makers
-
-## Tecnologías Usadas
-
-- **Next.js 14+** - Framework principal
-- **React 18+** - UI
-- **TypeScript** - Type safety
-- **Ant Design 5.x** - Componentes UI
-- **CSS Modules** - Estilos aislados
-- **next-intl** - Internacionalización
-
-## Performance
-
-- Pre-rendering estático SSG
-- Code splitting automático
-- CSS Modules para estilos optimizados
-- Lazy loading de componentes (posible con dynamic imports)
-- File size optimized (11.5 kB per locale)
+La animación está ralentizada y respeta movimiento reducido. Cambiar valores actualiza las trazas aun con el visor pausado. DIN y MCLK no se dibujan; MCLK se presenta como cálculo nominal, sujeto a los formatos y relaciones admitidos por el dispositivo real.
 
 ## Verificación
 
-Para verificar que todo funciona:
+`npm run test:instruments` comprueba frecuencias, flancos, mono/estéreo, profundidad/ranura y entradas inválidas. `npm run test:breakouts` comprueba los headers físicos y la integridad del catálogo y sus traducciones, incluyendo valores numéricos en tablas.
 
-```bash
-# Compilar
-npm run build
+Playwright cubre:
 
-# Ejecutar en desarrollo
-npm run dev
+- `tests/i2s-shared.spec.ts`: acuerdo calculadora/pinouts, los cuatro idiomas, valores inválidos, pausa, enlaces antiguos, recarga y configuraciones guardadas.
+- `tests/pinout-translations.spec.ts`: contenido completo de los 15 módulos y búsqueda localizada; disposición a 320 px en los cuatro idiomas.
+- `tests/mobile-instruments.spec.ts`: controles y señales en móvil y tablet.
+- `tests/pinouts.spec.ts` y `tests/mobile-pinouts.spec.ts`: selección, historial, identidad de pines y ampliación.
 
-# Navegar a
-http://localhost:3000/en/pinouts
-```
-
----
-
-Todos los cambios respetan la arquitectura y principios del proyecto base:
-- Código limpio y legible
-- SOLID principles
-- DRY (Don't Repeat Yourself)
-- Componentes pequeños y reutilizables
-- CSS separado en archivos modulares
-- TypeScript strict
+Ejecutar build, lint, pruebas de lógica y Playwright contra la compilación actual antes de integrar en `main` local. Push y deploy corresponden al cierre del día.

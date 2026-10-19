@@ -31,7 +31,7 @@ export function AnnotatedModuleDiagram({ breakout, children, artworkHeight = 185
             <path d={`M${startX} ${y} H${isLeft ? 172 : 468} L${cx} ${cy}`} fill="none" stroke={color} strokeWidth="1.5" strokeOpacity=".75" />
             <circle cx={cx} cy={cy} r="4" fill="#0f172a" stroke={color} strokeWidth="2" />
             <rect x={x} y={y - 12} width="150" height="24" rx="5" fill="var(--bk-surface)" stroke={color} strokeOpacity=".65" />
-            <text x={x + 75} y={y + 4} textAnchor="middle" fill={color} fontSize="13" fontWeight="700">{pin.name}</text>
+            <text x={x + 75} y={y + 4} textAnchor="middle" fill={color} fontSize="13" fontWeight="700">{pin.label ?? pin.name}</text>
           </g>
         );
       })}

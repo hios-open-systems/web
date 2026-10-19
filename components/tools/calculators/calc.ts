@@ -3,6 +3,7 @@
 import { rlCutoff } from '../../../lib/instruments/rl.ts';
 import { rclImpedanceAt } from '../../../lib/instruments/rcl.ts';
 import { nonInvertingTransfer } from '../../../lib/instruments/amplifier.ts';
+import { i2sBusModel } from '../../../lib/instruments/i2s.ts';
 
 export const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
 
@@ -71,13 +72,8 @@ export const calc = {
     const result = rclImpedanceAt(rOhm, lMilliH, cMicroF, freqHz);
     return result ? { ...result, valid: true } : { xl: 0, xc: 0, z: 0, f0: 0, q: 0, valid: false };
   },
-  i2sClocks: (sampleRate: number, bits: number, channels: number, mclkMultiplier: number) => {
-    if (sampleRate <= 0 || bits <= 0 || channels <= 0 || mclkMultiplier <= 0) {
-      return { bclk: 0, mclk: 0, bitRateMbps: 0 };
-    }
-    const bclk = sampleRate * bits * channels;
-    const mclk = sampleRate * mclkMultiplier;
-    const bitRateMbps = bclk / 1_000_000;
-    return { bclk, mclk, bitRateMbps };
+  i2sClocks: (sampleRate: number, bits: number, channels: number, mclkMultiplier: number, slotBits = Math.max(16, bits)) => {
+    const model = i2sBusModel(sampleRate, slotBits, bits, channels, mclkMultiplier);
+    return model ? { ...model, model, valid: true } : { bclk: 0, mclk: 0, bitRateMbps: 0, payloadBitRateMbps: 0, model: null, valid: false };
   },
 };

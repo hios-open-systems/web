@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { FUNC_LABEL, funcVar } from '@/config/pinouts/modules';
+import { funcVar } from '@/config/pinouts/modules';
 import type { BoardPinout } from '@/config/pinouts/modules';
 import { BoardArtwork } from './BoardArtwork';
 import { BoardPinSvg } from './BoardPinSvg';
@@ -33,7 +33,7 @@ export function BoardDiagram({ board, name, assign }: { board: BoardPinout; name
       {assign ? <p className={styles.hint}>{t('assignedPins', { count: used })}</p> : (
         <div className={styles.legend}>
           {funcs.map((func) => <span key={func} className={styles.chip} style={{ color: funcVar(func), borderColor: funcVar(func) }}>
-            <span className={styles.dot} style={{ background: funcVar(func) }} />{FUNC_LABEL[func]}
+            <span className={styles.dot} style={{ background: funcVar(func) }} />{t(`Functions.${func}`)}
           </span>)}
         </div>
       )}

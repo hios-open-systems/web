@@ -27,6 +27,8 @@ export type PinRole =
 
 export interface BreakoutPin {
   name: string;
+  /** Optional localized display text; name remains the stable physical reference. */
+  label?: string;
   role: PinRole;
   alt?: string;
   to?: string;
@@ -80,24 +82,6 @@ export interface BoardPinout {
   left: BoardPin[];
   right: BoardPin[];
 }
-
-export const FUNC_LABEL: Record<PinFunc, string> = {
-  power: 'Power',
-  gnd: 'GND',
-  gpio: 'GPIO',
-  adc: 'ADC',
-  touch: 'Touch',
-  spi: 'SPI',
-  i2c: 'I2C',
-  i2s: 'I2S',
-  uart: 'UART',
-  dac: 'DAC',
-  usb: 'USB',
-  strap: 'Strapping',
-  rgb: 'RGB',
-  in: 'Solo entrada',
-  nc: 'No usable',
-};
 
 export const funcVar = (func: PinFunc): string => `var(--pw-func-${func})`;
 
@@ -172,7 +156,7 @@ export const matchesBreakout = (breakout: Breakout, query: string): boolean => {
     breakout.summary.toLowerCase().includes(q) ||
     (breakout.iface ?? '').toLowerCase().includes(q) ||
     breakout.pins.some(
-      (pin) => pin.name.toLowerCase().includes(q) || (pin.alt ?? '').toLowerCase().includes(q),
+      (pin) => pin.name.toLowerCase().includes(q) || (pin.label ?? '').toLowerCase().includes(q) || (pin.alt ?? '').toLowerCase().includes(q),
     )
   );
 };

@@ -5,7 +5,7 @@ import { Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import type { Breakout } from '@/config/pinouts/modules';
-import { groupByKind, searchBreakouts } from '@/config/pinouts/modules';
+import { groupByKind, matchesBreakout } from '@/config/pinouts/modules';
 import styles from './breakout.module.css';
 
 interface BreakoutListProps {
@@ -14,10 +14,10 @@ interface BreakoutListProps {
   disabled?: boolean;
 }
 
-export function BreakoutList({ selectedId, onSelect, disabled }: BreakoutListProps) {
+export function BreakoutList({ breakouts, selectedId, onSelect, disabled }: BreakoutListProps & { breakouts: Breakout[] }) {
   const t = useTranslations('Pinouts');
   const [query, setQuery] = useState('');
-  const groups = useMemo(() => groupByKind(searchBreakouts(query)), [query]);
+  const groups = useMemo(() => groupByKind(breakouts.filter((item) => matchesBreakout(item, query))), [breakouts, query]);
 
   return (
     <nav className={styles.list}>

@@ -24,6 +24,13 @@ for (const [locale, copy] of Object.entries({ en, es, de, it })) {
       expect(await page.evaluate(inspectMobileLayout)).toEqual([]);
     }
 
+    await page.goto(`/${locale}/calculators?tab=i2s&sampleRate=48000&bitDepth=24&i2sSlotBits=32`);
+    const i2s = page.locator('[data-i2s-scope]');
+    await expect(i2s.locator('[data-i2s-readouts]')).toContainText('3.072MHz');
+    await page.getByRole('spinbutton', { name: copy.Calculators.cards.i2s.channels, exact: true }).fill('1');
+    await expect(i2s.locator('[data-i2s-readouts]')).toContainText('3.072MHz');
+    expect(await page.evaluate(inspectMobileLayout)).toEqual([]);
+
     await page.goto(`/${locale}/pinouts#pcm5102`);
     const lab = page.locator('[data-pinout-signal-lab]');
     await lab.getByRole('button', { name: copy.Instrument.pause, exact: true }).click();

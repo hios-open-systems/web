@@ -8,6 +8,8 @@ import { LED_BREAKOUTS } from '../config/pinouts/modules/led.ts';
 import { POWER_BREAKOUTS } from '../config/pinouts/modules/power.ts';
 import { BATTERY_BREAKOUTS } from '../config/pinouts/modules/battery.ts';
 import { CONNECTOR_BREAKOUTS } from '../config/pinouts/modules/connector.ts';
+import type { BreakoutCopy } from '../config/pinouts/modules/localize.ts';
+import { checkPinoutCopies } from './pinout-copy-checks.ts';
 
 const BREAKOUTS = [
   ...MCU_BREAKOUTS,
@@ -75,7 +77,7 @@ ok('KY-009 R/G/B are PWM', ['R', 'G', 'B'].every((n) => ky009.pins.some((p) => p
 
 interface PinoutsMessages {
   Pinouts: {
-    Modules: Record<string, { description?: string }>;
+    Modules: Record<string, BreakoutCopy>;
     Kinds: Record<string, string>;
     tables: Record<string, string>;
     meta: Record<string, { title?: string; description?: string }>;
@@ -86,6 +88,7 @@ const readMessages = (locale: string): PinoutsMessages =>
 
 for (const locale of ['en', 'es', 'de', 'it']) {
   const { Pinouts } = readMessages(locale);
+  checkPinoutCopies(BREAKOUTS, Pinouts.Modules);
   ok(
     `[${locale}] every breakout has a translated description`,
     BREAKOUTS.every((b) => typeof Pinouts.Modules[b.id]?.description === 'string'),
