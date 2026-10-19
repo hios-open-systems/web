@@ -48,6 +48,26 @@ El dominio solo lo puede servir una cosa a la vez. Secuencia segura:
 ## Deploy normal (día a día)
 `git push` a `main` → Workers Builds buildea y publica. Nada más.
 
+### Qué comprueba CI y qué no bloquea
+
+`.github/workflows/ci.yml` ejecuta lint, todos los self-tests descubiertos, build de
+OpenNext y recorridos Playwright de contenido, navegación, privacidad, móvil e
+instrumentos/electrónica/pinouts traducidos. Se fija Ubuntu 24.04 para que una
+migración de `ubuntu-latest` no cambie el entorno sin revisión. Si falla un recorrido,
+el workflow conserva `test-results/` durante 7 días como artifact.
+
+**Workers Builds y GitHub CI arrancan en paralelo con el push.** El check de GitHub
+no es una barrera para publicar en Cloudflare. Mientras se mantenga este esquema,
+validar localmente antes de subir `main` y comprobar después los dos checks y
+`/api/version` contra el SHA enviado. Los tests Playwright de CI usan `next start`:
+el build verifica el empaquetado del Worker, pero no sustituye una comprobación
+del runtime desplegado.
+
+Para exigir aprobación de CI antes de publicar habría que cambiar explícitamente
+el flujo: proteger `main` con checks de PR obligatorios, o desactivar el auto-deploy
+y desplegar desde un job dependiente de CI. Esta última opción requiere configurar
+credenciales y permisos de Cloudflare; no queda activada por editar este YAML.
+
 ## Si aparece un deploy en Pages después del refactor
 Si el deployment URL termina en `*.pages.dev` o el log dice `pages/view/...`, ese build
 sigue corriendo en el **proyecto Pages viejo**. Cambiar solo el build command de Pages a
