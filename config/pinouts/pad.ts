@@ -1,3 +1,4 @@
+import { MAX_SD_RIGHT_RESISTOR, MAX_SD_EXAMPLE_VALUES } from '../../lib/electronics/max98357.ts';
 import type { WiringGuide } from './wiring';
 
 export const PAD_WIRING: WiringGuide = {
@@ -268,7 +269,7 @@ GPIO16
                 │  └────────────────┘
                 │  ┌────────────────┐
                 └─►│ MAX98357A  R   │──► parlante R (4–8Ω)
-                   │ SD → 390k → Vin│
+                   │ SD → ${MAX_SD_RIGHT_RESISTOR / 1000}k → Vin│
                    │ (DIN)          │
                    └────────────────┘
        mismas 3 líneas a los dos · sólo cambia la R de SD`,
@@ -288,7 +289,7 @@ GPIO16
       tip: 'El pin **SD** del MAX98357A hace dos cosas: apaga el ampli **y** elige el canal, según la tensión que le pongas. Tiene un pulldown interno de **100k**, así que la R que le colgás a Vin arma un divisor. Los umbrales son **volts absolutos**, no fracción de Vdd.',
       rows: [
         { pin: 'SD', kind: 'pwr5', nm: 'Ampli IZQUIERDO', to: 'SD → Vin directo (5V) → banda >1.4V = **Left**' },
-        { pin: 'SD', kind: 'pwr33', nm: 'Ampli DERECHO', to: 'SD → **390kΩ** → Vin → ~1.0V = **Right**', note: 'la fórmula del datasheet (R = 94.0×Vdd − 100) da 370k a 5V' },
+        { pin: 'SD', kind: 'pwr33', nm: 'Ampli DERECHO', to: `SD → **${MAX_SD_EXAMPLE_VALUES.resistance}kΩ** → Vin → ~${MAX_SD_EXAMPLE_VALUES.voltage}V = **Right**`, note: 'Ejemplo a 5V, sin pullup en la placa. Si hay uno, usá el cálculo de SD: queda en paralelo.' },
         { pin: 'GAIN', kind: 'gnd', nm: 'Ganancia', to: 'dejalo **sin conectar** = 9dB (ese es el que va flotante, NO el SD)' },
       ],
     },
@@ -300,7 +301,7 @@ GPIO16
       rows: [
         { pin: '+', kind: 'pwr5', nm: 'Parlante IZQUIERDO', to: '→ borne + del ampli con SD → Vin' },
         { pin: '−', kind: 'gnd', nm: 'Parlante IZQUIERDO', to: '→ borne − del MISMO ampli (NO a GND común)' },
-        { pin: '+', kind: 'pwr5', nm: 'Parlante DERECHO', to: '→ borne + del ampli con SD → 390k' },
+        { pin: '+', kind: 'pwr5', nm: 'Parlante DERECHO', to: `→ borne + del ampli con SD → ${MAX_SD_RIGHT_RESISTOR / 1000}k` },
         { pin: '−', kind: 'gnd', nm: 'Parlante DERECHO', to: '→ borne − del MISMO ampli (NO a GND común)' },
       ],
     },
@@ -383,7 +384,7 @@ GPIO16
     'NeoPixel: 330Ω en serie en DIN (GPIO9) + 1N400x en el VCC de la tira (o 74AHCT125) + cap en su 5V',
     'NeoPixel: las 2 placas ENCADENADAS (DOUT de la A → DIN de la B) = 8 píxeles en un solo pin; NEOPIXEL_COUNT=8',
     'I2S: BCLK=40, LRC=41, DIN=42 cableados a AMBOS amplis (bus compartido)',
-    'Ampli-L: SD→Vin, medí SD > 1,4V · Ampli-R: SD→390k a Vin, medí SD ~1,0V (ventana segura 0,83–1,24V)',
+    `A 5V sin pullup en la placa: Ampli-L SD→Vin · Ampli-R SD→${MAX_SD_EXAMPLE_VALUES.resistance}k a Vin, SD ~${MAX_SD_EXAMPLE_VALUES.voltage}V (ventana garantizada ${MAX_SD_EXAMPLE_VALUES.min}–${MAX_SD_EXAMPLE_VALUES.max}V). Si hay pullup, usá el cálculo de SD.`,
     'GAIN de cada ampli sin conectar (=9dB) · parlante 4–8Ω directo (filterless, NO lo pruebes con carga resistiva)',
     'Parlantes: cada uno a los DOS bornes de SU ampli — ningún borne va a GND (la salida es diferencial)',
     'SW-CELDAS corta BAT+ → buck',
@@ -411,15 +412,5 @@ GPIO16
     ],
   },
 
-  ampSdSteps: [
-    'Ganancia: dejá el pin **GAIN** sin conectar (=9 dB). Ojo: el que va flotante es GAIN, **no** el SD — un SD flotante lo baja el pulldown interno a 0V y el ampli queda MUDO.',
-    'Ampli **LEFT**: SD → Vin directo. Queda a 5V, muy por encima del umbral de 1,4V.',
-    'Ampli **RIGHT**: R de **390kΩ** entre SD y Vin. (Fórmula del datasheet: R = 94.0 × Vdd − 100 = 370k a 5V; 390k es el valor comercial más cercano.)',
-    'Encendé el riel 5V (buck ya medido a 5.0V). No hace falta que haya sonido.',
-    'Multímetro en DC: punta roja a SD, negra a GND.',
-    'Bandas de SD (volts absolutos): <0,16V mudo · 0,16–0,77V (L+R)/2 · 0,77–1,4V Right · >1,4V Left.',
-    'LEFT tiene que dar >1,4V. RIGHT tiene que dar **~1,0V**; la ventana segura contra tolerancias es **0,83–1,24V**, no la banda nominal completa.',
-    '⚠️ Si tu módulo ya trae una R de SD a Vin de fábrica (la de Adafruit trae 1M), la tuya queda en **paralelo** y el cálculo cambia: por eso se mide, no se asume. Con 1M a bordo vas a necesitar ~620–680k externos.',
-    '⚠️ NO uses 220k: da 1,56V, que cae en la banda de **Left**. Los dos amplis te sacarían el mismo canal y vas a culpar al I2S.',
-  ],
+  ampSd: true,
 };

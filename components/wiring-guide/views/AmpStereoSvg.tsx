@@ -1,3 +1,5 @@
+import { useTranslations } from 'next-intl';
+import { MAX_SD_EXAMPLE_VALUES } from '@/lib/electronics/max98357';
 import { Fragment } from 'react';
 import type { I2sGpio } from './schematic';
 import { SCHEM } from './schematic';
@@ -15,6 +17,7 @@ function AmpBox({
   badge: string;
   line3: string;
 }) {
+  const t = useTranslations('Electronics.max');
   const inner = x + 14;
   return (
     <Fragment>
@@ -33,13 +36,14 @@ function AmpBox({
         {line3}
       </text>
       <text x={inner} y={y + 82} fill="var(--pw-schem-dim)" fontSize={10.5}>
-        SPK+/− → parlante 4–8Ω (directo)
+        SPK+/− → {t('speaker')}
       </text>
     </Fragment>
   );
 }
 
 export function AmpStereoSvg({ i2s }: { i2s: I2sGpio }) {
+  const t = useTranslations('Electronics.max');
   const busLabel = `bus I2S · GPIO ${i2s.bclk}/${i2s.lrc}/${i2s.din}`;
   return (
     <svg
@@ -47,7 +51,7 @@ export function AmpStereoSvg({ i2s }: { i2s: I2sGpio }) {
       viewBox="0 0 670 300"
       xmlns="http://www.w3.org/2000/svg"
       role="img"
-      aria-label="Dos módulos MAX98357A sobre el mismo bus I2S: mismas tres líneas BCLK/LRC/DIN a ambos; uno queda como canal Left (SD a Vin) y otro como Right (SD por 220–330k a Vin)."
+      aria-label={t('stereoAria', MAX_SD_EXAMPLE_VALUES)}
       fontFamily="ui-monospace, Menlo, monospace"
       fontSize={11}
     >
@@ -65,15 +69,15 @@ export function AmpStereoSvg({ i2s }: { i2s: I2sGpio }) {
         {busLabel}
       </text>
       <text x={200} y={150} fill="var(--pw-schem-dim)" fontSize={10} textAnchor="middle">
-        (mismas 3 líneas a ambos)
+        {t('sameBus')}
       </text>
       <line x1={104} y1={160} x2={300} y2={160} stroke={SCHEM.teal} strokeWidth={3} />
       <line x1={300} y1={160} x2={300} y2={92} stroke={SCHEM.teal} strokeWidth={3} />
       <line x1={300} y1={160} x2={300} y2={226} stroke={SCHEM.teal} strokeWidth={3} />
       <line x1={300} y1={92} x2={360} y2={92} stroke={SCHEM.teal} strokeWidth={3} />
       <line x1={300} y1={226} x2={360} y2={226} stroke={SCHEM.teal} strokeWidth={3} />
-      <AmpBox x={360} y={46} title="AMPLI L" badge="LEFT" line3="SD → Vin (medí >1,4V)" />
-      <AmpBox x={360} y={180} title="AMPLI R" badge="RIGHT" line3="SD → [220–330k]→Vin (medí 0,77–1,4V)" />
+      <AmpBox x={360} y={46} title="MAX98357A L" badge="LEFT" line3={t('leftConnection')} />
+      <AmpBox x={360} y={180} title="MAX98357A R" badge="RIGHT" line3={t('rightConnection', MAX_SD_EXAMPLE_VALUES)} />
     </svg>
   );
 }

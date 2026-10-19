@@ -32,7 +32,19 @@ La calculadora guarda `i2sSlotBits` junto con el resto de sus valores. Conserva 
 
 La animación está ralentizada y respeta movimiento reducido. Cambiar valores actualiza las trazas aun con el visor pausado. DIN y MCLK no se dibujan; MCLK se presenta como cálculo nominal, sujeto a los formatos y relaciones admitidos por el dispositivo real.
 
-## Verificación
+## Resistencias y divisores DC
+
+`lib/electronics/series.ts` contiene las series E12/E24/E48/E96 compartidas con el código de colores. `preferredResistance` busca también las décadas vecinas y permite elegir el valor más cercano, superior o inferior. La serie comercial y la tolerancia son parámetros distintos.
+
+`divider.ts` calcula divisores sin carga con entrada fija y extremos de tolerancia independientes. El ADC selecciona R superior redondeando hacia arriba después de aplicar el peor caso; muestra el valor comercial, la tensión nominal y el rango. `adcTolerancePct` se guarda en enlaces y presets (5% predeterminado). La resistencia inferior es la indicada por el usuario. LED usa redondeo superior para su recomendación nominal y aclara que no incluye tolerancias del LED.
+
+`max98357.ts` concentra pulldown, tolerancias y umbrales de SD del datasheet (Rev. 16, pp. 7/17). Distingue canal nominal de canal garantizado en todo el rango; la banda típica de Right no es una garantía. Considera una resistencia de placa en paralelo con la externa, ambas a Vin. Con otra topología se debe consultar el esquema. `null` representa conexión ausente; `0`, conexión directa.
+
+`Max98357Lab` se usa en el catálogo y las vistas de amplificadores PAD/Speaker. Las guías activan esa vista con `ampSd: true`; las instrucciones y SVG de esa vista se traducen mediante `Electronics.max`. Las otras secciones de las guías mantienen su contenido existente. El ejemplo a 5 V sin pullup usa valores derivados del modelo, no recomendaciones independientes por proyecto. `DividerReadout` se comparte con ADC; aquí no hay señales temporales que requieran osciloscopio.
+
+Pruebas: `npm run test:electronics`, `tests/electronics-shared.spec.ts` y `tests/mobile-electronics.spec.ts` cubren décadas, límites, tolerancias, canales, pullups, cuatro idiomas, enlaces y vistas de proyectos.
+
+## Verificación de instrumentos
 
 `npm run test:instruments` comprueba frecuencias, flancos, mono/estéreo, profundidad/ranura y entradas inválidas. `npm run test:breakouts` comprueba los headers físicos y la integridad del catálogo y sus traducciones, incluyendo valores numéricos en tablas.
 

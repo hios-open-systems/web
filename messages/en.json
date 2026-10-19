@@ -843,7 +843,7 @@
                     },
                     {
                         "title": "Select the channel (measure SD)",
-                        "body": "Connect the resistor from SD→Vin and measure SD–GND: **>1.4V = Left**, 0.77–1.4V = Right. Left: SD→Vin directly; Right: SD→Vin through ~220–330k."
+                        "body": "Use the SD calculation to choose a resistor for Vin and your board’s pullup. The table shows typical, not guaranteed, thresholds. Measure SD relative to GND; an unconnected GAIN sets 9 dB."
                     },
                     {
                         "title": "Output",
@@ -4065,5 +4065,64 @@
             "schematic": "Series RLC circuit: input Vin, output Vout across R relative to ground.",
             "hint": "Vout = VR: H = R / [R + j(ωL − 1/ωC)]. This is a band-pass response: at f0, |Z| is minimum, Vout = Vin and φ = 0°. Below f0 the output leads; above it, the output lags. Uses the calculator frequency f. Steady state with R > 0, an ideal source and no additional load; transients and parasitic losses are excluded."
         }
+    },
+    "Electronics": {
+        "voltage": "Nominal output voltage",
+        "range": "Tolerance range",
+        "invalid": "Enter valid values to calculate.",
+        "unloaded": "Unloaded DC model with a fixed input voltage. The range accounts for resistor tolerances.",
+        "tolerance": "External resistor tolerance (%)",
+        "ideal": "Ideal value",
+        "limitSelection": "Selected to stay below the limit with the specified tolerances",
+        "nominalCurrent": "Current with the standard resistor",
+        "nominalOnly": "Nominal value; resistor and LED tolerances are not included.",
+        "recommended": "Recommended resistor",
+        "max": {
+            "title": "MAX98357 · SD channel selection",
+            "description": "SD voltage selects the channel. Adjust the supply and resistors to see the result.",
+            "supply": "Vin and SD supply (V)",
+            "connection": "External SD-to-Vin connection",
+            "resistor": "Through a resistor",
+            "open": "No external connection",
+            "direct": "Direct to Vin",
+            "external": "External resistor (kΩ)",
+            "onboard": "SD-to-Vin resistor on the board (kΩ; 0 = none)",
+            "recommend": "Use E24 for Right",
+            "noRecommendation": "No valid Right recommendation for these parameters. Check the connection and tolerances.",
+            "channel": "Nominal channel",
+            "off": "Off",
+            "mono": "Mono (L+R)/2",
+            "right": "Right",
+            "left": "Left",
+            "stable": "Channel stable throughout the calculated range",
+            "uncertain": "The range crosses an uncertain region: the channel is not guaranteed",
+            "assumptions": "Internal pulldown: 100 kΩ ±8%. The calculation assumes pullup resistors connect to Vin; check the schematic if your board uses another connection. Leave GAIN unconnected for 9 dB. Measure SD relative to GND.",
+            "intro": "Both MAX98357A modules share BCLK, LRC and DIN. SD selects the channel; an unconnected GAIN sets 9 dB. Example at 5 V with no onboard pullup.",
+            "singleTitle": "One module: connections and channel selection",
+            "stereoTitle": "Two modules on the same I²S bus",
+            "moduleAria": "MAX98357A: I²S bus, unconnected GAIN, SD through a resistor to Vin, 5 V supply and speaker between SPK+ and SPK−.",
+            "moduleTitle": "MAX98357A — module connections",
+            "floating": "unconnected = 9 dB",
+            "channelResistor": "Channel R",
+            "commonGround": "Common GND",
+            "speaker": "4–8 Ω speaker",
+            "measure": "Measure SD–GND",
+            "measureHint": "Use the SD calculation and verify the channel.",
+            "stereoAria": "Two MAX98357A modules at 5 V without onboard pullups: Left with SD to Vin, Right with {resistance} kΩ between SD and Vin.",
+            "sameBus": "same 3 lines to both",
+            "leftConnection": "SD → Vin (5 V)",
+            "rightConnection": "SD → {resistance} kΩ → Vin (~{voltage} V)",
+            "stepsTitle": "Verify SD and the channel",
+            "steps": [
+                "Identify any onboard resistor between SD and Vin. Enter it in the calculation: it is in parallel with the external resistor.",
+                "Leave GAIN unconnected for 9 dB. An unconnected SD without a pullup is pulled down internally and shuts the amplifier down.",
+                "Right example at 5 V without an onboard pullup: {resistance} kΩ ±5% to Vin gives about {voltage} V. Left: connect SD directly to Vin.",
+                "Verify the supply rail before connecting. Measure SD with the red probe and GND with the black probe.",
+                "For Right, the guaranteed window between thresholds is {min}–{max} V. The calculation also accounts for resistor tolerances.",
+                "At 5 V, 220 kΩ without an additional pullup gives about 1.56 V nominally: it is not a valid Right recommendation. Repeat the measurement on both modules."
+            ]
+        },
+        "adcSummary": "ADC divider: upper R={resistance} ({series}), output={nominal} V, range={min}–{max} V, tolerance=±{tolerance}%",
+        "ledSummary": "LED: R={resistance} ({series}), nominal current={current} mA, nominal power={power} mW"
     }
 }

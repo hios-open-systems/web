@@ -134,7 +134,7 @@ export interface WiringGuide {
   sections: PinoutSection[];
   check: string[];
   keymap?: KeyMap;
-  ampSdSteps?: string[];
+  ampSd?: boolean;
   /** diferencias guía↔firmware, declaradas a propósito (ver FirmwareDivergence) */
   divergence?: FirmwareDivergence[];
 }

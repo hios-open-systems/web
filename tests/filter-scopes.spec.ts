@@ -85,7 +85,7 @@ for (const kind of ['rl', 'rcl'] as const) {
     await page.getByRole('button', { name: en.Presets.save, exact: true }).click();
     await page.getByRole('dialog').getByRole('button', { name: en.Presets.save, exact: true }).click();
     await page.goto(`/en/calculators?tab=${kind}`);
-    await page.getByRole('button', { name: en.Presets.presets, exact: true }).click();
+    await page.getByRole('button', { name: `${en.Presets.presets} (1)`, exact: true }).click();
     await page.getByRole('menuitem', { name: new RegExp(en.Presets.defaultName.replace('{n}', '1')) }).click();
     await expect(page).toHaveURL(new RegExp(`${frequencyKey}=2000`));
     await expect(page).toHaveURL(new RegExp(`${kind}InputV=2.5`));

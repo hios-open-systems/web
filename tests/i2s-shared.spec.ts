@@ -74,7 +74,7 @@ test('I²S saves slot width separately from precision and migrates old shared co
   await page.reload();
   await expect(page.locator('[data-i2s-readouts]')).toContainText('3.072MHz');
   await page.goto('/en/calculators?tab=i2s');
-  await page.getByRole('button', { name: en.Presets.presets, exact: true }).click();
+  await page.getByRole('button', { name: `${en.Presets.presets} (1)`, exact: true }).click();
   await page.getByRole('menuitem', { name: new RegExp(en.Presets.defaultName.replace('{n}', '1')) }).click();
   await expect(page).toHaveURL(/i2sSlotBits=32/);
   await expect(page.locator('[data-i2s-readouts]')).toContainText('3.072MHz');

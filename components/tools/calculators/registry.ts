@@ -126,6 +126,7 @@ export const CALCULATORS: CalcDef[] = [
       { key: 'vinMax', default: 12 },
       { key: 'vadcMax', default: 3.1 },
       { key: 'rBottomK', default: 10 },
+      { key: 'adcTolerancePct', default: 5 },
     ],
   },
   {

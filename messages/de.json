@@ -843,7 +843,7 @@
                     },
                     {
                         "title": "Kanal wählen (SD messen)",
-                        "body": "Widerstand von SD→Vin anschließen und SD–GND messen: **>1,4V = links**, 0,77–1,4V = rechts. Links: SD→Vin direkt; rechts: SD→Vin über ~220–330k."
+                        "body": "Mit der SD-Berechnung den Widerstand passend zu Vin und dem Pullup der Platine wählen. Die Tabelle zeigt typische, nicht garantierte Schwellwerte. SD gegen GND messen; GAIN unbeschaltet ergibt 9 dB."
                     },
                     {
                         "title": "Ausgang",
@@ -4065,5 +4065,64 @@
             "schematic": "RLC-Reihenschaltung: Eingang Vin, Ausgang Vout über R gegen Masse.",
             "hint": "Vout = VR: H = R / [R + j(ωL − 1/ωC)]. Bandpassverhalten: Bei f0 ist |Z| minimal, Vout = Vin und φ = 0°. Unterhalb von f0 eilt der Ausgang voraus, oberhalb nach. Verwendet die Frequenz f des Rechners. Eingeschwungener Zustand mit R > 0, idealer Quelle und ohne zusätzliche Last; Einschwingvorgänge und parasitäre Verluste sind ausgeschlossen."
         }
+    },
+    "Electronics": {
+        "voltage": "Nenn-Ausgangsspannung",
+        "range": "Toleranzbereich",
+        "invalid": "Gültige Werte für die Berechnung eingeben.",
+        "unloaded": "Unbelastetes DC-Modell mit fester Eingangsspannung. Der Bereich berücksichtigt die Widerstandstoleranzen.",
+        "tolerance": "Toleranz der externen Widerstände (%)",
+        "ideal": "Idealwert",
+        "limitSelection": "So gewählt, dass der Grenzwert bei den angegebenen Toleranzen eingehalten wird",
+        "nominalCurrent": "Strom mit dem Normwiderstand",
+        "nominalOnly": "Nennwert; Widerstands- und LED-Toleranzen sind nicht berücksichtigt.",
+        "recommended": "Empfohlener Widerstand",
+        "max": {
+            "title": "MAX98357 · SD-Kanalauswahl",
+            "description": "Die SD-Spannung wählt den Kanal. Versorgung und Widerstände ändern, um das Ergebnis zu sehen.",
+            "supply": "Vin und SD-Versorgung (V)",
+            "connection": "Externe Verbindung von SD zu Vin",
+            "resistor": "Über einen Widerstand",
+            "open": "Keine externe Verbindung",
+            "direct": "Direkt an Vin",
+            "external": "Externer Widerstand (kΩ)",
+            "onboard": "Widerstand zwischen SD und Vin auf der Platine (kΩ; 0 = keiner)",
+            "recommend": "E24 für Right verwenden",
+            "noRecommendation": "Für diese Parameter gibt es keine gültige Right-Empfehlung. Verbindung und Toleranzen prüfen.",
+            "channel": "Nominaler Kanal",
+            "off": "Aus",
+            "mono": "Mono (L+R)/2",
+            "right": "Right",
+            "left": "Left",
+            "stable": "Kanal im gesamten berechneten Bereich stabil",
+            "uncertain": "Der Bereich überschneidet eine unsichere Zone: Der Kanal ist nicht garantiert",
+            "assumptions": "Interner Pulldown: 100 kΩ ±8%. Die Berechnung setzt Pullup-Widerstände an Vin voraus; bei anderer Beschaltung den Schaltplan prüfen. GAIN für 9 dB unbeschaltet lassen. SD gegen GND messen.",
+            "intro": "Beide MAX98357A teilen BCLK, LRC und DIN. SD wählt den Kanal; GAIN unbeschaltet ergibt 9 dB. Beispiel bei 5 V ohne Pullup auf der Platine.",
+            "singleTitle": "Ein Modul: Anschlüsse und Kanalauswahl",
+            "stereoTitle": "Zwei Module am selben I²S-Bus",
+            "moduleAria": "MAX98357A: I²S-Bus, GAIN unbeschaltet, SD über Widerstand an Vin, 5-V-Versorgung und Lautsprecher zwischen SPK+ und SPK−.",
+            "moduleTitle": "MAX98357A — Modulanschlüsse",
+            "floating": "unbeschaltet = 9 dB",
+            "channelResistor": "Kanal-R",
+            "commonGround": "Gemeinsame GND",
+            "speaker": "4–8-Ω-Lautsprecher",
+            "measure": "SD–GND messen",
+            "measureHint": "SD-Berechnung nutzen und Kanal prüfen.",
+            "stereoAria": "Zwei MAX98357A bei 5 V ohne Pullup auf der Platine: Left mit SD an Vin, Right mit {resistance} kΩ zwischen SD und Vin.",
+            "sameBus": "dieselben 3 Leitungen an beide",
+            "leftConnection": "SD → Vin (5 V)",
+            "rightConnection": "SD → {resistance} kΩ → Vin (~{voltage} V)",
+            "stepsTitle": "SD und Kanal überprüfen",
+            "steps": [
+                "Prüfen, ob ein Widerstand zwischen SD und Vin auf der Platine vorhanden ist. Diesen in die Berechnung eingeben: Er liegt parallel zum externen Widerstand.",
+                "GAIN für 9 dB unbeschaltet lassen. Ein unbeschalteter SD-Pin ohne Pullup wird intern auf Masse gezogen und schaltet den Verstärker aus.",
+                "Right-Beispiel bei 5 V ohne Pullup auf der Platine: {resistance} kΩ ±5% an Vin ergeben etwa {voltage} V. Left: SD direkt an Vin anschließen.",
+                "Versorgung vor dem Anschließen prüfen. SD mit der roten und GND mit der schwarzen Messspitze messen.",
+                "Für Right beträgt das garantierte Fenster zwischen den Schwellwerten {min}–{max} V. Die Berechnung berücksichtigt auch die Widerstandstoleranzen.",
+                "Bei 5 V ergeben 220 kΩ ohne zusätzlichen Pullup nominal etwa 1,56 V: Das ist keine gültige Right-Empfehlung. Beide Module messen."
+            ]
+        },
+        "adcSummary": "ADC-Spannungsteiler: oberer R={resistance} ({series}), Ausgang={nominal} V, Bereich={min}–{max} V, Toleranz=±{tolerance}%",
+        "ledSummary": "LED: R={resistance} ({series}), Nennstrom={current} mA, Nennleistung={power} mW"
     }
 }

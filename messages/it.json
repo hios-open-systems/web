@@ -843,7 +843,7 @@
                     },
                     {
                         "title": "Scegliere il canale (misurare SD)",
-                        "body": "Collega la resistenza da SD→Vin e misura SD–GND: **>1,4V = sinistra**, 0,77–1,4V = destra. Sinistra: SD→Vin diretto; destra: SD→Vin tramite ~220–330k."
+                        "body": "Usa il calcolo di SD per scegliere il resistore in base a Vin e al pullup della scheda. La tabella mostra soglie tipiche, non garantite. Misura SD rispetto a GND; GAIN scollegato imposta 9 dB."
                     },
                     {
                         "title": "Uscita",
@@ -4065,5 +4065,64 @@
             "schematic": "Circuito RLC serie: ingresso Vin, uscita Vout su R rispetto a massa.",
             "hint": "Vout = VR: H = R / [R + j(ωL − 1/ωC)]. Risposta passa-banda: a f0, |Z| è minima, Vout = Vin e φ = 0°. Sotto f0 l’uscita è in anticipo; sopra, in ritardo. Usa la frequenza f del calcolatore. Regime permanente con R > 0, sorgente ideale e nessun carico aggiuntivo; transitori e perdite parassite sono esclusi."
         }
+    },
+    "Electronics": {
+        "voltage": "Tensione nominale di uscita",
+        "range": "Intervallo di tolleranza",
+        "invalid": "Inserisci valori validi per calcolare.",
+        "unloaded": "Modello DC senza carico, con tensione di ingresso fissa. L’intervallo considera le tolleranze dei resistori.",
+        "tolerance": "Tolleranza dei resistori esterni (%)",
+        "ideal": "Valore ideale",
+        "limitSelection": "Scelto per rispettare il limite con le tolleranze indicate",
+        "nominalCurrent": "Corrente con il resistore commerciale",
+        "nominalOnly": "Valore nominale; non include le tolleranze del resistore e del LED.",
+        "recommended": "Resistore consigliato",
+        "max": {
+            "title": "MAX98357 · selezione del canale SD",
+            "description": "La tensione di SD seleziona il canale. Modifica alimentazione e resistori per vedere il risultato.",
+            "supply": "Vin e alimentazione di SD (V)",
+            "connection": "Collegamento esterno da SD a Vin",
+            "resistor": "Tramite resistore",
+            "open": "Nessun collegamento esterno",
+            "direct": "Diretto a Vin",
+            "external": "Resistore esterno (kΩ)",
+            "onboard": "Resistore da SD a Vin sulla scheda (kΩ; 0 = nessuno)",
+            "recommend": "Usa E24 per Right",
+            "noRecommendation": "Nessun valore valido per Right con questi parametri. Controlla collegamento e tolleranze.",
+            "channel": "Canale nominale",
+            "off": "Spento",
+            "mono": "Mono (L+R)/2",
+            "right": "Right",
+            "left": "Left",
+            "stable": "Canale stabile nell’intero intervallo calcolato",
+            "uncertain": "L’intervallo attraversa una zona incerta: il canale non è garantito",
+            "assumptions": "Pulldown interno: 100 kΩ ±8%. Il calcolo presuppone resistori di pullup collegati a Vin; controlla lo schema se la scheda usa un altro collegamento. Lascia GAIN scollegato per 9 dB. Misura SD rispetto a GND.",
+            "intro": "I due MAX98357A condividono BCLK, LRC e DIN. SD seleziona il canale; GAIN scollegato imposta 9 dB. Esempio a 5 V senza pullup sulla scheda.",
+            "singleTitle": "Un modulo: collegamenti e selezione del canale",
+            "stereoTitle": "Due moduli sullo stesso bus I²S",
+            "moduleAria": "MAX98357A: bus I²S, GAIN scollegato, SD tramite resistore a Vin, alimentazione a 5 V e altoparlante tra SPK+ e SPK−.",
+            "moduleTitle": "MAX98357A — collegamenti del modulo",
+            "floating": "scollegato = 9 dB",
+            "channelResistor": "R del canale",
+            "commonGround": "GND comune",
+            "speaker": "altoparlante 4–8 Ω",
+            "measure": "Misura SD–GND",
+            "measureHint": "Usa il calcolo di SD e verifica il canale.",
+            "stereoAria": "Due MAX98357A a 5 V senza pullup sulla scheda: Left con SD a Vin, Right con {resistance} kΩ tra SD e Vin.",
+            "sameBus": "le stesse 3 linee a entrambi",
+            "leftConnection": "SD → Vin (5 V)",
+            "rightConnection": "SD → {resistance} kΩ → Vin (~{voltage} V)",
+            "stepsTitle": "Verifica SD e il canale",
+            "steps": [
+                "Identifica eventuali resistori tra SD e Vin sulla scheda. Inseriscili nel calcolo: sono in parallelo al resistore esterno.",
+                "Lascia GAIN scollegato per 9 dB. SD scollegato e senza pullup viene portato a massa dal pulldown interno e spegne l’amplificatore.",
+                "Esempio Right a 5 V senza pullup sulla scheda: {resistance} kΩ ±5% verso Vin producono circa {voltage} V. Left: collega SD direttamente a Vin.",
+                "Verifica l’alimentazione prima di collegare. Misura SD con il puntale rosso e GND con quello nero.",
+                "Per Right, la finestra garantita tra le soglie è {min}–{max} V. Il calcolo considera anche le tolleranze dei resistori.",
+                "A 5 V, 220 kΩ senza pullup aggiuntivo producono circa 1,56 V nominali: non sono una raccomandazione valida per Right. Ripeti la misura su entrambi i moduli."
+            ]
+        },
+        "adcSummary": "Partitore ADC: R superiore={resistance} ({series}), uscita={nominal} V, intervallo={min}–{max} V, tolleranza=±{tolerance}%",
+        "ledSummary": "LED: R={resistance} ({series}), corrente nominale={current} mA, potenza nominale={power} mW"
     }
 }

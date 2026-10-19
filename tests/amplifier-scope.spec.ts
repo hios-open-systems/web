@@ -64,7 +64,7 @@ test('frequency, amplitude and resistors survive saving and reload with reduced 
   await page.reload();
   await expect(readouts).toContainText('Vout = 2.000 V');
   await page.goto('/en/calculators?tab=gain');
-  await page.getByRole('button', { name: en.Presets.presets, exact: true }).click();
+  await page.getByRole('button', { name: `${en.Presets.presets} (1)`, exact: true }).click();
   await page.getByRole('menuitem', { name: new RegExp(en.Presets.defaultName.replace('{n}', '1')) }).click();
   await expect(readouts).toContainText('Av = 4.000');
   await expect(lab.getByLabel(en.Instrument.excitation.frequency, { exact: true })).toHaveValue('2000');

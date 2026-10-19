@@ -55,6 +55,7 @@ export function NumberField({
             tooltip={{ open: false }}
           />
           <InputNumber
+            aria-label={label}
             value={value}
             onChange={(v) => onChange(Number(v ?? 0))}
             min={min}
@@ -67,6 +68,7 @@ export function NumberField({
         </div>
       ) : (
         <InputNumber
+          aria-label={label}
           value={value}
           onChange={(v) => onChange(Number(v ?? 0))}
           min={min}

@@ -7,6 +7,8 @@ import { message } from 'antd';
 import { useCopyToClipboard } from '@/lib/hooks/useCopyToClipboard';
 import type { ResistorPackageType } from '../ResistorVisualizer';
 import { calc, clamp, formatOhm } from './calc';
+import { adcRecommendation } from '@/lib/electronics/divider';
+import { ledRecommendation } from '@/lib/electronics/led';
 import { type ESeries, isESeries } from './eseries';
 import { ALL_FIELDS, CALC_IDS, DEFAULTS, DEFAULT_CALC_ID, isStringField } from './registry';
 
@@ -45,6 +47,7 @@ const PRESET_PATCHES: Record<string, Record<string, number | string>> = {
 
 export function useCalculatorState() {
   const t = useTranslations('Calculators');
+  const te = useTranslations('Electronics');
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -87,6 +90,7 @@ export function useCalculatorState() {
   };
 
   const led = useMemo(() => calc.ledResistor(num('supply'), num('ledVf'), num('ledCurrent')), [num]);
+  const ledChoice = useMemo(() => ledRecommendation(num('supply'), num('ledVf'), num('ledCurrent'), eSeries === 'E12' ? 'e12' : 'e24'), [num, eSeries]);
   const capacitor = useMemo(
     () => calc.capacitorForRipple(num('rippleCurrent'), num('rippleDeltaV'), num('rippleFreq')),
     [num]
@@ -94,6 +98,7 @@ export function useCalculatorState() {
   const thermal = useMemo(() => calc.powerAndTemp(num('powerV'), num('powerI'), num('thetaJa'), num('ambient')), [num]);
   const runtime = useMemo(() => calc.runtimeHours(num('batteryMah'), num('avgCurrent'), num('efficiency')), [num]);
   const divider = useMemo(() => calc.adcDivider(num('vinMax'), num('vadcMax'), num('rBottomK')), [num]);
+  const adcChoice = useMemo(() => adcRecommendation(num('vinMax'), num('vadcMax'), num('rBottomK') * 1000, num('adcTolerancePct'), eSeries === 'E12' ? 'e12' : 'e24'), [num, eSeries]);
   const cutoff = useMemo(() => calc.rcCutoff(num('rcR'), num('rcC')), [num]);
   const requiredR = useMemo(() => calc.rcRequiredR(num('targetFc'), num('rcC')), [num]);
   const cutoffValid = num('rcR') > 0 && num('rcC') > 0;
@@ -213,19 +218,19 @@ export function useCalculatorState() {
   const summary = useMemo(() => {
     return [
       'HIOS Embedded Calculators - Summary',
-      `LED: R=${led.resistance.toFixed(0)} ohm, P=${(led.power * 1000).toFixed(1)} mW`,
+      ledChoice ? te('ledSummary', { resistance: formatOhm(ledChoice.resistance), series: eSeries, current: ledChoice.currentMa.toFixed(3), power: (ledChoice.power * 1000).toFixed(1) }) : `LED: ${t('cards.invalid')}`,
       `Ripple Cap: Cmin=${(capacitor.value * 1e6).toFixed(1)} uF`,
       `Thermal: P=${thermal.power.toFixed(2)} W, dT=${thermal.rise.toFixed(1)} C, Tj=${thermal.junction.toFixed(1)} C`,
       `Runtime: ${runtime.toFixed(1)} h (${(runtime / 24).toFixed(2)} days)`,
       `Resistor: ${formatOhm(resistorValue)} +/-${resistorTolerance}% (${formatOhm(resistorMin)} - ${formatOhm(resistorMax)})`,
-      `ADC Divider: Rtop=${divider.rTopK.toFixed(1)} kOhm, ratio=${divider.ratio.toFixed(2)}:1`,
+      adcChoice ? te('adcSummary', { resistance: formatOhm(adcChoice.resistance), series: eSeries, nominal: adcChoice.voltage.nominal.toFixed(3), min: adcChoice.voltage.min.toFixed(3), max: adcChoice.voltage.max.toFixed(3), tolerance: num('adcTolerancePct') }) : `ADC: ${t('cards.invalid')}`,
       `RC: fc=${cutoff.toFixed(1)} Hz, R@target=${requiredR.toFixed(0)} ohm`,
       gain.valid ? `Gain: ${gain.gain.toFixed(2)}x (${gain.gainDb.toFixed(2)} dB)` : `Gain: ${t('cards.invalid')}`,
       i2s.valid ? `I2S: BCLK=${Math.round(i2s.bclk)} Hz, WS=${num('sampleRate')} Hz, MCLK=${Math.round(i2s.mclk)} Hz, bus=${i2s.bitRateMbps.toFixed(3)} Mbps, audio=${i2s.payloadBitRateMbps.toFixed(3)} Mbps` : `I2S: ${t('cards.invalid')}`,
     ].join('\n');
   }, [
-    led, capacitor, thermal, runtime, resistorValue, resistorTolerance,
-    resistorMin, resistorMax, divider, cutoff, requiredR, gain, i2s, t, num,
+    ledChoice, te, capacitor, thermal, runtime, resistorValue, resistorTolerance,
+    resistorMin, resistorMax, adcChoice, eSeries, cutoff, requiredR, gain, i2s, t, num,
   ]);
 
   const copySummary = () => copyRaw(summary, t('copy_ok'));
@@ -239,7 +244,7 @@ export function useCalculatorState() {
   const setter = (key: string) => (n: number) => set(key, n);
 
   return {
-    t, palette, contextHolder,
+    t, palette, contextHolder, adcChoice, ledChoice,
     calcCardStyle, calcCardBodyStyle, inputStyle,
     applyPreset, activeTab, setActiveTab, eSeries, setESeries,
     copySummary, copyShareLink, getQuery,

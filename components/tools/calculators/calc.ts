@@ -1,3 +1,4 @@
+import { dividerTop } from '../../../lib/electronics/divider.ts';
 /* Pure, framework-free calculator math + formatting helpers.
  * Kept outside React so it can be unit-tested and reused. */
 import { rlCutoff } from '../../../lib/instruments/rl.ts';
@@ -42,11 +43,9 @@ export const calc = {
     return (batteryMah * (efficiencyPercent / 100)) / avgCurrentMa;
   },
   adcDivider: (vinMax: number, vadcMax: number, rBottomK: number) => {
-    const valid = vinMax > 0 && vadcMax > 0 && rBottomK > 0 && vinMax > vadcMax;
-    if (!valid) return { rTopK: 0, ratio: 1, valid: false };
-    const ratio = vinMax / vadcMax;
-    const rTopK = rBottomK * (ratio - 1);
-    return { rTopK, ratio, valid: true };
+    const top = dividerTop(vinMax, vadcMax, rBottomK * 1000);
+    return top === null ? { rTopK: 0, ratio: 1, valid: false }
+      : { rTopK: top / 1000, ratio: vinMax / vadcMax, valid: true };
   },
   rcCutoff: (rOhm: number, cNanoF: number) => {
     if (rOhm <= 0 || cNanoF <= 0) return 0;

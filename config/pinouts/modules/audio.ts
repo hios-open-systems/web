@@ -56,7 +56,7 @@ export const AUDIO_BREAKOUTS: Breakout[] = [
       },
       {
         title: 'Elegir el canal (medir SD)',
-        body: 'Poné la R de SD→Vin y medí SD–GND: **>1,4V = Left**, 0,77–1,4V = Right. Left: SD→Vin directo; Right: SD→Vin por ~220–330k.',
+        body: 'Usá el cálculo de SD para elegir la resistencia según Vin y el pullup de tu placa. La tabla muestra umbrales típicos, no garantizados. Medí SD respecto de GND; GAIN sin conectar fija 9 dB.',
       },
       {
         title: 'Salida',

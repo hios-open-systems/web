@@ -1,0 +1,5 @@
+.panel { border: 1px solid var(--hios-border); border-radius: 12px; padding: 16px; min-width: 0; }
+.panel p { overflow-wrap: anywhere; }
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: 16px; margin-block: 16px; }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.panel button { max-width: 100%; height: auto; min-height: 32px; white-space: normal; }

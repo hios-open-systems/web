@@ -1,21 +1,19 @@
 'use client';
 
-import { useWiringGuide } from '../WiringGuideContext';
-import { RichText } from '../RichText';
+import { useTranslations } from 'next-intl';
+import { MAX_SD_EXAMPLE_VALUES } from '@/lib/electronics/max98357';
 import styles from '../wiring-guide.module.css';
 
 export function AmpMeasureSteps() {
-  const guide = useWiringGuide();
-  const steps = guide.ampSdSteps ?? [];
-  if (steps.length === 0) return null;
+  const t = useTranslations('Electronics.max');
 
   return (
     <section>
-      <div className={styles.blockTitle}>Medir SD paso a paso (elegir la R de canal)</div>
+      <div className={styles.blockTitle}>{t('stepsTitle')}</div>
       <ol className={styles.stepList}>
-        {steps.map((step, index) => (
+        {[0, 1, 2, 3, 4, 5].map((index) => (
           <li key={index}>
-            <RichText text={step} />
+            {t(`steps.${index}`, MAX_SD_EXAMPLE_VALUES)}
           </li>
         ))}
       </ol>

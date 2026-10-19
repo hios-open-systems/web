@@ -34,7 +34,7 @@ export function WiringGuideView({ guide }: { guide: WiringGuide }) {
       ),
     });
   }
-  if (guide.ampSdSteps) {
+  if (guide.ampSd) {
     items.push({ key: 'parlantes', label: t('tabs.parlantes'), children: <AmpView /> });
   }
   if (guide.sections.length > 0) {
