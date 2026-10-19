@@ -3307,6 +3307,13 @@
             "atCutoff": "Llevar entrada a fc",
             "atResonance": "Llevar entrada a f0"
         },
+        "gain": {
+            "title": "Osciloscopio del amplificador no inversor",
+            "description": "Tensión de entrada y salida de un amplificador no inversor ideal, con la misma escala temporal y una escala de tensión automática compartida.",
+            "schematic": "Amplificador no inversor: Vin en la entrada positiva, Rf entre Vout y la entrada negativa, y Rg entre la entrada negativa y masa.",
+            "hint": "Av = 1 + Rf/Rg; Vout = Av × Vin, con φ = 0°. Aumentar Rf aumenta la ganancia; aumentar Rg la reduce. Con Rf = 0, la ganancia es unitaria. Ambos canales comparten una escala de tensión automática. Modelo ideal en régimen permanente: no incluye recorte por alimentación, límite de ancho de banda ni de velocidad de respuesta.",
+            "invalid": "Usá valores finitos: Rf ≥ 0, Rg > 0, y frecuencia y amplitud de entrada positivas. La tensión resultante también debe quedar dentro del rango numérico."
+        },
         "rl": {
             "title": "Osciloscopio RL",
             "description": "Tensión de entrada y salida sobre R de un filtro RL pasabajos ideal, con las mismas escalas de tiempo y tensión.",

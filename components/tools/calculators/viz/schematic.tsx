@@ -124,12 +124,12 @@ export function Ground({ x, y }: { x: number; y: number }) {
 }
 
 /** Op-amp triangle, input side at xIn, tip (output) at xOut, centred vy. */
-export function OpAmp({ xIn, xOut, vy }: { xIn: number; xOut: number; vy: number }) {
+export function OpAmp({ xIn, xOut, vy, nonInvertingTop = false }: { xIn: number; xOut: number; vy: number; nonInvertingTop?: boolean }) {
   return (
     <g stroke="currentColor" strokeWidth={1.6} fill="none">
       <polygon points={`${xIn},${vy - 26} ${xIn},${vy + 26} ${xOut},${vy}`} />
-      <text x={xIn + 7} y={vy - 9} fontSize="11" fill="#8b97a6" stroke="none">−</text>
-      <text x={xIn + 7} y={vy + 14} fontSize="11" fill="#8b97a6" stroke="none">+</text>
+      <text x={xIn + 7} y={vy - 9} fontSize="11" fill="#8b97a6" stroke="none">{nonInvertingTop ? '+' : '−'}</text>
+      <text x={xIn + 7} y={vy + 14} fontSize="11" fill="#8b97a6" stroke="none">{nonInvertingTop ? '−' : '+'}</text>
     </g>
   );
 }

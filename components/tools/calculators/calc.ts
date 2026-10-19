@@ -2,6 +2,7 @@
  * Kept outside React so it can be unit-tested and reused. */
 import { rlCutoff } from '../../../lib/instruments/rl.ts';
 import { rclImpedanceAt } from '../../../lib/instruments/rcl.ts';
+import { nonInvertingTransfer } from '../../../lib/instruments/amplifier.ts';
 
 export const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
 
@@ -57,10 +58,8 @@ export const calc = {
     return 1 / (2 * Math.PI * fcHz * cFarads);
   },
   ampGain: (rfOhm: number, rgOhm: number) => {
-    if (rfOhm < 0 || rgOhm <= 0) return { gain: 1, gainDb: 0 };
-    const gain = 1 + rfOhm / rgOhm;
-    const gainDb = 20 * Math.log10(gain);
-    return { gain, gainDb };
+    const result = nonInvertingTransfer(rfOhm, rgOhm);
+    return result ? { ...result, valid: true } : { gain: 0, gainDb: 0, phase: 0, valid: false };
   },
   rlFilter: (rOhm: number, lMilliH: number) => {
     const fc = rlCutoff(rOhm, lMilliH);

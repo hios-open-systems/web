@@ -49,28 +49,29 @@ export function RlSchematic({ rText, lText }: { rText: string; lText: string }) 
   );
 }
 
-export function AmpSchematic({ rfText, rgText, gainText }: { rfText: string; rgText: string; gainText: string }) {
+export function AmpSchematic({ rfText, rgText, gainText, ariaLabel }: { rfText: string; rgText: string; gainText: string; ariaLabel: string }) {
   return (
-    <Schematic ariaLabel="Non-inverting amplifier">
-      <Pin x={24} y={66} text="Vin" />
-      <Dot x={24} y={78} />
-      <Wire d="M24 78 H150" />
-      <OpAmp xIn={150} xOut={210} vy={78} />
-      <Wire d="M210 78 H320" />
-      <Dot x={320} y={78} />
-      <Pin x={320} y={66} text="Vout" />
+    <Schematic ariaLabel={ariaLabel}>
+      <Pin x={24} y={40} text="Vin" />
+      <Dot x={24} y={52} />
+      <Wire d="M24 52 H150" />
+      <OpAmp xIn={150} xOut={210} vy={64} nonInvertingTop />
+      <Wire d="M210 64 H320" />
+      <Dot x={320} y={64} />
+      <Pin x={320} y={52} text="Vout" />
       {/* feedback Rf from output to inverting input */}
-      <Wire d="M260 78 V36 H190" />
-      <ResistorH x={168} y={36} />
-      <Value x={168} y={24} text={rfText} />
-      <Wire d="M146 36 H140 V60 H150" />
+      <Dot x={270} y={64} />
+      <Wire d="M270 64 V110 H232" />
+      <ResistorH x={210} y={110} />
+      <Value x={210} y={132} text={`Rf: ${rfText}`} />
+      <Wire d="M188 110 H110 V76 H150" />
       {/* Rg from inverting node to ground */}
-      <Wire d="M140 60 V96" />
-      <ResistorV x={140} y={118} />
-      <Value x={166} y={122} text={rgText} anchor="start" />
-      <Wire d="M140 140 V146" />
-      <Ground x={140} y={146} />
-      <Value x={250} y={108} text={gainText} anchor="middle" />
+      <Dot x={110} y={76} />
+      <Wire d="M110 76 H44 V84" />
+      <ResistorV x={44} y={106} />
+      <Value x={62} y={128} text={`Rg: ${rgText}`} anchor="start" />
+      <Ground x={44} y={128} />
+      <Value x={230} y={90} text={gainText} />
     </Schematic>
   );
 }

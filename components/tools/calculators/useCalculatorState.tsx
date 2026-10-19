@@ -215,12 +215,12 @@ export function useCalculatorState() {
       `Resistor: ${formatOhm(resistorValue)} +/-${resistorTolerance}% (${formatOhm(resistorMin)} - ${formatOhm(resistorMax)})`,
       `ADC Divider: Rtop=${divider.rTopK.toFixed(1)} kOhm, ratio=${divider.ratio.toFixed(2)}:1`,
       `RC: fc=${cutoff.toFixed(1)} Hz, R@target=${requiredR.toFixed(0)} ohm`,
-      `Gain: ${gain.gain.toFixed(2)}x (${gain.gainDb.toFixed(2)} dB)`,
+      gain.valid ? `Gain: ${gain.gain.toFixed(2)}x (${gain.gainDb.toFixed(2)} dB)` : `Gain: ${t('cards.invalid')}`,
       `I2S: BCLK=${Math.round(i2s.bclk)} Hz, MCLK=${Math.round(i2s.mclk)} Hz, rate=${i2s.bitRateMbps.toFixed(3)} Mbps`,
     ].join('\n');
   }, [
     led, capacitor, thermal, runtime, resistorValue, resistorTolerance,
-    resistorMin, resistorMax, divider, cutoff, requiredR, gain, i2s,
+    resistorMin, resistorMax, divider, cutoff, requiredR, gain, i2s, t,
   ]);
 
   const copySummary = () => copyRaw(summary, t('copy_ok'));

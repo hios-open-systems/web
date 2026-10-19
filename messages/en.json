@@ -3307,6 +3307,13 @@
             "atCutoff": "Set input to fc",
             "atResonance": "Set input to f0"
         },
+        "gain": {
+            "title": "Non-inverting amplifier oscilloscope",
+            "description": "Input and output voltage of an ideal non-inverting amplifier, on the same time scale and a shared automatic voltage scale.",
+            "schematic": "Non-inverting amplifier: Vin at the positive input, Rf from Vout to the negative input, and Rg from the negative input to ground.",
+            "hint": "Av = 1 + Rf/Rg; Vout = Av × Vin, with φ = 0°. Increasing Rf increases gain; increasing Rg reduces it. Rf = 0 gives unity gain. Both channels share an automatic voltage scale. Ideal steady-state model: no supply-rail clipping, bandwidth limit or slew-rate limit.",
+            "invalid": "Use finite values: Rf ≥ 0, Rg > 0, and positive input frequency and amplitude. The resulting voltage must also fit the numeric range."
+        },
         "rl": {
             "title": "RL oscilloscope",
             "description": "Input voltage and output voltage across R of an ideal RL low-pass filter, on the same time and voltage scales.",

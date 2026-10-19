@@ -3307,6 +3307,13 @@
             "atCutoff": "Imposta ingresso a fc",
             "atResonance": "Porta l’ingresso a f0"
         },
+        "gain": {
+            "title": "Oscilloscopio dell’amplificatore non invertente",
+            "description": "Tensione d’ingresso e d’uscita di un amplificatore non invertente ideale, con la stessa scala temporale e una scala di tensione automatica condivisa.",
+            "schematic": "Amplificatore non invertente: Vin all’ingresso positivo, Rf tra Vout e l’ingresso negativo, Rg tra l’ingresso negativo e massa.",
+            "hint": "Av = 1 + Rf/Rg; Vout = Av × Vin, con φ = 0°. Aumentare Rf aumenta il guadagno; aumentare Rg lo riduce. Con Rf = 0, il guadagno è unitario. Entrambi i canali condividono una scala di tensione automatica. Modello ideale a regime: senza saturazione dovuta all’alimentazione, limiti di banda o di slew rate.",
+            "invalid": "Usa valori finiti: Rf ≥ 0, Rg > 0, frequenza e ampiezza d’ingresso positive. Anche la tensione risultante deve rientrare nell’intervallo numerico."
+        },
         "rl": {
             "title": "Oscilloscopio RL",
             "description": "Tensione d’ingresso e tensione d’uscita su R di un filtro RL passa-basso ideale, con le stesse scale di tempo e tensione.",

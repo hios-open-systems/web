@@ -3307,6 +3307,13 @@
             "atCutoff": "Eingang auf fc setzen",
             "atResonance": "Eingang auf f0 setzen"
         },
+        "gain": {
+            "title": "Oszilloskop für nichtinvertierende Verstärker",
+            "description": "Eingangs- und Ausgangsspannung eines idealen nichtinvertierenden Verstärkers mit gleicher Zeitskala und gemeinsamer automatischer Spannungsskala.",
+            "schematic": "Nichtinvertierender Verstärker: Vin am positiven Eingang, Rf zwischen Vout und negativem Eingang, Rg zwischen negativem Eingang und Masse.",
+            "hint": "Av = 1 + Rf/Rg; Vout = Av × Vin, mit φ = 0°. Ein größerer Rf erhöht die Verstärkung, ein größerer Rg verringert sie. Bei Rf = 0 beträgt die Verstärkung eins. Beide Kanäle nutzen dieselbe automatische Spannungsskala. Ideales Modell im eingeschwungenen Zustand: keine Begrenzung durch Versorgungsspannung, Bandbreite oder Anstiegsgeschwindigkeit.",
+            "invalid": "Endliche Werte verwenden: Rf ≥ 0, Rg > 0 sowie positive Eingangsfrequenz und Amplitude. Auch die resultierende Spannung muss im darstellbaren Zahlenbereich liegen."
+        },
         "rl": {
             "title": "RL-Oszilloskop",
             "description": "Eingangsspannung und Ausgangsspannung über R eines idealen RL-Tiefpasses mit gleichen Zeit- und Spannungsskalen.",

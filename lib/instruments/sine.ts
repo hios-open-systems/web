@@ -3,9 +3,14 @@ import type { ScopePoint } from '../../components/instruments/plotGeometry';
 export interface SineTransfer { gain: number; phase: number; }
 export interface SineModel extends SineTransfer { frequencyHz: number; peakVolts: number; duration: number; }
 
+/** One voltage scale for both channels, including amplified outputs. */
+export function sineVoltageLimit(model: Pick<SineModel, 'peakVolts' | 'gain'>) {
+  return Math.max(model.peakVolts, model.peakVolts * model.gain) * 1.2;
+}
+
 export function sineModel<T extends SineTransfer>(transfer: T | null, frequencyHz: number, peakVolts: number) {
   if (!transfer || ![frequencyHz, peakVolts].every((v) => Number.isFinite(v) && v > 0)
-    || !Number.isFinite(peakVolts * 1.2) || !Number.isFinite(3 / frequencyHz)
+    || !Number.isFinite(2 * sineVoltageLimit({ ...transfer, peakVolts })) || !Number.isFinite(3 / frequencyHz)
     || !Number.isFinite(transfer.gain) || transfer.gain < 0 || !Number.isFinite(transfer.phase)) return null;
   return { ...transfer, frequencyHz, peakVolts, duration: 3 / frequencyHz };
 }

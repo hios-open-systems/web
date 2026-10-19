@@ -5,20 +5,19 @@ import { Button, InputNumber } from 'antd';
 import { useTranslations } from 'next-intl';
 import { TimeScope } from '@/components/instruments/TimeScope';
 import { SCOPE_COLORS } from '@/components/instruments/channels';
-import { sineSamples, type SineModel } from '@/lib/instruments/sine';
+import { sineSamples, sineVoltageLimit, type SineModel } from '@/lib/instruments/sine';
 import styles from '@/components/instruments/instrumentScreen.module.css';
 
 interface ValueControl { value: number; onChange: (value: number) => void; }
-interface FilterScopeProps {
-  kind: 'rc' | 'rl' | 'rcl';
+interface SineScopeProps {
+  kind: 'rc' | 'rl' | 'rcl' | 'gain';
   model: SineModel | null;
   frequency?: ValueControl;
   amplitude: ValueControl;
-  characteristic: number;
-  onCharacteristic: () => void;
+  reference?: { frequencyHz: number; onSelect: () => void; label: 'atCutoff' | 'atResonance' };
 }
 
-function ExcitationControls({ kind, frequency, amplitude, characteristic, onCharacteristic }: FilterScopeProps) {
+function ExcitationControls({ frequency, amplitude, reference }: SineScopeProps) {
   const t = useTranslations('Instrument.excitation');
   const id = useId();
   return <div className={styles.fields}>
@@ -30,27 +29,28 @@ function ExcitationControls({ kind, frequency, amplitude, characteristic, onChar
       <InputNumber id={`${id}-amplitude`} value={amplitude.value} min={0.01} max={100} step={0.1}
         onChange={(value) => amplitude.onChange(Number(value ?? 0))} style={{ width: '100%' }} />
     </div>
-    <Button disabled={!(characteristic > 0 && Number.isFinite(characteristic))}
-      onClick={onCharacteristic}>{t(kind === 'rcl' ? 'atResonance' : 'atCutoff')}</Button>
+    {reference && <Button disabled={!(reference.frequencyHz > 0 && Number.isFinite(reference.frequencyHz))}
+      onClick={reference.onSelect}>{t(reference.label)}</Button>}
   </div>;
 }
 
-export function FilterScope(props: FilterScopeProps) {
+export function SineScope(props: SineScopeProps) {
   const { kind, model } = props;
   const t = useTranslations('Instrument');
   // Rounding via Number avoids showing −0.0° at resonance.
   const phase = model ? Number((model.phase * 180 / Math.PI).toFixed(1)).toFixed(1) : '';
-  return <div className={styles.lab} data-filter-lab={kind} data-rc-lab={kind === 'rc' || undefined}>
+  const voltageLimit = model ? sineVoltageLimit(model) : 1;
+  return <div className={styles.lab} data-sine-lab={kind} data-filter-lab={kind !== 'gain' ? kind : undefined} data-rc-lab={kind === 'rc' || undefined}>
     <ExcitationControls {...props} />
     {model ? <>
-      <div className={styles.readouts} data-filter-readouts data-rc-readouts={kind === 'rc' || undefined}>
-        <span>|H| = {model.gain.toFixed(3)} ({Number((20 * Math.log10(model.gain)).toFixed(2)).toFixed(2)} dB)</span>
+      <div className={styles.readouts} data-sine-readouts data-filter-readouts={kind !== 'gain' || undefined} data-rc-readouts={kind === 'rc' || undefined}>
+        <span>{kind === 'gain' ? 'Av' : '|H|'} = {model.gain.toFixed(3)} ({Number((20 * Math.log10(model.gain)).toFixed(2)).toFixed(2)} dB)</span>
         <span>φ = {phase}°</span>
         <span>Vout = {(model.peakVolts * model.gain).toFixed(3)} V {t('peak')}</span>
       </div>
       <TimeScope label={t(`${kind}.title`)} description={t(`${kind}.description`)}
         xAxis={{ domain: [0, model.duration], label: 't (s)' }}
-        yAxis={{ domain: [-model.peakVolts * 1.2, model.peakVolts * 1.2], label: 'V' }}
+        yAxis={{ domain: [-voltageLimit, voltageLimit], label: 'V' }}
         sample={(seconds) => {
           const values = sineSamples(model, seconds * Math.PI / 2);
           return [
@@ -58,7 +58,7 @@ export function FilterScope(props: FilterScopeProps) {
             { id: 'vout', label: 'CH2 · Vout', color: SCOPE_COLORS[1], points: values.output },
           ];
         }} />
-    </> : <p role="status">{t('invalid')}</p>}
+    </> : <p role="status">{t(kind === 'gain' ? 'gain.invalid' : 'invalid')}</p>}
     <p className={styles.hint}>{t(`${kind}.hint`)} {t('animationHint')}</p>
   </div>;
 }

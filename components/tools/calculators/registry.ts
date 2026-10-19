@@ -168,6 +168,8 @@ export const CALCULATORS: CalcDef[] = [
     fields: [
       { key: 'rf', default: 10000 },
       { key: 'rg', default: 1000 },
+      { key: 'gainInputHz', default: 1000 },
+      { key: 'gainInputV', default: 0.1 },
     ],
   },
   {

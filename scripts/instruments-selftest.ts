@@ -8,6 +8,7 @@ import { SCOPE_COLORS } from '../components/instruments/channels.ts';
 import { CHANNELS } from '../components/dsp/QpskSimulator/qpskMath.ts';
 import { AUDIO_BREAKOUTS } from '../config/pinouts/modules/audio.ts';
 import { testFilterScopes } from './filter-scope-checks.ts';
+import { testAmplifierScope } from './amplifier-scope-checks.ts';
 
 const near = (actual: number, expected: number, tolerance = 1e-10) => assert.ok(Math.abs(actual - expected) <= tolerance, `${actual} != ${expected}`);
 console.log('Instruments: axes, logarithmic spacing, invalid samples and units');
@@ -80,6 +81,10 @@ for (const locale of ['en', 'es', 'de', 'it']) {
   assert.ok(messages.Instrument.rl.hint.includes('H = R / (R + jωL)'));
   assert.ok(messages.Instrument.rcl.hint.includes('H = R / [R + j(ωL − 1/ωC)]'));
   assert.ok(messages.Instrument.excitation.atResonance && messages.Instrument.rcl.schematic);
+  assert.ok(messages.Instrument.gain.hint.includes('Av = 1 + Rf/Rg'));
+  assert.ok(messages.Instrument.gain.hint.includes('φ = 0°'));
+  assert.ok(messages.Instrument.gain.title && messages.Instrument.gain.description && messages.Instrument.gain.schematic && messages.Instrument.gain.invalid);
 }
 testFilterScopes();
+testAmplifierScope();
 console.log('All instrument checks passed.');
