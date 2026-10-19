@@ -3,90 +3,68 @@
 La app se sirve como **Cloudflare Worker** vía el adaptador `@opennextjs/cloudflare`
 (reemplaza al viejo modelo Pages / `next-on-pages`).
 
-El deploy es **push-to-deploy con Workers Builds**: NO se corre `wrangler deploy` ni
-`wrangler login` desde tu máquina. Cloudflare buildea y publica en su nube en cada push.
+El flujo definido en `.github/workflows/ci.yml` publica desde GitHub Actions **solo
+cuando pasan todas las validaciones**. Antes de activarlo hay que completar la
+configuración externa indicada abajo; editar el YAML no desactiva Workers Builds.
 
-- Worker: `hios-platform` (ver `wrangler.jsonc`)
-- Dominio: `openhios.dev`
-- Base de datos: D1 `hios-playground` (binding `DB`) — **compartida, no borrar**
+- Worker: `hios-platform` (ver `wrangler.jsonc`).
+- Dominio: `openhios.dev`.
+- D1: `hios-playground`, binding `DB` — **compartida, no borrar**.
 
----
+## Activación inicial (antes del primer push de este workflow)
 
-## Setup inicial (una sola vez, en el dashboard)
+1. En la cuenta de Cloudflare que sirve **openhios.dev**, abrir el Worker →
+   Settings → Builds y desactivar los builds automáticos de producción y previews
+   (o desconectar la integración Git). No modificar el Worker homónimo antiguo
+   que solo tiene un dominio `workers.dev`.
+2. Crear un API token de despliegue limitado a esa cuenta, con los permisos que
+   requiere Wrangler para Workers Scripts y los bindings existentes. Guardarlo
+   como secret de GitHub Actions `CLOUDFLARE_API_TOKEN`; nunca en git ni logs.
+3. Configurar la variable de Actions `CLOUDFLARE_ACCOUNT_ID` con la cuenta verificada.
+4. Solo después de comprobar que el auto-deploy anterior está desactivado, crear
+   la variable `WORKERS_BUILDS_DISABLED=true`. Es una constancia administrativa;
+   el workflow no puede consultar ni modificar Workers Builds con esa variable.
+5. Subir `main`, seguir el workflow y comprobar la versión publicada.
 
-### 1. Conectar el repo a Workers Builds
-Dashboard → **Compute (Workers)** → **Create** → **Import a repository** →
-autorizar la GitHub App de Cloudflare para `hios-open-systems/web` → elegir el repo.
+Referencia: https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/github-integration/
 
-Configurar el build:
-- **Build command:** `npx opennextjs-cloudflare build`
-- **Deploy command:** `npx opennextjs-cloudflare deploy`
-- **Production branch:** `main` (los demás branches generan preview deployments)
+## Deploy normal
 
-### 2. Secret del Worker
-Las vars públicas (`GITHUB_CLIENT_ID`, `AUTH_BASE_URL`) ya están en `wrangler.jsonc`.
-El secreto va aparte, en el dashboard (no en git):
+`git push origin main` ejecuta, en orden:
 
-Worker `hios-platform` → **Settings → Variables and Secrets** → Add → Secret:
-- `GITHUB_CLIENT_SECRET = <valor>`
+1. Lint y todos los self-tests descubiertos.
+2. Build OpenNext del Worker y validaciones SEO, sitemap, contenido, privacidad,
+   instrumentos, electrónica, traducciones, pinouts y móvil con Playwright.
+3. Verificación de credenciales, configuración externa y que el SHA probado siga
+   siendo la punta de `main`. Un run viejo falla antes de publicar.
+4. `opennextjs-cloudflare deploy`, usando **el mismo output ya probado**, sin rebuild.
+5. Comprobación de `/api/version` contra el SHA y respuesta HTML correcta de veinte
+   rutas de calculadoras, QPSK y guías PAD/BTDAC/Speaker en los cuatro idiomas.
 
-(La callback del GitHub OAuth app apunta a `openhios.dev`, que no cambia — no hay que
-tocar la app de GitHub.)
+Los PR ejecutan las pruebas pero nunca los pasos con credenciales de despliegue.
+Un fallo en cualquier validación impide publicar. Los pushes a main se serializan
+para no interrumpir un upload; los runs de PR obsoletos sí se cancelan.
+Los diagnósticos de Playwright se conservan siete días cuando falla una prueba.
 
-### 3. Cutover del dominio (Pages → Worker) — ORDEN IMPORTA
-El dominio solo lo puede servir una cosa a la vez. Secuencia segura:
+Los tests de navegador previos al deploy usan `next start`; el build comprueba el
+empaquetado Worker y el smoke posterior comprueba el runtime publicado. Ese smoke
+no reemplaza una prueba funcional completa de producción. Si falla después del
+upload, el workflow falla pero **no revierte automáticamente** el despliegue.
 
-1. Dejá que Workers Builds haga el primer deploy → probá en `hios-platform.<sub>.workers.dev`.
-2. Cuando esté OK: en el **proyecto Pages viejo** → Custom domains → **quitar** `openhios.dev`.
-3. En el **Worker** → Settings → Domains & Routes → **Add Custom Domain** → `openhios.dev`.
-4. Verificá que `openhios.dev` sirva el Worker (el `NEXT_PUBLIC_DEPLOY_VERSION` en el
-   footer/VersionWatcher debe coincidir con el commit deployado).
-5. Recién ahí: borrá el proyecto Pages viejo. **NO toques la base D1** — es la misma.
+## Recuperación y previews
 
----
+Si falla antes de publicar, producción conserva su versión anterior. Corregir y
+subir un nuevo commit, o reintentar el run solo si sigue siendo la punta de main.
+Para una regresión publicada, revertir el commit y pasar nuevamente por CI.
+Un rollback urgente desde Cloudflare debe ser una operación deliberada y luego
+reflejarse en git. No reactivar Workers Builds para resolver un fallo de CI.
 
-## Deploy normal (día a día)
-`git push` a `main` → Workers Builds buildea y publica. Nada más.
+Los branches/PR no publican previews automáticamente con este flujo. Cualquier
+preview futuro deberá usar un Worker separado y bindings ajenos a producción.
 
-### Qué comprueba CI y qué no bloquea
-
-`.github/workflows/ci.yml` ejecuta lint, todos los self-tests descubiertos, build de
-OpenNext y recorridos Playwright de contenido, navegación, privacidad, móvil e
-instrumentos/electrónica/pinouts traducidos. Se fija Ubuntu 24.04 para que una
-migración de `ubuntu-latest` no cambie el entorno sin revisión. Si falla un recorrido,
-el workflow conserva `test-results/` durante 7 días como artifact.
-
-**Workers Builds y GitHub CI arrancan en paralelo con el push.** El check de GitHub
-no es una barrera para publicar en Cloudflare. Mientras se mantenga este esquema,
-validar localmente antes de subir `main` y comprobar después los dos checks y
-`/api/version` contra el SHA enviado. Los tests Playwright de CI usan `next start`:
-el build verifica el empaquetado del Worker, pero no sustituye una comprobación
-del runtime desplegado.
-
-Para exigir aprobación de CI antes de publicar habría que cambiar explícitamente
-el flujo: proteger `main` con checks de PR obligatorios, o desactivar el auto-deploy
-y desplegar desde un job dependiente de CI. Esta última opción requiere configurar
-credenciales y permisos de Cloudflare; no queda activada por editar este YAML.
-
-## Si aparece un deploy en Pages después del refactor
-Si el deployment URL termina en `*.pages.dev` o el log dice `pages/view/...`, ese build
-sigue corriendo en el **proyecto Pages viejo**. Cambiar solo el build command de Pages a
-`npx opennextjs-cloudflare build` no alcanza: OpenNext genera `.open-next/worker.js`, pero
-Pages después intenta desplegar un output estático como `.vercel/output/static` y falla.
-
-En ese caso no hay que agregar `pages_build_output_dir` ni volver a `next-on-pages`; hay
-que crear/usar el deploy de **Workers Builds** en `Compute (Workers)` con:
-
-- **Build command:** `npx opennextjs-cloudflare build`
-- **Deploy command:** `npx opennextjs-cloudflare deploy`
-
-El proyecto Pages viejo queda solo como fallback temporal hasta quitarle el custom domain
-durante el cutover.
-
-## Preview de un branch
-`git push` de cualquier branch → Workers Builds genera un preview deployment con URL propia.
-
----
+El secret runtime `GITHUB_CLIENT_SECRET` permanece en Cloudflare. No confundirlo
+con el token de Actions. El dominio y D1 se conservan; no hace falta un cutover ni
+migraciones para este cambio de pipeline.
 
 ## Migraciones D1
 Las migraciones **no** corren solas en el deploy; son un paso aparte, solo cuando cambia
