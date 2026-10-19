@@ -1441,7 +1441,7 @@
                 "description": "Guía de cableado del parlante WiFi: I2S del ESP32 a 2× MAX98357 en stereo, LCD 16×2 I2C, medición del canal por SD y fuente 2S."
             }
         },
-        "attribution": "Inspirado en los recursos de pinout de luisllamas.es",
+        "attribution": "Referencia complementaria de pinouts:",
         "pin": "Pin",
         "gpioFunctions": "GPIO / funciones",
         "Functions": {
@@ -1471,7 +1471,8 @@
             "botones": "Botones",
             "parlantes": "Parlantes",
             "conexiones": "Conexiones",
-            "check": "Checklist"
+            "check": "Checklist",
+            "workbench": "Cableado y armado"
         },
         "ui": {
             "moreTabs": "Más pestañas",
@@ -4590,5 +4591,42 @@
             "check_5": "VBAT: reemplazá el divisor 100k/100k antes de conectar 2S a IO34 y actualizá la escala/calibración del firmware",
             "check_6": "Masa común: ESP32, amplis, LCD, buck, BMS"
         }
+    },
+    "PinExplorer": {
+        "select": "Explorar un pin",
+        "prompt": "Elegí un pin de la placa",
+        "hint": "Tocá un terminal del dibujo o elegilo aquí para ver sus funciones.",
+        "position": "Header {header}, posición {position} desde arriba.",
+        "illustration": "Ilustración orientativa, vista superior. Confirmá la revisión y la serigrafía de tu placa; los detalles mecánicos pueden variar."
+    },
+    "Assembly": {
+        "title": "Banco de cableado y armado",
+        "intro": "Trabajá un módulo por vez. Explorá cada señal y registrá las comprobaciones que hiciste en tu montaje.",
+        "wiring": "Cableado",
+        "assembly": "Armado",
+        "chooseModule": "Módulo de trabajo",
+        "module": "MÓDULO",
+        "power": "Alimentación del módulo",
+        "functional": "Diagrama funcional: los terminales numerados identifican conexiones de esta lista, no posiciones físicas. Los rieles y componentes intermedios se describen arriba y en el detalle de cada señal.",
+        "diagram": "Conexiones de señales del módulo",
+        "noSignals": "Este módulo no tiene señales GPIO. Seguí las conexiones de alimentación indicadas arriba.",
+        "previous": "Anterior",
+        "next": "Siguiente",
+        "progress": "Comprobaciones registradas: {done} de {total}",
+        "unpowered": "Para cablear, soldar o medir continuidad, desconectá USB, fuentes y batería. No sueldes directamente sobre celdas de litio.",
+        "prepareTitle": "Preparar y presentar",
+        "prepareBody": "Contrastá la variante y serigrafía con la guía. Identificá cada extremo en Cableado, cortá y pelá los cables, prepará el aislamiento y sujetá las piezas. Revisá polaridad y orientación antes de soldar.",
+        "solderTitle": "Soldar y aislar",
+        "solderBody": "Usá extracción de humos y soporte para el soldador. Con punta limpia y estañada, calentá terminal y pad juntos y aportá estaño a la unión. Retirá el estaño y luego la punta; dejá enfriar sin mover. Aislá conductores expuestos y sujetá los cables para que no tiren del pad.",
+        "inspectTitle": "Inspeccionar y comprobar",
+        "inspectBody": "Revisá con aumento que el estaño moje terminal y pad, sin puentes ni hilos sueltos. Con el circuito sin energía, comprobá continuidad de cada conexión y ausencia de cortos entre rieles. La inspección visual no sustituye estas mediciones. Antes de alimentar, completá el checklist del proyecto.",
+        "confirm": "He completado: {step}",
+        "progressHint": "Registro personal guardado en este navegador. Marcar un paso no valida el circuito ni habilita automáticamente la alimentación.",
+        "jointTitle": "Inspección de una unión",
+        "jointGood": "Mojado de pad y terminal",
+        "jointBad": "Puente entre terminales",
+        "jointHint": "Esquemas de referencia. El brillo depende de la aleación; por sí solo no demuestra la calidad de la unión.",
+        "sources": "Referencia de técnica de soldadura",
+        "saveFailed": "No se pudo guardar el progreso. Se conservará solo mientras esta vista esté abierta."
     }
 }

@@ -62,3 +62,10 @@
   font-size: 12px;
   color: var(--hios-text-secondary);
 }
+
+.inspector { margin: 12px; padding: 16px; border: 1px solid var(--hios-border, #64748b); border-radius: 12px; background: var(--hios-bg-secondary); overflow-wrap: anywhere; }
+.choose { display: grid; gap: 8px; font-weight: 600; }
+.choose select { width: 100%; min-height: 44px; padding: 8px; color: var(--hios-text); background: var(--hios-bg); border: 1px solid #64748b; border-radius: 8px; }
+.inspector p { margin: 8px 0; font-size: 13px; }
+.inspector ul { display: flex; flex-wrap: wrap; gap: 6px 22px; padding-left: 18px; font-size: 13px; }
+.wrap [role='button']:focus-visible { outline: 2px solid var(--hios-text); outline-offset: 2px; }

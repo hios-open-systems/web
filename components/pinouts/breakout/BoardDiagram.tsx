@@ -1,9 +1,11 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { useState } from 'react';
 import { funcVar } from '@/config/pinouts/modules';
 import type { BoardPinout } from '@/config/pinouts/modules';
 import { BoardArtwork } from './BoardArtwork';
+import { BoardInspector } from './BoardInspector';
 import { BoardPinSvg } from './BoardPinSvg';
 import { boardGeometry, diagramPinNumber, primaryOf } from './boardGeometry';
 import type { AssignMap } from './boardGeometry';
@@ -13,20 +15,24 @@ export type { AssignMap, PinAssign } from './boardGeometry';
 
 export function BoardDiagram({ board, name, assign }: { board: BoardPinout; name: string; assign?: AssignMap }) {
   const t = useTranslations('Pinouts');
+  const [selected, setSelected] = useState('');
   const geometry = boardGeometry(board, assign);
   const pins = [...board.left, ...board.right];
   const funcs = [...new Set(pins.flatMap((pin) => pin.labels.map((label) => label.func)))];
   const used = assign ? pins.filter((pin) => assign.has(primaryOf(pin).text)).length : 0;
   return (
     <>
+      <BoardInspector board={board} selected={selected} onSelect={setSelected} assign={assign} />
       <div className={styles.wrap}>
         <p className={styles.hint}>{t('boardOrientation')}</p>
-        <svg width={geometry.width} viewBox={`0 0 ${geometry.width} ${geometry.height}`} role="img" aria-label={name} fontFamily="ui-monospace, Menlo, monospace">
+        <svg width={geometry.width} viewBox={`0 0 ${geometry.width} ${geometry.height}`} role="group" aria-label={name} fontFamily="ui-monospace, Menlo, monospace">
           <title>{name}</title><desc>{t('boardOrientation')}</desc>
           <BoardArtwork board={board} x={geometry.boardX} bottom={geometry.bottom} />
           {(['left', 'right'] as const).flatMap((side) => board[side].map((pin, index) => (
             <BoardPinSvg key={`${side}-${pin.pos}`} pin={pin} index={index} side={side}
-              edge={side === 'left' ? geometry.boardX : geometry.boardR} number={diagramPinNumber(board, side, index)} assign={assign} />
+              edge={side === 'left' ? geometry.boardX : geometry.boardR} number={diagramPinNumber(board, side, index)} assign={assign}
+              selected={selected === `${side}-${pin.pos}`} onSelect={() => setSelected(`${side}-${pin.pos}`)}
+              accessibleName={`${board.headers[side]}-${pin.pos} ${primaryOf(pin).text}`} />
           )))}
         </svg>
       </div>

@@ -4,7 +4,7 @@ test('all modules remain navigable and readable on small screens', async ({ page
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/es/pinouts#esp32-s3-devkitc-1');
-  const selector = page.locator('main select');
+  const selector = page.getByRole('combobox', { name: 'Pinouts Interactivos', exact: true });
   await expect(selector).toBeVisible();
   const ids = await selector.locator('option').evaluateAll((options) => options.map((option) => option.getAttribute('value')!));
   expect(ids).toHaveLength(15);
@@ -34,9 +34,9 @@ test('deep links, history, physical header identities and diagram enlargement', 
   await expect(page.getByRole('button', { name: 'Ampliar', exact: true })).toHaveAttribute('aria-pressed', 'true');
   expect(await page.locator('#pinout-detail [data-pinout-diagram] svg').evaluate((svg) => svg.getBoundingClientRect().width)).toBeGreaterThanOrEqual(700);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await page.locator('main select').selectOption('jack-trs');
+  await page.getByRole('combobox', { name: 'Pinouts Interactivos', exact: true }).selectOption('jack-trs');
   await page.goBack();
   await expect(page.locator('#pinout-detail h2')).toHaveText('ESP32-WROOM-32 DevKit');
   await page.reload();
-  await expect(page.locator('main select')).toHaveValue('esp32-wroom-32');
+  await expect(page.getByRole('combobox', { name: 'Pinouts Interactivos', exact: true })).toHaveValue('esp32-wroom-32');
 });

@@ -65,7 +65,8 @@
     "test:instruments": "node --experimental-strip-types scripts/instruments-selftest.ts",
     "test:electronics": "node --experimental-strip-types scripts/electronics-selftest.ts",
     "test:wiring-i18n": "node --experimental-strip-types scripts/wiring-i18n-selftest.ts",
-    "test:deployment": "node scripts/deployment-selftest.mjs"
+    "test:deployment": "node scripts/deployment-selftest.mjs",
+    "test:assembly": "node --experimental-strip-types scripts/assembly-selftest.ts"
   },
   "dependencies": {
     "@ant-design/cssinjs": "^1.18.0",

@@ -15,6 +15,7 @@ import { WiringView } from './views/WiringView';
 import { AmpView } from './views/AmpView';
 import { GroupsView } from './views/GroupsView';
 import { ChecklistView } from './views/ChecklistView';
+import { WiringWorkbench } from './assembly/WiringWorkbench';
 import styles from './wiring-guide.module.css';
 
 export function WiringGuideView({ guide }: { guide: WiringGuide }) {
@@ -27,6 +28,9 @@ export function WiringGuideView({ guide }: { guide: WiringGuide }) {
     { key: 'diagrama', label: t('tabs.diagrama'), children: <SystemDiagram /> },
     { key: 'pines', label: t('tabs.pines'), children: <PinListView /> },
   ];
+  if (guide.meta.id === 'pad' || guide.meta.id === 'btdac') {
+    items.splice(1, 0, { key: 'workbench', label: t('tabs.workbench'), children: <WiringWorkbench /> });
+  }
   if (guide.keymap) {
     items.push({
       key: 'botones',

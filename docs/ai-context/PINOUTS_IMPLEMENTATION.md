@@ -70,3 +70,38 @@ Playwright cubre:
 - `tests/pinouts.spec.ts` y `tests/mobile-pinouts.spec.ts`: selección, historial, identidad de pines y ampliación.
 
 Ejecutar build, lint, pruebas de lógica y Playwright contra la compilación actual antes de integrar en `main` local. Push y deploy corresponden al cierre del día.
+
+
+## Explorador de pines y banco de armado
+
+`BoardDiagram` comparte un inspector accesible entre catálogo y guías. La identidad
+seleccionada es `lado-posicion`, no el nombre del pin: los GND repetidos siguen
+siendo terminales distintos. El selector HTML y los botones SVG (Enter/Espacio)
+controlan la misma selección. La ubicación mostrada por el inspector usa el header
+y la posición reales del modelo; la numeración corrida del dibujo sigue siendo
+una referencia visual. El acabado de PCB/metal es ilustrativo, no una foto ni un
+modelo mecánico de todas las variantes.
+
+PAD y BTDAC agregan una pestaña de cableado y armado con `WiringWorkbench`.
+`lib/padWiring/assembly.ts` deriva módulos, orden y conexiones de la guía existente;
+no duplica GPIO ni interpreta texto traducido como topología. Los terminales #1,
+#2, etc. del lienzo son referencias de la lista funcional, no patillas físicas.
+Los rieles, componentes en serie y precauciones conservan el texto verificado de
+la guía. BTDAC no declara variante de DevKit: no se le inventa un header físico.
+
+Los pasos de preparación, soldadura e inspección se reutilizan por módulo. Sus
+confirmaciones son un registro personal, no validación eléctrica ni permiso para
+energizar. El progreso usa IDs de módulo/fase y una clave con proyecto, revisión y
+versión del esquema; no depende del idioma ni modifica el checklist existente.
+Al cambiar los pasos o su significado, incrementar la versión del almacenamiento.
+La fase de alimentación requiere identificar y medir la fuente según la guía;
+este banco no enseña a fabricar packs ni a soldar sobre celdas.
+
+`Assembly` y `PinExplorer` contienen la interfaz ES/EN/DE/IT. Las ilustraciones de
+soldadura son SVG propios; la referencia técnica está enlazada a la guía de
+Adafruit: https://learn.adafruit.com/adafruit-guide-excellent-soldering/common-problems
+No se cargan imágenes, fuentes ni visores externos.
+
+Verificación: `test:assembly` (conexiones, IDs, persistencia, revisiones e idiomas),
+`tests/interactive-wiring.spec.ts` y `tests/mobile-assembly.spec.ts`. CI incluye
+ambos recorridos junto a las pruebas existentes de pinouts y guías.

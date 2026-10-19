@@ -4,14 +4,15 @@ import { useWiringGuide } from '../WiringGuideContext';
 import { PinBadge } from '../PinBadge';
 import { RichText } from '../RichText';
 import styles from '../wiring-guide.module.css';
+import type { PinoutSection } from '@/config/pinouts/wiring';
 
-export function GroupsView() {
+export function GroupsView({ sections, initiallyOpen = true }: { sections?: PinoutSection[]; initiallyOpen?: boolean } = {}) {
   const guide = useWiringGuide();
 
   return (
     <div className={styles.groups}>
-      {guide.sections.map((section, index) => (
-        <details key={section.t} className={styles.group} open={index === 0}>
+      {(sections ?? guide.sections).map((section, index) => (
+        <details key={section.t} className={styles.group} open={initiallyOpen && index === 0}>
           <summary className={styles.groupSummary}>
             {section.t}
             {section.cnt ? <span className={styles.groupCount}>{section.cnt}</span> : null}

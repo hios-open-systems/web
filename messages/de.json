@@ -1441,7 +1441,7 @@
                 "description": "Verdrahtungsanleitung für den WiFi-Lautsprecher: I2S vom ESP32 zu 2× MAX98357 in Stereo, 16×2-I2C-LCD, Kanalwahl per SD-Messung und 2S-Stromversorgung."
             }
         },
-        "attribution": "Inspiriert von den Pinout-Ressourcen auf luisllamas.es",
+        "attribution": "Ergänzende Pinout-Referenz:",
         "pin": "Pin",
         "gpioFunctions": "GPIO / Funktionen",
         "Functions": {
@@ -1471,7 +1471,8 @@
             "botones": "Tasten",
             "parlantes": "Lautsprecher",
             "conexiones": "Verbindungen",
-            "check": "Checkliste"
+            "check": "Checkliste",
+            "workbench": "Verdrahtung und Montage"
         },
         "ui": {
             "moreTabs": "Weitere Tabs",
@@ -4590,5 +4591,42 @@
             "check_5": "VBAT: 100k/100k-Teiler vor Anschluss von 2S an IO34 ersetzen und Firmware-Skalierung/Kalibrierung anpassen",
             "check_6": "Gemeinsame Masse: ESP32, Verstärker, LCD, Buck, BMS"
         }
+    },
+    "PinExplorer": {
+        "select": "Pin erkunden",
+        "prompt": "Einen Platinenpin auswählen",
+        "hint": "Einen Anschluss in der Zeichnung oder hier auswählen, um seine Funktionen anzuzeigen.",
+        "position": "Stiftleiste {header}, Position {position} von oben.",
+        "illustration": "Schematische Draufsicht. Platinenrevision und Beschriftung prüfen; mechanische Details können abweichen."
+    },
+    "Assembly": {
+        "title": "Verdrahtungs- und Montageplatz",
+        "intro": "Ein Modul nach dem anderen bearbeiten. Signale erkunden und die am Aufbau durchgeführten Prüfungen festhalten.",
+        "wiring": "Verdrahtung",
+        "assembly": "Montage",
+        "chooseModule": "Aktuelles Modul",
+        "module": "MODUL",
+        "power": "Modulversorgung",
+        "functional": "Funktionsdiagramm: Die nummerierten Anschlüsse kennzeichnen Verbindungen dieser Liste, keine physischen Positionen. Versorgung und Zwischenbauteile stehen oben und in den Signaldetails.",
+        "diagram": "Signalverbindungen des Moduls",
+        "noSignals": "Dieses Modul hat keine GPIO-Signale. Die oben angegebenen Versorgungsverbindungen beachten.",
+        "previous": "Zurück",
+        "next": "Weiter",
+        "progress": "Erfasste Prüfungen: {done} von {total}",
+        "unpowered": "Vor Verdrahtung, Löten oder Durchgangsprüfung USB, Netzteile und Akku trennen. Nicht direkt an Lithiumzellen löten.",
+        "prepareTitle": "Vorbereiten und positionieren",
+        "prepareBody": "Variante und Beschriftung mit der Anleitung vergleichen. In Verdrahtung alle Endpunkte identifizieren, Leitungen ablängen und abisolieren, Isolierung vorbereiten und Teile fixieren. Vor dem Löten Polarität und Ausrichtung prüfen.",
+        "solderTitle": "Löten und isolieren",
+        "solderBody": "Rauchabsaugung und Lötkolbenhalter verwenden. Mit sauberer, verzinnter Spitze Anschluss und Lötpad gemeinsam erwärmen und Lot an die Verbindung führen. Erst Lot, dann Spitze entfernen und ohne Bewegung abkühlen lassen. Freie Leiter isolieren und Leitungen zugentlasten.",
+        "inspectTitle": "Sichtprüfung und Messung",
+        "inspectBody": "Unter Vergrößerung prüfen, ob das Lot Anschluss und Pad benetzt, ohne Brücken oder lose Litzen. Im spannungsfreien Zustand jede Verbindung auf Durchgang und Versorgungsschienen auf Kurzschlüsse prüfen. Sichtprüfung ersetzt diese Messungen nicht. Vor dem Einschalten die Projektcheckliste abschließen.",
+        "confirm": "Erledigt: {step}",
+        "progressHint": "Persönlicher Eintrag in diesem Browser. Ein Häkchen bestätigt keine elektrische Prüfung und gibt die Versorgung nicht automatisch frei.",
+        "jointTitle": "Eine Lötstelle prüfen",
+        "jointGood": "Pad und Anschluss benetzt",
+        "jointBad": "Brücke zwischen Anschlüssen",
+        "jointHint": "Referenzskizzen. Der Glanz hängt von der Legierung ab und belegt allein keine gute Lötstelle.",
+        "sources": "Referenz zur Löttechnik",
+        "saveFailed": "Der Fortschritt konnte nicht gespeichert werden. Er bleibt nur erhalten, solange diese Ansicht geöffnet ist."
     }
 }

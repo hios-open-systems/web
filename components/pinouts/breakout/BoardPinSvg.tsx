@@ -20,9 +20,12 @@ interface Props {
   edge: number;
   number: number;
   assign?: AssignMap;
+  selected: boolean;
+  onSelect: () => void;
+  accessibleName: string;
 }
 
-export function BoardPinSvg({ pin, index, side, edge, number, assign }: Props) {
+export function BoardPinSvg({ pin, index, side, edge, number, assign, selected, onSelect, accessibleName }: Props) {
   const y = PIN_TOP + index * PITCH;
   const left = side === 'left';
   const primary = primaryOf(pin);
@@ -31,7 +34,12 @@ export function BoardPinSvg({ pin, index, side, edge, number, assign }: Props) {
   const textX = left ? edge - labelWidth(primary.text) - 14 : edge + 14;
   const usedX = left ? textX - labelWidth(used?.name ?? '') - 6 : textX + labelWidth(primary.text) + 6;
   return (
-    <g opacity={assign && !used ? .28 : 1}>
+    <g opacity={assign && !used && !selected ? .45 : 1} role="button" tabIndex={0}
+      aria-label={accessibleName} aria-pressed={selected} onClick={onSelect}
+      onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onSelect(); } }}
+      style={{ cursor: 'pointer' }} data-board-pin={accessibleName}>
+      <rect x={Math.min(edge - 8, textX) - 3} y={y - 14} width={labelWidth(primary.text) + 32} height="28" rx="6"
+        fill={selected ? color : 'transparent'} fillOpacity=".2" stroke={selected ? 'currentColor' : 'none'} />
       <title>{`${number}: ${pin.labels.map((label) => label.text).join(', ')}`}</title>
       <circle cx={edge} cy={y} r="6" fill="#0f172a" stroke={color} strokeWidth="2" />
       <rect x={edge - 2} y={y - 2} width="4" height="4" fill="#d4b777" />

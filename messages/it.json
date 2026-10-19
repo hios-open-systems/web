@@ -1441,7 +1441,7 @@
                 "description": "Guida al cablaggio dell’altoparlante WiFi: I2S dall’ESP32 a 2× MAX98357 in stereo, LCD 16×2 I2C, selezione del canale misurando SD e alimentazione 2S."
             }
         },
-        "attribution": "Ispirato alle risorse sui pinout di luisllamas.es",
+        "attribution": "Riferimento aggiuntivo per i pinout:",
         "pin": "Pin",
         "gpioFunctions": "GPIO / funzioni",
         "Functions": {
@@ -1471,7 +1471,8 @@
             "botones": "Pulsanti",
             "parlantes": "Altoparlanti",
             "conexiones": "Connessioni",
-            "check": "Checklist"
+            "check": "Checklist",
+            "workbench": "Cablaggio e montaggio"
         },
         "ui": {
             "moreTabs": "Altre schede",
@@ -4590,5 +4591,42 @@
             "check_5": "VBAT: sostituisci il partitore 100k/100k prima di collegare 2S a IO34 e aggiorna scala/calibrazione firmware",
             "check_6": "Massa comune: ESP32, amplificatori, LCD, buck, BMS"
         }
+    },
+    "PinExplorer": {
+        "select": "Esplora un pin",
+        "prompt": "Scegli un pin della scheda",
+        "hint": "Seleziona un terminale nel disegno o scegli qui per visualizzarne le funzioni.",
+        "position": "Connettore {header}, posizione {position} dall’alto.",
+        "illustration": "Vista dall’alto illustrativa. Controlla revisione e serigrafia della scheda; i dettagli meccanici possono variare."
+    },
+    "Assembly": {
+        "title": "Banco di cablaggio e montaggio",
+        "intro": "Lavora su un modulo alla volta. Esplora ogni segnale e registra i controlli eseguiti sul montaggio.",
+        "wiring": "Cablaggio",
+        "assembly": "Montaggio",
+        "chooseModule": "Modulo di lavoro",
+        "module": "MODULO",
+        "power": "Alimentazione del modulo",
+        "functional": "Schema funzionale: i terminali numerati identificano le connessioni di questo elenco, non posizioni fisiche. Alimentazioni e componenti intermedi sono descritti sopra e nel dettaglio di ogni segnale.",
+        "diagram": "Connessioni dei segnali del modulo",
+        "noSignals": "Questo modulo non ha segnali GPIO. Segui le connessioni di alimentazione indicate sopra.",
+        "previous": "Precedente",
+        "next": "Successivo",
+        "progress": "Controlli registrati: {done} di {total}",
+        "unpowered": "Scollega USB, alimentatori e batteria prima di cablare, saldare o misurare la continuità. Non saldare direttamente sulle celle al litio.",
+        "prepareTitle": "Preparare e posizionare",
+        "prepareBody": "Confronta variante e serigrafia con la guida. Identifica ogni estremità in Cablaggio, taglia e spela i fili, prepara l’isolamento e fissa i pezzi. Controlla polarità e orientamento prima di saldare.",
+        "solderTitle": "Saldare e isolare",
+        "solderBody": "Usa aspirazione dei fumi e supporto per il saldatore. Con punta pulita e stagnata, scalda insieme terminale e piazzola e alimenta lo stagno sulla giunzione. Allontana lo stagno, poi la punta; lascia raffreddare senza muovere. Isola i conduttori scoperti e fissa i cavi per non sollecitare la piazzola.",
+        "inspectTitle": "Ispezionare e verificare",
+        "inspectBody": "Con ingrandimento verifica che lo stagno bagni terminale e piazzola, senza ponti o fili liberi. A circuito disalimentato, verifica continuità di ogni connessione e assenza di corti tra alimentazioni. L’ispezione visiva non sostituisce le misure. Completa la checklist del progetto prima di alimentare.",
+        "confirm": "Ho completato: {step}",
+        "progressHint": "Registro personale salvato in questo browser. Spuntare un passo non convalida il circuito né autorizza automaticamente l’alimentazione.",
+        "jointTitle": "Ispezione di una giunzione",
+        "jointGood": "Piazzola e terminale bagnati",
+        "jointBad": "Ponte tra terminali",
+        "jointHint": "Schemi di riferimento. La lucentezza dipende dalla lega e da sola non dimostra la qualità della giunzione.",
+        "sources": "Riferimento per la tecnica di saldatura",
+        "saveFailed": "Impossibile salvare i progressi. Rimarranno disponibili solo finché questa vista resta aperta."
     }
 }

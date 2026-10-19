@@ -23,6 +23,7 @@ export const BTDAC_WIRING: WiringGuide = {
     },
     {
       id: 'dac',
+      sectionGroup: 'audio',
       name: 'DAC PCM5102',
       icon: '🎵',
       rail: 5,
@@ -31,6 +32,7 @@ export const BTDAC_WIRING: WiringGuide = {
     },
     {
       id: 'led',
+      sectionGroup: 'misc',
       name: 'LED RGB KY-009',
       icon: '🌈',
       rail: null,

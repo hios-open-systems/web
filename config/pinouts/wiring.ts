@@ -13,6 +13,8 @@ export type Palette = Record<BadgeKind, string>;
  */
 export interface ModuleInfo {
   id: string;
+  /** Existing detailed wiring sections associated with this module. Defaults to id. */
+  sectionGroup?: SectionGroup;
   name: string;
   icon: string;
   /** de qué riel come el MÓDULO (por su VCC), no la señal */

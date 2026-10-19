@@ -1441,7 +1441,7 @@
                 "description": "Wiring guide for the WiFi speaker: ESP32 I2S to 2× MAX98357 in stereo, 16×2 I2C LCD, channel selection by measuring SD, and 2S power supply."
             }
         },
-        "attribution": "Inspired by the pinout resources at luisllamas.es",
+        "attribution": "Additional pinout reference:",
         "pin": "Pin",
         "gpioFunctions": "GPIO / functions",
         "Functions": {
@@ -1471,7 +1471,8 @@
             "botones": "Buttons",
             "parlantes": "Speakers",
             "conexiones": "Connections",
-            "check": "Checklist"
+            "check": "Checklist",
+            "workbench": "Wiring and assembly"
         },
         "ui": {
             "moreTabs": "More tabs",
@@ -4590,5 +4591,42 @@
             "check_5": "VBAT: replace the 100k/100k divider before connecting 2S to IO34, and update firmware scaling/calibration",
             "check_6": "Common ground: ESP32, amplifiers, LCD, buck, BMS"
         }
+    },
+    "PinExplorer": {
+        "select": "Explore a pin",
+        "prompt": "Choose a board pin",
+        "hint": "Select a terminal in the drawing or choose one here to inspect its functions.",
+        "position": "Header {header}, position {position} from the top.",
+        "illustration": "Illustrative top view. Check your board revision and silkscreen; mechanical details may vary."
+    },
+    "Assembly": {
+        "title": "Wiring and assembly bench",
+        "intro": "Work on one module at a time. Explore each signal and record the checks you performed on your build.",
+        "wiring": "Wiring",
+        "assembly": "Assembly",
+        "chooseModule": "Working module",
+        "module": "MODULE",
+        "power": "Module power",
+        "functional": "Functional diagram: numbered terminals identify connections in this list, not physical positions. Power rails and intermediate components are described above and in each signal detail.",
+        "diagram": "Module signal connections",
+        "noSignals": "This module has no GPIO signals. Follow the power connections shown above.",
+        "previous": "Previous",
+        "next": "Next",
+        "progress": "Recorded checks: {done} of {total}",
+        "unpowered": "Disconnect USB, power supplies and battery before wiring, soldering or checking continuity. Do not solder directly onto lithium cells.",
+        "prepareTitle": "Prepare and position",
+        "prepareBody": "Check the variant and silkscreen against the guide. Identify each endpoint in Wiring, cut and strip wires, prepare insulation and secure the parts. Check polarity and orientation before soldering.",
+        "solderTitle": "Solder and insulate",
+        "solderBody": "Use fume extraction and an iron stand. With a clean, tinned tip, heat the terminal and pad together and feed solder into the joint. Remove the solder, then the tip; let it cool without moving. Insulate exposed conductors and secure wires so they do not pull on the pad.",
+        "inspectTitle": "Inspect and test",
+        "inspectBody": "Use magnification to check that solder wets both terminal and pad, without bridges or loose strands. With power disconnected, check continuity of each connection and absence of shorts between rails. Visual inspection does not replace these measurements. Complete the project checklist before applying power.",
+        "confirm": "I completed: {step}",
+        "progressHint": "Personal record saved in this browser. Checking a step does not validate the circuit or automatically authorize power-up.",
+        "jointTitle": "Inspecting a joint",
+        "jointGood": "Pad and terminal wetted",
+        "jointBad": "Bridge between terminals",
+        "jointHint": "Reference sketches. Shine depends on the alloy; it alone does not establish joint quality.",
+        "sources": "Soldering technique reference",
+        "saveFailed": "Progress could not be saved. It will last only while this view remains open."
     }
 }
