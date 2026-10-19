@@ -4,8 +4,6 @@ import { useMemo, useState } from 'react';
 import { Input, Segmented } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import {
-  PIN_ORDER_HINT,
-  PIN_ORDER_LABEL,
   matchesQuery,
   moduleOf,
   orderPins,
@@ -14,6 +12,7 @@ import {
 } from '@/config/pinouts/wiring';
 import type { Pin, PinOrder, RailInfo } from '@/config/pinouts/wiring';
 import { getBreakout } from '@/config/pinouts/modules';
+import { useTranslations } from 'next-intl';
 import { useWiringGuide } from '../WiringGuideContext';
 import { PinBadge } from '../PinBadge';
 import { RichText } from '../RichText';
@@ -29,6 +28,7 @@ const RAIL_TAG: Record<RailInfo['k'], string> = {
 const ORDERS: PinOrder[] = ['module', 'header', 'gpio'];
 
 export function PinListView() {
+  const t = useTranslations('WiringGuide.ui');
   const guide = useWiringGuide();
   const [query, setQuery] = useState('');
   const [order, setOrder] = useState<PinOrder>('module');
@@ -84,31 +84,31 @@ export function PinListView() {
         <Segmented
           value={order}
           onChange={(value) => setOrder(value as PinOrder)}
-          options={ORDERS.map((o) => ({ label: PIN_ORDER_LABEL[o], value: o }))}
+          options={ORDERS.map((o) => ({ label: t(`order_${o}`), value: o }))}
         />
         <Input
           prefix={<SearchOutlined />}
-          placeholder="Buscar: 40, ALT, stick, pantalla…"
+          placeholder={t('search')} aria-label={t('search')}
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           allowClear
         />
       </div>
-      <p className={styles.orderHint}>{PIN_ORDER_HINT[order]}</p>
+      <p className={styles.orderHint}>{t(`hint_${order}`)}</p>
 
       <div className={styles.listWrap}>
         <table className={styles.pinTable}>
           <thead>
             <tr>
               <th>GPIO</th>
-              <th>Función</th>
-              {!grouped ? <th>Módulo</th> : null}
-              <th>Destino</th>
+              <th>{t('function')}</th>
+              {!grouped ? <th>{t('module')}</th> : null}
+              <th>{t('destination')}</th>
             </tr>
           </thead>
           <tbody>{rows.map(renderRow)}</tbody>
         </table>
-        {rows.length === 0 ? <div className={styles.empty}>Sin resultados</div> : null}
+        {rows.length === 0 ? <div className={styles.empty}>{t('empty')}</div> : null}
       </div>
 
       <div className={styles.rails}>
@@ -145,6 +145,7 @@ function ModuleRows({
   modIcon: string;
   grouped: boolean;
 }) {
+  const t = useTranslations('WiringGuide.ui');
   return (
     <>
       {head ? (
@@ -156,7 +157,7 @@ function ModuleRows({
                 {head.icon} {head.name}
               </span>
               <span className={`${styles.modRail} ${styles[railClass(head.rail)]}`}>
-                {head.rail === null ? 'sin alimentación' : `riel ${railLabel(head.rail)}`}
+                {head.rail === null ? t('noSupply') : t('rail', { voltage: railLabel(head.rail) })}
               </span>
             </div>
             <div className={styles.modPower}>

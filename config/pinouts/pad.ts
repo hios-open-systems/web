@@ -161,7 +161,7 @@ export const PAD_WIRING: WiringGuide = {
    RIEL 5V ─► Pantalla VCC ; NeoPixel + 2× ampli Vin
    GPIO21 ─[SW-PANTALLA]─► LED/BL de la pantalla   (¡el switch va acá, NO en el VCC!)
    RIEL 3V3 ─► Stick VCC + Encoder + ; GND común: TODO`,
-      tip: '**USB no alimenta nada** (uso wireless). El 3V3 sale del S3, no se inyecta. Presupuesto real a full: 2 amplis a 4Ω (~1.5A) + 12 SK6812 en blanco (~0.7A) + S3 con RF + backlight (~0.6A) ≈ **2.9A** → el buck tiene que ser **≥3A**, no 2A.',
+      tip: '**USB no alimenta nada** (uso wireless). El 3V3 sale del S3, no se inyecta. Presupuesto estimado a plena carga: 2 amplis a 4Ω (~1.5A) + 8 NeoPixel en blanco (~0.5A) + S3 con RF + backlight (~0.6A) ≈ **2.6A** → el buck tiene que ser **≥3A**, no 2A.',
       rows: [
         { pin: '5V', kind: 'pwr5', nm: 'Buck OUT 5.0V', to: '→ RIEL 5V (S3, pantalla, NeoPixel, 2× ampli, cap)' },
         { pin: '3V3', kind: 'pwr33', nm: 'S3 pin 3V3', to: '→ RIEL 3V3 (stick + encoder)' },
@@ -208,7 +208,7 @@ GPIO15    │       │       │       │       │
 FILA1 ────┼─ACC6──┼─ACC7──┼─ACC8──┼─ACC9──┼─ACC10
 GPIO16
 
-  cada tecla:  COLUMNA ──[switch]──|◄|── FILA
+  cada tecla:  COLUMNA ──[switch]──|>|── FILA
                                   diodo
                           (la RAYA mira a la FILA)`,
       tip: '2 filas **OUTPUT** (en reposo HIGH, se bajan de a una) + 5 columnas **INPUT_PULLUP**. Un diodo por tecla, **cátodo (la raya) hacia la FILA**. Sin diodos, apretar 3 teclas en L inventa una cuarta (ghosting). Si una tecla no registra, el diodo está al revés: dalo vuelta. Sirve 1N4148 o cualquier silicio (1N400x/1N540x); **LEDs no**.',
@@ -366,7 +366,7 @@ GPIO16
   ],
 
   check: [
-    'Buck medido a 5.0V ANTES de conectar el S3 (≥3A: 2 amplis + NeoPixel + backlight pican ~2.9A)',
+    'Buck medido a 5.0V ANTES de conectar el S3 (≥3A: 2 amplis + NeoPixel + backlight pican ~2.6A)',
     'Buck con headroom real: a 6.0V de entrada un buck no-síncrono se cae de regulación — cortá el pack a ~7.0V',
     'Masa común con continuidad (batería−, buck, S3, TFT, stick, encoder, matriz, ALT, amplis, NeoPixel)',
     'Cap bulk 470–1000µF en el riel 5V + 1000µF cerca de los amplis (polaridad OK)',

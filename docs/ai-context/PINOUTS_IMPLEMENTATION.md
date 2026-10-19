@@ -16,6 +16,20 @@ Los textos visibles del catálogo viven en `messages/{en,es,de,it}.json`, bajo `
 
 Las guías de montaje de proyectos (`config/pinouts/{pad,btdac,speaker}.ts` y `components/wiring-guide/`) tienen su propio modelo. No confundir un pinout genérico de módulo con la asignación de GPIO de un proyecto.
 
+## Traducciones de guías de montaje
+
+`localizeGuide` aplica `WiringGuideContent.<proyecto>` al modelo compartido. `mapGuideText` enumera únicamente campos de texto: no permite traducir GPIO, identificadores, roles eléctricos, rieles, topología ni orden del checklist. Las notas de módulos, filas, diagramas ASCII, keymap y checklist están completas en ES/EN/DE/IT. `WiringGuide.ui` contiene etiquetas, controles y descripciones accesibles de los SVG.
+
+Las claves de módulos usan su ID y las de pines su GPIO. Secciones, filas y checklist conservan índices: al agregar o reordenar contenido hay que actualizar los cuatro idiomas y revisar la persistencia del checklist. Las pruebas comparan la copia ES resuelta con la configuración y exigen el mismo conjunto de claves en todos los idiomas; no hay fallback silencioso a español.
+
+Los tokens `{sdResistance}`, `{sdVoltage}`, `{sdMin}` y `{sdMax}` se resuelven desde `MAX_SD_EXAMPLE_VALUES`, también en los diagramas ASCII. No copiar valores independientes a las traducciones. Los nombres técnicos de I²S se conservan para identificar BCLK/LRC/DOUT.
+
+La matriz del PAD tiene 5 pulsadores por fila y 2 por columna; las leyendas usan las dimensiones del modelo. El cátodo del diodo apunta hacia la fila tanto en SVG como en ASCII (`|>|`). La explicación no depende de nombres de colores. El presupuesto orientativo del PAD usa 8 NeoPixel (~0,5 A), no los 12 LEDs de una revisión anterior: ~2,6 A con las hipótesis indicadas, buck ≥3 A.
+
+Speaker sigue siendo referencia del firmware, no un circuito de batería validado: su divisor 100k/100k entrega 4,2 V desde 8,4 V. La guía ahora lo marca como **no conectar a GPIO34** hasta redimensionar el divisor y actualizar escala/calibración. También exige revisar pull-ups de 5 V del PCF8574 antes de conectar I²C al ESP32. Referencia de niveles eléctricos: [datasheet oficial ESP32, características DC](https://documentation.espressif.com/esp32_datasheet_en.html). No se modificó el firmware ni se afirmó haber validado hardware real.
+
+`npm run test:wiring-i18n` verifica cobertura, placeholders, identidad eléctrica y regresiones de diagramas. `tests/wiring-guide-translations.spec.ts` y `tests/mobile-wiring-guides.spec.ts` recorren las pestañas de los tres proyectos en los cuatro idiomas, incluidos el menú de pestañas desbordadas, búsqueda y conservación del checklist entre idiomas.
+
 ## Reutilización de I²S
 
 `lib/instruments/i2s.ts` es la fuente común del cálculo y las muestras:
@@ -40,7 +54,7 @@ La animación está ralentizada y respeta movimiento reducido. Cambiar valores a
 
 `max98357.ts` concentra pulldown, tolerancias y umbrales de SD del datasheet (Rev. 16, pp. 7/17). Distingue canal nominal de canal garantizado en todo el rango; la banda típica de Right no es una garantía. Considera una resistencia de placa en paralelo con la externa, ambas a Vin. Con otra topología se debe consultar el esquema. `null` representa conexión ausente; `0`, conexión directa.
 
-`Max98357Lab` se usa en el catálogo y las vistas de amplificadores PAD/Speaker. Las guías activan esa vista con `ampSd: true`; las instrucciones y SVG de esa vista se traducen mediante `Electronics.max`. Las otras secciones de las guías mantienen su contenido existente. El ejemplo a 5 V sin pullup usa valores derivados del modelo, no recomendaciones independientes por proyecto. `DividerReadout` se comparte con ADC; aquí no hay señales temporales que requieran osciloscopio.
+`Max98357Lab` se usa en el catálogo y las vistas de amplificadores PAD/Speaker. Las guías activan esa vista con `ampSd: true`; las instrucciones y SVG de esa vista se traducen mediante `Electronics.max`. Las demás secciones se traducen mediante `WiringGuideContent`. El ejemplo a 5 V sin pullup usa valores derivados del modelo, no recomendaciones independientes por proyecto. `DividerReadout` se comparte con ADC; aquí no hay señales temporales que requieran osciloscopio.
 
 Pruebas: `npm run test:electronics`, `tests/electronics-shared.spec.ts` y `tests/mobile-electronics.spec.ts` cubren décadas, límites, tolerancias, canales, pullups, cuatro idiomas, enlaces y vistas de proyectos.
 

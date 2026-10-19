@@ -2,7 +2,9 @@
 
 import type { ReactNode } from 'react';
 import { Tabs } from 'antd';
+import { EllipsisOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
+import { localizeGuide, type GuideCopy } from '@/config/pinouts/localizeGuide';
 import type { WiringGuide } from '@/config/pinouts/wiring';
 import { WiringGuideProvider } from './WiringGuideContext';
 import { WiringGuideHeader } from './WiringGuideHeader';
@@ -17,6 +19,9 @@ import styles from './wiring-guide.module.css';
 
 export function WiringGuideView({ guide }: { guide: WiringGuide }) {
   const t = useTranslations('WiringGuide');
+  const content = useTranslations('WiringGuideContent');
+  const copy = content.raw(guide.meta.id) as GuideCopy;
+  const localizedGuide = localizeGuide(guide, copy);
 
   const items: { key: string; label: string; children: ReactNode }[] = [
     { key: 'diagrama', label: t('tabs.diagrama'), children: <SystemDiagram /> },
@@ -43,11 +48,13 @@ export function WiringGuideView({ guide }: { guide: WiringGuide }) {
   items.push({ key: 'check', label: t('tabs.check'), children: <ChecklistView /> });
 
   return (
-    <WiringGuideProvider guide={guide}>
+    <WiringGuideProvider guide={localizedGuide}>
       <main className={styles.guide}>
         <WiringGuideHeader />
         <div className={styles.tabs}>
-          <Tabs items={items} />
+          <Tabs items={items}
+            more={{ trigger: 'click', icon: <EllipsisOutlined aria-label={t('ui.moreTabs')} /> }}
+            locale={{ dropdownAriaLabel: t('ui.moreTabs') }} />
         </div>
       </main>
     </WiringGuideProvider>

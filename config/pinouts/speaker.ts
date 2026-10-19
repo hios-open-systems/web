@@ -7,7 +7,7 @@ export const SPEAKER_WIRING: WiringGuide = {
     subtitle: 'Parlante ESP32 con 2× MAX98357 I2S en stereo, LCD 16×2 I2C y batería 2S.',
     rev: '1.0',
     mcu: 'ESP32-WROOM-32',
-    note: 'as-wired desde el firmware. ⚠️ La convención SD tipo "1MΩ→GND=Left" es datasheet-dudosa; el método confiable es MEDIR SD (ver selección de canal SD).',
+    note: 'Referencia del cableado del firmware. Verificá SD para elegir el canal. El divisor 100k/100k del firmware no es apto para una batería 2S cargada: rediseñalo y recalibrá antes de conectar GPIO34.',
     source: 'src/main.ino',
   },
 
@@ -37,14 +37,14 @@ export const SPEAKER_WIRING: WiringGuide = {
       rail: 5,
       power: 'VCC → 5V · GND → GND',
       step: 3,
-      tip: 'Backpack PCF8574 en 0x27.',
+      tip: 'Backpack PCF8574 en 0x27. Revisá la tensión de los pull-ups: las señales I2C del ESP32 no deben quedar a 5V.',
     },
     {
       id: 'battery',
-      name: 'Medición de batería',
+      name: 'Medición de batería — revisar',
       icon: '🔋',
       rail: null,
-      power: 'divisor 100k/100k desde el pack → GPIO34',
+      power: 'Referencia del firmware: 100k/100k → GPIO34. NO conectar a 2S: 8.4V → 4.2V.',
       step: 4,
     },
   ],
@@ -55,7 +55,7 @@ export const SPEAKER_WIRING: WiringGuide = {
     { gpio: 27, kind: 'i2s', name: 'I2S LRC', mod: 'audio', dest: '→ LRC de ambos amplis' },
     { gpio: 21, kind: 'i2c', name: 'I2C SDA', mod: 'lcd', dest: '→ SDA del LCD 16×2 (0x27)' },
     { gpio: 22, kind: 'i2c', name: 'I2C SCL', mod: 'lcd', dest: '→ SCL del LCD' },
-    { gpio: 34, kind: 'adc', name: 'VBAT ADC', mod: 'battery', dest: 'divisor 100k/100k del pack (×2) — solo lectura', note: 'IO34 es input-only' },
+    { gpio: 34, kind: 'adc', name: 'VBAT ADC', mod: 'battery', dest: 'Firmware: divisor 100k/100k (×2), pendiente de rediseño para 2S', note: 'GPIO34 es solo entrada. A 8.4V este divisor entrega 4.2V: no lo conectes al ADC del ESP32.' },
   ],
 
   rails: [
@@ -68,17 +68,17 @@ export const SPEAKER_WIRING: WiringGuide = {
       t: '⚡ Energía',
       group: 'power',
       ascii: `2× 18650 (2S) ─► BMS/cargador USB-C ─► LM2596 (5.0V, ≥2–3A) ─► ESP32 VIN + 2× ampli Vin + LCD`,
-      tip: 'Con parlantes el pico de corriente sube: buck **≥2–3A** + cap generoso. VBAT se lee por divisor 100k/100k en IO34.',
+      tip: 'Los parlantes aumentan el pico: buck **≥2–3A** y capacitor de reserva. **No conectes el divisor 100k/100k del firmware a 2S**: 8.4V se convierten en 4.2V sobre GPIO34. Dimensioná el divisor para el rango del ADC y las tolerancias; después actualizá la escala y calibración del firmware.',
       rows: [
         { pin: 'VIN', kind: 'pwr5', nm: 'ESP32 5V', to: 'del LM2596 OUT+' },
-        { pin: '34', kind: 'adc', nm: 'VBAT (lectura)', to: 'divisor 100k/100k del pack (×2)' },
+        { pin: '34', kind: 'adc', nm: 'VBAT (pendiente de revisión)', to: '100k/100k (×2): 8.4V → 4.2V; NO conectar a GPIO34' },
         { pin: 'GND', kind: 'gnd', nm: 'Masa común', to: 'todo junto' },
       ],
     },
     {
       t: '📟 LCD 16×2 (I2C)',
       group: 'misc',
-      tip: 'Backpack PCF8574 en **0x27** (a veces 0x3F). VCC a 5V, contraste con el pote de atrás.',
+      tip: 'Backpack PCF8574 en **0x27** (a veces 0x3F). VCC a 5V; contraste con el potenciómetro trasero. Revisá los pull-ups: si SDA/SCL suben a 5V, usá conversión de nivel I2C adecuada; no conectes lógica de 5V directamente al ESP32.',
       rows: [
         { pin: '21', kind: 'i2c', nm: 'SDA', to: '→ SDA del LCD' },
         { pin: '22', kind: 'i2c', nm: 'SCL', to: '→ SCL del LCD' },
@@ -89,10 +89,10 @@ export const SPEAKER_WIRING: WiringGuide = {
   check: [
     'LM2596 medido a 5.0V (≥2–3A por los parlantes) antes de conectar',
     'I2S: DOUT=25, BCLK=26, LRC=27 → AMBOS MAX98357 (bus compartido)',
-    'Canal L/R por pin SD de cada ampli — MEDIR SD (>1,4V=Left, 0,77–1,4V=Right)',
+    'MEDÍ cada pin SD. Usá el cálculo de SD y las ventanas garantizadas de cada canal, incluyendo el pull-up de la placa si existe.',
     'GAIN flotante = 9 dB · parlante 4–8Ω directo (filterless)',
-    'LCD I2C en SDA=21 / SCL=22, dirección 0x27',
-    'VBAT: divisor 100k/100k a IO34 (input-only)',
+    'LCD I2C: SDA=21 / SCL=22, dirección 0x27; verificá niveles lógicos seguros antes de conectar',
+    'VBAT: reemplazá el divisor 100k/100k antes de conectar 2S a IO34 y actualizá la escala/calibración del firmware',
     'Masa común: ESP32, amplis, LCD, buck, BMS',
   ],
 

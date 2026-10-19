@@ -1,29 +1,31 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useWiringGuide } from '../WiringGuideContext';
 import { WiringKeyCell } from './WiringKeyCell';
 import { WiringMatrix } from './WiringMatrix';
 import styles from '../wiring-guide.module.css';
 
 export function WiringView() {
+  const t = useTranslations('WiringGuide.ui');
   const guide = useWiringGuide();
   if (!guide.keymap) return null;
 
   return (
     <section>
       <p className={styles.hint}>
-        Cómo se suelda cada tecla y cómo se arma la matriz. Punto azul = tap a la COLUMNA · punto naranja = unión a la FILA. Los ALT no entran acá (son directos).
+        {t('wiringIntro')}
       </p>
-      <div className={styles.blockTitle}>Una tecla de acción (repetís lo mismo ×10)</div>
+      <div className={styles.blockTitle}>{t('oneKey', { count: guide.keymap.rows.length * guide.keymap.cols.length })}</div>
       <div className={styles.svgScroll}>
         <WiringKeyCell />
       </div>
-      <div className={styles.blockTitle}>Matriz 2×5 completa — 10 diodos</div>
+      <div className={styles.blockTitle}>{t('fullMatrix', { rows: guide.keymap.rows.length, cols: guide.keymap.cols.length, count: guide.keymap.rows.length * guide.keymap.cols.length })}</div>
       <div className={styles.svgScroll}>
         <WiringMatrix keymap={guide.keymap} />
       </div>
       <p className={styles.hint}>
-        Buses: cada FILA (naranja) une los cátodos de sus 5 diodos → su GPIO. Cada COLUMNA (azul) une la pata libre de sus 5 switches → su GPIO. Donde una columna cruza una fila sin tecla hay un salto (no se tocan). Si una tecla no registra, el diodo está al revés → dalo vuelta.
+        {t('buses', { rows: guide.keymap.rows.length, cols: guide.keymap.cols.length })}
       </p>
     </section>
   );

@@ -29,8 +29,8 @@ export function GroupsView() {
                   <PinBadge label={row.pin} role={row.kind} />
                   <div className={styles.rowMeat}>
                     <div className={styles.rowName}>{row.nm}</div>
-                    {row.to ? <div className={styles.rowTo}>{row.to}</div> : null}
-                    {row.note ? <div className={styles.note}>⚠ {row.note}</div> : null}
+                    {row.to ? <div className={styles.rowTo}><RichText text={row.to} /></div> : null}
+                    {row.note ? <div className={styles.note}>⚠ <RichText text={row.note} /></div> : null}
                   </div>
                 </div>
               ))}

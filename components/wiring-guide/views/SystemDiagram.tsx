@@ -2,6 +2,7 @@
 
 import { Fragment } from 'react';
 import { railLabel, type Pin, type PinKind, type Rail } from '@/config/pinouts/wiring';
+import { useTranslations } from 'next-intl';
 import { useWiringGuide } from '../WiringGuideContext';
 import styles from '../wiring-guide.module.css';
 
@@ -74,6 +75,7 @@ const wrapLoad = (text: string): string[] =>
   }, []);
 
 export function SystemDiagram() {
+  const t = useTranslations('WiringGuide.ui');
   const guide = useWiringGuide();
 
   const rows = [...guide.modules]
@@ -103,18 +105,15 @@ export function SystemDiagram() {
 
   const railMeta = (k: 'c5' | 'c33' | 'cg') =>
     k === 'c5'
-      ? { label: '5V', color: roleVar('pwr5'), feeds: iconsOn(5) || '→ de la fuente' }
+      ? { label: '5V', color: roleVar('pwr5'), feeds: iconsOn(5) || t('fromSupply') }
       : k === 'c33'
-        ? { label: '3V3', color: roleVar('pwr33'), feeds: iconsOn(33) || '→ (no se usa)' }
-        : { label: 'GND', color: roleVar('gnd'), feeds: 'común a todo el device' };
+        ? { label: '3V3', color: roleVar('pwr33'), feeds: iconsOn(33) || t('unused') }
+        : { label: 'GND', color: roleVar('gnd'), feeds: t('groundAll') };
 
   return (
     <section>
       <p className={styles.hint}>
-        El device de un vistazo: la placa al centro, cada módulo con sus GPIO y de qué riel come. La
-        caja punteada de la derecha es lo que cuelga del módulo <strong>sin GPIO propio</strong> (los
-        parlantes de los amplis). Se genera desde los mismos datos que la lista de pines (verificados
-        contra el firmware), así que <strong>no puede quedar desincronizado</strong> del cableado real.
+        {t('systemIntro')}
       </p>
       <div className={styles.svgScroll}>
         <svg
@@ -122,7 +121,7 @@ export function SystemDiagram() {
           viewBox={`0 0 ${W} ${H}`}
           xmlns="http://www.w3.org/2000/svg"
           role="img"
-          aria-label={`Diagrama de sistema del ${guide.meta.title}: la placa ${guide.meta.mcu} en el centro y sus ${n} módulos colgando con los GPIO de cada uno, más los rieles de alimentación.`}
+          aria-label={t('systemAria', { title: guide.meta.title, mcu: guide.meta.mcu, count: n })}
           fontFamily="ui-monospace, Menlo, monospace"
         >
           {/* placa */}
@@ -180,7 +179,7 @@ export function SystemDiagram() {
                 <text x={MOD_X + 14} y={my + 23} fontSize={15}>
                   {r.mod.icon}
                 </text>
-                <text x={MOD_X + 38} y={my + 24} fill="var(--pw-schem-ink)" fontSize={12} fontWeight={700}>
+                <text x={MOD_X + 38} y={my + 24} fill="var(--pw-schem-ink)" fontSize={r.mod.name.length > 37 ? 10 : 12} fontWeight={700}>
                   {r.mod.name}
                 </text>
                 {r.mod.rail !== null && (
@@ -206,8 +205,8 @@ export function SystemDiagram() {
                     </text>
                   </Fragment>
                 )}
-                <text x={MOD_X + 14} y={my + 45} fill={color} fontSize={10} fontWeight={800}>
-                  {KIND_LABEL[r.kind]}
+                <text x={MOD_X + 14} y={my + 45} fill={color} fontSize={8} fontWeight={800}>
+                  {r.kind === 'mtx' ? t('matrix') : r.kind === 'dim' ? t('reserved') : KIND_LABEL[r.kind]}
                 </text>
                 {chips.map(({ p, x, w }) => (
                   <Fragment key={p.gpio}>
@@ -287,7 +286,7 @@ export function SystemDiagram() {
             strokeDasharray="4 3"
           />
           <text x={PAD + 14} y={railY + 19} fill="var(--pw-schem-dim)" fontSize={11} fontWeight={800}>
-            ALIMENTACIÓN
+            {t('power')}
           </text>
           {guide.rails.map((rl, i) => {
             const meta = railMeta(rl.k);

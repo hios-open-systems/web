@@ -63,7 +63,8 @@
     "test:workspaces": "node --experimental-strip-types scripts/workspaces-selftest.ts",
     "test:qpsk": "node --experimental-strip-types scripts/qpsk-selftest.ts",
     "test:instruments": "node --experimental-strip-types scripts/instruments-selftest.ts",
-    "test:electronics": "node --experimental-strip-types scripts/electronics-selftest.ts"
+    "test:electronics": "node --experimental-strip-types scripts/electronics-selftest.ts",
+    "test:wiring-i18n": "node --experimental-strip-types scripts/wiring-i18n-selftest.ts"
   },
   "dependencies": {
     "@ant-design/cssinjs": "^1.18.0",

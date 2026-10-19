@@ -1,4 +1,5 @@
 'use client';
+import { RichText } from './RichText';
 import { PageIntro } from '@/components/ui/PageIntro';
 
 import Link from 'next/link';
@@ -48,6 +49,7 @@ export function WiringGuideHeader() {
       <p className={styles.source}>
         {meta.mcu} · <code className={styles.mono}>{meta.source}</code>
       </p>
+      <p className={styles.hint} data-guide-note><RichText text={meta.note} /></p>
       <div className={styles.legend}>
         {legend.map((item) => (
           <span
@@ -56,7 +58,7 @@ export function WiringGuideHeader() {
             style={{ color: `var(--pw-role-${item.role})`, borderColor: `var(--pw-role-${item.role})` }}
           >
             <span className={styles.legendDot} style={{ background: `var(--pw-role-${item.role})` }} />
-            {item.label}
+            {item.role === 'mtx' ? t('ui.matrix') : item.label}
           </span>
         ))}
       </div>

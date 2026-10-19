@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import { Fragment } from 'react';
 import type { KeyMap } from '@/config/pinouts/wiring';
 import { SCHEM } from './schematic';
@@ -11,6 +12,7 @@ const colX = (index: number) => X0 + index * DX;
 const HEIGHT = 360;
 
 export function WiringMatrix({ keymap }: { keymap: KeyMap }) {
+  const t = useTranslations('WiringGuide.ui');
   const { cols, rows } = keymap;
   const width = X0 + (cols.length - 1) * DX + 96;
 
@@ -20,7 +22,7 @@ export function WiringMatrix({ keymap }: { keymap: KeyMap }) {
       viewBox={`0 0 ${width} ${HEIGHT}`}
       xmlns="http://www.w3.org/2000/svg"
       role="img"
-      aria-label="Esquema de la matriz de botones 2×5: dos buses de fila (naranja) y cinco de columna (azul); cada tecla es un pulsador con un diodo hacia su fila."
+      aria-label={t('matrixAria', { rows: rows.length, cols: cols.length })}
       fontFamily="ui-monospace, Menlo, monospace"
       fontSize={11}
     >
@@ -28,7 +30,7 @@ export function WiringMatrix({ keymap }: { keymap: KeyMap }) {
         <Fragment key={`bus-${row.r}`}>
           <line x1={66} y1={BUS_Y[j]} x2={width - 16} y2={BUS_Y[j]} stroke={SCHEM.row} strokeWidth={2.5} />
           <text x={60} y={BUS_Y[j] - 5} fill={SCHEM.row} fontWeight={800} textAnchor="end">
-            FILA {row.r}
+            {t('row')} {row.r}
           </text>
           <text x={60} y={BUS_Y[j] + 10} fill="var(--pw-schem-dim)" textAnchor="end">
             GPIO {row.gpio}
@@ -40,7 +42,7 @@ export function WiringMatrix({ keymap }: { keymap: KeyMap }) {
         return (
           <Fragment key={`col-${col.c}`}>
             <text x={x} y={Y_TOP - 17} fill={SCHEM.col} fontWeight={800} textAnchor="middle">
-              COL {col.c}
+              {t('col')} {col.c}
             </text>
             <text x={x} y={Y_TOP - 4} fill="var(--pw-schem-dim)" textAnchor="middle">
               GPIO {col.gpio}

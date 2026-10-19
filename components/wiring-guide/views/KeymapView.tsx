@@ -1,10 +1,12 @@
 'use client';
 
 import { Fragment } from 'react';
+import { useTranslations } from 'next-intl';
 import { useWiringGuide } from '../WiringGuideContext';
 import styles from '../wiring-guide.module.css';
 
 export function KeymapView() {
+  const t = useTranslations('WiringGuide.ui');
   const guide = useWiringGuide();
   const keymap = guide.keymap;
   if (!keymap) return null;
@@ -12,10 +14,10 @@ export function KeymapView() {
   return (
     <section>
       <p className={styles.hint}>
-        Tu layout físico: la fila de navegación (directa) arriba y las 2 filas de acción (matriz 2×5) abajo. Cada tecla muestra qué GPIO de FILA y de COLUMNA la forman.
+        {t('layoutIntro', { rows: keymap.rows.length, cols: keymap.cols.length })}
       </p>
 
-      <div className={styles.blockTitle}>Fila navegación — directos (sin matriz)</div>
+      <div className={styles.blockTitle}>{t('navigation')}</div>
       <div className={styles.navRow}>
         {keymap.navRow.map((nav) =>
           nav.kind === 'aux' ? (
@@ -30,18 +32,18 @@ export function KeymapView() {
               <div className={styles.navName} style={{ color: 'var(--pw-role-pwm)' }}>
                 {nav.logic}
               </div>
-              <div className={styles.navSub}>GPIO {nav.gpio} · directo</div>
+              <div className={styles.navSub}>GPIO {nav.gpio} · {t('direct')}</div>
             </div>
           ),
         )}
       </div>
 
-      <div className={styles.blockTitle}>Filas de acción — matriz 2×5</div>
+      <div className={styles.blockTitle}>{t('actions', { rows: keymap.rows.length, cols: keymap.cols.length })}</div>
       <div className={styles.gridScroll}>
         <div className={styles.grid}>
           {keymap.cols.map((col) => (
             <div key={col.c} className={styles.colHead}>
-              COL {col.c}
+              {t('col')} {col.c}
               <br />
               GPIO {col.gpio}
             </div>
@@ -49,7 +51,7 @@ export function KeymapView() {
           {keymap.rows.map((row) => (
             <Fragment key={row.r}>
               <div className={styles.rowBand}>
-                FILA {row.r} · GPIO {row.gpio} — {row.name}
+                {t('row')} {row.r} · GPIO {row.gpio} — {row.name}
               </div>
               {row.keys.map((key, index) => (
                 <div key={key} className={styles.cell} style={{ borderColor: 'var(--pw-role-mtx)' }}>
@@ -57,7 +59,7 @@ export function KeymapView() {
                     {key}
                   </div>
                   <div className={styles.cellPins}>
-                    F·{row.gpio} × C·{keymap.cols[index].gpio}
+                    {t('row')}·{row.gpio} × {t('col')}·{keymap.cols[index].gpio}
                   </div>
                 </div>
               ))}
