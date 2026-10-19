@@ -3,6 +3,11 @@
 La app se sirve como **Cloudflare Worker** vía el adaptador `@opennextjs/cloudflare`
 (reemplaza al viejo modelo Pages / `next-on-pages`).
 
+**Estado de transición:** Workers Builds sigue publicando los pushes a main.
+Los pasos de publicación desde Actions permanecen desactivados mientras
+`WORKERS_BUILDS_DISABLED` no sea `true`. Por ahora CI y el deploy de Cloudflare
+son independientes; la barrera de CI se activa al completar el procedimiento siguiente.
+
 El flujo definido en `.github/workflows/ci.yml` publica desde GitHub Actions **solo
 cuando pasan todas las validaciones**. Antes de activarlo hay que completar la
 configuración externa indicada abajo; editar el YAML no desactiva Workers Builds.

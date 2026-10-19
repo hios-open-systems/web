@@ -16,7 +16,7 @@ assert.match(steps[guardIndex].run, /WORKERS_BUILDS_DISABLED/);
 assert.match(steps[guardIndex].run, /git\/ref\/heads\/main/);
 assert.match(steps[guardIndex].run, /GITHUB_SHA/);
 for (const step of steps.filter(step => step.env?.CLOUDFLARE_API_TOKEN || step.run === 'node scripts/verify-production.mjs')) {
-  assert.equal(step.if, "github.event_name == 'push' && github.ref == 'refs/heads/main'");
+  assert.equal(step.if, "github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.WORKERS_BUILDS_DISABLED == 'true'");
 }
 assert.equal(steps.filter(step => step.run === 'npx opennextjs-cloudflare build').length, 1);
 for (const [index, step] of steps.entries()) {

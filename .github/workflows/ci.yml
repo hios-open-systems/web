@@ -112,7 +112,7 @@ jobs:
       # PRs never receive deployment credentials. Default success() also means
       # that any failed validation above prevents publication.
       - name: Verify production deployment prerequisites
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.WORKERS_BUILDS_DISABLED == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -125,7 +125,7 @@ jobs:
           test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha)" = "$GITHUB_SHA" || { echo 'Refusing to deploy an outdated main commit.'; exit 1; }
 
       - name: Deploy tested Worker to production
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.WORKERS_BUILDS_DISABLED == 'true'
         run: npx opennextjs-cloudflare deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -133,5 +133,5 @@ jobs:
           WRANGLER_SEND_METRICS: 'false'
 
       - name: Verify production version and routes
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.WORKERS_BUILDS_DISABLED == 'true'
         run: node scripts/verify-production.mjs
