@@ -1,0 +1,36 @@
+{
+  "units": "mm",
+  "revision": "concept-01",
+  "status": "Volumetric study. All component envelopes require physical measurement.",
+  "confirmed_inventory": {
+    "source": "../README.md and ../../../config/pinouts/pad.ts",
+    "user_confirmation": "2026-10-20: current hardware has ESP32-S3 only, no GPIO Extension Board.",
+    "action_buttons": 10,
+    "alt_buttons": 2,
+    "battery_cells": 2,
+    "speakers": 2,
+    "amplifiers": 2,
+    "led_boards": 2,
+    "leds_per_board": 4,
+    "switches": 2
+  },
+  "envelopes": {
+    "display": {"size": [112, 68, 10], "status": "assumed", "note": "Complete 4-inch module including PCB and rear protrusions; not derived from legacy 3.5-inch STL."},
+    "bezel": {"size": [116, 72, 12], "status": "design", "note": "Concept bounding envelope; no fasteners or glass supports designed."},
+    "active_screen": {"size": [84.54, 56.36, 0.3], "status": "calculated", "note": "Nominal 4-inch diagonal with 480:320 aspect; not a measured aperture."},
+    "keycap": {"size": [16, 16, 7], "status": "assumed", "note": "Same 12 physical buttons, 18 mm center pitch."},
+    "button_body": {"size": [12, 12, 11], "status": "assumed", "note": "Below the mounting plane; add separate 5 mm solder envelope."},
+    "joystick": {"size": [34, 26, 14], "status": "assumed", "note": "Board plus mechanism below cap; thumb-motion envelope also included."},
+    "encoder": {"size": [26, 19, 14], "status": "assumed", "note": "Board and body; knob separate."},
+    "esp32": {"size": [60, 29, 14], "status": "assumed", "note": "Populated DevKit envelope, including headers; no expansion carrier."},
+    "battery_holder": {"size": [80, 42, 21], "status": "assumed", "note": "Complete existing two-cell holder with cells, terminals and tabs. Must measure."},
+    "cell": {"size": [65, 18, 18], "status": "nominal", "note": "18650 nominal only. Protected cells can be larger; complete holder governs packing."},
+    "buck": {"size": [66, 36, 16], "status": "assumed", "note": "LM2596S including voltmeter, terminals and inductor. Requires side/rear inspection access."},
+    "bms": {"size": [42, 18, 6], "status": "assumed", "note": "Actual 2S USB-C board variant unmeasured."},
+    "speaker": {"size": [56, 18, 15], "status": "assumed", "note": "Rectangular drivers seen in rev09 photos; mounting ears included provisionally. Measure first."},
+    "amplifier": {"size": [20, 16, 6], "status": "assumed", "note": "MAX98357A populated module; terminals/wires require confirmation."},
+    "led_board": {"size": [20, 20, 5], "status": "assumed", "note": "Each existing 2x2 NeoPixel board. Preserve both."},
+    "switch": {"size": [12, 8, 12], "status": "assumed", "note": "SW-CELDAS and SW-PANTALLA including terminal envelope."},
+    "bulk_cap": {"size": [10, 10, 13], "status": "assumed", "note": "Two conservative reserves from wiring guide; presence and actual size pending."}
+  }
+}

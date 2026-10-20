@@ -1,0 +1,273 @@
+<div id="pad-packaging-study">
+  <style>
+    #pad-packaging-study .study-stage { width:100%; height:390px; display:block; touch-action:pan-y; }
+    #pad-packaging-study .study-stage text { fill:var(--foreground); font-family:inherit; }
+    #pad-packaging-study .study-caption { margin:8px 0; }
+    #pad-packaging-study .study-metrics { display:flex; flex-wrap:wrap; gap:8px 24px; margin:12px 0; }
+    #pad-packaging-study .study-controls { margin:12px 0; }
+    #pad-packaging-study .part-detail { min-height:3em; margin-top:8px; }
+    #pad-packaging-study .study-stage polygon { stroke-linejoin:round; }
+    #pad-packaging-study #pad-legend[hidden] { display:none; }
+    @media(max-width:480px) { #pad-packaging-study .study-stage { height:330px; } }
+  </style>
+  <div class="viz-controls" aria-label="Distribuciones">
+    <button class="btn" type="button" data-layout="0" aria-pressed="false">Lineal</button>
+    <button class="btn" type="button" data-layout="1" aria-pressed="true">Cuadrícula</button>
+    <button class="btn" type="button" data-layout="2" aria-pressed="false">Doble fila</button>
+  </div>
+  <div class="study-metrics tabular-nums" aria-live="polite">
+    <span id="pad-base"></span><span id="pad-footprint"></span>
+  </div>
+  <svg class="study-stage" role="img" aria-label="Ensamble volumétrico del pad; pantalla basculante y componentes a escala"></svg>
+  <div id="pad-legend" class="viz-row text-small" hidden>
+    <span><span style="color:var(--viz-series-2)">●</span> Alimentación</span>
+    <span><span style="color:var(--viz-series-1)">●</span> Electrónica y LEDs</span>
+    <span><span style="color:var(--viz-series-3)">●</span> Audio</span>
+    <span>Controles en neutro</span>
+  </div>
+  <div class="viz-controls study-controls">
+    <label class="form-label">Pantalla: <span id="pad-angle-value">55°</span>
+      <input class="form-range" id="pad-angle" type="range" min="0" max="75" value="55" step="1">
+    </label>
+    <label class="form-label">Vista
+      <select class="form-select" id="pad-view"><option value="iso">Perspectiva</option><option value="top">Desde arriba</option><option value="side">Perfil y eje</option></select>
+    </label>
+    <label class="form-check"><input class="form-check-input" id="pad-inside" type="checkbox"><span class="form-check-label">Ver interior</span></label>
+    <label class="form-check"><input class="form-check-input" id="pad-clearance" type="checkbox"><span class="form-check-label">Espacios libres</span></label>
+  </div>
+  <div id="pad-overall" class="study-caption tabular-nums" aria-live="polite"></div>
+  <div class="viz-controls">
+    <label class="form-label">Inspeccionar componente
+      <select class="form-select" id="pad-part"></select>
+    </label>
+  </div>
+  <div id="pad-detail" class="part-detail text-small" aria-live="polite"></div>
+  <div id="pad-note" class="text-small study-caption"></div>
+  <div class="text-small text-muted">Cotas provisionales · Referencia: 110 × 160 mm · Ángulo desde la horizontal · Huella sin cables · A1/A2 = ALT · No imprimible</div>
+  <script>
+  (() => {
+    const study = {"spec":{"units":"mm","revision":"concept-01","status":"Volumetric study. All component envelopes require physical measurement.","confirmed_inventory":{"source":"../README.md and ../../../config/pinouts/pad.ts","user_confirmation":"2026-10-20: current hardware has ESP32-S3 only, no GPIO Extension Board.","action_buttons":10,"alt_buttons":2,"battery_cells":2,"speakers":2,"amplifiers":2,"led_boards":2,"leds_per_board":4,"switches":2},"envelopes":{"display":{"size":[112,68,10],"status":"assumed","note":"Complete 4-inch module including PCB and rear protrusions; not derived from legacy 3.5-inch STL."},"bezel":{"size":[116,72,12],"status":"design","note":"Concept bounding envelope; no fasteners or glass supports designed."},"active_screen":{"size":[84.54,56.36,0.3],"status":"calculated","note":"Nominal 4-inch diagonal with 480:320 aspect; not a measured aperture."},"keycap":{"size":[16,16,7],"status":"assumed","note":"Same 12 physical buttons, 18 mm center pitch."},"button_body":{"size":[12,12,11],"status":"assumed","note":"Below the mounting plane; add separate 5 mm solder envelope."},"joystick":{"size":[34,26,14],"status":"assumed","note":"Board plus mechanism below cap; thumb-motion envelope also included."},"encoder":{"size":[26,19,14],"status":"assumed","note":"Board and body; knob separate."},"esp32":{"size":[60,29,14],"status":"assumed","note":"Populated DevKit envelope, including headers; no expansion carrier."},"battery_holder":{"size":[80,42,21],"status":"assumed","note":"Complete existing two-cell holder with cells, terminals and tabs. Must measure."},"cell":{"size":[65,18,18],"status":"nominal","note":"18650 nominal only. Protected cells can be larger; complete holder governs packing."},"buck":{"size":[66,36,16],"status":"assumed","note":"LM2596S including voltmeter, terminals and inductor. Requires side/rear inspection access."},"bms":{"size":[42,18,6],"status":"assumed","note":"Actual 2S USB-C board variant unmeasured."},"speaker":{"size":[56,18,15],"status":"assumed","note":"Rectangular drivers seen in rev09 photos; mounting ears included provisionally. Measure first."},"amplifier":{"size":[20,16,6],"status":"assumed","note":"MAX98357A populated module; terminals/wires require confirmation."},"led_board":{"size":[20,20,5],"status":"assumed","note":"Each existing 2x2 NeoPixel board. Preserve both."},"switch":{"size":[12,8,12],"status":"assumed","note":"SW-CELDAS and SW-PANTALLA including terminal envelope."},"bulk_cap":{"size":[10,10,13],"status":"assumed","note":"Two conservative reserves from wiring guide; presence and actual size pending."}}},"baseline":{"source":"Existing STL bounds; STL units interpreted as mm.","parts":{"box":[[-55.0,55.0],[0.0,160.0],[-30.0,0.0]],"front_plate":[[-55.0,55.0],[0.0,160.0],[-32.5,-30.0]],"tapa-superior":[[-55.0,55.0],[0.0,160.0],[0.0,2.5]]},"base":[110.0,160.0,35.0],"excludes":"Actual screen, pivot, feet and any protrusions in current physical assembly."},"scenes":[{"id":"lineal","name":"Lineal","base":[120,134,38],"pivot":[60,83,46],"angle":55,"note":"Conserva 2×5 y una fila de navegación. Más familiar; pantalla sobresale al bajarla.","keys":[[16,12],[34,12],[52,12],[70,12],[88,12],[16,32],[34,32],[52,32],[70,32],[88,32],[16,56],[34,56]],"joystick":[96,55],"encoder":[58,56],"parts":[{"id":"battery","label":"Portaceldas + 2×18650","size":[80,42,21],"center":[44.0,96.0,13.5],"category":"power","group":"battery","kind":"battery_holder"},{"id":"buck","label":"LM2596S + voltímetro","size":[66,36,16],"center":[58.0,21.0,11.0],"category":"power","group":"buck","kind":"buck"},{"id":"esp32","label":"ESP32-S3","size":[60,29,14],"center":[55.0,56.5,10.0],"category":"electronics","group":"esp32","kind":"esp32"},{"id":"bms","label":"BMS 2S USB-C","size":[18,42,6],"center":[99.0,96.0,6.0],"category":"power","group":"bms","kind":"bms"},{"id":"speaker-l","label":"Parlante izquierdo","size":[18,56,15],"center":[12.0,31.0,10.5],"category":"audio","group":"speaker-l","kind":"speaker"},{"id":"speaker-r","label":"Parlante derecho","size":[18,56,15],"center":[108.0,31.0,10.5],"category":"audio","group":"speaker-r","kind":"speaker"},{"id":"led-0","label":"NeoPixel zona 1 · 4 LEDs","size":[20,20,5],"center":[16.0,90.0,29.5],"category":"electronics","group":"led-0","kind":"led_board"},{"id":"led-1","label":"NeoPixel zona 2 · 4 LEDs","size":[20,20,5],"center":[40.0,90.0,29.5],"category":"electronics","group":"led-1","kind":"led_board"},{"id":"amp-0","label":"MAX98357A L","size":[20,16,6],"center":[64.0,90.0,30.0],"category":"audio","group":"amp-0","kind":"amplifier"},{"id":"amp-1","label":"MAX98357A R","size":[20,16,6],"center":[64.0,108.0,30.0],"category":"audio","group":"amp-1","kind":"amplifier"},{"id":"cap-0","label":"Reserva condensador 1","size":[10,10,13],"center":[8.0,67.0,9.5],"category":"power","group":"cap-0","kind":"bulk_cap","provisional":true},{"id":"cap-1","label":"Reserva condensador 2","size":[10,10,13],"center":[19.0,67.0,9.5],"category":"power","group":"cap-1","kind":"bulk_cap","provisional":true},{"id":"switch-0","label":"SW-CELDAS","size":[12,8,12],"center":[80.0,128.0,31.0],"category":"controls","group":"switch-0","kind":"switch"},{"id":"switch-1","label":"SW-PANTALLA","size":[12,8,12],"center":[94.0,128.0,31.0],"category":"controls","group":"switch-1","kind":"switch"},{"id":"key-1","label":"1","size":[16,16,7],"center":[16,12,41.5],"category":"controls","group":"key-1","kind":"keycap","top_label":"1"},{"id":"key-1-body","label":"Pulsador 1","size":[12,12,11],"center":[16,12,32.5],"category":"controls","group":"key-1","kind":"button_body"},{"id":"key-1-wire","label":"Soldadura 1","size":[14,14,5],"center":[16,12,24.5],"category":"clearance","group":"key-1","reserve":true},{"id":"key-2","label":"2","size":[16,16,7],"center":[34,12,41.5],"category":"controls","group":"key-2","kind":"keycap","top_label":"2"},{"id":"key-2-body","label":"Pulsador 2","size":[12,12,11],"center":[34,12,32.5],"category":"controls","group":"key-2","kind":"button_body"},{"id":"key-2-wire","label":"Soldadura 2","size":[14,14,5],"center":[34,12,24.5],"category":"clearance","group":"key-2","reserve":true},{"id":"key-3","label":"3","size":[16,16,7],"center":[52,12,41.5],"category":"controls","group":"key-3","kind":"keycap","top_label":"3"},{"id":"key-3-body","label":"Pulsador 3","size":[12,12,11],"center":[52,12,32.5],"category":"controls","group":"key-3","kind":"button_body"},{"id":"key-3-wire","label":"Soldadura 3","size":[14,14,5],"center":[52,12,24.5],"category":"clearance","group":"key-3","reserve":true},{"id":"key-4","label":"4","size":[16,16,7],"center":[70,12,41.5],"category":"controls","group":"key-4","kind":"keycap","top_label":"4"},{"id":"key-4-body","label":"Pulsador 4","size":[12,12,11],"center":[70,12,32.5],"category":"controls","group":"key-4","kind":"button_body"},{"id":"key-4-wire","label":"Soldadura 4","size":[14,14,5],"center":[70,12,24.5],"category":"clearance","group":"key-4","reserve":true},{"id":"key-5","label":"5","size":[16,16,7],"center":[88,12,41.5],"category":"controls","group":"key-5","kind":"keycap","top_label":"5"},{"id":"key-5-body","label":"Pulsador 5","size":[12,12,11],"center":[88,12,32.5],"category":"controls","group":"key-5","kind":"button_body"},{"id":"key-5-wire","label":"Soldadura 5","size":[14,14,5],"center":[88,12,24.5],"category":"clearance","group":"key-5","reserve":true},{"id":"key-6","label":"6","size":[16,16,7],"center":[16,32,41.5],"category":"controls","group":"key-6","kind":"keycap","top_label":"6"},{"id":"key-6-body","label":"Pulsador 6","size":[12,12,11],"center":[16,32,32.5],"category":"controls","group":"key-6","kind":"button_body"},{"id":"key-6-wire","label":"Soldadura 6","size":[14,14,5],"center":[16,32,24.5],"category":"clearance","group":"key-6","reserve":true},{"id":"key-7","label":"7","size":[16,16,7],"center":[34,32,41.5],"category":"controls","group":"key-7","kind":"keycap","top_label":"7"},{"id":"key-7-body","label":"Pulsador 7","size":[12,12,11],"center":[34,32,32.5],"category":"controls","group":"key-7","kind":"button_body"},{"id":"key-7-wire","label":"Soldadura 7","size":[14,14,5],"center":[34,32,24.5],"category":"clearance","group":"key-7","reserve":true},{"id":"key-8","label":"8","size":[16,16,7],"center":[52,32,41.5],"category":"controls","group":"key-8","kind":"keycap","top_label":"8"},{"id":"key-8-body","label":"Pulsador 8","size":[12,12,11],"center":[52,32,32.5],"category":"controls","group":"key-8","kind":"button_body"},{"id":"key-8-wire","label":"Soldadura 8","size":[14,14,5],"center":[52,32,24.5],"category":"clearance","group":"key-8","reserve":true},{"id":"key-9","label":"9","size":[16,16,7],"center":[70,32,41.5],"category":"controls","group":"key-9","kind":"keycap","top_label":"9"},{"id":"key-9-body","label":"Pulsador 9","size":[12,12,11],"center":[70,32,32.5],"category":"controls","group":"key-9","kind":"button_body"},{"id":"key-9-wire","label":"Soldadura 9","size":[14,14,5],"center":[70,32,24.5],"category":"clearance","group":"key-9","reserve":true},{"id":"key-10","label":"10","size":[16,16,7],"center":[88,32,41.5],"category":"controls","group":"key-10","kind":"keycap","top_label":"10"},{"id":"key-10-body","label":"Pulsador 10","size":[12,12,11],"center":[88,32,32.5],"category":"controls","group":"key-10","kind":"button_body"},{"id":"key-10-wire","label":"Soldadura 10","size":[14,14,5],"center":[88,32,24.5],"category":"clearance","group":"key-10","reserve":true},{"id":"key-11","label":"ALT1","size":[16,16,7],"center":[16,56,41.5],"category":"controls","group":"key-11","kind":"keycap","top_label":"ALT1"},{"id":"key-11-body","label":"Pulsador ALT1","size":[12,12,11],"center":[16,56,32.5],"category":"controls","group":"key-11","kind":"button_body"},{"id":"key-11-wire","label":"Soldadura ALT1","size":[14,14,5],"center":[16,56,24.5],"category":"clearance","group":"key-11","reserve":true},{"id":"key-12","label":"ALT2","size":[16,16,7],"center":[34,56,41.5],"category":"controls","group":"key-12","kind":"keycap","top_label":"ALT2"},{"id":"key-12-body","label":"Pulsador ALT2","size":[12,12,11],"center":[34,56,32.5],"category":"controls","group":"key-12","kind":"button_body"},{"id":"key-12-wire","label":"Soldadura ALT2","size":[14,14,5],"center":[34,56,24.5],"category":"clearance","group":"key-12","reserve":true},{"id":"joystick","label":"Joystick","size":[34,26,14],"center":[96,55,31.0],"category":"controls","group":"joystick","kind":"joystick"},{"id":"joystick-cap","label":"Joystick","size":[28,28,12],"center":[96,55,44.0],"category":"controls","group":"joystick","shape":"cylinder","top_label":"JOY"},{"id":"joystick-wire","label":"Cableado joystick","size":[34,26,4],"center":[96,55,22],"category":"clearance","group":"joystick","reserve":true},{"id":"encoder","label":"Encoder","size":[26,19,14],"center":[58,56,31.0],"category":"controls","group":"encoder","kind":"encoder"},{"id":"encoder-cap","label":"Encoder","size":[22,22,12],"center":[58,56,44.0],"category":"controls","group":"encoder","shape":"cylinder","top_label":"ENC"},{"id":"encoder-wire","label":"Cableado encoder","size":[26,19,4],"center":[58,56,22],"category":"clearance","group":"encoder","reserve":true},{"id":"thumb","label":"Recorrido provisional del pulgar","size":[38,38,20],"center":[96,55,50],"category":"clearance","group":"joystick","reserve":true,"ergonomic":true},{"id":"base","label":"Volumen de carcasa propuesto","size":[120,134,38],"center":[60.0,67.0,19.0],"category":"structure","group":"base","container":true},{"id":"display","label":"Pantalla 4″ con bisel provisional","size":[116,72,12],"center":[0,36.0,0],"category":"display","group":"screen-hinge","moving":true,"kind":"bezel"},{"id":"hinge--1","label":"Reserva soporte lateral","size":[2,12,14],"center":[1.0,83,41],"category":"structure","group":"screen-hinge"},{"id":"hinge-1","label":"Reserva soporte lateral","size":[2,12,14],"center":[119.0,83,41],"category":"structure","group":"screen-hinge"},{"id":"screen-cable","label":"Bucle flexible de pantalla","size":[14,8,12],"center":[60,75,37],"category":"clearance","group":"screen-hinge","reserve":true},{"id":"usb-space","label":"Acceso USB ESP32 (orientación a confirmar)","size":[49,10,8],"center":[109.5,66,10],"category":"clearance","group":"esp32","reserve":true},{"id":"charge-space","label":"Acceso USB-C BMS (orientación a confirmar)","size":[12,31,8],"center":[99,132.5,8],"category":"clearance","group":"bms","reserve":true}]},{"id":"cuadricula","name":"Cuadrícula","base":[128,120,38],"pivot":[64,68,46],"angle":55,"note":"12 teclas en 4×3; joystick y encoder a la derecha. Menor huella de base.","keys":[[14,12],[32,12],[50,12],[68,12],[14,30],[32,30],[50,30],[68,30],[14,48],[32,48],[50,48],[68,48]],"joystick":[104,42],"encoder":[104,13],"parts":[{"id":"battery","label":"Portaceldas + 2×18650","size":[80,42,21],"center":[44.0,96.0,13.5],"category":"power","group":"battery","kind":"battery_holder"},{"id":"buck","label":"LM2596S + voltímetro","size":[66,36,16],"center":[58.0,21.0,11.0],"category":"power","group":"buck","kind":"buck"},{"id":"esp32","label":"ESP32-S3","size":[60,29,14],"center":[55.0,56.5,10.0],"category":"electronics","group":"esp32","kind":"esp32"},{"id":"bms","label":"BMS 2S USB-C","size":[18,42,6],"center":[99.0,96.0,6.0],"category":"power","group":"bms","kind":"bms"},{"id":"speaker-l","label":"Parlante izquierdo","size":[18,56,15],"center":[12.0,31.0,10.5],"category":"audio","group":"speaker-l","kind":"speaker"},{"id":"speaker-r","label":"Parlante derecho","size":[18,56,15],"center":[116.0,31.0,10.5],"category":"audio","group":"speaker-r","kind":"speaker"},{"id":"led-0","label":"NeoPixel zona 1 · 4 LEDs","size":[20,20,5],"center":[16.0,90.0,29.5],"category":"electronics","group":"led-0","kind":"led_board"},{"id":"led-1","label":"NeoPixel zona 2 · 4 LEDs","size":[20,20,5],"center":[40.0,90.0,29.5],"category":"electronics","group":"led-1","kind":"led_board"},{"id":"amp-0","label":"MAX98357A L","size":[20,16,6],"center":[64.0,90.0,30.0],"category":"audio","group":"amp-0","kind":"amplifier"},{"id":"amp-1","label":"MAX98357A R","size":[20,16,6],"center":[64.0,108.0,30.0],"category":"audio","group":"amp-1","kind":"amplifier"},{"id":"cap-0","label":"Reserva condensador 1","size":[10,10,13],"center":[8.0,67.0,9.5],"category":"power","group":"cap-0","kind":"bulk_cap","provisional":true},{"id":"cap-1","label":"Reserva condensador 2","size":[10,10,13],"center":[19.0,67.0,9.5],"category":"power","group":"cap-1","kind":"bulk_cap","provisional":true},{"id":"switch-0","label":"SW-CELDAS","size":[12,8,12],"center":[80.0,114.0,31.0],"category":"controls","group":"switch-0","kind":"switch"},{"id":"switch-1","label":"SW-PANTALLA","size":[12,8,12],"center":[94.0,114.0,31.0],"category":"controls","group":"switch-1","kind":"switch"},{"id":"key-1","label":"1","size":[16,16,7],"center":[14,12,41.5],"category":"controls","group":"key-1","kind":"keycap","top_label":"1"},{"id":"key-1-body","label":"Pulsador 1","size":[12,12,11],"center":[14,12,32.5],"category":"controls","group":"key-1","kind":"button_body"},{"id":"key-1-wire","label":"Soldadura 1","size":[14,14,5],"center":[14,12,24.5],"category":"clearance","group":"key-1","reserve":true},{"id":"key-2","label":"2","size":[16,16,7],"center":[32,12,41.5],"category":"controls","group":"key-2","kind":"keycap","top_label":"2"},{"id":"key-2-body","label":"Pulsador 2","size":[12,12,11],"center":[32,12,32.5],"category":"controls","group":"key-2","kind":"button_body"},{"id":"key-2-wire","label":"Soldadura 2","size":[14,14,5],"center":[32,12,24.5],"category":"clearance","group":"key-2","reserve":true},{"id":"key-3","label":"3","size":[16,16,7],"center":[50,12,41.5],"category":"controls","group":"key-3","kind":"keycap","top_label":"3"},{"id":"key-3-body","label":"Pulsador 3","size":[12,12,11],"center":[50,12,32.5],"category":"controls","group":"key-3","kind":"button_body"},{"id":"key-3-wire","label":"Soldadura 3","size":[14,14,5],"center":[50,12,24.5],"category":"clearance","group":"key-3","reserve":true},{"id":"key-4","label":"4","size":[16,16,7],"center":[68,12,41.5],"category":"controls","group":"key-4","kind":"keycap","top_label":"4"},{"id":"key-4-body","label":"Pulsador 4","size":[12,12,11],"center":[68,12,32.5],"category":"controls","group":"key-4","kind":"button_body"},{"id":"key-4-wire","label":"Soldadura 4","size":[14,14,5],"center":[68,12,24.5],"category":"clearance","group":"key-4","reserve":true},{"id":"key-5","label":"5","size":[16,16,7],"center":[14,30,41.5],"category":"controls","group":"key-5","kind":"keycap","top_label":"5"},{"id":"key-5-body","label":"Pulsador 5","size":[12,12,11],"center":[14,30,32.5],"category":"controls","group":"key-5","kind":"button_body"},{"id":"key-5-wire","label":"Soldadura 5","size":[14,14,5],"center":[14,30,24.5],"category":"clearance","group":"key-5","reserve":true},{"id":"key-6","label":"6","size":[16,16,7],"center":[32,30,41.5],"category":"controls","group":"key-6","kind":"keycap","top_label":"6"},{"id":"key-6-body","label":"Pulsador 6","size":[12,12,11],"center":[32,30,32.5],"category":"controls","group":"key-6","kind":"button_body"},{"id":"key-6-wire","label":"Soldadura 6","size":[14,14,5],"center":[32,30,24.5],"category":"clearance","group":"key-6","reserve":true},{"id":"key-7","label":"7","size":[16,16,7],"center":[50,30,41.5],"category":"controls","group":"key-7","kind":"keycap","top_label":"7"},{"id":"key-7-body","label":"Pulsador 7","size":[12,12,11],"center":[50,30,32.5],"category":"controls","group":"key-7","kind":"button_body"},{"id":"key-7-wire","label":"Soldadura 7","size":[14,14,5],"center":[50,30,24.5],"category":"clearance","group":"key-7","reserve":true},{"id":"key-8","label":"8","size":[16,16,7],"center":[68,30,41.5],"category":"controls","group":"key-8","kind":"keycap","top_label":"8"},{"id":"key-8-body","label":"Pulsador 8","size":[12,12,11],"center":[68,30,32.5],"category":"controls","group":"key-8","kind":"button_body"},{"id":"key-8-wire","label":"Soldadura 8","size":[14,14,5],"center":[68,30,24.5],"category":"clearance","group":"key-8","reserve":true},{"id":"key-9","label":"9","size":[16,16,7],"center":[14,48,41.5],"category":"controls","group":"key-9","kind":"keycap","top_label":"9"},{"id":"key-9-body","label":"Pulsador 9","size":[12,12,11],"center":[14,48,32.5],"category":"controls","group":"key-9","kind":"button_body"},{"id":"key-9-wire","label":"Soldadura 9","size":[14,14,5],"center":[14,48,24.5],"category":"clearance","group":"key-9","reserve":true},{"id":"key-10","label":"10","size":[16,16,7],"center":[32,48,41.5],"category":"controls","group":"key-10","kind":"keycap","top_label":"10"},{"id":"key-10-body","label":"Pulsador 10","size":[12,12,11],"center":[32,48,32.5],"category":"controls","group":"key-10","kind":"button_body"},{"id":"key-10-wire","label":"Soldadura 10","size":[14,14,5],"center":[32,48,24.5],"category":"clearance","group":"key-10","reserve":true},{"id":"key-11","label":"ALT1","size":[16,16,7],"center":[50,48,41.5],"category":"controls","group":"key-11","kind":"keycap","top_label":"ALT1"},{"id":"key-11-body","label":"Pulsador ALT1","size":[12,12,11],"center":[50,48,32.5],"category":"controls","group":"key-11","kind":"button_body"},{"id":"key-11-wire","label":"Soldadura ALT1","size":[14,14,5],"center":[50,48,24.5],"category":"clearance","group":"key-11","reserve":true},{"id":"key-12","label":"ALT2","size":[16,16,7],"center":[68,48,41.5],"category":"controls","group":"key-12","kind":"keycap","top_label":"ALT2"},{"id":"key-12-body","label":"Pulsador ALT2","size":[12,12,11],"center":[68,48,32.5],"category":"controls","group":"key-12","kind":"button_body"},{"id":"key-12-wire","label":"Soldadura ALT2","size":[14,14,5],"center":[68,48,24.5],"category":"clearance","group":"key-12","reserve":true},{"id":"joystick","label":"Joystick","size":[34,26,14],"center":[104,42,31.0],"category":"controls","group":"joystick","kind":"joystick"},{"id":"joystick-cap","label":"Joystick","size":[28,28,12],"center":[104,42,44.0],"category":"controls","group":"joystick","shape":"cylinder","top_label":"JOY"},{"id":"joystick-wire","label":"Cableado joystick","size":[34,26,4],"center":[104,42,22],"category":"clearance","group":"joystick","reserve":true},{"id":"encoder","label":"Encoder","size":[26,19,14],"center":[104,13,31.0],"category":"controls","group":"encoder","kind":"encoder"},{"id":"encoder-cap","label":"Encoder","size":[22,22,12],"center":[104,13,44.0],"category":"controls","group":"encoder","shape":"cylinder","top_label":"ENC"},{"id":"encoder-wire","label":"Cableado encoder","size":[26,19,4],"center":[104,13,22],"category":"clearance","group":"encoder","reserve":true},{"id":"thumb","label":"Recorrido provisional del pulgar","size":[38,38,20],"center":[104,42,50],"category":"clearance","group":"joystick","reserve":true,"ergonomic":true},{"id":"base","label":"Volumen de carcasa propuesto","size":[128,120,38],"center":[64.0,60.0,19.0],"category":"structure","group":"base","container":true},{"id":"display","label":"Pantalla 4″ con bisel provisional","size":[116,72,12],"center":[0,36.0,0],"category":"display","group":"screen-hinge","moving":true,"kind":"bezel"},{"id":"hinge--1","label":"Reserva soporte lateral","size":[2,12,14],"center":[5.0,68,41],"category":"structure","group":"screen-hinge"},{"id":"hinge-1","label":"Reserva soporte lateral","size":[2,12,14],"center":[123.0,68,41],"category":"structure","group":"screen-hinge"},{"id":"screen-cable","label":"Bucle flexible de pantalla","size":[14,8,12],"center":[64,60,37],"category":"clearance","group":"screen-hinge","reserve":true},{"id":"usb-space","label":"Acceso USB ESP32 (orientación a confirmar)","size":[57,10,8],"center":[113.5,66,10],"category":"clearance","group":"esp32","reserve":true},{"id":"charge-space","label":"Acceso USB-C BMS (orientación a confirmar)","size":[12,17,8],"center":[99,125.5,8],"category":"clearance","group":"bms","reserve":true}]},{"id":"doble-fila","name":"Doble fila","base":[124,126,38],"pivot":[62,85,46],"angle":60,"note":"2×5 acciones + un ALT al final de cada fila. Navegación detrás; más ancho.","keys":[[17,12],[35,12],[53,12],[71,12],[89,12],[17,32],[35,32],[53,32],[71,32],[89,32],[107,12],[107,32]],"joystick":[24,57],"encoder":[64,57],"parts":[{"id":"battery","label":"Portaceldas + 2×18650","size":[80,42,21],"center":[44.0,96.0,13.5],"category":"power","group":"battery","kind":"battery_holder"},{"id":"buck","label":"LM2596S + voltímetro","size":[66,36,16],"center":[58.0,21.0,11.0],"category":"power","group":"buck","kind":"buck"},{"id":"esp32","label":"ESP32-S3","size":[60,29,14],"center":[55.0,56.5,10.0],"category":"electronics","group":"esp32","kind":"esp32"},{"id":"bms","label":"BMS 2S USB-C","size":[18,42,6],"center":[99.0,96.0,6.0],"category":"power","group":"bms","kind":"bms"},{"id":"speaker-l","label":"Parlante izquierdo","size":[18,56,15],"center":[12.0,31.0,10.5],"category":"audio","group":"speaker-l","kind":"speaker"},{"id":"speaker-r","label":"Parlante derecho","size":[18,56,15],"center":[112.0,31.0,10.5],"category":"audio","group":"speaker-r","kind":"speaker"},{"id":"led-0","label":"NeoPixel zona 1 · 4 LEDs","size":[20,20,5],"center":[16.0,90.0,29.5],"category":"electronics","group":"led-0","kind":"led_board"},{"id":"led-1","label":"NeoPixel zona 2 · 4 LEDs","size":[20,20,5],"center":[40.0,90.0,29.5],"category":"electronics","group":"led-1","kind":"led_board"},{"id":"amp-0","label":"MAX98357A L","size":[20,16,6],"center":[64.0,90.0,30.0],"category":"audio","group":"amp-0","kind":"amplifier"},{"id":"amp-1","label":"MAX98357A R","size":[20,16,6],"center":[64.0,108.0,30.0],"category":"audio","group":"amp-1","kind":"amplifier"},{"id":"cap-0","label":"Reserva condensador 1","size":[10,10,13],"center":[8.0,67.0,9.5],"category":"power","group":"cap-0","kind":"bulk_cap","provisional":true},{"id":"cap-1","label":"Reserva condensador 2","size":[10,10,13],"center":[19.0,67.0,9.5],"category":"power","group":"cap-1","kind":"bulk_cap","provisional":true},{"id":"switch-0","label":"SW-CELDAS","size":[12,8,12],"center":[80.0,120.0,31.0],"category":"controls","group":"switch-0","kind":"switch"},{"id":"switch-1","label":"SW-PANTALLA","size":[12,8,12],"center":[94.0,120.0,31.0],"category":"controls","group":"switch-1","kind":"switch"},{"id":"key-1","label":"1","size":[16,16,7],"center":[17,12,41.5],"category":"controls","group":"key-1","kind":"keycap","top_label":"1"},{"id":"key-1-body","label":"Pulsador 1","size":[12,12,11],"center":[17,12,32.5],"category":"controls","group":"key-1","kind":"button_body"},{"id":"key-1-wire","label":"Soldadura 1","size":[14,14,5],"center":[17,12,24.5],"category":"clearance","group":"key-1","reserve":true},{"id":"key-2","label":"2","size":[16,16,7],"center":[35,12,41.5],"category":"controls","group":"key-2","kind":"keycap","top_label":"2"},{"id":"key-2-body","label":"Pulsador 2","size":[12,12,11],"center":[35,12,32.5],"category":"controls","group":"key-2","kind":"button_body"},{"id":"key-2-wire","label":"Soldadura 2","size":[14,14,5],"center":[35,12,24.5],"category":"clearance","group":"key-2","reserve":true},{"id":"key-3","label":"3","size":[16,16,7],"center":[53,12,41.5],"category":"controls","group":"key-3","kind":"keycap","top_label":"3"},{"id":"key-3-body","label":"Pulsador 3","size":[12,12,11],"center":[53,12,32.5],"category":"controls","group":"key-3","kind":"button_body"},{"id":"key-3-wire","label":"Soldadura 3","size":[14,14,5],"center":[53,12,24.5],"category":"clearance","group":"key-3","reserve":true},{"id":"key-4","label":"4","size":[16,16,7],"center":[71,12,41.5],"category":"controls","group":"key-4","kind":"keycap","top_label":"4"},{"id":"key-4-body","label":"Pulsador 4","size":[12,12,11],"center":[71,12,32.5],"category":"controls","group":"key-4","kind":"button_body"},{"id":"key-4-wire","label":"Soldadura 4","size":[14,14,5],"center":[71,12,24.5],"category":"clearance","group":"key-4","reserve":true},{"id":"key-5","label":"5","size":[16,16,7],"center":[89,12,41.5],"category":"controls","group":"key-5","kind":"keycap","top_label":"5"},{"id":"key-5-body","label":"Pulsador 5","size":[12,12,11],"center":[89,12,32.5],"category":"controls","group":"key-5","kind":"button_body"},{"id":"key-5-wire","label":"Soldadura 5","size":[14,14,5],"center":[89,12,24.5],"category":"clearance","group":"key-5","reserve":true},{"id":"key-6","label":"6","size":[16,16,7],"center":[17,32,41.5],"category":"controls","group":"key-6","kind":"keycap","top_label":"6"},{"id":"key-6-body","label":"Pulsador 6","size":[12,12,11],"center":[17,32,32.5],"category":"controls","group":"key-6","kind":"button_body"},{"id":"key-6-wire","label":"Soldadura 6","size":[14,14,5],"center":[17,32,24.5],"category":"clearance","group":"key-6","reserve":true},{"id":"key-7","label":"7","size":[16,16,7],"center":[35,32,41.5],"category":"controls","group":"key-7","kind":"keycap","top_label":"7"},{"id":"key-7-body","label":"Pulsador 7","size":[12,12,11],"center":[35,32,32.5],"category":"controls","group":"key-7","kind":"button_body"},{"id":"key-7-wire","label":"Soldadura 7","size":[14,14,5],"center":[35,32,24.5],"category":"clearance","group":"key-7","reserve":true},{"id":"key-8","label":"8","size":[16,16,7],"center":[53,32,41.5],"category":"controls","group":"key-8","kind":"keycap","top_label":"8"},{"id":"key-8-body","label":"Pulsador 8","size":[12,12,11],"center":[53,32,32.5],"category":"controls","group":"key-8","kind":"button_body"},{"id":"key-8-wire","label":"Soldadura 8","size":[14,14,5],"center":[53,32,24.5],"category":"clearance","group":"key-8","reserve":true},{"id":"key-9","label":"9","size":[16,16,7],"center":[71,32,41.5],"category":"controls","group":"key-9","kind":"keycap","top_label":"9"},{"id":"key-9-body","label":"Pulsador 9","size":[12,12,11],"center":[71,32,32.5],"category":"controls","group":"key-9","kind":"button_body"},{"id":"key-9-wire","label":"Soldadura 9","size":[14,14,5],"center":[71,32,24.5],"category":"clearance","group":"key-9","reserve":true},{"id":"key-10","label":"10","size":[16,16,7],"center":[89,32,41.5],"category":"controls","group":"key-10","kind":"keycap","top_label":"10"},{"id":"key-10-body","label":"Pulsador 10","size":[12,12,11],"center":[89,32,32.5],"category":"controls","group":"key-10","kind":"button_body"},{"id":"key-10-wire","label":"Soldadura 10","size":[14,14,5],"center":[89,32,24.5],"category":"clearance","group":"key-10","reserve":true},{"id":"key-11","label":"ALT1","size":[16,16,7],"center":[107,12,41.5],"category":"controls","group":"key-11","kind":"keycap","top_label":"ALT1"},{"id":"key-11-body","label":"Pulsador ALT1","size":[12,12,11],"center":[107,12,32.5],"category":"controls","group":"key-11","kind":"button_body"},{"id":"key-11-wire","label":"Soldadura ALT1","size":[14,14,5],"center":[107,12,24.5],"category":"clearance","group":"key-11","reserve":true},{"id":"key-12","label":"ALT2","size":[16,16,7],"center":[107,32,41.5],"category":"controls","group":"key-12","kind":"keycap","top_label":"ALT2"},{"id":"key-12-body","label":"Pulsador ALT2","size":[12,12,11],"center":[107,32,32.5],"category":"controls","group":"key-12","kind":"button_body"},{"id":"key-12-wire","label":"Soldadura ALT2","size":[14,14,5],"center":[107,32,24.5],"category":"clearance","group":"key-12","reserve":true},{"id":"joystick","label":"Joystick","size":[34,26,14],"center":[24,57,31.0],"category":"controls","group":"joystick","kind":"joystick"},{"id":"joystick-cap","label":"Joystick","size":[28,28,12],"center":[24,57,44.0],"category":"controls","group":"joystick","shape":"cylinder","top_label":"JOY"},{"id":"joystick-wire","label":"Cableado joystick","size":[34,26,4],"center":[24,57,22],"category":"clearance","group":"joystick","reserve":true},{"id":"encoder","label":"Encoder","size":[26,19,14],"center":[64,57,31.0],"category":"controls","group":"encoder","kind":"encoder"},{"id":"encoder-cap","label":"Encoder","size":[22,22,12],"center":[64,57,44.0],"category":"controls","group":"encoder","shape":"cylinder","top_label":"ENC"},{"id":"encoder-wire","label":"Cableado encoder","size":[26,19,4],"center":[64,57,22],"category":"clearance","group":"encoder","reserve":true},{"id":"thumb","label":"Recorrido provisional del pulgar","size":[38,38,20],"center":[24,57,50],"category":"clearance","group":"joystick","reserve":true,"ergonomic":true},{"id":"base","label":"Volumen de carcasa propuesto","size":[124,126,38],"center":[62.0,63.0,19.0],"category":"structure","group":"base","container":true},{"id":"display","label":"Pantalla 4″ con bisel provisional","size":[116,72,12],"center":[0,36.0,0],"category":"display","group":"screen-hinge","moving":true,"kind":"bezel"},{"id":"hinge--1","label":"Reserva soporte lateral","size":[2,12,14],"center":[3.0,85,41],"category":"structure","group":"screen-hinge"},{"id":"hinge-1","label":"Reserva soporte lateral","size":[2,12,14],"center":[121.0,85,41],"category":"structure","group":"screen-hinge"},{"id":"screen-cable","label":"Bucle flexible de pantalla","size":[14,8,12],"center":[62,77,37],"category":"clearance","group":"screen-hinge","reserve":true},{"id":"usb-space","label":"Acceso USB ESP32 (orientación a confirmar)","size":[53,10,8],"center":[111.5,66,10],"category":"clearance","group":"esp32","reserve":true},{"id":"charge-space","label":"Acceso USB-C BMS (orientación a confirmar)","size":[12,23,8],"center":[99,128.5,8],"category":"clearance","group":"bms","reserve":true}]}],"reports":{"lineal":{"solid_collisions":[],"sweep_collisions_with_1mm_margin":[],"reserve_collisions":[],"intended_contacts":["Display and hinge supports share screen-hinge group; bearing fit unmodeled."],"metrics":[{"angle":0,"overall_mm":[120.0,155.0,52.0],"base_area_reduction_pct":8.64,"overall_area_reduction_pct":-5.68,"base_envelope_volume_change_pct":-0.81},{"angle":20,"overall_mm":[120.0,152.71,76.26],"base_area_reduction_pct":8.64,"overall_area_reduction_pct":-4.12,"base_envelope_volume_change_pct":-0.81},{"angle":35,"overall_mm":[120.0,145.42,92.21],"base_area_reduction_pct":8.64,"overall_area_reduction_pct":0.85,"base_envelope_volume_change_pct":-0.81},{"angle":45,"overall_mm":[120.0,138.15,101.15],"base_area_reduction_pct":8.64,"overall_area_reduction_pct":5.81,"base_envelope_volume_change_pct":-0.81},{"angle":55,"overall_mm":[120.0,134.0,108.42],"base_area_reduction_pct":8.64,"overall_area_reduction_pct":8.64,"base_envelope_volume_change_pct":-0.81},{"angle":75,"overall_mm":[120.0,134.0,117.1],"base_area_reduction_pct":8.64,"overall_area_reduction_pct":8.64,"base_envelope_volume_change_pct":-0.81}],"scope":"Box envelopes only. Does not certify fasteners, wires, ergonomics, holding torque or stability."},"cuadricula":{"solid_collisions":[],"sweep_collisions_with_1mm_margin":[],"reserve_collisions":[],"intended_contacts":["Display and hinge supports share screen-hinge group; bearing fit unmodeled."],"metrics":[{"angle":0,"overall_mm":[128.0,140.0,52.0],"base_area_reduction_pct":12.73,"overall_area_reduction_pct":-1.82,"base_envelope_volume_change_pct":-5.25},{"angle":20,"overall_mm":[128.0,137.71,76.26],"base_area_reduction_pct":12.73,"overall_area_reduction_pct":-0.15,"base_envelope_volume_change_pct":-5.25},{"angle":35,"overall_mm":[128.0,130.42,92.21],"base_area_reduction_pct":12.73,"overall_area_reduction_pct":5.15,"base_envelope_volume_change_pct":-5.25},{"angle":45,"overall_mm":[128.0,123.15,101.15],"base_area_reduction_pct":12.73,"overall_area_reduction_pct":10.44,"base_envelope_volume_change_pct":-5.25},{"angle":55,"overall_mm":[128.0,120.0,108.42],"base_area_reduction_pct":12.73,"overall_area_reduction_pct":12.73,"base_envelope_volume_change_pct":-5.25},{"angle":75,"overall_mm":[128.0,120.0,117.1],"base_area_reduction_pct":12.73,"overall_area_reduction_pct":12.73,"base_envelope_volume_change_pct":-5.25}],"scope":"Box envelopes only. Does not certify fasteners, wires, ergonomics, holding torque or stability."},"doble-fila":{"solid_collisions":[],"sweep_collisions_with_1mm_margin":[],"reserve_collisions":[],"intended_contacts":["Display and hinge supports share screen-hinge group; bearing fit unmodeled."],"metrics":[{"angle":0,"overall_mm":[124.0,157.0,52.0],"base_area_reduction_pct":11.23,"overall_area_reduction_pct":-10.61,"base_envelope_volume_change_pct":-3.62},{"angle":20,"overall_mm":[124.0,154.71,76.26],"base_area_reduction_pct":11.23,"overall_area_reduction_pct":-9.0,"base_envelope_volume_change_pct":-3.62},{"angle":35,"overall_mm":[124.0,147.42,92.21],"base_area_reduction_pct":11.23,"overall_area_reduction_pct":-3.86,"base_envelope_volume_change_pct":-3.62},{"angle":45,"overall_mm":[124.0,140.15,101.15],"base_area_reduction_pct":11.23,"overall_area_reduction_pct":1.26,"base_envelope_volume_change_pct":-3.62},{"angle":55,"overall_mm":[124.0,131.21,108.42],"base_area_reduction_pct":11.23,"overall_area_reduction_pct":7.56,"base_envelope_volume_change_pct":-3.62},{"angle":75,"overall_mm":[124.0,126.0,117.1],"base_area_reduction_pct":11.23,"overall_area_reduction_pct":11.23,"base_envelope_volume_change_pct":-3.62}],"scope":"Box envelopes only. Does not certify fasteners, wires, ergonomics, holding torque or stability."}}};
+    const faceIndices = [[0,1,3,2],[4,6,7,5],[0,4,5,1],[2,3,7,6],[0,2,6,4],[1,5,7,3]];
+const categoryColor = {
+  structure:"var(--muted)", display:"var(--secondary)", controls:"var(--muted)",
+  power:"var(--viz-series-2)", electronics:"var(--viz-series-1)",
+  audio:"var(--viz-series-3)", clearance:"var(--viz-series-4)"
+};
+const svgNS = "http://www.w3.org/2000/svg";
+function svgElement(tag, attributes, text) {
+  const node = document.createElementNS(svgNS,tag);
+  Object.entries(attributes).forEach(([k,v]) => node.setAttribute(k,String(v)));
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+function vertexCloud(part, scene, angle) {
+  const a=angle*Math.PI/180, vertices=[];
+  for (const x of [-1,1]) for (const y of [-1,1]) for (const z of [-1,1]) {
+    let q=part.center.map((v,i)=>v+[x,y,z][i]*part.size[i]/2);
+    if (part.moving) {
+      const [px,py,pz]=scene.pivot, [u,v,w]=q;
+      q=[px+u,py+v*Math.cos(a)-w*Math.sin(a),pz+v*Math.sin(a)+w*Math.cos(a)];
+    }
+    vertices.push(q);
+  }
+  return vertices;
+}
+function projectRaw([x,y,z], view) {
+  if (view==="top") return [x,-y,z];
+  if (view==="side") return [y,-z,x];
+  return [0.86*x+0.51*y,0.26*x-0.44*y-0.86*z,0.44*x-0.74*y+0.52*z];
+}
+function displayPoint(point, scene, angle) {
+  const [x,y,z]=point, a=angle*Math.PI/180, [px,py,pz]=scene.pivot;
+  return [px+x,py+y*Math.cos(a)-z*Math.sin(a),pz+y*Math.sin(a)+z*Math.cos(a)];
+}
+function worldBounds(scene, angle) {
+  const vv=scene.parts.filter(p=>!p.reserve).flatMap(p=>vertexCloud(p,scene,angle));
+  return [0,1,2].map(i=>Math.max(...vv.map(v=>v[i]))-Math.min(...vv.map(v=>v[i])));
+}
+function makeProjector(scene, angle, view, width, height) {
+  const boundsParts=[...scene.parts.filter(p=>!p.reserve),
+    {size:[110,160,1],center:[scene.base[0]/2,scene.base[1]/2,0]}];
+  const points=boundsParts.flatMap(p=>vertexCloud(p,scene,angle)).map(v=>projectRaw(v,view));
+  const min=[0,1].map(i=>Math.min(...points.map(p=>p[i])));
+  const max=[0,1].map(i=>Math.max(...points.map(p=>p[i])));
+  const scale=Math.min((width-60)/(max[0]-min[0]),(height-55)/(max[1]-min[1]));
+  return point => {
+    const [x,y,depth]=projectRaw(point,view);
+    return [(x-(min[0]+max[0])/2)*scale+width/2,
+            (y-(min[1]+max[1])/2)*scale+height/2, depth];
+  };
+}
+function addReference(svg, scene, project) {
+  const [w,d]=scene.base, x=(w-110)/2,y=(d-160)/2;
+  const points=[[x,y,0],[x+110,y,0],[x+110,y+160,0],[x,y+160,0]].map(project);
+  svg.append(svgElement("polygon",{points:points.map(p=>p.slice(0,2).join(",")).join(" "),
+    fill:"none",stroke:"var(--muted-foreground)","stroke-width":1,"stroke-dasharray":"4 4"}));
+}
+function partFaces(part, scene, state, project) {
+  if (part.shape==="cylinder") return cylinderFaces(part,project);
+  const vv=vertexCloud(part,scene,state.angle).map(project);
+  return faceIndices.map((indices,index)=>({
+    part, index, points:indices.map(i=>vv[i]),
+    depth:indices.reduce((sum,i)=>sum+vv[i][2],0)/4
+  }));
+}
+function cylinderFaces(part, project) {
+  const [x,y,z]=part.center, r=part.size[0]/2, h=part.size[2]/2;
+  const ring=dz=>Array.from({length:24},(_,i)=>{
+    const a=i*Math.PI/12;
+    return project([x+r*Math.cos(a),y+r*Math.sin(a),z+dz]);
+  });
+  const bottom=ring(-h), top=ring(h);
+  const polygons=[bottom,top,...bottom.map((p,i)=>[p,bottom[(i+1)%24],top[(i+1)%24],top[i]])];
+  return polygons.map((points,index)=>({part,index,points,
+    depth:points.reduce((s,p)=>s+p[2],0)/points.length}));
+}
+function paintFaces(svg, faces, state) {
+  faces.sort((a,b)=>a.depth-b.depth);
+  for (const {part,index,points} of faces) {
+    const container=part.container, selected=part.id===state.selected;
+    const opacity=part.reserve?0.12:container?(state.inside?0.035:1):1;
+    const shade=96-(index%6)*1.5;
+    const surface=part.category==="controls"?"var(--card)":categoryColor[part.category];
+    const fill=`color-mix(in srgb, ${surface} ${shade}%, var(--foreground))`;
+    const shape=svgElement("polygon",{points:points.map(p=>p.slice(0,2).join(",")).join(" "),
+      fill,
+      "fill-opacity":opacity,stroke:selected?"var(--viz-series-1)":"var(--border)",
+      "stroke-width":selected?1.5:0.7,"data-part":part.id});
+    svg.append(shape);
+  }
+}
+function paintLabels(svg, scene, state, project) {
+  if (state.view==="side") return;
+  for (const part of scene.parts.filter(p=>p.top_label)) {
+    if (state.inside) continue;
+    const point=[...part.center]; point[2]+=part.size[2]/2+0.5;
+    const p=project(point);
+    svg.append(svgElement("text",{x:p[0],y:p[1]+3,"text-anchor":"middle",
+      "class":"text-small","pointer-events":"none"},part.top_label.replace("ALT","A")));
+  }
+}
+function paintScreen(svg, scene, state, project) {
+  if (state.inside) return;
+  const panel=scene.parts.find(p=>p.id==="display");
+  const [sw,sh]=study.spec.envelopes.active_screen.size;
+  const x=sw/2,y=(panel.size[1]-sh)/2,z=panel.size[2]/2+0.15;
+  const corners=[[-x,y,z],[x,y,z],[x,y+sh,z],[-x,y+sh,z]];
+  const points=corners.map(p=>project(displayPoint(p,scene,state.angle)));
+  svg.append(svgElement("polygon",{points:points.map(p=>p.slice(0,2).join(",")).join(" "),
+    fill:"var(--viz-series-1)","fill-opacity":0.6,stroke:"var(--border)","stroke-width":1}));
+  if (state.view!=="side") {
+    const center=project(displayPoint([0,panel.size[1]/2,z+0.15],scene,state.angle));
+    svg.append(svgElement("text",{x:center[0],y:center[1],"text-anchor":"middle",
+      class:"text-small"},"HIOS PAD"));
+  }
+}
+function paintAxis(svg, scene, state, project) {
+  if (state.view!=="side" && !state.clearance) return;
+  const [x,y,z]=scene.pivot, a=project([x-60,y,z]), b=project([x+60,y,z]);
+  svg.append(svgElement("line",{x1:a[0],y1:a[1],x2:b[0],y2:b[1],
+    stroke:"var(--viz-series-4)","stroke-width":2}));
+  const p=project(scene.pivot);
+  svg.append(svgElement("circle",{cx:p[0],cy:p[1],r:4,fill:"var(--viz-series-4)"}));
+  svg.append(svgElement("text",{x:p[0]+9,y:p[1]-9,class:"text-small"},"Eje"));
+}
+
+    const root=document.getElementById("pad-packaging-study");
+const svg=root.querySelector(".study-stage");
+const byId=id=>root.querySelector("#pad-"+id);
+const saved=window.openai?.widgetState?.modelContent;
+const state={layout:1,angle:55,view:"iso",inside:false,clearance:false,selected:"display"};
+function applySaved(value) {
+  if (!value || typeof value!=="object") return;
+  if (Number.isInteger(value.layout) && value.layout>=0 && value.layout<3) state.layout=value.layout;
+  if (Number.isFinite(value.angle)) state.angle=Math.min(75,Math.max(0,value.angle));
+  if (["iso","top","side"].includes(value.view)) state.view=value.view;
+  for (const key of ["inside","clearance"]) if (typeof value[key]==="boolean") state[key]=value[key];
+}
+applySaved(saved);
+function persist() {
+  window.openai?.setWidgetState?.({modelContent:{...state,
+    layoutName:study.scenes[state.layout].name},privateContent:null})?.catch(()=>{});
+}
+function fillParts() {
+  const select=byId("part"), scene=study.scenes[state.layout];
+  select.replaceChildren();
+  for (const p of scene.parts.filter(p=>!p.id.endsWith("-body") && !p.id.endsWith("-wire"))) {
+    const option=document.createElement("option");
+    option.value=p.id; option.textContent=p.label; select.append(option);
+  }
+  select.value=state.selected;
+}
+function updateDetail(scene) {
+  const p=scene.parts.find(item=>item.id===state.selected);
+  if (!p) return;
+  const spec=study.spec.envelopes[p.kind];
+  const kind=p.reserve?"Espacio reservado":p.container?"Envolvente de diseño":"Modelo provisional";
+  byId("detail").textContent=`${p.label} · ${p.size.join(" × ")} mm · ${kind}`+
+    (spec?.status==="assumed"?" · Medir antes de fabricar.":"");
+}
+function updateMetrics(scene) {
+  const [w,d,h]=scene.base, overall=worldBounds(scene,state.angle);
+  const percent=100*(1-w*d/17600), real=100*(1-overall[0]*overall[1]/17600);
+  byId("base").textContent=`Base ${w} × ${d} × ${h} mm`;
+  byId("footprint").textContent=`${percent.toFixed(1)} % menos superficie de base`;
+  byId("overall").textContent=`Con pantalla: ${overall.map(v=>v.toFixed(1)).join(" × ")} mm · `+
+    `Huella total ${Math.abs(real).toFixed(1)} % ${real>=0?"menor":"mayor"} que 110 × 160`;
+  byId("angle-value").textContent=`${state.angle}°`;
+  byId("note").textContent=scene.note;
+}
+function syncControls() {
+  byId("angle").value=state.angle; byId("view").value=state.view;
+  byId("inside").checked=state.inside; byId("clearance").checked=state.clearance;
+  byId("legend").hidden=!state.inside;
+  root.querySelectorAll("[data-layout]").forEach(b=>
+    b.setAttribute("aria-pressed",Number(b.dataset.layout)===state.layout?"true":"false"));
+}
+function draw() {
+  const scene=study.scenes[state.layout], width=svg.clientWidth||680, height=svg.clientHeight||390;
+  svg.setAttribute("viewBox",`0 0 ${width} ${height}`);
+  svg.replaceChildren(svgElement("title",{},`${scene.name}, pantalla ${state.angle} grados`));
+  const project=makeProjector(scene,state.angle,state.view,width,height);
+  addReference(svg,scene,project);
+  const parts=scene.parts.filter(p=>{
+    if (p.reserve) return state.clearance;
+    if (state.inside) return !p.top_label && !p.moving;
+    return p.container || p.moving || p.top_label || p.category==="structure";
+  });
+  const faces=parts.flatMap(p=>partFaces(p,scene,state,project));
+  paintFaces(svg,faces,state);
+  paintScreen(svg,scene,state,project);
+  paintLabels(svg,scene,state,project);
+  paintAxis(svg,scene,state,project);
+  updateMetrics(scene); updateDetail(scene); syncControls();
+}
+function changeLayout(index) {
+  state.layout=index; state.angle=study.scenes[index].angle;
+  state.selected="display"; fillParts(); draw(); persist();
+}
+root.querySelectorAll("[data-layout]").forEach(b=>
+  b.addEventListener("click",()=>changeLayout(Number(b.dataset.layout))));
+byId("angle").addEventListener("input",e=>{state.angle=Number(e.target.value);draw();});
+byId("angle").addEventListener("change",persist);
+byId("view").addEventListener("change",e=>{state.view=e.target.value;draw();persist();});
+for (const key of ["inside","clearance"]) {
+  byId(key).addEventListener("change",e=>{state[key]=e.target.checked;draw();persist();});
+}
+byId("part").addEventListener("change",e=>{state.selected=e.target.value;draw();persist();});
+svg.addEventListener("click",e=>{
+  const id=e.target.getAttribute("data-part");
+  if (!id) return;
+  const select=byId("part");
+  if (![...select.options].some(o=>o.value===id)) return;
+  state.selected=id; select.value=id; draw(); persist();
+});
+window.addEventListener("openai:set_globals",event=>{
+  applySaved(event.detail?.globals?.widgetState?.modelContent);fillParts();draw();
+});
+fillParts();draw();
+new ResizeObserver(draw).observe(svg);
+
+  })();
+  </script>
+</div>

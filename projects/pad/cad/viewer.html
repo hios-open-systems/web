@@ -1,0 +1,54 @@
+<div id="pad-packaging-study">
+  <style>
+    #pad-packaging-study .study-stage { width:100%; height:390px; display:block; touch-action:pan-y; }
+    #pad-packaging-study .study-stage text { fill:var(--foreground); font-family:inherit; }
+    #pad-packaging-study .study-caption { margin:8px 0; }
+    #pad-packaging-study .study-metrics { display:flex; flex-wrap:wrap; gap:8px 24px; margin:12px 0; }
+    #pad-packaging-study .study-controls { margin:12px 0; }
+    #pad-packaging-study .part-detail { min-height:3em; margin-top:8px; }
+    #pad-packaging-study .study-stage polygon { stroke-linejoin:round; }
+    #pad-packaging-study #pad-legend[hidden] { display:none; }
+    @media(max-width:480px) { #pad-packaging-study .study-stage { height:330px; } }
+  </style>
+  <div class="viz-controls" aria-label="Distribuciones">
+    <button class="btn" type="button" data-layout="0" aria-pressed="false">Lineal</button>
+    <button class="btn" type="button" data-layout="1" aria-pressed="true">Cuadrícula</button>
+    <button class="btn" type="button" data-layout="2" aria-pressed="false">Doble fila</button>
+  </div>
+  <div class="study-metrics tabular-nums" aria-live="polite">
+    <span id="pad-base"></span><span id="pad-footprint"></span>
+  </div>
+  <svg class="study-stage" role="img" aria-label="Ensamble volumétrico del pad; pantalla basculante y componentes a escala"></svg>
+  <div id="pad-legend" class="viz-row text-small" hidden>
+    <span><span style="color:var(--viz-series-2)">●</span> Alimentación</span>
+    <span><span style="color:var(--viz-series-1)">●</span> Electrónica y LEDs</span>
+    <span><span style="color:var(--viz-series-3)">●</span> Audio</span>
+    <span>Controles en neutro</span>
+  </div>
+  <div class="viz-controls study-controls">
+    <label class="form-label">Pantalla: <span id="pad-angle-value">55°</span>
+      <input class="form-range" id="pad-angle" type="range" min="0" max="75" value="55" step="1">
+    </label>
+    <label class="form-label">Vista
+      <select class="form-select" id="pad-view"><option value="iso">Perspectiva</option><option value="top">Desde arriba</option><option value="side">Perfil y eje</option></select>
+    </label>
+    <label class="form-check"><input class="form-check-input" id="pad-inside" type="checkbox"><span class="form-check-label">Ver interior</span></label>
+    <label class="form-check"><input class="form-check-input" id="pad-clearance" type="checkbox"><span class="form-check-label">Espacios libres</span></label>
+  </div>
+  <div id="pad-overall" class="study-caption tabular-nums" aria-live="polite"></div>
+  <div class="viz-controls">
+    <label class="form-label">Inspeccionar componente
+      <select class="form-select" id="pad-part"></select>
+    </label>
+  </div>
+  <div id="pad-detail" class="part-detail text-small" aria-live="polite"></div>
+  <div id="pad-note" class="text-small study-caption"></div>
+  <div class="text-small text-muted">Cotas provisionales · Referencia: 110 × 160 mm · Ángulo desde la horizontal · Huella sin cables · A1/A2 = ALT · No imprimible</div>
+  <script>
+  (() => {
+    const study = /*__DATA__*/;
+    /*__DRAWING__*/
+    /*__VIEWER__*/
+  })();
+  </script>
+</div>
