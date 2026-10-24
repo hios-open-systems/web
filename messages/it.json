@@ -2126,7 +2126,6 @@
             "totalsEvents": "Eventi",
             "totalsViews": "Visualizzazioni",
             "totalsToolOpens": "Aperture tool",
-            "totalsUsers": "Utenti unici",
             "timelineTitle": "Timeline",
             "topPagesTitle": "Pagine top",
             "topToolsTitle": "Tool top",
@@ -2135,7 +2134,17 @@
             "colCount": "Conteggio",
             "colPath": "Percorso",
             "colTool": "Tool",
-            "empty": "Nessun dato in questo intervallo"
+            "empty": "Nessun dato in questo intervallo",
+            "events": {
+                "page_view": "Visualizzazioni di pagina",
+                "tool_open": "Aperture di strumenti",
+                "search_select": "Risultati di ricerca selezionati",
+                "preset_open": "Preset aperti",
+                "workspace_open": "Spazi aperti",
+                "handoff_complete": "Trasferimenti ricevuti",
+                "export_generated": "Esportazioni preparate"
+            },
+            "totalsExports": "Esportazioni preparate"
         },
         "guides": {
             "calculators": {
@@ -3744,7 +3753,7 @@
         "title": "Impostazioni dei dati",
         "intro": "Controlla la telemetria, i dati memorizzati in questo browser e le opzioni del tuo account.",
         "telemetryTitle": "Statistiche di utilizzo",
-        "telemetryHint": "Disattivata per impostazione predefinita. Se attivata, OpenHIOS registra visite e aperture degli strumenti sul proprio server, inclusi percorso, lingua, browser e dati della richiesta. Il contenuto degli strumenti non viene inviato. Con accesso effettuato, gli eventi sono associati all’account. Do Not Track la disattiva.",
+        "telemetryHint": "Disattivata per impostazione predefinita. Se attivata, questo browser invia a OpenHIOS la categoria della pagina o lo strumento, l’azione e la lingua, senza cookie di sessione, contenuti o parametri URL. Conserviamo conteggi giornalieri per 90 giorni. Un codice casuale per evento evita duplicati e viene eliminato dalla pulizia giornaliera dopo il giorno UTC successivo; non identifica i visitatori. Queste tabelle non conservano account, IP, browser o paese. Do Not Track e Global Privacy Control disattivano l’invio. L’infrastruttura elabora le richieste secondo le proprie politiche operative.",
         "telemetryOn": "Attiva",
         "telemetryOff": "Disattivata",
         "localTitle": "Archiviazione del browser",
@@ -3770,7 +3779,7 @@
     "PublicStats": {
         "kicker": "Utilizzo di HIOS",
         "title": "Statistiche",
-        "intro": "Visite e aperture degli strumenti di chi ha attivato le statistiche d’uso. I grafici contano eventi, non persone. La telemetria è disattivata per impostazione predefinita e si attiva in Impostazioni.",
+        "intro": "Attività di chi ha scelto di condividere le statistiche. Contiamo eventi, non persone né l’intero pubblico. La condivisione è facoltativa e disattivata per impostazione predefinita.",
         "pageViews": "Visualizzazioni di pagina",
         "toolOpens": "Aperture degli strumenti",
         "guestbook": "Messaggi pubblicati",
@@ -3778,10 +3787,13 @@
         "lastDays": "{days, plural, one {ultimo giorno} other {ultimi # giorni}}",
         "activity": "Eventi per giorno",
         "topTools": "Strumenti più aperti",
-        "countries": "Eventi per paese",
         "locales": "Lingue di navigazione",
         "empty": "Non ci sono dati da mostrare per questo periodo.",
-        "error": "Impossibile caricare le statistiche."
+        "error": "Impossibile caricare le statistiche.",
+        "methodology": "Aprire uno strumento non dimostra il completamento di un’attività. Esportazioni preparate conta i file generati dagli strumenti supportati; non conferma il salvataggio. I giorni usano UTC e includono oggi, ancora in corso. Il riepilogo si aggiorna fino a una volta all’ora; strumenti e lingue con meno di 5 eventi sono omessi. I bot riconoscibili vengono filtrati, ma le visite umane non sono certificate.",
+        "period": "Periodo: dal {from} al {to} (UTC). Riepilogo generato: {updated}.",
+        "legacy": "{count} eventi provengono dalla misurazione precedente senza i nuovi filtri. I loro dati di account e richiesta sono stati eliminati.",
+        "exportsGenerated": "Esportazioni preparate"
     },
     "HowItWorks": {
         "title": "Come funziona",

@@ -182,7 +182,9 @@ const nextConfig = {
 
 		return [
       { source: '/:path*', headers: securityHeaders },
-      { source: '/api/:path*', headers: [{ key: 'Cache-Control', value: 'private, no-store' }] },
+      // The stats handler sets cache policy only on successful public responses.
+      // Its errors and every other API remain private; no shared auth variants.
+      { source: '/api/:path((?!stats/public$).*)', headers: [{ key: 'Cache-Control', value: 'private, no-store' }] },
       {
         source: '/:locale(en|es|de|it)/:path*',
         // Prevent CDN-injected analytics. Never mark authenticated pages public.

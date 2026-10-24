@@ -20,7 +20,7 @@ export function PresetShelf() {
     const tool = workbenchTools.find(item => item.id === preset.toolId);
     if (!tool) return;
     const id = createHandoff(tool.id, { ...preset.settings, ...preset.content });
-    trackWorkbench('preset_reuse', tool.id);
+    trackWorkbench('preset_open', tool.id);
     window.location.assign(`/${locale}${tool.href}?handoff=${id}`);
   }
   return <section className={styles.stack}><h2>{t('presets')}</h2>

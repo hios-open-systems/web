@@ -60,10 +60,11 @@ test('serial controls and command input remain inside the viewport', async ({ pa
 
 test('loaded statistics remain readable with real rows and large counts', async ({ page }) => {
   await page.route('**/api/stats/public', (route) => route.fulfill({ json: {
-    rangeDays: 30, totals: { pageViews: 123456789, toolOpens: 987654, guestbook: 1234 },
+    rangeDays: 30, range: { from: '2026-10-01', to: '2026-10-30' }, generatedAt: '2026-10-30T12:00:00Z',
+    totals: { events: 124445677, pageViews: 123456789, toolOpens: 987654, guestbook: 1234, handoffsReceived: 50, exportsGenerated: 50, legacyEvents: 0 },
     perDay: [{ day: '2026-10-01', count: 12 }],
     topTools: [{ toolId: 'llm-grammar-generator', count: 12345 }],
-    countries: [{ country: 'AR', count: 1234 }], locales: [{ locale: 'es', count: 12 }],
+    locales: [{ locale: 'es', count: 12 }],
   } }));
   await page.goto('/es/stats');
   await expect(page.getByText(copy.Workbench.packs['llm-grammar-generator'].title, { exact: true })).toBeVisible();

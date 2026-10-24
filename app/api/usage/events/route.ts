@@ -1,108 +1,29 @@
 import { requireSameOrigin, readJsonBody } from '@/lib/httpSecurity';
-import type { NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
-import { getRequestAuth } from '@/lib/auth/request';
 import { checkRateLimit } from '@/lib/requestRateLimit';
+import { parseUsageEvent, shouldIgnoreUsage } from '@/lib/analytics/validation';
+import { recordUsage } from '@/lib/analytics/storage';
+import { cloudflareBotSignals } from '@/lib/analytics/bot-signals';
 
-
-type EventName = 'page_view' | 'tool_open' | 'search_open' | 'preset_reuse' | 'workspace_open' | 'handoff_complete';
-
-interface UsagePayload {
-  eventName: EventName;
-  path: string;
-  locale?: string;
-  toolId?: string;
-  metadata?: Record<string, unknown>;
-}
-
-function generateId(): string {
-  return crypto.randomUUID();
-}
-
-function isSafePath(path: string): boolean {
-  return path.startsWith('/') && path.length <= 320 && !/[?#]/.test(path);
-}
-
-function isSafeLocale(locale: string): boolean {
-  return /^[a-z]{2,5}(?:-[A-Z]{2})?$/.test(locale);
-}
-
-function isSafeToolId(toolId: string): boolean {
-  return /^[a-z0-9-]{2,80}$/.test(toolId);
-}
-
-function trimHeader(value: string | null, max = 300): string | null {
-  if (!value) return null;
-  const normalized = value.trim();
-  if (!normalized) return null;
-  return normalized.slice(0, max);
-}
-
-export async function POST(request: NextRequest) {
-    const denied = requireSameOrigin(request);
-    if (denied) return denied;
-  // Telemetría anónima que escribe en D1: frenamos flooding por IP.
+export async function POST(request: Request) {
+  const denied = requireSameOrigin(request);
+  if (denied) return denied;
+  if (shouldIgnoreUsage(request.headers, cloudflareBotSignals())) return new Response(null, { status: 204 });
   const limited = await checkRateLimit(request, 'usage', { limit: 60, windowMs: 60_000 });
   if (limited) return limited;
-
-  let payload: UsagePayload;
+  let input: unknown;
   try {
-    payload = (await readJsonBody(request, 32768)) as UsagePayload;
+    input = await readJsonBody(request, 2048);
   } catch (error) {
-        if (error instanceof Response) return error;
-    return Response.json({ error: 'invalid_json' }, { status: 400 });
+    return error instanceof Response ? error : Response.json({ error: 'invalid_json' }, { status: 400 });
   }
-
-  if (!payload || typeof payload !== 'object') {
-    return Response.json({ error: 'invalid_payload' }, { status: 400 });
-  }
-
-  if (!['page_view', 'tool_open', 'search_open', 'preset_reuse', 'workspace_open', 'handoff_complete'].includes(payload.eventName)) {
-    return Response.json({ error: 'invalid_event' }, { status: 400 });
-  }
-
-  if (typeof payload.path !== 'string' || !isSafePath(payload.path)) {
-    return Response.json({ error: 'invalid_path' }, { status: 400 });
-  }
-
-  if (payload.locale !== undefined && (typeof payload.locale !== 'string' || !isSafeLocale(payload.locale))) {
-    return Response.json({ error: 'invalid_locale' }, { status: 400 });
-  }
-
-  if (payload.toolId !== undefined && (typeof payload.toolId !== 'string' || !isSafeToolId(payload.toolId))) {
-    return Response.json({ error: 'invalid_tool_id' }, { status: 400 });
-  }
-
-  const safeMetadata = null;
-
+  const event = parseUsageEvent(input);
+  if (!event) return Response.json({ error: 'invalid_event' }, { status: 400 });
   try {
-    const auth = await getRequestAuth(request);
-    const userId = auth.user?.id ?? null;
-    const db = getDb();
-    await db
-      .prepare(
-        `INSERT INTO usage_events
-          (id, user_id, event_name, path, locale, tool_id, metadata, ua, referer, cf_ray, country)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      )
-      .bind(
-        generateId(),
-        userId,
-        payload.eventName,
-        payload.path,
-        payload.locale ?? null,
-        payload.toolId ?? null,
-        safeMetadata ? JSON.stringify(safeMetadata).slice(0, 2000) : null,
-        trimHeader(request.headers.get('user-agent'), 500),
-        null,
-        trimHeader(request.headers.get('cf-ray'), 100),
-        trimHeader(request.headers.get('cf-ipcountry'), 20),
-      )
-      .run();
+    await recordUsage(getDb(), event);
+    return new Response(null, { status: 204 });
   } catch {
-    // El logging nunca debe romper la UX ni la navegación.
-    return new Response(null, { status: 202 });
+    console.error('usage_aggregate_write_failed');
+    return Response.json({ error: 'Usage unavailable' }, { status: 503, headers: { 'Cache-Control': 'no-store' } });
   }
-
-  return new Response(null, { status: 204 });
 }

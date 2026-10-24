@@ -133,7 +133,7 @@ export function CommandPalette() {
 
   const go = useCallback(
     (href: string) => {
-      if (query.trim()) trackWorkbench('search_open');
+      if (query.trim()) trackWorkbench('search_select');
       setOpen(false);
       if (href !== pathname) router.push(href);
     },

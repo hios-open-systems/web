@@ -10,9 +10,10 @@ import { checkRateLimit } from '@/lib/requestRateLimit';
  * DELETE /api/user/account — borrado total de la cuenta y sus datos.
  *
  * El esquema hace casi todo el trabajo: borrar la fila de users cascadea
- * sessions, snippets y user_settings (ON DELETE CASCADE) y anonimiza
- * usage_events y feedback (ON DELETE SET NULL). No queda nada asociable
- * al usuario. Irreversible a propósito — es el botón "borrá todo lo mío"
+ * sessions, snippets y user_settings (ON DELETE CASCADE). Feedback pierde
+ * su vínculo de cuenta (ON DELETE SET NULL), pero conserva su contenido.
+ * Las métricas diarias no contienen identificadores de cuenta.
+ * Irreversible a propósito — es el botón "borrá todo lo mío"
  * de Settings → Datos y privacidad.
  */
 export async function DELETE(request: NextRequest) {

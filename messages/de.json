@@ -2126,7 +2126,6 @@
             "totalsEvents": "Ereignisse",
             "totalsViews": "Seitenaufrufe",
             "totalsToolOpens": "Tool-Öffnungen",
-            "totalsUsers": "Eindeutige Benutzer",
             "timelineTitle": "Zeitverlauf",
             "topPagesTitle": "Top-Seiten",
             "topToolsTitle": "Top-Tools",
@@ -2135,7 +2134,17 @@
             "colCount": "Anzahl",
             "colPath": "Pfad",
             "colTool": "Tool",
-            "empty": "Keine Daten in diesem Zeitraum"
+            "empty": "Keine Daten in diesem Zeitraum",
+            "events": {
+                "page_view": "Seitenaufrufe",
+                "tool_open": "Werkzeugöffnungen",
+                "search_select": "Ausgewählte Suchergebnisse",
+                "preset_open": "Geöffnete Presets",
+                "workspace_open": "Geöffnete Arbeitsbereiche",
+                "handoff_complete": "Empfangene Übertragungen",
+                "export_generated": "Vorbereitete Exporte"
+            },
+            "totalsExports": "Vorbereitete Exporte"
         },
         "guides": {
             "calculators": {
@@ -3744,7 +3753,7 @@
         "title": "Dateneinstellungen",
         "intro": "Prüfe Telemetrie, den Speicher dieses Browsers und die Optionen für dein Konto.",
         "telemetryTitle": "Nutzungsstatistik",
-        "telemetryHint": "Standardmäßig deaktiviert. Wenn aktiviert, speichert OpenHIOS Seitenbesuche und Werkzeugaufrufe auf seinem eigenen Server, einschließlich Pfad, Sprache, Browser und Anfragedaten. Werkzeuginhalte werden nicht gesendet. Bei Anmeldung werden Ereignisse Ihrem Konto zugeordnet. Do Not Track deaktiviert die Erfassung.",
+        "telemetryHint": "Standardmäßig deaktiviert. Bei Aktivierung sendet dieser Browser Seitenkategorie oder Werkzeug, Aktion und Sprache an OpenHIOS, ohne Sitzungscookies, Inhalte oder URL-Parameter. Tageszähler bleiben 90 Tage gespeichert. Ein zufälliger Code pro Ereignis verhindert Duplikate und wird bei der täglichen Bereinigung nach dem folgenden UTC-Tag gelöscht; er identifiziert keine Besucher. Diese Tabellen speichern weder Konto, IP, Browser noch Land. Do Not Track und Global Privacy Control deaktivieren die Übermittlung. Die Infrastruktur verarbeitet Anfragen nach ihren eigenen Betriebsrichtlinien.",
         "telemetryOn": "Aktiviert",
         "telemetryOff": "Deaktiviert",
         "localTitle": "Browserspeicher",
@@ -3770,7 +3779,7 @@
     "PublicStats": {
         "kicker": "HIOS-Nutzung",
         "title": "Statistik",
-        "intro": "Besuche und Werkzeugaufrufe von Personen, die Nutzungsstatistiken aktiviert haben. Die Diagramme zählen Ereignisse, keine Personen. Telemetrie ist standardmäßig deaktiviert und kann in den Einstellungen aktiviert werden.",
+        "intro": "Aktivität aus freiwillig geteilten Nutzungsdaten. Wir zählen Ereignisse, keine Personen oder das gesamte Publikum. Die Übermittlung ist optional und standardmäßig deaktiviert.",
         "pageViews": "Seitenaufrufe",
         "toolOpens": "Werkzeugaufrufe",
         "guestbook": "Veröffentlichte Einträge",
@@ -3778,10 +3787,13 @@
         "lastDays": "{days, plural, one {letzter Tag} other {letzte # Tage}}",
         "activity": "Ereignisse pro Tag",
         "topTools": "Meistgeöffnete Werkzeuge",
-        "countries": "Ereignisse nach Land",
         "locales": "Sprachen beim Besuch",
         "empty": "Für diesen Zeitraum sind keine Daten verfügbar.",
-        "error": "Die Statistik konnte nicht geladen werden."
+        "error": "Die Statistik konnte nicht geladen werden.",
+        "methodology": "Das Öffnen eines Werkzeugs belegt keinen Aufgabenabschluss. Vorbereitete Exporte zählt von unterstützten Werkzeugen erzeugte Dateien; das Speichern wird nicht bestätigt. Tage verwenden UTC und schließen den laufenden Tag ein. Die Übersicht wird bis zu einmal pro Stunde aktualisiert; Werkzeuge und Sprachen mit weniger als 5 Ereignissen werden ausgeblendet. Erkennbare Bots werden gefiltert, menschliche Besuche jedoch nicht bestätigt.",
+        "period": "Zeitraum: {from} bis {to} (UTC). Übersicht erstellt: {updated}.",
+        "legacy": "{count} Ereignisse stammen aus der vorherigen Messung ohne die neuen Filter. Ihre Konto- und Anfragedaten wurden entfernt.",
+        "exportsGenerated": "Vorbereitete Exporte"
     },
     "HowItWorks": {
         "title": "So funktioniert es",

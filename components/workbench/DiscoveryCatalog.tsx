@@ -89,7 +89,7 @@ export function DiscoveryCatalog() {
             <Link
               href={`/${locale}${tool.href}`}
               onClick={() => {
-                if (query.trim()) trackWorkbench('search_open', tool.id);
+                if (query.trim()) trackWorkbench('search_select', tool.id);
               }}
             >
               <h3>{tool.label}</h3>
