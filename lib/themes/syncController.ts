@@ -7,6 +7,7 @@ export type ThemeSyncState = 'anonymous' | 'checking' | 'needs-import' | 'synced
 export class ThemeSyncController {
   private revision = 0;
   private editedAccent: string | null = null;
+  private receivedFromTab = false;
   private writes: Promise<void> = Promise.resolve();
   private apply: (accent: string) => void;
   private report: (state: ThemeSyncState) => void;
@@ -17,6 +18,7 @@ export class ThemeSyncController {
   }
 
   edit(accent: string) {
+    this.receivedFromTab = false;
     this.editedAccent = accent;
     this.revision++;
   }
@@ -25,7 +27,16 @@ export class ThemeSyncController {
     this.revision++;
   }
 
+  receive() {
+    this.cancel();
+    this.receivedFromTab = true;
+    this.editedAccent = null;
+  }
+
   async load(localAccent: string) {
+    // The originating tab owns its account save. Never echo it from here or
+    // let a delayed login restore an account value over the shared local one.
+    if (this.receivedFromTab) { this.report('needs-import'); return; }
     // The user may have edited while /auth/me was still resolving.
     if (this.editedAccent !== null) return this.save(this.editedAccent);
     const revision = this.revision;

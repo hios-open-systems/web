@@ -14,9 +14,11 @@ import {
     THEME_PRESETS,
 } from '@/lib/themes/config';
 import { useThemeAccent } from '@/lib/themes/useThemeAccent';
+import { useThemeStorage } from '@/lib/themes/useThemeStorage';
 import type { ThemeSyncState } from '@/lib/themes/syncController';
 import {
     DEFAULT_SKIN,
+    SKIN_STORAGE_KEY,
     isValidSkin,
     readStoredSkin,
     writeStoredSkin,
@@ -71,18 +73,18 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const [skin, setSkinState] = useState<SkinId>(getInitialSkin);
     useEffect(() => {
         if (typeof window === 'undefined') return;
-        writeRaw('theme', mode);
         document.documentElement.setAttribute('data-theme', mode);
     }, [mode]);
 
     const toggleTheme = useCallback(() => {
-        setMode((prev) => (prev === 'light' ? 'dark' : 'light'));
-    }, []);
+        const next = mode === 'light' ? 'dark' : 'light';
+        setMode(next);
+        writeRaw('theme', next);
+    }, [mode]);
 
     useEffect(() => {
         if (typeof document === 'undefined') return;
         document.documentElement.setAttribute('data-skin', skin);
-        writeStoredSkin(skin);
     }, [skin]);
 
     // Solo local por ahora (como el modo). El sync remoto de skin queda para
@@ -90,7 +92,18 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const setSkin = useCallback((next: SkinId) => {
         if (!isValidSkin(next)) return;
         setSkinState(next);
+        writeStoredSkin(next);
     }, []);
+
+    const readSharedAppearance = useCallback((key: string | null) => {
+        if (key === null || key === 'theme') {
+            setMode(readRaw('theme') === 'light' ? 'light' : 'dark');
+        }
+        if (key === null || key === SKIN_STORAGE_KEY) setSkinState(readStoredSkin());
+    }, []);
+    useThemeStorage(readSharedAppearance);
+    // Catch writes made after the head bootstrap but before React subscribed.
+    useEffect(() => readSharedAppearance(null), [readSharedAppearance]);
 
     const applyPreset = useCallback(
         (presetId: string) => {
