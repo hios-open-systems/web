@@ -1,5 +1,6 @@
 @import './animations.css';
 @import './design-tokens.css';
+@import './antd-controls.css';
 
 :root {
   /* Responsive layout system */

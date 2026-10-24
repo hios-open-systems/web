@@ -1,0 +1,123 @@
+/* Shared control tokens must follow the pre-paint HTML theme, not the SSR
+   ConfigProvider's dark fallback. Keep these aliases after hydration too:
+   switching CSS-in-JS scopes must not change the visible control palette. */
+:root {
+  --control-bg: var(--hios-bg-elevated);
+  --control-fill: rgba(0, 0, 0, 0.06);
+  --control-fill-subtle: rgba(0, 0, 0, 0.02);
+  --control-hover: color-mix(in srgb, var(--accent) 85%, #000);
+  --control-shadow: 0 2px 0 rgba(0, 0, 0, 0.02);
+  --control-radius: 10px;
+  --control-radius-sm: 6px;
+  --control-radius-lg: 18px;
+}
+
+html[data-theme='dark'] {
+  --control-bg: var(--hios-bg-secondary);
+  --control-fill: rgba(255, 255, 255, 0.12);
+  --control-fill-subtle: rgba(255, 255, 255, 0.04);
+  --control-hover: color-mix(in srgb, var(--accent) 85%, #fff);
+  --control-shadow: 0 2px 0 rgba(255, 255, 255, 0.04);
+}
+
+html[data-skin='terminal'] {
+  --control-radius: 4px;
+  --control-radius-sm: 2px;
+  --control-radius-lg: 6px;
+}
+
+/* More specific than both global and component CSS-in-JS token declarations.
+   Theme scope classes also travel with portaled selects, dropdowns and menus. */
+html[data-theme][data-skin] :is([class*='hios-dark-'], [class*='hios-light-']) {
+  --ant-font-family: var(--font-sans, 'Inter'), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ant-font-family-code: var(--font-mono, 'IBM Plex Mono'), ui-monospace, SFMono-Regular, Menlo, monospace;
+  --ant-border-radius: var(--control-radius);
+  --ant-border-radius-sm: var(--control-radius-sm);
+  --ant-border-radius-lg: var(--control-radius-lg);
+  --ant-color-bg-container: var(--control-bg);
+  --ant-color-bg-elevated: var(--hios-bg-elevated);
+  --ant-color-bg-layout: var(--hios-bg);
+  --ant-color-text: var(--hios-text);
+  --ant-color-text-heading: var(--hios-text);
+  --ant-color-text-label: var(--hios-text-secondary);
+  --ant-color-text-secondary: var(--hios-text-secondary);
+  --ant-color-text-description: var(--hios-text-secondary);
+  --ant-color-text-placeholder: var(--hios-text-muted);
+  --ant-color-text-disabled: var(--hios-text-muted);
+  --ant-color-border: var(--hios-border);
+  --ant-color-border-secondary: var(--hios-border);
+  --ant-color-split: var(--hios-border);
+  --ant-color-fill-secondary: var(--control-fill);
+  --ant-color-fill-tertiary: var(--control-fill-subtle);
+  --ant-color-fill-quaternary: var(--control-fill-subtle);
+  --ant-color-fill-alter: var(--control-fill-subtle);
+  --ant-color-bg-container-disabled: var(--control-fill-subtle);
+  --ant-color-primary: var(--accent);
+  --ant-color-primary-text: var(--accent-text);
+  --ant-color-primary-hover: var(--control-hover);
+  --ant-color-primary-text-hover: var(--control-hover);
+  --ant-color-primary-active: color-mix(in srgb, var(--accent) 75%, #000);
+  --ant-color-primary-text-active: var(--ant-color-primary-active);
+  --ant-color-primary-bg: color-mix(in srgb, var(--accent) 12%, var(--control-bg));
+  --ant-color-primary-bg-hover: color-mix(in srgb, var(--accent) 18%, var(--control-bg));
+  --ant-color-primary-border: color-mix(in srgb, var(--accent) 40%, var(--control-bg));
+  --ant-color-primary-border-hover: var(--control-hover);
+  --ant-color-link: var(--accent-text);
+  --ant-color-link-hover: var(--control-hover);
+  --ant-color-link-active: var(--ant-color-primary-active);
+  --ant-control-outline: color-mix(in srgb, var(--accent) 20%, transparent);
+  --ant-control-item-bg-hover: var(--control-fill-subtle);
+  --ant-control-item-bg-active: var(--ant-color-primary-bg);
+  --ant-control-item-bg-active-hover: var(--ant-color-primary-bg-hover);
+
+  /* Component tokens are copied literals by Ant Design, so alias them back
+     to the shared tokens as well (including disabled and focused states). */
+  --ant-button-default-color: var(--ant-color-text);
+  --ant-button-default-bg: var(--ant-color-bg-container);
+  --ant-button-default-border-color: var(--ant-color-border);
+  --ant-button-default-border-color-disabled: var(--ant-color-border);
+  --ant-button-border-color-disabled: var(--ant-color-border);
+  --ant-button-default-hover-bg: var(--ant-color-bg-container);
+  --ant-button-default-hover-color: var(--ant-color-primary-hover);
+  --ant-button-default-hover-border-color: var(--ant-color-primary-hover);
+  --ant-button-default-active-bg: var(--ant-color-bg-container);
+  --ant-button-default-active-color: var(--ant-color-primary-active);
+  --ant-button-default-active-border-color: var(--ant-color-primary-active);
+  --ant-button-default-shadow: var(--control-shadow);
+  --ant-button-primary-shadow: 0 2px 0 var(--ant-control-outline);
+  --ant-button-text-text-color: var(--ant-color-text);
+  --ant-button-text-text-hover-color: var(--ant-color-text);
+  --ant-button-text-text-active-color: var(--ant-color-text);
+  --ant-button-text-hover-bg: var(--ant-control-item-bg-hover);
+  --ant-button-group-border-color: var(--ant-color-primary-hover);
+  --ant-input-addon-bg: var(--ant-color-fill-alter);
+  --ant-input-active-bg: var(--ant-color-bg-container);
+  --ant-input-hover-bg: var(--ant-color-bg-container);
+  --ant-input-active-border-color: var(--ant-color-primary);
+  --ant-input-hover-border-color: var(--ant-color-primary-hover);
+  --ant-input-active-shadow: 0 0 0 2px var(--ant-control-outline);
+  --ant-select-selector-bg: var(--ant-color-bg-container);
+  --ant-select-option-active-bg: var(--ant-control-item-bg-hover);
+  --ant-select-option-selected-bg: var(--ant-control-item-bg-active);
+  --ant-select-option-selected-color: var(--ant-color-text);
+  --ant-select-multiple-item-bg: var(--ant-color-fill-alter);
+  --ant-segmented-track-bg: var(--ant-color-fill-alter);
+  --ant-segmented-item-color: var(--ant-color-text-secondary);
+  --ant-segmented-item-hover-color: var(--ant-color-text);
+  --ant-segmented-item-hover-bg: var(--ant-control-item-bg-hover);
+  --ant-segmented-item-selected-bg: var(--ant-color-bg-elevated);
+  --ant-segmented-item-selected-color: var(--ant-color-text);
+  --ant-menu-item-bg: var(--ant-color-bg-container);
+  --ant-menu-popup-bg: var(--ant-color-bg-elevated);
+  --ant-menu-item-color: var(--ant-color-text);
+  --ant-menu-item-hover-color: var(--ant-color-text);
+  --ant-menu-item-hover-bg: var(--ant-control-item-bg-hover);
+  --ant-menu-item-selected-bg: var(--ant-control-item-bg-active);
+  --ant-menu-item-selected-color: var(--ant-color-primary-text);
+  --ant-menu-item-active-bg: var(--ant-control-item-bg-active);
+}
+
+/* Resolve next/font variables on the control, below the body's font classes. */
+html[data-theme][data-skin='terminal'] :is([class*='hios-dark-'], [class*='hios-light-']) {
+  --ant-font-family: var(--ant-font-family-code);
+}
