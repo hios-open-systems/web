@@ -1,0 +1,13 @@
+qty,part,role,notes,source
+1,ESP32-WROOM-32 DevKit (38 pines),MCU + BT/BLE/WiFi,"dual-core, BT 4.2, 4MB flash",projects/btdac/README.md
+1,PCM5102A breakout (GY-PCM5102),DAC I2S,SCK→GND (PLL interno); jumpers FLT=L DEMP=L XSMT=H FMT=L; pin 3.3V sin conectar,projects/btdac/README.md
+1,LM2596S con display,Regulador a 5.0V,ajustar a 5.0V antes de conectar,projects/btdac/README.md
+1,KY-009,LED RGB de estado,"cátodo común, sin resistencias integradas",projects/btdac/README.md
+3,Resistencia 330Ω,Serie de cada color del LED,,projects/btdac/README.md
+1,Cargador BMS 2S USB-C,Carga y protección del pack,BM al punto medio entre celdas,projects/btdac/README.md
+2,Celda 18650,Batería 2S,celdas con tensión similar (dif < 0.1V),projects/btdac/README.md
+1,Portapilas 2× 18650 en serie,Soporte del pack,verificar configuración serie,projects/btdac/README.md
+1,Capacitor 100µF,Desacople cerca del VIN del ESP32,,projects/btdac/README.md
+1,Capacitor 10µF,Desacople cerca del VIN del PCM5102,,projects/btdac/README.md
+2,Capacitor 100nF,Desacople (uno por módulo),cerca del ESP32 y del PCM5102,projects/btdac/README.md
+3,Piezas impresas 3D,"Gabinete base, tapa, bandeja PCM5102",STL en public/downloads/btdac/,config/prints/btdacPrints.ts

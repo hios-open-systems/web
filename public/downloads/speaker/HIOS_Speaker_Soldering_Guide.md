@@ -85,6 +85,8 @@
 
 ## ■ CONEXIONES - BATERÍA (opcional)
 
+> ⚠️ **NO CONECTES ESTE DIVISOR A UN PACK 2S.** Con 100k/100k, 8.4V (pack cargado) dan 4.2V sobre GPIO34, por encima de lo que tolera el ADC del ESP32. Rediseñá el divisor y recalibrá el firmware antes de conectarlo. Ver la guía verificada: https://openhios.dev/pinouts/speaker
+
 | # | DESDE | HACIA | ✓ |
 |---|-------|-------|---|
 | 28 | VBAT+ | R1 (100kΩ) | ☐ |

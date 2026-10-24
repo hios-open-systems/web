@@ -1,0 +1,6 @@
+qty,part,role,notes,source
+1,ESP32 clásico (no S3),Sink Bluetooth A2DP,el S3 no tiene Bluetooth Classic,projects/speaker-test/README.md
+2,MAX98357A breakout,Amplificador I2S L y R,,projects/speaker-test/README.md
+2,Parlante,Bajo prueba,,projects/speaker-test/README.md
+1,Resistencia 100kΩ,SD → Vin del amp izquierdo,ajustar según breakout,projects/speaker-test/README.md
+1,Resistencia 220kΩ,SD → Vin del amp derecho,ajustar según breakout,projects/speaker-test/README.md

@@ -270,4 +270,4 @@ Ejemplos:
 6. **Porta pilas 2x18650** - Buscar: "porta pila 18650 serie" (para 2S)
 7. **2x Bateria 18650** - Buscar: "bateria 18650 litio" (comprar protegidas)
 8. **Parlante 63mm** - Buscar: "parlante 4 ohm 3w 63mm"
-9. **Resistencias 100k** (x2) - Para divisor bateria (opcional)
+9. **Resistencias 100k** (x2) - Para divisor bateria (opcional) — ⚠️ no aptas para 2S, ver advertencia del divisor en PINOUT.md

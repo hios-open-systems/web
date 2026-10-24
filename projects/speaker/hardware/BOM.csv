@@ -1,0 +1,12 @@
+qty,part,role,notes,source
+1,ESP32 DevKit (WROOM-32),"Control, WiFi y Bluetooth",WiFi 2.4GHz,projects/speaker/README.md
+2,MAX98357 breakout,"Amplificador I2S, uno por canal",canal elegido por SD: medir,projects/speaker/README.md
+2,Parlante 4–8Ω,Salida L y R,directo a los bornes del ampli (filterless),projects/speaker/README.md
+1,LCD 16×2 + backpack I2C (PCF8574),"Estado, volumen y título",dirección 0x27 en el firmware; verificar niveles I2C,projects/speaker/README.md
+1,LM2596S con display,Regulador a 5.0V,buck ≥2–3A por los parlantes,config/pinouts/speaker.ts
+1,Cargador y protección 2S USB-C,Carga del pack,,projects/speaker/README.md
+2,Celda 18650,Batería 2S en serie,,projects/speaker/README.md
+1,Portapilas 2× 18650 en serie,Soporte del pack,,projects/speaker/README.md
+,Resistencias divisor VBAT,Medición de batería en GPIO34,PENDIENTE: el 100k/100k del firmware no es apto para 2S; valores a definir,config/pinouts/speaker.ts
+,Resistencias de SD,Selección de canal L/R,valor según calculadora de SD y breakout,projects/speaker/README.md
+3,Piezas impresas 3D,"Gabinete, bafle frontal, tapa posterior",STL en public/downloads/speaker/,config/prints/speakerPrints.ts

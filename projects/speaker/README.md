@@ -1,5 +1,7 @@
 # HIOS WiFi Speaker
 
+> **Esquema de cableado, netlist y BOM (CSV):** [`hardware/`](hardware/). Se generan desde los datos verificados contra el firmware.
+
 Parlante WiFi + Bluetooth con ESP32: **2× amplificador I2S MAX98357 en estéreo**, display LCD 16×2 y batería 2S recargable por USB-C. Reproduce radios WiFi, audio de YouTube (vía Invidious) y actúa como sink Bluetooth A2DP, con control por interfaz web.
 
 ## Primeros pasos
@@ -92,7 +94,7 @@ En desarrollo — prototipo funcional. El código incluye WiFi radio, YouTube/In
 
 ## Licencia
 
-Consultá las condiciones de licencia de cada dependencia antes de redistribuirla. Este directorio no incluye un archivo de licencia propio.
+Firmware: MIT ([`LICENSE`](../../LICENSE)). Esquema, BOM y diseños en [`hardware/`](hardware/): CERN-OHL-S v2 ([`LICENSE-HARDWARE`](../../LICENSE-HARDWARE)). Documentación: CC BY-SA 4.0 ([`LICENSE-DOCS`](../../LICENSE-DOCS)). Las librerías que usa el firmware mantienen sus propias licencias.
 
 ---
 

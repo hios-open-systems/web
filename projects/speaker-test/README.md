@@ -1,5 +1,7 @@
 # HIOS Speaker Test
 
+> **Esquema de cableado, netlist y BOM (CSV):** [`hardware/`](hardware/). Se generan desde los datos verificados contra el firmware.
+
 Banco de pruebas para **escuchar los parlantes antes de armar el device**.
 
 El ESP32 se hace pasar por un parlante Bluetooth. Emparejás el celular,

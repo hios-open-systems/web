@@ -1,5 +1,7 @@
 # HIOS PAD — Control-Deck & Gaming Keypad Programable (ESP32-S3)
 
+> **Esquema de cableado, netlist y BOM (CSV):** [`hardware/`](hardware/). Se generan desde los datos verificados contra el firmware.
+
 Plataforma de control de escritorio de hardware abierto basada en **ESP32-S3 N16R8**, pantalla **TFT 4" ILI9488 (480×320)**, encoder rotativo, joystick analógico de pulgar, **10 teclas de acción en matriz 2×5 con diodos**, **2 teclas `ALT`**, **audio estéreo I2S (2× MAX98357A)** e iluminación **NeoPixel de 8 LEDs en 2 zonas**.
 
 El mismo hardware físico admite **dos personalidades de firmware**:

@@ -6,7 +6,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?logo=typescript)](https://www.typescriptlang.org)
 [![Cloudflare](https://img.shields.io/badge/Cloudflare-Pages%20%2B%20D1-F38020?logo=cloudflare)](https://pages.cloudflare.com)
 [![License: MIT](https://img.shields.io/badge/Code-MIT-yellow.svg)](LICENSE)
-[![Hardware: CERN-OHL-S](https://img.shields.io/badge/Hardware-CERN--OHL--S%20v2-lightgrey.svg)](LICENSE)
+[![Hardware: CERN-OHL-S](https://img.shields.io/badge/Hardware-CERN--OHL--S%20v2-lightgrey.svg)](LICENSE-HARDWARE)
 [![i18n](https://img.shields.io/badge/i18n-4%20idiomas-informational)](messages/)
 [![Tráfico Público](https://img.shields.io/badge/Métricas%20en%20vivo-openhios.dev%2Fes%2Fstats-2ba640)](https://openhios.dev/es/stats)
 
@@ -111,6 +111,7 @@ npm run build      # Compilación de producción
 
 ## Licencias
 
-- **Código:** MIT
-- **Diseños de Hardware:** CERN-OHL-S v2
-- **Documentación y Guías:** CC BY-SA 4.0
+- **Código** (sitio y firmware): MIT, ver [`LICENSE`](LICENSE).
+- **Diseños de hardware** (`projects/*/hardware/`, CAD y STL): CERN-OHL-S v2, ver [`LICENSE-HARDWARE`](LICENSE-HARDWARE).
+- **Documentación y guías:** CC BY-SA 4.0, ver [`LICENSE-DOCS`](LICENSE-DOCS).
+- **Contenido de terceros** mantiene su licencia: samples FluidR3 (CC BY 3.0) y VCSL (CC0), ver [`public/samples/CREDITS.md`](public/samples/CREDITS.md); la perilla del joystick del PAD se basa en un modelo de Thingiverse (thing:6189483) con la licencia que indique su autor.

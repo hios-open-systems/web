@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="587" viewBox="0 0 1120 587">
+<title>HIOS BTDAC — esquema de cableado</title>
+<style>
+text{font-family:ui-monospace,Menlo,Consolas,monospace;fill:#111}
+.title{font-size:20px;font-weight:700}.meta{font-size:11px;fill:#444}
+.warn{font-size:12px;fill:#b00020;font-weight:700}
+.modname{font-size:13px;font-weight:700}.power{font-size:11px;fill:#333}
+.pin{font-size:11px}.gpio{font-size:11px;text-anchor:end;font-weight:700}
+.mcu{fill:#eef4ff;stroke:#1d4ed8;stroke-width:2}.mod{fill:#f7f7f7;stroke:#333;stroke-width:1.5}
+.rail{fill:#fff8e6;stroke:#b7791f}.railname{font-size:12px;font-weight:700}
+.wire{stroke:#1d4ed8;stroke-width:1.5;fill:none}.flag{stroke:#b00020;stroke-dasharray:5 3}.dot{fill:#1d4ed8}
+</style>
+<rect width="1120" height="587" fill="#ffffff"/>
+<text x="32" y="36" class="title">HIOS BTDAC — esquema de cableado (rev 2.0)</text>
+<text x="32" y="58" class="meta">MCU: ESP32-WROOM-32 · pines desde projects/btdac/src/HIOS_BTDAC.ino</text>
+<text x="32" y="76" class="meta">Generado por scripts/gen-hardware-docs.ts. Pines verificados contra el firmware por npm test. Cableado entre módulos, no una PCB.</text>
+<rect x="600" y="112" width="488" height="49" class="mod"/>
+<text x="612" y="130" class="modname">Energía</text>
+<text x="612" y="148" class="power">pack 2S → BMS → LM2596 a 5.0V → riel 5V</text>
+<rect x="600" y="175" width="488" height="121" class="mod"/>
+<text x="612" y="193" class="modname">DAC PCM5102</text>
+<text x="612" y="211" class="power">VIN → 5V · GND → GND</text>
+<circle cx="600" cy="232" r="3" class="dot"/>
+<text x="612" y="236" class="pin">I2S DOUT: → DIN del PCM5102</text>
+<circle cx="600" cy="256" r="3" class="dot"/>
+<text x="612" y="260" class="pin">I2S LRCK: → LRCK del PCM5102</text>
+<circle cx="600" cy="280" r="3" class="dot"/>
+<text x="612" y="284" class="pin">I2S BCK: → BCK del PCM5102</text>
+<rect x="600" y="310" width="488" height="121" class="mod"/>
+<text x="612" y="328" class="modname">LED RGB KY-009</text>
+<text x="612" y="346" class="power">cátodo común → GND (cada color entra por su 330Ω)</text>
+<circle cx="600" cy="367" r="3" class="dot"/>
+<text x="612" y="371" class="pin">LED R: → 330Ω → R del KY-009</text>
+<circle cx="600" cy="391" r="3" class="dot"/>
+<text x="612" y="395" class="pin">LED G: → 330Ω → G del KY-009</text>
+<circle cx="600" cy="415" r="3" class="dot"/>
+<text x="612" y="419" class="pin">LED B: → 330Ω → B del KY-009</text>
+<rect x="32" y="112" width="300" height="319" class="mcu"/>
+<text x="44" y="132" class="modname">ESP32-WROOM-32</text>
+<text x="320" y="236" class="gpio">I2S DOUT · GPIO13</text>
+<path d="M332 232 H600" class="wire"/>
+<text x="320" y="260" class="gpio">I2S LRCK · GPIO14</text>
+<path d="M332 256 H600" class="wire"/>
+<text x="320" y="284" class="gpio">I2S BCK · GPIO27</text>
+<path d="M332 280 H600" class="wire"/>
+<text x="320" y="371" class="gpio">LED R · GPIO4</text>
+<path d="M332 367 H600" class="wire"/>
+<text x="320" y="395" class="gpio">LED G · GPIO16</text>
+<path d="M332 391 H600" class="wire"/>
+<text x="320" y="419" class="gpio">LED B · GPIO17</text>
+<path d="M332 415 H600" class="wire"/>
+<text x="32" y="461" class="meta">Línea roja punteada = el pin tiene una nota: leela en hardware/README.md antes de soldar.</text>
+<text x="32" y="485" class="modname">Rieles de alimentación</text>
+<rect x="32" y="491" width="1056" height="25" class="rail"/>
+<text x="44" y="506" class="railname">5V</text>
+<text x="252" y="506" class="power">ESP32 VIN · PCM5102 VIN · del LM2596 (5.0V)</text>
+<rect x="32" y="524" width="1056" height="25" class="rail"/>
+<text x="44" y="539" class="railname">GND común</text>
+<text x="252" y="539" class="power">ESP32 · PCM5102 · KY-009 (cátodo) · LM2596 OUT− · BMS P−</text>
+</svg>
