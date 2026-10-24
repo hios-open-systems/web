@@ -24,10 +24,16 @@ export function PayloadLab() {
   const [selectedStats, setSelectedStats] = useState('');
   const [minified, setMinified] = useState(false);
   const [split, setSplit] = useState(50);
+  const [tab, setTab] = useState('tree');
+  const [selectedPath, setSelectedPath] = useState('[]');
   const [api, contextHolder] = message.useMessage();
   const copy = useCopyToClipboard(api);
   const { analysis, busy, error, cancel, read } = usePayloadWorker(input);
-  useToolBridge('payload', values => { if (values.payload !== undefined) setInput(values.payload); if (values.view) setMinified(values.view === 'minified'); });
+  useToolBridge('payload', values => { if (values.payload !== undefined) setInput(values.payload); if (values.view) setMinified(values.view === 'minified');
+    if (Number(values.split) >= 30 && Number(values.split) <= 70) setSplit(Number(values.split));
+    if (['tree', 'output', 'table', 'analysis'].includes(values.tab)) setTab(values.tab);
+    if (values.selectedPath) setSelectedPath(values.selectedPath);
+  }, { view: minified ? 'minified' : 'pretty', payload: input, split: String(split), tab, selectedPath });
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
     const hash = new URLSearchParams(window.location.hash.slice(1));
@@ -37,7 +43,7 @@ export function PayloadLab() {
     if (query.has('payload')) { query.delete('payload'); history.replaceState(null, '', `${location.pathname}${query.size ? '?' + query : ''}${location.hash}`); }
     setHydrated(true);
   }, []);
-  useEffect(() => { setSelected(analysis?.nodes[0] ?? null); }, [analysis]);
+  useEffect(() => { setSelected(analysis?.nodes.find(node => JSON.stringify(node.path) === selectedPath) ?? analysis?.nodes[0] ?? null); }, [analysis, selectedPath]);
   useEffect(() => {
     let active = true;
     setOutput('');
@@ -86,8 +92,8 @@ export function PayloadLab() {
     <label className={styles.resize}>{t('input')} ↔ {t('output')} <input type="range" min={30} max={70} value={split} aria-label={`${t('input')} / ${t('output')}`} onChange={e => setSplit(Number(e.target.value))} /></label>
     <div className={styles.panels} style={{ gridTemplateColumns: `minmax(0, ${split}fr) minmax(0, ${100 - split}fr)` }}>
       <Card title={t('input')} className={styles.editor}><Input.TextArea disabled={!hydrated} spellCheck={false} autoCorrect="off" autoCapitalize="off" aria-label={t('input')} value={input} onChange={event => setInput(event.target.value)} autoSize={{ minRows: 15, maxRows: 25 }} /></Card>
-      <Card className={styles.output}><Tabs items={[
-        { key: 'tree', label: t('tree'), children: analysis ? <PayloadTree nodes={analysis.nodes} selected={selected?.id ?? 0} onSelect={setSelected} /> : null },
+      <Card className={styles.output}><Tabs activeKey={tab} onChange={setTab} items={[
+        { key: 'tree', label: t('tree'), children: analysis ? <PayloadTree nodes={analysis.nodes} selected={selected?.id ?? 0} onSelect={node => { setSelected(node); setSelectedPath(JSON.stringify(node.path)); }} /> : null },
         { key: 'output', label: t('output'), children: <><pre className={styles.code}>{output}</pre>{output.length >= 100_000 ? <Tag>{t('partial')}</Tag> : null}</> },
         { key: 'table', label: t('table'), children: <PayloadTable text={output} /> },
         { key: 'analysis', label: t('analysis'), children: <><h3>{t('selected')}</h3><pre className={styles.code}>{selectedStats}</pre></> },

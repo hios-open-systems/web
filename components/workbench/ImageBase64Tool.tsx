@@ -1,4 +1,5 @@
 'use client';
+import { useToolFileDraft } from '@/lib/hooks/useToolFileDraft';
 
 import React, { useCallback, useMemo } from 'react';
 import { Button, Card, Space, Tag, Typography, Upload, message } from 'antd';
@@ -31,6 +32,8 @@ export function ImageBase64Tool() {
   const onError = useCallback(() => { messageApi.error(t('readError')); }, [messageApi, t]);
   const { imageInfo, loading, clear, processFile } = useBase64Image(onError);
 
+  const rememberFile = useToolFileDraft('image-base64', processFile);
+
   const themeVars = useMemo(
     () =>
       ({
@@ -56,7 +59,7 @@ export function ImageBase64Tool() {
         description={t('subtitle')}
         locality="local"
         actions={
-          (imageInfo || loading) ? <Button size="large" onClick={clear}>{t('clear')}</Button> : undefined
+          (imageInfo || loading) ? <Button size="large" onClick={() => { rememberFile(null); clear(); }}>{t('clear')}</Button> : undefined
         }
       />
 
@@ -68,6 +71,7 @@ export function ImageBase64Tool() {
             accept="image/*"
             showUploadList={false}
             beforeUpload={(file) => {
+              rememberFile(file);
               processFile(file);
               return false;
             }}

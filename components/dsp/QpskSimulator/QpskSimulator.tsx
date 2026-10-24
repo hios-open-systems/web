@@ -9,6 +9,7 @@ import { QpskHeader } from './QpskHeader';
 import { QpskScreens } from './QpskScreens';
 import { QpskControls } from './QpskControls';
 import { QpskLegend } from './QpskLegend';
+import { useQpskDraft } from './useQpskDraft';
 import styles from './qpskSimulator.module.css';
 
 export interface QpskSimulatorProps {
@@ -24,6 +25,7 @@ export function QpskSimulator({ initialDibits = INITIAL_DIBITS, className }: Qps
     running: true, showReference: true, showTrajectories: true,
   }));
   const [viewMode, setViewMode] = useState<ScreenViewMode>('both');
+  useQpskDraft(config, setConfig, viewMode, setViewMode);
   const timeCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const constCanvasRef = useRef<HTMLCanvasElement | null>(null);
   useQpskAnimation({ timeCanvasRef, constCanvasRef, config });

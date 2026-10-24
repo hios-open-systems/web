@@ -41,7 +41,7 @@ export function ObjectComparatorTool() {
     const { mode } = useTheme();
     const [leftInput, setLeftInput] = useState(EXAMPLE_LEFT);
     const [rightInput, setRightInput] = useState(EXAMPLE_RIGHT);
-    useToolBridge('object-compare', values => { if (values.left !== undefined) setLeftInput(values.left); if (values.right !== undefined) setRightInput(values.right); });
+    useToolBridge('object-compare', values => { if (values.left !== undefined) setLeftInput(values.left); if (values.right !== undefined) setRightInput(values.right); }, { left: leftInput, right: rightInput });
     const result = useMemo(() => compareJsonInputs(leftInput, rightInput, t('unknownError')), [leftInput, rightInput, t]);
 
     const themeVars = {

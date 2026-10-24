@@ -30,7 +30,7 @@ export function HashDigestTool() {
   const [algo, setAlgo] = useState<HashAlgorithm>('SHA-256');
   const { result, error, pending, missingKey } = useDigestResult(algo, input);
 
-  useToolBridge('hash-digest', v => { if (v.input !== undefined) setInput(v.input); if (v.algo && isHashAlgorithm(v.algo)) setAlgo(v.algo); });
+  useToolBridge('hash-digest', v => { if (v.input !== undefined) setInput(v.input); if (v.algo && isHashAlgorithm(v.algo)) setAlgo(v.algo); }, { algo, input });
 
   useEffect(() => {
     if (hydratedFromUrl.current) return;

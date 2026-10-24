@@ -1,5 +1,7 @@
 'use client';
 
+import { useToolDraft } from '@/lib/hooks/useToolDraft';
+import { serializeBeat } from '@/lib/workbench/beatmaker';
 import { useEffect, useState } from 'react';
 import { message } from 'antd';
 import {
@@ -15,6 +17,16 @@ import {
 export function useBeatmakerState() {
   const [project, setProject] = useState<BeatProject>(createDefaultProject);
   const [shareOpen, setShareOpen] = useState(false);
+  useToolDraft('beatmaker', { project: serializeBeat(project), solos: JSON.stringify(project.tracks.filter(track => track.solo).map(track => track.sound)) }, values => {
+    const saved = parseBeat(values.project ?? '');
+    if (saved) {
+      try {
+        const solos: unknown = JSON.parse(values.solos ?? '[]');
+        if (Array.isArray(solos)) saved.tracks = saved.tracks.map(track => ({ ...track, solo: solos.includes(track.sound) }));
+      } catch { /* Older drafts have no solo selection. */ }
+      setProject(saved);
+    }
+  });
 
   useEffect(() => {
     if (typeof window === 'undefined') return;

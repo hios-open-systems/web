@@ -1,5 +1,6 @@
 'use client';
 
+import { useToolDraft } from '@/lib/hooks/useToolDraft';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -185,6 +186,20 @@ export function useCalculatorState() {
     hydratedFromUrl.current = true;
     setUrlReady(true);
   }, [searchParams]);
+
+  useToolDraft('embedded', { ...Object.fromEntries(Object.entries(values).map(([key, value]) => [key, String(value)])), tab: activeTab, eseries: eSeries }, saved => {
+    const next = { ...DEFAULTS };
+    for (const field of ALL_FIELDS) {
+      const value = saved[field.key];
+      if (value === undefined) continue;
+      if (isStringField(field.key)) next[field.key] = value;
+      else if (Number.isFinite(Number(value))) next[field.key] = Number(value);
+    }
+    if (!ALLOWED_PACKAGES.includes(next.packageType as ResistorPackageType)) next.packageType = DEFAULTS.packageType;
+    setValues(next);
+    if (CALC_IDS.includes(saved.tab)) setActiveTab(saved.tab);
+    if (isESeries(saved.eseries)) setESeries(saved.eseries);
+  });
 
   const getQuery = useCallback(() => {
     if (!urlReady) return searchParams.toString();

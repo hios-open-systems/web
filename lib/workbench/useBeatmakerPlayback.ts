@@ -1,5 +1,6 @@
 'use client';
 
+import { useToolDraft } from '@/lib/hooks/useToolDraft';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { getSharedAudioContext } from '@/components/workbench/audio/audioEngine.ts';
 import { triggerSound } from './beatmakerSynths.ts';
@@ -10,6 +11,10 @@ export function useBeatmakerPlayback(project: BeatProject) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [masterVolume, setMasterVolume] = useState(0.85);
+  useToolDraft('beatmaker-volume', { volume: String(masterVolume) }, saved => {
+    const volume = Number(saved.volume);
+    if (volume >= 0 && volume <= 1) setMasterVolume(volume);
+  });
 
   const projectRef = useRef(project);
   projectRef.current = project;

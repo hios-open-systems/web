@@ -30,7 +30,7 @@ function fmt(n: number): string {
 export function OhmsLawTool() {
   const t = useTranslations('Workbench.ohmsLaw');
   const [vals, setVals] = useState<Record<Field, number | null>>({ v: 12, i: null, r: 4, p: null });
-  useToolBridge('ohms-law', data => { const next = parseOhms(data.values ?? ''); if (next) setVals(next); });
+  useToolBridge('ohms-law', data => { const next = parseOhms(data.values ?? ''); if (next) setVals(next); }, { values: JSON.stringify(vals) });
 
   const result = useMemo(() => {
     const keys = (Object.keys(vals) as Field[]).filter(

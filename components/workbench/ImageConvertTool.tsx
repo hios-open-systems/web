@@ -1,4 +1,5 @@
 'use client';
+import { useToolFileDraft } from '@/lib/hooks/useToolFileDraft';
 import { ToolPresetBinding, numberField } from '@/components/workbench/ToolPresetBinding';
 
 import Image from 'next/image';
@@ -57,6 +58,8 @@ export function ImageConvertTool() {
     } finally { if (ticket === generation.current) setLoading(false); }
   }, [messageApi]);
 
+  const rememberFile = useToolFileDraft('image-convert', processFile);
+
   const exportAs = useCallback(async (type: string, ext: string) => {
     if (!image) return;
     setBusy(true);
@@ -93,7 +96,7 @@ export function ImageConvertTool() {
         title="Conversor de imágenes"
         description="Subí una imagen y exportala a PNG, JPG o WEBP. Todo en el navegador; nada se sube a un servidor."
         locality="local"
-        actions={(image || loading) ? <Button size="large" disabled={busy} onClick={() => { generation.current++; setLoading(false); setSource(null); setImage(null); }}>Limpiar</Button> : undefined}
+        actions={(image || loading) ? <Button size="large" disabled={busy} onClick={() => { rememberFile(null); generation.current++; setLoading(false); setSource(null); setImage(null); }}>Limpiar</Button> : undefined}
       />
 
       {loading && <Text role="status">Procesando archivo…</Text>}
@@ -103,7 +106,7 @@ export function ImageConvertTool() {
             disabled={loading}
             accept="image/*"
             showUploadList={false}
-            beforeUpload={(file) => { processFile(file); return false; }}
+            beforeUpload={(file) => { rememberFile(file); processFile(file); return false; }}
             style={{ background: 'var(--hios-bg-secondary)', border: '1px dashed var(--hios-border)' }}
           >
             <p style={{ fontSize: 32, margin: '16px 0 8px' }}>

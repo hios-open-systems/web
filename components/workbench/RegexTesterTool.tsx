@@ -29,7 +29,7 @@ export function RegexTesterTool() {
   const [replaceEnabled, setReplaceEnabled] = useState(false);
   const [replacement, setReplacement] = useState('');
 
-  useToolBridge('regex', v => { if (v.input !== undefined) setInput(v.input); if (v.pattern !== undefined) setPattern(v.pattern); if (v.flags !== undefined) setFlags(sanitizeFlags(v.flags)); if (v.replacement !== undefined) { setReplacement(v.replacement); setReplaceEnabled(v.replaceEnabled === 'true' || v.replacement !== ''); } });
+  useToolBridge('regex', v => { if (v.input !== undefined) setInput(v.input); if (v.pattern !== undefined) setPattern(v.pattern); if (v.flags !== undefined) setFlags(sanitizeFlags(v.flags)); if (v.replacement !== undefined) { setReplacement(v.replacement); setReplaceEnabled(v.replaceEnabled === 'true' || v.replacement !== ''); } }, { replaceEnabled: String(replaceEnabled), input, pattern, flags, replacement });
 
   useEffect(() => {
     if (hydratedFromUrl.current) return;
