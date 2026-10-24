@@ -42,3 +42,11 @@ Validation completed: ESLint passed; 47/47 self-test groups passed; OpenNext pro
 For the eventual release, build from updated local main with the real public key, preserve/verify both secret bindings on the new version, run security tests and release prerequisites, then deploy only after explicit authorization. GitHub Actions has the public build variable; any independent Workers Builds environment still needs inspection. The first checklist item above is now provisioned for local/Actions builds and staged Worker secrets, but production activation and end-to-end captcha verification remain pending.
 
 Follow-up validation: OpenNext build with the real public site key completed successfully. The read-only `security-release-check.mjs` passed against the built assets and staged secret names. This is not an end-to-end captcha test or authorization to deploy. Browser review remains blocked because the authenticated Chrome window is not exposed by the connected extension; desktop control was stopped by its URL-verification safeguard.
+
+## Authorized production release
+
+The user authorized merge, push and production deployment. Browser access was established in Chrome profile Trabajo. Workers Builds was disabled and saved before pushing; GitHub Actions remains validation-only because WORKERS_BUILDS_DISABLED is unset and deployment credentials have not been configured. Future pushes do not automatically publish through either path until a deliberate CI cutover.
+
+Panel inspection confirmed active scanner-probe blocking and an active WAF rate-limit rule: 15 requests per 10 seconds per IP for POST/PUT/DELETE under /api/, excluding /api/usage, with a 10-second block. No WAF changes were made. The user profile confirms mobile TOTP two-factor authentication is active; account-wide enforcement remains off.
+
+The release build and 8 Worker API tests plus 16 browser security tests passed. Production commit 19c54ff98dc6 was published and its version plus 20 localized routes verified. The subsequent CI install check exposed npm 10 resolving the parent-scoped miniflare/undici override differently from local npm 11. Replaced it with an exact source-version override (undici@7.29.1 -> ^7.30.1), preserving the existing lockfile and patched runtime versions; npm 10 clean-install dry-run passed. The final release includes this CI compatibility correction.
