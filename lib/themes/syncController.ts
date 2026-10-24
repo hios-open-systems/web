@@ -1,7 +1,7 @@
-import { DEFAULT_ACCENT } from './config';
+import { isValidHex, normalizeHex } from './config';
 import { fetchRemoteThemeSettings, updateRemoteThemeAccent } from './sync';
 
-export type ThemeSyncState = 'anonymous' | 'checking' | 'needs-import' | 'synced' | 'error' | 'unavailable';
+export type ThemeSyncState = 'anonymous' | 'checking' | 'saving' | 'needs-import' | 'synced' | 'error' | 'unavailable';
 
 /** One controller per mounted provider. Local intent wins over older responses. */
 export class ThemeSyncController {
@@ -33,7 +33,7 @@ export class ThemeSyncController {
     this.editedAccent = null;
   }
 
-  async load(localAccent: string) {
+  async load() {
     // The originating tab owns its account save. Never echo it from here or
     // let a delayed login restore an account value over the shared local one.
     if (this.receivedFromTab) { this.report('needs-import'); return; }
@@ -44,8 +44,11 @@ export class ThemeSyncController {
     try {
       const settings = await fetchRemoteThemeSettings();
       if (revision !== this.revision) return;
-      if (settings.themeAccent) this.apply(settings.themeAccent);
-      this.report(!settings.themeAccent && localAccent !== DEFAULT_ACCENT ? 'needs-import' : 'synced');
+      if (settings.themeAccent) {
+        if (!isValidHex(settings.themeAccent)) throw new Error('Invalid account accent');
+        this.apply(normalizeHex(settings.themeAccent));
+      }
+      this.report(settings.themeAccent ? 'synced' : 'needs-import');
     } catch {
       if (revision === this.revision) this.report('unavailable');
     }
@@ -53,13 +56,16 @@ export class ThemeSyncController {
 
   save(accent: string): Promise<void> {
     const revision = ++this.revision;
-    this.report('checking');
+    this.report('saving');
     // Serialize writes: an older request must not finish last in the database.
     // Skip queued choices that have already been superseded by another edit.
     this.writes = this.writes.then(async () => {
       if (revision !== this.revision) return;
       try {
-        await updateRemoteThemeAccent(accent);
+        const settings = await updateRemoteThemeAccent(accent);
+        if (!settings.themeAccent || !isValidHex(settings.themeAccent) || normalizeHex(settings.themeAccent) !== accent) {
+          throw new Error('Account did not confirm the current accent');
+        }
         if (revision === this.revision) this.report('synced');
       } catch {
         if (revision === this.revision) this.report('unavailable');

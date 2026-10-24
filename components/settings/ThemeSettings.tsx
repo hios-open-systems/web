@@ -4,7 +4,6 @@ import { PageIntro } from '@/components/ui/PageIntro';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useTranslations, useLocale } from 'next-intl';
-import { Alert } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { CheckOutlined } from '@ant-design/icons';
 import { useTheme } from '@/lib/ThemeContext';
@@ -18,6 +17,8 @@ import {
   writeSavedThemes,
 } from '@/lib/themes/saved';
 import styles from './themeSettings.module.css';
+import { ThemeSaveStatus } from './ThemeSaveStatus';
+import { useThemeSaveStatus } from './useThemeSaveStatus';
 
 export function ThemeSettings() {
   const t = useTranslations('Settings');
@@ -30,11 +31,6 @@ export function ThemeSettings() {
     setAccent,
     setSkin,
     applyPreset,
-    isAuthenticated,
-    isSyncing,
-    syncState,
-    syncError,
-    syncCurrentAccent,
   } = useTheme();
   const [hexDraft, setHexDraft] = useState(accent);
   const [savedThemes, setSavedThemes] = useState<SavedTheme[]>([]);
@@ -70,22 +66,12 @@ export function ThemeSettings() {
 
   const activePreset = findPresetByAccent(accent);
   const draftValid = isValidHex(hexDraft);
-  const syncStatusLabel = !isAuthenticated
-    ? t('localMode')
-    : syncState === 'checking' || isSyncing
-      ? t('syncing')
-      : syncState === 'needs-import'
-        ? t('needsImport')
-        : syncState === 'unavailable'
-          ? t('syncUnavailable')
-          : syncState === 'error'
-            ? t('syncErrorState')
-            : t('accountMode');
+  const saveStatus = useThemeSaveStatus();
   const summaryCards = [
     {
       label: t('summarySyncLabel'),
-      value: syncStatusLabel,
-      hint: isAuthenticated ? t('summarySyncHintAccount') : t('summarySyncHintLocal'),
+      value: saveStatus.localLabel,
+      hint: saveStatus.accountLabel,
     },
     {
       label: t('summaryPresetLabel'),
@@ -98,10 +84,6 @@ export function ThemeSettings() {
       hint: t('summaryAccentHint'),
     },
   ];
-
-  const renderStatus = () => {
-    return <span className={styles.syncMeta}>{syncStatusLabel}</span>;
-  };
 
   const commitHex = () => {
     if (draftValid) setAccent(hexDraft);
@@ -138,34 +120,7 @@ export function ThemeSettings() {
         ))}
       </section>
 
-      <section className={styles.section} aria-label={t('syncTitle')}>
-        <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>{t('syncTitle')}</h2>
-          {renderStatus()}
-        </div>
-        <p className={styles.sectionHint}>{isAuthenticated ? t('syncHintAccount') : t('syncHintLocal')}</p>
-        {syncState === 'needs-import' ? (
-          <div className={styles.syncActionRow}>
-            <button
-              type="button"
-              className={styles.syncButton}
-              onClick={() => void syncCurrentAccent()}
-              disabled={isSyncing}
-            >
-              {t('syncNow')}
-            </button>
-          </div>
-        ) : null}
-        {syncError ? (
-          <Alert
-            type="warning"
-            showIcon
-            className={styles.syncAlert}
-            message={t('syncWarningTitle')}
-            description={syncError}
-          />
-        ) : null}
-      </section>
+      <ThemeSaveStatus />
 
       <section className={styles.section} aria-labelledby="theme-skins">
         <div className={styles.sectionHeader}>
@@ -357,9 +312,6 @@ export function ThemeSettings() {
         </div>
       </section>
 
-      <footer className={styles.footer}>
-        <span className={styles.footerNote}>{isAuthenticated ? t('accountFootnote') : t('localFootnote')}</span>
-      </footer>
     </section>
   );
 }

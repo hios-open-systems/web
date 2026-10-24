@@ -2,48 +2,40 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useCurrentUser } from '@/lib/hooks/useCurrentUser';
-import { DEFAULT_ACCENT, THEME_STORAGE_KEY, isValidHex, normalizeHex, readThemeConfig, writeThemeConfig } from './config';
+import { DEFAULT_ACCENT, THEME_STORAGE_KEY, isValidHex, normalizeHex } from './config';
 import { ThemeSyncController, type ThemeSyncState } from './syncController';
 import { useThemeStorage } from './useThemeStorage';
+import { useLocalAccent } from './useLocalAccent';
 
 function useSharedAccent(sync: ThemeSyncController, authenticated: boolean,
-  show: (accent: string) => void, report: (state: ThemeSyncState) => void) {
+  restore: () => string, report: (state: ThemeSyncState) => void) {
   useThemeStorage(useCallback((key) => {
     if (key !== null && key !== THEME_STORAGE_KEY) return;
-    const next = readThemeConfig().accent;
-    if (key !== null && document.documentElement.style.getPropertyValue('--accent') === next) return;
+    const previous = document.documentElement.style.getPropertyValue('--accent');
+    const next = restore();
+    if (key !== null && previous === next) return;
     sync.receive();
-    show(next);
-    document.documentElement.style.setProperty('--accent', next);
     report(authenticated ? 'needs-import' : 'anonymous');
-  }, [sync, authenticated, show, report]));
+  }, [sync, authenticated, restore, report]));
 }
 
 export function useThemeAccent() {
   const { user, isLoading } = useCurrentUser();
-  const [accent, setAccentState] = useState(DEFAULT_ACCENT);
+  const { accent, localAccentState, applyAccent, restoreAccent } = useLocalAccent();
   const [ready, setReady] = useState(false);
   const [syncState, setSyncState] = useState<ThemeSyncState>('anonymous');
-  const applyAccent = useCallback((next: string) => {
-    setAccentState(next);
-    document.documentElement.style.setProperty('--accent', next);
-    writeThemeConfig({ version: 1, accent: next });
-  }, []);
   const [sync] = useState(() => new ThemeSyncController(applyAccent, setSyncState));
-  useSharedAccent(sync, Boolean(user), setAccentState, setSyncState);
+  useSharedAccent(sync, Boolean(user), restoreAccent, setSyncState);
 
   useEffect(() => {
-    const saved = readThemeConfig();
     const bootstrapped = document.documentElement.style.getPropertyValue('--accent') || DEFAULT_ACCENT;
-    if (bootstrapped !== saved.accent) sync.receive();
-    setAccentState(saved.accent);
-    document.documentElement.style.setProperty('--accent', saved.accent);
+    if (bootstrapped !== restoreAccent()) sync.receive();
     setReady(true);
-  }, [sync]);
+  }, [sync, restoreAccent]);
 
   useEffect(() => {
     if (!ready || isLoading) return;
-    if (user) void sync.load(readThemeConfig().accent);
+    if (user) void sync.load();
     else setSyncState('anonymous');
     return () => sync.cancel();
   }, [ready, isLoading, user, sync]);
@@ -61,7 +53,8 @@ export function useThemeAccent() {
   );
 
   return {
-    accent, setAccent, syncCurrentAccent, syncState,
-    isAuthenticated: Boolean(user), isSyncing: syncState === 'checking', syncError: null,
+    accent, setAccent, syncCurrentAccent, localAccentState,
+    syncState: isLoading ? 'checking' as const : syncState,
+    isAuthenticated: Boolean(user), isSyncing: isLoading || syncState === 'checking' || syncState === 'saving', syncError: null,
   };
 }

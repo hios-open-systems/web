@@ -55,8 +55,11 @@ export function normalizeHex(value: string): string {
 }
 
 export function readThemeConfig(): ThemeConfig {
-    const raw = readRaw(THEME_STORAGE_KEY);
-    if (!raw) return DEFAULT_THEME_CONFIG;
+    return parseThemeConfig(readRaw(THEME_STORAGE_KEY)) ?? DEFAULT_THEME_CONFIG;
+}
+
+export function parseThemeConfig(raw: string | null): ThemeConfig | null {
+    if (!raw) return null;
     try {
         const parsed = JSON.parse(raw);
         if (
@@ -69,13 +72,13 @@ export function readThemeConfig(): ThemeConfig {
             return { version: 1, accent: normalizeHex(parsed.accent) };
         }
     } catch {
-        return DEFAULT_THEME_CONFIG;
+        return null;
     }
-    return DEFAULT_THEME_CONFIG;
+    return null;
 }
 
-export function writeThemeConfig(config: ThemeConfig): void {
-    writeRaw(THEME_STORAGE_KEY, JSON.stringify(config));
+export function writeThemeConfig(config: ThemeConfig): boolean {
+    return writeRaw(THEME_STORAGE_KEY, JSON.stringify(config));
 }
 
 export function findPresetByAccent(accent: string): ThemePreset | undefined {
