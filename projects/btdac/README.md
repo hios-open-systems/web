@@ -1,5 +1,7 @@
 # HIOS BTDAC — Receptor Bluetooth + DAC PCM5102
 
+> **Esquema de cableado, netlist y BOM (CSV):** [`hardware/`](hardware/). Se generan desde los datos verificados contra el firmware.
+
 Receptor de audio **Bluetooth A2DP** con ESP32 y DAC PCM5102. Entrega audio estéreo por salida de línea y mantiene un canal **BLE** para solicitar tonos de prueba desde la aplicación Android. HW **rev 2.0** · firmware/app **v0.5**.
 
 ## Primeros pasos
@@ -109,7 +111,7 @@ Funciones implementadas y ampliaciones pendientes:
 
 ## Licencia
 
-Consultá las condiciones de licencia de cada dependencia antes de redistribuirla. Este directorio no incluye un archivo de licencia propio.
+Firmware: MIT ([`LICENSE`](../../LICENSE)). Esquema, BOM y diseños en [`hardware/`](hardware/): CERN-OHL-S v2 ([`LICENSE-HARDWARE`](../../LICENSE-HARDWARE)). Documentación: CC BY-SA 4.0 ([`LICENSE-DOCS`](../../LICENSE-DOCS)). Las librerías que usa el firmware mantienen sus propias licencias.
 
 ---
 

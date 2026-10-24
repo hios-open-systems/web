@@ -1,0 +1,12 @@
+qty,part,role,notes,source
+1,ESP32-S3-DevKitC-1 (N16R8),MCU,,projects/hios-node-ai/COMPONENTS.md
+1,INMP441,Micrófono MEMS I2S,firmware aún no lo usa,projects/hios-node-ai/COMPONENTS.md
+1,MAX98357A,Amplificador I2S mono,firmware aún no lo usa,projects/hios-node-ai/COMPONENTS.md
+1,"OLED 0.96"" SSD1306 (I2C 0x3C)",Pantalla de estado,,projects/hios-node-ai/COMPONENTS.md
+1,Pulsador 6×6,Botón PTT,,projects/hios-node-ai/COMPONENTS.md
+1,LED 3mm difuso,Indicador de estado,,projects/hios-node-ai/COMPONENTS.md
+1,Resistencia 330Ω,Serie del LED,,projects/hios-node-ai/COMPONENTS.md
+1,Parlante 4Ω 3W (40mm),Salida acústica,,projects/hios-node-ai/COMPONENTS.md
+1,Cargador TP4056 USB-C,Carga de batería,,projects/hios-node-ai/COMPONENTS.md
+1,Celda 18650,Alimentación,falta definir cómo se obtiene 5V,projects/hios-node-ai/COMPONENTS.md
+1,Capacitor 220µF,Desacople 5V cerca del MAX98357A,,projects/hios-node-ai/PINOUT.md

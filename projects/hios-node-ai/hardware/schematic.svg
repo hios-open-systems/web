@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="937" viewBox="0 0 1120 937">
+<title>HIOS Node AI — esquema de cableado</title>
+<style>
+text{font-family:ui-monospace,Menlo,Consolas,monospace;fill:#111}
+.title{font-size:20px;font-weight:700}.meta{font-size:11px;fill:#444}
+.warn{font-size:12px;fill:#b00020;font-weight:700}
+.modname{font-size:13px;font-weight:700}.power{font-size:11px;fill:#333}
+.pin{font-size:11px}.gpio{font-size:11px;text-anchor:end;font-weight:700}
+.mcu{fill:#eef4ff;stroke:#1d4ed8;stroke-width:2}.mod{fill:#f7f7f7;stroke:#333;stroke-width:1.5}
+.rail{fill:#fff8e6;stroke:#b7791f}.railname{font-size:12px;font-weight:700}
+.wire{stroke:#1d4ed8;stroke-width:1.5;fill:none}.flag{stroke:#b00020;stroke-dasharray:5 3}.dot{fill:#1d4ed8}
+</style>
+<rect width="1120" height="937" fill="#ffffff"/>
+<text x="32" y="36" class="title">HIOS Node AI — esquema de cableado (rev —)</text>
+<text x="32" y="58" class="meta">MCU: ESP32-S3-DevKitC-1 (N16R8) · pines desde projects/hios-node-ai/PINOUT.md (firmware: src/main.cpp)</text>
+<text x="32" y="76" class="meta">BORRADOR — generado de la documentación; no hay firmware que lo confirme por completo. No soldar hasta resolver las advertencias.</text>
+<text x="32" y="100" class="warn">⚠ NO ARMABLE TODAVÍA: PINOUT.md y src/main.cpp ponen OLED SCL en GPIO22, que no existe en el ESP32-S3 (GPIO 0–21 y 26–48). Hay que</text>
+<text x="32" y="116" class="warn">elegir otro pin y actualizar ambos.</text>
+<text x="32" y="132" class="warn">⚠ src/main.cpp solo usa botón (4), LED (2) e I2C (21/22). El micrófono INMP441 y el MAX98357A están documentados pero el firmware</text>
+<text x="32" y="148" class="warn">todavía no los usa.</text>
+<text x="32" y="164" class="warn">⚠ No está documentado cómo se obtiene el riel 5V desde una sola 18650 + TP4056 (3.0–4.2V). Falta definir regulación/boost.</text>
+<rect x="600" y="192" width="488" height="49" class="mod"/>
+<text x="612" y="210" class="modname">Energía</text>
+<text x="612" y="228" class="power">18650 + TP4056 (USB-C) · el camino a 5V no está documentado</text>
+<rect x="600" y="255" width="488" height="121" class="mod"/>
+<text x="612" y="273" class="modname">Micrófono INMP441 (I2S)</text>
+<text x="612" y="291" class="power">VDD → 3V3 · GND → GND · L/R → GND (canal izquierdo)</text>
+<circle cx="600" cy="312" r="3" class="dot"/>
+<text x="612" y="316" class="pin">I2S Mic SCK: → SCK/BCLK del INMP441</text>
+<circle cx="600" cy="336" r="3" class="dot"/>
+<text x="612" y="340" class="pin">I2S Mic WS: → WS/LRC del INMP441</text>
+<circle cx="600" cy="360" r="3" class="dot"/>
+<text x="612" y="364" class="pin">I2S Mic SD: ← SD/DOUT del INMP441</text>
+<rect x="600" y="390" width="488" height="136" class="mod"/>
+<text x="612" y="408" class="modname">MAX98357A (I2S)</text>
+<text x="612" y="426" class="power">VIN → 5V · GND → GND · GAIN → GND</text>
+<text x="612" y="441" class="power">carga: Parlante 4Ω 3W</text>
+<circle cx="600" cy="462" r="3" class="dot"/>
+<text x="612" y="466" class="pin">I2S Amp BCLK: → BCLK del MAX98357A</text>
+<circle cx="600" cy="486" r="3" class="dot"/>
+<text x="612" y="490" class="pin">I2S Amp LRC: → LRC del MAX98357A</text>
+<circle cx="600" cy="510" r="3" class="dot"/>
+<text x="612" y="514" class="pin">I2S Amp DIN: → DIN del MAX98357A</text>
+<rect x="600" y="540" width="488" height="97" class="mod"/>
+<text x="612" y="558" class="modname">OLED SSD1306 0.96&quot; (I2C 0x3C)</text>
+<text x="612" y="576" class="power">VCC → 3V3 · GND → GND</text>
+<circle cx="600" cy="597" r="3" class="dot"/>
+<text x="612" y="601" class="pin">I2C SDA: → SDA del OLED</text>
+<circle cx="600" cy="621" r="3" class="dot"/>
+<text x="612" y="625" class="pin">I2C SCL: → SCL del OLED</text>
+<rect x="600" y="651" width="488" height="97" class="mod"/>
+<text x="612" y="669" class="modname">Botón PTT + LED de estado</text>
+<text x="612" y="687" class="power">botón a GND · LED vía 330Ω a GND</text>
+<circle cx="600" cy="708" r="3" class="dot"/>
+<text x="612" y="712" class="pin">Botón PTT: → pulsador → GND (INPUT_PULLUP)</text>
+<circle cx="600" cy="732" r="3" class="dot"/>
+<text x="612" y="736" class="pin">LED estado: → 330Ω → LED → GND</text>
+<rect x="32" y="192" width="300" height="556" class="mcu"/>
+<text x="44" y="212" class="modname">ESP32-S3-DevKitC-1 (N16R8)</text>
+<text x="320" y="316" class="gpio">I2S Mic SCK · GPIO42</text>
+<path d="M332 312 H600" class="wire"/>
+<text x="320" y="340" class="gpio">I2S Mic WS · GPIO41</text>
+<path d="M332 336 H600" class="wire"/>
+<text x="320" y="364" class="gpio">I2S Mic SD · GPIO40</text>
+<path d="M332 360 H600" class="wire"/>
+<text x="320" y="466" class="gpio">I2S Amp BCLK · GPIO15</text>
+<path d="M332 462 H600" class="wire"/>
+<text x="320" y="490" class="gpio">I2S Amp LRC · GPIO16</text>
+<path d="M332 486 H600" class="wire"/>
+<text x="320" y="514" class="gpio">I2S Amp DIN · GPIO17</text>
+<path d="M332 510 H600" class="wire"/>
+<text x="320" y="601" class="gpio">I2C SDA · GPIO21</text>
+<path d="M332 597 H600" class="wire"/>
+<text x="320" y="625" class="gpio">I2C SCL · GPIO22</text>
+<path d="M332 621 H600" class="wire flag"/>
+<text x="320" y="712" class="gpio">Botón PTT · GPIO4</text>
+<path d="M332 708 H600" class="wire"/>
+<text x="320" y="736" class="gpio">LED estado · GPIO2</text>
+<path d="M332 732 H600" class="wire"/>
+<text x="32" y="778" class="meta">Línea roja punteada = el pin tiene una nota: leela en hardware/README.md antes de soldar.</text>
+<text x="32" y="802" class="modname">Rieles de alimentación</text>
+<rect x="32" y="808" width="1056" height="25" class="rail"/>
+<text x="44" y="823" class="railname">5V</text>
+<text x="252" y="823" class="power">MAX98357A VIN · 220µF cerca del ampli</text>
+<rect x="32" y="841" width="1056" height="25" class="rail"/>
+<text x="44" y="856" class="railname">3V3</text>
+<text x="252" y="856" class="power">INMP441 VDD · OLED VCC</text>
+<rect x="32" y="874" width="1056" height="25" class="rail"/>
+<text x="44" y="889" class="railname">GND común</text>
+<text x="252" y="889" class="power">todos los módulos</text>
+</svg>

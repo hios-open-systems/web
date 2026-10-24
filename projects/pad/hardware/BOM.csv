@@ -1,0 +1,21 @@
+qty,part,role,notes,source
+1,ESP32-S3-DevKitC-1 N16R8,MCU,16MB flash + 8MB PSRAM octal,projects/pad/README.md
+1,"Pantalla ILI9488 4"" SPI 480×320",Display,"si trae buffer 74HC245, VCC a 3V3",config/pinouts/pad.ts
+1,Encoder KY-040,Navegación,a 3V3,projects/pad/README.md
+1,Joystick HW-504,Mouse / navegación,a 3V3 aunque el silk diga +5V,projects/pad/README.md
+12,Pulsador NA,10 teclas de acción + 2 ALT,,projects/pad/README.md
+10,Diodo 1N4148,Matriz 2×5 (uno por tecla),cátodo hacia la FILA,projects/pad/README.md
+2,MAX98357A breakout,Audio estéreo I2S,bus compartido,projects/pad/README.md
+1,Resistencia 360kΩ,SD del ampli derecho → Vin,ejemplo a 5V sin pull-up en la placa; recalcular si el breakout trae uno,config/pinouts/pad.ts
+2,Parlante 4–8Ω,Salida L y R,ningún borne a GND,config/pinouts/pad.ts
+2,Placa WS2812B ×4 LEDs,Iluminación (8 píxeles),encadenadas en GPIO9,projects/pad/README.md
+1,Resistencia 330Ω,Serie en DIN de NeoPixel,,projects/pad/README.md
+1,Diodo 1N400x,Serie en VCC de NeoPixel (nivel lógico),alternativa: 74AHCT125,config/pinouts/pad.ts
+1,Cargador BMS 2S USB-C,Carga y protección,,projects/pad/README.md
+2,Celda 18650,Batería 2S,,projects/pad/README.md
+1,LM2596S con display,Regulador a 5.0V,buck ≥3A,config/pinouts/pad.ts
+1,Interruptor SW-CELDAS,Corte general BAT+ → buck,≥3A,config/pinouts/pad.ts
+1,Interruptor SW-PANTALLA,Corte del backlight (GPIO21 → LED),nunca en el VCC de la pantalla,config/pinouts/pad.ts
+1,Capacitor 470–1000µF,Bulk en el riel 5V,,config/pinouts/pad.ts
+1,Capacitor 1000µF,Reserva cerca de los amplis,,config/pinouts/pad.ts
+7,Piezas impresas 3D,"Carcasa, tapa, placa, marcos y soportes",STL en public/downloads/pad/,config/prints/padPrints.ts

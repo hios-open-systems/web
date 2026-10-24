@@ -1,5 +1,7 @@
 # HIOS Node AI — Guía de Pinout y Diagrama de Conexiones
 
+> ⚠️ **Pinout no armable todavía:** GPIO22 (OLED SCL) no existe en el ESP32-S3 (sus GPIO son 0–21 y 26–48), y el camino de una 18650 a 5V no está definido. Ver `hardware/README.md`.
+
 Este documento especifica la distribución de pines (GPIO) y las conexiones de hardware del nodo HIOS AI sobre la placa ESP32-S3-DevKitC-1.
 
 ---

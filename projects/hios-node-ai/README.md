@@ -1,5 +1,7 @@
 # HIOS Node AI — Consultas a Ollama desde un ESP32-S3
 
+> **Esquema, netlist y BOM (borrador):** [`hardware/`](hardware/). Todavía no es armable: GPIO22 no existe en el ESP32-S3 y falta definir el riel 5V.
+
 Prototipo con **ESP32-S3** que envía una consulta de texto predefinida a un servidor **Ollama** al pulsar un botón. Una pantalla OLED muestra el estado de la solicitud y la respuesta. El modelo se ejecuta en el servidor de la red local.
 
 ## Funciones disponibles

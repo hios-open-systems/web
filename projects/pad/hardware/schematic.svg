@@ -1,0 +1,156 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="1421" viewBox="0 0 1120 1421">
+<title>HIOS PAD — esquema de cableado</title>
+<style>
+text{font-family:ui-monospace,Menlo,Consolas,monospace;fill:#111}
+.title{font-size:20px;font-weight:700}.meta{font-size:11px;fill:#444}
+.warn{font-size:12px;fill:#b00020;font-weight:700}
+.modname{font-size:13px;font-weight:700}.power{font-size:11px;fill:#333}
+.pin{font-size:11px}.gpio{font-size:11px;text-anchor:end;font-weight:700}
+.mcu{fill:#eef4ff;stroke:#1d4ed8;stroke-width:2}.mod{fill:#f7f7f7;stroke:#333;stroke-width:1.5}
+.rail{fill:#fff8e6;stroke:#b7791f}.railname{font-size:12px;font-weight:700}
+.wire{stroke:#1d4ed8;stroke-width:1.5;fill:none}.flag{stroke:#b00020;stroke-dasharray:5 3}.dot{fill:#1d4ed8}
+</style>
+<rect width="1120" height="1421" fill="#ffffff"/>
+<text x="32" y="36" class="title">HIOS PAD — esquema de cableado (rev 0.9)</text>
+<text x="32" y="58" class="meta">MCU: ESP32-S3 DevKitC-1 (N16R8) · pines desde projects/pad/src/app/Pins.h + Config.h + platformio.ini</text>
+<text x="32" y="76" class="meta">Generado por scripts/gen-hardware-docs.ts. Pines verificados contra el firmware por npm test. Cableado entre módulos, no una PCB.</text>
+<rect x="600" y="112" width="488" height="64" class="mod"/>
+<text x="612" y="130" class="modname">Energía — 3 rieles</text>
+<text x="612" y="148" class="power">celdas 2S → SW-CELDAS → buck 5.0V (≥3A) → riel 5V · S3 pin 5V → LDO</text>
+<text x="612" y="163" class="power">a bordo → riel 3V3</text>
+<rect x="600" y="190" width="488" height="193" class="mod"/>
+<text x="612" y="208" class="modname">Pantalla ILI9488 4&quot; (SPI)</text>
+<text x="612" y="226" class="power">VCC → 5V · GND → GND · LED → SW-PANTALLA → GPIO21</text>
+<circle cx="600" cy="247" r="3" class="dot"/>
+<text x="612" y="251" class="pin">TFT CS: ILI9488 CS (chip-select)</text>
+<circle cx="600" cy="271" r="3" class="dot"/>
+<text x="612" y="275" class="pin">TFT MOSI: ILI9488 SDI</text>
+<circle cx="600" cy="295" r="3" class="dot"/>
+<text x="612" y="299" class="pin">TFT SCLK: ILI9488 SCK</text>
+<circle cx="600" cy="319" r="3" class="dot"/>
+<text x="612" y="323" class="pin">TFT DC: ILI9488 DC/RS</text>
+<circle cx="600" cy="343" r="3" class="dot"/>
+<text x="612" y="347" class="pin">TFT RST: ILI9488 RESET</text>
+<circle cx="600" cy="367" r="3" class="dot"/>
+<text x="612" y="371" class="pin">TFT backlight: LED de la TFT (PWM por LEDC) · acá va en serie el SW…</text>
+<rect x="600" y="397" width="488" height="217" class="mod"/>
+<text x="612" y="415" class="modname">Matriz de acción 2×5 (10 teclas)</text>
+<text x="612" y="433" class="power">no se alimenta: cada tecla cierra COLUMNA → diodo → FILA</text>
+<circle cx="600" cy="454" r="3" class="dot"/>
+<text x="612" y="458" class="pin">Matriz COL 1: INPUT_PULLUP · lee ACC2 / ACC7</text>
+<circle cx="600" cy="478" r="3" class="dot"/>
+<text x="612" y="482" class="pin">Matriz FILA 0: OUTPUT (drive LOW) · fila de ARRIBA: ACC1–5</text>
+<circle cx="600" cy="502" r="3" class="dot"/>
+<text x="612" y="506" class="pin">Matriz FILA 1: OUTPUT (drive LOW) · fila de ABAJO: ACC6–10</text>
+<circle cx="600" cy="526" r="3" class="dot"/>
+<text x="612" y="530" class="pin">Matriz COL 0: INPUT_PULLUP · lee ACC1 / ACC6</text>
+<circle cx="600" cy="550" r="3" class="dot"/>
+<text x="612" y="554" class="pin">Matriz COL 2: INPUT_PULLUP · lee ACC3 / ACC8</text>
+<circle cx="600" cy="574" r="3" class="dot"/>
+<text x="612" y="578" class="pin">Matriz COL 3: INPUT_PULLUP · lee ACC4 / ACC9</text>
+<circle cx="600" cy="598" r="3" class="dot"/>
+<text x="612" y="602" class="pin">Matriz COL 4: INPUT_PULLUP · lee ACC5 / ACC10</text>
+<rect x="600" y="628" width="488" height="97" class="mod"/>
+<text x="612" y="646" class="modname">Botones ALT (navegación)</text>
+<text x="612" y="664" class="power">no se alimenta: pulsador directo a GND (INPUT_PULLUP)</text>
+<circle cx="600" cy="685" r="3" class="dot"/>
+<text x="612" y="689" class="pin">Botón ALT1: → GND (INPUT_PULLUP) · DIRECTO, sin diodo</text>
+<circle cx="600" cy="709" r="3" class="dot"/>
+<text x="612" y="713" class="pin">Botón ALT2: → GND (INPUT_PULLUP) · DIRECTO, sin diodo</text>
+<rect x="600" y="739" width="488" height="121" class="mod"/>
+<text x="612" y="757" class="modname">Encoder KY-040</text>
+<text x="612" y="775" class="power">+ → 3V3 · GND → GND</text>
+<circle cx="600" cy="796" r="3" class="dot"/>
+<text x="612" y="800" class="pin">Encoder CLK: KY-040 canal A</text>
+<circle cx="600" cy="820" r="3" class="dot"/>
+<text x="612" y="824" class="pin">Encoder DT: KY-040 canal B</text>
+<circle cx="600" cy="844" r="3" class="dot"/>
+<text x="612" y="848" class="pin">Encoder SW: KY-040 pulsador (INPUT_PULLUP)</text>
+<rect x="600" y="874" width="488" height="121" class="mod"/>
+<text x="612" y="892" class="modname">Stick analógico (HW-504)</text>
+<text x="612" y="910" class="power">+5V del módulo → riel 3V3 · GND → GND</text>
+<circle cx="600" cy="931" r="3" class="dot"/>
+<text x="612" y="935" class="pin">Stick VRx: Stick eje X — ADC1_0</text>
+<circle cx="600" cy="955" r="3" class="dot"/>
+<text x="612" y="959" class="pin">Stick VRy: Stick eje Y — ADC1_1</text>
+<circle cx="600" cy="979" r="3" class="dot"/>
+<text x="612" y="983" class="pin">Stick SW: Stick pulsador (INPUT_PULLUP)</text>
+<rect x="600" y="1009" width="488" height="136" class="mod"/>
+<text x="612" y="1027" class="modname">2× MAX98357A (I2S)</text>
+<text x="612" y="1045" class="power">Vin → 5V · GND → GND · 1000µF cerca de los amplis</text>
+<text x="612" y="1060" class="power">carga: 2× parlante 4–8Ω</text>
+<circle cx="600" cy="1081" r="3" class="dot"/>
+<text x="612" y="1085" class="pin">I2S BCLK: → BCLK de AMBOS MAX98357A (bus compartido)</text>
+<circle cx="600" cy="1105" r="3" class="dot"/>
+<text x="612" y="1109" class="pin">I2S LRC: → LRC de AMBOS MAX98357A (word-select L/R)</text>
+<circle cx="600" cy="1129" r="3" class="dot"/>
+<text x="612" y="1133" class="pin">I2S DOUT: → DIN de AMBOS MAX98357A (dato serial). Sale del S3, entr…</text>
+<rect x="600" y="1159" width="488" height="73" class="mod"/>
+<text x="612" y="1177" class="modname">2× NeoPixel 4 LEDs (8 px)</text>
+<text x="612" y="1195" class="power">VCC → 5V (o 1N400x en serie, ver tip) · GND → GND</text>
+<circle cx="600" cy="1216" r="3" class="dot"/>
+<text x="612" y="1220" class="pin">NeoPixel DIN: datos de la tira, vía 330Ω en serie</text>
+<rect x="32" y="112" width="300" height="1120" class="mcu"/>
+<text x="44" y="132" class="modname">ESP32-S3 DevKitC-1 (N16R8)</text>
+<text x="320" y="251" class="gpio">TFT CS · GPIO10</text>
+<path d="M332 247 H600" class="wire"/>
+<text x="320" y="275" class="gpio">TFT MOSI · GPIO11</text>
+<path d="M332 271 H600" class="wire"/>
+<text x="320" y="299" class="gpio">TFT SCLK · GPIO12</text>
+<path d="M332 295 H600" class="wire"/>
+<text x="320" y="323" class="gpio">TFT DC · GPIO13</text>
+<path d="M332 319 H600" class="wire"/>
+<text x="320" y="347" class="gpio">TFT RST · GPIO14</text>
+<path d="M332 343 H600" class="wire"/>
+<text x="320" y="371" class="gpio">TFT backlight · GPIO21</text>
+<path d="M332 367 H600" class="wire"/>
+<text x="320" y="458" class="gpio">Matriz COL 1 · GPIO8</text>
+<path d="M332 454 H600" class="wire flag"/>
+<text x="320" y="482" class="gpio">Matriz FILA 0 · GPIO15</text>
+<path d="M332 478 H600" class="wire"/>
+<text x="320" y="506" class="gpio">Matriz FILA 1 · GPIO16</text>
+<path d="M332 502 H600" class="wire"/>
+<text x="320" y="530" class="gpio">Matriz COL 0 · GPIO18</text>
+<path d="M332 526 H600" class="wire"/>
+<text x="320" y="554" class="gpio">Matriz COL 2 · GPIO38</text>
+<path d="M332 550 H600" class="wire flag"/>
+<text x="320" y="578" class="gpio">Matriz COL 3 · GPIO39</text>
+<path d="M332 574 H600" class="wire"/>
+<text x="320" y="602" class="gpio">Matriz COL 4 · GPIO47</text>
+<path d="M332 598 H600" class="wire"/>
+<text x="320" y="689" class="gpio">Botón ALT1 · GPIO17</text>
+<path d="M332 685 H600" class="wire"/>
+<text x="320" y="713" class="gpio">Botón ALT2 · GPIO48</text>
+<path d="M332 709 H600" class="wire flag"/>
+<text x="320" y="800" class="gpio">Encoder CLK · GPIO4</text>
+<path d="M332 796 H600" class="wire"/>
+<text x="320" y="824" class="gpio">Encoder DT · GPIO5</text>
+<path d="M332 820 H600" class="wire"/>
+<text x="320" y="848" class="gpio">Encoder SW · GPIO6</text>
+<path d="M332 844 H600" class="wire"/>
+<text x="320" y="935" class="gpio">Stick VRx · GPIO1</text>
+<path d="M332 931 H600" class="wire"/>
+<text x="320" y="959" class="gpio">Stick VRy · GPIO2</text>
+<path d="M332 955 H600" class="wire"/>
+<text x="320" y="983" class="gpio">Stick SW · GPIO7</text>
+<path d="M332 979 H600" class="wire"/>
+<text x="320" y="1085" class="gpio">I2S BCLK · GPIO40</text>
+<path d="M332 1081 H600" class="wire"/>
+<text x="320" y="1109" class="gpio">I2S LRC · GPIO41</text>
+<path d="M332 1105 H600" class="wire"/>
+<text x="320" y="1133" class="gpio">I2S DOUT · GPIO42</text>
+<path d="M332 1129 H600" class="wire"/>
+<text x="320" y="1220" class="gpio">NeoPixel DIN · GPIO9</text>
+<path d="M332 1216 H600" class="wire flag"/>
+<text x="32" y="1262" class="meta">Línea roja punteada = el pin tiene una nota: leela en hardware/README.md antes de soldar.</text>
+<text x="32" y="1286" class="modname">Rieles de alimentación</text>
+<rect x="32" y="1292" width="1056" height="25" class="rail"/>
+<text x="44" y="1307" class="railname">5V (buck 5.0V)</text>
+<text x="252" y="1307" class="power">ESP32 pin 5V · TFT VCC · NeoPixel VCC · 2× MAX98357A Vin · cap de bulk · buck ≥3A</text>
+<rect x="32" y="1325" width="1056" height="25" class="rail"/>
+<text x="44" y="1340" class="railname">3V3 (LDO del DevKit)</text>
+<text x="252" y="1340" class="power">Stick VCC · Encoder + . Lo genera el SGM2212-3.3 a bordo (800mA): NO inyectar de afuera</text>
+<rect x="32" y="1358" width="1056" height="25" class="rail"/>
+<text x="44" y="1373" class="railname">GND común</text>
+<text x="252" y="1373" class="power">batería− · buck · S3 · TFT · stick · encoder · matriz · ALT · amplis · NeoPixel (1 sola masa)</text>
+</svg>
