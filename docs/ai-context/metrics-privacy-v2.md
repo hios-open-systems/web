@@ -54,17 +54,36 @@ El público solo ve herramientas e idiomas con al menos cinco eventos en el per�
 
 ## Histórico agregado de Cloudflare
 
-Es una fuente complementaria pendiente de acceso de lectura a la zona. El intento de lectura de la auditoría anterior fue rechazado. No se importaron datos ni se habilitó Web Analytics.
+Acceso de lectura verificado el 24 de octubre de 2026 en la cuenta indicada por el dueño: sesión de Chrome y OAuth local existente de Wrangler. La zona activa `openhios.dev` está en Free. El fallo D1 de la auditoría no impedía consultar Analytics; no se ampliaron permisos ni se cambiaron credenciales.
 
-Cloudflare amplió varios datasets adaptativos a al menos 31 días de retención en Free/Pro y ventanas consultables de hasta 30 días. Esto no cambia el acceso a campos por plan: hay que consultar los settings reales del dataset y distinguir datos muestreados. [Retención](https://developers.cloudflare.com/changelog/post/2026-10-02-30-days-analytics-on-every-plan/), [Bot Analytics](https://developers.cloudflare.com/bots/bot-analytics/).
+El dataset `httpRequestsAdaptiveGroups` declara 2.678.400 segundos de retención (31 días), ventanas de 30 días y hasta 10.000 grupos por consulta. Está disponible `verifiedBotCategory`; el plan no expone los campos de puntaje de bot. La clasificación ausente no se interpreta como humanidad. [Settings del dataset](https://developers.cloudflare.com/analytics/graphql-api/features/discovery/settings/), [muestreo](https://developers.cloudflare.com/analytics/graphql-api/sampling/).
 
-Un importador posterior deberá ser una acción explícita del administrador y conservar una serie separada con fecha, solicitudes, dataset, filtros, muestreo y clasificación de bots disponible. No importar IPs, huellas, cookies, URLs completas ni logs por persona. Filtrar HTML, assets, API, tráfico interno, bots verificados y automatizados según los campos autorizados; declarar los desconocidos. Las navegaciones cliente de Next y las tareas ejecutadas localmente no equivalen a solicitudes HTML. Datos vencidos o eventos de herramientas nunca recogidos no pueden reconstruirse. Etiqueta propuesta: “Tráfico estimado de Cloudflare con bots filtrados”, nunca “personas únicas” o “sin bots” garantizado.
+`data/analytics/cloudflare-traffic.json` contiene una instantánea real y fechada, separada de `usage_daily`, sus API, su consentimiento y sus totales. Se incluye en el build de `/stats` y sigue disponible aunque falle la API de uso voluntario. No genera consultas nuevas a Cloudflare al visitar el sitio, ni instala Web Analytics, cookies o detección JavaScript. Estos agregados de infraestructura provienen de solicitudes que el proveedor ya procesa para servir la web; la preferencia voluntaria y DNT/GPC controlan nuestros eventos, no los registros operativos del proveedor. El panel de privacidad lo explica.
+
+La importación solo consulta grupos de conteos y bytes, clasificados por categoría de bot verificado, tipo de respuesta y estado HTTP. Filtra `requestSource: eyeball` y host exacto `openhios.dev`, excluyendo subsolicitudes y operaciones internas de Cloudflare. Nunca solicita IPs, identificadores de sesión, usuarios, rutas, referers, agentes de usuario, contenido, visitas ni visitantes únicos. Después de agregar, descarta también las categorías y los estados: conserva únicamente las cifras diarias y la información de muestreo.
+
+- Solicitudes y transferencia totales: incluyen bots, para dimensionar carga real.
+- Solicitudes excluidas: cualquier categoría de bot verificado no vacía, incluidas categorías futuras. No se usa una lista incompleta de nombres.
+- Solicitudes y transferencia restantes: categoría vacía; pueden contener automatización no detectada, pruebas y tráfico propio. No se denominan visitas humanas.
+- HTML exitoso restante: categoría vacía, tipo `html`, HTTP 200–299. Excluye assets, redirecciones y errores; no equivale a vistas de página ni refleja toda la navegación cliente.
+
+Los conteos adaptativos ya están ponderados; no se multiplican otra vez por `sampleInterval`. El resultado es una estimación, incluso si se presenta como entero. El primer y último día son parciales y sus límites exactos se guardan en UTC. El importador deja cinco minutos de margen respecto del límite móvil de retención. Un cero en una muestra no acredita ausencia absoluta de tráfico. Datos vencidos, acciones locales o eventos nunca registrados no pueden reconstruirse.
+
+### Actualización explícita
+
+Ejecutar `npm run analytics:import-cloudflare -- --wrangler` para reutilizar la credencial OAuth local existente, o definir `CLOUDFLARE_ANALYTICS_TOKEN` en el entorno y ejecutar `npm run analytics:import-cloudflare`. Para un token dedicado, usar permisos de lectura Analytics y Zone solo sobre openhios.dev. No copiar tokens al repositorio ni usar variables públicas del frontend.
+
+El comando descubre la zona por nombre, verifica campos y límites, consulta los intervalos UTC en dos bloques de hasta 16 días y solo reemplaza el archivo local después de validar el resultado completo. Falla si faltan permisos/clasificación/muestreo, si se alcanza el límite de resultados, si hay errores GraphQL o si la serie está incompleta. No sustituye fallos por ceros y preserva la instantánea anterior. Si Cloudflare agota el presupuesto de consultas, esperar el intervalo indicado antes de reintentar; no hay bucles automáticos. No escribe D1 ni configuración remota y no publica nada.
+
+La instantánea cubre la ventana retenida al importar; una nueva ejecución la reemplaza, sin acumular indefinidamente días en el sitio. Los commits conservan versiones históricas de estos agregados sin identificadores. Su período y fecha de importación se muestran siempre; no se presenta como contador en vivo. Para actualizar producción hace falta incluir la nueva instantánea en un release autorizado. Este trabajo no añade un proceso recurrente ni una credencial al Worker.
 
 ## Verificación y release
 
+- `npm run test:cloudflare-traffic`: filtros por categoría, ponderación, HTML exitoso, datos mínimos, períodos UTC, límites y preservación ante importación fallida.
 - `npm run test:analytics`: migración desde datos personales ficticios, esquema mínimo, validación, duplicados, rollback, retención, fechas UTC, privacidad y consentimiento.
 - `SECURITY_WORKER=1 npm run test:security`: D1 y Worker reales locales, idempotencia concurrente, permisos, cabeceras, caché entre cookies/queries, limpieza scheduled y recorrido navegador → ingesta → D1 → panel del dueño.
-- `tests/analytics.spec.ts`: consentimiento nuevo, DNT/GPC, exportación local, ausencia de cookies/referencia/contenidos, días cero y errores no cacheables.
+- `tests/analytics.spec.ts`: consentimiento nuevo, DNT/GPC, exportación local, ausencia de cookies/referencia/contenidos, días cero, errores no cacheables e histórico independiente sin conexiones externas nuevas.
+- `tests/landing-styles.spec.ts`: CSS de la portada y del osciloscopio tras navegación cliente y recarga con caché; incluido en CI. No reproduce por sí solo todos los casos de caché antigua entre despliegues.
 - Pruebas existentes de inputs locales, privacidad, visualización móvil, lint, tipos y build OpenNext.
 
 Para el próximo release autorizado, aplicar la migración D1 y publicar este Worker en la misma ventana de mantenimiento, verificando después ingesta, estadísticas y Cron. La migración elimina los datos granulares: no volver al Worker anterior, que depende de `usage_events`. No ejecutar una migración remota ni un despliegue como parte de la verificación local. Revisar las políticas de backup del proveedor si se requiere un plazo de borrado que incluya copias históricas.

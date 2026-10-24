@@ -71,7 +71,9 @@
     "test:assembly": "node --experimental-strip-types scripts/assembly-selftest.ts",
     "test:lmstudio": "node --experimental-strip-types scripts/lmstudio-selftest.ts",
     "test:production-security": "node --experimental-strip-types scripts/production-security-selftest.ts",
-    "test:analytics": "node --experimental-strip-types --experimental-sqlite scripts/analytics-selftest.ts"
+    "test:analytics": "node --experimental-strip-types --experimental-sqlite scripts/analytics-selftest.ts",
+    "analytics:import-cloudflare": "node --experimental-strip-types scripts/import-cloudflare-traffic.ts",
+    "test:cloudflare-traffic": "node --experimental-strip-types scripts/cloudflare-traffic-selftest.ts"
   },
   "dependencies": {
     "@ant-design/cssinjs": "^1.18.0",

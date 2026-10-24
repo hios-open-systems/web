@@ -3774,12 +3774,13 @@
         "notLoggedIn": "Du bist nicht angemeldet. Telemetrie und gesendete Nachrichten können auch ohne Konto Datensätze erzeugen.",
         "confirm": "Löschen",
         "cancel": "Abbrechen",
-        "clearStorageError": "Nicht alle Daten konnten gelöscht werden. Schließe andere HIOS-Tabs und versuche es erneut."
+        "clearStorageError": "Nicht alle Daten konnten gelöscht werden. Schließe andere HIOS-Tabs und versuche es erneut.",
+        "infrastructureHint": "Separat zeigen wir tägliche Verkehrsaggregate, die unser Infrastrukturbetreiber Cloudflare bereits verarbeitet. Es sind Schätzungen von Anfragen und Datenmengen, ohne Import von IPs, Konten oder individuellen Browserverläufen. Sie werden nicht mit freiwilligen Statistiken verknüpft. Dieser Schalter steuert nicht die Betriebsprotokolle des Anbieters. Ihre Abfrage fügt Ihrem Browser kein Tracking hinzu."
     },
     "PublicStats": {
         "kicker": "HIOS-Nutzung",
         "title": "Statistik",
-        "intro": "Aktivität aus freiwillig geteilten Nutzungsdaten. Wir zählen Ereignisse, keine Personen oder das gesamte Publikum. Die Übermittlung ist optional und standardmäßig deaktiviert.",
+        "intro": "Freiwillige Nutzung und aggregierter Infrastrukturverlauf mit getrennten Quellen, Zeiträumen und Einschränkungen.",
         "pageViews": "Seitenaufrufe",
         "toolOpens": "Werkzeugaufrufe",
         "guestbook": "Veröffentlichte Einträge",
@@ -3793,7 +3794,9 @@
         "methodology": "Das Öffnen eines Werkzeugs belegt keinen Aufgabenabschluss. Vorbereitete Exporte zählt von unterstützten Werkzeugen erzeugte Dateien; das Speichern wird nicht bestätigt. Tage verwenden UTC und schließen den laufenden Tag ein. Die Übersicht wird bis zu einmal pro Stunde aktualisiert; Werkzeuge und Sprachen mit weniger als 5 Ereignissen werden ausgeblendet. Erkennbare Bots werden gefiltert, menschliche Besuche jedoch nicht bestätigt.",
         "period": "Zeitraum: {from} bis {to} (UTC). Übersicht erstellt: {updated}.",
         "legacy": "{count} Ereignisse stammen aus der vorherigen Messung ohne die neuen Filter. Ihre Konto- und Anfragedaten wurden entfernt.",
-        "exportsGenerated": "Vorbereitete Exporte"
+        "exportsGenerated": "Vorbereitete Exporte",
+        "voluntaryDescription": "Aktivität aus freiwillig geteilten Nutzungsdaten. Wir zählen Ereignisse, keine Personen oder das gesamte Publikum. Die Übermittlung ist optional und standardmäßig deaktiviert.",
+        "voluntaryTitle": "Freiwillig geteilte Nutzung"
     },
     "HowItWorks": {
         "title": "So funktioniert es",
@@ -4660,5 +4663,21 @@
         "jointHint": "Referenzskizzen. Der Glanz hängt von der Legierung ab und belegt allein keine gute Lötstelle.",
         "sources": "Referenz zur Löttechnik",
         "saveFailed": "Der Fortschritt konnte nicht gespeichert werden. Er bleibt nur erhalten, solange diese Ansicht geöffnet ist."
+    },
+    "CloudflareTraffic": {
+        "title": "Infrastrukturverkehr · Cloudflare",
+        "methodology": "Aggregate von Anfragen, die Cloudflare bereits zur Bereitstellung von openhios.dev verarbeitet. Diese Quelle ist unabhängig von freiwilligen Nutzungsstatistiken; die Werte werden nicht addiert. Der Import speichert nur tägliche Zähler und Datenmengen, ohne IPs, Konten, Cookies, Pfade oder Inhalte.",
+        "period": "Historischer Zeitraum: {from} → {to}. Importiert: {updated}. Aktualisierung durch ausdrücklichen Import; kein Live-Zähler.",
+        "limitations": "Alle in der Abfrage vorhandenen Kategorien verifizierter Bots werden ausgeschlossen. Der verfügbare Tarif erlaubt keine Einordnung der übrigen Anfragen anhand eines Bot-Scores: unbekannte Automatisierung, Tests und eigener Verkehr können enthalten sein. Die Werte sind Schätzungen aus einer adaptiven Stichprobe, keine Personen. HTML zählt erfolgreiche HTML-Antworten mit Status 2xx, keine clientseitige Navigation oder lokale Werkzeugnutzung.",
+        "allRequests": "Alle Anfragen einschließlich Bots",
+        "excludedVerifiedRequests": "Ausgeschlossene Anfragen verifizierter Bots",
+        "remainingRequests": "Verbleibende Anfragen ohne verifizierte Bots",
+        "htmlRequests": "Verbleibende erfolgreiche HTML-Antworten",
+        "allBytes": "Gesamte Datenmenge einschließlich Bots",
+        "remainingBytes": "Verbleibende Datenmenge",
+        "estimate": "Schätzung für den Zeitraum",
+        "day": "UTC-Tag",
+        "daily": "Täglichen Verlauf anzeigen",
+        "partial": "Der erste und letzte Tag können unvollständig sein. Null bedeutet, dass die Abfrage keine Aktivität in der Stichprobe lieferte; es beweist nicht, dass kein Verkehr stattfand."
     }
 }

@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { publicUsage } from '../lib/analytics/summary';
+import traffic from '../data/analytics/cloudflare-traffic.json';
+import es from '../messages/es.json';
 
 test('expanded telemetry needs fresh consent and sends no cookie, referrer or input content', async ({ page, context, baseURL }) => {
   const events: { body: Record<string, unknown>; headers: Record<string, string> }[] = [];
@@ -86,4 +88,24 @@ test('public stats failures remain uncached in the standalone server', async ({ 
   expect(response.status()).toBe(503);
   expect(response.headers()['cache-control']).toContain('no-store');
   expect(response.headers()['cache-control']).not.toContain('s-maxage');
+});
+
+test('Cloudflare history stays independent, local and available when voluntary stats fail', async ({ page }) => {
+  const external: string[] = [];
+  const events: string[] = [];
+  page.on('request', request => {
+    if (/^https?:/.test(request.url()) && new URL(request.url()).hostname !== '127.0.0.1') external.push(request.url());
+    if (request.url().includes('/api/usage/events')) events.push(request.url());
+  });
+  await page.route('**/api/stats/public', route => route.fulfill({ status: 503, json: { error: 'unavailable' } }));
+  await page.goto('/es/stats');
+  await expect(page.getByText(es.PublicStats.error, { exact: true })).toBeVisible();
+  const section = page.getByRole('region', { name: es.CloudflareTraffic.title });
+  await expect(section.getByText(es.CloudflareTraffic.limitations, { exact: true })).toBeVisible();
+  await section.locator('summary').click();
+  await expect(section.getByRole('row')).toHaveCount(traffic.daily.length + 1);
+  expect(external).toEqual([]);
+  expect(events).toEqual([]);
+  await page.setViewportSize({ width: 360, height: 800 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
 });

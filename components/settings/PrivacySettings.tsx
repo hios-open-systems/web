@@ -76,6 +76,7 @@ export function PrivacySettings() {
                     <Switch checked={telemetry} onChange={toggleTelemetry} aria-label={t('telemetryTitle')} />
                 </div>
                 <p className={styles.hint}>{t('telemetryHint')}</p>
+                <p className={styles.hint}>{t('infrastructureHint')}</p>
                 <p className={styles.state} data-on={telemetry}>
                     {telemetry ? t('telemetryOn') : t('telemetryOff')}
                 </p>
