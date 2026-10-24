@@ -21,7 +21,7 @@ function resolveDeployVersion() {
 		process.env.GITHUB_SHA;
 	if (fromEnv) return fromEnv.slice(0, 12);
 	try {
-		return execSync('git rev-parse --short HEAD').toString().trim();
+		return execSync('git rev-parse --short=12 HEAD').toString().trim();
 	} catch {
 		return `build-${Date.now()}`;
 	}
