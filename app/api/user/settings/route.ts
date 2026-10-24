@@ -1,3 +1,4 @@
+import { requireSameOrigin, readJsonBody } from '@/lib/httpSecurity';
 import type { NextRequest } from 'next/server';
 import { getRequestAuth } from '@/lib/auth/request';
 import { getDb } from '@/lib/db';
@@ -33,13 +34,16 @@ export async function GET(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest) {
+    const denied = requireSameOrigin(request);
+    if (denied) return denied;
     const { response, user } = await requireUser(request);
     if (response || !user) return response;
 
     let payload: UpdateUserSettingsInput | null = null;
     try {
-        payload = (await request.json()) as UpdateUserSettingsInput;
-    } catch {
+        payload = (await readJsonBody(request, 32768)) as UpdateUserSettingsInput;
+    } catch (error) {
+        if (error instanceof Response) return error;
         return jsonError('Invalid JSON body', 400);
     }
 

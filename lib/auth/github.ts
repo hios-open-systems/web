@@ -41,7 +41,7 @@ export function getCallbackUrl(): string {
  * que `startsWith('/')` dejaba pasar y `new URL()` resolvía a otro dominio.
  */
 export function safeNextPath(value: string | null | undefined): string {
-    if (!value || value[0] !== '/') return '/';
+    if (!value || value[0] !== '/' || /[\x00-\x20\x7f]/.test(value)) return '/';
     const second = value[1];
     if (second === '/' || second === '\\') return '/';
     return value;

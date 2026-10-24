@@ -1,3 +1,4 @@
+import { requireSameOrigin, readJsonBody } from '@/lib/httpSecurity';
 import type { D1Database } from '@cloudflare/workers-types';
 import type { NextRequest } from 'next/server';
 import { getRequestAuth } from '@/lib/auth/request';
@@ -31,6 +32,10 @@ async function withWorkspaceTable<T>(db: D1Database, op: () => Promise<T>): Prom
 }
 
 export async function documentsApi(request: NextRequest, kind: StoredDocument['kind']) {
+  if (request.method !== 'GET') {
+    const denied = requireSameOrigin(request);
+    if (denied) return denied;
+  }
   const auth = await getRequestAuth(request);
   if (auth.error) return Response.json({ error: 'unavailable' }, { status: 503 });
   if (!auth.user) return Response.json({ error: 'unauthorized' }, { status: 401 });
@@ -52,13 +57,13 @@ export async function documentsApi(request: NextRequest, kind: StoredDocument['k
       return Response.json({ error: 'unavailable' }, { status: 503 });
     }
   }
-  if (request.headers.get('origin') !== request.nextUrl.origin) return Response.json({ error: 'origin' }, { status: 403 });
   const limited = checkRateLimit(request, 'workspace-write', { limit: 120, windowMs: 60_000 });
   if (limited) return limited;
-  const text = await request.text();
-  if (new TextEncoder().encode(text).length > 1_100_000) return Response.json({ error: 'too_large' }, { status: 413 });
   let payload: StoredDocument;
-  try { payload = JSON.parse(text) as StoredDocument; } catch { return Response.json({ error: 'invalid' }, { status: 400 }); }
+  try { payload = await readJsonBody(request, 1_100_000) as StoredDocument; } catch (error) {
+    if (error instanceof Response) return error;
+    return Response.json({ error: 'invalid' }, { status: 400 });
+  }
   if (!payload || !validDocument(payload.document, kind) || payload.id !== payload.document.id
     || !Number.isSafeInteger(payload.revision) || payload.revision < 0 || (payload.deleted !== undefined && typeof payload.deleted !== 'boolean')) {
     return Response.json({ error: 'invalid' }, { status: 400 });

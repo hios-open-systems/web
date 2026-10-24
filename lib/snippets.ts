@@ -82,6 +82,7 @@ function mapSnippetRow(row: SnippetRow): SnippetRecord {
 }
 
 function validateTitle(title: string | undefined, required: boolean): string | null {
+    if (title !== undefined && typeof title !== 'string') return 'Snippet title must be a string';
     if (!title?.trim()) {
         return required ? 'Snippet title is required' : null;
     }
@@ -93,6 +94,7 @@ function validateTitle(title: string | undefined, required: boolean): string | n
 }
 
 function validateBody(body: string | undefined, required: boolean): string | null {
+    if (body !== undefined && typeof body !== 'string') return 'Snippet body must be a string';
     if (!body?.trim()) {
         return required ? 'Snippet body is required' : null;
     }
@@ -112,10 +114,14 @@ function validateTags(tags: string[] | undefined): string | null {
 }
 
 export function validateCreateSnippetInput(input: CreateSnippetInput): string | null {
+    if (!input || typeof input !== 'object' || Array.isArray(input)) return 'Invalid snippet';
+    if (input.isPublic !== undefined && typeof input.isPublic !== 'boolean') return 'isPublic must be a boolean';
     return validateTitle(input.title, true) ?? validateBody(input.body, true) ?? validateTags(input.tags);
 }
 
 export function validateUpdateSnippetInput(input: UpdateSnippetInput): string | null {
+    if (!input || typeof input !== 'object' || Array.isArray(input)) return 'Invalid snippet';
+    if (input.isPublic !== undefined && typeof input.isPublic !== 'boolean') return 'isPublic must be a boolean';
     const hasKnownField = ['title', 'body', 'tags', 'isPublic'].some((key) => key in input);
     if (!hasKnownField) return 'Snippet update payload is empty';
     return validateTitle(input.title, false) ?? validateBody(input.body, false) ?? validateTags(input.tags);
@@ -126,7 +132,7 @@ export function normalizeCreateSnippetInput(input: CreateSnippetInput): Required
         title: input.title.trim(),
         body: input.body.trim(),
         tags: normalizeTags(input.tags),
-        isPublic: Boolean(input.isPublic),
+        isPublic: input.isPublic === true,
     };
 }
 

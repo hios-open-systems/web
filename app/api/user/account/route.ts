@@ -1,3 +1,4 @@
+import { requireSameOrigin } from '@/lib/httpSecurity';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { getRequestAuth } from '@/lib/auth/request';
@@ -15,6 +16,8 @@ import { checkRateLimit } from '@/lib/rateLimit';
  * de Settings → Datos y privacidad.
  */
 export async function DELETE(request: NextRequest) {
+    const denied = requireSameOrigin(request);
+    if (denied) return denied;
     const limited = checkRateLimit(request, 'account-delete', { limit: 3, windowMs: 60_000 });
     if (limited) return limited;
 

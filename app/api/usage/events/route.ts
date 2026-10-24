@@ -1,3 +1,4 @@
+import { requireSameOrigin, readJsonBody } from '@/lib/httpSecurity';
 import type { NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
 import { getRequestAuth } from '@/lib/auth/request';
@@ -38,14 +39,17 @@ function trimHeader(value: string | null, max = 300): string | null {
 }
 
 export async function POST(request: NextRequest) {
+    const denied = requireSameOrigin(request);
+    if (denied) return denied;
   // Telemetría anónima que escribe en D1: frenamos flooding por IP.
   const limited = checkRateLimit(request, 'usage', { limit: 60, windowMs: 60_000 });
   if (limited) return limited;
 
   let payload: UsagePayload;
   try {
-    payload = (await request.json()) as UsagePayload;
-  } catch {
+    payload = (await readJsonBody(request, 32768)) as UsagePayload;
+  } catch (error) {
+        if (error instanceof Response) return error;
     return Response.json({ error: 'invalid_json' }, { status: 400 });
   }
 

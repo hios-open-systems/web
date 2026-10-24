@@ -52,12 +52,15 @@ export function checkRateLimit(
 
     if (!bucket || bucket.resetAt <= now) {
         if (buckets.size >= MAX_BUCKETS) {
-            // Poda barata: descarta expirados; si no alcanza, resetea todo
-            // (peor caso: un burst pasa de más — preferible a crecer sin techo).
+            // Discard expired buckets without resetting active limits.
             for (const [k, b] of buckets) {
                 if (b.resetAt <= now) buckets.delete(k);
             }
-            if (buckets.size >= MAX_BUCKETS) buckets.clear();
+            if (buckets.size >= MAX_BUCKETS && !buckets.has(key)) {
+                return Response.json({ error: 'Too many requests' }, {
+                    status: 429, headers: { 'Retry-After': '60', 'Cache-Control': 'no-store' },
+                });
+            }
         }
         buckets.set(key, { count: 1, resetAt: now + windowMs });
         return null;

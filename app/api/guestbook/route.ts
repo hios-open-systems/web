@@ -1,3 +1,4 @@
+import { requireSameOrigin, readJsonBody } from '@/lib/httpSecurity';
 import type { NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
 import { isOwner } from '@/lib/auth/owner';
@@ -73,13 +74,16 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+    const denied = requireSameOrigin(request);
+    if (denied) return denied;
   const limited = checkRateLimit(request, 'guestbook', { limit: 3, windowMs: 60_000 });
   if (limited) return limited;
 
   let body: GuestbookBody;
   try {
-    body = (await request.json()) as GuestbookBody;
-  } catch {
+    body = (await readJsonBody(request, 32768)) as GuestbookBody;
+  } catch (error) {
+        if (error instanceof Response) return error;
     return Response.json({ error: 'invalid_json' }, { status: 400 });
   }
   if (!body || typeof body !== 'object') {

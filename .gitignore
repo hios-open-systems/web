@@ -66,6 +66,6 @@ external.integrations.md
 PENDING.md
 
 # Local Cloudflare runtime state
-/.wrangler/
+**/.wrangler/
 /.next-workspaces/
 /public/vendor/excalidraw/
