@@ -73,7 +73,7 @@ export function ResistorColorCodeTool() {
       if (DIGIT_COLORS.includes(selected.d1) && DIGIT_COLORS.includes(selected.d2) && DIGIT_COLORS.includes(selected.d3)
         && MULTIPLIER_COLORS.includes(selected.mult) && TOLERANCE_COLORS.includes(selected.tol)) setSel(selected);
     } catch { /* Invalid imported selection is ignored. */ }
-  });
+  }, { bandCount: String(bandCount), colors: JSON.stringify(sel) });
 
   const result = useMemo(() => bandsToValue(bands), [bands]);
 

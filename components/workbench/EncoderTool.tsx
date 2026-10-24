@@ -31,7 +31,7 @@ export function EncoderTool() {
   const [dir, setDir] = useState<Dir>('encode');
   const [input, setInput] = useState('Hola, HIOS 👋');
 
-  useToolBridge('encoder', v => { if (v.input !== undefined) setInput(v.input); if (v.mode && isEncoderMode(v.mode)) setMode(v.mode); if (v.dir === 'encode' || v.dir === 'decode') setDir(v.dir); });
+  useToolBridge('encoder', v => { if (v.input !== undefined) setInput(v.input); if (v.mode && isEncoderMode(v.mode)) setMode(v.mode); if (v.dir === 'encode' || v.dir === 'decode') setDir(v.dir); }, { mode, dir, input });
 
   useEffect(() => {
     if (hydratedFromUrl.current) return;

@@ -1,5 +1,6 @@
 'use client';
 
+import { useToolDraft } from '@/lib/hooks/useToolDraft';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { message } from 'antd';
@@ -65,6 +66,10 @@ export function useComposerState() {
   const [selectedRange, setSelectedRange] = useState<{ startTick: number; endTick: number } | null>(null);
   const [rendering, setRendering] = useState(false);
   const [deviceCopied, setDeviceCopied] = useState(false);
+  useToolDraft('chiptune-selection', { activeTrackId, selectedNoteId: selectedNoteId ?? '' }, saved => {
+    if (song.tracks.some(track => track.id === saved.activeTrackId)) setActiveTrackId(saved.activeTrackId);
+    if (song.tracks.some(track => track.notes.some(note => note.id === saved.selectedNoteId))) setSelectedNoteId(saved.selectedNoteId);
+  });
 
   const { isPlaying, loop, play, stop, toggleLoop, metronome, toggleMetronome, getPlayheadTicks, previewNote, masterVolume, setMasterVolume, seek, playbackError } = usePlayback(song);
 
@@ -457,8 +462,7 @@ export function useComposerState() {
 
   // --- persistencia en localStorage (debounced) ------------------------------
   useEffect(() => {
-    const id = window.setTimeout(() => writeSong(song), 400);
-    return () => window.clearTimeout(id);
+    writeSong(song);
   }, [song]);
 
   // --- atajos de teclado -----------------------------------------------------

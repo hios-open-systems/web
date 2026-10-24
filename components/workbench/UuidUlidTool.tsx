@@ -12,6 +12,7 @@ import { downloadBlob } from '@/lib/workbench/download';
 import { ToolHeader } from './ToolHeader';
 import { UrlPresets } from '@/components/common/UrlPresets';
 import styles from './workbench.module.css';
+import { useToolDraft } from '@/lib/hooks/useToolDraft';
 import { useToolBridge } from '@/lib/hooks/useToolBridge';
 
 const { Text } = Typography;
@@ -48,8 +49,24 @@ export function UuidUlidTool() {
   useToolBridge('uuid-ulid', values => {
     const nextType = values.type && isIdType(values.type) ? values.type : 'uuid';
     const nextCount = Math.max(1, Math.min(100, Math.floor(Number(values.count) || 5)));
-    setType(nextType); setCount(nextCount); setValues(generateIds(nextType, nextCount));
+    setType(nextType); setCount(nextCount);
+    try {
+      const saved: unknown = JSON.parse(values.generated ?? 'null');
+      setValues(Array.isArray(saved) && saved.length <= 100 && saved.every(item => typeof item === 'string' && item.length <= 100)
+        ? saved : generateIds(nextType, nextCount));
+    } catch { setValues(generateIds(nextType, nextCount)); }
   });
+  useToolDraft('uuid-ulid', { type, count: String(count), generated: JSON.stringify(values) }, saved => {
+    const query = new URLSearchParams(window.location.search);
+    if ((query.has('type') && query.get('type') !== saved.type) || (query.has('count') && query.get('count') !== saved.count)) return;
+    const nextCount = Number(saved.count);
+    if (!isIdType(saved.type) || !Number.isInteger(nextCount) || nextCount < 1 || nextCount > 100) return;
+    setType(saved.type); setCount(nextCount);
+    try {
+      const generated: unknown = JSON.parse(saved.generated);
+      if (Array.isArray(generated) && generated.length <= 100 && generated.every(value => typeof value === 'string' && value.length <= 100)) setValues(generated);
+    } catch { /* Keep fresh IDs when the saved output is invalid. */ }
+  }, true);
 
   useEffect(() => {
     if (!hydratedFromUrl.current) return;

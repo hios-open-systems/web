@@ -1,5 +1,6 @@
 'use client';
 
+import { useToolDraft } from '@/lib/hooks/useToolDraft';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { JAM_STYLES, getChordDetails, type JamStyleDef } from './jamStyles.ts';
 import { GUITAR_SCALES, type GuitarScaleDef } from './guitarScales.ts';
@@ -14,6 +15,16 @@ export function useJamPlayback() {
   const [currentBar, setCurrentBar] = useState(0);
   const [currentBeat, setCurrentBeat] = useState(0);
   const [volume, setVolume] = useState(0.8);
+  useToolDraft('jam-station', { style: style.id, scale: scale.id, keyRoot: String(keyRoot), bpm: String(bpm), volume: String(volume) }, saved => {
+    const nextStyle = JAM_STYLES.find(item => item.id === saved.style);
+    const nextScale = GUITAR_SCALES.find(item => item.id === saved.scale);
+    if (nextStyle) setStyle(nextStyle);
+    if (nextScale) setScale(nextScale);
+    const key = Number(saved.keyRoot), tempo = Number(saved.bpm), gain = Number(saved.volume);
+    if (Number.isInteger(key) && key >= 0 && key <= 11) setKeyRoot(key);
+    if (tempo >= 30 && tempo <= 300) setBpm(tempo);
+    if (gain >= 0 && gain <= 1) setVolume(gain);
+  });
 
   const ctxRef = useRef<AudioContext | null>(null);
   const masterGainRef = useRef<GainNode | null>(null);

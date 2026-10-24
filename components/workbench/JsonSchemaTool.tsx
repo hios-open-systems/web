@@ -39,7 +39,7 @@ export function JsonSchemaTool() {
 
   const [json, setJson] = useState(EXAMPLE_JSON);
   const [rootName, setRootName] = useState('MyModel');
-  useToolBridge('json-schema', values => { if (values.input !== undefined) setJson(values.input); if (values.rootName) setRootName(values.rootName); });
+  useToolBridge('json-schema', values => { if (values.input !== undefined) setJson(values.input); if (values.rootName) setRootName(values.rootName); }, { rootName, input: json });
 
   const result = useMemo(() => generate(json, rootName), [json, rootName]);
 

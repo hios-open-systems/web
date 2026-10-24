@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
+import { useToolDraft } from '@/lib/hooks/useToolDraft';
 import { Space, Tabs } from 'antd';
 import { useTranslations } from 'next-intl';
 import { useTheme } from '@/lib/ThemeContext';
@@ -13,6 +14,8 @@ import styles from './workbench.module.css';
 export function JwtPlaygroundTool() {
     const t = useTranslations('Workbench.jwtPlayground');
     const { mode } = useTheme();
+    const [tab, setTab] = useState('decode');
+    useToolDraft('jwt-tabs', { tab }, saved => { if (['decode', 'encode', 'verify'].includes(saved.tab)) setTab(saved.tab); });
 
     const themeVars = {
         '--wb-surface-border': 'var(--hios-border)',
@@ -34,7 +37,7 @@ export function JwtPlaygroundTool() {
                 guideId="jwtPlayground"
             />
             <Tabs
-                defaultActiveKey="decode"
+                activeKey={tab} onChange={setTab}
                 items={[
                     { key: 'decode', label: t('tabDecode'), children: <JwtDecodePanel /> },
                     { key: 'encode', label: t('tabEncode'), children: <JwtEncodePanel /> },

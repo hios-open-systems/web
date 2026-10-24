@@ -28,7 +28,7 @@ export function TextDiffTool() {
   const [a, setA] = useState(EXAMPLE_A);
   const [b, setB] = useState(EXAMPLE_B);
 
-  useToolBridge('text-diff', v => { if (v.a !== undefined) setA(v.a); if (v.b !== undefined) setB(v.b); });
+  useToolBridge('text-diff', v => { if (v.a !== undefined) setA(v.a); if (v.b !== undefined) setB(v.b); }, { a, b });
 
   useEffect(() => {
     if (hydratedFromUrl.current) return;

@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import styles from './serialMonitor.module.css';
-import { ToolPresetBinding, numberField, booleanField } from './ToolPresetBinding';
+import { ToolPresetBinding, numberField, booleanField, textField } from './ToolPresetBinding';
 
 interface SerialPort {
   open(options: { baudRate: number }): Promise<void>;
@@ -145,7 +145,7 @@ export function SerialMonitor() {
 
   return (
     <div className={styles.container}>
-      <ToolPresetBinding toolId="serial-monitor" fields={{ baudRate: numberField(baudRate, setBaudRate, 300, 2_000_000), appendNewline: booleanField(appendNewline, setAppendNewline) }} />
+      <ToolPresetBinding toolId="serial-monitor" fields={{ inputValue: textField(inputValue, setInputValue), logs: textField(logs, setLogs), baudRate: numberField(baudRate, setBaudRate, 300, 2_000_000), appendNewline: booleanField(appendNewline, setAppendNewline) }} />
       <div className={styles.header}>
         <div className={styles.controls}>
           <select

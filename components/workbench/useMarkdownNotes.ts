@@ -1,4 +1,5 @@
 'use client';
+import { readRaw, writeRaw } from '@/lib/storage/safeLocalStorage';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -44,13 +45,16 @@ export function useMarkdownNotes() {
     }
     setNotes(loaded);
     setReady(true);
-    setActiveId(loaded[0]?.id ?? null);
+    const remembered = shared === null ? readRaw('hios:notes:active') : null;
+    setActiveId(loaded.find(note => note.id === remembered)?.id ?? loaded[0]?.id ?? null);
   }, [searchParams, t]);
 
   // Small local documents are saved immediately, including before navigation.
   useEffect(() => {
     if (ready) setSaveFailed(!writeNotes(notes));
   }, [notes, ready]);
+
+  useEffect(() => { if (ready && activeId) writeRaw('hios:notes:active', activeId); }, [ready, activeId]);
 
   const active = useMemo(() => notes.find((n) => n.id === activeId) ?? null, [notes, activeId]);
 

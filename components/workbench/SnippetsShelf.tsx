@@ -1,5 +1,6 @@
 'use client';
 
+import { useToolDraft } from '@/lib/hooks/useToolDraft';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Alert, Button, Card, Empty, Input, Space, Tag, Typography, message } from 'antd';
 import { CopyOutlined, DeleteOutlined, LinkOutlined, SaveOutlined, UploadOutlined } from '@ant-design/icons';
@@ -45,6 +46,11 @@ export function SnippetsShelf() {
     const [title, setTitle] = useState('');
     const [tags, setTags] = useState('');
     const [body, setBody] = useState('');
+    useToolDraft('snippets', { title, tags, body }, saved => {
+        if (saved.title !== undefined) setTitle(saved.title);
+        if (saved.tags !== undefined) setTags(saved.tags);
+        if (saved.body !== undefined) setBody(saved.body);
+    });
     const [snippets, setSnippets] = useState<SnippetRecord[]>([]);
     const [localSnippets, setLocalSnippets] = useState<SnippetRecord[]>([]);
     const [isRemoteLoading, setIsRemoteLoading] = useState(false);

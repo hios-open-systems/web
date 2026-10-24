@@ -2,8 +2,10 @@
 import { useEffect, useRef } from 'react';
 import { readHandoff } from '@/lib/workbench/handoff';
 import { trackWorkbench } from '@/lib/workbench/events';
+import { useToolDraft } from './useToolDraft';
 
-export function useToolBridge(toolId: string, receive: (values: Record<string, string>) => void) {
+export function useToolBridge(toolId: string, receive: (values: Record<string, string>) => void, draft?: Record<string, string>) {
+  useToolDraft(toolId, draft, receive);
   const callback = useRef(receive);
   callback.current = receive;
   useEffect(() => {

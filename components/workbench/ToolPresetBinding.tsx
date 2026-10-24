@@ -13,7 +13,8 @@ export function numberField(value: number | null, set: (value: number) => void, 
   return { value: String(value ?? ''), content: false, restore: next => { const number = Number(next); if (next.trim() && Number.isFinite(number) && number >= min && number <= max) set(number); } };
 }
 export function ToolPresetBinding({ toolId, fields }: { toolId: string; fields: Record<string, PresetField> }) {
-  useToolBridge(toolId, values => { for (const [key, value] of Object.entries(values)) if (Object.hasOwn(fields, key)) fields[key].restore(value); });
+  useToolBridge(toolId, values => { for (const [key, value] of Object.entries(values)) if (Object.hasOwn(fields, key)) fields[key].restore(value); },
+    Object.fromEntries(Object.entries(fields).map(([key, field]) => [key, field.value])));
   const settings = Object.fromEntries(Object.entries(fields).filter(([, field]) => !field.content).map(([key, field]) => [key, field.value]));
   const content = Object.fromEntries(Object.entries(fields).filter(([, field]) => field.content).map(([key, field]) => [key, field.value]));
   return <PresetControls toolId={toolId} settings={settings} content={content} />;

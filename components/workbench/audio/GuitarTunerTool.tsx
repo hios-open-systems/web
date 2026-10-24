@@ -102,6 +102,7 @@ export function GuitarTunerTool() {
         fields={{
           instrument: textField(instrument, setInstrument, INSTRUMENTS, false),
           tuningId: textField(tuningId, setTuningId, TUNINGS.map((i) => i.id), false),
+          timbre: textField(timbre, setTimbre, ['sine', 'square', 'sawtooth', 'triangle'], true),
           a4: numberField(a4, setA4, 400, 480),
         }}
       />

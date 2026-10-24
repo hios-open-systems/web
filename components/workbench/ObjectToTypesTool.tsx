@@ -36,7 +36,7 @@ export function ObjectToTypesTool() {
   const [messageApi, contextHolder] = message.useMessage();
   const [input, setInput] = useState(EXAMPLE_OBJECT);
   const [rootName, setRootName] = useState('SiteSnapshot');
-  useToolBridge('object-to-types', values => { if (values.object !== undefined) setInput(values.object); if (values.rootName) setRootName(values.rootName); });
+  useToolBridge('object-to-types', values => { if (values.object !== undefined) setInput(values.object); if (values.rootName) setRootName(values.rootName); }, { rootName, object: input });
   const searchParams = useSearchParams();
   const hydratedFromUrl = useRef(false);
 

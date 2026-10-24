@@ -51,7 +51,7 @@ export function TypeCheckerTool() {
   const [typeSource, setTypeSource] = useState(EXAMPLE_TYPES);
   const [rootTypeName, setRootTypeName] = useState('ApiResponse');
   const [valueSource, setValueSource] = useState(EXAMPLE_VALUE);
-  useToolBridge('type-checker', values => { if (values.value !== undefined) setValueSource(values.value); if (values.types !== undefined) setTypeSource(values.types); if (values.rootName) setRootTypeName(values.rootName); });
+  useToolBridge('type-checker', values => { if (values.value !== undefined) setValueSource(values.value); if (values.types !== undefined) setTypeSource(values.types); if (values.rootName) setRootTypeName(values.rootName); }, { rootName: rootTypeName, value: valueSource, types: typeSource });
   const [result, setResult] = useState<TypeCheckResult>(EMPTY_RESULT);
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();

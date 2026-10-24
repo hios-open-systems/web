@@ -31,10 +31,7 @@ export function RandomStringTool() {
     const [messageApi, contextHolder] = message.useMessage();
     const [options, setOptions] = useState<RandomStringOptions>(defaultOptions);
     const [values, setValues] = useState<string[]>([]);
-    useToolBridge('random-string', data => {
-        const next = parseRandomOptions(data.options ?? '');
-        if (next) { setOptions(next); try { setValues(generateRandomStrings(next, 4)); } catch { setValues([]); } }
-    });
+
     const entropy = useMemo(() => estimateEntropy(options), [options]);
 
     const regenerate = () => {
@@ -53,6 +50,11 @@ export function RandomStringTool() {
             setValues([]);
         }
     }, []);
+
+    useToolBridge('random-string', data => {
+        const next = parseRandomOptions(data.options ?? '');
+        if (next) { setOptions(next); try { setValues(generateRandomStrings(next, 4)); } catch { setValues([]); } }
+    }, { options: JSON.stringify(options) });
 
     const handleCopy = useCopyToClipboard(messageApi);
 

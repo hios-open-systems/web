@@ -1,4 +1,5 @@
 'use client';
+import { useToolFileDraft } from '@/lib/hooks/useToolFileDraft';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Card, Space, Typography, Upload, message } from 'antd';
@@ -67,6 +68,8 @@ export function AudioConvertTool() {
     } finally { void ctx?.close().catch(() => {}); if (ticket === generation.current) setLoading(false); }
   }, [messageApi]);
 
+  const rememberFile = useToolFileDraft('audio-convert', processFile);
+
   const exportWav = () => {
     if (!audio) return;
     try {
@@ -96,7 +99,7 @@ export function AudioConvertTool() {
         title="Conversor de audio"
         description="Subí un archivo de audio y exportalo a WAV o MP3. Todo en el navegador; nada se sube a un servidor."
         locality="local"
-        actions={(audio || loading) ? <Button size="large" disabled={busy} onClick={() => { generation.current++; setLoading(false); setSource(null); setAudio(null); }}>Limpiar</Button> : undefined}
+        actions={(audio || loading) ? <Button size="large" disabled={busy} onClick={() => { rememberFile(null); generation.current++; setLoading(false); setSource(null); setAudio(null); }}>Limpiar</Button> : undefined}
       />
 
       {loading && <Text role="status">Procesando archivo…</Text>}
@@ -106,7 +109,7 @@ export function AudioConvertTool() {
             disabled={loading}
             accept="audio/*"
             showUploadList={false}
-            beforeUpload={(file) => { processFile(file); return false; }}
+            beforeUpload={(file) => { rememberFile(file); processFile(file); return false; }}
             style={{ background: 'var(--hios-bg-secondary)', border: '1px dashed var(--hios-border)' }}
           >
             <p style={{ fontSize: 32, margin: '16px 0 8px' }}>
