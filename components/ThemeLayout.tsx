@@ -19,8 +19,8 @@ import { HandoffNotice } from '@/components/workbench/HandoffNotice';
 
 function ThemedLayout({ children, currentVersion }: { children: React.ReactNode; currentVersion: string }) {
     const { mode, accent, skin } = useTheme();
-    // Match the extracted SSR tokens first, then update the CSS-in-JS cache
-    // with the saved theme. Otherwise a direct light-mode visit can keep dark controls.
+    // Keep SSR and hydration scopes identical. antd-controls.css follows the
+    // pre-paint HTML preferences while React updates the remaining library tokens.
     const [mounted, setMounted] = React.useState(false);
     React.useEffect(() => setMounted(true), []);
     const currentTheme = React.useMemo(
