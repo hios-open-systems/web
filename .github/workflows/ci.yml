@@ -84,6 +84,10 @@ jobs:
           NEXT_TELEMETRY_DISABLED: '1'
           NEXT_PUBLIC_TURNSTILE_SITEKEY: ${{ vars.NEXT_PUBLIC_TURNSTILE_SITEKEY }}
 
+      # The consent test exercises the browser -> Worker -> D1 flow.
+      - name: Install browser for security and tool content checks
+        run: npx playwright install --with-deps chromium
+
       - name: Verify authentication and endpoint permissions against local D1
         run: npm run test:security
         env:
@@ -94,9 +98,6 @@ jobs:
           npm run test:seo -- --built
           npm run test:sitemap -- --built
           npm run test:software
-
-      - name: Install browser for tool content checks
-        run: npx playwright install --with-deps chromium
 
       - name: Verify tool content and hydration
         run: npx playwright test tests/tool-content.spec.ts tests/project-software.spec.ts tests/section-navigation.spec.ts tests/project-stl.spec.ts tests/network-locality.spec.ts tests/local-inputs.spec.ts tests/analytics.spec.ts tests/landing-styles.spec.ts tests/discovery-demos.spec.ts tests/google-login.spec.ts tests/security-dependencies.spec.ts tests/security-imports.spec.ts tests/turnstile-submit.spec.ts --project=chromium --workers=1
