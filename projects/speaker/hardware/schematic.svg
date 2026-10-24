@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="713" viewBox="0 0 1120 713">
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="666" viewBox="0 0 1120 666">
 <title>HIOS WiFi Speaker — esquema de cableado</title>
 <style>
 text{font-family:ui-monospace,Menlo,Consolas,monospace;fill:#111}
@@ -10,58 +10,55 @@ text{font-family:ui-monospace,Menlo,Consolas,monospace;fill:#111}
 .rail{fill:#fff8e6;stroke:#b7791f}.railname{font-size:12px;font-weight:700}
 .wire{stroke:#1d4ed8;stroke-width:1.5;fill:none}.flag{stroke:#b00020;stroke-dasharray:5 3}.dot{fill:#1d4ed8}
 </style>
-<rect width="1120" height="713" fill="#ffffff"/>
+<rect width="1120" height="666" fill="#ffffff"/>
 <text x="32" y="36" class="title">HIOS WiFi Speaker — esquema de cableado (rev 1.0)</text>
 <text x="32" y="58" class="meta">MCU: ESP32-WROOM-32 · pines desde projects/speaker/src/main.ino</text>
 <text x="32" y="76" class="meta">Generado por scripts/gen-hardware-docs.ts. Pines verificados contra el firmware por npm test. Cableado entre módulos, no una PCB.</text>
-<text x="32" y="100" class="warn">⚠ El divisor de VBAT del firmware (100k/100k) NO es apto para 2S: a 8.4V entrega 4.2V sobre GPIO34. Rediseñalo y recalibrá antes</text>
-<text x="32" y="116" class="warn">de conectarlo.</text>
-<text x="32" y="132" class="warn">⚠ El canal L/R de cada MAX98357 lo elige su pin SD: medilo con la calculadora de SD, no lo asumas.</text>
-<rect x="600" y="160" width="488" height="49" class="mod"/>
-<text x="612" y="178" class="modname">Energía</text>
-<text x="612" y="196" class="power">pack 2S → BMS → LM2596 a 5.0V → riel 5V</text>
-<rect x="600" y="223" width="488" height="121" class="mod"/>
-<text x="612" y="241" class="modname">2× MAX98357 (I2S)</text>
-<text x="612" y="259" class="power">Vin → 5V · GND → GND</text>
-<circle cx="600" cy="280" r="3" class="dot"/>
-<text x="612" y="284" class="pin">I2S DOUT: → DIN de AMBOS MAX98357 (bus)</text>
-<circle cx="600" cy="304" r="3" class="dot"/>
-<text x="612" y="308" class="pin">I2S BCLK: → BCLK de ambos amplis</text>
-<circle cx="600" cy="328" r="3" class="dot"/>
-<text x="612" y="332" class="pin">I2S LRC: → LRC de ambos amplis</text>
-<rect x="600" y="358" width="488" height="97" class="mod"/>
-<text x="612" y="376" class="modname">LCD 16×2 (I2C)</text>
-<text x="612" y="394" class="power">VCC → 5V · GND → GND</text>
-<circle cx="600" cy="415" r="3" class="dot"/>
-<text x="612" y="419" class="pin">I2C SDA: → SDA del LCD 16×2 (0x27)</text>
-<circle cx="600" cy="439" r="3" class="dot"/>
-<text x="612" y="443" class="pin">I2C SCL: → SCL del LCD</text>
-<rect x="600" y="469" width="488" height="88" class="mod"/>
-<text x="612" y="487" class="modname">Medición de batería — revisar</text>
-<text x="612" y="505" class="power">Referencia del firmware: 100k/100k → GPIO34. NO conectar a 2S: 8.4V</text>
-<text x="612" y="520" class="power">→ 4.2V.</text>
-<circle cx="600" cy="541" r="3" class="dot"/>
-<text x="612" y="545" class="pin">VBAT ADC: Firmware: divisor 100k/100k (×2), pendiente de rediseño p…</text>
-<rect x="32" y="160" width="300" height="397" class="mcu"/>
-<text x="44" y="180" class="modname">ESP32-WROOM-32</text>
-<text x="320" y="284" class="gpio">I2S DOUT · GPIO25</text>
-<path d="M332 280 H600" class="wire"/>
-<text x="320" y="308" class="gpio">I2S BCLK · GPIO26</text>
-<path d="M332 304 H600" class="wire"/>
-<text x="320" y="332" class="gpio">I2S LRC · GPIO27</text>
-<path d="M332 328 H600" class="wire"/>
-<text x="320" y="419" class="gpio">I2C SDA · GPIO21</text>
-<path d="M332 415 H600" class="wire"/>
-<text x="320" y="443" class="gpio">I2C SCL · GPIO22</text>
-<path d="M332 439 H600" class="wire"/>
-<text x="320" y="545" class="gpio">VBAT ADC · GPIO34</text>
-<path d="M332 541 H600" class="wire flag"/>
-<text x="32" y="587" class="meta">Línea roja punteada = el pin tiene una nota: leela en hardware/README.md antes de soldar.</text>
-<text x="32" y="611" class="modname">Rieles de alimentación</text>
-<rect x="32" y="617" width="1056" height="25" class="rail"/>
-<text x="44" y="632" class="railname">5V</text>
-<text x="252" y="632" class="power">ESP32 VIN · 2× MAX98357 Vin · LCD VCC · del LM2596 (buck ≥2–3A)</text>
-<rect x="32" y="650" width="1056" height="25" class="rail"/>
-<text x="44" y="665" class="railname">GND común</text>
-<text x="252" y="665" class="power">ESP32 · amplis · LCD · buck · BMS (1 sola masa)</text>
+<text x="32" y="100" class="warn">⚠ El canal L/R de cada MAX98357 lo elige su pin SD: medilo con la calculadora de SD, no lo asumas.</text>
+<rect x="600" y="128" width="488" height="49" class="mod"/>
+<text x="612" y="146" class="modname">Energía</text>
+<text x="612" y="164" class="power">pack 2S → BMS → LM2596 a 5.0V → riel 5V</text>
+<rect x="600" y="191" width="488" height="121" class="mod"/>
+<text x="612" y="209" class="modname">2× MAX98357 (I2S)</text>
+<text x="612" y="227" class="power">Vin → 5V · GND → GND</text>
+<circle cx="600" cy="248" r="3" class="dot"/>
+<text x="612" y="252" class="pin">I2S DOUT: → DIN de AMBOS MAX98357 (bus)</text>
+<circle cx="600" cy="272" r="3" class="dot"/>
+<text x="612" y="276" class="pin">I2S BCLK: → BCLK de ambos amplis</text>
+<circle cx="600" cy="296" r="3" class="dot"/>
+<text x="612" y="300" class="pin">I2S LRC: → LRC de ambos amplis</text>
+<rect x="600" y="326" width="488" height="97" class="mod"/>
+<text x="612" y="344" class="modname">LCD 16×2 (I2C)</text>
+<text x="612" y="362" class="power">VCC → 5V · GND → GND</text>
+<circle cx="600" cy="383" r="3" class="dot"/>
+<text x="612" y="387" class="pin">I2C SDA: → SDA del LCD 16×2 (0x27)</text>
+<circle cx="600" cy="407" r="3" class="dot"/>
+<text x="612" y="411" class="pin">I2C SCL: → SCL del LCD</text>
+<rect x="600" y="437" width="488" height="73" class="mod"/>
+<text x="612" y="455" class="modname">Medición de batería</text>
+<text x="612" y="473" class="power">pack 2S → 270k → GPIO34 → 100k → GND · 100nF de GPIO34 a GND</text>
+<circle cx="600" cy="494" r="3" class="dot"/>
+<text x="612" y="498" class="pin">VBAT ADC: ← punto medio del divisor 270k/100k (×3.7): 8.4V → 2.27V,…</text>
+<rect x="32" y="128" width="300" height="382" class="mcu"/>
+<text x="44" y="148" class="modname">ESP32-WROOM-32</text>
+<text x="320" y="252" class="gpio">I2S DOUT · GPIO25</text>
+<path d="M332 248 H600" class="wire"/>
+<text x="320" y="276" class="gpio">I2S BCLK · GPIO26</text>
+<path d="M332 272 H600" class="wire"/>
+<text x="320" y="300" class="gpio">I2S LRC · GPIO27</text>
+<path d="M332 296 H600" class="wire"/>
+<text x="320" y="387" class="gpio">I2C SDA · GPIO21</text>
+<path d="M332 383 H600" class="wire"/>
+<text x="320" y="411" class="gpio">I2C SCL · GPIO22</text>
+<path d="M332 407 H600" class="wire"/>
+<text x="320" y="498" class="gpio">VBAT ADC · GPIO34</text>
+<path d="M332 494 H600" class="wire flag"/>
+<text x="32" y="540" class="meta">Línea roja punteada = el pin tiene una nota: leela en hardware/README.md antes de soldar.</text>
+<text x="32" y="564" class="modname">Rieles de alimentación</text>
+<rect x="32" y="570" width="1056" height="25" class="rail"/>
+<text x="44" y="585" class="railname">5V</text>
+<text x="252" y="585" class="power">ESP32 VIN · 2× MAX98357 Vin · LCD VCC · del LM2596 (buck ≥2–3A)</text>
+<rect x="32" y="603" width="1056" height="25" class="rail"/>
+<text x="44" y="618" class="railname">GND común</text>
+<text x="252" y="618" class="power">ESP32 · amplis · LCD · buck · BMS (1 sola masa)</text>
 </svg>

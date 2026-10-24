@@ -35,7 +35,7 @@ La hoja verificada contra el firmware es la guía **[/pinouts/speaker](https://o
 | I2S BCLK | GPIO26 | BCLK de ambos |
 | I2S LRC | GPIO27 | LRC de ambos |
 | I2C SDA / SCL | GPIO21 / GPIO22 | LCD 16×2 (0x27) |
-| VBAT | GPIO34 | divisor 100k/100k del pack (IO34 es input-only) |
+| VBAT | GPIO34 | divisor 270k/100k + 100nF del pack (IO34 es input-only) |
 | 5V / GND | VIN / GND | del LM2596 (buck a 5.0V) |
 
 > **Selección de canal L/R:** el bus I2S es compartido; cada amplificador selecciona su canal mediante SD. Verificá la tensión de ese pin y contrastala con la ficha del módulo. Consultá el paso de medición de SD en la guía de conexiones.

@@ -12,6 +12,7 @@ const SPK_GUIDE = 'config/pinouts/speaker.ts';
 const PAD_SRC = 'projects/pad/README.md';
 const PAD_GUIDE = 'config/pinouts/pad.ts';
 const NODE_SRC = 'projects/hios-node-ai/COMPONENTS.md';
+const NODE_HW = NODE_SRC;
 
 const item = (qty: number | null, part: string, role: string, notes: string, source: string): BomItem => ({
   qty, part, role, notes, source,
@@ -41,7 +42,9 @@ export const HARDWARE_BOMS: Record<string, BomItem[]> = {
     item(1, 'Cargador y protección 2S USB-C', 'Carga del pack', '', SPK_SRC),
     item(2, 'Celda 18650', 'Batería 2S en serie', '', SPK_SRC),
     item(1, 'Portapilas 2× 18650 en serie', 'Soporte del pack', '', SPK_SRC),
-    item(null, 'Resistencias divisor VBAT', 'Medición de batería en GPIO34', 'PENDIENTE: el 100k/100k del firmware no es apto para 2S; valores a definir', SPK_GUIDE),
+    item(1, 'Resistencia 270kΩ', 'Divisor VBAT (arriba)', '8.4V → 2.27V en GPIO34', SPK_GUIDE),
+    item(1, 'Resistencia 100kΩ', 'Divisor VBAT (abajo)', '', SPK_GUIDE),
+    item(1, 'Capacitor 100nF', 'Filtro del ADC en GPIO34', '', SPK_GUIDE),
     item(null, 'Resistencias de SD', 'Selección de canal L/R', 'valor según calculadora de SD y breakout', SPK_SRC),
     item(3, 'Piezas impresas 3D', 'Gabinete, bafle frontal, tapa posterior', 'STL en public/downloads/speaker/', 'config/prints/speakerPrints.ts'),
   ],
@@ -75,16 +78,22 @@ export const HARDWARE_BOMS: Record<string, BomItem[]> = {
     item(1, 'Resistencia 220kΩ', 'SD → Vin del amp derecho', 'ajustar según breakout', 'projects/speaker-test/README.md'),
   ],
   'hios-node-ai': [
-    item(1, 'ESP32-S3-DevKitC-1 (N16R8)', 'MCU', '', NODE_SRC),
-    item(1, 'INMP441', 'Micrófono MEMS I2S', 'firmware aún no lo usa', NODE_SRC),
-    item(1, 'MAX98357A', 'Amplificador I2S mono', 'firmware aún no lo usa', NODE_SRC),
-    item(1, 'OLED 0.96" SSD1306 (I2C 0x3C)', 'Pantalla de estado', '', NODE_SRC),
+    item(1, 'ESP32-S3-DevKitC-1 (N16R8)', 'MCU', '16MB flash + 8MB PSRAM octal', NODE_SRC),
+    item(1, 'INMP441 breakout', 'Micrófono MEMS I2S', 'VDD a 3V3; firmware aún no lo lee', NODE_SRC),
+    item(1, 'MAX98357A breakout', 'Amplificador I2S mono', '2.5–5.5V; 3.2W en 4Ω a 5V', NODE_SRC),
+    item(1, 'OLED 0.96" SSD1306 I2C (0x3C)', 'Pantalla de estado', '', NODE_SRC),
     item(1, 'Pulsador 6×6', 'Botón PTT', '', NODE_SRC),
     item(1, 'LED 3mm difuso', 'Indicador de estado', '', NODE_SRC),
     item(1, 'Resistencia 330Ω', 'Serie del LED', '', NODE_SRC),
     item(1, 'Parlante 4Ω 3W (40mm)', 'Salida acústica', '', NODE_SRC),
-    item(1, 'Cargador TP4056 USB-C', 'Carga de batería', '', NODE_SRC),
-    item(1, 'Celda 18650', 'Alimentación', 'falta definir cómo se obtiene 5V', NODE_SRC),
-    item(1, 'Capacitor 220µF', 'Desacople 5V cerca del MAX98357A', '', 'projects/hios-node-ai/PINOUT.md'),
+    item(1, 'Cargador TP4056 USB-C con protección (DW01A + FS8205A)', 'Carga 4.2V y protección de la celda', 'usar la versión con OUT+/OUT−; corte por descarga 2.4V, sobrecorriente ~3A', NODE_HW),
+    item(1, 'Celda 18650 + portapilas 1S', 'Alimentación', '', NODE_SRC),
+    item(1, 'Pololu U3V40F5 (step-up 5V)', 'Riel 5V desde la celda', 'arranca con ≥2.7V; hasta 4A de entrada; pololu.com/product/4012', NODE_HW),
+    item(1, 'Resistencia 22kΩ', 'EN del U3V40F5 → GND', 'corte por baja tensión ≈3.06V', NODE_HW),
+    item(1, 'Diodo Schottky SS34 (3A, 40V)', 'Boost → pin 5V del DevKit', 'evita conflicto con el USB', NODE_HW),
+    item(1, 'Interruptor deslizante SW1', 'Encendido (salida del TP4056)', 'que soporte ≥3A', NODE_HW),
+    item(2, 'Resistencia 100kΩ', 'Divisor VBAT → GPIO1', '4.2V → 2.1V', NODE_HW),
+    item(1, 'Capacitor 100nF', 'Filtro del ADC en GPIO1', '', NODE_HW),
+    item(1, 'Capacitor 220µF', 'Reserva en VIN del MAX98357A', '', 'projects/hios-node-ai/PINOUT.md'),
   ],
 };

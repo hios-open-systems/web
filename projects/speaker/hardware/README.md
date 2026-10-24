@@ -10,7 +10,6 @@ Esquema: [`schematic.svg`](schematic.svg) · BOM: [`BOM.csv`](BOM.csv). Es cable
 
 ## Advertencias
 
-- ⚠️ El divisor de VBAT del firmware (100k/100k) NO es apto para 2S: a 8.4V entrega 4.2V sobre GPIO34. Rediseñalo y recalibrá antes de conectarlo.
 - ⚠️ El canal L/R de cada MAX98357 lo elige su pin SD: medilo con la calculadora de SD, no lo asumas.
 
 ## Conexiones por módulo
@@ -38,13 +37,13 @@ Alimentación: VCC → 5V · GND → GND
 | 21 | I2C SDA | → SDA del LCD 16×2 (0x27) |  |
 | 22 | I2C SCL | → SCL del LCD |  |
 
-### Medición de batería — revisar
+### Medición de batería
 
-Alimentación: Referencia del firmware: 100k/100k → GPIO34. NO conectar a 2S: 8.4V → 4.2V.
+Alimentación: pack 2S → 270k → GPIO34 → 100k → GND · 100nF de GPIO34 a GND
 
 | GPIO | Señal | Hacia | Nota |
 |---|---|---|---|
-| 34 | VBAT ADC | Firmware: divisor 100k/100k (×2), pendiente de rediseño para 2S | GPIO34 es solo entrada. A 8.4V este divisor entrega 4.2V: no lo conectes al ADC del ESP32. |
+| 34 | VBAT ADC | ← punto medio del divisor 270k/100k (×3.7): 8.4V → 2.27V, 6.0V → 1.62V | GPIO34 es solo entrada. Con 270k/100k queda dentro del rango recomendado del ADC a 11 dB (≤2.45V). |
 
 ## Rieles
 
@@ -57,12 +56,12 @@ Alimentación: Referencia del firmware: 100k/100k → GPIO34. NO conectar a 2S: 
 
 ### ⚡ Energía
 
-Los parlantes aumentan el pico: buck ≥2–3A y capacitor de reserva. No conectes el divisor 100k/100k del firmware a 2S: 8.4V se convierten en 4.2V sobre GPIO34. Dimensioná el divisor para el rango del ADC y las tolerancias; después actualizá la escala y calibración del firmware.
+Los parlantes aumentan el pico: buck ≥2–3A y capacitor de reserva. Divisor de batería 270k (arriba) / 100k (abajo) + 100nF de GPIO34 a GND: 8.4V → 2.27V, dentro del rango recomendado del ADC a 11 dB. El firmware escala ×3.7 (VBAT_MULT).
 
 | Pin | Qué | Hacia | Nota |
 |---|---|---|---|
 | VIN | ESP32 5V | del LM2596 OUT+ |  |
-| 34 | VBAT (pendiente de revisión) | 100k/100k (×2): 8.4V → 4.2V; NO conectar a GPIO34 |  |
+| 34 | VBAT | pack+ → 270k → GPIO34 → 100k → GND · 100nF a GND |  |
 | GND | Masa común | todo junto |  |
 
 ### 📟 LCD 16×2 (I2C)
@@ -86,7 +85,9 @@ Backpack PCF8574 en 0x27 (a veces 0x3F). VCC a 5V; contraste con el potenciómet
 | 1 | Cargador y protección 2S USB-C | Carga del pack |  | `projects/speaker/README.md` |
 | 2 | Celda 18650 | Batería 2S en serie |  | `projects/speaker/README.md` |
 | 1 | Portapilas 2× 18650 en serie | Soporte del pack |  | `projects/speaker/README.md` |
-| ¿? | Resistencias divisor VBAT | Medición de batería en GPIO34 | PENDIENTE: el 100k/100k del firmware no es apto para 2S; valores a definir | `config/pinouts/speaker.ts` |
+| 1 | Resistencia 270kΩ | Divisor VBAT (arriba) | 8.4V → 2.27V en GPIO34 | `config/pinouts/speaker.ts` |
+| 1 | Resistencia 100kΩ | Divisor VBAT (abajo) |  | `config/pinouts/speaker.ts` |
+| 1 | Capacitor 100nF | Filtro del ADC en GPIO34 |  | `config/pinouts/speaker.ts` |
 | ¿? | Resistencias de SD | Selección de canal L/R | valor según calculadora de SD y breakout | `projects/speaker/README.md` |
 | 3 | Piezas impresas 3D | Gabinete, bafle frontal, tapa posterior | STL en public/downloads/speaker/ | `config/prints/speakerPrints.ts` |
 
@@ -99,5 +100,5 @@ Backpack PCF8574 en 0x27 (a veces 0x3F). VCC a 5V; contraste con el potenciómet
 - [ ] MEDÍ cada pin SD. Usá el cálculo de SD y las ventanas garantizadas de cada canal, incluyendo el pull-up de la placa si existe.
 - [ ] GAIN flotante = 9 dB · parlante 4–8Ω directo (filterless)
 - [ ] LCD I2C: SDA=21 / SCL=22, dirección 0x27; verificá niveles lógicos seguros antes de conectar
-- [ ] VBAT: reemplazá el divisor 100k/100k antes de conectar 2S a IO34 y actualizá la escala/calibración del firmware
+- [ ] VBAT: divisor 270k/100k + 100nF; GPIO34 mide ≤2.3V con el pack cargado (8.4V)
 - [ ] Masa común: ESP32, amplis, LCD, buck, BMS

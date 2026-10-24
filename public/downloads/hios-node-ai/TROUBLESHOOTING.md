@@ -12,4 +12,7 @@ Tabla de diagnósticos y solución de fallas comunes en el ensamblaje y firmware
 | **`DeserializationError::NoMemory`** | La API de Ollama devolvió el array masivo de `context` (~15KB) saturando el buffer JSON. | Usar el endpoint `/api/chat` en lugar de `/api/generate` y utilizar `ArduinoJson v7` (`JsonDocument`). |
 | **Ruido estático / Chasquido en el parlante** | Ruido de conmutación en la línea de alimentación de 5V al encender el WiFi. | Agregar un capacitor electrolítico de 220µF entre los pines `5V` y `GND` del amplificador MAX98357A. |
 | **Pantalla OLED vacía o congelada** | Dirección I2C incorrecta o falsos contactos en SDA/SCL. | Escanear el bus I2C con un sketch I2C Scanner. Verificar que la dirección sea `0x3C` o `0x3D`. |
+| **El DevKit no arranca con batería** | Boost sin salida o celda bajo el corte del EN (≈3.06V). | Medí VOUT del U3V40F5 (5.0V) y la celda; cargala por USB-C en el TP4056. |
+| **La tensión mostrada en el OLED es absurda** | Divisor VBAT mal soldado o sin GND. | GPIO1 debe medir la mitad de la batería (≤2.1V). Revisá las dos de 100kΩ y el 100nF. |
+| **No hay beep** | SD del MAX98357A a GND (apagado) o VIN sin 5V. | SD a VIN, VIN al 5V del boost (antes del SS34), parlante entre OUT+ y OUT−. |
 | **La PC local no responde a las consultas del ESP32** | Ollama está escuchando únicamente en `127.0.0.1` (localhost). | Configurar la variable de entorno `OLLAMA_HOST=0.0.0.0` y reiniciar el servicio de Ollama en la PC. |

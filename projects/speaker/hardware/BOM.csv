@@ -7,6 +7,8 @@ qty,part,role,notes,source
 1,Cargador y protección 2S USB-C,Carga del pack,,projects/speaker/README.md
 2,Celda 18650,Batería 2S en serie,,projects/speaker/README.md
 1,Portapilas 2× 18650 en serie,Soporte del pack,,projects/speaker/README.md
-,Resistencias divisor VBAT,Medición de batería en GPIO34,PENDIENTE: el 100k/100k del firmware no es apto para 2S; valores a definir,config/pinouts/speaker.ts
+1,Resistencia 270kΩ,Divisor VBAT (arriba),8.4V → 2.27V en GPIO34,config/pinouts/speaker.ts
+1,Resistencia 100kΩ,Divisor VBAT (abajo),,config/pinouts/speaker.ts
+1,Capacitor 100nF,Filtro del ADC en GPIO34,,config/pinouts/speaker.ts
 ,Resistencias de SD,Selección de canal L/R,valor según calculadora de SD y breakout,projects/speaker/README.md
 3,Piezas impresas 3D,"Gabinete, bafle frontal, tapa posterior",STL en public/downloads/speaker/,config/prints/speakerPrints.ts

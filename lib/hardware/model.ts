@@ -46,6 +46,8 @@ export interface HwDesign {
   pins: HwPin[];
   rails: HwRail[];
   checks: string[];
+  /** cadena de alimentación de izquierda a derecha, para dibujarla en el esquema */
+  powerChain?: string[];
   /** detalle por bloque (alimentación, jumpers, SD…) tal como lo trae la guía */
   sections: HwSection[];
 }

@@ -47,16 +47,23 @@ for (const file of ['projects/speaker-test/src/tone_test.cpp', 'projects/speaker
 }
 
 const nodeSrc = readFileSync('projects/hios-node-ai/src/main.cpp', 'utf8');
-assert.equal(gpioOf('hios-node-ai', 'Botón PTT'), constant(nodeSrc, 'BTN_PIN'));
-assert.equal(gpioOf('hios-node-ai', 'LED estado'), constant(nodeSrc, 'LED_PIN'));
-assert.equal(gpioOf('hios-node-ai', 'I2C SDA'), constant(nodeSrc, 'SDA_PIN'));
-assert.equal(gpioOf('hios-node-ai', 'I2C SCL'), constant(nodeSrc, 'SCL_PIN'));
+const NODE_PINS: Record<string, string> = {
+  'Botón PTT': 'BTN_PIN', 'LED estado': 'LED_PIN', 'I2C SDA': 'SDA_PIN', 'I2C SCL': 'SCL_PIN', 'VBAT ADC': 'VBAT_PIN',
+  'I2S Amp BCLK': 'AMP_BCLK_PIN', 'I2S Amp LRC': 'AMP_LRC_PIN', 'I2S Amp DIN': 'AMP_DIN_PIN',
+  'I2S Mic SCK': 'MIC_SCK_PIN', 'I2S Mic WS': 'MIC_WS_PIN', 'I2S Mic SD': 'MIC_SD_PIN',
+};
+assert.equal(Object.keys(NODE_PINS).length, design('hios-node-ai').pins.length, '[hios-node-ai] pin sin constante de firmware');
+for (const [signal, name] of Object.entries(NODE_PINS)) {
+  assert.equal(gpioOf('hios-node-ai', signal), constant(nodeSrc, name), `[hios-node-ai] ${signal} ≠ ${name}`);
+}
+assert.ok(!/WIFI_PASS\s*=\s*"/.test(nodeSrc), '[hios-node-ai] credenciales WiFi hardcodeadas en main.cpp');
 
-// 4. Un GPIO que no existe en el ESP32-S3 nunca puede publicarse como verificado ni callado.
-const S3_GPIOS = new Set([...Array.from({ length: 22 }, (_, i) => i), ...Array.from({ length: 23 }, (_, i) => i + 26)]);
+// 4. Un GPIO no disponible en el ESP32-S3 N16R8 nunca puede publicarse como verificado ni callado.
+// GPIO 0–21 y 26–48 existen en el S3; en el N16R8, 26–37 los usan la flash y la PSRAM octal.
+const S3_GPIOS = new Set([...Array.from({ length: 22 }, (_, i) => i), ...Array.from({ length: 11 }, (_, i) => i + 38)]);
 for (const d of HARDWARE_DESIGNS.filter((x) => x.mcu.includes('S3'))) {
   for (const pin of d.pins.filter((p) => !S3_GPIOS.has(p.gpio))) {
-    assert.equal(d.status, 'draft', `[${d.slug}] GPIO${pin.gpio} no existe en el S3 y el diseño figura como verificado`);
+    assert.equal(d.status, 'draft', `[${d.slug}] GPIO${pin.gpio} no está disponible en el S3 N16R8 y el diseño figura como verificado`);
     assert.ok(d.warnings.some((w) => w.includes(`GPIO${pin.gpio}`)), `[${d.slug}] GPIO${pin.gpio} inválido sin advertencia`);
   }
 }

@@ -5,7 +5,7 @@ import { BTDAC_WIRING } from '../config/pinouts/btdac.ts';
 import { SPEAKER_WIRING } from '../config/pinouts/speaker.ts';
 import { guideCopy, localizeGuide, mapGuideText, type GuideCopy } from '../config/pinouts/localizeGuide.ts';
 import { MAX_SD_EXAMPLE_VALUES } from '../lib/electronics/max98357.ts';
-import { dividerVoltage } from '../lib/electronics/divider.ts';
+import { dividerRange, dividerVoltage } from '../lib/electronics/divider.ts';
 
 const guides = [PAD_WIRING, BTDAC_WIRING, SPEAKER_WIRING];
 const placeholders = (value: string) => [...value.matchAll(/\{\w+\}/g)].map(m => m[0]).sort();
@@ -46,9 +46,12 @@ for (const locale of ['es', 'en', 'de', 'it']) {
   assert.ok(pad.check[18].includes(`${MAX_SD_EXAMPLE_VALUES.resistance}k`));
   assert.ok(pad.check[18].includes(`${MAX_SD_EXAMPLE_VALUES.min}–${MAX_SD_EXAMPLE_VALUES.max}V`));
   const speaker = localizeGuide(SPEAKER_WIRING, messages.WiringGuideContent.speaker);
-  assert.match(speaker.modules.find(m => m.id === 'battery')!.power, /8\.4V → 4\.2V/);
-  assert.match(speaker.pins.find(p => p.gpio === 34)!.note!, /4\.2V/);
+  assert.match(speaker.modules.find(m => m.id === 'battery')!.power, /270k → GPIO34 → 100k/);
+  assert.match(speaker.pins.find(p => p.gpio === 34)!.note!, /270k\/100k/);
   assert.match(speaker.sections[1].tip!, /SDA\/SCL.*5V/);
 }
-assert.equal(dividerVoltage(8.4, 100_000, 100_000), 4.2);
+assert.equal(dividerVoltage(8.4, 100_000, 100_000), 4.2, 'the old 100k/100k divider put 4.2V on GPIO34');
+// Speaker VBAT: 270k/100k keeps a full 2S pack inside the ESP32 11 dB recommended range (≤2.45V), even with 5% parts.
+assert.ok(Math.abs(dividerVoltage(8.4, 270_000, 100_000)! - 2.27) < 0.01);
+assert.ok(dividerRange(8.4, 270_000, 100_000, 5)!.max <= 2.45);
 console.log('Wiring translations: 3 guides × 4 locales, topology, placeholders and diagram regressions passed.');

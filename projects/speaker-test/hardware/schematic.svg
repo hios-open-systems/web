@@ -38,7 +38,6 @@ text{font-family:ui-monospace,Menlo,Consolas,monospace;fill:#111}
 <path d="M332 319 H600" class="wire"/>
 <text x="320" y="347" class="gpio">I2S BCLK · GPIO26</text>
 <path d="M332 343 H600" class="wire"/>
-<text x="32" y="389" class="meta">Línea roja punteada = el pin tiene una nota: leela en hardware/README.md antes de soldar.</text>
 <text x="32" y="413" class="modname">Rieles de alimentación</text>
 <rect x="32" y="419" width="1056" height="25" class="rail"/>
 <text x="44" y="434" class="railname">5V</text>
