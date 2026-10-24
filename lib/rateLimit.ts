@@ -1,17 +1,4 @@
-/**
- * Rate limiting liviano, en memoria, por isolate.
- *
- * Contexto: corremos en Cloudflare Workers (OpenNext). Cada isolate tiene su
- * propia memoria, así que esto NO es un límite global — es un freno efectivo
- * contra loops de abuso (un mismo cliente golpea casi siempre el mismo PoP y
- * por ende el mismo isolate caliente). La defensa "de verdad" a escala es una
- * WAF rule en Cloudflare; esto corta el 95% del abuso casual sin infra nueva.
- *
- * Uso en un route handler:
- *   const limited = checkRateLimit(request, 'dns', { limit: 30, windowMs: 60_000 });
- *   if (limited) return limited; // Response 429 lista
- */
-
+/** In-memory fallback for local development only. Production uses native bindings. */
 interface Bucket {
     count: number;
     resetAt: number;

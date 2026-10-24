@@ -10,7 +10,7 @@
     "start": "next start",
     "lint": "eslint app components config i18n lib styles types",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
-    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "deploy": "opennextjs-cloudflare build && node scripts/security-release-check.mjs && opennextjs-cloudflare deploy",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv",
     "test": "node scripts/run-selftests.mjs",
     "shots": "node scripts/shots.mjs",
@@ -69,7 +69,8 @@
     "test:wiring-i18n": "node --experimental-strip-types scripts/wiring-i18n-selftest.ts",
     "test:deployment": "node scripts/deployment-selftest.mjs",
     "test:assembly": "node --experimental-strip-types scripts/assembly-selftest.ts",
-    "test:lmstudio": "node --experimental-strip-types scripts/lmstudio-selftest.ts"
+    "test:lmstudio": "node --experimental-strip-types scripts/lmstudio-selftest.ts",
+    "test:production-security": "node --experimental-strip-types scripts/production-security-selftest.ts"
   },
   "dependencies": {
     "@ant-design/cssinjs": "^1.18.0",

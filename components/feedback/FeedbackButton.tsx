@@ -158,7 +158,7 @@ export function FeedbackButton({ toolSlug }: { toolSlug?: string }) {
                         <span style={{ fontSize: 12, opacity: 0.65 }}>{t('widget.emailHint')}</span>
                     </label>
 
-                    <TurnstileWidget onToken={setTurnstileToken} />
+                    <TurnstileWidget action="feedback" onToken={setTurnstileToken} />
                 </div>
             </Modal>
         </>

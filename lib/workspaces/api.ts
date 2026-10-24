@@ -3,7 +3,7 @@ import type { D1Database } from '@cloudflare/workers-types';
 import type { NextRequest } from 'next/server';
 import { getRequestAuth } from '@/lib/auth/request';
 import { getDb } from '@/lib/db';
-import { checkRateLimit } from '@/lib/rateLimit';
+import { checkRateLimit } from '@/lib/requestRateLimit';
 import { validDocument, type StoredDocument } from './model';
 
 interface Row { id: string; body: string; revision: number; deleted: number }
@@ -57,7 +57,7 @@ export async function documentsApi(request: NextRequest, kind: StoredDocument['k
       return Response.json({ error: 'unavailable' }, { status: 503 });
     }
   }
-  const limited = checkRateLimit(request, 'workspace-write', { limit: 120, windowMs: 60_000 });
+  const limited = await checkRateLimit(request, 'workspace-write', { limit: 120, windowMs: 60_000 });
   if (limited) return limited;
   let payload: StoredDocument;
   try { payload = await readJsonBody(request, 1_100_000) as StoredDocument; } catch (error) {

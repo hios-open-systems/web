@@ -1,6 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
-import { checkRateLimit } from '@/lib/rateLimit';
+import { checkRateLimit } from '@/lib/requestRateLimit';
 
 /**
  * GET /api/stats/public — agregados anónimos para la página /stats.
@@ -17,7 +17,7 @@ import { checkRateLimit } from '@/lib/rateLimit';
 const DAYS = 30;
 
 export async function GET(request: NextRequest) {
-    const limited = checkRateLimit(request, 'stats-public', { limit: 30, windowMs: 60_000 });
+    const limited = await checkRateLimit(request, 'stats-public', { limit: 30, windowMs: 60_000 });
     if (limited) return limited;
 
     const sinceEpoch = Math.floor(Date.now() / 1000) - DAYS * 24 * 60 * 60;

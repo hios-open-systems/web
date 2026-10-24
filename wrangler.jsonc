@@ -4,6 +4,9 @@
   // se mantienen; el GITHUB_CLIENT_SECRET va como Secret del Worker (dashboard).
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "hios-platform",
+  "account_id": "74517853847d3bfb25721012cf268858",
+  "workers_dev": false,
+  "preview_urls": false,
   "main": ".open-next/worker.js",
   "compatibility_date": "2025-04-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
@@ -13,8 +16,67 @@
   },
   "vars": {
     "GITHUB_CLIENT_ID": "Ov23licdOWRnG6AVSnyR",
-    "AUTH_BASE_URL": "https://openhios.dev"
+    "AUTH_BASE_URL": "https://openhios.dev",
+    "ADMIN_GITHUB_ID": "37183343"
   },
+  "ratelimits": [
+  {
+    "name": "RATE_LIMIT_3",
+    "namespace_id": "2026102400",
+    "simple": {
+      "limit": 3,
+      "period": 60
+    }
+  },
+  {
+    "name": "RATE_LIMIT_5",
+    "namespace_id": "2026102401",
+    "simple": {
+      "limit": 5,
+      "period": 60
+    }
+  },
+  {
+    "name": "RATE_LIMIT_10",
+    "namespace_id": "2026102402",
+    "simple": {
+      "limit": 10,
+      "period": 60
+    }
+  },
+  {
+    "name": "RATE_LIMIT_20",
+    "namespace_id": "2026102403",
+    "simple": {
+      "limit": 20,
+      "period": 60
+    }
+  },
+  {
+    "name": "RATE_LIMIT_30",
+    "namespace_id": "2026102404",
+    "simple": {
+      "limit": 30,
+      "period": 60
+    }
+  },
+  {
+    "name": "RATE_LIMIT_60",
+    "namespace_id": "2026102405",
+    "simple": {
+      "limit": 60,
+      "period": 60
+    }
+  },
+  {
+    "name": "RATE_LIMIT_120",
+    "namespace_id": "2026102406",
+    "simple": {
+      "limit": 120,
+      "period": 60
+    }
+  }
+],
   "d1_databases": [
     {
       "binding": "DB",
@@ -23,13 +85,10 @@
       "migrations_dir": "migrations"
     }
   ],
-  // Workers Logs persistentes: sin esto, los errores solo se ven con `wrangler
-  // tail` en vivo (si nadie mira el momento exacto, se pierden). Metido para
-  // cazar el próximo 1102 con su excepción real. Incluido en Workers Paid
-  // (20M eventos/mes); a este volumen de tráfico, costo 0. Si el tráfico
-  // creciera mucho, bajar head_sampling_rate (< 1 = loguear una fracción).
+  // Preserve diagnostics without storing OAuth codes or user input in URL queries.
   "observability": {
     "enabled": true,
-    "head_sampling_rate": 1
+    "head_sampling_rate": 1,
+    "redact_query_string": true
   }
 }
