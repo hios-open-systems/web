@@ -16,6 +16,7 @@ import {
 import { useThemeAccent } from '@/lib/themes/useThemeAccent';
 import { useThemeStorage } from '@/lib/themes/useThemeStorage';
 import type { ThemeSyncState } from '@/lib/themes/syncController';
+import type { LocalAccentState } from '@/lib/themes/useLocalAccent';
 import {
     DEFAULT_SKIN,
     SKIN_STORAGE_KEY,
@@ -39,6 +40,7 @@ interface ThemeContextType {
     isAuthenticated: boolean;
     isSyncing: boolean;
     syncState: ThemeSyncState;
+    localAccentState: LocalAccentState;
     syncError: string | null;
     syncCurrentAccent: () => Promise<void>;
 }

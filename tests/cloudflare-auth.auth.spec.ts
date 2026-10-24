@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { CLOUDFLARE_AUTH_SEED } from './fixtures/cloudflare-auth-seed.mjs';
+import es from '../messages/es.json';
 
 const PORT = Number(process.env.PLAYWRIGHT_PORT ?? 3201);
 const BASE_URL = `http://127.0.0.1:${PORT}`;
@@ -43,7 +44,7 @@ test.describe('Cloudflare auth smoke', () => {
     test('remote theme survives local reset after account sync', async ({ page }) => {
         await page.goto('/es/workbench/settings');
 
-        await expect(page.getByText('Con backup en cuenta', { exact: true })).toBeVisible();
+        await expect(page.getByTestId('theme-account-status')).toHaveText(es.Settings.accountMode);
         await page.waitForFunction(
             (accent) => getComputedStyle(document.documentElement).getPropertyValue('--accent').trim().toLowerCase() === accent,
             CLOUDFLARE_AUTH_SEED.theme.accent.toLowerCase(),

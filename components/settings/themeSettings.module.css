@@ -110,6 +110,22 @@
   color: var(--hios-text-secondary);
 }
 
+.saveStatusGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.saveStatusValue {
+  margin: 8px 0;
+  font-weight: 600;
+  color: var(--hios-text);
+}
+
+@media (max-width: 600px) {
+  .saveStatusGrid { grid-template-columns: 1fr; }
+}
+
 .syncActionRow {
   display: flex;
   gap: 10px;
