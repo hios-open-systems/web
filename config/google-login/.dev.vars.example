@@ -1,0 +1,4 @@
+# Optional manual alternative to importing Google's downloaded web-client JSON.
+# Copy to .dev.vars in this same directory; never commit .dev.vars.
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=

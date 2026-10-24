@@ -18,6 +18,23 @@ Missing credentials: local integration and cryptographic tests are complete, but
 
 Reference: https://developers.google.com/identity/openid-connect/openid-connect
 
+### Prueba real en localhost, sin desplegar
+En Google Auth Platform, elegir el proyecto, configurar Branding y audiencia External/Testing, y agregar la cuenta de prueba. Crear un cliente OAuth de tipo Web application con esta URI exacta:
+
+`http://localhost:3300/api/auth/google/callback`
+
+No se necesitan orígenes JavaScript para este flujo de servidor. Pedimos sólo `openid profile`; no habilitar APIs de Gmail o Drive. Descargar el JSON del cliente y guardarlo fuera del repositorio. No pegar el secreto en el chat.
+
+`npm run google:prepare` aplica las migraciones exclusivamente en D1 local, aislado en `.wrangler/google-login`. No importa sesiones ni usuarios de producción.
+
+`npm run google:local -- "C:\ruta\al\cliente.json"` valida el tipo de cliente y callback, importa exclusivamente ID/secreto a `config/google-login/.dev.vars` (ignorado por Git) e inicia el Worker existente en `http://localhost:3300/es`. Requiere un build OpenNext local previo. En siguientes ejecuciones alcanza `npm run google:local`. Ctrl+C detiene el servidor. No abre túneles, no publica ni ejecuta migraciones remotas. No hereda los secretos del .env.local del proyecto.
+
+La persona elige su cuenta y acepta el acceso en Google. Verificar regreso a localhost, cookie de sesión HttpOnly/Secure, usuario en /api/auth/me, conservación de la sesión al recargar, cierre de sesión y reingreso a la misma cuenta local. Revisar sólo indicadores o conteos en D1; no registrar códigos OAuth, tokens ni perfiles completos.
+
+La prueba crea una cuenta **local**: no vincula ni modifica la cuenta existente en openhios.dev. Una autorización real sigue pendiente hasta disponer del cliente y completar el consentimiento.
+
+Referencia para callbacks localhost: https://developers.google.com/identity/protocols/oauth2/web-server
+
 ## Read-only repositories
 The first version connects directly from the browser to GitHub.com or GitLab.com, using a token entered by the user for that session. It does not reuse the login token. A notice names destination and data before connecting. The app sends GET requests only, never follows redirects, uses no ambient cookies and never stores tokens or repository contents in browser storage or on the HIOS server. Disconnect clears the in-memory connection, drafts and requests; closing the page also discards them.
 
