@@ -4,6 +4,7 @@ import { PageIntro } from '@/components/ui/PageIntro';
 import { useCallback, useEffect, useState } from 'react';
 import { Button, Card, Empty, Input, Space, Typography, message } from 'antd';
 import { useTranslations } from 'next-intl';
+import { useTurnstileVerification } from '@/components/feedback/useTurnstileVerification';
 import { TurnstileWidget, turnstileEnabled } from '@/components/feedback/TurnstileWidget';
 
 const { Title, Text, Paragraph } = Typography;
@@ -31,7 +32,7 @@ export function GuestbookClient() {
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState('');
   const [body, setBody] = useState('');
-  const [token, setToken] = useState<string | null>(null);
+  const verification = useTurnstileVerification();
   const [sending, setSending] = useState(false);
 
   const load = useCallback(async () => {
@@ -60,12 +61,14 @@ export function GuestbookClient() {
       messageApi.warning(t('errorEmpty'));
       return;
     }
-    if (turnstileEnabled() && !token) {
-      messageApi.warning(t('errorCaptcha'));
-      return;
-    }
+    if (sending) return;
     setSending(true);
     try {
+      const token = await verification.verify();
+      if (turnstileEnabled() && !token) {
+        messageApi.warning(t('errorCaptcha'));
+        return;
+      }
       const res = await fetch('/api/guestbook', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
@@ -76,11 +79,12 @@ export function GuestbookClient() {
       setEntries((prev) => [{ ...data.entry, country: null }, ...prev]);
       setName('');
       setBody('');
-      setToken(null);
+
       messageApi.success(t('thanks'));
     } catch {
       messageApi.error(t('errorGeneric'));
     } finally {
+      verification.cancel();
       setSending(false);
     }
   };
@@ -121,7 +125,7 @@ export function GuestbookClient() {
             showCount
             onChange={(e) => setBody(e.target.value)}
           />
-          {turnstileEnabled() ? <TurnstileWidget action="guestbook" onToken={setToken} /> : null}
+          {turnstileEnabled() ? <TurnstileWidget action="guestbook" requestId={verification.requestId} onToken={verification.onToken} /> : null}
           <Button type="primary" loading={sending} onClick={submit} disabled={!name.trim() || !body.trim()}>
             {sending ? t('submitting') : t('submit')}
           </Button>

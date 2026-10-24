@@ -2996,6 +2996,7 @@
             "localResourcesOnly": "Lokale Dateien oder eingebettete Bilder verwenden. Diese Ansicht lädt keine verlinkten Bilder oder Ressourcen.",
             "externalConsent": "Beim Ausführen die abgefragte Domain an {provider} senden. Es werden keine Dateien gesendet.",
             "captchaConsent": "Externe Cloudflare-Turnstile-Prüfung laden (teilt Ihre IP mit Cloudflare)",
+            "captchaSubmitNotice": "Um Spam zu vermeiden und die Ressourcen von HIOS zu schonen, prüfen wir Nachrichten mit Cloudflare. Beim Veröffentlichen startet diese Prüfung und Ihre IP-Adresse wird an Cloudflare übermittelt.",
             "networkHint": "Dieses Werkzeug benötigt eine Netzwerkverbindung, um Daten abzufragen."
         },
         "jwtPlayground": {

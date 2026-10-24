@@ -2996,6 +2996,7 @@
             "localResourcesOnly": "Usá archivos locales o imágenes incluidas en el archivo. Esta vista no carga imágenes ni recursos enlazados.",
             "externalConsent": "Autorizo enviar el dominio consultado a {provider} al ejecutar la consulta. No se envían archivos.",
             "captchaConsent": "Cargar verificación externa de Cloudflare Turnstile (comparte tu IP con Cloudflare)",
+            "captchaSubmitNotice": "Para evitar spam y cuidar los recursos de HIOS, verificamos los mensajes con Cloudflare. Al publicar, se realiza esa verificación y se comparte tu IP con Cloudflare.",
             "networkHint": "Esta herramienta necesita una conexión de red para consultar datos."
         },
         "jwtPlayground": {

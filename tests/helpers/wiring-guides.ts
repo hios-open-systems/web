@@ -9,7 +9,7 @@ export const guideMessages = { en, es, de, it };
 export type GuideLocale = keyof typeof guideMessages;
 export type GuideId = 'pad' | 'btdac' | 'speaker';
 
-async function selectTab(page: Page, name: string) {
+export async function selectTab(page: Page, name: string) {
   await page.getByRole('tablist').scrollIntoViewIfNeeded();
   const tab = page.getByRole('tab', { name, exact: true });
   const clipped = await tab.evaluate(element => {

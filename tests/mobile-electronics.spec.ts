@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { inspectMobileLayout } from './helpers/mobile-layout';
+import { selectTab } from './helpers/wiring-guides';
 import en from '../messages/en.json';
 import es from '../messages/es.json';
 import de from '../messages/de.json';
@@ -18,7 +19,7 @@ for (const [locale, copy] of Object.entries({ en, es, de, it })) {
     if (locale === 'en') await lab.screenshot({ path: testInfo.outputPath('max98357-mobile.png') });
     expect(await page.evaluate(inspectMobileLayout)).toEqual([]);
     await page.goto(`/${locale}/pinouts/pad`);
-    await page.getByRole('tab', { name: copy.WiringGuide.tabs.parlantes, exact: true }).click();
+    await selectTab(page, copy.WiringGuide.tabs.parlantes);
     await expect(lab.locator('[data-divider-readout]')).toContainText('1.087 V');
     expect(await page.evaluate(inspectMobileLayout)).toEqual([]);
   });
