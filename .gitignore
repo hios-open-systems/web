@@ -29,7 +29,10 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env*.local
+.env
+.env.*
+!.env.example
+!.env.*.example
 
 # vercel
 .vercel
@@ -37,6 +40,8 @@ yarn-error.log*
 # OpenNext / Cloudflare Workers (output del adaptador + secrets locales + tipos generados)
 .open-next
 .dev.vars
+.dev.vars.*
+!.dev.vars.example
 cloudflare-env.d.ts
 worker-configuration.d.ts
 

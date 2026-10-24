@@ -1,3 +1,4 @@
+import { hasDiagramResources } from '../lib/workbench/localDiagram.ts';
 /**
  * Self-test for the Mermaid tool pure helpers (templates + heuristics).
  * The actual render is DOM-bound and covered by the smoke test.
@@ -34,6 +35,11 @@ ok('rejects empty', !looksLikeMermaid('   '));
 ok('svgFilename default', svgFilename('') === 'diagram.svg');
 ok('svgFilename slug', svgFilename('Flowchart TD: Start!') === 'flowchart-td-start.svg');
 ok('svgFilename trims junk', svgFilename('***') === 'diagram.svg');
+
+ok('blocks escaped CSS url', hasDiagramResources(String.raw`classDef default fill:u\72l('/api/private')`));
+ok('blocks JSON-escaped CSS url', hasDiagramResources(JSON.stringify({ themeCSS: String.raw`src:u\72l('/api/private')` })));
+ok('blocks escaped imports', hasDiagramResources(String.raw`@\69mport '/api/private'`));
+ok('permits ordinary diagrams', !hasDiagramResources('flowchart LR\n A[Start] --> B[Finish]'));
 
 if (failures > 0) {
   console.error(`\n${failures} check(s) failed`);
