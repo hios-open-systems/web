@@ -1,3 +1,4 @@
+import { requireSameOrigin, readJsonBody } from '@/lib/httpSecurity';
 import type { NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
 import { getRequestAuth } from '@/lib/auth/request';
@@ -38,13 +39,16 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+    const denied = requireSameOrigin(request);
+    if (denied) return denied;
     const { response, user } = await requireSnippetUser(request);
     if (response || !user) return response;
 
     let payload: CreateSnippetInput | null = null;
     try {
-        payload = (await request.json()) as CreateSnippetInput;
-    } catch {
+        payload = (await readJsonBody(request, 65536)) as CreateSnippetInput;
+    } catch (error) {
+        if (error instanceof Response) return error;
         return jsonError('Invalid JSON body', 400);
     }
 

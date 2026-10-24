@@ -1,9 +1,12 @@
+import { requireSameOrigin } from '@/lib/httpSecurity';
 import type { NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
 import { isOwner } from '@/lib/auth/owner';
 import { getRequestAuth } from '@/lib/auth/request';
 
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+    const denied = requireSameOrigin(request);
+    if (denied) return denied;
   const auth = await getRequestAuth(request);
   if (auth.error) {
     return Response.json({ error: 'Database unavailable' }, { status: 503 });

@@ -5,7 +5,7 @@ import createNextIntlPlugin from 'next-intl/plugin';
 import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare';
 
 if (process.env.HIOS_LOCAL_D1 === '1') {
-	initOpenNextCloudflareForDev({ configPath: 'tests/fixtures/workspaces.wrangler.jsonc', persist: { path: '.wrangler/workspace-e2e' } });
+	initOpenNextCloudflareForDev({ configPath: 'tests/fixtures/workspaces.wrangler.jsonc', persist: { path: '.wrangler/workspace-e2e/v3' } });
 }
 
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
@@ -182,6 +182,7 @@ const nextConfig = {
 
 		return [
       { source: '/:path*', headers: securityHeaders },
+      { source: '/api/:path*', headers: [{ key: 'Cache-Control', value: 'private, no-store' }] },
       {
         source: '/:locale(en|es|de|it)/:path*',
         // Prevent CDN-injected analytics. Never mark authenticated pages public.

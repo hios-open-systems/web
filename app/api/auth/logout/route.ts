@@ -1,9 +1,12 @@
+import { requireSameOrigin } from '@/lib/httpSecurity';
 import { NextResponse, type NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
 import { SESSION_COOKIE, deleteSession } from '@/lib/auth/session';
 
 
 export async function POST(request: NextRequest) {
+    const denied = requireSameOrigin(request);
+    if (denied) return denied;
     const sessionId = request.cookies.get(SESSION_COOKIE)?.value;
 
     if (sessionId) {
@@ -16,14 +19,7 @@ export async function POST(request: NextRequest) {
         }
     }
 
-    const response = NextResponse.redirect(new URL('/', request.url));
+    const response = NextResponse.redirect(new URL('/', request.url), 303);
     response.cookies.delete(SESSION_COOKIE);
     return response;
-}
-
-// Permitir GET para hacerlo trivial de invocar desde un link, sólo si querés.
-// Si te molesta la seguridad de logout-por-GET (CSRF para logout es bajo riesgo
-// pero molesto), comentá esto y forzá POST desde un form.
-export async function GET(request: NextRequest) {
-    return POST(request);
 }

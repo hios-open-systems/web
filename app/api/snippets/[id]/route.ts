@@ -1,3 +1,4 @@
+import { requireSameOrigin, readJsonBody } from '@/lib/httpSecurity';
 import type { NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
 import { getRequestAuth } from '@/lib/auth/request';
@@ -29,14 +30,17 @@ async function requireSnippetUser(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest, { params }: RouteProps) {
+    const denied = requireSameOrigin(request);
+    if (denied) return denied;
     const { response, user } = await requireSnippetUser(request);
     if (response || !user) return response;
 
     const { id } = await params;
     let payload: UpdateSnippetInput | null = null;
     try {
-        payload = (await request.json()) as UpdateSnippetInput;
-    } catch {
+        payload = (await readJsonBody(request, 65536)) as UpdateSnippetInput;
+    } catch (error) {
+        if (error instanceof Response) return error;
         return jsonError('Invalid JSON body', 400);
     }
 
@@ -62,6 +66,8 @@ export async function PATCH(request: NextRequest, { params }: RouteProps) {
 }
 
 export async function DELETE(request: NextRequest, { params }: RouteProps) {
+    const denied = requireSameOrigin(request);
+    if (denied) return denied;
     const { response, user } = await requireSnippetUser(request);
     if (response || !user) return response;
 

@@ -15,7 +15,10 @@ const NEXT_COOKIE = 'hios_oauth_next';
 function errorResponse(request: NextRequest, code: string) {
     const url = new URL('/', request.url);
     url.searchParams.set('auth_error', code);
-    return NextResponse.redirect(url);
+    const response = NextResponse.redirect(url);
+    response.cookies.delete(STATE_COOKIE);
+    response.cookies.delete(NEXT_COOKIE);
+    return response;
 }
 
 export async function GET(request: NextRequest) {

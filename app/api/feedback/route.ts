@@ -1,3 +1,4 @@
+import { requireSameOrigin, readJsonBody } from '@/lib/httpSecurity';
 import type { NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
 import { isOwner } from '@/lib/auth/owner';
@@ -46,14 +47,17 @@ function isSafeSlug(value: string): boolean {
 }
 
 export async function POST(request: NextRequest) {
+    const denied = requireSameOrigin(request);
+    if (denied) return denied;
   // Escribe en D1 y puede correr sin Turnstile: frenamos spam por IP.
   const limited = checkRateLimit(request, 'feedback', { limit: 5, windowMs: 60_000 });
   if (limited) return limited;
 
   let body: FeedbackBody;
   try {
-    body = (await request.json()) as FeedbackBody;
-  } catch {
+    body = (await readJsonBody(request, 32768)) as FeedbackBody;
+  } catch (error) {
+        if (error instanceof Response) return error;
     return Response.json({ error: 'invalid_json' }, { status: 400 });
   }
   if (!body || typeof body !== 'object') {

@@ -73,6 +73,11 @@ jobs:
         env:
           NEXT_TELEMETRY_DISABLED: '1'
 
+      - name: Verify authentication and endpoint permissions against local D1
+        run: npm run test:security
+        env:
+          SECURITY_WORKER: '1'
+
       - name: Verify rendered SEO metadata and sitemap
         run: |
           npm run test:seo -- --built
