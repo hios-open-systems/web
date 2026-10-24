@@ -36,6 +36,7 @@ The obsolete Pages-era `legacy-peer-deps=true` workaround is removed. Normal npm
 - `npm run lint`, all 45 self-test groups, and the complete `opennextjs-cloudflare build` passed.
 - Browser tests ran against the generated Worker with `wrangler dev --local`: 109 passed in total, one existing skipped test. Two stale calculator assertions were updated (E-series UI/result and saved-preset count) and both passed on rerun; no calculator implementation changed.
 - Added CI browser coverage for Mermaid-to-Excalidraw conversion with Nano ID 5, KaTeX math rendering and script sanitization.
+- Cached Worker verification: run `npx opennextjs-cloudflare populateCache local` before starting Wrangler directly (the normal OpenNext preview/deploy commands do this automatically). Without that staging step the read-only cache logs misses/writes. With it, responses reported `x-opennext-cache: HIT`, no cache errors were logged, and eight diagram/network/hydration tests passed again.
 - Built-page checks passed: SEO for 372 rendered pages, 364 sitemap URLs and hardware software-page content across all four locales.
 - LM Studio behavior is verified with mocked HTTP responses; no live inference or generated Android file writes were performed.
 
