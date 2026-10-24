@@ -3,11 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
-// Widget de Cloudflare Turnstile, feature-flagged por NEXT_PUBLIC_TURNSTILE_SITEKEY.
-// Si la var no está seteada, NO renderiza nada y el form sigue funcionando sin
-// captcha (local-first: la protección es opcional, no rompe el feedback anónimo).
-// El siteverify server-side vive en app/api/feedback/route.ts.
-
+// Only load Cloudflare after explicit consent. Production requires a site key.
 const SITEKEY = process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY;
 const SCRIPT_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
 
@@ -27,7 +23,7 @@ export function turnstileEnabled(): boolean {
   return Boolean(SITEKEY);
 }
 
-export function TurnstileWidget({ onToken }: { onToken: (token: string | null) => void }) {
+export function TurnstileWidget({ onToken, action }: { onToken: (token: string | null) => void; action: 'feedback' | 'guestbook' }) {
   const [allowed, setAllowed] = useState(false);
   const t = useTranslations('Workbench.toolHeader');
   const containerRef = useRef<HTMLDivElement>(null);
@@ -40,7 +36,7 @@ export function TurnstileWidget({ onToken }: { onToken: (token: string | null) =
       if (!window.turnstile || !containerRef.current || widgetIdRef.current) return;
       widgetIdRef.current = window.turnstile.render(containerRef.current, {
         sitekey: SITEKEY,
-        action: 'feedback',
+        action,
         callback: (token: string) => onToken(token),
         'expired-callback': () => onToken(null),
         'error-callback': () => onToken(null),
@@ -74,7 +70,7 @@ export function TurnstileWidget({ onToken }: { onToken: (token: string | null) =
         widgetIdRef.current = null;
       }
     };
-  }, [onToken, allowed]);
+  }, [onToken, allowed, action]);
 
   if (!SITEKEY) return null;
   if (!allowed) return <button type="button" onClick={() => setAllowed(true)}>{t('captchaConsent')}</button>;

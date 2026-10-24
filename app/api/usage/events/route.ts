@@ -2,7 +2,7 @@ import { requireSameOrigin, readJsonBody } from '@/lib/httpSecurity';
 import type { NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
 import { getRequestAuth } from '@/lib/auth/request';
-import { checkRateLimit } from '@/lib/rateLimit';
+import { checkRateLimit } from '@/lib/requestRateLimit';
 
 
 type EventName = 'page_view' | 'tool_open' | 'search_open' | 'preset_reuse' | 'workspace_open' | 'handoff_complete';
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     const denied = requireSameOrigin(request);
     if (denied) return denied;
   // Telemetría anónima que escribe en D1: frenamos flooding por IP.
-  const limited = checkRateLimit(request, 'usage', { limit: 60, windowMs: 60_000 });
+  const limited = await checkRateLimit(request, 'usage', { limit: 60, windowMs: 60_000 });
   if (limited) return limited;
 
   let payload: UsagePayload;

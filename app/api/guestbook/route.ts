@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
 import { isOwner } from '@/lib/auth/owner';
 import { getRequestAuth } from '@/lib/auth/request';
-import { checkRateLimit } from '@/lib/rateLimit';
+import { checkRateLimit } from '@/lib/requestRateLimit';
 import { verifyTurnstile } from '@/lib/turnstile';
 
 interface GuestbookBody {
@@ -76,7 +76,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
     const denied = requireSameOrigin(request);
     if (denied) return denied;
-  const limited = checkRateLimit(request, 'guestbook', { limit: 3, windowMs: 60_000 });
+  const limited = await checkRateLimit(request, 'guestbook', { limit: 3, windowMs: 60_000 });
   if (limited) return limited;
 
   let body: GuestbookBody;
@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
   }
 
   const clientIp = request.headers.get('cf-connecting-ip');
-  if (!(await verifyTurnstile(body.turnstileToken, clientIp))) {
+  if (!(await verifyTurnstile(body.turnstileToken, clientIp, 'guestbook'))) {
     return Response.json({ error: 'turnstile_failed' }, { status: 403 });
   }
 

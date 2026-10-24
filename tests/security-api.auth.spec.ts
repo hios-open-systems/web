@@ -94,3 +94,17 @@ test('account deletion revokes sessions and removes public snippets', async ({ r
   expect((await request.get(`/api/snippets/public/${snippet.id}`)).status()).toBe(404);
   expect((await request.get('/api/feedback', { headers: headers('owner') })).status()).toBe(200);
 });
+
+
+test('production Turnstile fails closed and native limiter rejects repeated writes', async ({ request }) => {
+  test.skip(process.env.SECURITY_WORKER !== '1', 'Requires production Worker bindings');
+  const feedback = { kind: 'note', message: 'Must not be stored without a challenge' };
+  expect((await request.post('/api/feedback', { headers: headers(), data: feedback })).status()).toBe(403);
+  expect((await request.post('/api/guestbook', { headers: headers(), data: { name: 'Test', message: 'No challenge' } })).status()).toBe(403);
+  const statuses: number[] = [];
+  for (let i = 0; i < 6; i++) {
+    statuses.push((await request.post('/api/feedback', { headers: headers(), data: feedback })).status());
+  }
+  expect(statuses).toContain(429);
+  expect(statuses.every(status => status === 403 || status === 429)).toBe(true);
+});

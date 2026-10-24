@@ -121,7 +121,7 @@ export function GuestbookClient() {
             showCount
             onChange={(e) => setBody(e.target.value)}
           />
-          {turnstileEnabled() ? <TurnstileWidget onToken={setToken} /> : null}
+          {turnstileEnabled() ? <TurnstileWidget action="guestbook" onToken={setToken} /> : null}
           <Button type="primary" loading={sending} onClick={submit} disabled={!name.trim() || !body.trim()}>
             {sending ? t('submitting') : t('submit')}
           </Button>

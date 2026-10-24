@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 import { getDb } from '@/lib/db';
 import { isOwner } from '@/lib/auth/owner';
 import { getRequestAuth } from '@/lib/auth/request';
-import { checkRateLimit } from '@/lib/rateLimit';
+import { checkRateLimit } from '@/lib/requestRateLimit';
 import { verifyTurnstile } from '@/lib/turnstile';
 
 
@@ -49,8 +49,8 @@ function isSafeSlug(value: string): boolean {
 export async function POST(request: NextRequest) {
     const denied = requireSameOrigin(request);
     if (denied) return denied;
-  // Escribe en D1 y puede correr sin Turnstile: frenamos spam por IP.
-  const limited = checkRateLimit(request, 'feedback', { limit: 5, windowMs: 60_000 });
+  // Limit anonymous writes before validating the challenge.
+  const limited = await checkRateLimit(request, 'feedback', { limit: 5, windowMs: 60_000 });
   if (limited) return limited;
 
   let body: FeedbackBody;
@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
   const toolSlug = body.toolSlug && isSafeSlug(body.toolSlug) ? body.toolSlug : null;
 
   const clientIp = request.headers.get('cf-connecting-ip');
-  if (!(await verifyTurnstile(body.turnstileToken, clientIp))) {
+  if (!(await verifyTurnstile(body.turnstileToken, clientIp, 'feedback'))) {
     return Response.json({ error: 'turnstile_failed' }, { status: 403 });
   }
 

@@ -3,5 +3,63 @@
   "compatibility_date": "2025-04-01",
   "compatibility_flags": ["nodejs_compat"],
   "vars": { "AUTH_BASE_URL": "http://localhost:3202", "GITHUB_CLIENT_ID": "local-test" },
+  "ratelimits": [
+  {
+    "name": "RATE_LIMIT_3",
+    "namespace_id": "2026102400",
+    "simple": {
+      "limit": 3,
+      "period": 60
+    }
+  },
+  {
+    "name": "RATE_LIMIT_5",
+    "namespace_id": "2026102401",
+    "simple": {
+      "limit": 5,
+      "period": 60
+    }
+  },
+  {
+    "name": "RATE_LIMIT_10",
+    "namespace_id": "2026102402",
+    "simple": {
+      "limit": 10,
+      "period": 60
+    }
+  },
+  {
+    "name": "RATE_LIMIT_20",
+    "namespace_id": "2026102403",
+    "simple": {
+      "limit": 20,
+      "period": 60
+    }
+  },
+  {
+    "name": "RATE_LIMIT_30",
+    "namespace_id": "2026102404",
+    "simple": {
+      "limit": 30,
+      "period": 60
+    }
+  },
+  {
+    "name": "RATE_LIMIT_60",
+    "namespace_id": "2026102405",
+    "simple": {
+      "limit": 60,
+      "period": 60
+    }
+  },
+  {
+    "name": "RATE_LIMIT_120",
+    "namespace_id": "2026102406",
+    "simple": {
+      "limit": 120,
+      "period": 60
+    }
+  }
+],
   "d1_databases": [{ "binding": "DB", "database_name": "workspace-tests", "database_id": "00000000-0000-0000-0000-000000000006" }]
 }

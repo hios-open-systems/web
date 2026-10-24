@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 import { getRequestAuth } from '@/lib/auth/request';
 import { SESSION_COOKIE } from '@/lib/auth/session';
 import { getDb } from '@/lib/db';
-import { checkRateLimit } from '@/lib/rateLimit';
+import { checkRateLimit } from '@/lib/requestRateLimit';
 
 /**
  * DELETE /api/user/account — borrado total de la cuenta y sus datos.
@@ -18,7 +18,7 @@ import { checkRateLimit } from '@/lib/rateLimit';
 export async function DELETE(request: NextRequest) {
     const denied = requireSameOrigin(request);
     if (denied) return denied;
-    const limited = checkRateLimit(request, 'account-delete', { limit: 3, windowMs: 60_000 });
+    const limited = await checkRateLimit(request, 'account-delete', { limit: 3, windowMs: 60_000 });
     if (limited) return limited;
 
     const auth = await getRequestAuth(request);
