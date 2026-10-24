@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
+import { Typography } from 'antd';
 
 // Only load Cloudflare after explicit consent. Production requires a site key.
 const SITEKEY = process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY;
-const SCRIPT_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+const SCRIPT_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
 
 interface TurnstileApi {
   render: (el: HTMLElement, opts: Record<string, unknown>) => string;
@@ -23,14 +24,13 @@ export function turnstileEnabled(): boolean {
   return Boolean(SITEKEY);
 }
 
-export function TurnstileWidget({ onToken, action }: { onToken: (token: string | null) => void; action: 'feedback' | 'guestbook' }) {
-  const [allowed, setAllowed] = useState(false);
+export function TurnstileWidget({ onToken, action, requestId }: { onToken: (token: string | null) => void; action: 'feedback' | 'guestbook'; requestId: number }) {
   const t = useTranslations('Workbench.toolHeader');
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!SITEKEY || !allowed) return;
+    if (!SITEKEY || requestId === 0) return;
 
     const render = () => {
       if (!window.turnstile || !containerRef.current || widgetIdRef.current) return;
@@ -40,6 +40,7 @@ export function TurnstileWidget({ onToken, action }: { onToken: (token: string |
         callback: (token: string) => onToken(token),
         'expired-callback': () => onToken(null),
         'error-callback': () => onToken(null),
+        'timeout-callback': () => onToken(null),
       });
     };
 
@@ -61,18 +62,23 @@ export function TurnstileWidget({ onToken, action }: { onToken: (token: string |
       script.defer = true;
       document.head.appendChild(script);
     }
+    const failed = () => { script?.remove(); onToken(null); };
     script.addEventListener('load', render);
+    script.addEventListener('error', failed);
 
     return () => {
       script?.removeEventListener('load', render);
+      script?.removeEventListener('error', failed);
       if (widgetIdRef.current && window.turnstile) {
         window.turnstile.remove(widgetIdRef.current);
         widgetIdRef.current = null;
       }
     };
-  }, [onToken, allowed, action]);
+  }, [onToken, requestId, action]);
 
   if (!SITEKEY) return null;
-  if (!allowed) return <button type="button" onClick={() => setAllowed(true)}>{t('captchaConsent')}</button>;
-  return <div ref={containerRef} style={{ minHeight: 65 }} />;
+  return <div>
+    <Typography.Text type="secondary" style={{ fontSize: 12 }}>{t('captchaSubmitNotice')}</Typography.Text>
+    <div ref={containerRef} />
+  </div>;
 }

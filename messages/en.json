@@ -2996,6 +2996,7 @@
             "localResourcesOnly": "Use local files or embedded images. This view does not load linked images or resources.",
             "externalConsent": "Allow sending the queried domain to {provider} when I run the query. No files are sent.",
             "captchaConsent": "Load external Cloudflare Turnstile verification (shares your IP with Cloudflare)",
+            "captchaSubmitNotice": "To prevent spam and protect HIOS resources, we verify messages with Cloudflare. Publishing starts this verification and shares your IP with Cloudflare.",
             "networkHint": "This tool needs a network connection to query data."
         },
         "jwtPlayground": {

@@ -8,6 +8,7 @@ import { message } from 'antd';
 import { MessageOutlined } from '@ant-design/icons';
 import { submitFeedback } from '@/lib/feedback/submit';
 import { useFeedback } from '@/components/feedback/FeedbackProvider';
+import { useTurnstileVerification } from '@/components/feedback/useTurnstileVerification';
 import { TurnstileWidget, turnstileEnabled } from '@/components/feedback/TurnstileWidget';
 
 type WidgetKind = 'bug' | 'idea' | 'note';
@@ -41,7 +42,7 @@ export function FeedbackButton({ toolSlug }: { toolSlug?: string }) {
     const [rating, setRating] = useState(0);
     const [text, setText] = useState('');
     const [email, setEmail] = useState('');
-    const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+    const verification = useTurnstileVerification();
     const [sending, setSending] = useState(false);
 
     const resolvedSlug = toolSlug ?? deriveToolSlug(pathname ?? '');
@@ -51,10 +52,12 @@ export function FeedbackButton({ toolSlug }: { toolSlug?: string }) {
         setRating(0);
         setText('');
         setEmail('');
-        setTurnstileToken(null);
+        verification.cancel();
     };
 
     const handleCancel = () => {
+        if (sending) return;
+        verification.cancel();
         setOpen(false);
     };
 
@@ -65,16 +68,18 @@ export function FeedbackButton({ toolSlug }: { toolSlug?: string }) {
             return;
         }
 
-        if (turnstileEnabled() && !turnstileToken) {
-            messageApi.error(t('widget.captchaError'));
-            return;
-        }
+        if (sending) return;
 
         const effectiveRating = rating > 0 ? rating : undefined;
         const kindLabelKey = `widget.kind${kind.charAt(0).toUpperCase()}${kind.slice(1)}` as const;
 
         setSending(true);
         try {
+            const turnstileToken = await verification.verify();
+            if (turnstileEnabled() && !turnstileToken) {
+                messageApi.error(t('widget.captchaError'));
+                return;
+            }
             const result = await submitFeedback({
                 kind,
                 rating: effectiveRating,
@@ -95,6 +100,7 @@ export function FeedbackButton({ toolSlug }: { toolSlug?: string }) {
             setOpen(false);
             reset();
         } finally {
+            verification.cancel();
             setSending(false);
         }
     };
@@ -158,7 +164,7 @@ export function FeedbackButton({ toolSlug }: { toolSlug?: string }) {
                         <span style={{ fontSize: 12, opacity: 0.65 }}>{t('widget.emailHint')}</span>
                     </label>
 
-                    <TurnstileWidget action="feedback" onToken={setTurnstileToken} />
+                    <TurnstileWidget action="feedback" requestId={verification.requestId} onToken={verification.onToken} />
                 </div>
             </Modal>
         </>
