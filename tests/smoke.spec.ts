@@ -543,10 +543,12 @@ test.describe('Calculators', () => {
 
     test('selector E12/E24 cambia la normalización', async ({ page }) => {
         await page.goto('/es/calculators?tab=led');
-        await expect(page.getByText(/E24:/)).toBeVisible();
+        await expect(page.getByRole('radio', { name: 'E24', exact: true })).toBeChecked();
+        await expect(page.getByText('300.00 Ω', { exact: true }).first()).toBeVisible();
         await page.locator('.ant-segmented-item-label', { hasText: /^E12$/ }).click();
         await expect(page).toHaveURL(/eseries=E12/);
-        await expect(page.getByText(/E12:/)).toBeVisible();
+        await expect(page.getByRole('radio', { name: 'E12', exact: true })).toBeChecked();
+        await expect(page.getByText('330.00 Ω', { exact: true }).first()).toBeVisible();
     });
 
     test('preset base (Plantillas) aplica valores', async ({ page }) => {
@@ -562,7 +564,7 @@ test.describe('Calculators', () => {
         await page.getByRole('dialog').getByRole('button', { name: es.Presets.save, exact: true }).click();
         // Cambiamos el estado y luego recargamos el preset guardado.
         await page.goto('/es/calculators?tab=rc&rcR=10');
-        await page.getByRole('button', { name: es.Presets.presets, exact: true }).click();
+        await page.getByRole('button', { name: `${es.Presets.presets} (1)`, exact: true }).click();
         await page.getByRole('menuitem', { name: new RegExp(es.Presets.defaultName.replace('{n}', '1')) }).click();
         await expect(page).toHaveURL(/rcR=4700/);
     });

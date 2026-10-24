@@ -1,8 +1,6 @@
 // orquestador-hios.ts
-import { LMStudioClient } from "@lmstudio/sdk";
+import { requestLocalCompletion } from "./scripts/lmstudio-client.ts";
 import * as fs from "fs";
-
-const client = new LMStudioClient();
 
 async function generarPantallaConfig() {
   // 1. Leer contexto local de btdac
@@ -14,13 +12,12 @@ async function generarPantallaConfig() {
   const prompt = `Contexto del código existente:\n${existingCode}\n\nBasado en el pinout: ${pinout}, genera el ViewModel en Kotlin para manejar la config del BTDAC via BLE.`;
 
   // 3. Inferencia Local (Nemotron)
-  const model = await client.llm.model("nemotron-3-nano");
-  const response = await model.respond(prompt);
+  const content = await requestLocalCompletion(prompt);
 
   // 4. Escritura Automática (Incremento)
   // Ruta corregida para guardar en el paquete 'viewmodel'
   const targetPath = './projects/btdac/android/app/src/main/java/dev/hios/btdac/viewmodel/ConfigViewModel.kt';
-  fs.writeFileSync(targetPath, response.content);
+  fs.writeFileSync(targetPath, content);
   console.log(`✅ Código incrementado localmente en: ${targetPath}`);
 }
 

@@ -66,20 +66,20 @@
     "test:electronics": "node --experimental-strip-types scripts/electronics-selftest.ts",
     "test:wiring-i18n": "node --experimental-strip-types scripts/wiring-i18n-selftest.ts",
     "test:deployment": "node scripts/deployment-selftest.mjs",
-    "test:assembly": "node --experimental-strip-types scripts/assembly-selftest.ts"
+    "test:assembly": "node --experimental-strip-types scripts/assembly-selftest.ts",
+    "test:lmstudio": "node --experimental-strip-types scripts/lmstudio-selftest.ts"
   },
   "dependencies": {
     "@ant-design/cssinjs": "^1.18.0",
     "@ant-design/icons": "^5.2.0",
     "@breezystack/lamejs": "^1.2.7",
     "@excalidraw/excalidraw": "^0.18.1",
-    "@lmstudio/sdk": "^1.5.0",
     "antd": "^5.14.0",
     "clsx": "^2.1.0",
     "framer-motion": "^12.29.0",
     "gray-matter": "^4.0.3",
-    "mermaid": "^11.16.0",
-    "next": "^15.5.20",
+    "mermaid": "^11.17.2",
+    "next": "^15.5.28",
     "next-intl": "^4.7.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
@@ -89,9 +89,9 @@
     "three": "^0.169.0"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "5.20260718.1",
+    "@cloudflare/workers-types": "5.20261024.1",
     "@eslint/eslintrc": "^3.3.6",
-    "@opennextjs/cloudflare": "1.20.1",
+    "@opennextjs/cloudflare": "1.20.13",
     "@playwright/test": "^1.60.0",
     "@types/node": "^20.11.0",
     "@types/react": "^19.2.17",
@@ -100,19 +100,35 @@
     "@types/three": "^0.169.0",
     "cross-env": "^10.1.0",
     "eslint": "^9.39.5",
-    "eslint-config-next": "^15.5.20",
+    "eslint-config-next": "^15.5.28",
     "husky": "^9.0.0",
     "lint-staged": "^15.2.0",
     "prettier": "^3.2.0",
     "typescript": "^5.3.0",
-    "wrangler": "4.112.0",
+    "wrangler": "4.152.0",
     "yaml": "^2.9.1"
   },
   "overrides": {
     "prismjs": "^1.30.0",
     "lodash-es": "^4.18.1",
     "postcss": "^8.5.18",
-    "nanoid": "^3.3.8"
+    "nanoid@^3.0.0": "^3.3.20",
+    "@excalidraw/mermaid-to-excalidraw": {
+      "nanoid": "^5.1.16"
+    },
+    "@node-minify/core": {
+      "glob": "^10.5.0"
+    },
+    "miniflare": {
+      "undici": "^7.30.1"
+    },
+    "mermaid": {
+      "katex": "^0.18.2"
+    },
+    "@swc/helpers": "^0.5.23",
+    "@excalidraw/excalidraw": {
+      "@radix-ui/react-tabs": "^1.2.1"
+    }
   },
   "engines": {
     "node": ">=22.6"
