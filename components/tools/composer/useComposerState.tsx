@@ -30,6 +30,8 @@ import { renderSongToWav, renderSongToBuffer } from '@/components/workbench/audi
 import { usePlayback } from '@/components/workbench/audio/chiptune/usePlayback';
 import { repeatRange, fillSubdivision } from '@/lib/workbench/patternOps';
 import { encodeShare, decodeShare } from './registry';
+import { readHandoff } from '@/lib/workbench/handoff';
+import { parseSong } from '@/lib/workbench/chiptune';
 import { fitNote, resizeSong } from '@/lib/workbench/chiptuneEditing';
 import { transposeTrack, varyMelody, type MusicalScale } from '@/lib/workbench/chiptuneMusic';
 import { soundsFor, type SampledSoundId } from '@/lib/workbench/sampledSounds';
@@ -454,6 +456,12 @@ export function useComposerState() {
     if (hydrated.current) return;
     hydrated.current = true;
     const code = searchParams.get('s');
+    const handoff = searchParams.get('handoff');
+    if (handoff) {
+      const data = readHandoff(handoff, 'chiptune');
+      const imported = data?.song ? parseSong(data.song) : null;
+      if (imported) resetTo(imported);
+    }
     if (code) {
       const shared = decodeShare(code);
       if (shared) resetTo(shared);

@@ -1,0 +1,14 @@
+.reader { display:flex; flex-direction:column; gap:22px; max-width:1320px; margin:auto; padding:30px 24px; }
+.connect { max-width:700px; display:flex; flex-direction:column; gap:16px; }
+.connect label { display:flex; flex-direction:column; gap:6px; }
+.connect p, .document p { color:var(--hios-text-secondary); line-height:1.6; }
+.toolbar { display:flex; flex-wrap:wrap; align-items:center; gap:12px; overflow-wrap:anywhere; }
+.toolbar > :first-child { flex:1; min-width:0; }
+.layout { display:grid; grid-template-columns:260px minmax(0,1fr); gap:24px; }
+.files { display:flex; flex-direction:column; gap:5px; min-width:0; overflow-wrap:anywhere; }
+.files > button { text-align:left; overflow:hidden; text-overflow:ellipsis; }
+.document { min-width:0; }
+.document textarea { font-family:var(--font-mono),monospace; }
+.markdown { border:1px solid var(--hios-border); border-radius:8px; padding:20px; overflow-wrap:anywhere; }
+.markdown pre { white-space:pre-wrap; }
+@media(max-width:720px) { .reader { padding:20px 16px; } .layout { grid-template-columns:1fr; } .files { max-height:280px; overflow:auto; } }

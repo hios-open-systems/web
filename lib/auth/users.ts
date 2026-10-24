@@ -48,6 +48,8 @@ export async function upsertUserFromGithub(
         .bind(id, profile.id, profile.login, profile.name, profile.avatar_url, profile.email)
         .run();
 
+    await db.prepare("INSERT OR IGNORE INTO auth_identities (provider, subject, user_id) VALUES ('github', ?, ?)")
+        .bind(String(profile.id), id).run();
     return {
         id,
         github_id: profile.id,

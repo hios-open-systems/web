@@ -254,3 +254,5 @@
     height: var(--touch-target);
   }
 }
+.signInOptions { display:flex; flex-direction:column; gap:10px; max-width:300px; }
+.signInOptions small { font-size:11px; line-height:1.5; color:var(--hios-text-secondary); white-space:normal; }

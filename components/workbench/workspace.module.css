@@ -4,6 +4,14 @@
   gap: 20px;
   min-width: 0;
 }
+.filterLabel { display:flex; flex-direction:column; gap:6px; font-size:12px; color:var(--hios-text-secondary); }
+.toolbar:has(.filterLabel) { align-items:end; }
+.taskGrid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+.taskGrid a { display:flex; flex-direction:column; gap:8px; padding:18px; border:1px solid var(--hios-border); border-radius:12px; color:var(--hios-text); background:var(--hios-bg-elevated); }
+.taskGrid a:hover { border-color:var(--accent); }
+.taskGrid a > span { color:var(--accent-text); font-size:22px; }
+.taskGrid small { color:var(--hios-text-secondary); line-height:1.5; }
+@media(max-width:800px) { .taskGrid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
 .toolbar,
 .row {
   display: flex;

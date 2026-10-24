@@ -1,8 +1,9 @@
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 export default function setup() {
-  const sql = readdirSync('migrations').filter(name => name.endsWith('.sql')).sort()
-    .map(name => readFileSync(`migrations/${name}`, 'utf8'));
+  execFileSync(process.execPath, ['node_modules/wrangler/bin/wrangler.js', 'd1', 'migrations', 'apply', 'DB', '--local',
+    '--config', 'tests/fixtures/workspaces.wrangler.jsonc', '--persist-to', '.wrangler/workspace-e2e'], { stdio: 'inherit', env: { ...process.env, CI: '1' } });
+  const sql: string[] = [];
   for (const [id, githubId, login] of [['a', 990101, 'juanjparedez'], ['b', 990102, 'security-b'], ['owner', 37183343, 'renamed-owner']]) {
     sql.push(`DELETE FROM users WHERE id = 'security-${id}';
       INSERT INTO users (id, github_id, github_login) VALUES ('security-${id}', ${githubId}, '${login}');

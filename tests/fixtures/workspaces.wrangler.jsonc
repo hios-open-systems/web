@@ -2,7 +2,8 @@
   "name": "hios-workspace-tests",
   "compatibility_date": "2025-04-01",
   "compatibility_flags": ["nodejs_compat"],
-  "vars": { "AUTH_BASE_URL": "http://localhost:3202", "GITHUB_CLIENT_ID": "local-test" },
+  "vars": { "AUTH_BASE_URL": "http://localhost:3202", "GITHUB_CLIENT_ID": "local-test",
+    "GOOGLE_CLIENT_ID": "synthetic-local-test", "GOOGLE_CLIENT_SECRET": "synthetic-local-test" },
   "ratelimits": [
   {
     "name": "RATE_LIMIT_3",
@@ -61,5 +62,5 @@
     }
   }
 ],
-  "d1_databases": [{ "binding": "DB", "database_name": "workspace-tests", "database_id": "00000000-0000-0000-0000-000000000006" }]
+  "d1_databases": [{ "binding": "DB", "database_name": "workspace-tests", "database_id": "00000000-0000-0000-0000-000000000006", "migrations_dir": "../../migrations" }]
 }

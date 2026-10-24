@@ -11,6 +11,7 @@ import { PresetShelf } from './PresetShelf';
 import { SpaceSidebar, SpaceActions } from './SpaceNavigation';
 import { useSpacesWorkspace } from './useSpacesWorkspace';
 import styles from './workspace.module.css';
+import { SignInOptions } from '@/components/auth/SignInOptions';
 
 export function SpacesWorkspace() {
   const state = useSpacesWorkspace();
@@ -108,9 +109,7 @@ export function SpacesWorkspace() {
             {t('sync')}
           </Button>
         ) : (
-          <Button type="text" onClick={() => window.location.assign('/api/auth/github/start')}>
-            {t('login')}
-          </Button>
+            <SignInOptions />
         )}
       </div>
       {store.records

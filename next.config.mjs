@@ -118,7 +118,8 @@ const nextConfig = {
 			"style-src 'self' 'unsafe-inline'",
 			"img-src 'self' data: blob:",
 			"font-src 'self' data:",
-			`connect-src 'self' https://challenges.cloudflare.com${isDev ? ' ws:' : ''}`,
+			// Repository reader: only explicit user actions send its in-memory token.
+			`connect-src 'self' https://challenges.cloudflare.com https://api.github.com https://gitlab.com${isDev ? ' ws:' : ''}`,
 			"frame-src 'self' https://challenges.cloudflare.com",
 			"worker-src 'self' blob:",
 			"manifest-src 'self'",

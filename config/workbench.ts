@@ -1,6 +1,7 @@
 export type WorkbenchSectionId = 'audio' | 'network' | 'validation' | 'generation' | 'testing' | 'electronics' | 'reference';
 
 export type WorkbenchToolId =
+  | 'repositories'
   | 'payload'
   | 'type-checker'
   | 'jwt-decode'
@@ -134,6 +135,8 @@ export const workbenchSections: WorkbenchSection[] = [
 ];
 
 export const workbenchTools: WorkbenchTool[] = [
+  { id: 'repositories', locality: 'network', sectionId: 'reference', href: '/workbench/repositories',
+    accent: '#89b4fa', icon: 'notes' },
   {
     id: 'tone-generator',
     locality: 'local',

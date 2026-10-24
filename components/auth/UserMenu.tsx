@@ -9,6 +9,7 @@ import { isLocalResource } from '@/lib/localResource';
 import { useCurrentUser } from '@/lib/hooks/useCurrentUser';
 import { useFeedback } from '@/components/feedback/FeedbackProvider';
 import styles from './userMenu.module.css';
+import { SignInOptions } from './SignInOptions';
 
 function UserPanel({
   open,
@@ -16,7 +17,6 @@ function UserPanel({
   me,
   display,
   locale,
-  nextUrl,
   unreadCount,
   onClose,
   onLogout,
@@ -26,7 +26,6 @@ function UserPanel({
   me: { name: string | null; login: string; isOwner?: boolean } | null;
   display: string;
   locale: string;
-  nextUrl: string;
   unreadCount: number;
   onClose: () => void;
   onLogout: () => void;
@@ -45,16 +44,11 @@ function UserPanel({
         {me ? (
           <>
             <span className={styles.menuName}>{display}</span>
-            <span className={styles.menuLogin}>@{me.login}</span>
+            {me.login ? <span className={styles.menuLogin}>@{me.login}</span> : null}
+            <SignInOptions linking />
           </>
         ) : (
-          <a
-            href={`/api/auth/github/start?next=${nextUrl}`}
-            aria-label={t('signIn')}
-            className={styles.signInAction}
-          >
-            <GithubOutlined aria-hidden="true" /> <span>{t('signIn')}</span>
-          </a>
+          <SignInOptions />
         )}
       </div>
       {!inDrawer ? (
@@ -147,20 +141,13 @@ export function UserMenu({
     }
   }, []);
 
-  const nextUrl = encodeURIComponent(pathname);
   if (inDrawer && !me) {
     return (
-      <a
-        className={`${styles.loginButton} ${styles.drawerLogin}`}
-        href={`/api/auth/github/start?next=${nextUrl}`}
-        aria-label={t('signIn')}
-      >
-        <GithubOutlined aria-hidden="true" /> <span className={styles.loginLabel}>{t('signIn')}</span>
-      </a>
+      <SignInOptions />
     );
   }
 
-  const display = me ? me.name || me.login : tSettings('title');
+  const display = me ? me.name || me.login || t('account') : tSettings('title');
 
   return (
     <div ref={rootRef} className={`${styles.root} ${inDrawer ? styles.drawerAccount : ''}`}>
@@ -193,7 +180,6 @@ export function UserMenu({
           me={me ?? null}
           display={display}
           locale={locale}
-          nextUrl={nextUrl}
           unreadCount={unreadCount}
           onClose={() => {
             setOpen(false);

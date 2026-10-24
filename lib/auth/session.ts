@@ -13,8 +13,8 @@ export interface SessionRow {
 
 export interface UserRow {
     id: string;
-    github_id: number;
-    github_login: string;
+    github_id: number | null;
+    github_login: string | null;
     name: string | null;
     avatar_url: string | null;
     email: string | null;
@@ -60,8 +60,8 @@ export async function findSessionWithUser(
             user_id: string;
             expires_at: number;
             u_id: string;
-            github_id: number;
-            github_login: string;
+            github_id: number | null;
+            github_login: string | null;
             name: string | null;
             avatar_url: string | null;
             email: string | null;

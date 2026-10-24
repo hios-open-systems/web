@@ -1,11 +1,9 @@
 import { getPlatformProxy } from 'wrangler';
-import { readFileSync, readdirSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+execFileSync(process.execPath, ['node_modules/wrangler/bin/wrangler.js', 'd1', 'migrations', 'apply', 'DB', '--local',
+  '--config', 'tests/fixtures/workspaces.wrangler.jsonc', '--persist-to', '.wrangler/workspace-e2e'], { stdio: 'inherit', env: { ...process.env, CI: '1' } });
 const proxy = await getPlatformProxy({ configPath: 'tests/fixtures/workspaces.wrangler.jsonc', persist: { path: '.wrangler/workspace-e2e' } });
 try {
-  for (const file of readdirSync('migrations').filter(file => file.endsWith('.sql')).sort()) {
-    const sql = readFileSync(`migrations/${file}`, 'utf8');
-    for (const statement of sql.split(';').map(s => s.trim()).filter(Boolean)) await proxy.env.DB.prepare(statement).run();
-  }
   for (const [id, githubId] of [['workspace-test-a', 980001], ['workspace-test-b', 980002]]) {
     await proxy.env.DB.prepare('DELETE FROM users WHERE id = ?').bind(id).run();
     await proxy.env.DB.prepare('INSERT INTO users(id, github_id, github_login) VALUES(?,?,?)').bind(id, githubId, id).run();

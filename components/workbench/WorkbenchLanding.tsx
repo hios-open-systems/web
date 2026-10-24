@@ -11,12 +11,13 @@ import { DiscoveryCatalog } from './DiscoveryCatalog';
 import { WorkspaceAccess } from './WorkspaceAccess';
 import styles from './workbench.module.css';
 
+const visibleTools = workbenchTools.filter((tool) => !tool.external);
+
 export function WorkbenchLanding() {
   const locale = useLocale();
   const t = useTranslations('Workbench');
   const router = useRouter();
   const searchParams = useSearchParams();
-  const visibleTools = workbenchTools.filter((tool) => !tool.external);
 
   // Deep-link / shortcut: /workbench?tool=<id> jumps straight in,
   // ?tool=random opens a random one. No catalog gate.
@@ -28,7 +29,7 @@ export function WorkbenchLanding() {
         ? visibleTools[Math.floor(Math.random() * visibleTools.length)]
         : visibleTools.find((tool) => tool.id === param);
     if (target) router.replace(`/${locale}${target.href}`);
-  }, [searchParams, router, locale, visibleTools]);
+  }, [searchParams, router, locale]);
 
   const randomHref = `/${locale}/workbench?tool=random`;
 

@@ -4,7 +4,8 @@
   "compatibility_date": "2025-04-01",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": { "binding": "ASSETS", "directory": "../../.open-next/assets" },
-  "vars": { "AUTH_BASE_URL": "http://localhost:3202", "GITHUB_CLIENT_ID": "local-test" },
+  "vars": { "AUTH_BASE_URL": "http://localhost:3202", "GITHUB_CLIENT_ID": "local-test",
+    "GOOGLE_CLIENT_ID": "synthetic-local-test", "GOOGLE_CLIENT_SECRET": "synthetic-local-test" },
   "ratelimits": [
   {
     "name": "RATE_LIMIT_3",

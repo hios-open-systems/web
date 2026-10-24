@@ -1557,7 +1557,13 @@
     "Auth": {
         "signIn": "Iniciar sesión con GitHub",
         "signOut": "Cerrar sesión",
-        "admin": "Admin"
+        "admin": "Admin",
+        "signInGoogle": "Continuar con Google",
+        "linkGoogle": "Vincular Google a esta cuenta",
+        "linkGoogleHint": "Google verifica tu identidad y nombre. Tus espacios siguen en esta cuenta.",
+        "providersHint": "Al continuar, GitHub o Google reciben la solicitud de acceso y comparten tu identidad con HIOS. No se solicita acceso a repositorios. Si ya tenés cuenta, entrá con GitHub y vinculá Google.",
+        "providerError": "No se pudo iniciar sesión. Volvé a intentar desde el menú de cuenta.",
+        "account": "Mi cuenta"
     },
     "Feedback": {
         "title": "Feedback inbox",
@@ -2702,6 +2708,10 @@
             "image-base64": {
                 "title": "Imagen a Base64",
                 "description": "Convertí una imagen a Base64 o a una URL de datos para usarla en HTML o CSS."
+            },
+            "repositories": {
+                "title": "Repositorios y documentación",
+                "description": "Leé proyectos de GitHub o GitLab y prepará documentación en tu dispositivo."
             }
         },
         "payload": {
@@ -3943,7 +3953,24 @@
             "page-calculators": "Calculadoras"
         },
         "localPreview": "Datos que se guardan en este navegador",
-        "presetPrivacy": "Esta configuración y sus datos se guardan en este navegador."
+        "presetPrivacy": "Esta configuración y sus datos se guardan en este navegador.",
+        "discovery": {
+            "title": "¿Qué querés hacer?",
+            "hint": "Elegí una tarea o buscá en el catálogo. Tus favoritos y recientes quedan en este dispositivo.",
+            "music": "Crear música",
+            "musicHint": "Componé, escuchá y exportá.",
+            "circuit": "Conectar un circuito",
+            "circuitHint": "Explorá pines y conexiones.",
+            "data": "Revisar datos",
+            "dataHint": "Validá y transformá JSON.",
+            "docs": "Leer un repositorio",
+            "docsHint": "GitHub, GitLab y documentación privada.",
+            "collection": "Vista del catálogo",
+            "all": "Todas las herramientas",
+            "favorites": "Favoritos",
+            "recent": "Recientes",
+            "reset": "Limpiar filtros"
+        }
     },
     "ProjectGettingStarted": {
         "usage": "Así se usa",
@@ -4007,7 +4034,7 @@
         "title": "Entre cables",
         "titleAccent": "y código.",
         "subtitle": "Acá comparto los proyectos que voy armando: un PAD programable, un receptor de audio Bluetooth y pruebas con ESP32. También hay herramientas web que podés usar por tu cuenta.",
-        "tryIt": "Cambiá la onda y mové la frecuencia",
+        "tryIt": "Elegí una demo",
         "manifesto": "Proyectos, herramientas y notas de desarrollo.",
         "scroll": "Recorrer el sitio",
         "directory": "Por tema",
@@ -4038,6 +4065,39 @@
             "frequency": "Frecuencia",
             "hint": "Sólo visual · sin audio",
             "open": "Abrir generador"
+        },
+        "demos": {
+            "choose": "Elegí una demo",
+            "signal": "Oscilador",
+            "pinout": "Pinout",
+            "beat": "Beat",
+            "qpsk": "QPSK",
+            "local": "EN TU DISPOSITIVO",
+            "open": "Abrir herramienta",
+            "pinHint": "Tocá un pin para ver su función",
+            "qpskTitle": "Constelación QPSK",
+            "qpskHint": "Cambiá los bits y observá la fase",
+            "symbol": "Símbolo de dos bits",
+            "carrier": "Portadora modulada",
+            "beatTitle": "Trap · {bpm} BPM",
+            "beatHint": "Dos compases. Tocá la grilla para cambiar notas y golpes.",
+            "stop": "Detener",
+            "play": "Reproducir",
+            "continueBeat": "Seguir en el compositor",
+            "audioHint": "Audio sólo al reproducir",
+            "error": "No se pudo completar. Volvé a intentar.",
+            "pins": {
+                "LRC": "Selección izquierda/derecha (WS).",
+                "BCLK": "Reloj de bits del bus I²S.",
+                "DIN": "Entrada de audio digital I²S.",
+                "GAIN": "Selección de ganancia; flotante: 9 dB.",
+                "SD": "Apagado y selección de canal.",
+                "GND": "Masa común.",
+                "Vin": "Alimentación: 2,5–5,5 V.",
+                "SPKplus": "Salida positiva al parlante. No conectar a GND.",
+                "SPKminus": "Salida negativa en puente. No conectar a GND."
+            },
+            "bar": "Compás"
         }
     },
     "SignalScope": {
@@ -4679,5 +4739,27 @@
         "day": "Día UTC",
         "daily": "Ver histórico diario",
         "partial": "El primer y el último día pueden estar incompletos. Un cero significa que la consulta no devolvió actividad en la muestra; no prueba ausencia de tráfico."
+    },
+    "Repositories": {
+        "title": "Repositorios y documentación",
+        "description": "Leé proyectos de GitHub o GitLab y prepará documentación en tu dispositivo.",
+        "privacy": "Al conectar, tu navegador envía el token, la ruta del repositorio y tu dirección de red directamente a api.github.com o gitlab.com. HIOS no recibe el token ni los archivos. Sólo se realizan lecturas; las ediciones y borradores quedan en memoria hasta que cerrás o desconectás.",
+        "url": "URL del repositorio",
+        "branch": "Rama o etiqueta (vacío: predeterminada)",
+        "token": "Token de lectura",
+        "permissions": "GitHub: token fine-grained limitado al repositorio, Contents: read-only. GitLab.com: token de proyecto con read_api y rol Reporter. No uses tokens con permisos de escritura. No se guardan credenciales. Los tokens de proyecto en GitLab.com requieren Premium o Ultimate.",
+        "connect": "Conectar y leer",
+        "disconnect": "Desconectar y borrar memoria",
+        "error": "No se pudo leer. Revisá URL, permisos, rama, límites del proveedor o tamaño del archivo (máximo 1 MB aprox.).",
+        "files": "Archivos",
+        "empty": "Esta carpeta está vacía.",
+        "limited": "GitHub limita esta carpeta a 1000 entradas. No se muestra el resto.",
+        "more": "Siguiente página",
+        "document": "Documento",
+        "preview": "Vista Markdown",
+        "download": "Descargar copia",
+        "draft": "Borrador local: no modifica el repositorio. Descargá los cambios antes de cerrar o desconectar. Imágenes y enlaces externos están desactivados.",
+        "image": "Imagen omitida",
+        "select": "Elegí un archivo para leerlo o preparar una copia."
     }
 }

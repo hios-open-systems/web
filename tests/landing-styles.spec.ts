@@ -12,6 +12,7 @@ test('landing styles survive client navigation and a cached reload', async ({ pa
   await page.locator('header a[href="/es"]').first().click();
   await expect(page).toHaveURL(/\/es$/);
   for (let visit = 0; visit < 2; visit++) {
+    await page.getByRole('button', { name: 'Oscilador', exact: true }).click();
     await expect(page.locator('[class*="heroSection_grid"]')).toHaveCSS('display', 'grid');
     await expect(page.locator('[data-signal-wave] [class*="instrument_wave"]')).toHaveCSS('fill', 'none');
     expect(await page.locator('h1').evaluate(element => parseFloat(getComputedStyle(element).fontSize))).toBeGreaterThan(40);

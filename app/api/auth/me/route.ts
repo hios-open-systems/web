@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
             user: result
                 ? {
                     id: result.user.id,
-                    login: result.user.github_login,
+                    login: result.user.github_login ?? '',
                     name: result.user.name,
                     avatar_url: result.user.avatar_url,
                     isOwner: isOwner(result.user),

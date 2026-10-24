@@ -1557,7 +1557,13 @@
     "Auth": {
         "signIn": "Sign in with GitHub",
         "signOut": "Sign out",
-        "admin": "Admin"
+        "admin": "Admin",
+        "signInGoogle": "Continue with Google",
+        "linkGoogle": "Link Google to this account",
+        "linkGoogleHint": "Google verifies your identity and name. Your spaces stay in this account.",
+        "providersHint": "Continuing sends a sign-in request to GitHub or Google, which shares your identity with HIOS. No repository access is requested. Existing users: sign in with GitHub first, then link Google.",
+        "providerError": "Sign-in failed. Try again from the account menu.",
+        "account": "My account"
     },
     "Feedback": {
         "title": "Feedback inbox",
@@ -2702,6 +2708,10 @@
             "image-base64": {
                 "title": "Image to Base64",
                 "description": "Convert an image to Base64 or a data URL for use in HTML or CSS."
+            },
+            "repositories": {
+                "title": "Repositories and documentation",
+                "description": "Read GitHub or GitLab projects and prepare documentation on your device."
             }
         },
         "payload": {
@@ -3943,7 +3953,24 @@
             "page-calculators": "Calculators"
         },
         "localPreview": "Data saved in this browser",
-        "presetPrivacy": "This configuration and its data are saved in this browser."
+        "presetPrivacy": "This configuration and its data are saved in this browser.",
+        "discovery": {
+            "title": "What would you like to do?",
+            "hint": "Choose a task or search the catalog. Favorites and recents stay on this device.",
+            "music": "Make music",
+            "musicHint": "Compose, listen and export.",
+            "circuit": "Connect a circuit",
+            "circuitHint": "Explore pins and connections.",
+            "data": "Inspect data",
+            "dataHint": "Validate and transform JSON.",
+            "docs": "Read a repository",
+            "docsHint": "GitHub, GitLab and private documentation.",
+            "collection": "Catalog view",
+            "all": "All tools",
+            "favorites": "Favorites",
+            "recent": "Recent",
+            "reset": "Clear filters"
+        }
     },
     "ProjectGettingStarted": {
         "usage": "How to use it",
@@ -4007,7 +4034,7 @@
         "title": "Wires",
         "titleAccent": "and code.",
         "subtitle": "This is where I share what I’m building: a programmable PAD, a Bluetooth audio receiver and experiments with ESP32. There are also web tools you can use for your own projects.",
-        "tryIt": "Change the wave and adjust the frequency",
+        "tryIt": "Choose a demo",
         "manifesto": "Projects, tools and development notes.",
         "scroll": "Explore the site",
         "directory": "By topic",
@@ -4038,6 +4065,39 @@
             "frequency": "Frequency",
             "hint": "Visual only · no audio",
             "open": "Open generator"
+        },
+        "demos": {
+            "choose": "Choose a demo",
+            "signal": "Oscillator",
+            "pinout": "Pinout",
+            "beat": "Beat",
+            "qpsk": "QPSK",
+            "local": "ON YOUR DEVICE",
+            "open": "Open tool",
+            "pinHint": "Select a pin to see its function",
+            "qpskTitle": "QPSK constellation",
+            "qpskHint": "Change the bits and watch the phase",
+            "symbol": "Two-bit symbol",
+            "carrier": "Modulated carrier",
+            "beatTitle": "Trap · {bpm} BPM",
+            "beatHint": "Two bars. Tap the grid to change notes and drum hits.",
+            "stop": "Stop",
+            "play": "Play",
+            "continueBeat": "Continue in composer",
+            "audioHint": "Audio only when you press play",
+            "error": "Could not complete. Please try again.",
+            "pins": {
+                "LRC": "Left/right word select (WS).",
+                "BCLK": "I²S bit clock.",
+                "DIN": "I²S digital audio input.",
+                "GAIN": "Gain selection; floating: 9 dB.",
+                "SD": "Shutdown and channel selection.",
+                "GND": "Common ground.",
+                "Vin": "Power supply: 2.5–5.5 V.",
+                "SPKplus": "Positive speaker output. Never connect to GND.",
+                "SPKminus": "Bridged negative output. Never connect to GND."
+            },
+            "bar": "Bar"
         }
     },
     "SignalScope": {
@@ -4679,5 +4739,27 @@
         "day": "UTC day",
         "daily": "View daily history",
         "partial": "The first and last days may be incomplete. Zero means the query returned no activity in its sample; it does not prove that there was no traffic."
+    },
+    "Repositories": {
+        "title": "Repositories and documentation",
+        "description": "Read GitHub or GitLab projects and prepare documentation on your device.",
+        "privacy": "Connecting sends your token, repository path and network address directly from your browser to api.github.com or gitlab.com. HIOS receives neither tokens nor files. Read operations only; edits and drafts stay in memory until you close or disconnect.",
+        "url": "Repository URL",
+        "branch": "Branch or tag (empty: default)",
+        "token": "Read-only token",
+        "permissions": "GitHub: fine-grained token for this repository, Contents: read-only. GitLab.com: project token with read_api and Reporter role. Do not use write-enabled tokens. Credentials are never saved. GitLab.com project tokens require Premium or Ultimate.",
+        "connect": "Connect and read",
+        "disconnect": "Disconnect and clear memory",
+        "error": "Could not read. Check URL, permissions, branch, provider limits or file size (about 1 MB maximum).",
+        "files": "Files",
+        "empty": "This folder is empty.",
+        "limited": "GitHub limits this folder to 1000 entries. Remaining entries are not displayed.",
+        "more": "Next page",
+        "document": "Document",
+        "preview": "Markdown preview",
+        "download": "Download copy",
+        "draft": "Local draft: does not change the repository. Download your changes before closing or disconnecting. External images and links are disabled.",
+        "image": "Image omitted",
+        "select": "Choose a file to read or prepare a copy."
     }
 }

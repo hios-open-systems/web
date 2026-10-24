@@ -1,6 +1,6 @@
 import { defineConfig } from '@playwright/test';
 export default defineConfig({
-  testDir: './tests', testMatch: ['**/security-api.auth.spec.ts', '**/analytics-api.auth.spec.ts'], workers: 1,
+  testDir: './tests', testMatch: ['**/security-api.auth.spec.ts', '**/analytics-api.auth.spec.ts', '**/google-api.auth.spec.ts'], workers: 1,
   timeout: 60_000, globalSetup: './tests/security.global-setup.ts',
   use: { baseURL: 'http://localhost:3202' },
   webServer: {

@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowRightOutlined, ArrowDownOutlined } from '@ant-design/icons';
-import { LabSignal } from './LabSignal';
+import { LabShowcase } from './LabShowcase';
 import { useLocale, useTranslations } from 'next-intl';
 import styles from './heroSection.module.css';
 
@@ -17,7 +17,7 @@ export function HeroSection() {
           <HeroCopy />
           <div className={styles.preview}>
             <span className={styles.annotation}>{lab('tryIt')} ↘</span>
-            <LabSignal />
+            <LabShowcase />
           </div>
         </div>
         <div className={styles.bottomRail}>
