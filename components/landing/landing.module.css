@@ -96,6 +96,100 @@
   text-transform: uppercase;
   letter-spacing: 0.14em;
 }
+.studioSpotlight {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+.studioCard {
+  --studio-accent: #c084fc;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 22px 24px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--studio-accent) 32%, var(--hios-border));
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--studio-accent) 16%, transparent), transparent 60%),
+    var(--hios-bg-elevated);
+  color: var(--hios-text);
+  text-decoration: none;
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+}
+.studioCard[data-studio='beatmaker'] {
+  --studio-accent: #f59e0b;
+}
+.studioCard:hover {
+  color: var(--hios-text);
+  transform: translateY(-3px);
+  border-color: var(--studio-accent);
+  box-shadow: 0 14px 32px color-mix(in srgb, var(--studio-accent) 16%, rgba(0, 0, 0, 0.25));
+}
+.studioMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font: 600 10px var(--font-stack-mono);
+  letter-spacing: 0.12em;
+  color: var(--studio-accent);
+}
+.studioMeta > span::before {
+  content: '● ';
+}
+.studioCard h3 {
+  margin: 0;
+  font-family: var(--font-stack-display);
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+.studioCard p {
+  margin: 0;
+  color: var(--hios-text-secondary);
+  font-size: 12.5px;
+  line-height: 1.65;
+  flex: 1;
+}
+.studioTags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  padding-top: 12px;
+  border-top: 1px solid var(--hios-border);
+}
+.studioTags span {
+  font: 600 9.5px var(--font-stack-mono);
+  letter-spacing: 0.06em;
+  padding: 4px 8px;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--studio-accent) 10%, var(--hios-bg));
+  border: 1px solid color-mix(in srgb, var(--studio-accent) 26%, var(--hios-border));
+  color: var(--hios-text-secondary);
+}
+.studioCta {
+  margin-left: auto;
+  font: 700 11.5px var(--font-stack-mono);
+  color: var(--studio-accent);
+}
+@media (max-width: 800px) {
+  .studioSpotlight {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 600px) {
+  .studioCard {
+    padding: 16px;
+  }
+  .studioCta {
+    margin-left: 0;
+    width: 100%;
+    padding-top: 4px;
+  }
+}
 .activityGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

@@ -61,6 +61,83 @@
 .position {
   min-width: 36px;
   font-variant-numeric: tabular-nums;
+  font-family: var(--font-stack-mono);
+  font-weight: 700;
+  color: var(--accent-text);
+}
+.lcdDisplay {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 10px;
+  border-radius: 7px;
+  border: 1px solid var(--hios-border);
+  background: color-mix(in srgb, var(--hios-bg) 85%, #000);
+}
+.beatLeds {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.beatLeds i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--hios-text) 20%, transparent);
+  transition: background 0.1s ease, box-shadow 0.1s ease, transform 0.1s ease;
+}
+.beatLeds i[data-active='true'] {
+  background: var(--accent-text);
+  box-shadow: 0 0 8px var(--accent);
+  transform: scale(1.2);
+}
+.shortcutBadge {
+  margin-left: auto;
+  max-width: 100%;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--hios-border);
+  background: var(--hios-bg);
+  color: var(--hios-text-muted);
+  font: 11px var(--font-stack-mono);
+  white-space: normal;
+  word-break: break-word;
+}
+.styleChips {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(126px, 1fr));
+  gap: 8px;
+}
+.styleChip {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  padding: 10px 12px;
+  border-radius: 9px;
+  border: 1px solid var(--hios-border);
+  background: var(--hios-bg);
+  color: var(--hios-text);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.16s ease, transform 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+}
+.styleChip:hover {
+  border-color: color-mix(in srgb, var(--accent) 50%, var(--hios-border));
+  transform: translateY(-1px);
+}
+.styleChipActive {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--hios-bg));
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+.styleChipTitle {
+  font-size: 12.5px;
+  font-weight: 700;
+}
+.styleChipMeta {
+  font: 10.5px var(--font-stack-mono);
+  color: var(--hios-text-secondary);
 }
 .workspace {
   display: grid;

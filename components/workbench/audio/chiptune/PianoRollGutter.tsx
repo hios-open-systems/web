@@ -13,12 +13,13 @@ interface PianoRollGutterProps {
   pitches: number[];
   isDrumTrack: boolean;
   scale?: MusicalScale;
+  onPreviewPitch?: (pitch: number) => void;
 }
 
 const pitchLabel = (pitch: number): string =>
   `${NOTE_NAMES[((pitch % 12) + 12) % 12]}${Math.floor(pitch / 12) - 1}`;
 
-export function PianoRollGutter({ height, rowH, pitches, isDrumTrack, scale }: PianoRollGutterProps) {
+export function PianoRollGutter({ height, rowH, pitches, isDrumTrack, scale, onPreviewPitch }: PianoRollGutterProps) {
   return (
     <div className={styles.rollGutter} style={{ height: height + RULER_H }}>
       <div className={styles.rollCorner} style={{ height: RULER_H }} />
@@ -35,8 +36,10 @@ export function PianoRollGutter({ height, rowH, pitches, isDrumTrack, scale }: P
               fontWeight: drum ? 600 : undefined,
               color: drum ? 'var(--text-primary)' : undefined,
               background: drum ? 'rgba(251, 113, 133, 0.08)' : undefined,
+              cursor: onPreviewPitch ? 'pointer' : undefined,
             }}
-            title={drum ? `${drum.name} (MIDI ${pitch})` : `${pitchLabel(pitch)} (MIDI ${pitch})`}
+            onPointerDown={() => onPreviewPitch?.(pitch)}
+            title={drum ? `Click para escuchar: ${drum.name} (MIDI ${pitch})` : `Click para escuchar: ${pitchLabel(pitch)} (MIDI ${pitch})`}
           >
             {isDrumTrack
               ? formatDrumPitch(pitch)

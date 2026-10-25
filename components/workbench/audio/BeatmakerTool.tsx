@@ -24,7 +24,10 @@ export function BeatmakerTool() {
     cycleStepDetail,
     toggleMute,
     toggleSolo,
+    setTrackVolume,
+    fillTrack,
     selectPreset,
+    randomize,
     fork,
     clear,
   } = useBeatmakerState();
@@ -86,6 +89,7 @@ export function BeatmakerTool() {
         onBpmChange={(bpm) => setProject((p) => ({ ...p, bpm }))}
         onSwingChange={(swing) => setProject((p) => ({ ...p, swing }))}
         onSelectPreset={selectPreset}
+        onRandomize={randomize}
         onFork={fork}
         onShare={() => setShareOpen(true)}
         onExportWav={handleExportWav}
@@ -103,6 +107,8 @@ export function BeatmakerTool() {
         onPreview={playback.previewSound}
         onToggleMute={toggleMute}
         onToggleSolo={toggleSolo}
+        onTrackVolume={setTrackVolume}
+        onFillTrack={fillTrack}
       />
 
       <BeatShareModal open={shareOpen} project={project} onClose={() => setShareOpen(false)} />

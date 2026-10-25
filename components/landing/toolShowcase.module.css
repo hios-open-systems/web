@@ -43,6 +43,7 @@
   gap: 12px;
 }
 .tool {
+  --tool-accent: var(--accent);
   display: flex;
   align-items: center;
   min-width: 0;
@@ -53,11 +54,12 @@
   background: var(--hios-bg-elevated);
   color: var(--hios-text);
   text-decoration: none;
-  transition: border-color 0.18s ease, transform 0.18s ease, background 0.18s ease;
+  transition: border-color 0.18s ease, transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
 }
 .tool:hover {
-  border-color: color-mix(in srgb, var(--accent) 45%, var(--hios-border));
-  background: color-mix(in srgb, var(--accent) 4%, var(--hios-bg-elevated));
+  border-color: color-mix(in srgb, var(--tool-accent) 55%, var(--hios-border));
+  background: color-mix(in srgb, var(--tool-accent) 6%, var(--hios-bg-elevated));
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--tool-accent) 12%, transparent);
   color: var(--hios-text);
   transform: translateY(-2px);
 }

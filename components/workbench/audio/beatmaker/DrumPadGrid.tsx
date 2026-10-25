@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { TrackRow } from './TrackRow.tsx';
-import type { BeatProject, BeatSound } from '@/lib/workbench/beatmaker.ts';
+import type { BeatProject, BeatSound, TrackFillMode } from '@/lib/workbench/beatmaker.ts';
 import styles from './beatmaker.module.css';
 
 interface DrumPadGridProps {
@@ -14,6 +14,8 @@ interface DrumPadGridProps {
   onPreview: (sound: BeatSound) => void;
   onToggleMute: (sound: BeatSound) => void;
   onToggleSolo: (sound: BeatSound) => void;
+  onTrackVolume?: (sound: BeatSound, volume: number) => void;
+  onFillTrack?: (sound: BeatSound, mode: TrackFillMode) => void;
 }
 
 export function DrumPadGrid({
@@ -25,6 +27,8 @@ export function DrumPadGrid({
   onPreview,
   onToggleMute,
   onToggleSolo,
+  onTrackVolume,
+  onFillTrack,
 }: DrumPadGridProps) {
   return (
     <div className={styles.gridCard}>
@@ -60,6 +64,8 @@ export function DrumPadGrid({
             onPreview={() => onPreview(track.sound)}
             onToggleMute={() => onToggleMute(track.sound)}
             onToggleSolo={() => onToggleSolo(track.sound)}
+            onVolumeChange={(vol) => onTrackVolume?.(track.sound, vol)}
+            onFill={(mode) => onFillTrack?.(track.sound, mode)}
           />
         ))}
       </div>

@@ -26,6 +26,9 @@ export function ComposerApp() {
         guideId="composer"
         actions={
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            <Button size="small" icon={<PlayCircleOutlined />} href="/workbench/beatmaker">
+              Beatmaker DAW
+            </Button>
             <Button size="small" icon={<PlayCircleOutlined />} href="/workbench/jam-station">
               Jam Station
             </Button>

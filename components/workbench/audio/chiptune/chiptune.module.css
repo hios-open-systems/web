@@ -187,6 +187,16 @@
   opacity: 0.55;
   box-sizing: border-box;
   font-variant-numeric: tabular-nums;
+  user-select: none;
+  transition: background 0.1s ease, color 0.1s ease, opacity 0.1s ease;
+}
+.rollLabel:hover {
+  opacity: 1;
+  background: color-mix(in srgb, var(--accent, #a855f7) 22%, transparent);
+  color: var(--hios-text, #fff);
+}
+.rollLabel:active {
+  background: color-mix(in srgb, var(--accent, #a855f7) 45%, transparent);
 }
 
 .rollLabelC {

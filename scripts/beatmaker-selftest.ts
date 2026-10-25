@@ -9,8 +9,10 @@ import {
   SOUND_IDS,
   createDefaultProject,
   createProjectFromPreset,
+  fillTrackSteps,
   forkBeat,
   parseBeat,
+  randomizeBeat,
   serializeBeat,
 } from '../lib/workbench/beatmaker.ts';
 
@@ -88,6 +90,15 @@ ok('Trap 808 tiene variedad melódica de notas', new Set(trap808Pitches).size > 
 const boombap = createProjectFromPreset(BEAT_PRESETS.find((p) => p.id === 'boombap-90s')!);
 const bapSnare = boombap.tracks.find((t) => t.sound === 'snare')!;
 ok('BoomBap snare está en tiempos 4 y 12 (2 y 4 full-time)', bapSnare.steps[4].active && bapSnare.steps[12].active);
+
+// 8. Randomize y fillTrackSteps
+const filled2 = fillTrackSteps(def.tracks[0], 'every2');
+ok('fillTrackSteps every2 activa los pasos pares', filled2.steps.every((s, idx) => s.active === (idx % 2 === 0)));
+const cleared = fillTrackSteps(filled2, 'clear');
+ok('fillTrackSteps clear desactiva todos los pasos', cleared.steps.every((s) => !s.active));
+const rndBeat = randomizeBeat(def, 42);
+eq('randomizeBeat conserva las 8 pistas', rndBeat.tracks.length, 8);
+ok('randomizeBeat produce un beat serializable válido', parseBeat(serializeBeat(rndBeat)) !== null);
 
 if (failures > 0) {
   console.error(`\n${failures} check(s) failed`);

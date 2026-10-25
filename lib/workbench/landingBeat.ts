@@ -36,3 +36,39 @@ export function toggleMelodyStep(song: ChiptuneSong, pitch: number, step: number
       : [...track.notes, { id: `Keys-${pitch}-${step}`, pitch, start, duration: TICKS_PER_STEP * 2, velocity: 90 }],
   }) };
 }
+
+/** Generates a fresh 2-bar rhythmic & melodic variation for the landing beat demo. */
+export function randomizeLandingBeat(song: ChiptuneSong, seed = Date.now()): ChiptuneSong {
+  let s = (seed >>> 0) || 1;
+  const rand = () => {
+    s = (s * 1664525 + 1013904223) >>> 0;
+    return s / 0x100000000;
+  };
+  const kicks = [0, 16];
+  for (const step of [3, 6, 7, 10, 14, 19, 22, 26, 28, 30]) {
+    if (rand() < 0.42) kicks.push(step);
+  }
+  const snares = [8, 24];
+  if (rand() < 0.5) snares.push(rand() < 0.5 ? 15 : 31);
+  const hats: number[] = [];
+  for (let i = 0; i < 32; i++) {
+    if (i % 2 === 0 || rand() < 0.35) hats.push(i);
+  }
+  const bassSteps = kicks.filter((_, idx) => idx % 2 === 0 || rand() < 0.6);
+  const keyPitches = [67, 69, 72, 76];
+  const keyNotes = Array.from({ length: 6 }, (_, idx) => {
+    const step = Math.min(30, idx * 5 + Math.floor(rand() * 3));
+    const pitch = keyPitches[Math.floor(rand() * keyPitches.length)];
+    return { id: `Keys-${pitch}-${step}`, pitch, start: step * TICKS_PER_STEP, duration: TICKS_PER_STEP * 2, velocity: 90 };
+  });
+  return {
+    ...song,
+    tracks: [
+      track('Kick', 'noise-perc', 36, kicks),
+      track('Snare', 'noise-perc', 38, snares),
+      track('Hi-hat', 'noise-perc', 42, hats),
+      track('Bass', 'triangle-bass', 33, bassSteps, 3),
+      { id: 'Keys', name: 'Keys', instrument: 'pulse-soft', muted: false, volume: 0.32, notes: keyNotes },
+    ],
+  };
+}

@@ -23,6 +23,7 @@ interface BeatControlsProps {
   onBpmChange: (bpm: number) => void;
   onSwingChange: (swing: number) => void;
   onSelectPreset: (presetId: string) => void;
+  onRandomize?: () => void;
   onFork: () => void;
   onShare: () => void;
   onExportWav: () => void;
@@ -39,6 +40,7 @@ export function BeatControls({
   onBpmChange,
   onSwingChange,
   onSelectPreset,
+  onRandomize,
   onFork,
   onShare,
   onExportWav,
@@ -73,6 +75,14 @@ export function BeatControls({
               label: `${p.genre}: ${p.name}`,
             }))}
           />
+
+          {onRandomize && (
+            <Tooltip title="Genera un patrón rítmico y melódico aleatorio con un clic">
+              <Button onClick={onRandomize} className={styles.randomBtn}>
+                🎲 Random Groove
+              </Button>
+            </Tooltip>
+          )}
         </div>
 
         <div className={styles.playbackGroup}>

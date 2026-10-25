@@ -9,24 +9,35 @@ import styles from '@/components/tools/composer/composer.module.css';
 
 function Position({ c }: { c: ComposerState }) {
   const [position, setPosition] = useState('1.1');
+  const [beatIdx, setBeatIdx] = useState(0);
   const {
     getPlayheadTicks,
+    isPlaying,
     song: { ppq, beatsPerBar },
   } = c;
   useEffect(() => {
     const update = () => {
       const tick = getPlayheadTicks() ?? 0;
       const beat = Math.floor(tick / ppq);
-      setPosition(`${Math.floor(beat / beatsPerBar) + 1}.${(beat % beatsPerBar) + 1}`);
+      const inBar = beat % beatsPerBar;
+      setBeatIdx(inBar);
+      setPosition(`${Math.floor(beat / beatsPerBar) + 1}.${inBar + 1}`);
     };
     update();
     const timer = window.setInterval(update, 80);
     return () => window.clearInterval(timer);
   }, [getPlayheadTicks, ppq, beatsPerBar]);
   return (
-    <output aria-label="Posición" className={styles.position}>
-      {position}
-    </output>
+    <div className={styles.lcdDisplay} title="Compás y pulso actual">
+      <output aria-label="Posición" className={styles.position}>
+        {position}
+      </output>
+      <span className={styles.beatLeds} aria-hidden="true">
+        {Array.from({ length: beatsPerBar }, (_, i) => (
+          <i key={i} data-active={(isPlaying && beatIdx === i) || undefined} />
+        ))}
+      </span>
+    </div>
   );
 }
 
@@ -112,6 +123,9 @@ export function TransportBar({ c }: { c: ComposerState }) {
             onChange={c.setMasterVolume}
           />
         </label>
+        <span className={styles.shortcutBadge} title="Atajos de teclado cuando el foco no está en un campo">
+          ⌨ Espacio: Play · L: Loop · M: Metrónomo · Ctrl+Z: Deshacer
+        </span>
       </div>
 
     </div>

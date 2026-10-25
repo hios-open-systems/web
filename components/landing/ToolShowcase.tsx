@@ -12,14 +12,14 @@ const ALL_TOOLS = workbenchTools.filter((tool) => !tool.external);
 
 // Highlight the latest AI tools and a few core ones to reflect the new platform reality
 const HIGHLIGHTED_IDS = [
+  'chiptune',
+  'beatmaker',
   'qpsk-modulator',
   'esp32-llm-bridge',
   'llm-vram-calc',
   'token-inspector',
-  'llm-grammar-generator',
   'tone-generator',
   'payload',
-  'chiptune',
 ];
 
 const TOOLS = ALL_TOOLS.filter((tool) => HIGHLIGHTED_IDS.includes(tool.id));
@@ -66,7 +66,11 @@ function ShowcaseTool({ tool, index }: { tool: WorkbenchTool; index: number }) {
   const locale = useLocale();
   const packs = useTranslations('Workbench.packs');
   return (
-    <Link href={`/${locale}${tool.href}`} className={styles.tool}>
+    <Link
+      href={`/${locale}${tool.href}`}
+      className={styles.tool}
+      style={{ '--tool-accent': tool.accent } as React.CSSProperties}
+    >
       <span className={styles.toolIndex}>{String(index + 1).padStart(2, '0')}</span>
       <span className={styles.toolIcon} style={{ color: tool.accent }}>
         {getWorkbenchIcon(tool.icon)}

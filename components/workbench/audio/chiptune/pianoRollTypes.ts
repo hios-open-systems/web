@@ -27,6 +27,7 @@ export interface PianoRollProps {
   onSeek?: (tick: number) => void;
   onLoopRegion?: (region: LoopRegion | null) => void;
   onChangeNotes?: (ids: string[], patch: Partial<ChiptuneNote>) => void;
+  onPreviewPitch?: (pitch: number) => void;
   getPlayheadTicks: () => number | null;
   isPlaying: boolean;
 }

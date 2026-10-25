@@ -113,6 +113,7 @@ export function ComposerEditor({ c }: { c: ComposerState }) {
         onChangeNote={(id, patch) => c.onChangeNote(id, patch.pitch === undefined ? patch : { ...patch, pitch: pitchForEdit(patch.pitch) })}
         onDeleteNote={c.onDeleteNote}
         onAddNote={(note) => c.onAddNote({ ...note, pitch: pitchForEdit(note.pitch) })}
+        onPreviewPitch={(pitch) => track && c.previewNote(pitch, track)}
         onSeek={c.seek}
         getPlayheadTicks={c.getPlayheadTicks}
         isPlaying={c.isPlaying}

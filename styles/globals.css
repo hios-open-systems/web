@@ -467,3 +467,15 @@ a:hover {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--hios-text-secondary);
 }
+
+@property --inner-size {
+  syntax: '<length-percentage>';
+  inherits: true;
+  initial-value: 0px;
+}
+
+@property --outer-size {
+  syntax: '<length-percentage>';
+  inherits: true;
+  initial-value: 0px;
+}

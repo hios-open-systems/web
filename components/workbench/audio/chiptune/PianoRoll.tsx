@@ -18,7 +18,7 @@ export function PianoRoll({
   song, activeTrackId, selectedNoteId, selectedNoteIds = [], selectedRange, loopActive = false, lane,
   zoom = 1, drawDuration = TICKS_PER_STEP * 2, mode = 'draw', showGhostNotes = false,
   onActivateTrack, onRange, onSelectNote, onChangeNote, onDeleteNote, onAddNote,
-  onSeek, onLoopRegion, onChangeNotes, getPlayheadTicks, scale,
+  onSeek, onLoopRegion, onChangeNotes, onPreviewPitch, getPlayheadTicks, scale,
 }: PianoRollProps) {
   const stepW = STEP_W * zoom;
   const rowH = ROW_H * zoom;
@@ -69,14 +69,7 @@ export function PianoRoll({
         }}
       >
         <div className={styles.rollInner} style={{ height: height + RULER_H }}>
-          <PianoRollGutter
-            height={height}
-            rowH={rowH}
-            pitches={pitches}
-            isDrumTrack={isDrumTrack}
-            scale={scale}
-          />
-
+          <PianoRollGutter height={height} rowH={rowH} pitches={pitches} isDrumTrack={isDrumTrack} scale={scale} onPreviewPitch={onPreviewPitch} />
           <div className={styles.rollGridWrap} style={{ width }}>
             <PianoRollRuler
               width={width}

@@ -277,6 +277,44 @@ export function forkBeat(source: BeatProject, newAuthor = 'Remixer'): BeatProjec
   };
 }
 
+export type TrackFillMode = 'every2' | 'every4' | 'random' | 'clear';
+
+const SCALE_808 = [36, 39, 41, 43, 44, 46];
+const SCALE_MELODY = [60, 63, 65, 67, 70, 72];
+
+export function fillTrackSteps(track: BeatTrack, mode: TrackFillMode, seed = Date.now()): BeatTrack {
+  let s = (seed >>> 0) || 1;
+  const rand = () => {
+    s = (s * 1664525 + 1013904223) >>> 0;
+    return s / 0x100000000;
+  };
+  const steps: BeatStep[] = track.steps.map((st, i) => {
+    if (mode === 'clear') return { ...st, active: false, roll: 1 };
+    if (mode === 'every2') return { ...st, active: i % 2 === 0, velocity: i % 4 === 0 ? 115 : 88, roll: 1 };
+    if (mode === 'every4') return { ...st, active: i % 4 === 0, velocity: 120, roll: 1 };
+    const density = track.sound === 'hihat' ? 0.65 : track.sound === 'snare' || track.sound === 'clap' ? 0.22 : 0.32;
+    const active = (track.sound === 'kick' && i === 0) || (track.sound === 'snare' && i === 8) || rand() < density;
+    const pitch = track.sound === '808'
+      ? SCALE_808[Math.floor(rand() * SCALE_808.length)]
+      : track.sound === 'melody'
+      ? SCALE_MELODY[Math.floor(rand() * SCALE_MELODY.length)]
+      : st.pitch;
+    const roll: 1 | 2 | 3 | 4 = track.sound === 'hihat' && active && rand() < 0.25 ? (rand() < 0.5 ? 2 : 3) : 1;
+    return { active, velocity: active ? 90 + Math.floor(rand() * 32) : 80, pitch, roll };
+  });
+  return { ...track, steps };
+}
+
+export function randomizeBeat(source: BeatProject, seed = Date.now()): BeatProject {
+  return {
+    ...source,
+    id: `random-${Date.now()}`,
+    name: `Random Groove · ${source.bpm} BPM`,
+    tracks: source.tracks.map((tr, idx) => fillTrackSteps(tr, 'random', seed + idx * 997)),
+    createdAt: Date.now(),
+  };
+}
+
 export function serializeBeat(project: BeatProject): string {
   const compact = {
     v: 1,

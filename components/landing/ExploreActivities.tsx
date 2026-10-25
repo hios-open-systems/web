@@ -19,9 +19,9 @@ const journeys = {
     ['tool:ohms-law', '/workbench/ohms-law', 'Ohm'],
   ],
   audio: [
+    ['tool:chiptune', '/composer', 'Chiptune'],
+    ['tool:beatmaker', '/workbench/beatmaker', 'Beatmaker'],
     ['tool:guitar-tuner', '/workbench/guitar-tuner', 'Tuner'],
-    ['tool:metronome', '/workbench/metronome', 'BPM'],
-    ['tool:chiptune', '/workbench/chiptune', 'Chiptune'],
   ],
   ai: [
     ['tool:llm-vram-calc', '/workbench/llm-vram-calc', 'VRAM'],
@@ -51,6 +51,7 @@ export function ExploreActivities({ heading = true }: { heading?: boolean }) {
         </div>
         <p>{lab('exploreSubtitle')}</p>
       </header>
+      <StudioSpotlight locale={locale} />
       <div className={styles.activityGrid}>
         {activities.map((activity, index) => (
           <ActivityCard key={activity} activity={activity} index={index} />
@@ -60,6 +61,43 @@ export function ExploreActivities({ heading = true }: { heading?: boolean }) {
         {t('external')} <ArrowUpOutlined rotate={45} />
       </Link>
     </section>
+  );
+}
+
+function StudioSpotlight({ locale }: { locale: string }) {
+  const packs = useTranslations('Workbench.packs');
+  const w = useTranslations('Workbench');
+  return (
+    <div className={styles.studioSpotlight} data-reveal>
+      <Link href={`/${locale}/composer`} className={styles.studioCard} data-studio="chiptune">
+        <div className={styles.studioMeta}>
+          <span>SYNTH—01 / 8-BIT &amp; RETRO</span>
+          <ArrowUpOutlined rotate={45} />
+        </div>
+        <h3>{packs('chiptune.title')}</h3>
+        <p>{packs('chiptune.description')}</p>
+        <div className={styles.studioTags}>
+          <span>PIANO ROLL</span>
+          <span>PROCEDURAL</span>
+          <span>MIDI / WAV / MP3</span>
+          <strong className={styles.studioCta}>{w('toolCta')} →</strong>
+        </div>
+      </Link>
+      <Link href={`/${locale}/workbench/beatmaker`} className={styles.studioCard} data-studio="beatmaker">
+        <div className={styles.studioMeta}>
+          <span>DRUM—08 / URBAN LOOPER DAW</span>
+          <ArrowUpOutlined rotate={45} />
+        </div>
+        <h3>{packs('beatmaker.title')}</h3>
+        <p>{packs('beatmaker.description')}</p>
+        <div className={styles.studioTags}>
+          <span>808 SUB-BASS</span>
+          <span>TRAP / BOOMBAP</span>
+          <span>16-STEP PADS</span>
+          <strong className={styles.studioCta}>{w('toolCta')} →</strong>
+        </div>
+      </Link>
+    </div>
   );
 }
 
