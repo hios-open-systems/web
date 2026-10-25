@@ -19,7 +19,7 @@ const journeys = {
     ['tool:ohms-law', '/workbench/ohms-law', 'Ohm'],
   ],
   audio: [
-    ['tool:chiptune', '/composer', 'Chiptune'],
+    ['tool:chiptune', '/workbench/chiptune', 'Chiptune'],
     ['tool:beatmaker', '/workbench/beatmaker', 'Beatmaker'],
     ['tool:guitar-tuner', '/workbench/guitar-tuner', 'Tuner'],
   ],
