@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="937" viewBox="0 0 1120 937">
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="1104" viewBox="0 0 1120 1104">
 <title>HIOS Node AI — esquema de cableado</title>
 <style>
 text{font-family:ui-monospace,Menlo,Consolas,monospace;fill:#111}
@@ -10,82 +10,108 @@ text{font-family:ui-monospace,Menlo,Consolas,monospace;fill:#111}
 .rail{fill:#fff8e6;stroke:#b7791f}.railname{font-size:12px;font-weight:700}
 .wire{stroke:#1d4ed8;stroke-width:1.5;fill:none}.flag{stroke:#b00020;stroke-dasharray:5 3}.dot{fill:#1d4ed8}
 </style>
-<rect width="1120" height="937" fill="#ffffff"/>
-<text x="32" y="36" class="title">HIOS Node AI — esquema de cableado (rev —)</text>
-<text x="32" y="58" class="meta">MCU: ESP32-S3-DevKitC-1 (N16R8) · pines desde projects/hios-node-ai/PINOUT.md (firmware: src/main.cpp)</text>
-<text x="32" y="76" class="meta">BORRADOR — generado de la documentación; no hay firmware que lo confirme por completo. No soldar hasta resolver las advertencias.</text>
-<text x="32" y="100" class="warn">⚠ NO ARMABLE TODAVÍA: PINOUT.md y src/main.cpp ponen OLED SCL en GPIO22, que no existe en el ESP32-S3 (GPIO 0–21 y 26–48). Hay que</text>
-<text x="32" y="116" class="warn">elegir otro pin y actualizar ambos.</text>
-<text x="32" y="132" class="warn">⚠ src/main.cpp solo usa botón (4), LED (2) e I2C (21/22). El micrófono INMP441 y el MAX98357A están documentados pero el firmware</text>
-<text x="32" y="148" class="warn">todavía no los usa.</text>
-<text x="32" y="164" class="warn">⚠ No está documentado cómo se obtiene el riel 5V desde una sola 18650 + TP4056 (3.0–4.2V). Falta definir regulación/boost.</text>
-<rect x="600" y="192" width="488" height="49" class="mod"/>
-<text x="612" y="210" class="modname">Energía</text>
-<text x="612" y="228" class="power">18650 + TP4056 (USB-C) · el camino a 5V no está documentado</text>
-<rect x="600" y="255" width="488" height="121" class="mod"/>
-<text x="612" y="273" class="modname">Micrófono INMP441 (I2S)</text>
-<text x="612" y="291" class="power">VDD → 3V3 · GND → GND · L/R → GND (canal izquierdo)</text>
-<circle cx="600" cy="312" r="3" class="dot"/>
-<text x="612" y="316" class="pin">I2S Mic SCK: → SCK/BCLK del INMP441</text>
-<circle cx="600" cy="336" r="3" class="dot"/>
-<text x="612" y="340" class="pin">I2S Mic WS: → WS/LRC del INMP441</text>
-<circle cx="600" cy="360" r="3" class="dot"/>
-<text x="612" y="364" class="pin">I2S Mic SD: ← SD/DOUT del INMP441</text>
-<rect x="600" y="390" width="488" height="136" class="mod"/>
-<text x="612" y="408" class="modname">MAX98357A (I2S)</text>
-<text x="612" y="426" class="power">VIN → 5V · GND → GND · GAIN → GND</text>
-<text x="612" y="441" class="power">carga: Parlante 4Ω 3W</text>
-<circle cx="600" cy="462" r="3" class="dot"/>
-<text x="612" y="466" class="pin">I2S Amp BCLK: → BCLK del MAX98357A</text>
-<circle cx="600" cy="486" r="3" class="dot"/>
-<text x="612" y="490" class="pin">I2S Amp LRC: → LRC del MAX98357A</text>
-<circle cx="600" cy="510" r="3" class="dot"/>
-<text x="612" y="514" class="pin">I2S Amp DIN: → DIN del MAX98357A</text>
-<rect x="600" y="540" width="488" height="97" class="mod"/>
-<text x="612" y="558" class="modname">OLED SSD1306 0.96&quot; (I2C 0x3C)</text>
-<text x="612" y="576" class="power">VCC → 3V3 · GND → GND</text>
-<circle cx="600" cy="597" r="3" class="dot"/>
-<text x="612" y="601" class="pin">I2C SDA: → SDA del OLED</text>
-<circle cx="600" cy="621" r="3" class="dot"/>
-<text x="612" y="625" class="pin">I2C SCL: → SCL del OLED</text>
-<rect x="600" y="651" width="488" height="97" class="mod"/>
-<text x="612" y="669" class="modname">Botón PTT + LED de estado</text>
-<text x="612" y="687" class="power">botón a GND · LED vía 330Ω a GND</text>
-<circle cx="600" cy="708" r="3" class="dot"/>
-<text x="612" y="712" class="pin">Botón PTT: → pulsador → GND (INPUT_PULLUP)</text>
-<circle cx="600" cy="732" r="3" class="dot"/>
-<text x="612" y="736" class="pin">LED estado: → 330Ω → LED → GND</text>
-<rect x="32" y="192" width="300" height="556" class="mcu"/>
-<text x="44" y="212" class="modname">ESP32-S3-DevKitC-1 (N16R8)</text>
-<text x="320" y="316" class="gpio">I2S Mic SCK · GPIO42</text>
-<path d="M332 312 H600" class="wire"/>
-<text x="320" y="340" class="gpio">I2S Mic WS · GPIO41</text>
-<path d="M332 336 H600" class="wire"/>
-<text x="320" y="364" class="gpio">I2S Mic SD · GPIO40</text>
-<path d="M332 360 H600" class="wire"/>
-<text x="320" y="466" class="gpio">I2S Amp BCLK · GPIO15</text>
-<path d="M332 462 H600" class="wire"/>
-<text x="320" y="490" class="gpio">I2S Amp LRC · GPIO16</text>
-<path d="M332 486 H600" class="wire"/>
-<text x="320" y="514" class="gpio">I2S Amp DIN · GPIO17</text>
-<path d="M332 510 H600" class="wire"/>
-<text x="320" y="601" class="gpio">I2C SDA · GPIO21</text>
-<path d="M332 597 H600" class="wire"/>
-<text x="320" y="625" class="gpio">I2C SCL · GPIO22</text>
-<path d="M332 621 H600" class="wire flag"/>
-<text x="320" y="712" class="gpio">Botón PTT · GPIO4</text>
-<path d="M332 708 H600" class="wire"/>
-<text x="320" y="736" class="gpio">LED estado · GPIO2</text>
-<path d="M332 732 H600" class="wire"/>
-<text x="32" y="778" class="meta">Línea roja punteada = el pin tiene una nota: leela en hardware/README.md antes de soldar.</text>
-<text x="32" y="802" class="modname">Rieles de alimentación</text>
-<rect x="32" y="808" width="1056" height="25" class="rail"/>
-<text x="44" y="823" class="railname">5V</text>
-<text x="252" y="823" class="power">MAX98357A VIN · 220µF cerca del ampli</text>
-<rect x="32" y="841" width="1056" height="25" class="rail"/>
-<text x="44" y="856" class="railname">3V3</text>
-<text x="252" y="856" class="power">INMP441 VDD · OLED VCC</text>
-<rect x="32" y="874" width="1056" height="25" class="rail"/>
-<text x="44" y="889" class="railname">GND común</text>
-<text x="252" y="889" class="power">todos los módulos</text>
+<rect width="1120" height="1104" fill="#ffffff"/>
+<text x="32" y="36" class="title">HIOS Node AI — esquema de cableado (rev 1.0)</text>
+<text x="32" y="58" class="meta">MCU: ESP32-S3-DevKitC-1 (N16R8) · pines desde projects/hios-node-ai/src/main.cpp</text>
+<text x="32" y="76" class="meta">Generado por scripts/gen-hardware-docs.ts. Pines verificados contra el firmware por npm test. Cableado entre módulos, no una PCB.</text>
+<text x="32" y="100" class="warn">⚠ Diseño completo pero todavía no armado ni compilado: probalo módulo por módulo con la checklist antes de cerrar la caja.</text>
+<text x="32" y="116" class="warn">⚠ El micrófono queda cableado y reservado (GPIO40–42); el firmware aún no lo lee. Para voz hace falta además un servidor de</text>
+<text x="32" y="132" class="warn">transcripción en la PC: Ollama solo recibe texto.</text>
+<text x="32" y="160" class="modname">Camino de la energía</text>
+<rect x="32" y="170" width="152.66666666666666" height="34" class="rail"/>
+<text x="40" y="191" class="railname">18650 (1S)</text>
+<rect x="212.66666666666666" y="170" width="152.66666666666666" height="34" class="rail"/>
+<text x="220.66666666666666" y="191" class="railname">TP4056 + DW01A</text>
+<path d="M186.66666666666666 187 H208.66666666666666" class="wire"/><path d="M203.66666666666666 182 L209.66666666666666 187 L203.66666666666666 192" class="wire"/>
+<rect x="393.3333333333333" y="170" width="152.66666666666666" height="34" class="rail"/>
+<text x="401.3333333333333" y="191" class="railname">SW1</text>
+<path d="M367.3333333333333 187 H389.3333333333333" class="wire"/><path d="M384.3333333333333 182 L390.3333333333333 187 L384.3333333333333 192" class="wire"/>
+<rect x="574" y="170" width="152.66666666666666" height="34" class="rail"/>
+<text x="582" y="191" class="railname">U3V40F5 5V</text>
+<path d="M548 187 H570" class="wire"/><path d="M565 182 L571 187 L565 192" class="wire"/>
+<rect x="754.6666666666666" y="170" width="152.66666666666666" height="34" class="rail"/>
+<text x="762.6666666666666" y="191" class="railname">SS34</text>
+<path d="M728.6666666666666 187 H750.6666666666666" class="wire"/><path d="M745.6666666666666 182 L751.6666666666666 187 L745.6666666666666 192" class="wire"/>
+<rect x="935.3333333333333" y="170" width="152.66666666666666" height="34" class="rail"/>
+<text x="943.3333333333333" y="191" class="railname">DevKit 5V → LDO 3V3</text>
+<path d="M909.3333333333333 187 H931.3333333333333" class="wire"/><path d="M926.3333333333333 182 L932.3333333333333 187 L926.3333333333333 192" class="wire"/>
+<rect x="600" y="224" width="488" height="64" class="mod"/>
+<text x="612" y="242" class="modname">Energía 1S → 5V</text>
+<text x="612" y="260" class="power">18650 → TP4056 con protección → SW1 → Pololu U3V40F5 (5V) → SS34 →</text>
+<text x="612" y="275" class="power">pin 5V del DevKit · 5V del boost → MAX98357A</text>
+<rect x="600" y="302" width="488" height="73" class="mod"/>
+<text x="612" y="320" class="modname">Medición de batería</text>
+<text x="612" y="338" class="power">divisor 100k/100k desde la salida del switch + 100nF a GND</text>
+<circle cx="600" cy="359" r="3" class="dot"/>
+<text x="612" y="363" class="pin">VBAT ADC: ← punto medio del divisor 100k/100k (4.2V → 2.1V)</text>
+<rect x="600" y="389" width="488" height="121" class="mod"/>
+<text x="612" y="407" class="modname">Micrófono INMP441 (I2S)</text>
+<text x="612" y="425" class="power">VDD → 3V3 · GND → GND · L/R → GND (canal izquierdo)</text>
+<circle cx="600" cy="446" r="3" class="dot"/>
+<text x="612" y="450" class="pin">I2S Mic SCK: → SCK del INMP441</text>
+<circle cx="600" cy="470" r="3" class="dot"/>
+<text x="612" y="474" class="pin">I2S Mic WS: → WS del INMP441</text>
+<circle cx="600" cy="494" r="3" class="dot"/>
+<text x="612" y="498" class="pin">I2S Mic SD: ← SD del INMP441</text>
+<rect x="600" y="524" width="488" height="136" class="mod"/>
+<text x="612" y="542" class="modname">MAX98357A (I2S)</text>
+<text x="612" y="560" class="power">VIN → 5V del boost · GND → GND · GAIN → GND (12 dB) · SD → VIN</text>
+<text x="612" y="575" class="power">carga: Parlante 4Ω 3W a OUT+ / OUT− (ningún borne a GND)</text>
+<circle cx="600" cy="596" r="3" class="dot"/>
+<text x="612" y="600" class="pin">I2S Amp BCLK: → BCLK del MAX98357A</text>
+<circle cx="600" cy="620" r="3" class="dot"/>
+<text x="612" y="624" class="pin">I2S Amp LRC: → LRC del MAX98357A</text>
+<circle cx="600" cy="644" r="3" class="dot"/>
+<text x="612" y="648" class="pin">I2S Amp DIN: → DIN del MAX98357A</text>
+<rect x="600" y="674" width="488" height="97" class="mod"/>
+<text x="612" y="692" class="modname">OLED SSD1306 0.96&quot; (I2C 0x3C)</text>
+<text x="612" y="710" class="power">VCC → 3V3 · GND → GND</text>
+<circle cx="600" cy="731" r="3" class="dot"/>
+<text x="612" y="735" class="pin">I2C SDA: → SDA del OLED</text>
+<circle cx="600" cy="755" r="3" class="dot"/>
+<text x="612" y="759" class="pin">I2C SCL: → SCL del OLED</text>
+<rect x="600" y="785" width="488" height="97" class="mod"/>
+<text x="612" y="803" class="modname">Botón PTT + LED de estado</text>
+<text x="612" y="821" class="power">botón a GND · LED vía 330Ω a GND</text>
+<circle cx="600" cy="842" r="3" class="dot"/>
+<text x="612" y="846" class="pin">Botón PTT: → pulsador → GND (INPUT_PULLUP)</text>
+<circle cx="600" cy="866" r="3" class="dot"/>
+<text x="612" y="870" class="pin">LED estado: → 330Ω → ánodo del LED; cátodo → GND</text>
+<rect x="32" y="224" width="300" height="658" class="mcu"/>
+<text x="44" y="244" class="modname">ESP32-S3-DevKitC-1 (N16R8)</text>
+<text x="320" y="363" class="gpio">VBAT ADC · GPIO1</text>
+<path d="M332 359 H600" class="wire"/>
+<text x="320" y="450" class="gpio">I2S Mic SCK · GPIO42</text>
+<path d="M332 446 H600" class="wire"/>
+<text x="320" y="474" class="gpio">I2S Mic WS · GPIO41</text>
+<path d="M332 470 H600" class="wire"/>
+<text x="320" y="498" class="gpio">I2S Mic SD · GPIO40</text>
+<path d="M332 494 H600" class="wire"/>
+<text x="320" y="600" class="gpio">I2S Amp BCLK · GPIO15</text>
+<path d="M332 596 H600" class="wire"/>
+<text x="320" y="624" class="gpio">I2S Amp LRC · GPIO16</text>
+<path d="M332 620 H600" class="wire"/>
+<text x="320" y="648" class="gpio">I2S Amp DIN · GPIO17</text>
+<path d="M332 644 H600" class="wire"/>
+<text x="320" y="735" class="gpio">I2C SDA · GPIO8</text>
+<path d="M332 731 H600" class="wire"/>
+<text x="320" y="759" class="gpio">I2C SCL · GPIO9</text>
+<path d="M332 755 H600" class="wire"/>
+<text x="320" y="846" class="gpio">Botón PTT · GPIO4</text>
+<path d="M332 842 H600" class="wire"/>
+<text x="320" y="870" class="gpio">LED estado · GPIO2</text>
+<path d="M332 866 H600" class="wire"/>
+<text x="32" y="936" class="modname">Rieles de alimentación</text>
+<rect x="32" y="942" width="1056" height="25" class="rail"/>
+<text x="44" y="957" class="railname">BAT (3.0–4.2V)</text>
+<text x="252" y="957" class="power">TP4056 OUT+ → SW1 → U3V40F5 VIN · divisor VBAT</text>
+<rect x="32" y="975" width="1056" height="25" class="rail"/>
+<text x="44" y="990" class="railname">5V</text>
+<text x="252" y="990" class="power">U3V40F5 VOUT → MAX98357A VIN + 220µF · U3V40F5 VOUT → SS34 → DevKit 5V (J1 pin 21)</text>
+<rect x="32" y="1008" width="1056" height="25" class="rail"/>
+<text x="44" y="1023" class="railname">3V3</text>
+<text x="252" y="1023" class="power">LDO del DevKit (J1 pin 1) → INMP441 VDD · OLED VCC</text>
+<rect x="32" y="1041" width="1056" height="25" class="rail"/>
+<text x="44" y="1056" class="railname">GND común</text>
+<text x="252" y="1056" class="power">TP4056 OUT− · U3V40F5 GND · DevKit G · todos los módulos</text>
 </svg>

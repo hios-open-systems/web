@@ -24,7 +24,7 @@
  * PINOUT:
  * - I2S: DIN=GPIO25, BCLK=GPIO26, LRC=GPIO27
  * - I2C: SDA=GPIO21, SCL=GPIO22
- * - VBAT: GPIO34 (divisor 100k/100k)
+ * - VBAT: GPIO34 (divisor 270k/100k + 100nF: 8.4V -> 2.27V)
  *
  * License: MIT
  */
@@ -71,7 +71,7 @@ const char* OTA_PASSWORD = "hios";
 // Bateria
 #define VBAT_PIN      34
 #define VBAT_ENABLED  true
-#define VBAT_MULT     2.0
+#define VBAT_MULT     3.7   // (270k + 100k) / 100k
 #define VBAT_MIN      6.0
 #define VBAT_MAX      8.4
 
@@ -207,12 +207,14 @@ void readBattery() {
         return;
     }
 
+    // analogReadMilliVolts usa la calibracion de fabrica del ADC: mas exacto
+    // que escalar analogRead() con 3.3V, que no es lineal cerca de los extremos.
     long sum = 0;
     for (int i = 0; i < 10; i++) {
-        sum += analogRead(VBAT_PIN);
+        sum += analogReadMilliVolts(VBAT_PIN);
         delay(1);
     }
-    float adcVoltage = (sum / 10.0 / 4095.0) * 3.3;
+    float adcVoltage = sum / 10.0 / 1000.0;
     batteryVoltage = adcVoltage * VBAT_MULT;
     batteryPercent = constrain(::map(batteryVoltage * 100, VBAT_MIN * 100, VBAT_MAX * 100, 0, 100), 0, 100);
 }

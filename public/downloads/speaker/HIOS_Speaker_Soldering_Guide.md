@@ -11,7 +11,7 @@
 - [ ] LCD I2C con dirección verificada (0x27 o 0x3F)
 - [ ] Polaridad de baterías verificada
 - [ ] Celdas 18650 con voltaje similar (dif < 0.1V)
-- [ ] Resistencias 100kΩ verificadas (si se usa medición batería)
+- [ ] Resistencias 270kΩ + 100kΩ y capacitor 100nF verificados (medición de batería)
 
 ---
 
@@ -85,15 +85,15 @@
 
 ## ■ CONEXIONES - BATERÍA (opcional)
 
-> ⚠️ **NO CONECTES ESTE DIVISOR A UN PACK 2S.** Con 100k/100k, 8.4V (pack cargado) dan 4.2V sobre GPIO34, por encima de lo que tolera el ADC del ESP32. Rediseñá el divisor y recalibrá el firmware antes de conectarlo. Ver la guía verificada: https://openhios.dev/pinouts/speaker
+> ✅ **Divisor corregido para 2S: R1 = 270kΩ (arriba), R2 = 100kΩ (abajo) y 100nF de GPIO34 a GND.** 8.4V → 2.27V, dentro del rango recomendado del ADC del ESP32 a 11 dB (150–2450 mV). El firmware escala ×3.7 (`VBAT_MULT`). Guía verificada: https://openhios.dev/pinouts/speaker
 
 | # | DESDE | HACIA | ✓ |
 |---|-------|-------|---|
-| 28 | VBAT+ | R1 (100kΩ) | ☐ |
+| 28 | VBAT+ | R1 (270kΩ) | ☐ |
 | 29 | R1 ↔ R2 | ESP32 GPIO 34 | ☐ |
 | 30 | R2 (100kΩ) | GND | ☐ |
 
-**Divisor resistivo:** `VBAT → R1(100k) → GPIO34 → R2(100k) → GND`
+**Divisor resistivo:** `VBAT → R1(270k) → GPIO34 → R2(100k) → GND` + 100nF de GPIO34 a GND
 
 ---
 

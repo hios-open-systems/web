@@ -16,9 +16,11 @@ const TARGETS: Record<string, string[]> = {
   btdac: ['projects/btdac/HIOS_BTDAC_Soldering_Guide.pdf', 'public/downloads/btdac/HIOS_BTDAC_Soldering_Guide.pdf'],
   speaker: ['projects/speaker/HIOS_Speaker_Soldering_Guide.pdf', 'public/downloads/speaker/HIOS_Speaker_Soldering_Guide.pdf'],
   pad: ['projects/pad/hardware/HIOS_PAD_Soldering_Guide.pdf'],
+  'hios-node-ai': ['projects/hios-node-ai/hardware/HIOS_Node_AI_Soldering_Guide.pdf'],
 };
 
-const browser = await chromium.launch();
+// CHROMIUM_PATH: usar un Chromium ya instalado si el de Playwright no está descargado.
+const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
 for (const design of HARDWARE_DESIGNS) {
   const [first, ...copies] = TARGETS[design.slug] ?? [];
   if (!first) continue;

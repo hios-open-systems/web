@@ -1,12 +1,18 @@
 qty,part,role,notes,source
-1,ESP32-S3-DevKitC-1 (N16R8),MCU,,projects/hios-node-ai/COMPONENTS.md
-1,INMP441,Micrófono MEMS I2S,firmware aún no lo usa,projects/hios-node-ai/COMPONENTS.md
-1,MAX98357A,Amplificador I2S mono,firmware aún no lo usa,projects/hios-node-ai/COMPONENTS.md
-1,"OLED 0.96"" SSD1306 (I2C 0x3C)",Pantalla de estado,,projects/hios-node-ai/COMPONENTS.md
+1,ESP32-S3-DevKitC-1 (N16R8),MCU,16MB flash + 8MB PSRAM octal,projects/hios-node-ai/COMPONENTS.md
+1,INMP441 breakout,Micrófono MEMS I2S,VDD a 3V3; firmware aún no lo lee,projects/hios-node-ai/COMPONENTS.md
+1,MAX98357A breakout,Amplificador I2S mono,2.5–5.5V; 3.2W en 4Ω a 5V,projects/hios-node-ai/COMPONENTS.md
+1,"OLED 0.96"" SSD1306 I2C (0x3C)",Pantalla de estado,,projects/hios-node-ai/COMPONENTS.md
 1,Pulsador 6×6,Botón PTT,,projects/hios-node-ai/COMPONENTS.md
 1,LED 3mm difuso,Indicador de estado,,projects/hios-node-ai/COMPONENTS.md
 1,Resistencia 330Ω,Serie del LED,,projects/hios-node-ai/COMPONENTS.md
 1,Parlante 4Ω 3W (40mm),Salida acústica,,projects/hios-node-ai/COMPONENTS.md
-1,Cargador TP4056 USB-C,Carga de batería,,projects/hios-node-ai/COMPONENTS.md
-1,Celda 18650,Alimentación,falta definir cómo se obtiene 5V,projects/hios-node-ai/COMPONENTS.md
-1,Capacitor 220µF,Desacople 5V cerca del MAX98357A,,projects/hios-node-ai/PINOUT.md
+1,Cargador TP4056 USB-C con protección (DW01A + FS8205A),Carga 4.2V y protección de la celda,"usar la versión con OUT+/OUT−; corte por descarga 2.4V, sobrecorriente ~3A",projects/hios-node-ai/COMPONENTS.md
+1,Celda 18650 + portapilas 1S,Alimentación,,projects/hios-node-ai/COMPONENTS.md
+1,Pololu U3V40F5 (step-up 5V),Riel 5V desde la celda,arranca con ≥2.7V; hasta 4A de entrada; pololu.com/product/4012,projects/hios-node-ai/COMPONENTS.md
+1,Resistencia 22kΩ,EN del U3V40F5 → GND,corte por baja tensión ≈3.06V,projects/hios-node-ai/COMPONENTS.md
+1,"Diodo Schottky SS34 (3A, 40V)",Boost → pin 5V del DevKit,evita conflicto con el USB,projects/hios-node-ai/COMPONENTS.md
+1,Interruptor deslizante SW1,Encendido (salida del TP4056),que soporte ≥3A,projects/hios-node-ai/COMPONENTS.md
+2,Resistencia 100kΩ,Divisor VBAT → GPIO1,4.2V → 2.1V,projects/hios-node-ai/COMPONENTS.md
+1,Capacitor 100nF,Filtro del ADC en GPIO1,,projects/hios-node-ai/COMPONENTS.md
+1,Capacitor 220µF,Reserva en VIN del MAX98357A,,projects/hios-node-ai/PINOUT.md

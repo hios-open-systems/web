@@ -49,7 +49,6 @@ text{font-family:ui-monospace,Menlo,Consolas,monospace;fill:#111}
 <path d="M332 391 H600" class="wire"/>
 <text x="320" y="419" class="gpio">LED B · GPIO17</text>
 <path d="M332 415 H600" class="wire"/>
-<text x="32" y="461" class="meta">Línea roja punteada = el pin tiene una nota: leela en hardware/README.md antes de soldar.</text>
 <text x="32" y="485" class="modname">Rieles de alimentación</text>
 <rect x="32" y="491" width="1056" height="25" class="rail"/>
 <text x="44" y="506" class="railname">5V</text>

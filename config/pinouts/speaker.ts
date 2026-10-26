@@ -7,7 +7,7 @@ export const SPEAKER_WIRING: WiringGuide = {
     subtitle: 'Parlante ESP32 con 2× MAX98357 I2S en stereo, LCD 16×2 I2C y batería 2S.',
     rev: '1.0',
     mcu: 'ESP32-WROOM-32',
-    note: 'Referencia del cableado del firmware. Verificá SD para elegir el canal. El divisor 100k/100k del firmware no es apto para una batería 2S cargada: rediseñalo y recalibrá antes de conectar GPIO34.',
+    note: 'Referencia del cableado del firmware. Verificá SD para elegir el canal. VBAT usa un divisor 270k/100k: 8.4V llegan como 2.27V a GPIO34.',
     source: 'src/main.ino',
   },
 
@@ -41,10 +41,10 @@ export const SPEAKER_WIRING: WiringGuide = {
     },
     {
       id: 'battery',
-      name: 'Medición de batería — revisar',
+      name: 'Medición de batería',
       icon: '🔋',
       rail: null,
-      power: 'Referencia del firmware: 100k/100k → GPIO34. NO conectar a 2S: 8.4V → 4.2V.',
+      power: 'pack 2S → 270k → GPIO34 → 100k → GND · 100nF de GPIO34 a GND',
       step: 4,
     },
   ],
@@ -55,7 +55,7 @@ export const SPEAKER_WIRING: WiringGuide = {
     { gpio: 27, kind: 'i2s', name: 'I2S LRC', mod: 'audio', dest: '→ LRC de ambos amplis' },
     { gpio: 21, kind: 'i2c', name: 'I2C SDA', mod: 'lcd', dest: '→ SDA del LCD 16×2 (0x27)' },
     { gpio: 22, kind: 'i2c', name: 'I2C SCL', mod: 'lcd', dest: '→ SCL del LCD' },
-    { gpio: 34, kind: 'adc', name: 'VBAT ADC', mod: 'battery', dest: 'Firmware: divisor 100k/100k (×2), pendiente de rediseño para 2S', note: 'GPIO34 es solo entrada. A 8.4V este divisor entrega 4.2V: no lo conectes al ADC del ESP32.' },
+    { gpio: 34, kind: 'adc', name: 'VBAT ADC', mod: 'battery', dest: '← punto medio del divisor 270k/100k (×3.7): 8.4V → 2.27V, 6.0V → 1.62V', note: 'GPIO34 es solo entrada. Con 270k/100k queda dentro del rango recomendado del ADC a 11 dB (≤2.45V).' },
   ],
 
   rails: [
@@ -68,10 +68,10 @@ export const SPEAKER_WIRING: WiringGuide = {
       t: '⚡ Energía',
       group: 'power',
       ascii: `2× 18650 (2S) ─► BMS/cargador USB-C ─► LM2596 (5.0V, ≥2–3A) ─► ESP32 VIN + 2× ampli Vin + LCD`,
-      tip: 'Los parlantes aumentan el pico: buck **≥2–3A** y capacitor de reserva. **No conectes el divisor 100k/100k del firmware a 2S**: 8.4V se convierten en 4.2V sobre GPIO34. Dimensioná el divisor para el rango del ADC y las tolerancias; después actualizá la escala y calibración del firmware.',
+      tip: 'Los parlantes aumentan el pico: buck **≥2–3A** y capacitor de reserva. Divisor de batería **270k (arriba) / 100k (abajo)** + **100nF** de GPIO34 a GND: 8.4V → 2.27V, dentro del rango recomendado del ADC a 11 dB. El firmware escala ×3.7 (`VBAT_MULT`).',
       rows: [
         { pin: 'VIN', kind: 'pwr5', nm: 'ESP32 5V', to: 'del LM2596 OUT+' },
-        { pin: '34', kind: 'adc', nm: 'VBAT (pendiente de revisión)', to: '100k/100k (×2): 8.4V → 4.2V; NO conectar a GPIO34' },
+        { pin: '34', kind: 'adc', nm: 'VBAT', to: 'pack+ → 270k → GPIO34 → 100k → GND · 100nF a GND' },
         { pin: 'GND', kind: 'gnd', nm: 'Masa común', to: 'todo junto' },
       ],
     },
@@ -92,7 +92,7 @@ export const SPEAKER_WIRING: WiringGuide = {
     'MEDÍ cada pin SD. Usá el cálculo de SD y las ventanas garantizadas de cada canal, incluyendo el pull-up de la placa si existe.',
     'GAIN flotante = 9 dB · parlante 4–8Ω directo (filterless)',
     'LCD I2C: SDA=21 / SCL=22, dirección 0x27; verificá niveles lógicos seguros antes de conectar',
-    'VBAT: reemplazá el divisor 100k/100k antes de conectar 2S a IO34 y actualizá la escala/calibración del firmware',
+    'VBAT: divisor 270k/100k + 100nF; GPIO34 mide ≤2.3V con el pack cargado (8.4V)',
     'Masa común: ESP32, amplis, LCD, buck, BMS',
   ],
 

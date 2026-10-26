@@ -57,6 +57,7 @@ export function renderWiringMd(design: HwDesign, bom: BomItem[]): string {
     'Esquema: [`schematic.svg`](schematic.svg) · BOM: [`BOM.csv`](BOM.csv). Es cableado entre módulos (breakouts), no una PCB.', '',
   ];
   if (design.warnings.length) out.push('## Advertencias', '', ...design.warnings.map((w) => `- ⚠️ ${w}`), '');
+  if (design.powerChain?.length) out.push('## Camino de la energía', '', design.powerChain.join(' → '), '');
   out.push('## Conexiones por módulo', '', ...netlistMd(design));
   out.push('## Rieles', '', '| Riel | Conecta |', '|---|---|');
   out.push(...design.rails.map((r) => `| ${mdCell(r.name)} | ${mdCell(r.connects)} |`), '');

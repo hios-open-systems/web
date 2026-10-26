@@ -71,16 +71,16 @@ Guia de conexiones del proyecto. Hub de audio WiFi + Bluetooth con display LCD.
 
 **Circuito divisor resistivo:**
 
-> ⚠️ **NO CONECTES ESTE DIVISOR A UN PACK 2S.** Con 100k/100k, 8.4V (pack cargado) dan 4.2V sobre GPIO34, por encima de lo que tolera el ADC del ESP32. Rediseñá el divisor y recalibrá el firmware antes de conectarlo. Ver la guía verificada: https://openhios.dev/pinouts/speaker
+> ✅ **Divisor corregido para 2S: R1 = 270kΩ (arriba), R2 = 100kΩ (abajo) y 100nF de GPIO34 a GND.** 8.4V → 2.27V, dentro del rango recomendado del ADC del ESP32 a 11 dB (150–2450 mV). El firmware escala ×3.7 (`VBAT_MULT`). Guía verificada: https://openhios.dev/pinouts/speaker
 ```
-VBAT (7.4V) ───┬─── R1 (100kΩ) ───┬─── R2 (100kΩ) ───┬─── GND
+VBAT (7.4V) ───┬─── R1 (270kΩ) ───┬─── R2 (100kΩ) ───┬─── GND
                │                   │                   │
                │                   └─── GPIO34         │
                │                        (max 3.3V)     │
                └───────────────────────────────────────┘
 ```
-**Nota:** Con R1=R2=100kΩ, el voltaje en GPIO34 = VBAT / 2.
-Rango: 3.0V (baterias vacias) a 4.2V (llenas) en el ADC.
+**Nota:** Con R1=270kΩ y R2=100kΩ, el voltaje en GPIO34 = VBAT / 3.7.
+Rango: 1.62V (pack a 6.0V) a 2.27V (pack a 8.4V) en el ADC.
 
 ### Parlante
 
@@ -141,7 +141,7 @@ Rango: 3.0V (baterias vacias) a 4.2V (llenas) en el ADC.
        ▼                                   ┌──────┴──────┐     │
   ┌─────────┐                              │    ESP32    │     │
   │ DIVISOR │                              │             │     │
-  │100k/100k├─────────────────────────────►│ GPIO34      │     │
+  │270k/100k├─────────────────────────────►│ GPIO34      │     │
   └─────────┘                              │             │     │
                                            │ GPIO25 ─────┼─────┼──┐
                                            │ GPIO26 ─────┼─────┼──┼──┐

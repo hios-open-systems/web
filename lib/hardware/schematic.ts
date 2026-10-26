@@ -68,6 +68,21 @@ function header(design: HwDesign, y: number): { svg: string[]; y: number } {
   return { svg, y: cy + 12 };
 }
 
+/** Cajas encadenadas con flechas: el camino de la energía de la batería al MCU. */
+function powerChainBlock(chain: string[] | undefined, y: number): { svg: string[]; y: number } {
+  if (!chain?.length) return { svg: [], y };
+  const gap = 28;
+  const w = (W - 2 * MCU_X - gap * (chain.length - 1)) / chain.length;
+  const svg = [text(MCU_X, y, 'Camino de la energía', 'modname')];
+  chain.forEach((label, i) => {
+    const x = MCU_X + i * (w + gap);
+    svg.push(`<rect x="${x}" y="${y + 10}" width="${w}" height="34" class="rail"/>`);
+    svg.push(text(x + 8, y + 31, clip(label, Math.floor(w / 7)), 'railname'));
+    if (i > 0) svg.push(`<path d="M${x - gap + 2} ${y + 27} H${x - 4}" class="wire"/><path d="M${x - 9} ${y + 22} L${x - 3} ${y + 27} L${x - 9} ${y + 32}" class="wire"/>`);
+  });
+  return { svg, y: y + 64 };
+}
+
 function moduleBlock(group: Group, y: number, mcuPinY: Map<number, number>): { svg: string[]; y: number } {
   const lines = [group.mod.power, ...(group.mod.load ? [`carga: ${group.mod.load}`] : [])].flatMap((l) => wrap(l, 68));
   const h = 26 + lines.length * 15 + group.pins.length * ROW + 8;
@@ -103,7 +118,9 @@ function mcuBlock(design: HwDesign, top: number, bottom: number, pinY: Map<numbe
 
 function railsBlock(design: HwDesign, y: number): { svg: string[]; y: number } {
   const svg = [
-    text(MCU_X, y, 'Línea roja punteada = el pin tiene una nota: leela en hardware/README.md antes de soldar.', 'meta'),
+    ...(design.pins.some((p) => p.note)
+      ? [text(MCU_X, y, 'Línea roja punteada = el pin tiene una nota: leela en hardware/README.md antes de soldar.', 'meta')]
+      : []),
     text(MCU_X, y + 24, 'Rieles de alimentación', 'modname'),
   ];
   let cy = y + 44;
@@ -130,7 +147,8 @@ text{font-family:ui-monospace,Menlo,Consolas,monospace;fill:#111}
 
 export function renderSchematicSvg(design: HwDesign): string {
   const head = header(design, 36);
-  const top = head.y;
+  const chain = powerChainBlock(design.powerChain, head.y);
+  const top = chain.y;
   const pinY = new Map<number, number>();
   const mods: string[] = [];
   let y = top;
@@ -147,7 +165,7 @@ export function renderSchematicSvg(design: HwDesign): string {
     `<title>${esc(fullTitle(design))} — esquema de cableado</title>`,
     STYLE,
     `<rect width="${W}" height="${h}" fill="#ffffff"/>`,
-    ...head.svg, ...mods, ...mcu, ...rails.svg,
+    ...head.svg, ...chain.svg, ...mods, ...mcu, ...rails.svg,
     '</svg>',
     '',
   ].join('\n');
