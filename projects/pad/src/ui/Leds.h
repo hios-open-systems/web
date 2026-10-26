@@ -3,8 +3,7 @@
 //  activa: cada Layer tiene su uint16_t color (RGB565) y aca lo expandimos a
 //  RGB888 y pintamos la tira.
 //
-//  Pin: GPIO9 (ex-divisor de batería, cfg::NEOPIXEL_PIN). Pin limpio -> UART0
-//  (43/44) queda libre para el Serial y el flasheo. Se controla por cfg::NEOPIXEL_ENABLED.
+//  Pin: pins::NEOPIXEL (Pins.h). Se controla por cfg::NEOPIXEL_ENABLED.
 //
 //  ZONAS: la tira son 2 placas de 4 LEDs encadenadas en UN pin, y encadenar no
 //  las hace dependientes (cada WS2812B tiene su controlador). Se parte en
@@ -17,8 +16,7 @@
 namespace leds {
 
 // Inicializa la tira y la deja en estado conocido (apagada). Llamar en setup()
-// JUSTO DESPUES de Serial.begin() (para que el RMT gane el pin 43 de forma
-// estable) y antes de usar setLayerColor().
+// antes de usar setLayerColor().
 void begin();
 
 // Pinta TODA la tira con el color de la capa (RGB565): pisa las zonas. Cachea: si

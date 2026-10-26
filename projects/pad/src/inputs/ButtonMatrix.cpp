@@ -60,9 +60,16 @@ void ButtonMatrix::seedInitialState() {
   // (los pines pueden leer indeterminado durante el reset).
   bool crudo[N];
   sample(crudo);
+  const uint32_t now = millis();
   for (uint8_t i = 0; i < N; i++) {
     m_btn[i].estable     = crudo[i];
     m_btn[i].lecturaPrev = crudo[i];
+    m_btn[i].tCambio     = now;
+    m_btn[i].tPress      = now;
+    // Un boton apretado AL ARRANCAR no es una pulsacion del usuario: sin esto, tPress=0
+    // hacia que el primer update() disparara LONG_PRESS al instante (p.ej. encoder
+    // apretado al encender -> ciclaba la capa). Lo marcamos como ya emitido.
+    m_btn[i].longEmitido = crudo[i];
   }
 }
 

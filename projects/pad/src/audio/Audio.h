@@ -1,9 +1,9 @@
 // ============================================================================
-//  Audio - Salida I2S a los 2x MAX98357A (bus compartido).  rev 0.9
+//  Audio - Salida I2S a los 2x MAX98357A (bus compartido).
 //
 //  Los 3 pines de I2S van a los DOS amplis. Lo unico distinto entre ellos es su
 //  pin SD, que elige el canal y NO se cablea al S3 (LEFT = SD a Vin; RIGHT = SD
-//  por 390k a Vin). O sea: el firmware manda un stream STEREO y el hardware
+//  por 360k a Vin). O sea: el firmware manda un stream STEREO y el hardware
 //  reparte. Por eso el buffer es interleaved L/R.
 //
 //  `tone()` NO bloquea al que llama: encola y una task propia renderiza. Si

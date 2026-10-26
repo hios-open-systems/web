@@ -60,7 +60,7 @@ const uiBlob = () => {
   const L = LAYERS[st.active];
   return {
     b: st.pressedMask, lay: st.active, enc: 12, sx: 2048, sy: 2048, mo: false, cf: 0, em: st.em, alt: 0,
-    mic: true, cam: false, med: true, vol: 42, tp: 5, wOff: false, bat: 255,
+    mic: true, cam: false, med: true, vol: 42, tp: 5, wOff: false,
     live: true, cpuT: 55, gpuT: 48, cpuL: 30, gpuL: 20, wOn: false, wBr: 0, wRoom: '', wTgt: '',
     layer: { i: st.active, n: L.n, color: L.color, group: L.group, count: LAYERS.length, labels: LABELS },
   };

@@ -16,7 +16,7 @@ The input subsystem (`src/inputs/` and `src/mapping/`) runs on **Core 1** of Fre
 |---|---|---|
 | **10 Action Keys (`BTN_1..10`)** | 2×5 matrix with `1N4148` diodes (cathode to row, `MTX_SETTLE_US = 30 µs`, `25 ms` debounce) | Trigger keyboard shortcuts (`kmod::CTRL/SHIFT/ALT/GUI`), media keys (`MediaUsage`), multi-step macros, text snippets, app launchers, or network commands to the companion. Every press emits a crisp I2S acoustic click (`2200 Hz`, `18 ms`). |
 | **2 `ALT` Keys (`ALT_1`, `ALT_2`)** | Direct GPIO inputs to GND with `ALT_LINGER_MS = 600 ms` grace window | **Momentary layer shifts:** holding `ALT 1` opens the **Launcher** layer (spawns 6 PC apps via companion); holding `ALT 2` opens the **Macros** layer. The 600 ms linger window prevents false releases. |
-| **Rotary Encoder (`KY-040`)** | A/B quadrature with dynamic acceleration (`ENC_ACCEL_MS = 35 ms`, `×4`, max 12 steps) + `ENC_SW` | **Rotate:** executes the active layer's rotary action (`Volume`, `Scroll`, `Zoom`, `Tabs`, or `Brightness`). **Double-tap (`220 ms`):** live-cycles the encoder override (`Layer → Volume → Scroll → Zoom → Tabs`) without leaving the current layer. **Single tap:** opens the group/layer carousel menu. **Long-press (`600 ms`):** opens Settings or goes back. |
+| **Rotary Encoder (`KY-040`)** | A/B quadrature with dynamic acceleration (`ENC_ACCEL_MS = 35 ms`, `×4`, max 12 steps) + `ENC_SW` | **Rotate:** executes the active layer's rotary action (`Volume`, `Scroll`, `Zoom`, `Tabs`, or `Brightness`). **Double-tap (`220 ms`):** live-cycles the encoder override (`Layer → Volume → Scroll → Zoom → Tabs`) without leaving the current layer. **Single tap:** opens the group/layer carousel menu. **Long-press (`600 ms`):** moves to the next layer; inside the menu, closes it. |
 | **Analog Joystick (`HW-504`)** | Powered at **3.3 V** on 12-bit ADC1 (`8 discard reads` + `4×` averaging) + `STICK_SW` | **X/Y Axes:** drives the HID mouse pointer at `40 Hz` with deadzone (`450`), slow EMA auto-recentering, and a **quadratic acceleration curve (`mouseAccel`)** for pixel-level center precision and fast screen traversal at full deflection. **Tap (`140 ms`):** left click. **Double-tap:** right click. **Long-press (`600 ms`):** toggles mouse mode. **Hold `ENC_SW + STICK_SW` (`1.5 s`):** interactive NVS calibration. |
 
 ---
@@ -27,7 +27,7 @@ The UI engine (`src/ui/` and `src/app/Theme.h`) renders over a **27 MHz HSPI** b
 
 * **Dark Mode (`MODE_DARK`) & Light Mode (`MODE_LIGHT`):** native 16-bit **RGB565** semantic tokens (`BG`, `PANEL`, `CARD`, `EDGE`, `FG`, `SOFT`, `DIM`, `DARK`) with runtime alpha blending (`theme::blend`) switchable directly on the device.
 * **7 Global Accent Colors + Per-Layer Color Identity:** the `Color` setting selects among **7 global accents** (`Cyan`, `Green`, `Magenta`, `Orange`, `Violet`, `Rose`, `Yellow`) for the header wordmark and NTP clock, while each layer carries its own RGB565 accent color.
-* **Dual-Zone WS2812B NeoPixel Lighting (`GPIO9`):** two chained 4-LED boards (**8 addressable pixels split into 2 zones**) illuminate the translucent 3D-printed enclosure with the active layer's color.
+* **Dual-Zone WS2812B NeoPixel Lighting (`GPIO38`):** two chained 4-LED boards (**8 addressable pixels split into 2 zones**) illuminate the translucent 3D-printed enclosure with the active layer's color.
 * **Partial Dirty-Check Rendering (`dash::*`):** compares consecutive `UiSnapshot` structs and redraws **only the changed region**: `dash::keycap()`, `dash::status()`, `dash::clock()`, `dash::encDial()`, or `dash::stick()`.
 * **4 Full-Screen Telemetry Monitor Views (`src/ui/monitor.cpp`):** selecting a Monitor layer replaces the 10-key grid with dedicated instrumentation screens featuring **56-sample circular history buffers** and real-time **sparklines**:
   1. **General:** **CPU & GPU** temperatures (`°C`) and load (`%`) with thermal threshold coloring (`Green < 65 °C`, `Yellow ≥ 65 °C`, `Red ≥ 80 °C`), cooler fan speed (`RPM` or `%`), **RAM**, and **VRAM** usage (`MB used / total`).
@@ -88,5 +88,5 @@ pio run -t upload
 pio device monitor -b 115200
 ```
 
-* **Verified Wiring Guide:** follow **[/pinouts/pad](/pinouts/pad)** for step-by-step assembly, 2S power safety (`SW-CELDAS`), I2S stereo channel selection (`390 kΩ` on R channel `SD`), and GPIO assignments verified by `npm run test:wiring`.
+* **Verified Wiring Guide:** follow **[/pinouts/pad](/pinouts/pad)** for step-by-step assembly, 2S power safety (`SW-CELDAS`), I2S stereo channel selection (`360 kΩ` on R channel `SD`), and GPIO assignments verified by `npm run test:wiring`.
 * **3D Printable Enclosure & Knob:** inspect and download the STL files in **[Maker (/prints#prints-pad)](/prints#prints-pad)**.

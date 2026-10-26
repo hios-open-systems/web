@@ -18,25 +18,25 @@ El subsistema de entrada (`src/inputs/` y `src/mapping/`) corre a alta prioridad
 |---|---|---|
 | **10 Teclas de Acción (`BTN_1..10`)** | Matriz 2×5 con diodos `1N4148` (cátodo a fila, `MTX_SETTLE_US = 30 µs`, antirrebote `25 ms`) | Disparan atajos de teclado (`kmod::CTRL/SHIFT/ALT/GUI`), teclas multimedia (`MediaUsage`), secuencias de macro multi-paso, inserción de texto, lanzamiento de apps o comandos de red al companion. Cada pulsación emite un click táctil acústico sintetizado por I2S (`2200 Hz`, `18 ms`). |
 | **2 Teclas `ALT` (`ALT_1`, `ALT_2`)** | GPIO directos a GND con ventana `ALT_LINGER_MS = 600 ms` | **Capas momentáneas rápidas:** mantener `ALT 1` abre la capa **Launcher** (lanzador de 6 aplicaciones en PC vía companion); mantener `ALT 2` abre la capa **Macros** (ejecución de secuencias programables). La ventana de 600 ms evita cierres falsos al soltar. |
-| **Encoder Rotativo (`KY-040`)** | Canal A/B con aceleración dinámica (`ENC_ACCEL_MS = 35 ms`, `×4`, tope 12 pasos) + pulsador `ENC_SW` | **Giro:** ejecuta la acción de la capa activa (`Volumen`, `Scroll`, `Zoom`, `Pestañas` o `Brillo`). **Doble-tap (`220 ms`):** cicla en vivo el override del encoder (`Capa → Volumen → Scroll → Zoom → Pestañas`) sin cambiar de capa. **Tap simple:** abre el menú carrusel de grupos. **Long-press (`600 ms`):** abre Ajustes o vuelve atrás. |
-| **Joystick Analógico (`HW-504`)** | Alimentado a **3.3 V** en ADC1 de 12 bits (`8 lecturas` de descarte S/H + promedio `4×`) + `STICK_SW` | **Ejes X/Y:** mueve el puntero del mouse a `40 Hz` con zona muerta (`450`), auto-recentrado lento EMA y **curva de aceleración cuadrática (`mouseAccel`)** para precisión fina en el centro y desplazamiento rápido en los extremos. **Tap (`140 ms`):** click izquierdo. **Doble-tap:** click derecho. **Long-press (`600 ms`):** activa/desactiva modo mouse. **Combo `ENC_SW + STICK_SW` (`1.5 s`):** calibración interactiva guardada en NVS. |
+| **Encoder Rotativo (`KY-040`)** | Canal A/B con aceleración dinámica (`ENC_ACCEL_MS = 35 ms`, `×4`, tope 12 pasos) + pulsador `ENC_SW` | **Giro:** ejecuta la acción de la capa activa (`Volumen`, `Scroll`, `Zoom`, `Pestañas` o `Brillo`). **Doble-tap (`220 ms`):** cicla en vivo el override del encoder (`Capa → Volumen → Scroll → Zoom → Pestañas`) sin cambiar de capa. **Tap simple:** abre el menú. **Long-press (`600 ms`):** pasa a la capa siguiente; dentro del menú, lo cierra. |
+| **Joystick Analógico (`HW-504`)** | Alimentado a **3.3 V** en ADC1 de 12 bits (`8 lecturas` de descarte S/H + promedio `4×`) + `STICK_SW` | **Ejes X/Y:** mueve el puntero del mouse a `40 Hz` con zona muerta (`450` sin calibrar; tras calibrar, la medida por eje), auto-recentrado lento EMA y **curva de aceleración cuadrática (`mouseAccel`)** para precisión fina en el centro y desplazamiento rápido en los extremos. **Tap (`140 ms`):** click izquierdo. **Doble-tap:** click derecho. **Long-press (`600 ms`):** activa/desactiva modo mouse. **Combo `ENC_SW + STICK_SW` (`1.5 s`):** calibración interactiva guardada en NVS. |
 
 ---
 
 ## 2. Sistema de Themes, Paleta RGB565, NeoPixel B-Zone y Vistas de Monitor
 
-La interfaz gráfica (`src/ui/` y `src/app/Theme.h`) está diseñada para operar a 60 FPS percibidos sobre bus SPI a **27 MHz** sin bloquear el servidor web ni generar parpadeos de pantalla completa:
+La interfaz gráfica (`src/ui/` y `src/app/Theme.h`) refresca cada ~50 ms sobre bus SPI a **27 MHz** sin bloquear el servidor web ni generar parpadeos de pantalla completa:
 
 * **Modo Oscuro (`MODE_DARK`) y Modo Claro (`MODE_LIGHT`):** paleta semántica en formato nativo **RGB565 de 16 bits** (`BG`, `PANEL`, `CARD`, `EDGE`, `FG`, `SOFT`, `DIM`, `DARK`) con mezcla alfa por hardware/software (`theme::blend`) configurable en vivo desde el propio PAD.
 * **7 Colores de Acento Globales + Color por Capa:** el ajuste `Color` permite elegir entre **7 acentos globales** (`Cyan`, `Green`, `Magenta`, `Orange`, `Violet`, `Rose`, `Yellow`) que tiñen la marca, el reloj NTP y los indicadores del header, mientras que cada capa define su propio color de identidad para la franja superior y los bordes activos.
-* **Iluminación NeoPixel WS2812B en 2 Zonas (`GPIO9`):** 2 placas encadenadas de 4 LEDs (**8 píxeles direccionables divididos en 2 zonas independientes**) que sincronizan automáticamente el color de la carcasa translúcida con el color de la capa activa o las alertas de estado.
+* **Iluminación NeoPixel WS2812B en 2 Zonas (`GPIO38`):** 2 placas encadenadas de 4 LEDs (**8 píxeles direccionables divididos en 2 zonas independientes**) que sincronizan automáticamente el color de la carcasa translúcida con el color de la capa activa o las alertas de estado.
 * **Renderizado Parcial por Dirty-Checking (`dash::*`):** en lugar de refrescar los `480×320` píxeles en cada ciclo, el motor compara el `UiSnapshot` actual con el anterior y redibuja **únicamente la celda modificada**: `dash::keycap()` (una sola tecla pulsada), `dash::status()` (cluster de batería, WiFi/BLE/USB y micrófono), `dash::clock()` (cambio de minuto), `dash::encDial()` (rueda del encoder) o `dash::stick()` (vector del joystick).
 * **4 Vistas de Telemetría / Monitor a Pantalla Completa (`src/ui/monitor.cpp`):** cuando seleccionás una capa del grupo Monitor, el PAD reemplaza la grilla de teclas por instrumentos dedicados con historial circular de **56 muestras** y gráficos **sparkline** en tiempo real:
   1. **General:** Temperatura (`°C`) y porcentaje de carga de **CPU y GPU** con sparklines coloreados por umbral térmico (`Verde < 65 °C`, `Amarillo ≥ 65 °C`, `Rojo ≥ 80 °C`), velocidad de ventiladores (`RPM` o `%`), uso de **RAM** y **VRAM** (`MB usados / totales`).
   2. **Red:** Tasa de transferencia de **bajada y subida** auto-escalada (`KB/s` o `MB/s`) con sparkline histórico, estado de enlace e **IP local**.
   3. **Núcleos:** Barras individuales de carga para **hasta 24 núcleos/hilos de CPU**, tiempo de actividad del sistema (`uptime`) y cantidad de procesos activos.
   4. **Disco:** Porcentaje de ocupación del volumen principal y tasas de **lectura/escritura (`KB/s` o `MB/s`)** con sparklines.
-* **Registro de Ajustes en Dispositivo (`SettingsRegistry`):** accesible desde la última página del menú carrusel, dividido en **Apariencia** (`Brillo` PWM LEDC de 8 bits a 5 kHz, `Tema` Oscuro/Claro, `Color` de acento) y **Sistema** (`Hora` NTP UTC-3, `WiFi` STA/Portal cautivo, `Calibrar` centro y rango del stick, `Precisión` de velocidad del puntero y `Dimmer` de reposo). Todo persiste en memoria no volátil **NVS**.
+* **Registro de Ajustes en Dispositivo (`SettingsRegistry`):** accesible desde la última página del menú, dividido en **Apariencia** (`Brillo` PWM LEDC de 8 bits a 5 kHz, `Tema` Oscuro/Claro, `Color` de acento) y **Sistema** (`Hora` NTP UTC-3, `WiFi` STA/Portal cautivo, `Calibrar` centro y rango del stick, `Precisión` de velocidad del puntero y `Dimmer` de reposo). Todo persiste en memoria no volátil **NVS**.
 
 ---
 
@@ -94,7 +94,7 @@ El firmware divide el trabajo entre los dos núcleos Xtensa LX7 del ESP32-S3 a 2
 
 * **`inputTask` (Core 1 — Tiempo Real):** escanea la matriz 2×5, los 2 `ALT`, el encoder KY-040 y el ADC del joystick → `Dispatcher` resuelve la acción según la capa activa → encola acciones HID y publica el `UiSnapshot`.
 * **`transportTask` (Core 1 — Tiempo Real):** consume la cola de acciones y las transmite por el transporte activo (**USB nativo TinyUSB** o **Bluetooth BLE NimBLE** con auto-switch: enchufado usa USB, desenchufado conmuta a BLE).
-* **`uiTask` (Core 0 — Motor Gráfico):** consume el último `UiSnapshot` y ejecuta el render parcial del dashboard `Cards`, de las 4 vistas de `Monitor`, del menú carrusel o del portal cautivo.
+* **`uiTask` (Core 0 — Motor Gráfico):** consume el último `UiSnapshot` y ejecuta el render parcial del dashboard `Cards`, de las 4 vistas de `Monitor`, del menú o del portal cautivo.
 * **`netTask` (Core 0 — Red y API):** administra WiFi STA, portal cautivo de configuración (`HIOS-PAD-setup`), sincronización horaria NTP (`pool.ntp.org`), mDNS (`hiospad.local`), actualizaciones OTA y el servidor HTTP (`/api/state`, `/api/config`, `/api/ui`, `/api/cmd`).
 
 ---
@@ -104,8 +104,8 @@ El firmware divide el trabajo entre los dos núcleos Xtensa LX7 del ESP32-S3 a 2
 * **Microcontrolador:** **ESP32-S3-DevKitC-1 N16R8** (16 MB Flash Quad SPI + 8 MB PSRAM Octal AP Memory a 3.3 V). *Nota: la PSRAM octal ocupa los GPIO 33–37 y la flash los GPIO 26–32.*
 * **Pantalla:** **ILI9488 4.0"** `480×320` SPI (HSPI a 27 MHz, backlight con dimming PWM LEDC de 8 bits en `BL_CANAL = 0` a 5 kHz).
 * **Controles:** **Encoder KY-040** + **Joystick HW-504** (alimentado estrictamente a **3.3 V** para no saturar el ADC1 del S3 ni acoplar ejes) + **12 pulsadores NA a GND** (10 en matriz 2×5 con diodos `1N4148` + 2 `ALT` directos).
-* **Audio Estéreo I2S:** **2× MAX98357A** compartiendo bus I2S (`BCLK`, `LRC`, `DOUT`); selección de canal por pin `SD` (Canal Izquierdo: `SD` directo a `Vin`; Canal Derecho: `SD` mediante resistor de **390 kΩ** a `Vin`).
-* **Iluminación:** **8× WS2812B (NeoPixel)** en 2 placas de 4 LEDs en serie sobre `GPIO9` (vía resistor de 330 Ω), divididas por software en 2 zonas independientes.
+* **Audio Estéreo I2S:** **2× MAX98357A** compartiendo bus I2S (`BCLK`, `LRC`, `DOUT`); selección de canal por pin `SD` (Canal Izquierdo: `SD` directo a `Vin`; Canal Derecho: `SD` mediante resistor de **360 kΩ** a `Vin`).
+* **Iluminación:** **8× WS2812B (NeoPixel)** en 2 placas de 4 LEDs en serie sobre `GPIO38` (vía resistor de 330 Ω), divididas por software en 2 zonas independientes.
 * **Alimentación:** Pack **Li-Ion 2S (2× 18650, 7.4 V nominal / 8.4 V carga)** con BMS 2S USB-C + regulador step-down **LM2596S con display voltímetro ajustado a 5.0 V** y llave de corte `SW-CELDAS`.
 * **Guía de cableado verificada paso a paso:** consultá **[/pinouts/pad](/pinouts/pad)**, verificada automáticamente contra [`src/app/Pins.h`](src/app/Pins.h) y [`platformio.ini`](platformio.ini) mediante `npm run test:wiring`.
 
@@ -126,8 +126,8 @@ pio device monitor -b 115200
 1. **Token de seguridad (`token API/OTA`):** en el primer arranque el firmware genera un token aleatorio único en NVS y lo imprime por el monitor serie. Copialo en `companion/config.json` para autenticar `POST /api/state`, `/api/config` y las actualizaciones OTA.
 2. **Precaución eléctrica al conectar USB:** con el pack 2S conectado, **abrí siempre `SW-CELDAS` antes de enchufar el cable USB** para no unir `VBUS` con la salida de `5.0 V` del buck LM2596S. Para actualizar sin tocar cables, usá **OTA por WiFi** (requiere el token de seguridad impreso al boot):
    ```bash
-   # Vía PlatformIO directo con el token impreso por serial:
-   pio run -e ota -t upload --upload-port 192.168.1.43 --upload-flags="--auth=<TOKEN>"
+   # Vía PlatformIO directo: [env:ota] lee el token de PAD_OTA_TOKEN (--auth)
+   PAD_OTA_TOKEN=<TOKEN> pio run -e ota -t upload --upload-port 192.168.1.43
 
    # O usando el script con soporte para WSL2 / Linux:
    ./flash-ota.sh 192.168.1.43 <TOKEN>
@@ -141,8 +141,7 @@ pio device monitor -b 115200
 * **Inicialización de fuentes en `TFT_eSprite`:** crear un `TFT_eSprite` deja `gfxFont` sin inicializar, lo que provocaba un *boot loop* al dibujar texto; siempre se invoca `setTextFont(1)` inmediatamente después de instanciar cada sprite.
 * **Por qué el Joystick va a 3.3 V y no a 5 V:** alimentar el potenciómetro del HW-504 a 5 V satura el rango del ADC del ESP32-S3 (~3.1 V máx. con `ADC_11db`) en el último tercio del recorrido y genera acoplamiento entre ejes (diagonales fantasma).
 * **Aislamiento de símbolos USB HID vs NimBLE:** `USBHIDKeyboard.h` y las librerías BLE definen símbolos `KEY_*` y `KeyReport` incompatibles; se aislaron en unidades de traducción separadas dentro de `src/transport/` mediante fábricas (`ITransport`).
-* **Gestión de Heap en el Menú:** el sprite del carrusel (~60 KB) se aloja al abrir el menú y se libera al cerrarlo para preservar margen de RAM interna cuando coexisten las pilas de NimBLE y WiFi.
-* **Medición de batería en el voltímetro del buck:** el divisor resistivo en `GPIO9` se descartó (`cfg::BATTERY_ENABLED = false`) porque el display del módulo LM2596S ya indica la tensión real del pack 2S en la carcasa y `GPIO9` quedó asignado como línea de datos limpia para los NeoPixels (dejando `UART0` en `43/44` libre para flasheo y logs sin parpadeos de arranque).
+* **Batería:** el pad no la mide; la tensión del pack 2S se lee en el display del módulo LM2596S.
 
 ## Créditos
 

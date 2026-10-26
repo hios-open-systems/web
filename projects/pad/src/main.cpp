@@ -80,7 +80,7 @@ public:
     appstate::lastInputMs = e.t_ms;
     lastInput = e.t_ms;
     if (e.id == InputId::ENC_ROT && e.edge == Edge::ROTATE) {
-      menu::turn(e.v1 > 0 ? +1 : -1);
+      menu::turn(e.v1);   // con signo: un giro rapido de varios detentes no pierde pasos
     } else if (e.id == InputId::ENC_SW) {
       if (e.edge == Edge::PRESS) longConsumed = false;
       else if (e.edge == Edge::LONG_PRESS) {        // sube un nivel; en nivel 1 cierra
@@ -237,29 +237,13 @@ static void renderUI(const UiSnapshot& s) {
   prev = s;
 }
 
-// Lee la bateria (2S por divisor -> ADC) y devuelve 0..100, o 255 si esta
-// desactivada (BATTERY_ENABLED=false). Muestrea cada BAT_SAMPLE_MS y cachea.
-static uint8_t readBatteryPct(uint32_t now) {
-  if (!cfg::BATTERY_ENABLED) return 255;
-  static uint32_t lastMs = 0;
-  static uint8_t  cached = 255;
-  if (lastMs != 0 && (now - lastMs) < cfg::BAT_SAMPLE_MS) return cached;
-  lastMs = now;
-  uint32_t mv = 0;
-  for (int i = 0; i < 8; i++) mv += analogReadMilliVolts(cfg::BAT_ADC_PIN);
-  mv /= 8;
-  uint32_t vbat = mv * (cfg::BAT_R1_K + cfg::BAT_R2_K) / cfg::BAT_R2_K;   // deshace el divisor
-  long pct = (long)(vbat - cfg::BAT_EMPTY_MV) * 100 / (cfg::BAT_FULL_MV - cfg::BAT_EMPTY_MV);
-  cached = (uint8_t)(pct < 0 ? 0 : pct > 100 ? 100 : pct);
-  return cached;
-}
-
 // ============================================================================
 //  Tareas
 // ============================================================================
 static void inputTask(void*) {
   DispatchSink dsink;
   MenuSink     msink;
+  WifiSink     wsink;   // vive todo el task: PRESS/LONG/RELEASE llegan en vueltas distintas
   Serial.printf("[inputTask] core %d\n", xPortGetCoreID());
   static uint32_t comboStart = 0;
   static bool     menuEntered = false;
@@ -282,7 +266,7 @@ static void inputTask(void*) {
 
     // En modo WiFi: long-press del encoder = salir; tap = reconfigurar (levantar portal).
     if (appstate::mode == AppMode::WIFI) {
-      WifiSink wsink;
+      wsink.exit = false; wsink.reconfigure = false;   // pedidos de ESTA vuelta (el estado del gesto se conserva)
       inputs.update(now, wsink);
       if (wsink.exit) { net::stopPortal(); appstate::mode = AppMode::NORMAL; uiForceRedraw(); }
       else if (wsink.reconfigure && !net::portalActive()) { net::requestPortal(); uiForceRedraw(); }
@@ -382,7 +366,6 @@ static void inputTask(void*) {
     s.transports  = tp;
     s.wifiOff     = !net::isWifiEnabled();          // aviso si el usuario apago el WiFi
 
-    s.battery     = readBatteryPct(now);            // 255 = sin medicion (BATTERY_ENABLED=false)
     xQueueOverwrite(bus::uiMailbox, &s);
 
     vTaskDelay(pdMS_TO_TICKS(2));
@@ -553,8 +536,7 @@ void setup() {
   Serial.printf("[hw] PSRAM=%u  heap=%u  flash=%u\n",
                 (unsigned)ESP.getPsramSize(), (unsigned)ESP.getFreeHeap(), (unsigned)ESP.getFlashChipSize());
 
-  // NeoPixel: inicializa la tira (GPIO9) y la deja apagada (estado conocido).
-  // GPIO9 es pin limpio -> el Serial por UART0 (43/44) sigue funcionando.
+  // NeoPixel: inicializa la tira y la deja apagada (estado conocido).
   leds::begin();
 
   // Config: intenta cargar de LittleFS (editada por la app); si no hay/invalida,
@@ -619,4 +601,17 @@ void setup() {
 
 void loop() {
   vTaskDelay(pdMS_TO_TICKS(1000));
+#ifdef STACK_DEBUG
+  // -D STACK_DEBUG en build_flags: imprime cada 10s cuanto stack le SOBRA a cada task
+  // (en bytes). Si alguno baja de ~512, subir su tamano en xTaskCreatePinnedToCore.
+  static uint8_t n = 0;
+  if (++n >= 10) {
+    n = 0;
+    const char* names[] = {"input", "transport", "ui", "net", "audio"};
+    for (const char* nm : names) {
+      TaskHandle_t h = xTaskGetHandle(nm);
+      if (h) Serial.printf("[stack] %-9s libre=%u\n", nm, (unsigned)uxTaskGetStackHighWaterMark(h));
+    }
+  }
+#endif
 }

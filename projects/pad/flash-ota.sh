@@ -31,10 +31,9 @@ echo ">> Build (WSL)..."
 pio run -d "$DIR"
 
 AUTH_ARGS=()
-PIO_AUTH_ARGS=()
 if [[ -n "$TOKEN" ]]; then
   AUTH_ARGS=(-a "$TOKEN")
-  PIO_AUTH_ARGS=(--upload-flags="--auth=$TOKEN")
+  export PAD_OTA_TOKEN="$TOKEN"         # lo lee [env:ota] (--auth=${sysenv.PAD_OTA_TOKEN})
 fi
 
 if command -v python.exe >/dev/null 2>&1; then
@@ -42,5 +41,6 @@ if command -v python.exe >/dev/null 2>&1; then
   python.exe "$(wslpath -w "$ESPOTA")" -i "$IP" -p "$PORT" "${AUTH_ARGS[@]}" -f "$(wslpath -w "$BIN")" -r
 else
   echo ">> Flash OTA (pio, Linux nativo) -> $IP"
-  pio run -d "$DIR" -t upload --upload-port "$IP" "${PIO_AUTH_ARGS[@]}"
+  # -e ota: el env por defecto sube por esptool (cable) y no entiende una IP.
+  pio run -d "$DIR" -e ota -t upload --upload-port "$IP"
 fi

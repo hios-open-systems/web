@@ -25,7 +25,8 @@ private:
   int32_t  m_driftX = 0, m_driftY = 0;  // offset de auto-recentrado: lleva el reposo real al centro de referencia
   bool     m_driftInit = false;         // snap inicial del drift hecho (mata el offset estatico al arrancar)
   uint16_t m_driftWarmup = 0;           // updates esperados antes del snap (deja asentar el EMA)
-  uint32_t m_tRecenter = 0;             // ultimo paso de seguimiento lento
+  uint32_t m_tRecenter = 0;             // ultimo paso de seguimiento rapido (dentro de la zona muerta)
+  uint32_t m_tRecenterSlow = 0;         // ultimo paso de seguimiento lento (entre zona muerta y banda)
 
   int sampleAvg(uint8_t pin) const;   // promedio de STICK_SAMPLES lecturas
 };

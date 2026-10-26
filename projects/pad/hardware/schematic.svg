@@ -20,30 +20,30 @@ text{font-family:ui-monospace,Menlo,Consolas,monospace;fill:#111}
 <text x="612" y="163" class="power">a bordo → riel 3V3</text>
 <rect x="600" y="190" width="488" height="193" class="mod"/>
 <text x="612" y="208" class="modname">Pantalla ILI9488 4&quot; (SPI)</text>
-<text x="612" y="226" class="power">VCC → 5V · GND → GND · LED → SW-PANTALLA → GPIO21</text>
+<text x="612" y="226" class="power">VCC → 5V · GND → GND · LED → SW-PANTALLA → GPIO9</text>
 <circle cx="600" cy="247" r="3" class="dot"/>
-<text x="612" y="251" class="pin">TFT CS: ILI9488 CS (chip-select)</text>
+<text x="612" y="251" class="pin">TFT backlight: LED de la TFT (PWM por LEDC) · acá va en serie el SW…</text>
 <circle cx="600" cy="271" r="3" class="dot"/>
-<text x="612" y="275" class="pin">TFT MOSI: ILI9488 SDI</text>
+<text x="612" y="275" class="pin">TFT CS: ILI9488 CS (chip-select)</text>
 <circle cx="600" cy="295" r="3" class="dot"/>
-<text x="612" y="299" class="pin">TFT SCLK: ILI9488 SCK</text>
+<text x="612" y="299" class="pin">TFT MOSI: ILI9488 SDI</text>
 <circle cx="600" cy="319" r="3" class="dot"/>
-<text x="612" y="323" class="pin">TFT DC: ILI9488 DC/RS</text>
+<text x="612" y="323" class="pin">TFT SCLK: ILI9488 SCK</text>
 <circle cx="600" cy="343" r="3" class="dot"/>
-<text x="612" y="347" class="pin">TFT RST: ILI9488 RESET</text>
+<text x="612" y="347" class="pin">TFT DC: ILI9488 DC/RS</text>
 <circle cx="600" cy="367" r="3" class="dot"/>
-<text x="612" y="371" class="pin">TFT backlight: LED de la TFT (PWM por LEDC) · acá va en serie el SW…</text>
+<text x="612" y="371" class="pin">TFT RST: ILI9488 RESET</text>
 <rect x="600" y="397" width="488" height="217" class="mod"/>
 <text x="612" y="415" class="modname">Matriz de acción 2×5 (10 teclas)</text>
 <text x="612" y="433" class="power">no se alimenta: cada tecla cierra COLUMNA → diodo → FILA</text>
 <circle cx="600" cy="454" r="3" class="dot"/>
-<text x="612" y="458" class="pin">Matriz COL 1: INPUT_PULLUP · lee ACC2 / ACC7</text>
+<text x="612" y="458" class="pin">Matriz FILA 0: OUTPUT (drive LOW) · fila de ARRIBA: ACC1–5</text>
 <circle cx="600" cy="478" r="3" class="dot"/>
-<text x="612" y="482" class="pin">Matriz FILA 0: OUTPUT (drive LOW) · fila de ARRIBA: ACC1–5</text>
+<text x="612" y="482" class="pin">Matriz FILA 1: OUTPUT (drive LOW) · fila de ABAJO: ACC6–10</text>
 <circle cx="600" cy="502" r="3" class="dot"/>
-<text x="612" y="506" class="pin">Matriz FILA 1: OUTPUT (drive LOW) · fila de ABAJO: ACC6–10</text>
+<text x="612" y="506" class="pin">Matriz COL 0: INPUT_PULLUP · lee ACC1 / ACC6</text>
 <circle cx="600" cy="526" r="3" class="dot"/>
-<text x="612" y="530" class="pin">Matriz COL 0: INPUT_PULLUP · lee ACC1 / ACC6</text>
+<text x="612" y="530" class="pin">Matriz COL 1: INPUT_PULLUP · lee ACC2 / ACC7</text>
 <circle cx="600" cy="550" r="3" class="dot"/>
 <text x="612" y="554" class="pin">Matriz COL 2: INPUT_PULLUP · lee ACC3 / ACC8</text>
 <circle cx="600" cy="574" r="3" class="dot"/>
@@ -54,9 +54,9 @@ text{font-family:ui-monospace,Menlo,Consolas,monospace;fill:#111}
 <text x="612" y="646" class="modname">Botones ALT (navegación)</text>
 <text x="612" y="664" class="power">no se alimenta: pulsador directo a GND (INPUT_PULLUP)</text>
 <circle cx="600" cy="685" r="3" class="dot"/>
-<text x="612" y="689" class="pin">Botón ALT1: → GND (INPUT_PULLUP) · DIRECTO, sin diodo</text>
+<text x="612" y="689" class="pin">Botón ALT2: → GND (INPUT_PULLUP) · DIRECTO, sin diodo</text>
 <circle cx="600" cy="709" r="3" class="dot"/>
-<text x="612" y="713" class="pin">Botón ALT2: → GND (INPUT_PULLUP) · DIRECTO, sin diodo</text>
+<text x="612" y="713" class="pin">Botón ALT1: → GND (INPUT_PULLUP) · DIRECTO, sin diodo</text>
 <rect x="600" y="739" width="488" height="121" class="mod"/>
 <text x="612" y="757" class="modname">Encoder KY-040</text>
 <text x="612" y="775" class="power">+ → 3V3 · GND → GND</text>
@@ -80,11 +80,11 @@ text{font-family:ui-monospace,Menlo,Consolas,monospace;fill:#111}
 <text x="612" y="1045" class="power">Vin → 5V · GND → GND · 1000µF cerca de los amplis</text>
 <text x="612" y="1060" class="power">carga: 2× parlante 4–8Ω</text>
 <circle cx="600" cy="1081" r="3" class="dot"/>
-<text x="612" y="1085" class="pin">I2S BCLK: → BCLK de AMBOS MAX98357A (bus compartido)</text>
+<text x="612" y="1085" class="pin">I2S DOUT: → DIN de AMBOS MAX98357A (dato serial). Sale del S3, entr…</text>
 <circle cx="600" cy="1105" r="3" class="dot"/>
 <text x="612" y="1109" class="pin">I2S LRC: → LRC de AMBOS MAX98357A (word-select L/R)</text>
 <circle cx="600" cy="1129" r="3" class="dot"/>
-<text x="612" y="1133" class="pin">I2S DOUT: → DIN de AMBOS MAX98357A (dato serial). Sale del S3, entr…</text>
+<text x="612" y="1133" class="pin">I2S BCLK: → BCLK de AMBOS MAX98357A (bus compartido)</text>
 <rect x="600" y="1159" width="488" height="73" class="mod"/>
 <text x="612" y="1177" class="modname">2× NeoPixel 4 LEDs (8 px)</text>
 <text x="612" y="1195" class="power">VCC → 5V (o 1N400x en serie, ver tip) · GND → GND</text>
@@ -92,56 +92,56 @@ text{font-family:ui-monospace,Menlo,Consolas,monospace;fill:#111}
 <text x="612" y="1220" class="pin">NeoPixel DIN: datos de la tira, vía 330Ω en serie</text>
 <rect x="32" y="112" width="300" height="1120" class="mcu"/>
 <text x="44" y="132" class="modname">ESP32-S3 DevKitC-1 (N16R8)</text>
-<text x="320" y="251" class="gpio">TFT CS · GPIO10</text>
+<text x="320" y="251" class="gpio">TFT backlight · GPIO9</text>
 <path d="M332 247 H600" class="wire"/>
-<text x="320" y="275" class="gpio">TFT MOSI · GPIO11</text>
+<text x="320" y="275" class="gpio">TFT CS · GPIO10</text>
 <path d="M332 271 H600" class="wire"/>
-<text x="320" y="299" class="gpio">TFT SCLK · GPIO12</text>
+<text x="320" y="299" class="gpio">TFT MOSI · GPIO11</text>
 <path d="M332 295 H600" class="wire"/>
-<text x="320" y="323" class="gpio">TFT DC · GPIO13</text>
+<text x="320" y="323" class="gpio">TFT SCLK · GPIO12</text>
 <path d="M332 319 H600" class="wire"/>
-<text x="320" y="347" class="gpio">TFT RST · GPIO14</text>
+<text x="320" y="347" class="gpio">TFT DC · GPIO13</text>
 <path d="M332 343 H600" class="wire"/>
-<text x="320" y="371" class="gpio">TFT backlight · GPIO21</text>
+<text x="320" y="371" class="gpio">TFT RST · GPIO14</text>
 <path d="M332 367 H600" class="wire"/>
-<text x="320" y="458" class="gpio">Matriz COL 1 · GPIO8</text>
-<path d="M332 454 H600" class="wire flag"/>
-<text x="320" y="482" class="gpio">Matriz FILA 0 · GPIO15</text>
+<text x="320" y="458" class="gpio">Matriz FILA 0 · GPIO4</text>
+<path d="M332 454 H600" class="wire"/>
+<text x="320" y="482" class="gpio">Matriz FILA 1 · GPIO5</text>
 <path d="M332 478 H600" class="wire"/>
-<text x="320" y="506" class="gpio">Matriz FILA 1 · GPIO16</text>
+<text x="320" y="506" class="gpio">Matriz COL 0 · GPIO6</text>
 <path d="M332 502 H600" class="wire"/>
-<text x="320" y="530" class="gpio">Matriz COL 0 · GPIO18</text>
+<text x="320" y="530" class="gpio">Matriz COL 1 · GPIO7</text>
 <path d="M332 526 H600" class="wire"/>
-<text x="320" y="554" class="gpio">Matriz COL 2 · GPIO38</text>
-<path d="M332 550 H600" class="wire flag"/>
-<text x="320" y="578" class="gpio">Matriz COL 3 · GPIO39</text>
+<text x="320" y="554" class="gpio">Matriz COL 2 · GPIO15</text>
+<path d="M332 550 H600" class="wire"/>
+<text x="320" y="578" class="gpio">Matriz COL 3 · GPIO16</text>
 <path d="M332 574 H600" class="wire"/>
-<text x="320" y="602" class="gpio">Matriz COL 4 · GPIO47</text>
+<text x="320" y="602" class="gpio">Matriz COL 4 · GPIO17</text>
 <path d="M332 598 H600" class="wire"/>
-<text x="320" y="689" class="gpio">Botón ALT1 · GPIO17</text>
+<text x="320" y="689" class="gpio">Botón ALT2 · GPIO8</text>
 <path d="M332 685 H600" class="wire"/>
-<text x="320" y="713" class="gpio">Botón ALT2 · GPIO48</text>
-<path d="M332 709 H600" class="wire flag"/>
-<text x="320" y="800" class="gpio">Encoder CLK · GPIO4</text>
+<text x="320" y="713" class="gpio">Botón ALT1 · GPIO18</text>
+<path d="M332 709 H600" class="wire"/>
+<text x="320" y="800" class="gpio">Encoder CLK · GPIO21</text>
 <path d="M332 796 H600" class="wire"/>
-<text x="320" y="824" class="gpio">Encoder DT · GPIO5</text>
+<text x="320" y="824" class="gpio">Encoder DT · GPIO47</text>
 <path d="M332 820 H600" class="wire"/>
-<text x="320" y="848" class="gpio">Encoder SW · GPIO6</text>
+<text x="320" y="848" class="gpio">Encoder SW · GPIO48</text>
 <path d="M332 844 H600" class="wire"/>
 <text x="320" y="935" class="gpio">Stick VRx · GPIO1</text>
 <path d="M332 931 H600" class="wire"/>
 <text x="320" y="959" class="gpio">Stick VRy · GPIO2</text>
 <path d="M332 955 H600" class="wire"/>
-<text x="320" y="983" class="gpio">Stick SW · GPIO7</text>
+<text x="320" y="983" class="gpio">Stick SW · GPIO42</text>
 <path d="M332 979 H600" class="wire"/>
-<text x="320" y="1085" class="gpio">I2S BCLK · GPIO40</text>
+<text x="320" y="1085" class="gpio">I2S DOUT · GPIO39</text>
 <path d="M332 1081 H600" class="wire"/>
-<text x="320" y="1109" class="gpio">I2S LRC · GPIO41</text>
+<text x="320" y="1109" class="gpio">I2S LRC · GPIO40</text>
 <path d="M332 1105 H600" class="wire"/>
-<text x="320" y="1133" class="gpio">I2S DOUT · GPIO42</text>
+<text x="320" y="1133" class="gpio">I2S BCLK · GPIO41</text>
 <path d="M332 1129 H600" class="wire"/>
-<text x="320" y="1220" class="gpio">NeoPixel DIN · GPIO9</text>
-<path d="M332 1216 H600" class="wire flag"/>
+<text x="320" y="1220" class="gpio">NeoPixel DIN · GPIO38</text>
+<path d="M332 1216 H600" class="wire"/>
 <text x="32" y="1262" class="meta">Línea roja punteada = el pin tiene una nota: leela en hardware/README.md antes de soldar.</text>
 <text x="32" y="1286" class="modname">Rieles de alimentación</text>
 <rect x="32" y="1292" width="1056" height="25" class="rail"/>

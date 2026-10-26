@@ -14,7 +14,7 @@ Lo stesso hardware fisico supporta **due personalità firmware**:
 |---|---|---|
 | **10 Tasti di Azione (`BTN_1..10`)** | Matrice 2×5 con diodi `1N4148` (`30 µs` settle, `25 ms` debounce) | Scorciatoie da tastiera, controlli multimediali, macro multi-step, testi rapidi, avvio app o comandi al companion con click acustico I2S (`2200 Hz`, `18 ms`). |
 | **2 Tasti `ALT` (`ALT_1`, `ALT_2`)** | GPIO diretti a GND con finestra `ALT_LINGER_MS = 600 ms` | **Livelli momentanei:** tenere premuto `ALT 1` apre **Launcher** (avvia 6 app su PC); tenere premuto `ALT 2` apre **Macros**. |
-| **Encoder Rotativo (`KY-040`)** | Accelerazione dinamica (`35 ms`, `×4`) + pulsante `ENC_SW` | **Rotazione:** azione del livello (`Volume`, `Scroll`, `Zoom`, `Schede`, `Luminosità`). **Doppio tap:** cambia modalità encoder al volo. **Tap singolo:** menu carosello gruppi/livelli. **Pressione prolungata:** Impostazioni o indietro. |
+| **Encoder Rotativo (`KY-040`)** | Accelerazione dinamica (`35 ms`, `×4`) + pulsante `ENC_SW` | **Rotazione:** azione del livello (`Volume`, `Scroll`, `Zoom`, `Schede`, `Luminosità`). **Doppio tap:** cambia modalità encoder al volo. **Tap singolo:** menu carosello gruppi/livelli. **Pressione prolungata:** livello successivo; nel menu, lo chiude. |
 | **Joystick Analogico (`HW-504`)** | Alimentato a **3,3 V** su ADC1 a 12 bit + `STICK_SW` | **Assi X/Y:** muove il puntatore mouse a `40 Hz` con curva di accelerazione quadratica (`mouseAccel`) e auto-centratura EMA. **Tap:** clic sinistro. **Doppio tap:** clic destro. **Pressione prolungata:** attiva/disattiva mouse. **`ENC_SW + STICK_SW` (`1,5 s`):** calibrazione NVS. |
 
 ---
@@ -22,7 +22,7 @@ Lo stesso hardware fisico supporta **due personalità firmware**:
 ## 2. Sistema di Temi (RGB565), NeoPixel B-Zone e 4 Viste Monitor
 
 * **Tema Scuro (`MODE_DARK`) e Tema Chiaro (`MODE_LIGHT`):** palette nativa RGB565 a 16 bit con **7 colori di accento globali** (`Cyan`, `Green`, `Magenta`, `Orange`, `Violet`, `Rose`, `Yellow`) più colore dedicato per ogni livello.
-* **Illuminazione NeoPixel WS2812B a 2 Zone (`GPIO9`):** 8 LED indirizzabili divisi in 2 zone che sincronizzano la scocca traslucida con il colore del livello attivo.
+* **Illuminazione NeoPixel WS2812B a 2 Zone (`GPIO38`):** 8 LED indirizzabili divisi in 2 zone che sincronizzano la scocca traslucida con il colore del livello attivo.
 * **Rendering Parziale Dirty-Check (`dash::*`):** ridisegna via SPI a 27 MHz solo le celle modificate senza sfarfallio.
 * **4 Viste Telemetria / Monitor a Schermo Intero (`src/ui/monitor.cpp`):** **General** (temperatura e carico CPU/GPU con sparkline a 56 campioni, RPM ventole, RAM e VRAM), **Red** (download/upload in `KB/s` o `MB/s` + IP), **Núcleos** (barre di carico fino a 24 core, uptime e processi) e **Disco** (utilizzo volume e sparkline lettura/scrittura).
 

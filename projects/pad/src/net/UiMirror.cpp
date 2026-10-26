@@ -24,7 +24,6 @@ void serializeUi(JsonObject ui, const UiSnapshot& s, const KeyMap* km, bool incl
   ui["vol"]  = s.volume;
   ui["tp"]   = s.transports;
   ui["wOff"] = s.wifiOff;
-  ui["bat"]  = s.battery;
   ui["live"] = s.live;
   // monitor escalares (baratos; los arrays/hist se omiten en v1)
   ui["cpuT"] = s.cpuTemp;

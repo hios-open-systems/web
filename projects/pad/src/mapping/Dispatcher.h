@@ -33,6 +33,7 @@ private:
   void handleEncSwNav(const InputEvent& e);   // encoder = navegacion (abre menu)
   void handleAlt(const InputEvent& e);        // ALT_1/ALT_2: capa momentanea (hold + linger)
   void handleFaceButton(const InputEvent& e); // botones 1-10: una sola accion (la de la capa)
+  void handleRotate(const InputEvent& e);     // encoder: una accion por detente (+ aceleracion)
   void fireResolved(const InputEvent& e);     // resuelve y procesa la accion de la capa
   void enqueueClick(uint8_t button);
   uint8_t layerEncMode() const;               // modo de override que la capa ya hace de fabrica (0=ninguno)
@@ -65,4 +66,5 @@ private:
   uint8_t  m_encOverride = 0;       // override del rotar: 0=capa,1=Vol,2=Scroll,3=Zoom,4=Pestanas
   bool     m_encTapPending = false;
   uint32_t m_encTapMs = 0;
+  uint32_t m_lastRotMs = 0;         // ultimo ROTATE (aceleracion del encoder)
 };

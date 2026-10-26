@@ -14,7 +14,7 @@ Dieselbe physische Hardware unterstützt **zwei Firmware-Profile**:
 |---|---|---|
 | **10 Aktionstasten (`BTN_1..10`)** | 2×5-Matrix mit `1N4148`-Dioden (`30 µs` Settle, `25 ms` Entprellung) | Tastenkürzel, Mediensteuerung, Makros, Textbausteine, App-Launcher und Companion-Befehle mit akustischem I2S-Tastenklick (`2200 Hz`, `18 ms`). |
 | **2 `ALT`-Tasten (`ALT_1`, `ALT_2`)** | Direkte GPIOs mit `600 ms` Haltefenster (`ALT_LINGER_MS`) | **Momentane Ebenen:** `ALT 1` öffnet **Launcher** (startet 6 PC-Apps), `ALT 2` öffnet **Macros**. |
-| **Drehencoder (`KY-040`)** | Dynamische Beschleunigung (`35 ms`, `×4`) + Taster `ENC_SW` | **Drehen:** Ebenen-Aktion (`Lautstärke`, `Scroll`, `Zoom`, `Tabs`, `Helligkeit`). **Doppeltipp:** wechselt den Encoder-Modus live. **Kurzer Druck:** Gruppen-/Ebenenmenü. **Langer Druck:** Einstellungen / Zurück. |
+| **Drehencoder (`KY-040`)** | Dynamische Beschleunigung (`35 ms`, `×4`) + Taster `ENC_SW` | **Drehen:** Ebenen-Aktion (`Lautstärke`, `Scroll`, `Zoom`, `Tabs`, `Helligkeit`). **Doppeltipp:** wechselt den Encoder-Modus live. **Kurzer Druck:** Gruppen-/Ebenenmenü. **Langer Druck:** nächste Ebene; im Menü schließt er es. |
 | **Analog-Joystick (`HW-504`)** | **3,3 V** am 12-Bit-ADC1 + Taster `STICK_SW` | **X/Y-Achsen:** HID-Mauszeiger (`40 Hz`) mit quadratischer Beschleunigung (`mouseAccel`) und EMA-Zentrierung. **Tipp:** Linksklick. **Doppeltipp:** Rechtsklick. **Halten:** Mausmodus ein/aus. **`ENC_SW + STICK_SW` (`1,5 s`):** NVS-Kalibrierung. |
 
 ---
@@ -22,7 +22,7 @@ Dieselbe physische Hardware unterstützt **zwei Firmware-Profile**:
 ## 2. Theme-System (RGB565), Dual-Zone-NeoPixel & 4 Telemetrie-Monitore
 
 * **Dark Mode (`MODE_DARK`) & Light Mode (`MODE_LIGHT`):** native 16-Bit-RGB565-Farbpalette mit **7 globalen Akzentfarben** (`Cyan`, `Green`, `Magenta`, `Orange`, `Violet`, `Rose`, `Yellow`) sowie eigener Kennfarbe pro Ebene.
-* **Dual-Zone-WS2812B-NeoPixel (`GPIO9`):** 8 adressierbare LEDs in 2 Zonen beleuchten das Gehäuse passend zur aktiven Ebene.
+* **Dual-Zone-WS2812B-NeoPixel (`GPIO38`):** 8 adressierbare LEDs in 2 Zonen beleuchten das Gehäuse passend zur aktiven Ebene.
 * **Partielles Dirty-Check-Rendering (`dash::*`):** aktualisiert über den 27-MHz-SPI-Bus nur veränderte Kacheln ohne Bildschirmflackern.
 * **4 Vollbild-Telemetrieansichten (`src/ui/monitor.cpp`):** **General** (CPU/GPU-Temperatur und -Last mit 56-Sample-Sparklines, Lüfter-RPM, RAM, VRAM), **Red** (Download/Upload in `KB/s` oder `MB/s` + IP), **Núcleos** (Einzelkernlast für bis zu 24 Threads, Uptime, Prozesse) und **Disco** (Volumenbelegung und Lese-/Schreib-Sparklines).
 
