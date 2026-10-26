@@ -9,7 +9,7 @@ export const PAD_WIRING: WiringGuide = {
     rev: '0.9',
     mcu: 'ESP32-S3 DevKitC-1 (N16R8)',
     boardId: 'esp32-s3-devkitc-1',
-    note: 'as-wired: el firmware del repo YA es rev 0.9 (matriz 2×5 escaneada + bus I2S). Soldás esto, flasheás lo que está commiteado y anda. El self-test compara esta guía contra Pins.h y platformio.ini en cada corrida.',
+    note: 'El cableado coincide con el firmware del repo. El self-test compara esta guía contra Pins.h y platformio.ini en cada corrida.',
     source: 'src/app/Pins.h + Config.h + platformio.ini',
   },
 
@@ -33,7 +33,7 @@ export const PAD_WIRING: WiringGuide = {
       name: 'Pantalla ILI9488 4" (SPI)',
       icon: '🖥️',
       rail: 5,
-      power: 'VCC → 5V · GND → GND · LED → SW-PANTALLA → GPIO21',
+      power: 'VCC → 5V · GND → GND · LED → SW-PANTALLA → GPIO9',
       step: 2,
       tip: 'El ILI9488 es lógica **3.3V** (abs-max 3.3V en IOVCC) — tus GPIO son 3.3V, así que va directo. Pero **fijate si tu módulo trae un buffer 74HC245** al lado del header: si lo trae, se alimenta del VCC del módulo y a 5V su umbral pasa a 3.5V → tu SPI de 3.3V queda por debajo y ves **pantalla en blanco**. En ese caso, VCC va al riel **3V3**, no al 5V.',
     },
@@ -105,37 +105,37 @@ export const PAD_WIRING: WiringGuide = {
   pins: [
     { gpio: 1, kind: 'adc', name: 'Stick VRx', mod: 'stick', dest: 'Stick eje X — ADC1_0' },
     { gpio: 2, kind: 'adc', name: 'Stick VRy', mod: 'stick', dest: 'Stick eje Y — ADC1_1' },
-    { gpio: 4, kind: 'io', name: 'Encoder CLK', mod: 'encoder', dest: 'KY-040 canal A' },
-    { gpio: 5, kind: 'io', name: 'Encoder DT', mod: 'encoder', dest: 'KY-040 canal B' },
-    { gpio: 6, kind: 'io', name: 'Encoder SW', mod: 'encoder', dest: 'KY-040 pulsador (INPUT_PULLUP)' },
-    { gpio: 7, kind: 'io', name: 'Stick SW', mod: 'stick', dest: 'Stick pulsador (INPUT_PULLUP)' },
-    { gpio: 8, kind: 'mtx', name: 'Matriz COL 1', mod: 'matrix', dest: 'INPUT_PULLUP · lee ACC2 / ACC7', note: 'es ADC1_7, pero acá va como digital' },
-    { gpio: 9, kind: 'neo', name: 'NeoPixel DIN', mod: 'led', dest: 'datos de la tira, vía 330Ω en serie', note: 'ex-divisor de batería. La medición de batería se descartó: NO reactivar BATTERY_ENABLED sin reasignar el ADC' },
+    { gpio: 4, kind: 'mtx', name: 'Matriz FILA 0', mod: 'matrix', dest: 'OUTPUT (drive LOW) · fila de ARRIBA: ACC1–5' },
+    { gpio: 5, kind: 'mtx', name: 'Matriz FILA 1', mod: 'matrix', dest: 'OUTPUT (drive LOW) · fila de ABAJO: ACC6–10' },
+    { gpio: 6, kind: 'mtx', name: 'Matriz COL 0', mod: 'matrix', dest: 'INPUT_PULLUP · lee ACC1 / ACC6' },
+    { gpio: 7, kind: 'mtx', name: 'Matriz COL 1', mod: 'matrix', dest: 'INPUT_PULLUP · lee ACC2 / ACC7' },
+    { gpio: 8, kind: 'io', name: 'Botón ALT2', mod: 'nav', dest: '→ GND (INPUT_PULLUP) · DIRECTO, sin diodo' },
+    { gpio: 9, kind: 'pwm', name: 'TFT backlight', mod: 'display', dest: 'LED de la TFT (PWM por LEDC) · acá va en serie el SW-PANTALLA' },
     { gpio: 10, kind: 'spi', name: 'TFT CS', mod: 'display', dest: 'ILI9488 CS (chip-select)' },
     { gpio: 11, kind: 'spi', name: 'TFT MOSI', mod: 'display', dest: 'ILI9488 SDI' },
     { gpio: 12, kind: 'spi', name: 'TFT SCLK', mod: 'display', dest: 'ILI9488 SCK' },
     { gpio: 13, kind: 'spi', name: 'TFT DC', mod: 'display', dest: 'ILI9488 DC/RS' },
     { gpio: 14, kind: 'spi', name: 'TFT RST', mod: 'display', dest: 'ILI9488 RESET' },
-    { gpio: 15, kind: 'mtx', name: 'Matriz FILA 0', mod: 'matrix', dest: 'OUTPUT (drive LOW) · fila de ARRIBA: ACC1–5' },
-    { gpio: 16, kind: 'mtx', name: 'Matriz FILA 1', mod: 'matrix', dest: 'OUTPUT (drive LOW) · fila de ABAJO: ACC6–10' },
-    { gpio: 17, kind: 'io', name: 'Botón ALT1', mod: 'nav', dest: '→ GND (INPUT_PULLUP) · DIRECTO, sin diodo' },
-    { gpio: 18, kind: 'mtx', name: 'Matriz COL 0', mod: 'matrix', dest: 'INPUT_PULLUP · lee ACC1 / ACC6' },
+    { gpio: 15, kind: 'mtx', name: 'Matriz COL 2', mod: 'matrix', dest: 'INPUT_PULLUP · lee ACC3 / ACC8' },
+    { gpio: 16, kind: 'mtx', name: 'Matriz COL 3', mod: 'matrix', dest: 'INPUT_PULLUP · lee ACC4 / ACC9' },
+    { gpio: 17, kind: 'mtx', name: 'Matriz COL 4', mod: 'matrix', dest: 'INPUT_PULLUP · lee ACC5 / ACC10' },
+    { gpio: 18, kind: 'io', name: 'Botón ALT1', mod: 'nav', dest: '→ GND (INPUT_PULLUP) · DIRECTO, sin diodo' },
     { gpio: 19, kind: 'dim', name: 'USB D−', mod: 'system', dest: 'USB nativo (HID) — RESERVADO, no soldar nada' },
     { gpio: 20, kind: 'dim', name: 'USB D+', mod: 'system', dest: 'USB nativo (HID) — RESERVADO, no soldar nada' },
-    { gpio: 21, kind: 'pwm', name: 'TFT backlight', mod: 'display', dest: 'LED de la TFT (PWM por LEDC) · acá va en serie el SW-PANTALLA' },
-    { gpio: 38, kind: 'mtx', name: 'Matriz COL 2', mod: 'matrix', dest: 'INPUT_PULLUP · lee ACC3 / ACC8', note: 'en DevKitC-1 **v1.1** este pin maneja el LED RGB de la placa. No rompe nada (el DIN del LED es alta impedancia) pero el pixel va a parpadear con el escaneo' },
-    { gpio: 39, kind: 'mtx', name: 'Matriz COL 3', mod: 'matrix', dest: 'INPUT_PULLUP · lee ACC4 / ACC9' },
-    { gpio: 40, kind: 'i2s', name: 'I2S BCLK', mod: 'audio', dest: '→ BCLK de AMBOS MAX98357A (bus compartido)' },
-    { gpio: 41, kind: 'i2s', name: 'I2S LRC', mod: 'audio', dest: '→ LRC de AMBOS MAX98357A (word-select L/R)' },
-    { gpio: 42, kind: 'i2s', name: 'I2S DOUT', mod: 'audio', dest: '→ DIN de AMBOS MAX98357A (dato serial). Sale del S3, entra al ampli: por eso acá es DOUT y allá DIN' },
+    { gpio: 21, kind: 'io', name: 'Encoder CLK', mod: 'encoder', dest: 'KY-040 canal A' },
+    { gpio: 38, kind: 'neo', name: 'NeoPixel DIN', mod: 'led', dest: 'datos de la tira, vía 330Ω en serie' },
+    { gpio: 39, kind: 'i2s', name: 'I2S DOUT', mod: 'audio', dest: '→ DIN de AMBOS MAX98357A (dato serial). Sale del S3, entra al ampli: por eso acá es DOUT y allá DIN' },
+    { gpio: 40, kind: 'i2s', name: 'I2S LRC', mod: 'audio', dest: '→ LRC de AMBOS MAX98357A (word-select L/R)' },
+    { gpio: 41, kind: 'i2s', name: 'I2S BCLK', mod: 'audio', dest: '→ BCLK de AMBOS MAX98357A (bus compartido)' },
+    { gpio: 42, kind: 'io', name: 'Stick SW', mod: 'stick', dest: 'Stick pulsador (INPUT_PULLUP)' },
     { gpio: 43, kind: 'dim', name: 'UART0 TX', mod: 'system', dest: 'Serial + flasheo por cable (CH343)' },
     { gpio: 44, kind: 'dim', name: 'UART0 RX', mod: 'system', dest: 'Serial + flasheo por cable (CH343)' },
-    { gpio: 47, kind: 'mtx', name: 'Matriz COL 4', mod: 'matrix', dest: 'INPUT_PULLUP · lee ACC5 / ACC10' },
-    { gpio: 48, kind: 'io', name: 'Botón ALT2', mod: 'nav', dest: '→ GND (INPUT_PULLUP) · DIRECTO, sin diodo', note: 'en DevKitC-1 **v1.0** este pin maneja el LED RGB de la placa. El pulsador funciona igual; el LED simplemente no se usa' },
+    { gpio: 47, kind: 'io', name: 'Encoder DT', mod: 'encoder', dest: 'KY-040 canal B' },
+    { gpio: 48, kind: 'io', name: 'Encoder SW', mod: 'encoder', dest: 'KY-040 pulsador (INPUT_PULLUP)' },
   ],
 
   /**
-   * Vacío: el firmware ya alcanzó a la guía (rev 0.9 en ambos).
+   * Vacío: la guía y el firmware coinciden.
    *
    * NO borrar el campo. Existe para que una divergencia guía↔firmware nunca vuelva
    * a ser CALLADA: el self-test compara contra `Pins.h` y, si encuentra una que no
@@ -159,7 +159,7 @@ export const PAD_WIRING: WiringGuide = {
    RIEL 5V ─► ESP32 pin 5V ─►(LDO SGM2212)─► pin 3V3 ─► RIEL 3V3
    RIEL 5V ─► cap 470–1000µF ─► GND   (+1000µF cerca de los amplis)
    RIEL 5V ─► Pantalla VCC ; NeoPixel + 2× ampli Vin
-   GPIO21 ─[SW-PANTALLA]─► LED/BL de la pantalla   (¡el switch va acá, NO en el VCC!)
+   GPIO9 ─[SW-PANTALLA]─► LED/BL de la pantalla    (¡el switch va acá, NO en el VCC!)
    RIEL 3V3 ─► Stick VCC + Encoder + ; GND común: TODO`,
       tip: '**USB no alimenta nada** (uso wireless). El 3V3 sale del S3, no se inyecta. Presupuesto estimado a plena carga: 2 amplis a 4Ω (~1.5A) + 8 NeoPixel en blanco (~0.5A) + S3 con RF + backlight (~0.6A) ≈ **2.6A** → el buck tiene que ser **≥3A**, no 2A.',
       rows: [
@@ -175,21 +175,21 @@ export const PAD_WIRING: WiringGuide = {
       tip: '**SW-PANTALLA debe cortar la línea LED/BL, no el VCC de la pantalla.** Si cortás VCC mientras los GPIO10–14 mantienen señales SPI de 3.3 V, se supera el límite de entrada del ILI9488 (`VIN ≤ IOVCC + 0.3V`, equivalente a 0.3 V con el módulo apagado). La corriente por los diodos de protección puede dañar el controlador. Mantené alimentado el módulo y controlá por separado la retroiluminación.',
       rows: [
         { pin: 'SW1', kind: 'pwr5', nm: 'SW-CELDAS', to: 'corta BAT+ → buck (apaga TODO)', note: '≥3A' },
-        { pin: 'SW2', kind: 'pwr33', nm: 'SW-PANTALLA', to: 'corta GPIO21 → LED/BL de la pantalla (la lógica queda alimentada)' },
+        { pin: 'SW2', kind: 'pwr33', nm: 'SW-PANTALLA', to: 'corta GPIO9 → LED/BL de la pantalla (la lógica queda alimentada)' },
       ],
     },
     {
       t: '🖥️ Pantalla ILI9488 4"',
       group: 'display',
       cnt: '6 pines',
-      tip: 'SPI por **HSPI** a 27MHz. El **MISO no se cablea** (`TFT_MISO=-1`): solo escribimos. Los 5 pines de señal salen de `platformio.ini`, no de `Pins.h` — el backlight sí está en `Pins.h` porque lo maneja el LEDC a mano. ⚠️ El **CS es 10**: un doc viejo decía 13, y soldarlo ahí lo cortocircuita contra el DC.',
+      tip: 'SPI por **HSPI** a 27MHz. El **MISO no se cablea** (`TFT_MISO=-1`): solo escribimos. Los 5 pines de señal salen de `platformio.ini`, no de `Pins.h` — el backlight sí está en `Pins.h` porque lo maneja el LEDC a mano.',
       rows: [
         { pin: '10', kind: 'spi', nm: 'CS', to: '→ CS (a veces serigrafiado "CD")' },
         { pin: '11', kind: 'spi', nm: 'MOSI', to: '→ SDI del módulo' },
         { pin: '12', kind: 'spi', nm: 'SCLK', to: '→ SCK / SCL del módulo' },
         { pin: '13', kind: 'spi', nm: 'DC', to: '→ DC / RS' },
         { pin: '14', kind: 'spi', nm: 'RST', to: '→ RESET' },
-        { pin: '21', kind: 'pwm', nm: 'Backlight', to: '→ [SW-PANTALLA] → LED', note: 'el switch va acá, NUNCA cortando el VCC' },
+        { pin: '9', kind: 'pwm', nm: 'Backlight', to: '→ [SW-PANTALLA] → LED', note: 'el switch va acá, NUNCA cortando el VCC' },
         { pin: 'VCC', kind: 'pwr5', nm: 'Alimentación', to: '→ RIEL 5V', note: 'si el módulo trae buffer 74HC245 junto al header, VCC va a 3V3 o ves pantalla en blanco' },
         { pin: 'GND', kind: 'gnd', nm: 'Masa', to: '→ GND común' },
         { pin: '—', kind: 'dim', nm: 'MISO / SDO', to: 'NO se conecta (TFT_MISO=-1)' },
@@ -200,26 +200,26 @@ export const PAD_WIRING: WiringGuide = {
       group: 'matrix',
       cnt: '10 teclas · 7 pines',
       ascii: `        COL0    COL1    COL2    COL3    COL4
-        GPIO18  GPIO8   GPIO38  GPIO39  GPIO47
+        GPIO6   GPIO7   GPIO15  GPIO16  GPIO17
           │       │       │       │       │
 FILA0 ────┼─ACC1──┼─ACC2──┼─ACC3──┼─ACC4──┼─ACC5
-GPIO15    │       │       │       │       │
+GPIO4     │       │       │       │       │
           │       │       │       │       │
 FILA1 ────┼─ACC6──┼─ACC7──┼─ACC8──┼─ACC9──┼─ACC10
-GPIO16
+GPIO5 
 
   cada tecla:  COLUMNA ──[switch]──|>|── FILA
                                   diodo
                           (la RAYA mira a la FILA)`,
       tip: '2 filas **OUTPUT** (en reposo HIGH, se bajan de a una) + 5 columnas **INPUT_PULLUP**. Un diodo por tecla, **cátodo (la raya) hacia la FILA**. Sin diodos, apretar 3 teclas en L inventa una cuarta (ghosting). Si una tecla no registra, el diodo está al revés: dalo vuelta. Sirve 1N4148 o cualquier silicio (1N400x/1N540x); **LEDs no**.',
       rows: [
-        { pin: '15', kind: 'mtx', nm: 'FILA 0 — arriba', to: 'OUTPUT · ACC1 a ACC5' },
-        { pin: '16', kind: 'mtx', nm: 'FILA 1 — abajo', to: 'OUTPUT · ACC6 a ACC10' },
-        { pin: '18', kind: 'mtx', nm: 'COL 0', to: 'INPUT_PULLUP · ACC1 / ACC6' },
-        { pin: '8', kind: 'mtx', nm: 'COL 1', to: 'INPUT_PULLUP · ACC2 / ACC7', note: 'es ADC1_7, acá va como digital' },
-        { pin: '38', kind: 'mtx', nm: 'COL 2', to: 'INPUT_PULLUP · ACC3 / ACC8', note: 'en DevKitC-1 v1.1 maneja el LED RGB de la placa: va a parpadear con el escaneo (cosmético)' },
-        { pin: '39', kind: 'mtx', nm: 'COL 3', to: 'INPUT_PULLUP · ACC4 / ACC9' },
-        { pin: '47', kind: 'mtx', nm: 'COL 4', to: 'INPUT_PULLUP · ACC5 / ACC10' },
+        { pin: '4', kind: 'mtx', nm: 'FILA 0 — arriba', to: 'OUTPUT · ACC1 a ACC5' },
+        { pin: '5', kind: 'mtx', nm: 'FILA 1 — abajo', to: 'OUTPUT · ACC6 a ACC10' },
+        { pin: '6', kind: 'mtx', nm: 'COL 0', to: 'INPUT_PULLUP · ACC1 / ACC6' },
+        { pin: '7', kind: 'mtx', nm: 'COL 1', to: 'INPUT_PULLUP · ACC2 / ACC7' },
+        { pin: '15', kind: 'mtx', nm: 'COL 2', to: 'INPUT_PULLUP · ACC3 / ACC8' },
+        { pin: '16', kind: 'mtx', nm: 'COL 3', to: 'INPUT_PULLUP · ACC4 / ACC9' },
+        { pin: '17', kind: 'mtx', nm: 'COL 4', to: 'INPUT_PULLUP · ACC5 / ACC10' },
       ],
     },
     {
@@ -228,8 +228,8 @@ GPIO16
       cnt: '2 · directos',
       tip: 'Van **fuera de la matriz y sin diodo**, a propósito: son los que abren capa/menú y tienen que leerse **siempre**, sin depender de qué fila está escaneando. Pulsador NA directo a GND, el pull-up es interno.',
       rows: [
-        { pin: '17', kind: 'io', nm: 'ALT 1', to: 'pulsador → GND (INPUT_PULLUP)' },
-        { pin: '48', kind: 'io', nm: 'ALT 2', to: 'pulsador → GND (INPUT_PULLUP)', note: 'en DevKitC-1 v1.0 este pin maneja el LED RGB de la placa; el pulsador anda igual' },
+        { pin: '18', kind: 'io', nm: 'ALT 1', to: 'pulsador → GND (INPUT_PULLUP)' },
+        { pin: '8', kind: 'io', nm: 'ALT 2', to: 'pulsador → GND (INPUT_PULLUP)' },
       ],
     },
     {
@@ -238,9 +238,9 @@ GPIO16
       cnt: '3 pines',
       tip: 'CLK y DT van por **interrupción** (cuadratura: el orden de flancos da el sentido). El SW es el pulsador del eje: **press abre el menú**. Si gira al revés, permutá CLK y DT. El módulo KY-040 ya trae sus pull-ups a bordo.',
       rows: [
-        { pin: '4', kind: 'io', nm: 'CLK — canal A', to: '→ CLK del módulo (interrupción)' },
-        { pin: '5', kind: 'io', nm: 'DT — canal B', to: '→ DT del módulo (interrupción)' },
-        { pin: '6', kind: 'io', nm: 'SW — pulsador', to: '→ SW (INPUT_PULLUP)' },
+        { pin: '21', kind: 'io', nm: 'CLK — canal A', to: '→ CLK del módulo (interrupción)' },
+        { pin: '47', kind: 'io', nm: 'DT — canal B', to: '→ DT del módulo (interrupción)' },
+        { pin: '48', kind: 'io', nm: 'SW — pulsador', to: '→ SW (INPUT_PULLUP)' },
         { pin: '+', kind: 'pwr33', nm: 'Alimentación', to: '→ RIEL 3V3' },
         { pin: 'GND', kind: 'gnd', nm: 'Masa', to: '→ GND común' },
       ],
@@ -253,7 +253,7 @@ GPIO16
       rows: [
         { pin: '1', kind: 'adc', nm: 'VRx — eje X', to: '→ VRx (ADC1_0)' },
         { pin: '2', kind: 'adc', nm: 'VRy — eje Y', to: '→ VRy (ADC1_1)' },
-        { pin: '7', kind: 'io', nm: 'SW — pulsador', to: '→ SW (INPUT_PULLUP)' },
+        { pin: '42', kind: 'io', nm: 'SW — pulsador', to: '→ SW (INPUT_PULLUP)' },
         { pin: '+5V', kind: 'pwr33', nm: 'Alimentación', to: '→ RIEL **3V3** (NO 5V)', note: 'el silk miente: verificá con multímetro antes de encender' },
         { pin: 'GND', kind: 'gnd', nm: 'Masa', to: '→ GND común' },
       ],
@@ -263,9 +263,9 @@ GPIO16
       group: 'audio',
       cnt: '3 pines',
       ascii: `                 ┌────────────────┐
-  GPIO40 BCLK ──┬─►│ MAX98357A  L   │──► parlante L (4–8Ω)
-  GPIO41 LRC  ──┼─►│ SD → Vin       │
-  GPIO42 DOUT ──┼─►│ (DIN)          │
+  GPIO41 BCLK ──┬─►│ MAX98357A  L   │──► parlante L (4–8Ω)
+  GPIO40 LRC  ──┼─►│ SD → Vin       │
+  GPIO39 DOUT ──┼─►│ (DIN)          │
                 │  └────────────────┘
                 │  ┌────────────────┐
                 └─►│ MAX98357A  R   │──► parlante R (4–8Ω)
@@ -275,9 +275,9 @@ GPIO16
        mismas 3 líneas a los dos · sólo cambia la R de SD`,
       tip: 'Las **3 líneas van en paralelo a los dos amplis**: no hay un bus por canal. Lo único distinto entre ellos es el pin **SD**, que elige el canal (ver el bloque de abajo). Ojo con el nombre: sale del S3 como **DOUT** y entra al ampli como **DIN** — es el mismo cable.',
       rows: [
-        { pin: '40', kind: 'i2s', nm: 'BCLK — bit clock', to: '→ BCLK de AMBOS amplis' },
-        { pin: '41', kind: 'i2s', nm: 'LRC — word select', to: '→ LRC de AMBOS amplis (elige L/R en el tiempo)' },
-        { pin: '42', kind: 'i2s', nm: 'DOUT — dato serial', to: '→ DIN de AMBOS amplis' },
+        { pin: '41', kind: 'i2s', nm: 'BCLK — bit clock', to: '→ BCLK de AMBOS amplis' },
+        { pin: '40', kind: 'i2s', nm: 'LRC — word select', to: '→ LRC de AMBOS amplis (elige L/R en el tiempo)' },
+        { pin: '39', kind: 'i2s', nm: 'DOUT — dato serial', to: '→ DIN de AMBOS amplis' },
         { pin: 'Vin', kind: 'pwr5', nm: 'Alimentación', to: '→ RIEL 5V + **1000µF** cerca de los amplis' },
         { pin: 'GND', kind: 'gnd', nm: 'Masa', to: '→ GND común' },
       ],
@@ -308,8 +308,8 @@ GPIO16
     {
       t: '🌈 NeoPixel — 2 placas, 8 píxeles',
       group: 'led',
-      cnt: 'DIN=9',
-      ascii: `  GPIO9 ──[330Ω]──► DIN ┌─placa A─┐ DOUT ──► DIN ┌─placa B─┐
+      cnt: 'DIN=38',
+      ascii: `  GPIO38 ─[330Ω]──► DIN ┌─placa A─┐ DOUT ──► DIN ┌─placa B─┐
                         │ 0  1    │              │ 4  5    │
                         │ 2  3    │              │ 6  7    │
                         └─────────┘              └─────────┘
@@ -317,9 +317,9 @@ GPIO16
    GND ─────────────────► GND de las dos
 
    1 solo cable de datos = 8 píxeles direccionables de a uno`,
-      tip: 'Las 2 placas están **encadenadas en un solo pin** (DOUT de A → DIN de B) y eso **no** les quita independencia: cada WS2812B tiene su propio controlador y se come los primeros 24 bits que le llegan, así que los 8 píxeles se direccionan por separado (`NEOPIXEL_COUNT=8`). Efectos por zona = **software, no cableado**: pintás 0–3 con un color y 4–7 con otro. Un segundo GPIO de datos no compraría nada. En GPIO9 (ex-batería) → UART0 (43/44) queda libre p/ serial+flasheo, sin parpadeo de boot. **Feedback por botón:** encadená 1 LED por tecla en el MISMO GPIO9 (subí `NEOPIXEL_COUNT`) → RGB por tecla sin gastar pines.',
+      tip: 'Las 2 placas están **encadenadas en un solo pin** (DOUT de A → DIN de B) y eso **no** les quita independencia: cada WS2812B tiene su propio controlador y se come los primeros 24 bits que le llegan, así que los 8 píxeles se direccionan por separado (`NEOPIXEL_COUNT=8`). Efectos por zona = **software, no cableado**: pintás 0–3 con un color y 4–7 con otro. Un segundo GPIO de datos no compraría nada. **Feedback por botón:** encadená 1 LED por tecla en el MISMO GPIO38 (subí `NEOPIXEL_COUNT`) → RGB por tecla sin gastar pines.',
       rows: [
-        { pin: '9', kind: 'neo', nm: 'DIN — placa A', to: 'GPIO9 → 330Ω en serie → DIN de la primera placa', note: '3.3V está bajo el umbral: 1N400x en serie con el VCC, o 74AHCT125' },
+        { pin: '38', kind: 'neo', nm: 'DIN — placa A', to: 'GPIO38 → 330Ω en serie → DIN de la primera placa', note: '3.3V está bajo el umbral: 1N400x en serie con el VCC, o 74AHCT125' },
         { pin: '—', kind: 'neo', nm: 'DOUT A → DIN B', to: 'encadenado: la placa B sigue a la A (píxeles 4–7)', note: 'sentido único: DIN→DOUT. Al revés, la B queda muerta' },
         { pin: '5V', kind: 'pwr5', nm: 'VCC — las dos', to: '→ RIEL 5V vía 1N400x (→ ~4.35V)', note: '~60mA/LED a tope: 8 LEDs en blanco ≈ 0,5A. Limitá brillo' },
         { pin: 'GND', kind: 'gnd', nm: 'GND — las dos', to: '→ GND común' },
@@ -339,17 +339,17 @@ GPIO16
       ],
     },
     {
-      t: '🔋 Batería — descartada en el pad',
+      t: '🔋 Batería',
       group: 'misc',
-      cnt: 'GPIO9→NeoPixel',
-      tip: 'No se mide en el pad: la **pantalla de la fuente** ya muestra la tensión de entrada (= las 2 celdas 2S). GPIO9 (ex-divisor) ahora maneja el NeoPixel. En firmware: `BATTERY_ENABLED=false` — **NO lo actives**: `BAT_ADC_PIN` sigue apuntando al 9 y le meterías 2.7V DC a la línea de datos del NeoPixel.',
+      cnt: 'sin medición',
+      tip: 'El pad no mide la batería. La tensión del pack 2S se lee en la **pantalla de la fuente**.',
       rows: [],
     },
     {
       t: '🧮 Presupuesto de pines',
       group: 'misc',
       cnt: 'libre: GPIO3',
-      tip: 'Matriz acción 7 (2 filas + 5 cols) + 2 ALT directos + 3 I2S = 12 → usan todos los GPIO que quedaron. Sobra **exactamente un pin: el GPIO3**, y es strapping (JTAG_SEL), así que con cuidado. No usables: **26–32** (flash) y **33–37** (PSRAM octal del R8 — el DevKitC-1 ni siquiera saca 26–34 al header, y 35/36/37 están ahí pero se los come la PSRAM), 19/20 (USB nativo), 43/44 (UART0), **0/45/46** (strapping; el 0 además es el BOOT de recuperación).',
+      tip: 'Los 25 GPIO usables están todos asignados, agrupados por módulo. Sobra **un solo pin: el GPIO3**, y es strapping (JTAG_SEL), así que con cuidado. No usables: **26–32** (flash) y **33–37** (PSRAM octal del R8 — el DevKitC-1 ni siquiera saca 26–34 al header, y 35/36/37 están ahí pero se los come la PSRAM), 19/20 (USB nativo), 43/44 (UART0), **0/45/46** (strapping; el 0 además es el BOOT de recuperación).',
       rows: [
         { pin: '3', kind: 'io', nm: 'ÚNICO pin libre', to: 'strapping (JTAG_SEL): usable como salida, sin nada colgado al bootear' },
         { pin: '35', kind: 'dim', nm: '35 / 36 / 37', to: 'están en el header pero los usa la PSRAM octal — tocarlos = boot loop' },
@@ -360,7 +360,7 @@ GPIO16
       t: '💡 ¿Un segundo pin de datos para los LEDs?',
       group: 'led',
       cnt: 'no hace falta',
-      tip: 'No, y **no lo necesitás**. Las 2 placas de 4 LEDs ya son **8 píxeles direccionables de a uno** sobre GPIO9: encadenarlas no las hace dependientes, cada WS2812B tiene su propio controlador. Lo que hoy las pinta iguales es el **firmware**, no el cable — `leds::setLayerColor()` recorre `NEOPIXEL_COUNT` pintando el MISMO color en todos. Efectos por zona (placa A ≠ placa B) salen **cambiando ese loop**, sin tocar el soldador. Si igual quisieras un bus separado, el único pin libre es el **GPIO3** (strapping): gastarías tu último pin de reserva a cambio de nada.',
+      tip: 'No, y **no lo necesitás**. Las 2 placas de 4 LEDs ya son **8 píxeles direccionables de a uno** sobre GPIO38: encadenarlas no las hace dependientes, cada WS2812B tiene su propio controlador. Lo que hoy las pinta iguales es el **firmware**, no el cable — `leds::setLayerColor()` recorre `NEOPIXEL_COUNT` pintando el MISMO color en todos. Efectos por zona (placa A ≠ placa B) salen **cambiando ese loop**, sin tocar el soldador. Si igual quisieras un bus separado, el único pin libre es el **GPIO3** (strapping): gastarías tu último pin de reserva a cambio de nada.',
       rows: [],
     },
   ],
@@ -373,17 +373,17 @@ GPIO16
     'Stick y encoder al riel 3V3 (NO 5V) — verificado con multímetro',
     'Pantalla: si tiene buffer 74HC245 junto al header, su VCC va a 3V3 (si no, pantalla en blanco)',
     'SW-PANTALLA en la línea LED/BL, NUNCA cortando el VCC de la pantalla (abs-max del ILI9488)',
-    'TFT: CS=10, MOSI=11, SCLK=12, DC=13, RST=14, BL=21 (verificado contra platformio.ini)',
+    'TFT: BL=9, CS=10, MOSI=11, SCLK=12, DC=13, RST=14 (verificado contra platformio.ini)',
     'TFT: el MISO/SDO NO se cablea (TFT_MISO=-1, sólo escribimos)',
-    'Matriz acción: 2 filas (15/16 = OUTPUT) + 5 columnas (18/8/38/39/47 = INPUT_PULLUP)',
+    'Matriz acción: 2 filas (4/5 = OUTPUT) + 5 columnas (6/7/15/16/17 = INPUT_PULLUP)',
     '10 diodos (uno por botón de acción), cátodo (raya) hacia la FILA → evita ghosting (si no registra, dalos vuelta)',
     'Diodos: 1N4148 (chico) o cualquier silicio: 1N400x/1N540x sirven igual (más grandes). LEDs NO',
-    'ALT1→GPIO17, ALT2→GPIO48 DIRECTOS a GND (INPUT_PULLUP), SIN diodo (fila nav)',
-    'Encoder KY-040: CLK=GPIO4, DT=GPIO5, SW=GPIO6, + a 3V3 (si gira al revés, permutá CLK y DT)',
-    'Stick HW-504: VRx=GPIO1, VRy=GPIO2, SW=GPIO7 — los ejes en ADC1, el único que anda con la radio prendida',
-    'NeoPixel: 330Ω en serie en DIN (GPIO9) + 1N400x en el VCC de la tira (o 74AHCT125) + cap en su 5V',
+    'ALT1→GPIO18, ALT2→GPIO8 DIRECTOS a GND (INPUT_PULLUP), SIN diodo (fila nav)',
+    'Encoder KY-040: CLK=GPIO21, DT=GPIO47, SW=GPIO48, + a 3V3 (si gira al revés, permutá CLK y DT)',
+    'Stick HW-504: VRx=GPIO1, VRy=GPIO2, SW=GPIO42 — los ejes en ADC1, el único que anda con la radio prendida',
+    'NeoPixel: 330Ω en serie en DIN (GPIO38) + 1N400x en el VCC de la tira (o 74AHCT125) + cap en su 5V',
     'NeoPixel: las 2 placas ENCADENADAS (DOUT de la A → DIN de la B) = 8 píxeles en un solo pin; NEOPIXEL_COUNT=8',
-    'I2S: BCLK=40, LRC=41, DIN=42 cableados a AMBOS amplis (bus compartido)',
+    'I2S: BCLK=41, LRC=40, DIN=39 cableados a AMBOS amplis (bus compartido)',
     `A 5V sin pullup en la placa: Ampli-L SD→Vin · Ampli-R SD→${MAX_SD_EXAMPLE_VALUES.resistance}k a Vin, SD ~${MAX_SD_EXAMPLE_VALUES.voltage}V (ventana garantizada ${MAX_SD_EXAMPLE_VALUES.min}–${MAX_SD_EXAMPLE_VALUES.max}V). Si hay pullup, usá el cálculo de SD.`,
     'GAIN de cada ampli sin conectar (=9dB) · parlante 4–8Ω directo (filterless, NO lo pruebes con carga resistiva)',
     'Parlantes: cada uno a los DOS bornes de SU ampli — ningún borne va a GND (la salida es diferencial)',
@@ -394,21 +394,21 @@ GPIO16
 
   keymap: {
     cols: [
-      { c: 0, gpio: 18 },
-      { c: 1, gpio: 8 },
-      { c: 2, gpio: 38 },
-      { c: 3, gpio: 39 },
-      { c: 4, gpio: 47 },
+      { c: 0, gpio: 6 },
+      { c: 1, gpio: 7 },
+      { c: 2, gpio: 15 },
+      { c: 3, gpio: 16 },
+      { c: 4, gpio: 17 },
     ],
     rows: [
-      { r: 0, gpio: 15, name: 'acción · fila de ARRIBA', keys: ['ACC1', 'ACC2', 'ACC3', 'ACC4', 'ACC5'] },
-      { r: 1, gpio: 16, name: 'acción · fila de ABAJO', keys: ['ACC6', 'ACC7', 'ACC8', 'ACC9', 'ACC10'] },
+      { r: 0, gpio: 4, name: 'acción · fila de ARRIBA', keys: ['ACC1', 'ACC2', 'ACC3', 'ACC4', 'ACC5'] },
+      { r: 1, gpio: 5, name: 'acción · fila de ABAJO', keys: ['ACC6', 'ACC7', 'ACC8', 'ACC9', 'ACC10'] },
     ],
     navRow: [
-      { kind: 'btn', logic: 'ALT1', gpio: 17 },
-      { kind: 'btn', logic: 'ALT2', gpio: 48 },
-      { kind: 'aux', label: 'Encoder', gpio: '4/5/6' },
-      { kind: 'aux', label: 'Stick', gpio: '1/2/7' },
+      { kind: 'btn', logic: 'ALT1', gpio: 18 },
+      { kind: 'btn', logic: 'ALT2', gpio: 8 },
+      { kind: 'aux', label: 'Encoder', gpio: '21/47/48' },
+      { kind: 'aux', label: 'Stick', gpio: '1/2/42' },
     ],
   },
 

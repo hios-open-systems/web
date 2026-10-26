@@ -298,9 +298,6 @@ function render(f) {
     wizb.hidden = true;
   }
 
-  const batPct = (f.bat === undefined || f.bat === 255) ? 86 : f.bat;
-  document.getElementById('bat').textContent = batPct + '%';
-
   const micEl = document.getElementById('mic');
   const muted = Boolean(f.mic);
   micEl.textContent = muted ? 'MUTE' : 'MIC ON';

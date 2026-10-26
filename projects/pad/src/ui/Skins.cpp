@@ -34,24 +34,6 @@ static void clip(TFT_eSPI& g, const char* s, int x, int y, int maxw, uint8_t fon
   g.drawString(buf, x, y, font);
 }
 
-// Mini-bateria en (x,y), ~22x11. Lee s.battery (255 = sin medicion: contorno
-// atenuado + guion, NO un % inventado; el divisor todavia no esta cableado).
-// Cuando haya dato real (BATTERY_ENABLED + divisor) se llena y colorea solo.
-static void drawBattery(TFT_eSPI& g, const UiSnapshot& s, int x, int y) {
-  const int bw = 20, bh = 11;
-  const bool nodata = (s.battery == 255);
-  uint16_t edge = nodata ? theme::DIM
-                : (s.battery > 50 ? theme::GREEN : (s.battery > 20 ? theme::YELLOW : theme::RED));
-  g.drawRoundRect(x, y, bw, bh, 2, edge);
-  g.fillRect(x + bw, y + 3, 2, bh - 6, edge);                // pico +
-  if (nodata) {
-    g.drawFastHLine(x + 7, y + bh / 2, 6, theme::DIM);       // guion "sin medicion"
-  } else {
-    int fw = (bw - 4) * s.battery / 100;
-    if (fw > 0) g.fillRect(x + 2, y + 2, fw, bh - 4, edge);
-  }
-}
-
 // Mini-microfono (~12px) para la fila de estado del header (el glyph MIC es muy alto).
 static void drawMicMini(TFT_eSPI& g, int cx, int cy, uint16_t col) {
   g.fillRoundRect(cx - 3, cy - 7, 6, 9, 3, col);             // capsula
@@ -59,15 +41,14 @@ static void drawMicMini(TFT_eSPI& g, int cx, int cy, uint16_t col) {
   g.drawFastHLine(cx - 3, cy + 5, 7, col);                   // base
 }
 
-// Cluster de estado del header (reemplaza al dock eliminado): bateria + wifi (barritas)
-// + mic, en una fila arriba del reloj. Se refresca en el header (full) y en status.
+// Cluster de estado del header: enlace (barritas WiFi) + mic, en una fila arriba del
+// reloj. Se refresca en el header (full) y en status.
 static void drawStatusCluster(TFT_eSPI& g, const UiSnapshot& s) {
   bool wifi = s.transports & tport::WIFI;
   bool ble  = s.transports & tport::BLE;
   bool usb  = s.transports & tport::USB;
   uint16_t tcol = wifi ? theme::CYAN : (ble ? theme::VIOLET : (usb ? theme::GREEN : theme::DIM));
   g.fillRect(346, 2, 124, 17, theme::PANEL);                 // limpia la fila (no pisa WiZ <=346)
-  drawBattery(g, s, 350, 4);
   iconkit::icon(g, wifi ? Glyph::WIFI : Glyph::LINK, 388, 10, tcol);   // barritas en WiFi
   if (s.wifiOff) iconkit::ln(g, 388 - 9, 2, 388 + 9, 18, theme::ORANGE);  // WiFi off (aviso)
   uint16_t micC = s.micMuted ? theme::RED : theme::GREEN;

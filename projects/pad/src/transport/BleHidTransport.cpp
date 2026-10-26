@@ -175,10 +175,9 @@ bool BleHidTransport::begin() {
   m_hid->hidInfo(0x00, 0x01);
   m_hid->reportMap((uint8_t*)REPORT_MAP, sizeof(REPORT_MAP));
   m_hid->startServices();
-  // El servicio de bateria lo crea NimBLEHIDDevice y los hosts lo muestran. El pad NO
-  // mide la bateria (cfg::BATTERY_ENABLED=false: GPIO9 es el NeoPixel; la tension la
-  // muestra la pantalla del buck), asi que esto es un valor fijo: el host va a ver
-  // siempre 100% aunque la bateria este baja. No es un dato real.
+  // El servicio de bateria lo crea NimBLEHIDDevice y los hosts lo muestran. El pad no
+  // mide la bateria (la tension se ve en la pantalla de la fuente): este 100% es fijo,
+  // NO un dato real.
   m_hid->setBatteryLevel(100);
 
 #if CONFIG_BT_NIMBLE_EXT_ADV

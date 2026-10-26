@@ -1,5 +1,5 @@
 // ============================================================================
-//  Audio - Salida I2S a los 2x MAX98357A (bus compartido).  rev 0.9
+//  Audio - Salida I2S a los 2x MAX98357A (bus compartido).
 //
 //  Los 3 pines de I2S van a los DOS amplis. Lo unico distinto entre ellos es su
 //  pin SD, que elige el canal y NO se cablea al S3 (LEFT = SD a Vin; RIGHT = SD

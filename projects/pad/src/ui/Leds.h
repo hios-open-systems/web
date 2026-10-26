@@ -3,8 +3,7 @@
 //  activa: cada Layer tiene su uint16_t color (RGB565) y aca lo expandimos a
 //  RGB888 y pintamos la tira.
 //
-//  Pin: GPIO9 (ex-divisor de batería, cfg::NEOPIXEL_PIN). Pin limpio -> UART0
-//  (43/44) queda libre para el Serial y el flasheo. Se controla por cfg::NEOPIXEL_ENABLED.
+//  Pin: pins::NEOPIXEL (Pins.h). Se controla por cfg::NEOPIXEL_ENABLED.
 //
 //  ZONAS: la tira son 2 placas de 4 LEDs encadenadas en UN pin, y encadenar no
 //  las hace dependientes (cada WS2812B tiene su controlador). Se parte en

@@ -62,7 +62,6 @@ export const demoFrame = {
   lay: 0,
   b: 0,
   tp: 5,
-  bat: 86,
   os: 'Windows',
   mic: false,
   vol: 58,

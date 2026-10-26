@@ -1,5 +1,5 @@
 // ============================================================================
-//  ButtonMatrix - Los 14 pulsadores del pad.  rev 0.9
+//  ButtonMatrix - Los 14 pulsadores del pad.
 //
 //  Dos formas de leerlos, un solo antirrebote:
 //    · 10 teclas de ACCION (BTN_1..BTN_10) en MATRIZ 2x5 con diodos. Se escanea
@@ -7,14 +7,11 @@
 //    · 4 DIRECTOS (ALT_1, ALT_2, SW del encoder, SW del stick): INPUT_PULLUP a
 //      GND, se leen siempre.
 //
-//  El muestreo (`sample`) esta separado de la maquina de debounce/long-press a
-//  proposito: como se LEE un boton cambio en rev 0.9, pero cuando un boton
-//  cuenta como pulsado no cambio en nada. Mezclar las dos cosas era lo que hacia
-//  que pasar a matriz pareciera un rewrite.
+//  El muestreo (`sample`) esta separado de la maquina de debounce/long-press:
+//  como se LEE un boton y cuando cuenta como pulsado son problemas distintos.
 //
-//  Emite PRESS / RELEASE / LONG_PRESS como InputEvent. La API publica (begin /
-//  seedInitialState / update / pressed) es la misma que en rev 0.8: main.cpp no
-//  se entera de que abajo hay una matriz.
+//  Emite PRESS / RELEASE / LONG_PRESS como InputEvent. main.cpp no se entera de
+//  que abajo hay una matriz.
 // ============================================================================
 #pragma once
 #include "../app/Types.h"

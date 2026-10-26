@@ -94,11 +94,11 @@ const hardened = parseInline('foo snake_case bar _real_ baz');
 ok('parseInline ignores snake_case underscores', hardened.every((t) => !t.italic || t.text === 'real'));
 ok('parseInline keeps snake_case as text', hardened.map((t) => t.text).join('') === 'foo snake_case bar real baz');
 
-const p40 = PAD_WIRING.pins.find((p) => p.gpio === 40)!;
-ok('matchesQuery by dest', matchesQuery(p40, 'bclk'));
-ok('matchesQuery by gpio', matchesQuery(p40, '40'));
-ok('matchesQuery empty is truthy', matchesQuery(p40, ''));
-ok('matchesQuery no match', !matchesQuery(p40, 'zzzzz'));
+const p41 = PAD_WIRING.pins.find((p) => p.gpio === 41)!;
+ok('matchesQuery by dest', matchesQuery(p41, 'bclk'));
+ok('matchesQuery by gpio', matchesQuery(p41, '41'));
+ok('matchesQuery empty is truthy', matchesQuery(p41, ''));
+ok('matchesQuery no match', !matchesQuery(p41, 'zzzzz'));
 
 ok('railLabel', railLabel(5) === '5V' && railLabel(33) === '3V3' && railLabel(null) === '—');
 ok('railClass', railClass(5) === 'r5' && railClass(33) === 'r33' && railClass(null) === 'rNone');

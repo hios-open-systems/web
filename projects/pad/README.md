@@ -29,7 +29,7 @@ La interfaz gráfica (`src/ui/` y `src/app/Theme.h`) refresca cada ~50 ms sobre 
 
 * **Modo Oscuro (`MODE_DARK`) y Modo Claro (`MODE_LIGHT`):** paleta semántica en formato nativo **RGB565 de 16 bits** (`BG`, `PANEL`, `CARD`, `EDGE`, `FG`, `SOFT`, `DIM`, `DARK`) con mezcla alfa por hardware/software (`theme::blend`) configurable en vivo desde el propio PAD.
 * **7 Colores de Acento Globales + Color por Capa:** el ajuste `Color` permite elegir entre **7 acentos globales** (`Cyan`, `Green`, `Magenta`, `Orange`, `Violet`, `Rose`, `Yellow`) que tiñen la marca, el reloj NTP y los indicadores del header, mientras que cada capa define su propio color de identidad para la franja superior y los bordes activos.
-* **Iluminación NeoPixel WS2812B en 2 Zonas (`GPIO9`):** 2 placas encadenadas de 4 LEDs (**8 píxeles direccionables divididos en 2 zonas independientes**) que sincronizan automáticamente el color de la carcasa translúcida con el color de la capa activa o las alertas de estado.
+* **Iluminación NeoPixel WS2812B en 2 Zonas (`GPIO38`):** 2 placas encadenadas de 4 LEDs (**8 píxeles direccionables divididos en 2 zonas independientes**) que sincronizan automáticamente el color de la carcasa translúcida con el color de la capa activa o las alertas de estado.
 * **Renderizado Parcial por Dirty-Checking (`dash::*`):** en lugar de refrescar los `480×320` píxeles en cada ciclo, el motor compara el `UiSnapshot` actual con el anterior y redibuja **únicamente la celda modificada**: `dash::keycap()` (una sola tecla pulsada), `dash::status()` (cluster de batería, WiFi/BLE/USB y micrófono), `dash::clock()` (cambio de minuto), `dash::encDial()` (rueda del encoder) o `dash::stick()` (vector del joystick).
 * **4 Vistas de Telemetría / Monitor a Pantalla Completa (`src/ui/monitor.cpp`):** cuando seleccionás una capa del grupo Monitor, el PAD reemplaza la grilla de teclas por instrumentos dedicados con historial circular de **56 muestras** y gráficos **sparkline** en tiempo real:
   1. **General:** Temperatura (`°C`) y porcentaje de carga de **CPU y GPU** con sparklines coloreados por umbral térmico (`Verde < 65 °C`, `Amarillo ≥ 65 °C`, `Rojo ≥ 80 °C`), velocidad de ventiladores (`RPM` o `%`), uso de **RAM** y **VRAM** (`MB usados / totales`).
@@ -104,8 +104,8 @@ El firmware divide el trabajo entre los dos núcleos Xtensa LX7 del ESP32-S3 a 2
 * **Microcontrolador:** **ESP32-S3-DevKitC-1 N16R8** (16 MB Flash Quad SPI + 8 MB PSRAM Octal AP Memory a 3.3 V). *Nota: la PSRAM octal ocupa los GPIO 33–37 y la flash los GPIO 26–32.*
 * **Pantalla:** **ILI9488 4.0"** `480×320` SPI (HSPI a 27 MHz, backlight con dimming PWM LEDC de 8 bits en `BL_CANAL = 0` a 5 kHz).
 * **Controles:** **Encoder KY-040** + **Joystick HW-504** (alimentado estrictamente a **3.3 V** para no saturar el ADC1 del S3 ni acoplar ejes) + **12 pulsadores NA a GND** (10 en matriz 2×5 con diodos `1N4148` + 2 `ALT` directos).
-* **Audio Estéreo I2S:** **2× MAX98357A** compartiendo bus I2S (`BCLK`, `LRC`, `DOUT`); selección de canal por pin `SD` (Canal Izquierdo: `SD` directo a `Vin`; Canal Derecho: `SD` mediante resistor de **360 kΩ** a `Vin`, ~1.09 V; un 390 kΩ también cae en la ventana del canal derecho).
-* **Iluminación:** **8× WS2812B (NeoPixel)** en 2 placas de 4 LEDs en serie sobre `GPIO9` (vía resistor de 330 Ω), divididas por software en 2 zonas independientes.
+* **Audio Estéreo I2S:** **2× MAX98357A** compartiendo bus I2S (`BCLK`, `LRC`, `DOUT`); selección de canal por pin `SD` (Canal Izquierdo: `SD` directo a `Vin`; Canal Derecho: `SD` mediante resistor de **360 kΩ** a `Vin`).
+* **Iluminación:** **8× WS2812B (NeoPixel)** en 2 placas de 4 LEDs en serie sobre `GPIO38` (vía resistor de 330 Ω), divididas por software en 2 zonas independientes.
 * **Alimentación:** Pack **Li-Ion 2S (2× 18650, 7.4 V nominal / 8.4 V carga)** con BMS 2S USB-C + regulador step-down **LM2596S con display voltímetro ajustado a 5.0 V** y llave de corte `SW-CELDAS`.
 * **Guía de cableado verificada paso a paso:** consultá **[/pinouts/pad](/pinouts/pad)**, verificada automáticamente contra [`src/app/Pins.h`](src/app/Pins.h) y [`platformio.ini`](platformio.ini) mediante `npm run test:wiring`.
 
@@ -141,7 +141,7 @@ pio device monitor -b 115200
 * **Inicialización de fuentes en `TFT_eSprite`:** crear un `TFT_eSprite` deja `gfxFont` sin inicializar, lo que provocaba un *boot loop* al dibujar texto; siempre se invoca `setTextFont(1)` inmediatamente después de instanciar cada sprite.
 * **Por qué el Joystick va a 3.3 V y no a 5 V:** alimentar el potenciómetro del HW-504 a 5 V satura el rango del ADC del ESP32-S3 (~3.1 V máx. con `ADC_11db`) en el último tercio del recorrido y genera acoplamiento entre ejes (diagonales fantasma).
 * **Aislamiento de símbolos USB HID vs NimBLE:** `USBHIDKeyboard.h` y las librerías BLE definen símbolos `KEY_*` y `KeyReport` incompatibles; se aislaron en unidades de traducción separadas dentro de `src/transport/` mediante fábricas (`ITransport`).
-* **Medición de batería en el voltímetro del buck:** el divisor resistivo en `GPIO9` se descartó (`cfg::BATTERY_ENABLED = false`) porque el display del módulo LM2596S ya indica la tensión real del pack 2S en la carcasa y `GPIO9` quedó asignado como línea de datos limpia para los NeoPixels (dejando `UART0` en `43/44` libre para flasheo y logs sin parpadeos de arranque).
+* **Batería:** el pad no la mide; la tensión del pack 2S se lee en el display del módulo LM2596S.
 
 ## Créditos
 

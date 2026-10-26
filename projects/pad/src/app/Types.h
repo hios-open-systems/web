@@ -66,7 +66,6 @@ struct UiSnapshot {
   uint8_t  volume;      // 0..100 (estimado)
   uint8_t  transports;  // bits tport::USB/BLE/WIFI
   bool     wifiOff;     // WiFi apagado por el usuario (long-press boton 5) -> aviso en pantalla
-  uint8_t  battery;     // 0..100 (placeholder hasta sumar medicion; 255 = sin dato)
   // --- feedback real del companion (Fase 1); sentinela = sin dato ---
   bool     live;        // hay estado fresco del companion (mic/vol son reales)
   int16_t  cpuTemp;     // C, -1000 = sin dato
