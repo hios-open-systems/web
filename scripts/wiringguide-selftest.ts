@@ -162,7 +162,7 @@ for (const [name, label] of [
   ['ENC_CLK', 'Encoder CLK'], ['ENC_DT', 'Encoder DT'], ['ENC_SW', 'Encoder SW'],
   ['STICK_X', 'Stick VRx'], ['STICK_Y', 'Stick VRy'], ['STICK_SW', 'Stick SW'],
   ['I2S_BCLK', 'I2S BCLK'], ['I2S_LRC', 'I2S LRC'], ['I2S_DOUT', 'I2S DOUT'],
-  ['TFT_BL', 'TFT backlight'],
+  ['TFT_BL', 'TFT backlight'], ['NEOPIXEL', 'NeoPixel DIN'],
 ] as const) {
   const g = intConst(padPins, name);
   ok(`Pins.h expone ${name}`, g !== null);

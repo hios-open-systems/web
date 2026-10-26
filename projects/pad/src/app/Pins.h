@@ -12,6 +12,7 @@
 //  junto con los parlantes. Las 10 teclas de ACCION pasan a una MATRIZ 2x5 con
 //  diodos: 7 GPIO en vez de 10. Los 3 que se liberan son el bus I2S.
 //    matriz 7 + ALT 2 + I2S 3 = 12  ->  sobra exactamente el GPIO3 (strapping).
+//  (El GPIO9, ex-divisor de bateria, hoy es el DIN del NeoPixel.)
 //
 //  Los 2 ALT quedan DIRECTOS a proposito: son los que abren capa/menu y tienen
 //  que leerse siempre, sin depender de en que fila esta el escaneo.
@@ -66,5 +67,10 @@ static constexpr uint8_t I2S_DOUT = 42;   // dato serial -> DIN de los amplis
 // con el modulo sin alimentar, seguir manejando el SPI viola el abs-max del
 // ILI9488 (VIN <= IOVCC + 0.3V) y le mete corriente por los diodos de ESD.
 static constexpr uint8_t TFT_BL = 21;
+
+// --- Tira NeoPixel (2 placas x 4 WS2812B encadenadas) ---
+// DIN via 330 ohm en serie. Ex-divisor de bateria: la medicion de bateria se
+// descarto (ver cfg::BATTERY_ENABLED). Pin limpio -> UART0 (43/44) queda libre.
+static constexpr uint8_t NEOPIXEL = 9;
 
 }  // namespace pins

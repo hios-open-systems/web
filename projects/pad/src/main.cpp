@@ -80,7 +80,7 @@ public:
     appstate::lastInputMs = e.t_ms;
     lastInput = e.t_ms;
     if (e.id == InputId::ENC_ROT && e.edge == Edge::ROTATE) {
-      menu::turn(e.v1 > 0 ? +1 : -1);
+      menu::turn(e.v1);   // con signo: un giro rapido de varios detentes no pierde pasos
     } else if (e.id == InputId::ENC_SW) {
       if (e.edge == Edge::PRESS) longConsumed = false;
       else if (e.edge == Edge::LONG_PRESS) {        // sube un nivel; en nivel 1 cierra
@@ -260,6 +260,7 @@ static uint8_t readBatteryPct(uint32_t now) {
 static void inputTask(void*) {
   DispatchSink dsink;
   MenuSink     msink;
+  WifiSink     wsink;   // vive todo el task: PRESS/LONG/RELEASE llegan en vueltas distintas
   Serial.printf("[inputTask] core %d\n", xPortGetCoreID());
   static uint32_t comboStart = 0;
   static bool     menuEntered = false;
@@ -282,7 +283,7 @@ static void inputTask(void*) {
 
     // En modo WiFi: long-press del encoder = salir; tap = reconfigurar (levantar portal).
     if (appstate::mode == AppMode::WIFI) {
-      WifiSink wsink;
+      wsink.exit = false; wsink.reconfigure = false;   // pedidos de ESTA vuelta (el estado del gesto se conserva)
       inputs.update(now, wsink);
       if (wsink.exit) { net::stopPortal(); appstate::mode = AppMode::NORMAL; uiForceRedraw(); }
       else if (wsink.reconfigure && !net::portalActive()) { net::requestPortal(); uiForceRedraw(); }
@@ -619,4 +620,17 @@ void setup() {
 
 void loop() {
   vTaskDelay(pdMS_TO_TICKS(1000));
+#ifdef STACK_DEBUG
+  // -D STACK_DEBUG en build_flags: imprime cada 10s cuanto stack le SOBRA a cada task
+  // (en bytes). Si alguno baja de ~512, subir su tamano en xTaskCreatePinnedToCore.
+  static uint8_t n = 0;
+  if (++n >= 10) {
+    n = 0;
+    const char* names[] = {"input", "transport", "ui", "net", "audio"};
+    for (const char* nm : names) {
+      TaskHandle_t h = xTaskGetHandle(nm);
+      if (h) Serial.printf("[stack] %-9s libre=%u\n", nm, (unsigned)uxTaskGetStackHighWaterMark(h));
+    }
+  }
+#endif
 }

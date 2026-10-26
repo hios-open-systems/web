@@ -48,6 +48,17 @@ static int16_t normAxis(int raw, int center) {
   return (int16_t)n;
 }
 
+// Un paso +-1 del auto-recentrado de un eje (ver update()). `off` es la desviacion
+// ya corregida por el drift: dentro de la zona muerta adapta en cada paso rapido;
+// hasta la banda, solo en los pasos lentos; fuera de la banda no toca.
+static void trackRest(int32_t f, int ref, int dead, bool fast, bool slow, int32_t& drift) {
+  const int off = (int)(f - drift) - ref;
+  const int m = abs(off);
+  if (m >= cfg::STICK_REST_BAND) return;
+  if (m < dead ? !fast : !slow) return;
+  drift += (off > 0) - (off < 0);
+}
+
 void AnalogStick::update(uint32_t now, InputSink& sink) {
   // Promedio + filtro EMA entero (m += (raw-m)/4). El truncado entero hace que
   // el ruido chico no mueva el valor -> estable en reposo.
@@ -66,20 +77,26 @@ void AnalogStick::update(uint32_t now, InputSink& sink) {
   // muerta chica. El snap inicial espera a que el EMA se asiente (warmup): si snapeas en
   // el primer sample, m_f* todavia vale el centro de boot y el reposo EMA lo supera mas
   // rapido de lo que el seguimiento lento puede alcanzar -> el gate de banda se cierra y
-  // el drift queda clavado. Tras el snap, seguimiento lento +-1 dentro de una banda (drift
-  // termico). Fuera de la banda = empuje real -> no adapta, no roba movimiento intencional.
+  // el drift queda clavado. Tras el snap, seguimiento +-1 en dos velocidades:
+  //   - dentro de la zona muerta: rapido (STICK_RECENTER_MS). Ahi la salida ya es 0,
+  //     asi que adaptar no le roba nada al usuario.
+  //   - entre zona muerta y STICK_REST_BAND: muy lento (STICK_RECENTER_SLOW_MS). Antes
+  //     iba a la velocidad rapida y se comia los empujes suaves sostenidos: el puntero
+  //     frenaba solo a los pocos segundos.
+  //   - fuera de la banda: empuje real, no adapta.
   if (!m_driftInit) {
     if (++m_driftWarmup >= cfg::STICK_RECENTER_WARMUP) {
       m_driftX = m_fx - refX; m_driftY = m_fy - refY; m_driftInit = true;
     }
-  } else if (now - m_tRecenter >= cfg::STICK_RECENTER_MS) {
-    m_tRecenter = now;
-    if (abs((int)(m_fx - m_driftX) - refX) < cfg::STICK_REST_BAND) {
-      int o = (int)(m_fx - refX) - m_driftX; m_driftX += (o > 0) - (o < 0);
-    }
-    if (abs((int)(m_fy - m_driftY) - refY) < cfg::STICK_REST_BAND) {
-      int o = (int)(m_fy - refY) - m_driftY; m_driftY += (o > 0) - (o < 0);
-    }
+  } else {
+    const bool fast = (now - m_tRecenter >= cfg::STICK_RECENTER_MS);
+    const bool slow = (now - m_tRecenterSlow >= cfg::STICK_RECENTER_SLOW_MS);
+    if (fast) m_tRecenter = now;
+    if (slow) m_tRecenterSlow = now;
+    const int deadX = appstate::stickCal.valid ? appstate::stickCal.x.dead : cfg::STICK_DEADZONE;
+    const int deadY = appstate::stickCal.valid ? appstate::stickCal.y.dead : cfg::STICK_DEADZONE;
+    trackRest(m_fx, refX, deadX, fast, slow, m_driftX);
+    trackRest(m_fy, refY, deadY, fast, slow, m_driftY);
   }
 
   // Con calibracion: escala asimetrica por direccion. Sin ella: fallback al

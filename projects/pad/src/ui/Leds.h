@@ -17,8 +17,7 @@
 namespace leds {
 
 // Inicializa la tira y la deja en estado conocido (apagada). Llamar en setup()
-// JUSTO DESPUES de Serial.begin() (para que el RMT gane el pin 43 de forma
-// estable) y antes de usar setLayerColor().
+// antes de usar setLayerColor().
 void begin();
 
 // Pinta TODA la tira con el color de la capa (RGB565): pisa las zonas. Cachea: si

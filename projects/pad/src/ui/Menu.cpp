@@ -1,5 +1,7 @@
 #include "Menu.h"
 #include <Arduino.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/semphr.h>
 #include <math.h>
 #include <esp_heap_caps.h>
 #include "../app/Theme.h"
@@ -49,6 +51,17 @@ static bool    s_overview = false; // vista de TODAS las secciones (botones 1-10
 static bool    s_dirty    = true;
 static bool    s_needFull = true;
 
+// El estado de arriba lo tocan DOS cores: el inputTask (core 1) navega con turn/press/
+// pickButton/open/close y el uiTask (core 0) lo lee en render(). Sin lock, un giro a
+// mitad de un render dibujaba media pantalla con la seccion vieja y media con la nueva.
+// Recursivo porque back() llama a close(). render() lo retiene mientras dibuja: en el
+// menu el input puede esperar un frame, y el mutex hereda prioridad (input=5 > ui=2).
+static SemaphoreHandle_t s_lock = nullptr;
+struct Lock {
+  Lock()  { if (s_lock) xSemaphoreTakeRecursive(s_lock, portMAX_DELAY); }
+  ~Lock() { if (s_lock) xSemaphoreGiveRecursive(s_lock); }
+};
+
 // --- indices de los items de ajuste (despues de las capas) ---
 static int idxBright() { return s_km ? s_km->count() : 0; }
 static int idxTheme()  { return idxBright() + 1; }
@@ -74,15 +87,20 @@ static int pageOfLayer(uint8_t layerIdx) {
 static const char* pageName()  { return menumodel::section(s_groupSel).name; }
 static uint16_t    pageColor() { return menumodel::section(s_groupSel).color; }
 
-void init(KeyMap* km) { s_km = km; menumodel::begin(km); }
+void init(KeyMap* km) {
+  if (!s_lock) s_lock = xSemaphoreCreateRecursiveMutex();
+  s_km = km; menumodel::begin(km);
+}
 
 void open(uint8_t currentLayer) {
+  Lock l;
   s_open = true; s_editItem = false; s_overview = false;
   s_sel = currentLayer;
   s_groupSel = pageOfLayer(currentLayer);
   s_dirty = true; s_needFull = true;
 }
 void close() {
+  Lock l;
   s_open = false; s_editItem = false;
 }
 bool isOpen() { return s_open; }
@@ -93,6 +111,7 @@ bool inLayerPicker() { return s_open; }
 // Boton i (0..9): elige el item i de la seccion actual. View -> salta; setting editable ->
 // entra en ajuste (el encoder cambia el valor); WiFi/Calibrar -> accion directa.
 MenuResult pickButton(uint8_t i) {
+  Lock l;
   if (!s_open) return MenuResult::NONE;
   if (s_overview) {                                // overview: el boton i salta a esa pagina
     if ((int)i < pageCount()) { s_groupSel = i; s_overview = false; s_needFull = true; s_dirty = true; }
@@ -151,14 +170,18 @@ static void editSelected(int delta) {
 }
 
 void turn(int delta) {
+  Lock l;
   if (!s_open) return;
   if (s_editItem) { editSelected(delta); s_dirty = true; return; } // ajustando -> cambia el valor
   if (s_overview) return;                                          // en overview se elige con botones; el encoder NO navega por atras
-  s_groupSel = (s_groupSel + delta + pageCount()) % pageCount();   // en el picker, cambia de seccion
+  const int n = pageCount();
+  if (n <= 0) return;
+  s_groupSel = ((s_groupSel + delta) % n + n) % n;                // en el picker, cambia de seccion (delta puede ser > 1)
   s_dirty = true;
 }
 
 MenuResult press() {                               // encoder press: cierra el ajuste, o abre/cierra el overview
+  Lock l;
   if (!s_open) return MenuResult::NONE;
   if (s_editItem) s_editItem = false;
   else            s_overview = !s_overview;         // ver TODAS las secciones (botones 1-10 saltan)
@@ -167,7 +190,7 @@ MenuResult press() {                               // encoder press: cierra el a
 }
 
 void back() { close(); }                           // long-press del encoder: cierra el menu
-uint8_t selectedLayer() { return (uint8_t)s_sel; }
+uint8_t selectedLayer() { Lock l; return (uint8_t)s_sel; }
 
 // ---------------------------------------------------------------------------
 static uint16_t itemAccent(int i) {
@@ -546,6 +569,7 @@ static void renderBody(TFT_eSPI& tft) {
 
 void render(TFT_eSPI& tft) {
   if (!s_km) return;
+  Lock l;
 
   if (s_needFull) {
     // Sin fillScreen (evita el parpadeo negro al abrir). renderBody rellena la grilla

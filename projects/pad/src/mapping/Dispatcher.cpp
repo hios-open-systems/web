@@ -49,16 +49,7 @@ void Dispatcher::dispatch(const InputEvent& e) {
   // SW del encoder: NAVEGACION (abre el menu); no dispara acciones de la capa.
   if (e.id == InputId::ENC_SW)   { handleEncSwNav(e); return; }
 
-  // Override del encoder (doble-tap cicla modos): pisa la accion de la capa.
-  if (e.id == InputId::ENC_ROT && e.edge == Edge::ROTATE && m_encOverride != 0) {
-    Action a = encModeAction(m_encOverride, e.v1 > 0);
-    if (m_state && a.type == ActionType::MEDIA) {
-      if (a.p.media.usage == MediaUsage::VOL_UP)   m_state->bumpVolume(+4);
-      if (a.p.media.usage == MediaUsage::VOL_DOWN) m_state->bumpVolume(-4);
-    }
-    if (a.type != ActionType::NONE) xQueueSend(bus::actionQueue, &a, 0);
-    return;
-  }
+  if (e.id == InputId::ENC_ROT && e.edge == Edge::ROTATE) { handleRotate(e); return; }
 
   // Botones de cara (1-10): tap = accion de capa (al SOLTAR); hold = toggle del card.
   // Los ALT_1/ALT_2 caen a fireResolved (binding vacio por ahora -> no-op).
@@ -68,6 +59,45 @@ void Dispatcher::dispatch(const InputEvent& e) {
   if (e.id == InputId::STICK_AXIS && !m_mouseOn) return;
 
   fireResolved(e);
+}
+
+// Encoder: un ROTATE puede traer mas de un detente (giro rapido entre dos updates).
+// Antes se disparaba UNA sola accion por evento -> se perdian pasos de volumen/zoom/
+// pestanas. Ahora se repite la accion una vez por detente, y si los detentes llegan
+// mas rapido que ENC_ACCEL_MS se multiplica por ENC_ACCEL_MULT (tope ENC_REPS_MAX).
+// La aceleracion NO aplica a cambios de capa ni a lanzar apps: ahi un detente = un paso.
+void Dispatcher::handleRotate(const InputEvent& e) {
+  const bool cw = e.v1 > 0;
+  int reps = abs((int)e.v1);
+  if (reps == 0) return;
+  const bool fast = m_lastRotMs != 0 && (e.t_ms - m_lastRotMs) < cfg::ENC_ACCEL_MS;
+  m_lastRotMs = e.t_ms;
+
+  // Evento unitario: cada repeticion es un detente (el scroll toma el signo como rueda).
+  InputEvent unit = e;
+  unit.v1 = cw ? 1 : -1;
+
+  // Override del encoder (doble-tap cicla modos): pisa la accion de la capa.
+  if (m_encOverride != 0) {
+    if (fast) reps *= cfg::ENC_ACCEL_MULT;
+    if (reps > cfg::ENC_REPS_MAX) reps = cfg::ENC_REPS_MAX;
+    Action a = encModeAction(m_encOverride, cw);
+    if (a.type == ActionType::NONE) return;
+    for (int i = 0; i < reps; i++) {
+      if (m_state && a.type == ActionType::MEDIA) {
+        if (a.p.media.usage == MediaUsage::VOL_UP)   m_state->bumpVolume(+4);
+        if (a.p.media.usage == MediaUsage::VOL_DOWN) m_state->bumpVolume(-4);
+      }
+      xQueueSend(bus::actionQueue, &a, 0);
+    }
+    return;
+  }
+
+  const Action probe = m_km->resolve(m_activeLayer, unit);
+  const bool accel = probe.type != ActionType::LAYER && probe.type != ActionType::NET_LAUNCH;
+  if (fast && accel) reps *= cfg::ENC_ACCEL_MULT;
+  if (reps > cfg::ENC_REPS_MAX) reps = cfg::ENC_REPS_MAX;
+  for (int i = 0; i < reps; i++) fireResolved(unit);
 }
 
 // Resuelve la accion de la capa para el evento y la procesa
