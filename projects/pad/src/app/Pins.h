@@ -57,7 +57,8 @@ static constexpr uint8_t STICK_SW = 7;  // pulsador (INPUT_PULLUP)
 
 // --- Bus I2S: los 3 pines van a AMBOS MAX98357A (bus compartido) -------------
 // Lo unico distinto entre los dos amplis es su pin SD, que elige el canal y NO
-// se cablea al S3: LEFT = SD a Vin; RIGHT = SD por 390k a Vin (~1.0V medido).
+// se cablea al S3: LEFT = SD a Vin; RIGHT = SD por 360k a Vin (~1.09V, igual que la
+// guia /pinouts/pad). Un 390k tambien cae en la ventana del canal derecho (~1.0V medido).
 static constexpr uint8_t I2S_BCLK = 40;
 static constexpr uint8_t I2S_LRC  = 41;   // word-select (L/R)
 static constexpr uint8_t I2S_DOUT = 42;   // dato serial -> DIN de los amplis

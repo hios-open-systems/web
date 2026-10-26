@@ -401,7 +401,7 @@
                 {
                     "component": "Amplificador I2S MAX98357A + Parlantes",
                     "qty": 2,
-                    "notes": "Estéreo en bus I2S compartido (L: SD a Vin, R: SD por 390 kΩ a Vin)"
+                    "notes": "Estéreo en bus I2S compartido (L: SD a Vin, R: SD por 360 kΩ a Vin)"
                 },
                 {
                     "component": "Placas NeoPixel WS2812B (2×4 LEDs)",

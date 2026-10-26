@@ -401,7 +401,7 @@
                 {
                     "component": "MAX98357A I2S-Verstärker + Lautsprecher",
                     "qty": 2,
-                    "notes": "Stereo am gemeinsamen I2S-Bus (L: SD an Vin, R: SD über 390 kΩ an Vin)"
+                    "notes": "Stereo am gemeinsamen I2S-Bus (L: SD an Vin, R: SD über 360 kΩ an Vin)"
                 },
                 {
                     "component": "WS2812B-NeoPixel-Platinen (2×4 LEDs)",

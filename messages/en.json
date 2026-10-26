@@ -401,7 +401,7 @@
                 {
                     "component": "MAX98357A I2S Amp + Speakers",
                     "qty": 2,
-                    "notes": "Stereo on shared I2S bus (L: SD to Vin, R: SD via 390 kΩ to Vin)"
+                    "notes": "Stereo on shared I2S bus (L: SD to Vin, R: SD via 360 kΩ to Vin)"
                 },
                 {
                     "component": "WS2812B NeoPixel Boards (2×4 LEDs)",

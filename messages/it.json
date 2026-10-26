@@ -401,7 +401,7 @@
                 {
                     "component": "Amplificatore I2S MAX98357A + Altoparlanti",
                     "qty": 2,
-                    "notes": "Stereo su bus I2S condiviso (L: SD a Vin, R: SD tramite 390 kΩ a Vin)"
+                    "notes": "Stereo su bus I2S condiviso (L: SD a Vin, R: SD tramite 360 kΩ a Vin)"
                 },
                 {
                     "component": "Schede NeoPixel WS2812B (2×4 LED)",
