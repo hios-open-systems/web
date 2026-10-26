@@ -12,11 +12,12 @@ const deployIndex = steps.findIndex(step => step.run === 'npx opennextjs-cloudfl
 assert.ok(deployIndex > 0);
 const guardIndex = steps.findIndex(step => step.name === 'Verify production deployment prerequisites');
 assert.equal(guardIndex, deployIndex - 1);
-assert.match(steps[guardIndex].run, /WORKERS_BUILDS_DISABLED/);
+assert.ok('workflow_dispatch' in workflow.on, 'Production deploy is a manual run');
+assert.deepEqual(Object.keys(workflow.on).sort(), ['pull_request', 'push', 'workflow_dispatch']);
 assert.match(steps[guardIndex].run, /git\/ref\/heads\/main/);
 assert.match(steps[guardIndex].run, /GITHUB_SHA/);
 for (const step of steps.filter(step => step.env?.CLOUDFLARE_API_TOKEN || step.run === 'node scripts/verify-production.mjs')) {
-  assert.equal(step.if, "github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.WORKERS_BUILDS_DISABLED == 'true'");
+  assert.equal(step.if, "github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'");
 }
 assert.equal(steps.filter(step => step.run === 'npx opennextjs-cloudflare build').length, 1);
 for (const [index, step] of steps.entries()) {

@@ -5,6 +5,9 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  # Deploy is manual: Actions → CI → "Run workflow" on main. It runs the full
+  # validation first and publishes only if everything passes.
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -126,25 +129,23 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
-      # PRs never receive deployment credentials. Default success() also means
-      # that any failed validation above prevents publication.
+      # Only a manual run on main publishes. PRs and pushes never receive
+      # deployment credentials, and any failed validation above blocks it.
       - name: Verify production deployment prerequisites
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.WORKERS_BUILDS_DISABLED == 'true'
+        if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
         env:
           GH_TOKEN: ${{ github.token }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-          WORKERS_BUILDS_DISABLED: ${{ vars.WORKERS_BUILDS_DISABLED }}
           NEXT_PUBLIC_TURNSTILE_SITEKEY: ${{ vars.NEXT_PUBLIC_TURNSTILE_SITEKEY }}
         run: |
           node scripts/security-release-check.mjs
-          test "$WORKERS_BUILDS_DISABLED" = "true" || { echo 'Disable automatic Workers Builds before enabling CI deployment.'; exit 1; }
           test -n "$CLOUDFLARE_API_TOKEN" || { echo 'Missing Cloudflare deployment token.'; exit 1; }
           test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo 'Missing Cloudflare account ID.'; exit 1; }
           test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha)" = "$GITHUB_SHA" || { echo 'Refusing to deploy an outdated main commit.'; exit 1; }
 
       - name: Deploy tested Worker to production
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.WORKERS_BUILDS_DISABLED == 'true'
+        if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
         run: npx opennextjs-cloudflare deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -152,5 +153,5 @@ jobs:
           WRANGLER_SEND_METRICS: 'false'
 
       - name: Verify production version and routes
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.WORKERS_BUILDS_DISABLED == 'true'
+        if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
         run: node scripts/verify-production.mjs
