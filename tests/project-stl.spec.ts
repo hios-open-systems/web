@@ -57,7 +57,7 @@ test('all three hardware projects expose #models-3d section with STL downloads',
     await page.goto(`/es/projects/${slug}`);
     const modelsSection = page.locator('#models-3d');
     await expect(modelsSection).toBeVisible();
-    await expect(modelsSection.locator('[role="tablist"]')).toBeVisible();
+    await expect(modelsSection.locator('[data-prints] button[aria-pressed="true"]')).toHaveCount(1);
     await expect(modelsSection.locator('a[download]').first()).toHaveAttribute('href', /\.stl$/i);
   }
 });

@@ -369,8 +369,7 @@
             ],
             "whatDoesnt": [
                 "Las 4 vistas de telemetría real, el control WiZ y el mute global de micrófono requieren pad-companion corriendo en red local",
-                "El companion cuenta con proveedores nativos para Windows y Linux; el soporte para macOS está pendiente",
-                "La medición de batería por ADC en GPIO9 se deshabilitó a favor del bus NeoPixel (la tensión real del pack 2S se lee en el display del buck LM2596S)"
+                "El companion cuenta con proveedores nativos para Windows y Linux; el soporte para macOS está pendiente"
             ],
             "bom": [
                 {
@@ -406,7 +405,7 @@
                 {
                     "component": "Placas NeoPixel WS2812B (2×4 LEDs)",
                     "qty": 2,
-                    "notes": "8 píxeles encadenados en GPIO9 vía 330 Ω, divididos en 2 zonas"
+                    "notes": "8 píxeles encadenados en GPIO38 vía 330 Ω, divididos en 2 zonas"
                 },
                 {
                     "component": "Pack 2S 18650 + BMS USB-C + Buck LM2596S",
@@ -433,7 +432,7 @@
                 },
                 {
                     "label": "Iluminación y Audio",
-                    "value": "8 × WS2812B NeoPixel (2 zonas en GPIO9) + 2 × MAX98357A I2S estéreo"
+                    "value": "8 × WS2812B NeoPixel (2 zonas en GPIO38) + 2 × MAX98357A I2S estéreo"
                 },
                 {
                     "label": "Transporte HID",
@@ -631,7 +630,21 @@
         "asset_firmware": "Firmware y configuración",
         "asset_data": "Datos",
         "view_in_maker": "Ver en Maker",
-        "printable_parts_description": "{count, plural, one {# pieza con visor 3D y descarga.} other {# piezas con visor 3D y descarga.}}"
+        "printable_parts_description": "{count, plural, one {# pieza con visor 3D y descarga.} other {# piezas con visor 3D y descarga.}}",
+        "nav_label": "Secciones del proyecto",
+        "nav_overview": "Resumen",
+        "nav_docs": "Documentación",
+        "nav_parts": "Piezas 3D",
+        "nav_firmware": "Firmware",
+        "nav_files": "Archivos",
+        "docs_description": "El README del proyecto: diseño, decisiones y detalles de armado.",
+        "full_pinout": "Pinout completo",
+        "external_models": "Modelos externos:",
+        "firmware_title": "Firmware y código",
+        "firmware_description": "{count, plural, one {# archivo real} other {# archivos reales}} de {path}, leídos sin salir de la página.",
+        "copy": "Copiar",
+        "copied": "Copiado",
+        "full_file": "Archivo completo"
     },
     "Pinouts": {
         "boardOrientation": "Vista superior · USB abajo. Referencia del dibujo: números únicos, bajando por la izquierda y subiendo por la derecha. No son números GPIO ni la numeración del fabricante.",
@@ -1472,7 +1485,7 @@
             "parlantes": "Parlantes",
             "conexiones": "Conexiones",
             "check": "Checklist",
-            "workbench": "Cableado y armado"
+            "workbench": "Modo soldadura"
         },
         "ui": {
             "moreTabs": "Más pestañas",
@@ -4688,28 +4701,27 @@
         "illustration": "Ilustración orientativa, vista superior. Confirmá la revisión y la serigrafía de tu placa; los detalles mecánicos pueden variar."
     },
     "Assembly": {
-        "title": "Banco de cableado y armado",
-        "intro": "Trabajá un módulo por vez. Explorá cada señal y registrá las comprobaciones que hiciste en tu montaje.",
-        "wiring": "Cableado",
-        "assembly": "Armado",
-        "chooseModule": "Módulo de trabajo",
-        "module": "MÓDULO",
-        "power": "Alimentación del módulo",
-        "functional": "Diagrama funcional: los terminales numerados identifican conexiones de esta lista, no posiciones físicas. Los rieles y componentes intermedios se describen arriba y en el detalle de cada señal.",
-        "diagram": "Conexiones de señales del módulo",
-        "noSignals": "Este módulo no tiene señales GPIO. Seguí las conexiones de alimentación indicadas arriba.",
+        "title": "Modo soldadura",
+        "intro": "Un módulo por vez. Cada unión muestra el pin exacto del header del ESP32, contado desde la antena. Tildá cada una cuando quede soldada y medida.",
+        "unpowered": "Soldá sin energía: desconectá USB, fuente y batería. No sueldes directo sobre celdas de litio.",
+        "modules": "Módulos en orden de soldado",
+        "stepOf": "Módulo {current} de {total}",
+        "power": "Alimentación",
+        "mapTitle": "Header del ESP32",
+        "mapHint": "Placa vista desde arriba: antena arriba, USB abajo. El número es la posición del pin contando desde la antena.",
+        "antenna": "Antena",
+        "legendModule": "este módulo",
+        "otherModule": "ocupado por otro módulo",
+        "legendFree": "libre o sin uso",
+        "toBoard": "Al header del ESP32",
+        "onModule": "En el módulo y los rieles",
+        "joints": "Uniones",
+        "markDone": "Soldado y medido: {name}",
+        "moduleNotes": "Diagrama y notas del módulo",
         "previous": "Anterior",
         "next": "Siguiente",
-        "progress": "Comprobaciones registradas: {done} de {total}",
-        "unpowered": "Para cablear, soldar o medir continuidad, desconectá USB, fuentes y batería. No sueldes directamente sobre celdas de litio.",
-        "prepareTitle": "Preparar y presentar",
-        "prepareBody": "Contrastá la variante y serigrafía con la guía. Identificá cada extremo en Cableado, cortá y pelá los cables, prepará el aislamiento y sujetá las piezas. Revisá polaridad y orientación antes de soldar.",
-        "solderTitle": "Soldar y aislar",
-        "solderBody": "Usá extracción de humos y soporte para el soldador. Con punta limpia y estañada, calentá terminal y pad juntos y aportá estaño a la unión. Retirá el estaño y luego la punta; dejá enfriar sin mover. Aislá conductores expuestos y sujetá los cables para que no tiren del pad.",
-        "inspectTitle": "Inspeccionar y comprobar",
-        "inspectBody": "Revisá con aumento que el estaño moje terminal y pad, sin puentes ni hilos sueltos. Con el circuito sin energía, comprobá continuidad de cada conexión y ausencia de cortos entre rieles. La inspección visual no sustituye estas mediciones. Antes de alimentar, completá el checklist del proyecto.",
-        "confirm": "He completado: {step}",
-        "progressHint": "Registro personal guardado en este navegador. Marcar un paso no valida el circuito ni habilita automáticamente la alimentación.",
+        "progress": "{done} de {total} uniones",
+        "progressHint": "El progreso se guarda en este navegador. Tildar no valida el circuito: medí continuidad y cortos antes de alimentar.",
         "jointTitle": "Inspección de una unión",
         "jointGood": "Mojado de pad y terminal",
         "jointBad": "Puente entre terminales",

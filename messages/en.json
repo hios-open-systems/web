@@ -369,8 +369,7 @@
             ],
             "whatDoesnt": [
                 "Live PC telemetry monitors, WiZ lighting control and OS-wide mic mute require pad-companion running on the local network",
-                "The companion includes native Windows and Linux providers; macOS support is pending",
-                "ADC battery sensing on GPIO9 is disabled in favor of the NeoPixel data line (actual 2S pack voltage is shown on the LM2596S buck display)"
+                "The companion includes native Windows and Linux providers; macOS support is pending"
             ],
             "bom": [
                 {
@@ -406,7 +405,7 @@
                 {
                     "component": "WS2812B NeoPixel Boards (2×4 LEDs)",
                     "qty": 2,
-                    "notes": "8 chained pixels on GPIO9 via 330 Ω, split into 2 addressable zones"
+                    "notes": "8 chained pixels on GPIO38 via 330 Ω, split into 2 addressable zones"
                 },
                 {
                     "component": "2S 18650 Pack + USB-C BMS + LM2596S Buck",
@@ -433,7 +432,7 @@
                 },
                 {
                     "label": "Lighting & Audio",
-                    "value": "8 × WS2812B NeoPixels (2 zones on GPIO9) + 2 × MAX98357A stereo I2S"
+                    "value": "8 × WS2812B NeoPixels (2 zones on GPIO38) + 2 × MAX98357A stereo I2S"
                 },
                 {
                     "label": "HID Transport",
@@ -631,7 +630,21 @@
         "asset_firmware": "Firmware and configuration",
         "asset_data": "Data",
         "view_in_maker": "View in Maker",
-        "printable_parts_description": "{count, plural, one {# part with a 3D viewer and download.} other {# parts with a 3D viewer and downloads.}}"
+        "printable_parts_description": "{count, plural, one {# part with a 3D viewer and download.} other {# parts with a 3D viewer and downloads.}}",
+        "nav_label": "Project sections",
+        "nav_overview": "Overview",
+        "nav_docs": "Documentation",
+        "nav_parts": "3D parts",
+        "nav_firmware": "Firmware",
+        "nav_files": "Files",
+        "docs_description": "The project README: design, decisions and build details.",
+        "full_pinout": "Full pinout",
+        "external_models": "External models:",
+        "firmware_title": "Firmware and code",
+        "firmware_description": "{count, plural, one {# real file} other {# real files}} from {path}, readable without leaving the page.",
+        "copy": "Copy",
+        "copied": "Copied",
+        "full_file": "Full file"
     },
     "Pinouts": {
         "boardOrientation": "Top view · USB below. Diagram reference: unique numbers down the left side and up the right side. These are neither GPIO numbers nor manufacturer pin numbers.",
@@ -1472,7 +1485,7 @@
             "parlantes": "Speakers",
             "conexiones": "Connections",
             "check": "Checklist",
-            "workbench": "Wiring and assembly"
+            "workbench": "Soldering mode"
         },
         "ui": {
             "moreTabs": "More tabs",
@@ -4688,28 +4701,27 @@
         "illustration": "Illustrative top view. Check your board revision and silkscreen; mechanical details may vary."
     },
     "Assembly": {
-        "title": "Wiring and assembly bench",
-        "intro": "Work on one module at a time. Explore each signal and record the checks you performed on your build.",
-        "wiring": "Wiring",
-        "assembly": "Assembly",
-        "chooseModule": "Working module",
-        "module": "MODULE",
-        "power": "Module power",
-        "functional": "Functional diagram: numbered terminals identify connections in this list, not physical positions. Power rails and intermediate components are described above and in each signal detail.",
-        "diagram": "Module signal connections",
-        "noSignals": "This module has no GPIO signals. Follow the power connections shown above.",
+        "title": "Soldering mode",
+        "intro": "One module at a time. Each joint shows the exact ESP32 header pin, counted from the antenna. Tick each one once it is soldered and measured.",
+        "unpowered": "Solder with everything unpowered: unplug USB, supply and battery. Never solder directly onto lithium cells.",
+        "modules": "Modules in soldering order",
+        "stepOf": "Module {current} of {total}",
+        "power": "Power",
+        "mapTitle": "ESP32 header",
+        "mapHint": "Board seen from above: antenna up, USB down. The number is the pin position counted from the antenna.",
+        "antenna": "Antenna",
+        "legendModule": "this module",
+        "otherModule": "used by another module",
+        "legendFree": "free or unused",
+        "toBoard": "To the ESP32 header",
+        "onModule": "On the module and the rails",
+        "joints": "Joints",
+        "markDone": "Soldered and measured: {name}",
+        "moduleNotes": "Module diagram and notes",
         "previous": "Previous",
         "next": "Next",
-        "progress": "Recorded checks: {done} of {total}",
-        "unpowered": "Disconnect USB, power supplies and battery before wiring, soldering or checking continuity. Do not solder directly onto lithium cells.",
-        "prepareTitle": "Prepare and position",
-        "prepareBody": "Check the variant and silkscreen against the guide. Identify each endpoint in Wiring, cut and strip wires, prepare insulation and secure the parts. Check polarity and orientation before soldering.",
-        "solderTitle": "Solder and insulate",
-        "solderBody": "Use fume extraction and an iron stand. With a clean, tinned tip, heat the terminal and pad together and feed solder into the joint. Remove the solder, then the tip; let it cool without moving. Insulate exposed conductors and secure wires so they do not pull on the pad.",
-        "inspectTitle": "Inspect and test",
-        "inspectBody": "Use magnification to check that solder wets both terminal and pad, without bridges or loose strands. With power disconnected, check continuity of each connection and absence of shorts between rails. Visual inspection does not replace these measurements. Complete the project checklist before applying power.",
-        "confirm": "I completed: {step}",
-        "progressHint": "Personal record saved in this browser. Checking a step does not validate the circuit or automatically authorize power-up.",
+        "progress": "{done} of {total} joints",
+        "progressHint": "Progress is saved in this browser. Ticking does not validate the circuit: check continuity and shorts before powering.",
         "jointTitle": "Inspecting a joint",
         "jointGood": "Pad and terminal wetted",
         "jointBad": "Bridge between terminals",

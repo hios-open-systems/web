@@ -142,7 +142,6 @@ text{font-family:ui-monospace,Menlo,Consolas,monospace;fill:#111}
 <path d="M332 1129 H600" class="wire"/>
 <text x="320" y="1220" class="gpio">NeoPixel DIN · GPIO38</text>
 <path d="M332 1216 H600" class="wire"/>
-<text x="32" y="1262" class="meta">Línea roja punteada = el pin tiene una nota: leela en hardware/README.md antes de soldar.</text>
 <text x="32" y="1286" class="modname">Rieles de alimentación</text>
 <rect x="32" y="1292" width="1056" height="25" class="rail"/>
 <text x="44" y="1307" class="railname">5V (buck 5.0V)</text>

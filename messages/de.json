@@ -369,8 +369,7 @@
             ],
             "whatDoesnt": [
                 "Echtzeit-Telemetrie, WiZ-Lichtsteuerung und globaler Mikrofon-Mute erfordern pad-companion im lokalen Netzwerk",
-                "Der Companion bietet native Provider für Windows und Linux; macOS ist noch offen",
-                "Die ADC-Akkumessung an GPIO9 ist zugunsten der NeoPixel-Datenleitung deaktiviert (die 2S-Spannung zeigt das LM2596S-Display)"
+                "Der Companion bietet native Provider für Windows und Linux; macOS ist noch offen"
             ],
             "bom": [
                 {
@@ -406,7 +405,7 @@
                 {
                     "component": "WS2812B-NeoPixel-Platinen (2×4 LEDs)",
                     "qty": 2,
-                    "notes": "8 verkettete Pixel an GPIO9 über 330 Ω, aufgeteilt in 2 Zonen"
+                    "notes": "8 verkettete Pixel an GPIO38 über 330 Ω, aufgeteilt in 2 Zonen"
                 },
                 {
                     "component": "2S-18650-Pack + USB-C-BMS + LM2596S-Buck",
@@ -433,7 +432,7 @@
                 },
                 {
                     "label": "Beleuchtung & Audio",
-                    "value": "8 × WS2812B-NeoPixel (2 Zonen an GPIO9) + 2 × MAX98357A Stereo-I2S"
+                    "value": "8 × WS2812B-NeoPixel (2 Zonen an GPIO38) + 2 × MAX98357A Stereo-I2S"
                 },
                 {
                     "label": "HID-Transport",
@@ -631,7 +630,21 @@
         "asset_firmware": "Firmware und Konfiguration",
         "asset_data": "Daten",
         "view_in_maker": "In Maker ansehen",
-        "printable_parts_description": "{count, plural, one {# Bauteil mit 3D-Ansicht und Download.} other {# Bauteile mit 3D-Ansicht und Download.}}"
+        "printable_parts_description": "{count, plural, one {# Bauteil mit 3D-Ansicht und Download.} other {# Bauteile mit 3D-Ansicht und Download.}}",
+        "nav_label": "Projektabschnitte",
+        "nav_overview": "Überblick",
+        "nav_docs": "Dokumentation",
+        "nav_parts": "3D-Teile",
+        "nav_firmware": "Firmware",
+        "nav_files": "Dateien",
+        "docs_description": "Das README des Projekts: Aufbau, Entscheidungen und Details zur Montage.",
+        "full_pinout": "Vollständiges Pinout",
+        "external_models": "Externe Modelle:",
+        "firmware_title": "Firmware und Code",
+        "firmware_description": "{count, plural, one {# echte Datei} other {# echte Dateien}} aus {path}, direkt auf der Seite lesbar.",
+        "copy": "Kopieren",
+        "copied": "Kopiert",
+        "full_file": "Ganze Datei"
     },
     "Pinouts": {
         "boardOrientation": "Draufsicht · USB unten. Diagrammreferenz: eindeutige Nummern links nach unten und rechts nach oben. Keine GPIO-Nummern oder Hersteller-Pinnummern.",
@@ -1472,7 +1485,7 @@
             "parlantes": "Lautsprecher",
             "conexiones": "Verbindungen",
             "check": "Checkliste",
-            "workbench": "Verdrahtung und Montage"
+            "workbench": "Lötmodus"
         },
         "ui": {
             "moreTabs": "Weitere Tabs",
@@ -4688,28 +4701,27 @@
         "illustration": "Schematische Draufsicht. Platinenrevision und Beschriftung prüfen; mechanische Details können abweichen."
     },
     "Assembly": {
-        "title": "Verdrahtungs- und Montageplatz",
-        "intro": "Ein Modul nach dem anderen bearbeiten. Signale erkunden und die am Aufbau durchgeführten Prüfungen festhalten.",
-        "wiring": "Verdrahtung",
-        "assembly": "Montage",
-        "chooseModule": "Aktuelles Modul",
-        "module": "MODUL",
-        "power": "Modulversorgung",
-        "functional": "Funktionsdiagramm: Die nummerierten Anschlüsse kennzeichnen Verbindungen dieser Liste, keine physischen Positionen. Versorgung und Zwischenbauteile stehen oben und in den Signaldetails.",
-        "diagram": "Signalverbindungen des Moduls",
-        "noSignals": "Dieses Modul hat keine GPIO-Signale. Die oben angegebenen Versorgungsverbindungen beachten.",
+        "title": "Lötmodus",
+        "intro": "Ein Modul nach dem anderen. Jede Lötstelle zeigt den genauen Pin der ESP32-Stiftleiste, gezählt ab der Antenne. Hake sie ab, sobald sie gelötet und gemessen ist.",
+        "unpowered": "Nur stromlos löten: USB, Netzteil und Akku trennen. Nie direkt an Lithiumzellen löten.",
+        "modules": "Module in Lötreihenfolge",
+        "stepOf": "Modul {current} von {total}",
+        "power": "Versorgung",
+        "mapTitle": "ESP32-Stiftleiste",
+        "mapHint": "Platine von oben: Antenne oben, USB unten. Die Zahl ist die Pinposition ab der Antenne.",
+        "antenna": "Antenne",
+        "legendModule": "dieses Modul",
+        "otherModule": "von anderem Modul belegt",
+        "legendFree": "frei oder ungenutzt",
+        "toBoard": "Zur ESP32-Stiftleiste",
+        "onModule": "Am Modul und an den Schienen",
+        "joints": "Lötstellen",
+        "markDone": "Gelötet und gemessen: {name}",
+        "moduleNotes": "Moduldiagramm und Hinweise",
         "previous": "Zurück",
         "next": "Weiter",
-        "progress": "Erfasste Prüfungen: {done} von {total}",
-        "unpowered": "Vor Verdrahtung, Löten oder Durchgangsprüfung USB, Netzteile und Akku trennen. Nicht direkt an Lithiumzellen löten.",
-        "prepareTitle": "Vorbereiten und positionieren",
-        "prepareBody": "Variante und Beschriftung mit der Anleitung vergleichen. In Verdrahtung alle Endpunkte identifizieren, Leitungen ablängen und abisolieren, Isolierung vorbereiten und Teile fixieren. Vor dem Löten Polarität und Ausrichtung prüfen.",
-        "solderTitle": "Löten und isolieren",
-        "solderBody": "Rauchabsaugung und Lötkolbenhalter verwenden. Mit sauberer, verzinnter Spitze Anschluss und Lötpad gemeinsam erwärmen und Lot an die Verbindung führen. Erst Lot, dann Spitze entfernen und ohne Bewegung abkühlen lassen. Freie Leiter isolieren und Leitungen zugentlasten.",
-        "inspectTitle": "Sichtprüfung und Messung",
-        "inspectBody": "Unter Vergrößerung prüfen, ob das Lot Anschluss und Pad benetzt, ohne Brücken oder lose Litzen. Im spannungsfreien Zustand jede Verbindung auf Durchgang und Versorgungsschienen auf Kurzschlüsse prüfen. Sichtprüfung ersetzt diese Messungen nicht. Vor dem Einschalten die Projektcheckliste abschließen.",
-        "confirm": "Erledigt: {step}",
-        "progressHint": "Persönlicher Eintrag in diesem Browser. Ein Häkchen bestätigt keine elektrische Prüfung und gibt die Versorgung nicht automatisch frei.",
+        "progress": "{done} von {total} Lötstellen",
+        "progressHint": "Der Fortschritt wird in diesem Browser gespeichert. Abhaken prüft die Schaltung nicht: vor dem Einschalten Durchgang und Kurzschlüsse messen.",
         "jointTitle": "Eine Lötstelle prüfen",
         "jointGood": "Pad und Anschluss benetzt",
         "jointBad": "Brücke zwischen Anschlüssen",

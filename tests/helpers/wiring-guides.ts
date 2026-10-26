@@ -46,6 +46,10 @@ export async function exerciseGuide(page: Page, locale: GuideLocale, id: GuideId
   await page.goto(`/${locale}/pinouts/${id}`);
   await expect(page.getByText(copy.meta_subtitle, { exact: true })).toBeVisible();
   await expect(page.locator('[data-guide-note]')).toContainText(copy.meta_note);
+  // Soldering mode is the landing tab: one module, its joints, nothing overflowing.
+  await expect(page.locator('[data-soldering-mode] [data-wire]').first()).toBeVisible();
+  if (mobile) expect(await page.evaluate(inspectMobileLayout)).toEqual([]);
+  await tab('diagrama');
   await expect(page.getByText(ui.systemIntro, { exact: true })).toBeVisible();
   await checkDiagramText(page);
   if (mobile) expect(await page.evaluate(inspectMobileLayout)).toEqual([]);
@@ -69,12 +73,13 @@ export async function exerciseGuide(page: Page, locale: GuideLocale, id: GuideId
     if (mobile) expect(await page.evaluate(inspectMobileLayout)).toEqual([]);
   }
   await tab('conexiones');
-  for (const detail of await page.locator('details').all()) {
+  const panel = page.locator('[role="tabpanel"]:visible');
+  for (const detail of await panel.locator('details').all()) {
     if (await detail.getAttribute('open') === null) await detail.locator('summary').click();
   }
-  await expect(page.locator('details').first()).toContainText(copy.section_0_t);
-  if (id === 'pad') await expect(page.locator('pre').nth(1)).toContainText('|>|');
-  if (id === 'speaker') await expect(page.locator('details').first()).toContainText('8.4V');
+  await expect(panel.locator('details').first()).toContainText(copy.section_0_t);
+  if (id === 'pad') await expect(panel.locator('pre').nth(1)).toContainText('|>|');
+  if (id === 'speaker') await expect(panel.locator('details').first()).toContainText('8.4V');
   if (mobile) expect(await page.evaluate(inspectMobileLayout)).toEqual([]);
   await tab('check');
   await expect(page.getByRole('checkbox').first()).toHaveAccessibleName(copy.check_0);

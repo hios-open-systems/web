@@ -1,0 +1,39 @@
+.layout { display: grid; gap: 16px; min-width: 0; }
+.viewer {
+  position: relative; height: clamp(260px, 55vw, 420px); border-radius: 14px; overflow: hidden;
+  border: 1px solid var(--hios-border); background: #0d0d0d;
+}
+@media (min-width: 960px) {
+  .layout { grid-template-columns: minmax(0, 1.35fr) minmax(300px, 1fr); align-items: start; }
+  .viewer { position: sticky; top: calc(var(--layout-header-height) + 72px); height: 460px; }
+  .external { grid-column: 1 / -1; }
+}
+.list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.item {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: stretch;
+  border: 1px solid var(--hios-border); border-radius: 12px; background: var(--hios-bg-secondary); overflow: hidden;
+}
+.item[aria-current='true'] { border-color: var(--accent-2); box-shadow: inset 3px 0 0 var(--accent-2); }
+.pick {
+  display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 10px; align-items: start; text-align: left;
+  padding: 12px 10px 12px 12px; background: none; border: 0; color: var(--hios-text); font: inherit; cursor: pointer; min-height: 44px;
+}
+.pick:disabled { cursor: default; }
+.pick:focus-visible { outline: 2px solid var(--accent-2); outline-offset: -2px; }
+.num {
+  width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font: 600 12px var(--font-stack-mono);
+  border: 1px solid var(--hios-border); color: var(--hios-text-secondary);
+}
+.item[aria-current='true'] .num { background: var(--accent-2); border-color: transparent; color: #04121a; }
+.body { display: grid; gap: 2px; min-width: 0; }
+.body strong { font-size: 14.5px; line-height: 1.35; }
+.meta { font: 11.5px var(--font-stack-mono); color: var(--hios-text-muted); overflow-wrap: anywhere; }
+.desc { font-size: 13px; line-height: 1.5; color: var(--hios-text-secondary); margin-top: 2px; }
+.download {
+  display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2px; min-width: 56px; padding: 0 10px;
+  border-left: 1px solid var(--hios-border); color: var(--accent-2-text); font: 600 11.5px var(--font-stack-mono); text-decoration: none;
+}
+.download:hover { background: color-mix(in srgb, var(--accent-2) 10%, transparent); }
+.download :global(.anticon) { font-size: 16px; }
+.external { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin: 0; font-size: 13px; color: var(--hios-text-muted); }
+.external a { color: var(--accent-2-text); font-weight: 600; }
