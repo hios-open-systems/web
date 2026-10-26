@@ -21,6 +21,10 @@
   --accent-text: color-mix(in srgb, var(--accent) 65%, #000);
   --hios-accent: var(--accent);
   --hios-accent-light: #fbbf24;
+  /* Segundo acento, fijo (no lo pisa el accent del usuario): frío, complementa al
+     amber. Marca secciones y el modo soldadura. -text cumple AA sobre el fondo. */
+  --accent-2: #0891b2;
+  --accent-2-text: #0e7490;
   --hios-success: #10b981;
   --hios-success-light: #34d399;
   --hios-warning: #f97316;
@@ -98,6 +102,8 @@
   /* AA sobre #0b0e14 y #11151d (≥4.5:1) */
   --hios-text-muted: #78849a;
   --accent-text: var(--accent);
+  --accent-2: #22d3ee;
+  --accent-2-text: #67e8f9;
   --hios-border: rgba(255, 255, 255, 0.08);
   --hios-grid-line: rgba(255, 255, 255, 0.045);
 

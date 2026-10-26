@@ -369,8 +369,7 @@
             ],
             "whatDoesnt": [
                 "Le 4 viste di telemetria reale, il controllo luci WiZ e il mute globale del microfono richiedono pad-companion sulla rete locale",
-                "Il companion include provider nativi per Windows e Linux; macOS non è ancora implementato",
-                "La misura batteria via ADC su GPIO9 è disabilitata a favore della linea dati NeoPixel (la tensione reale 2S è visibile sul display del buck LM2596S)"
+                "Il companion include provider nativi per Windows e Linux; macOS non è ancora implementato"
             ],
             "bom": [
                 {
@@ -406,7 +405,7 @@
                 {
                     "component": "Schede NeoPixel WS2812B (2×4 LED)",
                     "qty": 2,
-                    "notes": "8 pixel concatenati su GPIO9 tramite 330 Ω, divisi in 2 zone"
+                    "notes": "8 pixel concatenati su GPIO38 tramite 330 Ω, divisi in 2 zone"
                 },
                 {
                     "component": "Pacco 2S 18650 + BMS USB-C + Buck LM2596S",
@@ -433,7 +432,7 @@
                 },
                 {
                     "label": "Illuminazione e Audio",
-                    "value": "8 × WS2812B NeoPixel (2 zone su GPIO9) + 2 × MAX98357A I2S stereo"
+                    "value": "8 × WS2812B NeoPixel (2 zone su GPIO38) + 2 × MAX98357A I2S stereo"
                 },
                 {
                     "label": "Trasporto HID",
@@ -631,7 +630,21 @@
         "asset_firmware": "Firmware e configurazione",
         "asset_data": "Dati",
         "view_in_maker": "Apri in Maker",
-        "printable_parts_description": "{count, plural, one {# componente con visualizzatore 3D e download.} other {# componenti con visualizzatore 3D e download.}}"
+        "printable_parts_description": "{count, plural, one {# componente con visualizzatore 3D e download.} other {# componenti con visualizzatore 3D e download.}}",
+        "nav_label": "Sezioni del progetto",
+        "nav_overview": "Panoramica",
+        "nav_docs": "Documentazione",
+        "nav_parts": "Parti 3D",
+        "nav_firmware": "Firmware",
+        "nav_files": "File",
+        "docs_description": "Il README del progetto: progettazione, scelte e dettagli di montaggio.",
+        "full_pinout": "Pinout completo",
+        "external_models": "Modelli esterni:",
+        "firmware_title": "Firmware e codice",
+        "firmware_description": "{count, plural, one {# file reale} other {# file reali}} da {path}, leggibili senza lasciare la pagina.",
+        "copy": "Copia",
+        "copied": "Copiato",
+        "full_file": "File completo"
     },
     "Pinouts": {
         "boardOrientation": "Vista dall’alto · USB in basso. Riferimento del disegno: numeri univoci lungo il lato sinistro verso il basso e il destro verso l’alto. Non sono numeri GPIO né numeri del produttore.",
@@ -1472,7 +1485,7 @@
             "parlantes": "Altoparlanti",
             "conexiones": "Connessioni",
             "check": "Checklist",
-            "workbench": "Cablaggio e montaggio"
+            "workbench": "Modalità saldatura"
         },
         "ui": {
             "moreTabs": "Altre schede",
@@ -4688,28 +4701,27 @@
         "illustration": "Vista dall’alto illustrativa. Controlla revisione e serigrafia della scheda; i dettagli meccanici possono variare."
     },
     "Assembly": {
-        "title": "Banco di cablaggio e montaggio",
-        "intro": "Lavora su un modulo alla volta. Esplora ogni segnale e registra i controlli eseguiti sul montaggio.",
-        "wiring": "Cablaggio",
-        "assembly": "Montaggio",
-        "chooseModule": "Modulo di lavoro",
-        "module": "MODULO",
-        "power": "Alimentazione del modulo",
-        "functional": "Schema funzionale: i terminali numerati identificano le connessioni di questo elenco, non posizioni fisiche. Alimentazioni e componenti intermedi sono descritti sopra e nel dettaglio di ogni segnale.",
-        "diagram": "Connessioni dei segnali del modulo",
-        "noSignals": "Questo modulo non ha segnali GPIO. Segui le connessioni di alimentazione indicate sopra.",
+        "title": "Modalità saldatura",
+        "intro": "Un modulo alla volta. Ogni giunto mostra il pin esatto dell'header dell'ESP32, contato dall'antenna. Spuntalo quando è saldato e misurato.",
+        "unpowered": "Salda senza alimentazione: scollega USB, alimentatore e batteria. Non saldare mai direttamente sulle celle al litio.",
+        "modules": "Moduli in ordine di saldatura",
+        "stepOf": "Modulo {current} di {total}",
+        "power": "Alimentazione",
+        "mapTitle": "Header dell'ESP32",
+        "mapHint": "Scheda vista dall'alto: antenna in alto, USB in basso. Il numero è la posizione del pin contando dall'antenna.",
+        "antenna": "Antenna",
+        "legendModule": "questo modulo",
+        "otherModule": "usato da un altro modulo",
+        "legendFree": "libero o non usato",
+        "toBoard": "All'header dell'ESP32",
+        "onModule": "Sul modulo e sulle linee di alimentazione",
+        "joints": "Giunti",
+        "markDone": "Saldato e misurato: {name}",
+        "moduleNotes": "Schema e note del modulo",
         "previous": "Precedente",
         "next": "Successivo",
-        "progress": "Controlli registrati: {done} di {total}",
-        "unpowered": "Scollega USB, alimentatori e batteria prima di cablare, saldare o misurare la continuità. Non saldare direttamente sulle celle al litio.",
-        "prepareTitle": "Preparare e posizionare",
-        "prepareBody": "Confronta variante e serigrafia con la guida. Identifica ogni estremità in Cablaggio, taglia e spela i fili, prepara l’isolamento e fissa i pezzi. Controlla polarità e orientamento prima di saldare.",
-        "solderTitle": "Saldare e isolare",
-        "solderBody": "Usa aspirazione dei fumi e supporto per il saldatore. Con punta pulita e stagnata, scalda insieme terminale e piazzola e alimenta lo stagno sulla giunzione. Allontana lo stagno, poi la punta; lascia raffreddare senza muovere. Isola i conduttori scoperti e fissa i cavi per non sollecitare la piazzola.",
-        "inspectTitle": "Ispezionare e verificare",
-        "inspectBody": "Con ingrandimento verifica che lo stagno bagni terminale e piazzola, senza ponti o fili liberi. A circuito disalimentato, verifica continuità di ogni connessione e assenza di corti tra alimentazioni. L’ispezione visiva non sostituisce le misure. Completa la checklist del progetto prima di alimentare.",
-        "confirm": "Ho completato: {step}",
-        "progressHint": "Registro personale salvato in questo browser. Spuntare un passo non convalida il circuito né autorizza automaticamente l’alimentazione.",
+        "progress": "{done} di {total} giunti",
+        "progressHint": "I progressi sono salvati in questo browser. Spuntare non convalida il circuito: verifica continuità e cortocircuiti prima di alimentare.",
         "jointTitle": "Ispezione di una giunzione",
         "jointGood": "Piazzola e terminale bagnati",
         "jointBad": "Ponte tra terminali",

@@ -24,6 +24,9 @@ import { ProjectComponents } from '@/components/projects/ProjectComponents';
 import { ProjectStlPreview } from '@/components/projects/ProjectStlPreview';
 import { ProjectPrintsShowcase } from '@/components/projects/ProjectPrintsShowcase';
 import { ProjectFirmwareExplorer } from '@/components/projects/ProjectFirmwareExplorer';
+import { ProjectSection, ProjectSectionNav, type SectionLink } from '@/components/projects/sections/ProjectSection';
+import { ProjectSoldering } from '@/components/projects/sections/ProjectSoldering';
+import { WIRING_GUIDE_SLUGS } from '@/config/pinouts/guides';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -55,6 +58,8 @@ export function ProjectDetailClient({
   const locale = useLocale();
   const t = useTranslations('ProjectDetail');
   const tProjects = useTranslations('Projects');
+  const tAssembly = useTranslations('Assembly');
+  const tGuide = useTranslations('ProjectGettingStarted');
   const accentColor = 'var(--accent-text)';
   const bgColor = 'var(--hios-bg)';
   const textColor = 'var(--hios-text)';
@@ -89,6 +94,19 @@ export function ProjectDetailClient({
   } catch {
     story = null;
   }
+
+  const hasSoldering = WIRING_GUIDE_SLUGS.includes(slug);
+  const hasFirmware = !!project.firmwareFiles?.length;
+  const sectionLinks: SectionLink[] = [
+    ...(story ? [{ id: 'overview', label: t('nav_overview') }] : []),
+    ...(hasSoldering ? [{ id: 'soldering', label: tAssembly('title'), primary: true }] : []),
+    ...(gettingStarted ? [{ id: 'usage', label: tGuide('usage') }, { id: 'flash', label: tGuide('flash') }] : []),
+    { id: 'docs', label: t('nav_docs') },
+    ...(projectPrints.length > 0 ? [{ id: 'models-3d', label: t('nav_parts') }] : []),
+    ...(hasFirmware ? [{ id: 'firmware', label: t('nav_firmware') }] : []),
+    { id: 'files', label: t('nav_files') },
+  ];
+  const numberOf = (id: string) => sectionLinks.findIndex((link) => link.id === id) + 1;
 
   // Strip leading H1 from README so the page has a single H1 in ProjectDetailHeader
   const readmeBody = project.readme.replace(/^#\s+[^\n]+\n+/, '');
@@ -141,7 +159,7 @@ export function ProjectDetailClient({
   );
 
   return (
-    <div style={{ background: bgColor, minHeight: '100vh', paddingBottom: '64px', overflowX: 'hidden' }}>
+    <div style={{ background: bgColor, minHeight: '100vh', paddingBottom: '64px', overflowX: 'clip' }}>
       {/* Header / Back navigation */}
       <nav
         style={{
@@ -162,6 +180,8 @@ export function ProjectDetailClient({
         <ProjectDetailHeader project={project} slug={slug} hasGuide={!!gettingStarted} />
       </section>
 
+      <ProjectSectionNav links={sectionLinks} label={t('nav_label')} />
+
       {softwareBanner && <div style={{ padding: '0 24px' }}>{softwareBanner}</div>}
 
       {/* Gallery */}
@@ -173,7 +193,7 @@ export function ProjectDetailClient({
 
       {/* Technical Summary Card */}
       {story && (
-        <section style={{ ...sectionContainer, padding: '0 24px 32px' }}>
+        <section id="overview" style={{ ...sectionContainer, padding: '0 24px 32px', scrollMarginTop: 140 }}>
           <Card
             style={{
               background: 'var(--hios-bg-secondary)',
@@ -344,11 +364,19 @@ export function ProjectDetailClient({
         </section>
       )}
 
+      {hasSoldering && (
+        <ProjectSection id="soldering" index={numberOf('soldering')} title={tAssembly('title')}
+          description={tAssembly('intro')}
+          actions={<Link href={`/${locale}/pinouts/${slug}`}>{t('full_pinout')} →</Link>}>
+          <ProjectSoldering slug={slug} />
+        </ProjectSection>
+      )}
+
       {/* Interactive Getting Started + Live Demo + Flash Instructions */}
       {gettingStarted}
 
       {/* Full Technical Documentation (Markdown README) */}
-      <section style={{ ...sectionContainer, padding: '0 24px 48px' }}>
+      <ProjectSection id="docs" index={numberOf('docs')} title={t('nav_docs')} description={t('docs_description')}>
         <div className="markdown-content" style={{ color: textColor }}>
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
@@ -473,19 +501,15 @@ export function ProjectDetailClient({
             {readmeBody}
           </ReactMarkdown>
         </div>
-      </section>
+      </ProjectSection>
 
       {/* Printable 3D Parts & Inline STL Viewer */}
       {projectPrints.length > 0 && (
-        <div style={{ ...sectionContainer, padding: '0 24px' }}>
+        <ProjectSection id="models-3d" index={numberOf('models-3d')} title={t('printable_parts')}
+          description={t('printable_parts_description', { count: projectPrints.length })}
+          actions={<Link href={`/${locale}/prints#prints-${slug}`}>{t('view_in_maker')} →</Link>}>
           <ProjectPrintsShowcase
             prints={projectPrints}
-            locale={locale}
-            slug={slug}
-            title={t('printable_parts')}
-            description={t('printable_parts_description', { count: projectPrints.length })}
-            downloadLabel={t('download')}
-            makerLabel={t('view_in_maker')}
             externalLinks={
               slug === 'pad'
                 ? [{ name: 'Tapa impresa del stick (Thingiverse #6189483)', url: 'https://www.thingiverse.com/thing:6189483' }]
@@ -496,14 +520,16 @@ export function ProjectDetailClient({
                 : []
             }
           />
-        </div>
+        </ProjectSection>
       )}
 
       {/* Real Firmware & App Source Code Explorer */}
       {project.firmwareFiles && project.firmwareFiles.length > 0 && (
-        <div style={{ ...sectionContainer, padding: '0 24px' }}>
+        <ProjectSection id="firmware" index={numberOf('firmware')} title={t('firmware_title')}
+          description={t('firmware_description', { count: project.firmwareFiles.length, path: `projects/${slug}/` })}
+          actions={<a href={`https://github.com/hios-open-systems/web/tree/main/projects/${slug}`} target="_blank" rel="noopener noreferrer"><GithubOutlined /> GitHub ↗</a>}>
           <ProjectFirmwareExplorer files={project.firmwareFiles} slug={slug} />
-        </div>
+        </ProjectSection>
       )}
 
       {/* References & Documentation Links */}
@@ -581,23 +607,8 @@ export function ProjectDetailClient({
       )}
 
       {/* Technical Files & 3D Assets */}
-      <section style={{ ...sectionContainer, padding: '0 24px 32px' }}>
-        <Card
-          style={{
-            background: mode === 'dark' ? '#141414' : '#fafafa',
-            border: cardBorder,
-            borderRadius: '14px',
-          }}
-          styles={{ body: { padding: '20px' } }}
-        >
+      <ProjectSection id="files" index={numberOf('files')} title={t('technical_files')} description={t('technical_files_description')}>
           <Space direction="vertical" size={16} style={{ width: '100%' }}>
-            <div>
-              <Title level={4} style={{ color: textColor, marginBottom: 6 }}>
-                {t('technical_files')}
-              </Title>
-              <Text style={{ color: secondaryColor }}>{t('technical_files_description')}</Text>
-            </div>
-
             {Object.keys(groupedAssets).length === 0 ? (
               <Empty
                 image={Empty.PRESENTED_IMAGE_SIMPLE}
@@ -619,7 +630,7 @@ export function ProjectDetailClient({
                         </span>
                       }
                       style={{
-                        background: mode === 'dark' ? '#101010' : '#fff',
+                        background: 'var(--hios-bg-secondary)',
                         border: cardBorder,
                         borderRadius: '10px',
                       }}
@@ -650,8 +661,7 @@ export function ProjectDetailClient({
               </Space>
             )}
           </Space>
-        </Card>
-      </section>
+      </ProjectSection>
     </div>
   );
 }

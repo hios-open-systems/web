@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { CodeOutlined, CopyOutlined, CheckOutlined, GithubOutlined } from '@ant-design/icons';
+import { useTranslations } from 'next-intl';
+import { CopyOutlined, CheckOutlined, GithubOutlined } from '@ant-design/icons';
 import type { FirmwareSnippet } from '@/lib/projects';
 
 interface ProjectFirmwareExplorerProps {
@@ -10,11 +11,6 @@ interface ProjectFirmwareExplorerProps {
 }
 
 const cStyle: React.CSSProperties = {
-  marginBottom: 48,
-  padding: 'clamp(14px, 3vw, 24px)',
-  background: 'var(--bg-secondary)',
-  borderRadius: 16,
-  border: '1px solid var(--border-color)',
   boxSizing: 'border-box',
   maxWidth: '100%',
   overflowX: 'hidden',
@@ -31,7 +27,7 @@ const preStyle: React.CSSProperties = {
   overflowX: 'auto',
   maxHeight: 420,
   borderRadius: '0 0 12px 12px',
-  border: '1px solid var(--border-color)',
+  border: '1px solid var(--hios-border)',
   borderTop: 'none',
   boxSizing: 'border-box',
   maxWidth: '100%',
@@ -41,14 +37,15 @@ const pillBtn: React.CSSProperties = {
   padding: '4px 10px',
   fontSize: 12,
   borderRadius: 6,
-  border: '1px solid var(--border-color)',
-  background: 'var(--bg-secondary)',
+  border: '1px solid var(--hios-border)',
+  background: 'var(--hios-bg-secondary)',
   cursor: 'pointer',
 };
 
 export function ProjectFirmwareExplorer({ files, slug }: ProjectFirmwareExplorerProps) {
   const [activePath, setActivePath] = useState<string>(files[0]?.path ?? '');
   const [copied, setCopied] = useState(false);
+  const t = useTranslations('ProjectDetail');
 
   const current = files.find((f) => f.path === activePath) ?? files[0];
   if (!current) return null;
@@ -62,22 +59,7 @@ export function ProjectFirmwareExplorer({ files, slug }: ProjectFirmwareExplorer
 
   return (
     <section id="firmware-code" style={cStyle}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: 12, marginBottom: 14 }}>
-        <div style={{ minWidth: 0, maxWidth: '100%' }}>
-          <h3 style={{ margin: '0 0 4px', color: 'var(--text-primary)', fontSize: 20, fontWeight: 700 }}>
-            <CodeOutlined style={{ color: 'var(--accent-primary)', marginRight: 8 }} />
-            Explorador de Firmware y Código ({files.length} módulos)
-          </h3>
-          <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: 13.5 }}>
-            Archivos reales del repositorio <code>projects/{slug}/</code> sin salir de la página.
-          </p>
-        </div>
-        <a href={`https://github.com/hios-open-systems/web/tree/main/projects/${slug}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent-primary)', fontWeight: 600, fontSize: 13.5 }}>
-          <GithubOutlined /> En GitHub →
-        </a>
-      </div>
-
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 14 }} role="tablist" aria-label="Archivos de firmware">
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 14 }} role="tablist" aria-label={t('firmware_title')}>
         {files.map((item) => {
           const isSelected = item.path === current.path;
           return (
@@ -94,9 +76,9 @@ export function ProjectFirmwareExplorer({ files, slug }: ProjectFirmwareExplorer
                 fontFamily: 'var(--font-mono)',
                 fontWeight: isSelected ? 700 : 500,
                 cursor: 'pointer',
-                background: isSelected ? 'var(--accent-primary)' : 'var(--bg-elevated)',
-                color: isSelected ? '#080c10' : 'var(--text-primary)',
-                border: isSelected ? '1px solid var(--accent-primary)' : '1px solid var(--border-color)',
+                background: isSelected ? 'var(--accent)' : 'var(--hios-bg-elevated)',
+                color: isSelected ? '#080c10' : 'var(--hios-text)',
+                border: isSelected ? '1px solid var(--accent)' : '1px solid var(--hios-border)',
               }}
             >
               {item.title} <span style={{ opacity: 0.72, fontSize: 11 }}>({item.lines}L)</span>
@@ -105,17 +87,17 @@ export function ProjectFirmwareExplorer({ files, slug }: ProjectFirmwareExplorer
         })}
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10, padding: '10px 12px', background: 'var(--bg-elevated)', border: '1px solid var(--border-color)', borderRadius: '12px 12px 0 0' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10, padding: '10px 12px', background: 'var(--hios-bg-elevated)', border: '1px solid var(--hios-border)', borderRadius: '12px 12px 0 0' }}>
         <div style={{ minWidth: 0, flex: '1 1 180px', wordBreak: 'break-all' }}>
-          <code style={{ color: 'var(--accent-primary)', fontWeight: 700, fontSize: 12.5 }}>projects/{slug}/{current.path}</code>
-          <span style={{ color: 'var(--text-secondary)', fontSize: 12, display: 'block', marginTop: 2 }}>{current.role}</span>
+          <code style={{ color: 'var(--accent-text)', fontWeight: 700, fontSize: 12.5 }}>projects/{slug}/{current.path}</code>
+          <span style={{ color: 'var(--hios-text-secondary)', fontSize: 12, display: 'block', marginTop: 2 }}>{current.role}</span>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-          <button type="button" onClick={handleCopy} style={{ ...pillBtn, color: 'var(--text-primary)' }}>
-            {copied ? <><CheckOutlined /> Copiado</> : <><CopyOutlined /> Copiar</>}
+          <button type="button" onClick={handleCopy} style={{ ...pillBtn, color: 'var(--hios-text)' }}>
+            {copied ? <><CheckOutlined /> {t('copied')}</> : <><CopyOutlined /> {t('copy')}</>}
           </button>
-          <a href={current.githubUrl} target="_blank" rel="noopener noreferrer" style={{ ...pillBtn, color: 'var(--accent-primary)', textDecoration: 'none', fontWeight: 600 }}>
-            <GithubOutlined /> Archivo completo
+          <a href={current.githubUrl} target="_blank" rel="noopener noreferrer" style={{ ...pillBtn, color: 'var(--accent-text)', textDecoration: 'none', fontWeight: 600 }}>
+            <GithubOutlined /> {t('full_file')}
           </a>
         </div>
       </div>
