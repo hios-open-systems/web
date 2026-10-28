@@ -1,92 +1,92 @@
-# Deploy — openhios.dev (Cloudflare Workers + OpenNext)
+# Validación y release local — Cloudflare Workers + OpenNext
 
-La app se sirve como **Cloudflare Worker** vía el adaptador `@opennextjs/cloudflare`
-(reemplaza al viejo modelo Pages / `next-on-pages`).
+Los pushes y PR **no ejecutan GitHub Actions**. `.github/workflows/ci.yml` solo
+admite `workflow_dispatch` como respaldo manual de verificación, sin despliegue
+ni credenciales de publicación. El cambio entra en vigor al subir ese workflow.
+Workers Builds debe seguir desactivado en Cloudflare; el repositorio no controla
+ese ajuste externo (se documentó desactivado el 24 de octubre de 2026).
 
-**Deploy manual.** Ni un push ni un merge a `main` publican nada. Producción se
-actualiza solo cuando alguien corre el workflow a mano:
+## Preparación
 
-> GitHub → **Actions** → **CI** → **Run workflow** → branch `main` → **Run workflow**.
+- Node >=22.6, npm, Git y Chromium de Playwright. La validación ejecuta `npm ci`
+  desde el lockfile e instala Chromium si falta; necesita acceso a los registros
+  de paquetes y descarga de Playwright. En Linux instalar también sus dependencias
+  del sistema con `npx playwright install-deps chromium`.
+- Gitleaks 8.30.1: instalar desde el release oficial de `gitleaks/gitleaks`, verificar
+  el checksum del archivo descargado y dejar el binario en PATH o en
+  `.release-tools/gitleaks` (`gitleaks.exe` en Windows). También acepta la ruta
+  explícita `HIOS_GITLEAKS_PATH`. Esta carpeta está ignorada por Git.
+- `NEXT_PUBLIC_TURNSTILE_SITEKEY` real en `.env.local` (ignorado) o en el entorno.
+  El runner carga `.env.local` con las reglas de Next, sin imprimir su contenido.
+- Para publicar: login local de Wrangler o un token Cloudflare con permisos del
+  Worker. Los secrets runtime siguen en Cloudflare; no se copian al repositorio.
 
-Ese run valida todo y publica **solo si todas las validaciones pasan**.
-Workers Builds (el auto-deploy de Cloudflare) está desactivado desde el 2026-10-24
-y tiene que seguir así: si se reactiva, habría dos caminos de deploy.
+## Secuencia de release
 
-- Worker: `hios-platform` (ver `wrangler.jsonc`).
-- Dominio: `openhios.dev`.
-- D1: `hios-playground`, binding `DB` — **compartida, no borrar**.
+Primero integrar y confirmar los cambios en `main` local. Después:
 
-## Configuración (una sola vez)
+```bash
+npm run release:verify
+npm run release:push
+npm run deploy
+```
 
-En GitHub → Settings → Secrets and variables → **Actions**:
+Cada comando requiere `main` y árbol limpio, incluidos archivos no versionados
+que no estén ignorados. `release:verify` no sube commits, no despliega y no toca
+D1 remoto. Los únicos procesos Wrangler de pruebas usan D1 local con fixtures.
 
-1. Secret `CLOUDFLARE_API_TOKEN`: token de Cloudflare limitado a la cuenta de
-   openhios.dev, con permiso de edición de Workers Scripts (y los bindings que usa
-   el Worker). Nunca en git ni en logs.
-2. Variable `CLOUDFLARE_ACCOUNT_ID`: la cuenta que sirve openhios.dev.
-3. Variable `NEXT_PUBLIC_TURNSTILE_SITEKEY`: la site key real (la exige el chequeo
-   de release).
+La verificación conserva las comprobaciones del antiguo CI:
 
-Sin el token o la cuenta, el run manual falla en "Verify production deployment
-prerequisites", antes de tocar producción.
+1. Instalación limpia, Chromium y escaneo redactado de secretos de todo Git.
+2. Lint y todos los grupos de self-tests descubiertos automáticamente.
+3. Un único build de producción OpenNext.
+4. Seguridad, autenticación y métricas contra Worker y D1 locales.
+5. SEO renderizado, sitemap y contenido de software.
+6. Navegador: contenido, hidratación, privacidad, demos, instrumentos, electrónica,
+   traducciones, pinouts, navegación y layouts móviles/tablet; auditorías de rutas
+   públicas para conexiones implícitas y ancho móvil.
 
-## Qué hace un run manual
+La lista exacta de suites/anchos está en `scripts/release-browser-plan.json`.
+Es la selección anterior de CI: no equivale a ejecutar todos los archivos de
+`tests/`. Las suites autenticadas antiguas de Pages siguen fuera de este flujo;
+ver [BACKLOG.md](BACKLOG.md). Las pruebas públicas usan `next start`, mientras las
+pruebas API de seguridad usan el Worker construido. Ninguna sustituye pruebas
+físicas de hardware ni consentimiento real de OAuth/captcha.
 
-1. Lint y todos los self-tests descubiertos.
-2. Build OpenNext del Worker y validaciones SEO, sitemap, contenido, privacidad,
-   instrumentos, electrónica, traducciones, pinouts y móvil con Playwright.
-3. Verificación de credenciales, configuración externa y que el SHA probado siga
-   siendo la punta de `main`. Un run viejo falla antes de publicar.
-4. `opennextjs-cloudflare deploy`, usando **el mismo output ya probado**, sin rebuild.
-5. Comprobación de `/api/version` contra el SHA y respuesta HTML correcta de veinte
-   rutas de calculadoras, QPSK y guías PAD/BTDAC/Speaker en los cuatro idiomas.
+Si falla un paso, se detiene sin emitir autorización local. El comprobante anterior
+se elimina al empezar una nueva validación. Solo al terminar se guarda
+`.release/verified.json` con commit, hash de todo `.open-next`, versión de Node,
+hash de la clave pública y etapas completadas; no contiene secretos.
 
-Los pushes y PR corren las mismas pruebas pero nunca los pasos con credenciales.
-Los runs sobre `main` se serializan para no interrumpir un upload; los runs de PR
-obsoletos sí se cancelan. Los diagnósticos de Playwright se conservan siete días
-cuando falla una prueba.
+`release:push` verifica ese comprobante y hace un push normal, sin force, del
+commit exacto a `origin/main`. `deploy` exige además que `origin/main` coincida,
+comprueba los secrets y clave pública con `security-release-check.mjs`, publica
+**el mismo artefacto sin reconstruirlo** y comprueba versión y 20 rutas localizadas.
+Un cambio de commit, artefacto, clave o Node obliga a repetir la validación.
+El comprobante es una protección local contra errores, no una firma de CI remota.
+Los comandos directos de Git/Wrangler pueden saltarse este flujo; usar los scripts.
 
-Los tests de navegador previos al deploy usan `next start`; el build comprueba el
-empaquetado Worker y el smoke posterior comprueba el runtime publicado. Ese smoke
-no reemplaza una prueba funcional completa de producción. Si falla después del
-upload, el workflow falla pero **no revierte automáticamente** el despliegue.
+## Fallos y recuperación
 
-Alternativa local (con login de Wrangler): `npm run deploy` desde `main` actualizado.
+Los logs se muestran en la terminal y Playwright conserva diagnósticos en
+`test-results/`. Un fallo previo al upload no cambia producción. Si el smoke falla
+tras publicar, el comando falla pero no hace rollback automático: investigar y
+revertir deliberadamente, validar y publicar de nuevo.
 
-## Recuperación y previews
+El runner usa `.release/lock` para evitar dos releases simultáneos. Si una
+interrupción abrupta deja ese archivo, comprobar que el PID escrito y sus procesos
+hijos terminaron antes de eliminarlo y repetir la validación.
 
-Si falla antes de publicar, producción conserva su versión anterior. Corregir,
-mergear y volver a correr el workflow a mano sobre main.
-Para una regresión publicada, revertir el commit y pasar nuevamente por CI.
-Un rollback urgente desde Cloudflare debe ser una operación deliberada y luego
-reflejarse en git. No reactivar Workers Builds para resolver un fallo de CI.
+El respaldo manual de Actions utiliza la misma validación en Linux; su resultado
+no autoriza un artefacto distinto de la máquina local y nunca publica.
 
-Los branches/PR no publican previews automáticamente con este flujo. Cualquier
-preview futuro deberá usar un Worker separado y bindings ajenos a producción.
+## Entorno y migraciones
 
-El secret runtime `GITHUB_CLIENT_SECRET` permanece en Cloudflare. No confundirlo
-con el token de Actions. El dominio y D1 se conservan; no hace falta un cutover ni
-migraciones para este cambio de pipeline.
+Worker `hios-platform`, dominio `openhios.dev`, binding D1 `DB` de
+`hios-playground`: se conservan. Las migraciones no corren con el despliegue.
+Aplicar solo las pendientes según el registro del entorno, con respaldo previo
+para producción; `npm run db:migrate:local` y `npm run db:migrate` son operaciones
+separadas. Este cambio no requiere migraciones remotas.
 
-## Migraciones D1
-Las migraciones **no** corren solas en el deploy; son un paso aparte, solo cuando cambia
-el esquema (`migrations/*.sql`). La base es la misma que ya estaba en prod, así que el
-cutover no requiere migrar nada.
-
-- **Local** (para `npm run preview`, sin login):
-  ```bash
-  npm run db:migrate:local
-  ```
-- **Remoto** (prod) — sin OAuth, con un API token de scope D1 (Dashboard → Profile →
-  API Tokens → Create → permiso Account · D1 · Edit):
-  ```bash
-  CLOUDFLARE_API_TOKEN=<token> npm run db:migrate
-  ```
-
----
-
-## Desarrollo local (offline, sin login)
-- `npm run dev` — Next dev server, HMR. **No** expone el binding D1 (ver nota en `lib/db.ts`):
-  las rutas que tocan la DB tiran error a propósito.
-- `npm run preview` — corre el Worker buildeado en workerd con **D1 local** real. Usalo
-  cuando trabajás features de base de datos. Todo offline, sin autenticarte.
+`npm run dev` sirve la interfaz; `npm run preview` construye y ejecuta el Worker
+con D1 local. Para las pruebas se usan configuraciones aisladas en `tests/fixtures`.

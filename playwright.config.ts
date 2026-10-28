@@ -7,7 +7,7 @@ export default defineConfig({
     testDir: './tests',
     testIgnore: '**/*.auth.spec.ts',
     fullyParallel: true,
-    forbidOnly: !!process.env.CI,
+    forbidOnly: !!process.env.CI || process.env.HIOS_RELEASE === '1',
     retries: process.env.CI ? 1 : 0,
     workers: process.env.CI ? 1 : undefined,
     reporter: process.env.CI ? 'github' : 'list',
@@ -43,7 +43,7 @@ export default defineConfig({
     webServer: {
         command: `npx cross-env PORT=${PORT} npm run start`,
         url: BASE_URL,
-        reuseExistingServer: !process.env.CI,
+        reuseExistingServer: !process.env.CI && process.env.HIOS_RELEASE !== '1',
         timeout: 180_000,
         stdout: 'ignore',
         stderr: 'pipe',

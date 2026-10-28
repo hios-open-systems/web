@@ -1,0 +1,85 @@
+[
+  {
+    "name": "Verify tool content and hydration",
+    "args": [
+      "test",
+      "tests/tool-content.spec.ts",
+      "tests/project-software.spec.ts",
+      "tests/section-navigation.spec.ts",
+      "tests/project-stl.spec.ts",
+      "tests/network-locality.spec.ts",
+      "tests/local-inputs.spec.ts",
+      "tests/analytics.spec.ts",
+      "tests/landing-styles.spec.ts",
+      "tests/discovery-demos.spec.ts",
+      "tests/google-login.spec.ts",
+      "tests/security-dependencies.spec.ts",
+      "tests/security-imports.spec.ts",
+      "tests/turnstile-submit.spec.ts",
+      "--project=chromium",
+      "--workers=1"
+    ]
+  },
+  {
+    "name": "Verify instruments, electronics and localized pinouts",
+    "args": [
+      "test",
+      "tests/instruments.spec.ts",
+      "tests/i2s-shared.spec.ts",
+      "tests/electronics-shared.spec.ts",
+      "tests/pinouts.spec.ts",
+      "tests/pinout-translations.spec.ts",
+      "tests/wiring-guide-translations.spec.ts",
+      "tests/interactive-wiring.spec.ts",
+      "--project=chromium",
+      "--workers=2"
+    ]
+  },
+  {
+    "name": "Verify hardware tools on mobile and tablet",
+    "args": [
+      "test",
+      "tests/mobile-instruments.spec.ts",
+      "tests/mobile-electronics.spec.ts",
+      "tests/mobile-pinouts.spec.ts",
+      "tests/mobile-wiring-guides.spec.ts",
+      "tests/mobile-assembly.spec.ts",
+      "--project=mobile-360",
+      "--project=mobile-390",
+      "--project=tablet-768",
+      "--workers=2"
+    ]
+  },
+  {
+    "name": "Audit implicit outbound traffic on every public route",
+    "args": [
+      "test",
+      "tests/site-locality.spec.ts",
+      "--project=chromium",
+      "--workers=3"
+    ]
+  },
+  {
+    "name": "Verify mobile layouts and interactions",
+    "args": [
+      "test",
+      "tests/mobile-responsive.spec.ts",
+      "tests/mobile-usability.spec.ts",
+      "tests/mobile-section-access.spec.ts",
+      "tests/mobile-discovery.spec.ts",
+      "--project=mobile-360",
+      "--project=mobile-390",
+      "--project=tablet-768",
+      "--workers=2"
+    ]
+  },
+  {
+    "name": "Audit all public pages at the narrowest supported width",
+    "args": [
+      "test",
+      "tests/mobile-pages.spec.ts",
+      "--project=mobile-360",
+      "--workers=2"
+    ]
+  }
+]

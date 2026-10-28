@@ -4,6 +4,14 @@ Resumen contrastado con Git el 27 de octubre de 2026. Describe código integrado
 no afirma que cada commit esté desplegado. Para publicar, consultar
 [DEPLOY.md](DEPLOY.md); para trabajo abierto, [BACKLOG.md](BACKLOG.md).
 
+## Validación local del release — 27 de octubre de 2026
+
+- Disparadores automáticos de Actions retirados; respaldo manual sin despliegue.
+- `release:verify` ejecuta las comprobaciones del CI anterior en la máquina local.
+- `release:push` y `deploy` requieren commit y artefacto verificados; deploy no
+  reconstruye y comprueba que `origin/main` coincida antes de publicar.
+- Comprobantes y binarios auxiliares locales ignorados por Git.
+
 ## Limpieza documental — 27 de octubre de 2026
 
 - Consolidación de pendientes reales, verificaciones externas e ideas opcionales.
