@@ -120,7 +120,7 @@ Una fila por herramienta. Sirve como **spec previo** (antes de codear) y como **
 - **Output**: lista en `/workbench/feedback`, con copy-to-clipboard (formato texto plano), borrar individual y borrar todo. Toast antd cuando se captura un error nuevo. Dot rojo en el icono de campana del header si hay entradas no leídas. Repeticiones del mismo error o entry se consolidan localmente por fingerprint y muestran ocurrencias + último avistamiento.
 - **Storage**: `localStorage` bajo `hios-feedback-entries`, versionado, circular buffer de 50 entradas. Cada entry guarda `source`, `severity`, `fingerprint`, `occurrences`, `lastSeenAt`, `locale`, `toolSlug` y `authState`. Cross-tab via `storage` event.
 - **Casos borde**: localStorage lleno → fail silencioso. JSON corrupto o payload viejo → se migra o devuelve lista vacía sin reventar. Stack ausente (rejection con string) → entry sin stack, igual visible. Duplicados se consolidan en una sola tarjeta en vez de spammear la lista.
-- **Status**: works. Uplink a servidor/admin logs sigue pendiente.
+- **Status**: works. El registro automático permanece local; el envío explícito de feedback al servidor es un flujo separado. Logs automáticos de servidor son una idea opcional en `BACKLOG.md`.
 
 ### Theme settings `/workbench/settings`
 - **Propósito**: customizar el accent del workbench (color de marca). El modo light/dark sigue en el toggle del header.
@@ -159,8 +159,8 @@ Una fila por herramienta. Sirve como **spec previo** (antes de codear) y como **
 ### JsonSchemaTool (/workbench/json-schema)
 - **Propósito**: inferir un JSON Schema draft-07 desde cualquier ejemplo de JSON pegado.
 - **Input**: JSON libre + nombre del root type.
-- **Output**: JSON Schema con $schema, 	itle, tipos, ormat (date-time, email, uri), equired, dditionalProperties: false en raíz, y oneOf para arrays heterogéneos.
-- **Casos borde**: array vacío → items: {}; strings cortos adjuntan xamples; errores de parse se muestran inline.
+- **Output**: JSON Schema con `$schema`, `title`, tipos, `format` (date-time, email, uri), `required`, `additionalProperties: false` en raíz, y `oneOf` para arrays heterogéneos.
+- **Casos borde**: array vacío → `items: {}`; strings cortos adjuntan `examples`; errores de parse se muestran inline.
 - **Status**: works (local only)
 
 ### UrlParserTool (/workbench/url-parser)

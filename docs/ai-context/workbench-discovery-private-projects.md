@@ -1,6 +1,6 @@
 # Workbench, landing demos and private projects
 
-Local implementation, October 2026. No push, deployment, remote schema migration or OAuth client registration is part of this delivery.
+Implementation reference, October 2026. Delivery history is in [CHANGELOG.md](../../CHANGELOG.md); current release instructions are in [DEPLOY.md](../../DEPLOY.md).
 
 ## Discover and try
 The catalog and its heading count the same internal tools. Search, activity and execution filters combine with favorites/recent views. Task shortcuts lead to music, pinouts, JSON and repository documentation.
@@ -10,7 +10,7 @@ The landing selects one of four demos after hydration. The selector never advanc
 ## Google login
 Set server-only GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET and AUTH_BASE_URL. Register the exact callback https://openhios.dev/api/auth/google/callback in a Google OAuth web client. Configure the consent screen and testing/publishing status in Google Cloud. Never put secrets in NEXT_PUBLIC_* variables. The button appears only when all three settings exist.
 
-Before releasing, back up D1 and apply pending migrations in order, including 0007 and 0008. Migration 0008 preserves internal account IDs and dependent records while making GitHub fields nullable. It snapshots dependent tables within the atomic migration because SQLite DROP TABLE runs cascading foreign keys. It was exercised with existing sessions, snippets, settings, workspaces and feedback, including deletion cascades after migration. Do not run raw schema migrations repeatedly against a seeded database; use Wrangler's migration ledger.
+For a new environment, back up D1 and apply only migrations not yet recorded in its ledger, in order. The October 24 release notes record migrations 0007 and 0008 as applied to production; do not treat this guide as a request to repeat them. Migration 0008 preserves internal account IDs and dependent records while making GitHub fields nullable. It snapshots dependent tables within the atomic migration because SQLite DROP TABLE runs cascading foreign keys. It was exercised with existing sessions, snippets, settings, workspaces and feedback, including deletion cascades after migration. Do not run raw schema migrations repeatedly against a seeded database; use Wrangler's migration ledger.
 
 OIDC code flow requests openid profile, with PKCE S256, state cookie, nonce, short-lived one-use D1 transaction and jose RS256/JWKS validation (issuer, audience, authorized party, expiration and issuance). Tokens are exchanged only after user navigation to Google and are never stored. No email, Gmail or Drive scopes; no remote avatar rendering. Existing users sign in with GitHub, then explicitly link Google from their account menu. Linking is bound to that still-valid session; a Google identity already used by another account is rejected. No email-based account merging. Owner access remains bound to the verified GitHub ID.
 
@@ -46,10 +46,9 @@ References:
 - https://docs.github.com/en/rest/repos/contents
 - https://docs.gitlab.com/user/project/settings/project_access_tokens/
 
-## Next useful additions
-Prioritize a local documentation workspace (Markdown links, offline full-text search and local folders), secret redaction before sharing, and project BOM/pinout comparison. They reuse existing tools and keep private files on device. A GitHub App with selected repositories and Contents read-only would remove manual token entry; GitLab OAuth needs a separately scoped connector. Neither should inherit permissions merely because someone signed in.
+## Follow-up
 
-Reference for selected repositories and scoped app permissions: https://docs.github.com/en/apps/creating-github-apps/about-creating-github-apps/about-creating-github-apps
+Open work and optional ideas are maintained only in [BACKLOG.md](../../BACKLOG.md).
 
 ## Verification
 - Next/OpenNext production build, TypeScript and ESLint passed.

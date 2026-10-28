@@ -1,34 +1,27 @@
-# Workbench redesign: implementation checkpoint
+# Espacios y Payload: referencia de implementación
 
-This branch is an implementation checkpoint, not the completion of the full redesign plan.
+Revisado el 27 de octubre de 2026. Sustituye el checkpoint de una rama antigua.
 
-## Included
+Implementado: descubrimiento por actividad, espacios IndexedDB, accesos ordenados,
+plantillas, transferencia JSON versionada, presets, consentimiento para contenido,
+APIs D1 por cuenta y revisiones en conflicto. Payload usa un worker, árbol
+virtualizado y transferencia de subconjuntos entre herramientas.
 
-- Shared activity discovery, catalog search and command palette ranking.
-- Local IndexedDB workspaces, ordered resource shortcuts, templates and versioned JSON transfer.
-- Preset adapters, explicit content upload consent, account-scoped D1 APIs and revision conflict handling.
-- Payload Lab worker, bounded iterative analysis, virtualized tree, paths, subset handoffs and explicit share links.
-- Four locale translations, related project/article resources, audio resource cleanup and privacy-conscious telemetry.
+Los [borradores automáticos](ai-context/tool-state-audit.md) son locales y no
+equivalen a presets sincronizados.
 
-## Remaining acceptance work
+Pruebas existentes: `tests/workspaces.spec.ts`, `tests/workspaces.auth.spec.ts`,
+`tests/mobile-workspaces.spec.ts`, `tests/workbench-catalog.spec.ts` y
+`tests/tool-drafts.spec.ts`. Atención: `playwright.cloudflare.config.ts` todavía
+arranca `wrangler pages dev .vercel/output/static`, y la suite de espacios fija
+`localhost:3202` mientras esa configuración usa 3201. No es un comando vigente
+para certificar espacios en Workers. `playwright.security.config.ts` sí tiene
+un modo Worker para las pruebas de seguridad; no sustituye todos esos recorridos.
 
-- Stabilize authenticated browser tests for two sessions and offline conflict recovery. API isolation, stale-revision rejection and implicit-content rejection have passed against local D1; the latest complete authenticated browser run did not pass.
-- Complete individual functional acceptance for all 54 catalog entries. Route smoke coverage is not full functional acceptance.
-- Complete the audit matrix and remaining family-specific improvements.
-- Make Payload Lab table pagination operate on worker-held data beyond the truncated preview, and improve deeply nested output recovery.
-- Verify account changes, legacy migrations, hardware interactions, keyboard access and mobile behavior across the complete catalog.
+Las limitaciones de Payload y comprobaciones de sesiones están en
+[BACKLOG.md](../BACKLOG.md). Esta actualización no certifica una nueva ejecución
+de las suites de navegador.
 
-## Release requirement
-
-`main` uses Cloudflare push-to-deploy. Migration `migrations/0006_workspaces.sql` must be applied to the target D1 database before releasing the workspace APIs. Deployment does not apply migrations automatically. No remote migration has been executed as part of this checkpoint.
-
-## Checks
-
-- `npm run lint`
-- `npx tsc --noEmit`
-- `npm test`
-- `npm run build`
-- `npx playwright test tests/workspaces.spec.ts tests/workbench-catalog.spec.ts tests/mobile-workspaces.spec.ts`
-- Local authenticated tests: `node scripts/seed-workspace-tests.mjs`, then `npx playwright test -c playwright.workspaces.config.ts`.
-
-The authenticated fixtures use an isolated local D1 database and dummy sessions; they are not production credentials.
+La migración de espacios es `migrations/0006_workspaces.sql`. Aplicar únicamente
+migraciones pendientes según el registro del entorno; no repetirlas a mano.
+El procedimiento vigente está en [DEPLOY.md](../DEPLOY.md).

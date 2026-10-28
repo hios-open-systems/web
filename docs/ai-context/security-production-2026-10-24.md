@@ -1,5 +1,10 @@
 # Production security hardening — 2026-10-24
 
+> Historical audit: the initial inspection and staging notes below predate the
+> authorized release recorded at the end. They are not current pending tasks.
+> Use [DEPLOY.md](../../DEPLOY.md) for the current manual workflow and
+> [BACKLOG.md](../../BACKLOG.md) for remaining verification.
+
 ## Scope and verified production state
 
 Read-only Wrangler/API inspection confirmed account `74517853847d3bfb25721012cf268858`, Worker `hios-platform`, and domain `openhios.dev`. No push, deployment, secret write, or remote configuration mutation was performed.
@@ -16,7 +21,7 @@ At inspection time, production had only `GITHUB_CLIENT_SECRET`; no Turnstile wid
 
 Native counters are approximate and shared per Cloudflare location, not an exact global quota or a replacement for edge WAF protection. See [Cloudflare rate limits](https://developers.cloudflare.com/workers/runtime-apis/bindings/rate-limit/) and [Turnstile server verification](https://developers.cloudflare.com/turnstile/get-started/server-side-validation/).
 
-## Release prerequisites — not yet applied
+## Historical prerequisites at initial inspection
 
 1. Provision a real Turnstile widget restricted to `openhios.dev`, set `NEXT_PUBLIC_TURNSTILE_SITEKEY` in the build environment (GitHub Actions repository variable if using CI), and provision `TURNSTILE_SECRET_KEY` for the release. Do not commit either credential configuration file. Wrangler secret writes can deploy; coordinate this with the authorized release. Without the secret, production feedback and guestbook writes now intentionally fail closed.
 2. Verify OAuth provider settings and a complete login/logout after release, including the canonical callback. Verify custom-domain routing before disabling alternate hosts.
@@ -39,7 +44,7 @@ Validation completed: ESLint passed; 47/47 self-test groups passed; OpenNext pro
 - Encrypted local recovery copy: `.wrangler/security/turnstile-secret.dpapi`, protected by Windows DPAPI for the current Windows user. Public key copy: `.wrangler/security/turnstile-sitekey.txt`. Both paths and `.env.local` are ignored by Git. Do not print, commit, or send the decrypted value through chat. If recovery is needed, decrypt only in memory and pipe to the authorized Cloudflare secret command.
 - WAF/SSL/Workers Builds inspection still returns HTTP 403 with the current OAuth scopes. Account-wide 2FA enforcement is still false; member/user API responses do not expose enrollment. The last remote main commit has a successful `Workers Builds: hios-platform` check, so automatic deployment must be reviewed in the panel before a push. No WAF, 2FA or build-trigger settings have been changed.
 
-For the eventual release, build from updated local main with the real public key, preserve/verify both secret bindings on the new version, run security tests and release prerequisites, then deploy only after explicit authorization. GitHub Actions has the public build variable; any independent Workers Builds environment still needs inspection. The first checklist item above is now provisioned for local/Actions builds and staged Worker secrets, but production activation and end-to-end captcha verification remain pending.
+For the eventual release, build from updated local main with the real public key, preserve/verify both secret bindings on the new version, run security tests and release prerequisites, then deploy only after explicit authorization. GitHub Actions has the public build variable; any independent Workers Builds environment still needs inspection. The first checklist item above is now provisioned for local/Actions builds and staged Worker secrets, but production activation and end-to-end captcha verification were still pending at that staging checkpoint. See the subsequent authorized release below.
 
 Follow-up validation: OpenNext build with the real public site key completed successfully. The read-only `security-release-check.mjs` passed against the built assets and staged secret names. This is not an end-to-end captcha test or authorization to deploy. Browser review remains blocked because the authenticated Chrome window is not exposed by the connected extension; desktop control was stopped by its URL-verification safeguard.
 

@@ -21,6 +21,9 @@
 
 ## 🇪🇸 Español
 
+Documentación del repositorio: [historial](CHANGELOG.md), [pendientes verificados](BACKLOG.md),
+[despliegue](DEPLOY.md) y [referencias técnicas](docs/ai-context/README.md).
+
 ### Qué es
 HIOS (HI Open Systems) reúne proyectos de **hardware abierto con firmware en C++**, simuladores interactivos de **procesamiento digital de señales (DSP), filtros analógicos y telecomunicaciones**, complementados con una mesa de trabajo (*workbench*) de utilidades de ingeniería local-first sin login ni intermediación de servidores.
 
@@ -61,15 +64,6 @@ Suite de más de 50 herramientas cliente para el flujo de trabajo diario de soft
 - **Inspección de red e infraestructura:** Consultas directas DNS (A, AAAA, MX, TXT, CNAME), verificador de certificados TLS y vigencia, evaluador de expresiones Cron.
 - **Modelado y tipos:** Validador y generador de interfaces TypeScript a partir de JSON en vivo (`Object → Types`), comparador estructural (diff) de JSON y esquemas JSON Schema.
 - **Diagramación:** Entorno local integrado con Mermaid.js y Excalidraw sin envío de diagramas a servicios de terceros.
-
----
-
-### Capturas
-| Hardware y Firmware C++ | Simulador QPSK y Diagramas de Bode |
-|:---:|:---:|
-| ![Hardware ESP32](docs/screenshots/hardware-firmware.png) | ![Simulador QPSK](docs/screenshots/simulador-qpsk-bode.png) |
-| **Sintetizador Chiptune y Audio DSP** | **Workbench de Desarrollo** |
-| ![Audio DSP](docs/screenshots/audio-dsp-synth.png) | ![Dev Workbench](docs/screenshots/dev-workbench.png) |
 
 ---
 
