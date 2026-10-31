@@ -5,6 +5,7 @@ import { useLocale } from 'next-intl';
 import { useCurrentUser } from '@/lib/hooks/useCurrentUser';
 import { useUsageSummary } from '@/lib/hooks/useUsageSummary';
 import { UsageAnalyticsResults } from '@/components/workbench/UsageAnalyticsResults';
+import { TrafficAdmin } from './TrafficAdmin';
 import styles from './adminPanel.module.css';
 
 export function AdminPanel() {
@@ -21,12 +22,12 @@ export function AdminPanel() {
         <button key={value} type="button" role="radio" aria-checked={value === days} onClick={() => setDays(value)}
           className={styles.rangeButton + (value === days ? ' ' + styles.rangeButtonActive : '')}>{value}d</button>)}</div>
     </header>
-    <p className={styles.note}>Eventos de participación voluntaria; no representan personas ni toda la audiencia. Los días usan UTC e incluyen el día actual incompleto. Exportaciones preparadas cuenta archivos generados por las herramientas compatibles; no confirma que se hayan guardado.</p>
-    {status === 'loading' ? <p>…</p> : null}
-    {status === 'error' ? <p className={styles.note}>No se pudo cargar el resumen.</p> : null}
-    {data ? <><p>{data.range.from} — {data.range.to} (UTC)</p>
-      {data.totals.legacyEvents > 0 ? <p className={styles.note}>{data.totals.legacyEvents} eventos proceden de la medición anterior, sin los nuevos filtros.</p> : null}
-      <UsageAnalyticsResults data={data} /></> : null}
+    <TrafficAdmin days={days} />
+    <details className={styles.section}><summary>Eventos voluntarios (opt-in, muestra parcial)</summary>
+      {status === 'loading' ? <p>…</p> : null}
+      {status === 'error' ? <p className={styles.note}>No se pudo cargar el resumen.</p> : null}
+      {data ? <UsageAnalyticsResults data={data} /> : null}
+    </details>
     <AdminLinks locale={locale} />
   </main>;
 }

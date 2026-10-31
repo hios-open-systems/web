@@ -25,6 +25,8 @@ export function ensureTrafficSchema(db: D1Database) {
   return schemaReady;
 }
 
+const fullPath = (locale: string, path: string) => locale ? `/${locale}${path === '/' ? '' : path}` : path;
+
 function secretOf(env: TrafficEnv) {
   return env.ANALYTICS_SALT || env.GITHUB_CLIENT_SECRET || 'openhios-traffic';
 }
@@ -58,7 +60,7 @@ export async function recordTraffic(env: TrafficEnv, request: Request, response:
       ON CONFLICT(day, client, ua) DO UPDATE SET requests = requests + 1, errors = errors + excluded.errors,
         not_found = not_found + excluded.not_found, last_path = excluded.last_path, last_status = excluded.last_status, last_seen = excluded.last_seen`)
       .bind(day, client, ua, ip ? ipPrefix(ip) : 'unknown', cf.asn ?? 0, (cf.asOrganization ?? '').slice(0, 80), country,
-        facts.bot ? 1 : 0, error, response.status === 404 ? 1 : 0, `${request.method} ${facts.locale ? `/${facts.locale}` : ''}${facts.path}`.slice(0, 200),
+        facts.bot ? 1 : 0, error, response.status === 404 ? 1 : 0, `${request.method} ${fullPath(facts.locale, facts.path)}`.slice(0, 200),
         response.status, now.toISOString()),
   ];
   if (facts.pageView) {
