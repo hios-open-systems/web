@@ -36,6 +36,7 @@
     "test:patterns": "node --experimental-strip-types scripts/patterns-selftest.ts",
     "test:themes": "node --experimental-strip-types scripts/themes-selftest.ts",
     "test:usage": "node --experimental-strip-types scripts/usage-selftest.ts",
+    "images:optimize": "node scripts/optimize-images.mjs",
     "gen:icons": "node --experimental-strip-types scripts/gen-icons.ts",
     "gen:hardware": "node --experimental-strip-types scripts/gen-hardware-docs.ts",
     "gen:hardware-pdf": "node --experimental-strip-types scripts/gen-hardware-pdf.ts",
