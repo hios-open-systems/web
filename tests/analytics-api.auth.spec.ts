@@ -91,7 +91,15 @@ test('browser consent flows through the Worker and D1 into the owner dashboard',
     const after = await (await request.get('/api/usage/summary?days=30', { headers: owner })).json();
     expect(after.totals.toolOpens).toBe(before.totals.toolOpens + 1);
     await context.addCookies([{ name: 'hios_session', value: 'security-owner-session', url: origin }]);
+    // Admin needs a passkey on top of the owner session: enroll one with a virtual authenticator.
+    const cdp = await context.newCDPSession(page);
+    await cdp.send('WebAuthn.enable');
+    await cdp.send('WebAuthn.addVirtualAuthenticator', { options: { protocol: 'ctap2', transport: 'internal',
+      hasResidentKey: true, hasUserVerification: true, isUserVerified: true, automaticPresenceSimulation: true } });
+    expect((await request.get('/api/admin/traffic', { headers: owner })).status()).toBe(403);
     await page.goto('/es/admin');
+    await page.getByRole('button', { name: 'Registrar passkey' }).click();
+    await page.getByText('Eventos voluntarios (opt-in, muestra parcial)').click();
     const stat = page.locator('.ant-statistic').filter({ hasText: es.Workbench.usageAnalytics.totalsToolOpens });
     await expect(stat.locator('.ant-statistic-content-value')).toHaveText(String(after.totals.toolOpens));
   } finally { await context.close(); }

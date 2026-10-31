@@ -10,7 +10,7 @@ function htmlFiles(directory: string): string[] {
   });
 }
 const routes = htmlFiles(root).map(file => '/' + relative(root, file).replaceAll('\\', '/').replace(/\.html$/, ''))
-  .filter(route => /^\/(es|en|de|it)(\/|$)/.test(route) && !route.endsWith('/admin'))
+  .filter(route => /^\/(es|en|de|it)(\/|$)/.test(route) && !/\/admin(\/|$)/.test(route))
   .filter(route => {
     try { return !(JSON.parse(readFileSync(join(root, route.slice(1) + '.meta'), 'utf8')).status >= 300); }
     catch { return true; }
