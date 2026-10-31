@@ -42,3 +42,18 @@ Find the client in `/admin` (many requests, many 404s, scanner paths like
 `/wp-login.php`). Block in Cloudflare → Security → WAF → custom rule using the
 IP prefix (`ip.src in {203.0.113.0/24}`), the ASN (`ip.geoip.asnum eq 12345`),
 or the user agent.
+
+## Admin access (passkey)
+
+`/admin` and `/admin/traffic` need two things: the owner's GitHub session
+(`isOwner`, GitHub id 37183343) and a passkey step-up (WebAuthn, so
+fingerprint, face or device PIN). `GET /api/admin/traffic` enforces both on the
+server (`requireAdmin` in `lib/admin/context.ts`); the UI gate is only UX.
+
+- First passkey: only within 15 minutes of a fresh GitHub login, and only
+  while no passkey exists. An old or stolen session cannot enroll.
+- More passkeys (another device): only from an already verified admin session.
+- The step-up cookie `hios_admin` (HttpOnly, Secure, SameSite=Strict) lasts 8 h
+  and is bound to the GitHub session; logging out or "Bloquear admin" ends it.
+- Lost every passkey: `npx wrangler d1 execute hios-playground --remote --command "DELETE FROM admin_passkeys"`,
+  then log in again with GitHub and register a new one within 15 minutes.

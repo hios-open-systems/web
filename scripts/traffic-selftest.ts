@@ -7,10 +7,13 @@ import { ipPrefix, visitorId, clientId } from '../lib/traffic/identity.ts';
 import { recordTraffic, pruneTraffic } from '../lib/traffic/record.ts';
 import { readTrafficSummary, readRequestBreakdown, readTopClients, trafficRange } from '../lib/traffic/read.ts';
 import { TRAFFIC_SCHEMA } from '../lib/traffic/schema.ts';
+import { ADMIN_SCHEMA } from '../lib/admin/schema.ts';
 
 // Migration and runtime schema must not drift.
 const squash = (sql: string) => sql.replace(/--.*$/gm, '').replace(/\s+/g, ' ').replace(/;\s*/g, ';').trim();
 assert.equal(squash(readFileSync('migrations/0009_traffic.sql', 'utf8')), squash(TRAFFIC_SCHEMA.map(sql => `${sql};`).join('\n')));
+
+assert.equal(squash(readFileSync('migrations/0010_admin_passkeys.sql', 'utf8')), squash(ADMIN_SCHEMA.map(sql => `${sql};`).join('\n')));
 
 // D1 shim over real SQLite so the production SQL runs.
 const sqlite = new DatabaseSync(':memory:');
@@ -47,6 +50,7 @@ assert.equal(classify(req('/es/tools', { rsc: '1' }), 200, 'text/x-component').k
 assert.equal(classify(req('/es/tools', { rsc: '1' }), 200, 'text/x-component').pageView, true);
 assert.equal(classify(req('/es/tools', { rsc: '1', 'next-router-prefetch': '1' }), 200, 'text/x-component').pageView, false);
 assert.equal(classify(req('/es/nope'), 404, 'text/html').pageView, false);
+assert.equal(classify(req('/es/admin/traffic'), 200, 'text/html').pageView, false);
 assert.equal(classify(req('/api/stats/public'), 200, 'application/json').kind, 'api');
 assert.equal(classify(req('/es', { 'user-agent': 'Googlebot/2.1' }), 200, 'text/html').bot, true);
 assert.equal(classify(req('/es', { 'user-agent': 'curl/8.0' }), 200, 'text/html').pageView, false);

@@ -60,6 +60,7 @@ export function classify(request: Request, status: number, contentType: string, 
   const bot = isBot(request.headers.get('user-agent') ?? '', verifiedBot);
   const { path, locale } = splitPath(url.pathname);
   const ok = status >= 200 && status < 300 && request.method === 'GET';
-  const pageView = !bot && ok && !isPrefetch(request.headers) && (kind === 'page' || kind === 'nav');
+  // The owner's admin pages are not traction.
+  const pageView = !bot && ok && !isPrefetch(request.headers) && (kind === 'page' || kind === 'nav') && !path.startsWith('/admin');
   return { kind, pageView, bot, path, locale, referrer: kind === 'page' ? referrerOf(url, request.headers.get('referer')) : '', status };
 }

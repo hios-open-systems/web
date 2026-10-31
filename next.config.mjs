@@ -154,6 +154,8 @@ const nextConfig = {
 			'microphone=(self)',
 			'midi=()',
 			'payment=()',
+			'publickey-credentials-create=(self)',
+			'publickey-credentials-get=(self)',
 			'serial=(self)',
 			'usb=()',
 		].join(', ');
