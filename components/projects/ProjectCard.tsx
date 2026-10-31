@@ -48,22 +48,13 @@ function ProjectArtwork({ project, index }: { project: Project; index: number })
   const t = useTranslations('Projects');
   return (
     <div className={styles.projectImage}>
-      {project.slug === 'hios-node-ai' ? (
-        <div className={styles.projectDiagram} aria-hidden="true">
-          <span>ESP32</span>
-          <span>↔</span>
-          <span>OLLAMA</span>
-          <small>LOCAL NETWORK / HTTP / OLED</small>
-        </div>
-      ) : (
-        <Image
-          src={project.image}
-          alt={project.name}
-          fill
-          sizes="(max-width: 700px) 100vw, 600px"
-          style={{ objectFit: 'cover' }}
-        />
-      )}
+      <Image
+        src={project.image}
+        alt={project.name}
+        fill
+        sizes="(max-width: 700px) 100vw, 600px"
+        style={{ objectFit: 'cover' }}
+      />
       <span className={styles.projectNumber}>HI—0{index + 1}</span>
       <span className={styles.projectStatus}>{t(`status_${project.status}`)}</span>
     </div>

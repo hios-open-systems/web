@@ -1,0 +1,40 @@
+<!doctype html><html><head><meta charset="utf-8"><style>body{margin:0}</style>
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script></head><body>
+<script type="module">
+// HIOS BTDAC cover: enclosure from public/downloads/btdac/*.stl (105x65x26 base + lid with an 8x8 mm LED window).
+import { THREE, RoundedBoxGeometry, studio, stl, at, mesh, pla, canvasTex, shoot, W, H } from './studio.js';
+const { renderer, scene } = studio({ accent: 0x8b5cf6 });
+const dev = new THREE.Group(); scene.add(dev);
+const shell = pla(0xc3c8d0, { roughness: 0.6 });
+dev.add(await stl('/public/downloads/btdac/btdac-enclosure-base.stl', shell));
+const lid = await stl('/public/downloads/btdac/btdac-enclosure-lid.stl', shell); lid.position.y = 26; dev.add(lid);
+
+// parting line between base and lid
+dev.add(mesh(new THREE.BoxGeometry(105.2, 0.5, 65.2), pla(0x6b7280, { roughness: 0.8 }), new THREE.Vector3(0, 26, 0), false));
+
+// KY-009 RGB LED glowing through the lid window
+dev.add(mesh(new THREE.BoxGeometry(7.6, 0.6, 7.6), new THREE.MeshBasicMaterial({ color: 0xc4b5fd }), at(0, 0, 29.8), false));
+const glow = new THREE.PointLight(0x8b5cf6, 400, 60); glow.position.copy(at(0, 0, 36)); dev.add(glow);
+
+// embossed name on the lid
+const label = canvasTex(1024, 256, (c) => {
+  c.fillStyle = '#5b6170'; c.font = '800 120px sans-serif'; c.fillText('HIOS', 40, 170);
+  c.fillStyle = '#8b5cf6'; c.font = '300 120px sans-serif'; c.fillText('BTDAC', 360, 170);
+});
+const tag = mesh(new THREE.PlaneGeometry(44, 11), new THREE.MeshBasicMaterial({ map: label, transparent: true }), at(-20, -20, 30.05), false);
+tag.rotation.x = -Math.PI / 2; dev.add(tag);
+
+// front panel: 3.5 mm line out and toggle switch; side: USB-C charge port
+const metal = new THREE.MeshStandardMaterial({ color: 0xc9ccd2, metalness: 1, roughness: 0.25 });
+const black = pla(0x15161a, { roughness: 0.4 });
+const jack = mesh(new THREE.CylinderGeometry(3.2, 3.2, 1.2, 32), metal, at(30, -32.9, 14)); jack.rotation.x = Math.PI / 2; dev.add(jack);
+const hole = mesh(new THREE.CylinderGeometry(1.8, 1.8, 1.4, 24), black, at(30, -33, 14), false); hole.rotation.x = Math.PI / 2; dev.add(hole);
+const nut = mesh(new THREE.CylinderGeometry(3.6, 3.6, 1.2, 6), metal, at(-30, -33, 14)); nut.rotation.x = Math.PI / 2; dev.add(nut);
+const lever = mesh(new THREE.CylinderGeometry(0.9, 1.4, 11, 16), metal, new THREE.Vector3(-30, 16.6, 37.8)); lever.rotation.x = Math.PI / 2 - 0.5; dev.add(lever);
+const usb = mesh(new RoundedBoxGeometry(1.4, 3.4, 9.2, 2, 1.2), black, at(-52.8, 10, 12), false); dev.add(usb);
+
+dev.rotation.y = 0.0;
+const cam = new THREE.PerspectiveCamera(24, W / H, 1, 4000);
+cam.position.set(-150, 190, 250); cam.lookAt(0, 12, 0);
+shoot(renderer, scene, cam);
+</script></body></html>

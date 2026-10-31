@@ -90,35 +90,6 @@
   margin: 20px 24px 24px;
   font-size: 11px;
 }
-.projectDiagram {
-  height: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  align-content: center;
-  align-items: center;
-  justify-content: center;
-  padding: 30px;
-  background:
-    radial-gradient(#b8f36d25 1px, transparent 1px) 0 0 / 20px 20px,
-    #11231e;
-  color: #b8f36d;
-}
-.projectDiagram > span:not(:nth-child(2)) {
-  padding: 24px 16px;
-  border: 1px solid #b8f36d77;
-  font: 16px var(--font-stack-mono);
-  border-radius: 8px;
-  background: #b8f36d09;
-}
-.projectDiagram > small {
-  width: 100%;
-  text-align: center;
-  font: 9px var(--font-stack-mono);
-  color: #b3d1bd;
-  letter-spacing: 0.12em;
-}
-
 @media (max-width: 700px) {
   .projectInfo {
     padding: 20px 20px 0;

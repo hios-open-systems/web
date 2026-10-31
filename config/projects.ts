@@ -28,7 +28,7 @@ export const projects: Project[] = [
         tagline: "Receptor de audio Bluetooth",
         description: "Receptor de audio Bluetooth con ESP32 y DAC PCM5102. Entrega audio estéreo por salida de línea y permite solicitar tonos de prueba desde una app Android.",
         status: 'prototype',
-        image: '/images/btdac/build/20260125_180730.jpg',
+        image: '/images/btdac/cover.jpg',
         learnings: ["Audio I2S","Bluetooth A2DP","Control por BLE"],
         stats: {
             tutorials: 3,
@@ -40,7 +40,7 @@ export const projects: Project[] = [
         name: 'HIOS PAD',
         description: "Control programable con teclas, encoder, joystick y pantalla. Permite organizar atajos en capas, usar teclado y mouse por USB o Bluetooth y editar la configuración desde una interfaz web.",
         status: 'prototype',
-        image: '/images/pad/pad-5-rev09-top.jpg',
+        image: '/images/pad/cover.jpg',
         learnings: ["ESP32-S3","USB y Bluetooth HID","Editor web","Companion para PC"],
     },
     {
@@ -48,7 +48,7 @@ export const projects: Project[] = [
         name: 'WiFi Speaker',
         description: "Proyecto de parlante con ESP32, recepción de audio por WiFi y Bluetooth, amplificación I2S y control desde una interfaz web. En desarrollo.",
         status: 'wip',
-        image: '/images/speaker/modules/Max98357.png',
+        image: '/images/speaker/cover.jpg',
         learnings: ["Audio I2S","WiFi","Bluetooth A2DP","Control web"],
         stats: {
             tutorials: 5,
@@ -61,7 +61,7 @@ export const projects: Project[] = [
         tagline: "Consultas a IA desde un ESP32-S3",
         description: "Prototipo con ESP32-S3 que envía una consulta de texto a Ollama al pulsar un botón y muestra la respuesta en una pantalla OLED. Requiere un servidor en la red local.",
         status: 'prototype',
-        image: '/images/pad/pad-1-overview.jpg',
+        image: '/images/hios-node-ai/cover.jpg',
         learnings: ["ESP32-S3","Ollama por HTTP","Pantalla OLED","FreeRTOS"],
         stats: {
             tutorials: 2,
