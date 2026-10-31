@@ -13,13 +13,18 @@ test('private endpoints reject missing, forged and expired sessions; admin uses 
     expect((await request.get(path, { headers: headers('owner') })).status()).toBe(200);
   }
   expect((await request.delete('/api/guestbook/unknown', { headers: headers('a') })).status()).toBe(403);
+  // Sensitive traffic needs the owner session plus a passkey step-up.
+  expect((await request.get('/api/admin/traffic', { headers: headers('missing') })).status()).toBe(401);
+  expect((await request.get('/api/admin/traffic', { headers: headers('a') })).status()).toBe(403);
+  expect((await request.get('/api/admin/traffic', { headers: { ...headers('owner'), Cookie: `${headers('owner').Cookie}; hios_admin=forged` } })).status()).toBe(403);
+  expect((await request.get('/api/admin/passkey', { headers: headers('a') })).status()).toBe(403);
 });
 
 test('mutations reject cross-origin, sibling origin, null and missing Origin before writes', async ({ request }) => {
   const routes = [['POST', '/api/snippets'], ['PATCH', '/api/snippets/unknown'], ['DELETE', '/api/snippets/unknown'],
     ['POST', '/api/snippets/import'], ['PATCH', '/api/user/settings'], ['DELETE', '/api/user/account'],
     ['PUT', '/api/user/workspaces'], ['PUT', '/api/user/presets'], ['DELETE', '/api/guestbook/unknown'],
-    ['POST', '/api/auth/logout'], ['POST', '/api/feedback'], ['POST', '/api/guestbook'], ['POST', '/api/usage/events']];
+    ['POST', '/api/auth/logout'], ['POST', '/api/admin/passkey'], ['POST', '/api/feedback'], ['POST', '/api/guestbook'], ['POST', '/api/usage/events']];
   for (const [method, path] of routes) {
     for (const source of ['https://evil.example', 'http://sub.localhost:3202', 'null', '']) {
       const response = await request.fetch(path, { method, headers: { Cookie: headers().Cookie, ...(source ? { Origin: source } : {}) }, data: {} });

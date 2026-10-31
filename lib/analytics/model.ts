@@ -34,12 +34,3 @@ export interface UsageSummary {
   topPages: { path: string; count: number }[];
   topTools: { toolId: string; count: number }[];
 }
-export interface PublicUsage {
-  rangeDays: number;
-  range: UsageSummary['range'];
-  generatedAt: string;
-  totals: UsageTotals & { guestbook: number };
-  perDay: { day: string; count: number }[];
-  topTools: { toolId: string; count: number }[];
-  locales: { locale: string; count: number }[];
-}

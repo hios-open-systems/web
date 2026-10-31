@@ -1,4 +1,4 @@
-// Local-only replacement for the SDK used by orquestador-hios.ts.
+// Local-only replacement for the SDK used by scripts/orquestador-hios.ts.
 // https://lmstudio.ai/docs/developer/openai-compat/chat-completions
 export async function requestLocalCompletion(prompt: string, request: typeof fetch = fetch): Promise<string> {
   const response = await request('http://127.0.0.1:1234/v1/chat/completions', {

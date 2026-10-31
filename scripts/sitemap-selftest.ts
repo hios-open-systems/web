@@ -34,7 +34,7 @@ function verifyBuild() {
   for (const file of htmlFiles(root)) {
     const route = '/' + relative(root, file).split(sep).join('/').replace(/\.html$/, '');
     if (!/^\/(en|es|de|it)(\/|$)/.test(route)) continue;
-    if (/\/admin$|\/workbench\/(settings|feedback)$/.test(route)) continue;
+    if (/\/admin(\/traffic)?$|\/workbench\/(settings|feedback)$/.test(route)) continue;
     const response = JSON.parse(readFileSync(file.replace(/\.html$/, '.meta'), 'utf8')) as { status?: number };
     if (response.status && response.status >= 300 && response.status < 400) continue;
     const html = readFileSync(file, 'utf8');

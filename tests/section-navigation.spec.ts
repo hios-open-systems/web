@@ -61,7 +61,7 @@ test('every generated public page is reachable by links from its locale home', (
     }
     const missing = [...pages.keys()].filter(path => path.startsWith(home + '/') && !reached.has(path))
       // Private owner page has a session-gated link; these two legacy URLs redirect.
-      .filter(path => !['/admin', '/json', '/calculators/rcl'].some(suffix => path === home + suffix));
+      .filter(path => !['/admin', '/admin/traffic', '/json', '/calculators/rcl'].some(suffix => path === home + suffix));
     expect(missing, locale).toEqual([]);
     expect(reached.size).toBeGreaterThan(80);
   }

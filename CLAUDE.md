@@ -63,4 +63,11 @@ Projects are loaded at build time from `projects/` directory:
 | Slug | Description |
 |------|-------------|
 | btdac | Bluetooth DAC with ESP32 and PCM5102 |
+| pad | Programmable control deck and gaming keypad (ESP32-S3) |
+| hios-node-ai | ESP32-S3 node that queries Ollama |
 | speaker | WiFi speaker (work in progress) |
+| speaker-test | Speaker test bench |
+
+## Stats
+
+Traffic is recorded automatically by `worker.js` into D1 (`lib/traffic/`). See `docs/ai-context/traffic-stats.md`. Never reintroduce manual imports.

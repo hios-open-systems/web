@@ -1,7 +1,7 @@
 import { getDb } from '@/lib/db';
 import { checkRateLimit } from '@/lib/requestRateLimit';
-import { readUsage } from '@/lib/analytics/storage';
-import { publicUsage, usageRange } from '@/lib/analytics/summary';
+import { readTrafficSummary, trafficRange } from '@/lib/traffic/read';
+import { publicTraffic } from '@/lib/traffic/public';
 import { cachedPublicUsage, cachePublicUsage, PUBLIC_STATS_CACHE_CONTROL } from '@/lib/analytics/public-cache';
 
 export async function GET(request: Request) {
@@ -12,18 +12,17 @@ export async function GET(request: Request) {
   try {
     const db = getDb();
     const now = new Date();
-    const range = usageRange(30, now);
-    const [rows, guestbook] = await Promise.all([
-      readUsage(db, range.from, range.to),
+    const [summary, guestbook] = await Promise.all([
+      readTrafficSummary(db, trafficRange(30, now), 50, now),
       db.prepare("SELECT COUNT(*) AS count FROM guestbook WHERE status = 'visible'").first<{ count: number }>(),
     ]);
-    const response = Response.json(publicUsage(rows, guestbook?.count ?? 0, now), {
+    const response = Response.json(publicTraffic(summary, guestbook?.count ?? 0), {
       headers: { 'Cache-Control': PUBLIC_STATS_CACHE_CONTROL },
     });
     cachePublicUsage(request, response);
     return response;
   } catch {
-    console.error('usage_public_read_failed');
+    console.error('traffic_public_read_failed');
     return Response.json({ error: 'Stats unavailable' }, { status: 503, headers: { 'Cache-Control': 'private, no-store' } });
   }
 }

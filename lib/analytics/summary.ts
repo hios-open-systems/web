@@ -1,4 +1,4 @@
-import { EVENT_NAMES, type DailyUsage, type UsageSummary, type PublicUsage, type UsageTotals } from './model.ts';
+import { EVENT_NAMES, type DailyUsage, type UsageSummary, type UsageTotals } from './model.ts';
 
 export function usageRange(days: number, now = new Date(), locale: string | null = null): UsageSummary['range'] {
   const to = now.toISOString().slice(0, 10);
@@ -38,16 +38,5 @@ export function summarizeUsage(rows: DailyUsage[], range: UsageSummary['range'])
     timeline: daysInRange(range).flatMap(day => EVENT_NAMES.map(event_name => ({ day, event_name, count: timelineCounts.get(`${day}:${event_name}`) ?? 0 }))),
     topPages: ranked(rows, 'path', 'page_view').slice(0, 20).map(row => ({ path: row.name, count: row.count })),
     topTools: ranked(rows, 'tool_id', 'tool_open').slice(0, 20).map(row => ({ toolId: row.name, count: row.count })),
-  };
-}
-
-export function publicUsage(rows: DailyUsage[], guestbook: number, now = new Date()): PublicUsage {
-  const range = usageRange(30, now);
-  const summary = summarizeUsage(rows, range);
-  return {
-    rangeDays: range.days, range, generatedAt: now.toISOString(), totals: { ...summary.totals, guestbook },
-    perDay: daysInRange(range).map(day => ({ day, count: summary.timeline.filter(row => row.day === day).reduce((sum, row) => sum + row.count, 0) })),
-    topTools: summary.topTools.filter(row => row.count >= 5).slice(0, 8),
-    locales: ranked(rows, 'locale').filter(row => row.count >= 5).map(row => ({ locale: row.name, count: row.count })),
   };
 }

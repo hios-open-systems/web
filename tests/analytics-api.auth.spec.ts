@@ -46,9 +46,9 @@ test('public aggregate caches across cookies and query strings; private APIs nev
   expect(response.headers()['set-cookie']).toBeUndefined();
   const initial = await response.json();
   expect(initial.perDay).toHaveLength(30);
-  expect(initial.countries).toBeUndefined();
-  expect(initial.topTools.every((row: { count: number }) => row.count >= 5)).toBe(true);
-  expect(initial.locales.every((row: { count: number }) => row.count >= 5)).toBe(true);
+  for (const key of ['pages', 'referrers', 'countries', 'locales']) {
+    expect(initial[key].every((row: { count: number }) => row.count >= 2), key).toBe(true);
+  }
   expect((await request.post('/api/usage/events', { headers, data: event() })).status()).toBe(204);
   const next = await request.get('/api/stats/public?ignored=second', { headers: owner });
   if (process.env.SECURITY_WORKER === '1') expect(await next.json()).toEqual(initial);
@@ -91,7 +91,15 @@ test('browser consent flows through the Worker and D1 into the owner dashboard',
     const after = await (await request.get('/api/usage/summary?days=30', { headers: owner })).json();
     expect(after.totals.toolOpens).toBe(before.totals.toolOpens + 1);
     await context.addCookies([{ name: 'hios_session', value: 'security-owner-session', url: origin }]);
+    // Admin needs a passkey on top of the owner session: enroll one with a virtual authenticator.
+    const cdp = await context.newCDPSession(page);
+    await cdp.send('WebAuthn.enable');
+    await cdp.send('WebAuthn.addVirtualAuthenticator', { options: { protocol: 'ctap2', transport: 'internal',
+      hasResidentKey: true, hasUserVerification: true, isUserVerified: true, automaticPresenceSimulation: true } });
+    expect((await request.get('/api/admin/traffic', { headers: owner })).status()).toBe(403);
     await page.goto('/es/admin');
+    await page.getByRole('button', { name: 'Registrar passkey' }).click();
+    await page.getByText('Eventos voluntarios (opt-in, muestra parcial)').click();
     const stat = page.locator('.ant-statistic').filter({ hasText: es.Workbench.usageAnalytics.totalsToolOpens });
     await expect(stat.locator('.ant-statistic-content-value')).toHaveText(String(after.totals.toolOpens));
   } finally { await context.close(); }

@@ -15,7 +15,7 @@ export function UsageAnalyticsTool() {
   const { data, status } = useUsageSummary(days, locale);
   return <Space direction="vertical" size={20} className={styles.stackFull}>
     <ToolHeader eyebrow={t('badge')} title={t('title')} description={t('subtitle')} locality="local" />
-    <Typography.Paragraph>{publicText('intro')} {publicText('methodology')}</Typography.Paragraph>
+    <Typography.Paragraph>{publicText('voluntaryDescription')}</Typography.Paragraph>
     <Card className={styles.sectionCard}><Space wrap size={12}>
       <Typography.Text>{t('days')}</Typography.Text>
       <Select aria-label={t('days')} value={days} onChange={setDays} options={[7, 14, 30, 90].map(value => ({ label: value + 'd', value }))} />
