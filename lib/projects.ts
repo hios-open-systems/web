@@ -138,6 +138,8 @@ function loadFirmwareSnippets(slug: string, projectPath: string): FirmwareSnippe
 function loadProjectImages(slug: string, projectPath: string): string[] {
     const picsPath = path.join(projectPath, 'pics');
     const images: string[] = [];
+    // Rendered cover (npm run covers) leads the gallery when present.
+    if (fs.existsSync(path.join(publicDir, 'images', slug, 'cover.jpg'))) images.push(`/images/${slug}/cover.jpg`);
     if (!fs.existsSync(picsPath)) return images;
 
     const buildPath = path.join(picsPath, 'build');

@@ -1,0 +1,52 @@
+<!doctype html><html><head><meta charset="utf-8"><style>body{margin:0}</style>
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script></head><body>
+<script type="module">
+// HIOS Node AI cover: concept enclosure (no printed parts published yet) sized for the BOM:
+// ESP32-S3 DevKitC, 18650 cell, 40 mm speaker, 0.96" OLED, 6x6 PTT button, 3 mm LED, INMP441 mic.
+import { THREE, RoundedBoxGeometry, studio, mesh, pla, canvasTex, shoot, W, H } from './studio.js';
+const { renderer, scene } = studio({ accent: 0x34d399 });
+const dev = new THREE.Group(); scene.add(dev);
+const BW = 96, BD = 62, BH = 30;
+dev.add(mesh(new RoundedBoxGeometry(BW, BH, BD, 6, 8), pla(0xeef0f2, { roughness: 0.55 }), new THREE.Vector3(0, BH / 2, 0)));
+const top = BH;
+
+// 0.96" OLED (active 22x11 mm) in a black window
+dev.add(mesh(new RoundedBoxGeometry(30, 1, 18, 2, 0.4), pla(0x0b0c0f, { roughness: 0.2, clearcoat: 1 }), new THREE.Vector3(-22, top + 0.3, -8)));
+const oled = canvasTex(512, 256, (c) => {
+  c.fillStyle = '#000'; c.fillRect(0, 0, 512, 256);
+  c.fillStyle = '#7dd3fc'; c.font = 'bold 44px monospace'; c.fillText('HIOS AI', 20, 56);
+  c.fillStyle = '#e5e7eb'; c.font = '34px monospace'; c.fillText('> llama3.2', 20, 130); c.fillText('thinking...', 20, 190);
+  c.fillStyle = '#34d399'; c.fillRect(20, 220, 300, 8);
+});
+const scr = mesh(new THREE.PlaneGeometry(24, 12), new THREE.MeshBasicMaterial({ map: oled }), new THREE.Vector3(-22, top + 0.85, -8), false);
+scr.rotation.x = -Math.PI / 2; dev.add(scr);
+
+// 40 mm speaker grille
+const dot = pla(0x2a2d33, { roughness: 0.9, clearcoat: 0 });
+for (let r = 0; r <= 15; r += 3.4) {
+  const n = r === 0 ? 1 : Math.round((2 * Math.PI * r) / 3.4);
+  for (let i = 0; i < n; i++) { const a = (i / n) * Math.PI * 2; dev.add(mesh(new THREE.CylinderGeometry(1, 1, 0.3, 12), dot, new THREE.Vector3(24 + Math.cos(a) * r, top + 0.1, 2 + Math.sin(a) * r), false)); }
+}
+
+// push-to-talk button, status LED, mic hole
+dev.add(mesh(new THREE.CylinderGeometry(7.5, 7.5, 1.2, 48), pla(0xd4d7dc, { roughness: 0.5 }), new THREE.Vector3(-22, top + 0.5, 14)));
+dev.add(mesh(new THREE.CylinderGeometry(6, 6.2, 3.4, 48), pla(0x10b981, { roughness: 0.35, clearcoat: 0.6 }), new THREE.Vector3(-22, top + 1.8, 14)));
+dev.add(mesh(new THREE.SphereGeometry(1.6, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0x6ee7b7 }), new THREE.Vector3(-4, top, -14), false));
+const led = new THREE.PointLight(0x34d399, 120, 30); led.position.set(-4, top + 3, -14); dev.add(led);
+dev.add(mesh(new THREE.CylinderGeometry(0.8, 0.8, 0.3, 16), dot, new THREE.Vector3(-4, top + 0.1, 14), false));
+
+// side: USB-C and slide switch
+const black = pla(0x15161a, { roughness: 0.4 });
+dev.add(mesh(new RoundedBoxGeometry(9.2, 3.4, 1.4, 2, 1.2), black, new THREE.Vector3(-20, 12, BD / 2 + 0.2), false));
+dev.add(mesh(new THREE.BoxGeometry(10, 4, 1), black, new THREE.Vector3(14, 12, BD / 2 + 0.2), false));
+dev.add(mesh(new THREE.BoxGeometry(3.4, 2.6, 1.6), pla(0xd4d7dc), new THREE.Vector3(11.5, 12, BD / 2 + 0.8), false));
+
+const label = canvasTex(1024, 128, (c) => { c.fillStyle = '#9aa1ab'; c.font = '700 84px sans-serif'; c.fillText('HIOS NODE AI', 10, 96); });
+const tag = mesh(new THREE.PlaneGeometry(40, 5), new THREE.MeshBasicMaterial({ map: label, transparent: true }), new THREE.Vector3(24, top + 0.05, -23), false);
+tag.rotation.x = -Math.PI / 2; dev.add(tag);
+
+dev.rotation.y = 0.18;
+const cam = new THREE.PerspectiveCamera(24, W / H, 1, 4000);
+cam.position.set(-120, 170, 220); cam.lookAt(0, 12, 0);
+shoot(renderer, scene, cam);
+</script></body></html>
