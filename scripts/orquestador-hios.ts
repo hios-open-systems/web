@@ -1,5 +1,5 @@
-// orquestador-hios.ts
-import { requestLocalCompletion } from "./scripts/lmstudio-client.ts";
+// scripts/orquestador-hios.ts — run from the repo root: node --experimental-strip-types scripts/orquestador-hios.ts
+import { requestLocalCompletion } from "./lmstudio-client.ts";
 import * as fs from "fs";
 
 async function generarPantallaConfig() {

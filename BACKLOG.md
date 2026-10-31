@@ -13,7 +13,7 @@ Una sección por idea. Llenala al menos hasta `Sketch` antes de empezarla — si
 ## Investigar warning webpack cache con next-intl
 - **Why**: en build aparece warning de `webpack.cache.PackFileCacheStrategy` al parsear `next-intl/.../extractor/format/index.js` con `import(t)`. No rompe release, pero ensucia logs y puede ocultar señales reales.
 - **Sketch**:
-  1. Confirmar en issue tracker de `next-intl`/`next` si está reportado para la versión actual (`next-intl@4.7.0`, `next@14.2.35`).
+  1. Confirmar en issue tracker de `next-intl`/`next` si está reportado para la versión actual (ver versiones actuales en `package.json`).
   2. Probar upgrade controlado de `next-intl` (y/o pin recomendado) en rama corta con `npm run build`.
   3. Si persiste, documentar que es warning no bloqueante y agregar nota en `TOOLS.md` para evitar falsos positivos en QA.
   4. Re-evaluar al migrar de major de Next.
