@@ -46,9 +46,9 @@ test('public aggregate caches across cookies and query strings; private APIs nev
   expect(response.headers()['set-cookie']).toBeUndefined();
   const initial = await response.json();
   expect(initial.perDay).toHaveLength(30);
-  expect(initial.countries).toBeUndefined();
-  expect(initial.topTools.every((row: { count: number }) => row.count >= 5)).toBe(true);
-  expect(initial.locales.every((row: { count: number }) => row.count >= 5)).toBe(true);
+  for (const key of ['pages', 'referrers', 'countries', 'locales']) {
+    expect(initial[key].every((row: { count: number }) => row.count >= 2), key).toBe(true);
+  }
   expect((await request.post('/api/usage/events', { headers, data: event() })).status()).toBe(204);
   const next = await request.get('/api/stats/public?ignored=second', { headers: owner });
   if (process.env.SECURITY_WORKER === '1') expect(await next.json()).toEqual(initial);

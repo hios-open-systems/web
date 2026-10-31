@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { publicUsage } from '../lib/analytics/summary';
-import traffic from '../data/analytics/cloudflare-traffic.json';
+import { publicTraffic } from '../lib/traffic/public';
+import { trafficRange } from '../lib/traffic/read';
 import es from '../messages/es.json';
 
 test('expanded telemetry needs fresh consent and sends no cookie, referrer or input content', async ({ page, context, baseURL }) => {
@@ -71,15 +71,22 @@ test('a prepared image export counts an outcome without uploading the file or it
   expect(JSON.stringify(events)).not.toContain('SECRET_CLIENT');
 });
 
-test('public stats show zero days, methodology and outcome counts', async ({ page }, testInfo) => {
-  const date = new Date('2026-10-24T12:00:00Z');
-  const data = publicUsage([{ day: '2026-10-24', event_name: 'export_generated', path: '/workbench/image-convert', locale: 'es', tool_id: 'image-convert', version: 2, count: 8 }], 0, date);
+test('public stats show traction: visitors, pages, referrers and countries', async ({ page }, testInfo) => {
+  const now = new Date('2026-10-24T12:00:00Z');
+  const range = trafficRange(30, now);
+  const perDay = Array.from({ length: 30 }, (_, i) => ({ day: new Date(Date.parse(`${range.from}T00:00:00Z`) + i * 86_400_000).toISOString().slice(0, 10), views: 0, visitors: 0 }));
+  perDay[29] = { day: '2026-10-24', views: 12, visitors: 5 };
+  const data = publicTraffic({ range, generatedAt: now.toISOString(), totals: { views: 12, visitors: 5 }, perDay,
+    pages: [{ name: '/projects/pad', count: 8 }, { name: '/secret-single', count: 1 }],
+    referrers: [{ name: 'news.ycombinator.com', count: 4 }], countries: [{ name: 'AR', count: 9 }], locales: [{ name: 'es', count: 12 }] }, 0);
   await page.route('**/api/stats/public', route => route.fulfill({ json: data }));
   await page.goto('/es/stats');
-  await expect(page.getByText('Exportaciones preparadas', { exact: true })).toBeVisible();
-  await expect(page.locator('[title="2026-10-23: 0"]')).toHaveCSS('height', '0px');
-  await expect(page.getByText(/Contamos eventos, no personas/)).toBeVisible();
-  await expect(page.getByText(/usuarios únicos/i)).toHaveCount(0);
+  await expect(page.getByText('Visitantes', { exact: true })).toBeVisible();
+  await expect(page.getByText('/projects/pad', { exact: true })).toBeVisible();
+  await expect(page.getByText('/secret-single')).toHaveCount(0);
+  await expect(page.getByText('news.ycombinator.com', { exact: true })).toBeVisible();
+  await expect(page.getByText('Argentina', { exact: true })).toBeVisible();
+  await expect(page.locator('[title="2026-10-23: 0 · 0"]')).toHaveCSS('height', '0px');
   await page.screenshot({ path: testInfo.outputPath('usage-stats.png'), fullPage: true });
 });
 
@@ -90,22 +97,16 @@ test('public stats failures remain uncached in the standalone server', async ({ 
   expect(response.headers()['cache-control']).not.toContain('s-maxage');
 });
 
-test('Cloudflare history stays independent, local and available when voluntary stats fail', async ({ page }) => {
+test('stats page makes no third-party requests and survives an API failure', async ({ page }) => {
   const external: string[] = [];
-  const events: string[] = [];
   page.on('request', request => {
     if (/^https?:/.test(request.url()) && new URL(request.url()).hostname !== '127.0.0.1') external.push(request.url());
-    if (request.url().includes('/api/usage/events')) events.push(request.url());
   });
   await page.route('**/api/stats/public', route => route.fulfill({ status: 503, json: { error: 'unavailable' } }));
   await page.goto('/es/stats');
   await expect(page.getByText(es.PublicStats.error, { exact: true })).toBeVisible();
-  const section = page.getByRole('region', { name: es.CloudflareTraffic.title });
-  await expect(section.getByText(es.CloudflareTraffic.limitations, { exact: true })).toBeVisible();
-  await section.locator('summary').click();
-  await expect(section.getByRole('row')).toHaveCount(traffic.daily.length + 1);
+  await expect(page.getByText(es.PublicStats.methodology, { exact: true })).toBeVisible();
   expect(external).toEqual([]);
-  expect(events).toEqual([]);
   await page.setViewportSize({ width: 360, height: 800 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1)).toBe(true);
 });

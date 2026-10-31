@@ -7,7 +7,7 @@ function cacheContext(request: Request) {
   const cache = (caches as CacheStorage & { default: Cache }).default;
   // Ignore query parameters/cookies; this endpoint has no personal variants.
   const url = new URL('/api/stats/public', request.url);
-  url.searchParams.set('schema', '2');
+  url.searchParams.set('schema', '3');
   return { cache, ctx, key: new Request(url, { method: 'GET' }) };
 }
 

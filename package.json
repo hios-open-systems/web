@@ -78,8 +78,6 @@
     "test:production-security": "node --experimental-strip-types scripts/production-security-selftest.ts",
     "test:traffic": "node --experimental-strip-types --experimental-sqlite scripts/traffic-selftest.ts",
     "test:analytics": "node --experimental-strip-types --experimental-sqlite scripts/analytics-selftest.ts",
-    "analytics:import-cloudflare": "node --experimental-strip-types scripts/import-cloudflare-traffic.ts",
-    "test:cloudflare-traffic": "node --experimental-strip-types scripts/cloudflare-traffic-selftest.ts",
     "test:google-auth": "node --experimental-strip-types --experimental-sqlite scripts/google-auth-selftest.ts",
     "test:google-local": "node scripts/google-local-selftest.mjs",
     "test:discovery": "node --experimental-strip-types scripts/discovery-selftest.ts"

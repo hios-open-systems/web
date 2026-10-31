@@ -1,5 +1,7 @@
 # Métricas de uso y privacidad, versión 2
 
+> **31/10/2026:** el snapshot manual de Cloudflare (`data/analytics/cloudflare-traffic.json`, `analytics:import-cloudflare`) se eliminó. `/stats` ahora usa el tráfico que registra el Worker automáticamente. Ver `traffic-stats.md`. Los eventos voluntarios de este documento siguen existiendo para el panel de uso del workbench.
+
 Implementación local del 24 de octubre de 2026. La migración y la configuración del Worker deben publicarse juntas en el próximo release autorizado; este trabajo no cambia producción.
 
 ## Qué se mide
