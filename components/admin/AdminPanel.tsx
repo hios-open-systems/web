@@ -35,7 +35,7 @@ function AdminLinks({ locale }: { locale: string }) {
     <Link href={'/' + locale + '/admin/traffic'} className={styles.link}>Tráfico sensible →</Link>
     <Link href={'/' + locale + '/workbench/feedback'} className={styles.link}>Feedback inbox →</Link>
     <Link href={'/' + locale + '/stats'} className={styles.link}>Stats públicas →</Link>
-    <a href="https://github.com/juanjparedez/web" target="_blank" rel="noopener noreferrer" className={styles.link}>Repo →</a>
+    <a href="https://github.com/juanjparedez/openhios" target="_blank" rel="noopener noreferrer" className={styles.link}>Repo →</a>
     <a href="https://dash.cloudflare.com" target="_blank" rel="noopener noreferrer" className={styles.link}>Cloudflare →</a>
   </div></section>;
 }

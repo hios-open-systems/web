@@ -37,7 +37,7 @@ export function Footer() {
   const socialLinks = [
     {
       icon: <GithubOutlined />,
-      href: 'https://github.com/juanjparedez/web',
+      href: 'https://github.com/juanjparedez/openhios',
       label: 'GitHub',
     },
     {
