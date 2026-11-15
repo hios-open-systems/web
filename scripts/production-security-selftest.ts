@@ -56,7 +56,7 @@ try {
 console.log('Native rate limiting and Turnstile production failure modes: OK');
 
 const config = ts.parseConfigFileTextToJson('wrangler.jsonc', readFileSync('wrangler.jsonc', 'utf8')).config;
-assert.equal(config.account_id, '74517853847d3bfb25721012cf268858');
+assert.equal(config.account_id, '5f41ffae9202926d95a48448ea3965bd');
 assert.equal(config.workers_dev, false);
 assert.equal(config.preview_urls, false);
 assert.equal(config.observability.redact_query_string, true);

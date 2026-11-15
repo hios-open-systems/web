@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync, readdirSync } from 'node:fs';
 
 // Read-only gate. Never print secret values or create a deployment.
-const account = '74517853847d3bfb25721012cf268858';
+const account = '5f41ffae9202926d95a48448ea3965bd';
 const key = process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY;
 if (!key || !/^[a-zA-Z0-9_-]{10,100}$/.test(key) || /^[123]x0+/.test(key)) {
   throw new Error('Configure a real NEXT_PUBLIC_TURNSTILE_SITEKEY before building and releasing.');

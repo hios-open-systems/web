@@ -22,7 +22,7 @@ const MESSAGE = [
     'or hunt for hidden endpoints: there is nothing to monetize here, just',
     'open source tools.',
     '',
-    '→ https://github.com/hios-open-systems/web',
+    '→ https://github.com/juanjparedez/web',
     '→ Si encontrás algo raro / found something odd: /.well-known/security.txt',
 ].join('\n');
 
