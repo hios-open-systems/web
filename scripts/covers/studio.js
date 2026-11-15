@@ -25,7 +25,9 @@ export function studio({ accent = 0x38bdf8 } = {}) {
   const key = new THREE.DirectionalLight(0xffffff, 2.4); key.position.set(-140, 280, 180); key.castShadow = true;
   key.shadow.mapSize.set(4096, 4096); Object.assign(key.shadow.camera, { left: -160, right: 160, top: 160, bottom: -160, near: 10, far: 900 });
   key.shadow.radius = 8; key.shadow.bias = -0.0004; scene.add(key);
-  const rim = new THREE.DirectionalLight(accent, 1.4); rim.position.set(220, 140, -240); scene.add(rim);
+  // the black aluminum variant (?alu) gets a neutral rim so the anodized faces don't pick up a tint
+  const alu = new URLSearchParams(location.search).has('alu');
+  const rim = new THREE.DirectionalLight(alu ? 0xdfe6ee : accent, alu ? 0.9 : 1.4); rim.position.set(220, 140, -240); scene.add(rim);
   scene.add(new THREE.HemisphereLight(0xe6f0ff, 0x0d1014, 0.35));
   return { renderer, scene };
 }

@@ -1,6 +1,7 @@
 // Renders the project cover images from the three.js scenes in scripts/covers/.
 // Each scene loads the project's real STLs from public/downloads/ and writes
-// public/images/<slug>/cover.jpg. Run: npm run covers [-- pad speaker ...]
+// public/images/<slug>/cover.jpg, plus the machined black-aluminum version (scene opened with
+// ?alu, see scripts/covers/alu.js) as cover-alu.jpg. Run: npm run covers [-- pad speaker ...]
 import { chromium } from '@playwright/test';
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
@@ -32,14 +33,17 @@ const browser = await chromium.launch({
 });
 const page = await browser.newPage({ viewport: { width: 1600, height: 1000 } });
 page.on('pageerror', (e) => console.error('scene error:', e.message));
+page.on('console', (m) => m.type() === 'error' && console.error('console:', m.text()));
 for (const slug of slugs) {
   if (!SCENES[slug]) throw new Error(`no scene for ${slug}`);
-  await page.goto(`${base}/scripts/covers/${SCENES[slug]}.html`);
-  await page.waitForFunction(() => window.__done === true, null, { timeout: 180000 });
   mkdirSync(join(ROOT, 'public/images', slug), { recursive: true });
-  const out = join(ROOT, 'public/images', slug, 'cover.jpg');
-  await (await page.$('canvas')).screenshot({ path: out, type: 'jpeg', quality: 88 });
-  console.log('cover ->', out);
+  for (const [query, file] of [['', 'cover.jpg'], ['?alu', 'cover-alu.jpg']]) {
+    await page.goto(`${base}/scripts/covers/${SCENES[slug]}.html${query}`);
+    await page.waitForFunction(() => window.__done === true, null, { timeout: 180000 });
+    const out = join(ROOT, 'public/images', slug, file);
+    await (await page.$('canvas')).screenshot({ path: out, type: 'jpeg', quality: 88 });
+    console.log('cover ->', out);
+  }
 }
 await browser.close();
 server.close();

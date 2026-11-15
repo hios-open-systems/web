@@ -3,16 +3,37 @@
 <script type="module">
 // HIOS PAD cover: printed case from public/downloads/pad/*.stl, controls at the cutouts of tapa-superior.stl.
 import { THREE, RoundedBoxGeometry, studio, stl, at, mesh, pla, canvasTex, shoot, W, H } from './studio.js';
+import { ALU, machined, rrect, hole as cutout, circle, slotMat } from './alu.js';
 const { renderer, scene } = studio({ accent: 0x38bdf8 });
 const dev = new THREE.Group(); scene.add(dev);
-const body = pla(0x0b6fb0, { roughness: 0.5 });
 const S = '/public/downloads/pad/';
-for (const f of ['box.stl', 'front_plate.stl', 'tapa-superior.stl']) dev.add(await stl(S + f, body));
-// 4" ILI9488 module on standoffs over the display windows, as on the rev09 build
-dev.add(mesh(new RoundedBoxGeometry(106, 1.6, 66, 2, 0.6), pla(0xb3261e, { roughness: 0.5 }), at(0, 119, 6.5)));
-dev.add(mesh(new THREE.BoxGeometry(98, 2, 60), pla(0x0e0f12, { roughness: 0.25, clearcoat: 1 }), at(0, 119.5, 8.2)));
-const standoff = new THREE.MeshStandardMaterial({ color: 0xc8c8c8, metalness: 1, roughness: 0.3 });
-for (const [x, y] of [[-49, 89], [49, 89], [-49, 149], [49, 149]]) dev.add(mesh(new THREE.CylinderGeometry(1.6, 1.6, 6, 16), standoff, at(x, y, 4.5)));
+if (!ALU) {
+  const body = pla(0x0b6fb0, { roughness: 0.5 });
+  for (const f of ['box.stl', 'front_plate.stl', 'tapa-superior.stl']) dev.add(await stl(S + f, body));
+  // 4" ILI9488 module on standoffs over the display windows, as on the rev09 build
+  dev.add(mesh(new RoundedBoxGeometry(106, 1.6, 66, 2, 0.6), pla(0xb3261e, { roughness: 0.5 }), at(0, 119, 6.5)));
+  dev.add(mesh(new THREE.BoxGeometry(98, 2, 60), pla(0x0e0f12, { roughness: 0.25, clearcoat: 1 }), at(0, 119.5, 8.2)));
+  const standoff = new THREE.MeshStandardMaterial({ color: 0xc8c8c8, metalness: 1, roughness: 0.3 });
+  for (const [x, y] of [[-49, 89], [49, 89], [-49, 149], [49, 149]]) dev.add(mesh(new THREE.CylinderGeometry(1.6, 1.6, 6, 16), standoff, at(x, y, 4.5)));
+} else {
+  // Same 110x160x35 envelope: milled tub + 2.5 mm top plate (parting line between them).
+  const tub = machined(rrect(-55, 0, 55, 160, 6), 32.2, 1); tub.position.copy(at(0, 0, -32.5)); dev.add(tub);
+  const top = rrect(-55, 0, 55, 160, 6);
+  for (const y of [31.4, 12.9]) for (const x of [-37, -18.5, 0, 18.5, 37]) top.holes.push(cutout(x - 8.6, y - 8.6, x + 8.6, y + 8.6, 2));
+  for (const x of [-40.5, -22]) top.holes.push(cutout(x - 8.6, 51.6, x + 8.6, 68.8, 2));
+  top.holes.push(circle(0, 60.2, 8.2), circle(36.5, 60.2, 10.6), cutout(-43.5, 92, 43.5, 147, 2.5));
+  dev.add(machined(top, 2.5, 0.6));
+  // side vents: straight slots cut with an end mill instead of the printed honeycomb
+  const slot = slotMat();
+  for (const x of [-55, 55]) for (const z of [-11, -16.5, -22]) for (const [y0, y1] of [[22, 74], [86, 138]])
+    dev.add(mesh(new THREE.BoxGeometry(0.8, 2.6, y1 - y0), slot, at(x - Math.sign(x) * 0.36, (y0 + y1) / 2, z), false));
+  // display sits under the window, behind a black glass frame
+  dev.add(mesh(new THREE.BoxGeometry(87, 0.4, 55), pla(0x050608, { roughness: 0.15, clearcoat: 1 }), at(0, 119.5, 1.4), false));
+  // laser-etched mark
+  const mark = canvasTex(512, 128, (c) => { c.fillStyle = '#8d939c'; c.font = '700 92px sans-serif'; c.fillText('HIOS', 8, 100); c.fillStyle = '#5f656e'; c.font = '300 92px sans-serif'; c.fillText('PAD', 268, 100); });
+  const tag = mesh(new THREE.PlaneGeometry(26, 6.5), new THREE.MeshBasicMaterial({ map: mark, transparent: true }), at(-31, 80, 2.52), false);
+  tag.rotation.x = -Math.PI / 2; dev.add(tag);
+}
 
 // 480x320 control-deck UI on the 84x56 mm active area
 const ui = canvasTex(1680, 1120, (c) => {
@@ -33,7 +54,7 @@ const ui = canvasTex(1680, 1120, (c) => {
   for (let i = 0; i < 56; i++) { const x = 24 + i * 14.4, y = 520 - 14 * Math.abs(Math.sin(i * 0.35)) - 5 * Math.sin(i * 1.3); i ? c.lineTo(x, y) : c.moveTo(x, y); }
   c.stroke();
 });
-const scr = mesh(new THREE.PlaneGeometry(84, 56), new THREE.MeshPhysicalMaterial({ map: ui, emissive: 0xffffff, emissiveMap: ui, emissiveIntensity: 1.0, roughness: 0.1, clearcoat: 1 }), at(0, 119.5, 9.25), false);
+const scr = mesh(new THREE.PlaneGeometry(84, 56), new THREE.MeshPhysicalMaterial({ map: ui, emissive: 0xffffff, emissiveMap: ui, emissiveIntensity: 1.0, roughness: 0.1, clearcoat: 1 }), at(0, 119.5, ALU ? 1.75 : 9.25), false);
 scr.rotation.x = -Math.PI / 2; dev.add(scr);
 
 // keycaps over the 2x5 matrix and the two ALT keys
@@ -57,7 +78,7 @@ dev.add(mesh(new THREE.CylinderGeometry(2.4, 2.4, 6, 16), dark, at(36.5, 60.2, 4
 dev.add(mesh(new THREE.CylinderGeometry(8.8, 8.4, 5, 48), dark, at(36.5, 60.2, 9.5)));
 const ring = mesh(new THREE.TorusGeometry(6.4, 0.9, 12, 48), dark, at(36.5, 60.2, 12)); ring.rotation.x = Math.PI / 2; dev.add(ring);
 const screw = new THREE.MeshStandardMaterial({ color: 0xcfcfcf, metalness: 1, roughness: 0.3 });
-for (const [dx, dy] of [[-12.5, -10], [12.5, -10], [-12.5, 10], [12.5, 10]]) dev.add(mesh(new THREE.CylinderGeometry(1.7, 1.7, 0.8, 20), screw, at(36.5 + dx, 60.2 + dy, 2.9)));
+if (!ALU) for (const [dx, dy] of [[-12.5, -10], [12.5, -10], [-12.5, 10], [12.5, 10]]) dev.add(mesh(new THREE.CylinderGeometry(1.7, 1.7, 0.8, 20), screw, at(36.5 + dx, 60.2 + dy, 2.9)));
 
 dev.position.y = 32.5; dev.position.z = 80;
 const cam = new THREE.PerspectiveCamera(26, W / H, 1, 4000);
