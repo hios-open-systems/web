@@ -17,7 +17,9 @@ if (!assets.some(path => path.endsWith('.js') && readFileSync(`.open-next/assets
 const secrets = JSON.parse(execFileSync(process.execPath, [
   'node_modules/wrangler/bin/wrangler.js', 'secret', 'list', '--name', 'hios-platform',
 ], { encoding: 'utf8', env: { ...process.env, CLOUDFLARE_ACCOUNT_ID: account, WRANGLER_SEND_METRICS: 'false' }, stdio: ['ignore', 'pipe', 'pipe'] }));
-for (const name of ['GITHUB_CLIENT_SECRET', 'TURNSTILE_SECRET_KEY']) {
+for (const name of ['TURNSTILE_SECRET_KEY']) {
   if (!secrets.some(secret => secret.name === name)) throw new Error(`Missing production secret: ${name}`);
 }
+// GitHub login (and with it /admin) stays off until this secret is set; the public site works without it.
+if (!secrets.some(secret => secret.name === 'GITHUB_CLIENT_SECRET')) console.warn('GITHUB_CLIENT_SECRET not set: GitHub login and /admin are disabled.');
 console.log('Security release prerequisites present. Validate widget hostname and OAuth settings before release.');

@@ -13,21 +13,18 @@ Target GitHub repo: `juanjparedez/web` (from `hios-open-systems/web`).
   `TURNSTILE_SECRET_KEY` and a new `ANALYTICS_SALT`. The first real deploy replaces the code and keeps the secrets.
 - Rate-limit bindings need nothing: namespace ids are per account and are created on deploy.
 
-## Steps that need Juanjo, in order
+## Simplified plan (Juanjo, 2026-11-15)
 
-1. Export the old DB (from the web folder, logged in to the OLD account, before pulling this PR):
-   `npx wrangler d1 export hios-playground --remote --output hios-old.sql`
-2. Old dashboard → openhios.dev → DNS → Records → Export. Save the file next to `hios-old.sql`.
-3. Transfer the repo: GitHub → hios-open-systems/web → Settings → Transfer → `juanjparedez`.
-4. Personal Cloudflare → My Profile → API Tokens → "Edit Cloudflare Workers" template (add D1 Edit). Then in the GitHub repo → Settings → Secrets and variables → Actions:
-   - secret `CLOUDFLARE_API_TOKEN` = that token
-   - variable `CLOUDFLARE_ACCOUNT_ID` = `5f41ffae9202926d95a48448ea3965bd`
-   - variable `NEXT_PUBLIC_TURNSTILE_SITEKEY` = `0x4AAAAAAGBfbG5Ah4d36fkE`
-5. Personal Cloudflare → Workers → hios-platform → Settings → Variables and Secrets: add `GITHUB_CLIENT_SECRET`
-   (generate a new one in the GitHub OAuth app) and, if Google login is used, `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
-6. Old dashboard → Domain Registration → openhios.dev → Configuration: DNSSEC off, then move the domain to account
-   `5f41ffae9202926d95a48448ea3965bd`. Approve the email in the personal account. The site is down from here until step 7.
-7. Claude imports the DB and DNS. Juanjo merges this PR and runs Actions → CI → Run workflow on main.
+- Old D1 data is NOT migrated: prod was pre-PR #11 (no traffic tables), guestbook empty. The new D1 has all
+  migrations 0001-0010 applied by Claude via the API (recorded in `d1_migrations`).
+- GitHub OAuth secret is optional for now: the release check only warns. Without it GitHub login and /admin are off.
+  To enable later: generate a client secret in the OAuth app and add `GITHUB_CLIENT_SECRET` to the worker.
+- Done by Juanjo: repo transferred to `juanjparedez/web`; GitHub token + account id + site key set.
+
+### Only step left for Juanjo
+
+Old dashboard → Domain Registration → openhios.dev → Configuration: DNSSEC off, then move the domain to
+account `5f41ffae9202926d95a48448ea3965bd` and approve the email. Then Claude merges and starts the deploy.
 
 ## After it is live
 
