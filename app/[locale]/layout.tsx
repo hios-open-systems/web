@@ -93,7 +93,7 @@ export default async function RootLayout({ children, params }: Props) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: "window.EXCALIDRAW_ASSET_PATH='/vendor/excalidraw/';" }} />
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOTSTRAP_SCRIPT }} />
-        <meta name="source" content="https://github.com/juanjparedez/openhios" />
+        <meta name="source" content="https://github.com/juanjparedez/web" />
         <link rel="author" href="/humans.txt" />
       </head>
       <body className={`${inter.variable} ${archivo.variable} ${plexMono.variable}`}>

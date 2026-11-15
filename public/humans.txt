@@ -9,7 +9,7 @@
 	Language: Español / English / Deutsch / Italiano
 	Stack: Next.js, Ant Design, TypeScript, Cloudflare Workers
 	Fonts: Inter, Archivo, IBM Plex Mono
-	Source: https://github.com/juanjparedez/openhios
+	Source: https://github.com/juanjparedez/web
 
 /* THANKS */
 	A la comunidad open source, que hace que un tipo con un soldador

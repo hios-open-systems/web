@@ -2,7 +2,7 @@
 
 Target Cloudflare account: `5f41ffae9202926d95a48448ea3965bd` (personal, Workers Paid).
 Old account: `74517853847d3bfb25721012cf268858` (hios/devsolutions).
-Target GitHub repo: `juanjparedez/openhios` (from `hios-open-systems/web`).
+Target GitHub repo: `juanjparedez/web` (from `hios-open-systems/web`).
 
 ## Already done in the personal account
 

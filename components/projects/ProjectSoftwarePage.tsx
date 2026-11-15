@@ -57,7 +57,7 @@ export async function ProjectSoftwarePage({ locale, slug }: { locale: string; sl
         <h2>{labels('source')}</h2>
         <div className={styles.links}>
           {project.sources.map((source) => (
-            <a key={source.path} href={`https://github.com/juanjparedez/openhios/tree/main/projects/${source.path}`}>
+            <a key={source.path} href={`https://github.com/juanjparedez/web/tree/main/projects/${source.path}`}>
               {source.label} ↗
             </a>
           ))}

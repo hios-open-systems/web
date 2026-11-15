@@ -38,7 +38,7 @@ export interface ProjectMeta {
 
 const projectsDir = path.join(process.cwd(), 'projects');
 const publicDir = path.join(process.cwd(), 'public');
-const GITHUB_BLOB_BASE = 'https://github.com/juanjparedez/openhios/blob/main/projects';
+const GITHUB_BLOB_BASE = 'https://github.com/juanjparedez/web/blob/main/projects';
 
 const SKIP_DIRS = new Set(['pics', 'node_modules', '.git', '.pio', 'dist', 'build', '.gradle', 'res', 'backup']);
 const SKIP_FILES = new Set([

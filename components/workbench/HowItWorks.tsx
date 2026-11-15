@@ -20,7 +20,7 @@ const { Text } = Typography;
 // la tool (una sola fuente, sin drift).
 const ENTRIES: Record<string, { file: string; source: string }> = manifest;
 
-const REPO_BLOB_BASE = 'https://github.com/juanjparedez/openhios/blob/main/';
+const REPO_BLOB_BASE = 'https://github.com/juanjparedez/web/blob/main/';
 
 export function HowItWorks({ algorithmId }: { algorithmId: string }) {
   const t = useTranslations('HowItWorks');

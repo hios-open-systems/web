@@ -36,7 +36,7 @@ test('project onboarding exposes board-specific flashing and source links', asyn
     await expect(page.locator('#flash pre')).toContainText('pio run -t upload --upload-port COM5');
     const sourcePath = slug === 'pad' ? 'src/main.cpp' : slug === 'btdac' ? 'src/HIOS_BTDAC.ino' : 'src/main.ino';
     await expect(page.getByRole('link', { name: 'Abrir código del firmware' })).toHaveAttribute('href',
-      `https://github.com/juanjparedez/openhios/blob/main/projects/${slug}/${sourcePath}`);
+      `https://github.com/juanjparedez/web/blob/main/projects/${slug}/${sourcePath}`);
   }
   await context.close();
 });

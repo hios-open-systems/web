@@ -1,6 +1,6 @@
 # HIOS Node AI — Consultas a Ollama desde un ESP32-S3
 
-> **Esquema de cableado, netlist y BOM (CSV):** [`hardware/`](https://github.com/juanjparedez/openhios/tree/main/projects/hios-node-ai/hardware). Se generan desde los datos verificados contra el firmware.
+> **Esquema de cableado, netlist y BOM (CSV):** [`hardware/`](https://github.com/juanjparedez/web/tree/main/projects/hios-node-ai/hardware). Se generan desde los datos verificados contra el firmware.
 
 Prototipo con **ESP32-S3** que envía una consulta de texto predefinida a un servidor **Ollama** al pulsar un botón. Una pantalla OLED muestra el estado de la solicitud y la respuesta. El modelo se ejecuta en el servidor de la red local.
 

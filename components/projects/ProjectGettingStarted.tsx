@@ -4,7 +4,7 @@ import { getTranslations } from 'next-intl/server';
 import type { SoftwareProjectSlug } from '@/config/project-software';
 import styles from './project-software.module.css';
 
-const repository = 'https://github.com/juanjparedez/openhios';
+const repository = 'https://github.com/juanjparedez/web';
 const sourceFiles: Record<SoftwareProjectSlug, string> = {
   pad: 'src/main.cpp',
   btdac: 'src/HIOS_BTDAC.ino',

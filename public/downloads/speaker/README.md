@@ -6,7 +6,7 @@ Parlante WiFi con ESP32, amplificador I2S MAX98357 y control via web.
 
 ```bash
 # Clonar el repositorio
-git clone https://github.com/juanjparedez/openhios.git
+git clone https://github.com/juanjparedez/web.git
 cd web/projects/speaker
 
 # Subir firmware (PlatformIO)
@@ -81,7 +81,7 @@ speaker/
 
 ## Links
 
-- [GitHub](https://github.com/juanjparedez/openhios/tree/main/projects/speaker)
+- [GitHub](https://github.com/juanjparedez/web/tree/main/projects/speaker)
 - [Web](https://openhios.dev/projects/speaker)
 
 ## Licencia
