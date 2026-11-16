@@ -1,5 +1,7 @@
 import { Section, Prose, Callout } from '../ui/Prose';
 import { Widget } from '../widgets/Widget';
+import { BankList } from '../BankList';
+import { OFFICIAL_FILES } from '@/lib/radio/bankReglamento';
 import styles from '../radio.module.css';
 
 const DISTRICTS: ReadonlyArray<readonly [string, string]> = [
@@ -68,6 +70,21 @@ export function ChapterD() {
           </ul>
         </Prose>
         <Callout tone="info"><p>Sin cifrado: en radioaficionados todo se transmite en claro. Los bancos de estudio listan «transmitir textos encriptados» como infracción (Cap. XIII); lo confirmamos contra el texto oficial junto con el plan de bandas.</p></Callout>
+      </Section>
+
+      <Section id="banco" kicker="Examen" title="Preguntas del examen: reglamentación">
+        <BankList pool="D" />
+      </Section>
+
+      <Section id="fuentes" kicker="D.6" title="Archivos oficiales para bajar">
+        <Prose>
+          <p>ENACOM publica el material del examen junto a la Res. 508/2018. Bajalos y guardalos: son la referencia final ante cualquier duda.</p>
+          <ul>
+            {OFFICIAL_FILES.map((f) => <li key={f.url}><a href={f.url} target="_blank" rel="noreferrer">{f.name}</a></li>)}
+            <li><a href="https://www.enacom.gob.ar/radioaficionados_p127" target="_blank" rel="noreferrer">Página de Radioaficionados de ENACOM</a> (reglamento, normativa y lista de radio clubes)</li>
+            <li><a href="https://www.lu1ma.org.ar/index.php/biblioteca/" target="_blank" rel="noreferrer">Biblioteca del Cuyo Radio Club (LU1MA)</a>: bancos de preguntas técnicas por categoría y apuntes del curso</li>
+          </ul>
+        </Prose>
       </Section>
     </>
   );

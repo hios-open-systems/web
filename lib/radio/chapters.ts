@@ -21,6 +21,7 @@ export const CHAPTERS: readonly Chapter[] = [
       { id: 'resonancia', title: 'Resonancia, Q y selectividad' },
       { id: 'filtros', title: 'Filtros y armónicas' },
       { id: 'semis', title: 'Semiconductores y fuentes' },
+      { id: 'banco', title: 'Preguntas del examen' },
     ],
   },
   {
@@ -31,6 +32,7 @@ export const CHAPTERS: readonly Chapter[] = [
       { id: 'receptor', title: 'El receptor' },
       { id: 'transmisor', title: 'El transmisor' },
       { id: 'instrumentos', title: 'Instrumentos de la estación' },
+      { id: 'banco', title: 'Preguntas del examen' },
     ],
   },
   {
@@ -43,6 +45,7 @@ export const CHAPTERS: readonly Chapter[] = [
       { id: 'antenas', title: 'Antenas básicas' },
       { id: 'ionosfera', title: 'Propagación en HF' },
       { id: 'alcance', title: 'Alcance en VHF/UHF: ¿llego?' },
+      { id: 'banco', title: 'Preguntas del examen' },
     ],
   },
   {
@@ -54,6 +57,8 @@ export const CHAPTERS: readonly Chapter[] = [
       { id: 'bandas', title: 'Bandas y frecuencias' },
       { id: 'lenguaje', title: 'Fonético, código Q y RST' },
       { id: 'repetidoras', title: 'Repetidoras y emergencias' },
+      { id: 'banco', title: 'Preguntas del examen' },
+      { id: 'fuentes', title: 'Archivos oficiales' },
     ],
   },
   {
@@ -67,9 +72,10 @@ export const CHAPTERS: readonly Chapter[] = [
   },
   {
     slug: 'practica', code: '✓', title: 'Práctica y simulacro',
-    summary: 'Preguntas por bloque con explicación, simulacro cronometrado y tarjetas.',
+    summary: 'Las preguntas reales del banco de examen por bloque, simulacro cronometrado y tarjetas.',
     sections: [
-      { id: 'quiz', title: 'Preguntas y simulacro' },
+      { id: 'examen', title: 'Cómo es el examen' },
+      { id: 'quiz', title: 'Práctica con el banco y simulacro' },
       { id: 'fichas', title: 'Tarjetas de memoria' },
     ],
   },

@@ -1,5 +1,6 @@
 import { Section, Prose, Callout } from '../ui/Prose';
 import { Widget } from '../widgets/Widget';
+import { BankList } from '../BankList';
 
 export function ChapterA2() {
   return (
@@ -30,6 +31,10 @@ export function ChapterA2() {
           </ul>
           <p><strong>Fuentes</strong>: una lineal (transformador + regulador) es pesada y calienta, pero es silenciosa. Una switching conmuta a decenas de kHz: liviana y eficiente, pero las baratas irradian ruido que se escucha en HF como un zumbido o «pajaritos» cada tantos kHz. Para la estación: lineal o switching de buena calidad con filtros y ferritas.</p>
         </Prose>
+      </Section>
+
+      <Section id="banco" kicker="Examen" title="Preguntas del examen: bloque A">
+        <BankList pool="A" />
       </Section>
     </>
   );

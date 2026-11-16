@@ -68,3 +68,13 @@
 .pager a { color: var(--accent-2-text); text-decoration: none; font-weight: 600; }
 
 .notice { font-size: 0.9rem; color: var(--hios-text-secondary); border: 1px dashed var(--hios-border); border-radius: 10px; padding: 10px 14px; }
+
+/* Lista de estudio del banco de examen. */
+.bank { border: 1px solid var(--hios-border); border-radius: 14px; background: var(--hios-bg-secondary); padding: 14px 16px; }
+.bank summary { cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 10px; min-height: var(--touch-target); }
+.bankNote { color: var(--hios-text-secondary); font-size: 0.88rem; margin: 8px 0 12px; }
+.bankList { margin: 0; padding-left: 0; list-style: none; display: grid; gap: 10px; }
+.bankList li { display: grid; gap: 2px; padding: 10px 12px; border-radius: 10px; background: var(--hios-bg-elevated); border: 1px solid var(--hios-border); }
+.bankList strong { color: var(--accent-2-text); }
+.bankList em { font-style: normal; font-size: 0.85rem; color: var(--hios-warning); }
+.bankSource { font-family: var(--font-stack-mono); font-size: 0.72rem; color: var(--hios-text-muted); }
