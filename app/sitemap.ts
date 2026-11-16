@@ -4,6 +4,7 @@ import { workbenchTools } from '@/config/workbench';
 import { getAllPostMeta } from '@/lib/blog';
 import { getProjectSlugs } from '@/lib/projects';
 import type { PagePath } from '@/lib/seo';
+import { CHAPTERS } from '@/lib/radio/chapters';
 import { createLocalizedSitemap } from '@/lib/seo-sitemap';
 
 // Filesystem-backed catalogs are read at build time, including on Workers.
@@ -18,6 +19,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/workbench/spaces',
     '/calculators',
     '/composer',
+    '/radio',
+    ...CHAPTERS.map((c): PagePath => `/radio/${c.slug}`),
     '/pinouts',
     '/pinouts/pad',
     '/pinouts/btdac',

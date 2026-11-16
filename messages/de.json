@@ -1564,7 +1564,8 @@
             "stats": "Statistik",
             "guestbook": "Gästebuch",
             "about": "Über HIOS",
-            "composer": "Chiptune Composer"
+            "composer": "Chiptune Composer",
+            "radio": "Amateurfunk"
         }
     },
     "Auth": {
@@ -1760,7 +1761,8 @@
             "stats": "Statistik",
             "guestbook": "Gästebuch",
             "about": "Über HIOS",
-            "projects": "Projekte"
+            "projects": "Projekte",
+            "radio": "Amateurfunk"
         }
     },
     "Presets": {
@@ -4751,5 +4753,10 @@
         "draft": "Lokaler Entwurf: ändert das Repository nicht. Änderungen vor dem Schließen oder Trennen herunterladen. Externe Bilder und Links sind deaktiviert.",
         "image": "Bild ausgelassen",
         "select": "Datei zum Lesen oder Bearbeiten einer Kopie auswählen."
+    },
+    "Radio": {
+        "title": "Amateurfunk: interaktiver Lizenz-Leitfaden",
+        "description": "Interaktiver Leitfaden zur argentinischen Amateurfunklizenz (ENACOM): Elektrotechnik, Modulation, Antennen, Ausbreitung, Morse und Probeprüfung mit Simulatoren.",
+        "spanishOnly": "Dieser Leitfaden ist vorerst auf Spanisch, da er auf die argentinische ENACOM-Prüfung abzielt. Die Simulatoren funktionieren in jeder Sprache."
     }
 }

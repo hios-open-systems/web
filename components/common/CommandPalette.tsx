@@ -33,6 +33,7 @@ const STATIC_PAGES = [
   { key: 'workbench', href: '/workbench' },
   { key: 'calculators', href: '/calculators' },
   { key: 'composer', href: '/composer' },
+  { key: 'radio', href: '/radio' },
   { key: 'pinouts', href: '/pinouts' },
   { key: 'padWiring', href: '/pinouts/pad' },
   { key: 'btdacWiring', href: '/pinouts/btdac' },
