@@ -82,7 +82,8 @@
     "test:analytics": "node --experimental-strip-types --experimental-sqlite scripts/analytics-selftest.ts",
     "test:google-auth": "node --experimental-strip-types --experimental-sqlite scripts/google-auth-selftest.ts",
     "test:google-local": "node scripts/google-local-selftest.mjs",
-    "test:discovery": "node --experimental-strip-types scripts/discovery-selftest.ts"
+    "test:discovery": "node --experimental-strip-types scripts/discovery-selftest.ts",
+    "test:radio": "node --experimental-strip-types scripts/radio-selftest.ts"
   },
   "dependencies": {
     "@ant-design/cssinjs": "^1.18.0",

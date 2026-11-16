@@ -27,6 +27,7 @@ export function Footer() {
     { href: `/${locale}/pinouts`, label: label('pinouts', 'Pinouts') },
     { href: `/${locale}/calculators`, label: label('calculators', 'Calculadoras') },
     { href: `/${locale}/composer`, label: t('sections.composer') },
+    { href: `/${locale}/radio`, label: t('sections.radio') },
     { href: `/${locale}/prints`, label: copy('prints') },
     { href: `/${locale}/blog`, label: copy('blog') },
     { href: `/${locale}/stats`, label: copy('stats') },

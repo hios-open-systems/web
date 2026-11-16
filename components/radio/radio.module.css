@@ -1,0 +1,70 @@
+/* Guía de radioaficionado: prosa + instrumentos interactivos. */
+
+.page { max-width: 1180px; margin: 0 auto; padding: 32px var(--layout-gutter) 80px; }
+.layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 40px; align-items: start; }
+@media (max-width: 900px) { .layout { grid-template-columns: minmax(0, 1fr); } .toc { display: none; } }
+
+.toc { position: sticky; top: calc(var(--layout-header-height) + 16px); font-size: 0.86rem; }
+.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.toc a { display: block; padding: 6px 10px; border-radius: 8px; color: var(--hios-text-secondary); text-decoration: none; border-left: 2px solid transparent; }
+.toc a:hover { color: var(--hios-text); background: var(--hios-bg-secondary); border-left-color: var(--accent-2); }
+.tocTitle { font-family: var(--font-stack-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--hios-text-muted); margin: 0 0 8px 10px; }
+
+.content { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 56px; }
+.section { scroll-margin-top: calc(var(--layout-header-height) + 16px); display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.section > h2 { margin: 0; font-family: var(--font-stack-display); font-size: clamp(1.4rem, 1.1rem + 1vw, 1.9rem); letter-spacing: -0.01em; }
+.kicker { font-family: var(--font-stack-mono); font-size: 0.75rem; letter-spacing: 0.1em; color: var(--accent-2-text); text-transform: uppercase; }
+.prose { max-width: var(--layout-reading); color: var(--hios-text); line-height: 1.7; font-size: 1.02rem; }
+.prose p { margin: 0 0 12px; }
+.prose ul { margin: 0 0 12px; padding-left: 20px; }
+.prose li { margin-bottom: 6px; }
+.prose strong { color: var(--hios-text); }
+
+.formula { display: inline-block; font-family: var(--font-stack-mono); font-size: 1.05rem; padding: 6px 14px; border-radius: 10px; background: var(--hios-bg-secondary); border: 1px solid var(--hios-border); margin: 4px 0; }
+.callout { border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); padding: 12px 16px; border-radius: 0 10px 10px 0; max-width: var(--layout-reading); }
+.callout[data-tone='info'] { border-left-color: var(--accent-2); background: color-mix(in srgb, var(--accent-2) 8%, transparent); }
+.callout p { margin: 0; }
+
+/* Instrumento: chasis oscuro tipo osciloscopio, igual en tema claro y oscuro. */
+.instrument {
+  --scope-bg: #070b0e; --scope-grid: rgba(0, 255, 170, 0.1); --scope-axis: rgba(0, 255, 170, 0.28);
+  --trace-1: #22d3ee; --trace-2: #facc15; --trace-3: #f472b6; --trace-4: #4ade80;
+  --ink: #e2e8f0; --ink-muted: #94a3b8;
+  background: #12151a; border: 1px solid #2d3748; border-radius: 14px; padding: clamp(12px, 2.5vw, 18px);
+  color: var(--ink); display: grid; gap: 14px; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+}
+.instrumentHead { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.badge { background: #0284c7; color: #fff; font-family: var(--font-stack-mono); font-weight: 700; font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.08em; }
+.instrumentTitle { font-weight: 600; font-size: 0.98rem; }
+.instrumentHint { color: var(--ink-muted); font-size: 0.86rem; margin: 0; }
+.screen { background: var(--scope-bg); border: 1px solid #1f2937; border-radius: 10px; overflow: hidden; }
+.screen svg { display: block; width: 100%; height: auto; }
+
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 12px 18px; }
+.range { display: grid; gap: 4px; font-size: 0.84rem; }
+.range label { display: flex; justify-content: space-between; gap: 8px; color: var(--ink-muted); }
+.range output { color: var(--ink); font-family: var(--font-stack-mono); }
+.range input[type='range'] { width: 100%; accent-color: #22d3ee; min-height: 28px; }
+
+.readouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 130px), 1fr)); gap: 8px; }
+.readout { background: #0b1016; border: 1px solid #1f2937; border-radius: 8px; padding: 8px 10px; }
+.readout span { display: block; color: var(--ink-muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.readout strong { font-family: var(--font-stack-mono); font-size: 1.05rem; color: var(--ink); }
+.readout[data-tone='good'] strong { color: #4ade80; }
+.readout[data-tone='warn'] strong { color: #facc15; }
+.readout[data-tone='bad'] strong { color: #f87171; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { border: 1px solid #334155; background: #0b1016; color: var(--ink); border-radius: 999px; padding: 5px 12px; font-size: 0.82rem; cursor: pointer; min-height: 32px; }
+.chip[aria-pressed='true'] { background: #0284c7; border-color: #0284c7; color: #fff; }
+.chip:focus-visible, .range input:focus-visible { outline: 2px solid #22d3ee; outline-offset: 2px; }
+
+.textInput { width: 100%; background: #0b1016; color: var(--ink); border: 1px solid #334155; border-radius: 8px; padding: 10px 12px; font-family: var(--font-stack-mono); font-size: 0.95rem; resize: vertical; }
+
+.svgLabel { fill: var(--ink-muted); font-family: var(--font-stack-mono); font-size: 11px; }
+.svgStrong { fill: var(--ink); font-family: var(--font-stack-mono); font-size: 12px; font-weight: 600; }
+
+.pager { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; border-top: 1px solid var(--hios-border); padding-top: 24px; }
+.pager a { color: var(--accent-2-text); text-decoration: none; font-weight: 600; }
+
+.notice { font-size: 0.9rem; color: var(--hios-text-secondary); border: 1px dashed var(--hios-border); border-radius: 10px; padding: 10px 14px; }

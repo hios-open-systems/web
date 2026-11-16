@@ -1564,7 +1564,8 @@
             "stats": "Estadísticas",
             "guestbook": "Libro de visitas",
             "about": "Acerca de HIOS",
-            "composer": "Compositor Chiptune"
+            "composer": "Compositor Chiptune",
+            "radio": "Radioaficionado"
         }
     },
     "Auth": {
@@ -1760,7 +1761,8 @@
             "stats": "Estadísticas",
             "guestbook": "Libro de visitas",
             "about": "Acerca de HIOS",
-            "projects": "Proyectos"
+            "projects": "Proyectos",
+            "radio": "Radioaficionado"
         }
     },
     "Presets": {
@@ -4751,5 +4753,10 @@
         "draft": "Borrador local: no modifica el repositorio. Descargá los cambios antes de cerrar o desconectar. Imágenes y enlaces externos están desactivados.",
         "image": "Imagen omitida",
         "select": "Elegí un archivo para leerlo o preparar una copia."
+    },
+    "Radio": {
+        "title": "Radioaficionado: guía interactiva para la licencia",
+        "description": "Guía para sacar la licencia de radioaficionado en Argentina (ENACOM): electricidad, modulación, antenas, propagación, Morse y simulacro de examen, con simuladores interactivos.",
+        "spanishOnly": "Esta guía está en español: apunta al examen de ENACOM (Argentina)."
     }
 }

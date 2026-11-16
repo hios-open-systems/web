@@ -6,6 +6,7 @@ export const sectionLinks = [
   { key: 'pinouts', href: '/pinouts' },
   { key: 'calculators', href: '/calculators' },
   { key: 'composer', href: '/composer' },
+  { key: 'radio', href: '/radio' },
   { key: 'software', href: '/tools' },
   { key: 'stats', href: '/stats' },
   { key: 'guestbook', href: '/guestbook' },
@@ -59,6 +60,7 @@ export function useNavGroups(): NavGroupConfig[] {
         { href: `/${locale}/projects`, label: t('projects'), badge: 'PCB' },
         { href: `/${locale}/pinouts`, label: sec('pinouts'), badge: 'GPIO' },
         { href: `/${locale}/prints`, label: sec('maker'), badge: '3D' },
+        { href: `/${locale}/radio`, label: sec('radio'), badge: 'HAM' },
       ],
     },
     {

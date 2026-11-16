@@ -1564,7 +1564,8 @@
             "stats": "Statistics",
             "guestbook": "Guestbook",
             "about": "About HIOS",
-            "composer": "Chiptune Composer"
+            "composer": "Chiptune Composer",
+            "radio": "Ham radio"
         }
     },
     "Auth": {
@@ -1760,7 +1761,8 @@
             "stats": "Statistics",
             "guestbook": "Guestbook",
             "about": "About HIOS",
-            "projects": "Projects"
+            "projects": "Projects",
+            "radio": "Ham radio"
         }
     },
     "Presets": {
@@ -4751,5 +4753,10 @@
         "draft": "Local draft: does not change the repository. Download your changes before closing or disconnecting. External images and links are disabled.",
         "image": "Image omitted",
         "select": "Choose a file to read or prepare a copy."
+    },
+    "Radio": {
+        "title": "Ham radio: interactive licensing guide",
+        "description": "Interactive guide to the Argentine amateur radio license (ENACOM): electricity, modulation, antennas, propagation, Morse and a mock exam, with hands-on simulators.",
+        "spanishOnly": "This guide is in Spanish for now: it targets the Argentine ENACOM exam. The simulators work in any language."
     }
 }
