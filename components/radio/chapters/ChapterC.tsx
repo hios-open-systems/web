@@ -1,5 +1,6 @@
 import { Section, Prose, Formula, Callout } from '../ui/Prose';
 import { Widget } from '../widgets/Widget';
+import { BankList } from '../BankList';
 
 export function ChapterC() {
   return (
@@ -61,6 +62,10 @@ export function ChapterC() {
         </Prose>
         <Callout tone="info"><p>Para el enlace de ~5 km con un familiar: probá con dos handies a nivel de calle y después con una antena en el techo. La diferencia es enorme, y es más barata que más potencia.</p></Callout>
         <Widget name="link" />
+      </Section>
+
+      <Section id="banco" kicker="Examen" title="Preguntas del examen: bloque C">
+        <BankList pool="C" />
       </Section>
     </>
   );

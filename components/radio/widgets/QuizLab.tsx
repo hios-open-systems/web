@@ -1,37 +1,33 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { QUIZ, type QuizBlock, type QuizQuestion } from '@/lib/radio/quiz';
+import { buildMock, questionsFor, shuffle, MOCK_LAYOUT, type ExamPool, type ExamQuestion } from '@/lib/radio/exam';
 import { Instrument, Chips, Readouts } from '../ui/Instrument';
+import { QuizResult } from './QuizResult';
 import styles from '../radio.module.css';
 
-type Mode = 'A' | 'B' | 'C' | 'D' | 'all' | 'exam';
-interface Shown { q: QuizQuestion; order: number[] }
-const EXAM_SIZE = 20; const EXAM_SECONDS = 20 * 60; const PASS = 0.7;
-
-function shuffle<T>(a: T[]): T[] {
-  const r = [...a];
-  for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; }
-  return r;
-}
+type Mode = ExamPool | 'exam';
+interface Shown { q: ExamQuestion; options: string[] }
+const EXAM_SECONDS = MOCK_LAYOUT.minutes * 60;
 
 function build(mode: Mode): Shown[] {
-  const pool = mode === 'all' || mode === 'exam' ? [...QUIZ] : QUIZ.filter((q) => q.block === (mode as QuizBlock));
-  const qs = shuffle(pool).slice(0, mode === 'exam' ? EXAM_SIZE : pool.length);
-  return qs.map((q) => ({ q, order: shuffle(q.options.map((_, i) => i)) }));
+  const qs = mode === 'exam' ? buildMock() : shuffle(questionsFor(mode));
+  return qs.map((q) => ({ q, options: shuffle([q.answer, ...q.wrong]) }));
 }
 
-/** Práctica por bloque con explicación, o simulacro cronometrado no oficial. */
+/** Práctica con los bancos reales (técnico y reglamentación) y simulacro cronometrado. */
 export function QuizLab() {
   const [mode, setMode] = useState<Mode>('A');
   const [seed, setSeed] = useState(0);
   // eslint-disable-next-line react-hooks/exhaustive-deps -- seed rearma la tanda
   const items = useMemo(() => build(mode), [mode, seed]);
   const [idx, setIdx] = useState(0);
-  const [picked, setPicked] = useState<number | null>(null);
-  const [score, setScore] = useState(0);
+  const [picked, setPicked] = useState<string | null>(null);
+  const [misses, setMisses] = useState<ExamQuestion[]>([]);
   const [left, setLeft] = useState(EXAM_SECONDS);
   const done = idx >= items.length || (mode === 'exam' && left <= 0);
+  const answered = mode === 'exam' && left <= 0 ? idx : Math.min(idx, items.length);
+  const score = answered - misses.length;
 
   useEffect(() => {
     if (mode !== 'exam' || done) return;
@@ -39,49 +35,45 @@ export function QuizLab() {
     return () => window.clearInterval(id);
   }, [mode, done]);
 
-  const restart = (m: Mode) => { setMode(m); setSeed((s) => s + 1); setIdx(0); setPicked(null); setScore(0); setLeft(EXAM_SECONDS); };
+  const restart = (m: Mode) => { setMode(m); setSeed((s) => s + 1); setIdx(0); setPicked(null); setMisses([]); setLeft(EXAM_SECONDS); };
   const cur = items[idx];
-  const choose = (opt: number) => {
-    if (picked !== null) return;
+  const choose = (opt: string) => {
+    if (picked !== null || !cur) return;
     setPicked(opt);
-    if (opt === cur.q.answer) setScore((s) => s + 1);
-    if (mode === 'exam') window.setTimeout(() => { setPicked(null); setIdx((n) => n + 1); }, 350);
+    if (opt !== cur.q.answer) setMisses((m) => [...m, cur.q]);
+    if (mode === 'exam') window.setTimeout(() => { setPicked(null); setIdx((n) => n + 1); }, 300);
   };
-  const pct = items.length ? score / items.length : 0;
+  const show = picked !== null && mode !== 'exam';
   return (
-    <Instrument badge="QUIZ" title="Práctica y simulacro" hint="Preguntas escritas por OpenHios a partir del temario Novicio, no el banco oficial de ENACOM. Sirven para entender. El simulacro: 20 preguntas, 20 minutos, sin ver las respuestas hasta el final.">
+    <Instrument badge="QUIZ" title="Práctica con el banco de examen" hint={`Preguntas del banco técnico de Novicio (150, Cuyo Radio Club LU1MA) y del banco de Reglamentación de ENACOM (Res. 508/2018), parafraseadas y con su número para buscarlas en el original. Simulacro: ${MOCK_LAYOUT.tecnica} técnicas + ${MOCK_LAYOUT.reglamento} de reglamento en ${MOCK_LAYOUT.minutes} minutos.`}>
       <Chips label="Modo" value={mode} onChange={restart} options={[
-        { value: 'A', label: 'Bloque A' }, { value: 'B', label: 'Bloque B' }, { value: 'C', label: 'Bloque C' }, { value: 'D', label: 'Bloque D' },
-        { value: 'all', label: 'Todo' }, { value: 'exam', label: '⏱ Simulacro' },
+        { value: 'A', label: `Técnica A (${questionsFor('A').length})` }, { value: 'B', label: `Técnica B (${questionsFor('B').length})` },
+        { value: 'C', label: `Técnica C (${questionsFor('C').length})` }, { value: 'D', label: `Reglamento (${questionsFor('D').length})` },
+        { value: 'repaso', label: 'Repaso conceptual' }, { value: 'exam', label: '⏱ Simulacro' },
       ]} />
-      {done ? (
-        <div className={styles.screen} style={{ padding: 20, textAlign: 'center' }} aria-live="polite">
-          <p style={{ fontSize: '1.6rem', margin: 0, color: pct >= PASS ? '#4ade80' : '#f87171' }}>{score} / {items.length} · {Math.round(pct * 100)} %</p>
-          <p style={{ color: '#94a3b8' }}>{pct >= PASS ? 'Bien. Repetí hasta que salga siempre arriba de 90 %.' : 'Volvé a los capítulos y a los simuladores de lo que fallaste.'}</p>
-          <button type="button" className={styles.chip} onClick={() => restart(mode)}>↻ Otra tanda</button>
-        </div>
-      ) : (
+      {done ? <QuizResult score={score} total={answered} misses={misses} onRestart={() => restart(mode)} /> : (
         <>
-          <p style={{ margin: 0, fontSize: '1.05rem' }}><span style={{ color: '#94a3b8' }}>{idx + 1}/{items.length} · Bloque {cur.q.block} · </span>{cur.q.q}</p>
+          <p style={{ margin: 0, fontSize: '1.05rem' }}>
+            <span style={{ color: '#94a3b8', fontFamily: 'var(--font-stack-mono)', fontSize: '0.8rem' }}>{idx + 1}/{items.length} · {cur.q.source}</span><br />{cur.q.q}
+          </p>
           <div style={{ display: 'grid', gap: 8 }}>
-            {cur.order.map((o) => {
-              const show = picked !== null && mode !== 'exam';
+            {cur.options.map((o) => {
               const color = !show ? undefined : o === cur.q.answer ? '#166534' : o === picked ? '#7f1d1d' : undefined;
-              return <button key={o} type="button" className={styles.chip} onClick={() => choose(o)} style={{ textAlign: 'left', borderRadius: 10, padding: '10px 14px', background: color }} aria-pressed={picked === o}>{cur.q.options[o]}</button>;
+              return <button key={o} type="button" className={styles.chip} onClick={() => choose(o)} style={{ textAlign: 'left', borderRadius: 10, padding: '10px 14px', background: color }} aria-pressed={picked === o}>{o}</button>;
             })}
           </div>
-          {picked !== null && mode !== 'exam' ? (
-            <div className={styles.chips} style={{ alignItems: 'center' }}>
-              <span style={{ color: picked === cur.q.answer ? '#4ade80' : '#f87171' }}>{picked === cur.q.answer ? '✓ Correcto. ' : '✗ No. '}</span>
-              <span style={{ color: '#cbd5e1', flex: 1 }}>{cur.q.explain}</span>
-              <button type="button" className={styles.chip} onClick={() => { setPicked(null); setIdx((n) => n + 1); }}>Siguiente →</button>
+          {show ? (
+            <div style={{ display: 'grid', gap: 8 }}>
+              <span style={{ color: picked === cur.q.answer ? '#4ade80' : '#f87171' }}>{picked === cur.q.answer ? '✓ Correcto.' : `✗ Era: ${cur.q.answer}.`} <span style={{ color: '#cbd5e1' }}>{cur.q.explain}</span></span>
+              {cur.q.warn ? <span style={{ color: '#facc15', fontSize: '0.88rem' }}>⚠ {cur.q.warn}</span> : null}
+              <div><button type="button" className={styles.chip} onClick={() => { setPicked(null); setIdx((n) => n + 1); }}>Siguiente →</button></div>
             </div>
           ) : null}
         </>
       )}
       <Readouts items={[
-        { label: 'Aciertos', value: `${score}` },
-        ...(mode === 'exam' ? [{ label: 'Tiempo', value: `${Math.floor(Math.max(0, left) / 60)}:${String(Math.max(0, left) % 60).padStart(2, '0')}`, tone: (left < 120 ? 'bad' : undefined) as 'bad' | undefined }] : []),
+        { label: 'Aciertos', value: `${score} / ${answered}` },
+        ...(mode === 'exam' ? [{ label: 'Tiempo', value: `${Math.floor(Math.max(0, left) / 60)}:${String(Math.max(0, left) % 60).padStart(2, '0')}`, tone: (left < 300 ? 'bad' : undefined) as 'bad' | undefined }] : []),
       ]} />
     </Instrument>
   );

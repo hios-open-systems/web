@@ -9,6 +9,9 @@ import { COAX_CABLES, lossPer100m, cableLossDb, powerAfterLoss } from '../lib/ra
 import { QUIZ } from '../lib/radio/quiz.ts';
 import { PHONETIC, Q_CODES, MORSE, KOCH_ORDER, textToMorse, morseToText, ditMs } from '../lib/radio/codes.ts';
 import { BANDS } from '../lib/radio/bands.ts';
+import { BANK_TECNICA } from '../lib/radio/bankTecnica.ts';
+import { BANK_REGLAMENTO } from '../lib/radio/bankReglamento.ts';
+import { EXAM_QUESTIONS, questionsFor, buildMock, MOCK_LAYOUT } from '../lib/radio/exam.ts';
 
 const near = (a: number, b: number, tol: number, msg: string) =>
   assert.ok(Math.abs(a - b) <= tol, `${msg}: ${a} vs ${b}`);
@@ -92,4 +95,21 @@ assert.equal(new Set(KOCH_ORDER).size, KOCH_ORDER.length, 'Koch sin repetidos');
 for (let i = 1; i < BANDS.length; i++) assert.ok(BANDS[i].startMHz > BANDS[i - 1].endMHz, `orden ${BANDS[i].name}`);
 for (const b of BANDS) assert.ok(b.endMHz > b.startMHz, b.name);
 
-console.log(`All radio self-tests passed (${QUIZ.length} preguntas)`);
+// Bancos de examen.
+assert.equal(BANK_TECNICA.length, 150, 'banco técnico completo');
+assert.deepEqual(BANK_TECNICA.map((q) => q.n), Array.from({ length: 150 }, (_, i) => i + 1), 'numeración 1..150');
+assert.equal(new Set(BANK_REGLAMENTO.map((q) => q.id)).size, BANK_REGLAMENTO.length, 'ids reglamento únicos');
+for (const q of EXAM_QUESTIONS) {
+  const opts = [q.answer, ...q.wrong];
+  assert.ok(q.q.trim() && opts.every((o) => o.trim()), `vacío ${q.key}`);
+  assert.equal(new Set(opts).size, opts.length, `opciones repetidas ${q.key}`);
+  assert.ok(q.wrong.length >= 2, `pocas opciones ${q.key}`);
+}
+assert.equal(new Set(EXAM_QUESTIONS.map((q) => q.key)).size, EXAM_QUESTIONS.length, 'keys únicas');
+for (const pool of ['A', 'B', 'C', 'D', 'repaso'] as const) assert.ok(questionsFor(pool).length > 0, `pool ${pool}`);
+let seed = 1;
+const mock = buildMock(() => ((seed = (seed * 16807) % 2147483647) / 2147483647));
+assert.equal(mock.length, MOCK_LAYOUT.tecnica + MOCK_LAYOUT.reglamento, 'largo simulacro');
+assert.equal(new Set(mock.map((q) => q.key)).size, mock.length, 'simulacro sin repetidas');
+
+console.log(`All radio self-tests passed (${QUIZ.length} propias, ${BANK_TECNICA.length} técnicas, ${BANK_REGLAMENTO.length} reglamento)`);

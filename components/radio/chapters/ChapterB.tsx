@@ -1,5 +1,6 @@
 import { Section, Prose, Formula, Callout } from '../ui/Prose';
 import { Widget } from '../widgets/Widget';
+import { BankList } from '../BankList';
 
 export function ChapterB() {
   return (
@@ -46,6 +47,10 @@ export function ChapterB() {
           </ul>
         </Prose>
         <Callout tone="info"><p>Regla de oro: nunca transmitas sin antena o carga conectada. La potencia vuelve al amplificador y lo puede quemar.</p></Callout>
+      </Section>
+
+      <Section id="banco" kicker="Examen" title="Preguntas del examen: bloque B">
+        <BankList pool="B" />
       </Section>
     </>
   );
