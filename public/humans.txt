@@ -1,7 +1,7 @@
 /* TEAM */
 	Maker: Juan Paredez
 	Location: Argentina
-	Contact: devsolutionsar@gmail.com
+	Contact: contacto@openhios.dev
 	GitHub: https://github.com/juanjparedez
 
 /* SITE */

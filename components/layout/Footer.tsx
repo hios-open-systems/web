@@ -42,7 +42,7 @@ export function Footer() {
     },
     {
       icon: <MailOutlined />,
-      href: 'mailto:devsolutionsar@gmail.com',
+      href: 'mailto:contacto@openhios.dev',
       label: 'Email',
     },
   ];
