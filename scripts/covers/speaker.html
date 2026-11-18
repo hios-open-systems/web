@@ -3,13 +3,22 @@
 <script type="module">
 // HIOS WiFi Speaker cover: cabinet, baffle and back plate from public/downloads/speaker/*.stl (135x75x60 mm).
 import { THREE, RoundedBoxGeometry, studio, stl, mesh, pla, canvasTex, shoot, W, H } from './studio.js';
+import { ALU, machined, rrect, hole as cutout, circle } from './alu.js';
 const { renderer, scene } = studio({ accent: 0xf59e0b });
 const dev = new THREE.Group(); scene.add(dev);
-const shell = pla(0x2b2e35, { roughness: 0.65 });
-// STLs stay in their own frame here: +Z is the front (baffle at z = 60), +Y up.
-const cab = await stl('/public/downloads/speaker/speaker-cabinet-base.stl', shell, false); dev.add(cab);
-const baffle = await stl('/public/downloads/speaker/speaker-front-baffle.stl', pla(0x3a3e47, { roughness: 0.6 }), false); baffle.position.z = 60; dev.add(baffle);
-const back = await stl('/public/downloads/speaker/speaker-back-plate.stl', shell, false); back.position.z = -4.5; dev.add(back);
+if (!ALU) {
+  const shell = pla(0x2b2e35, { roughness: 0.65 });
+  // STLs stay in their own frame here: +Z is the front (baffle at z = 60), +Y up.
+  const cab = await stl('/public/downloads/speaker/speaker-cabinet-base.stl', shell, false); dev.add(cab);
+  const baffle = await stl('/public/downloads/speaker/speaker-front-baffle.stl', pla(0x3a3e47, { roughness: 0.6 }), false); baffle.position.z = 60; dev.add(baffle);
+  const back = await stl('/public/downloads/speaker/speaker-back-plate.stl', shell, false); back.position.z = -4.5; dev.add(back);
+} else {
+  // milled cabinet + 6 mm front plate with chamfered driver and display openings (front = +Z)
+  dev.add(machined(rrect(-67.5, -37.5, 67.5, 37.5, 6), 59.7, 1, false));
+  const front = rrect(-67.5, -37.5, 67.5, 37.5, 6);
+  front.holes.push(circle(-42.15, 0, 17.4), circle(42.15, 0, 17.4), cutout(-23.5, -13.5, 23.5, 13.5, 2));
+  const plate = machined(front, 5.5, 0.8, false); plate.position.z = 60; dev.add(plate);
+}
 
 // two 40 mm drivers behind the grille posts at x = ±42
 const cone = pla(0x15161a, { roughness: 0.9, clearcoat: 0 });
@@ -18,7 +27,7 @@ for (const x of [-42.15, 42.15]) {
   const c = mesh(new THREE.LatheGeometry(pts, 64), cone, new THREE.Vector3(x, 0, 60)); c.rotation.x = Math.PI / 2; c.scale.y = -1; c.position.z = 65.5 - 0.2; dev.add(c);
   const surround = mesh(new THREE.TorusGeometry(15.2, 0.9, 12, 64), cone, new THREE.Vector3(x, 0, 65.4)); dev.add(surround);
   const cap = mesh(new THREE.SphereGeometry(4.2, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2), pla(0x222429, { roughness: 0.4 }), new THREE.Vector3(x, 0, 62.4)); cap.rotation.x = Math.PI / 2; dev.add(cap);
-  const trim = mesh(new THREE.TorusGeometry(16.6, 0.5, 8, 64), new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.6, roughness: 0.35 }), new THREE.Vector3(x, 0, 65.6)); dev.add(trim);
+  const trim = mesh(new THREE.TorusGeometry(16.6, 0.5, 8, 64), new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.6, roughness: 0.35 }), new THREE.Vector3(x, 0, 65.6)); if (!ALU) dev.add(trim);
 }
 
 // 16x2 LCD in the centre frame
@@ -27,8 +36,8 @@ const lcd = canvasTex(1024, 512, (c) => {
   c.fillStyle = '#e0f2fe'; c.font = '600 92px monospace';
   c.fillText('HIOS  Radio', 60, 200); c.fillText('Vol 12   WiFi', 60, 360);
 });
-dev.add(mesh(new THREE.BoxGeometry(46, 26, 1), pla(0x0c0d10, { roughness: 0.3 }), new THREE.Vector3(0, 0, 65.6)));
-const glass = mesh(new THREE.PlaneGeometry(40, 20), new THREE.MeshPhysicalMaterial({ map: lcd, emissive: 0xffffff, emissiveMap: lcd, emissiveIntensity: 0.9, roughness: 0.1, clearcoat: 1 }), new THREE.Vector3(0, 0, 66.15), false);
+dev.add(mesh(new THREE.BoxGeometry(46, 26, 1), pla(0x0c0d10, { roughness: 0.3 }), new THREE.Vector3(0, 0, ALU ? 64.4 : 65.6)));
+const glass = mesh(new THREE.PlaneGeometry(40, 20), new THREE.MeshPhysicalMaterial({ map: lcd, emissive: 0xffffff, emissiveMap: lcd, emissiveIntensity: 0.9, roughness: 0.1, clearcoat: 1 }), new THREE.Vector3(0, 0, ALU ? 64.95 : 66.15), false);
 dev.add(glass);
 
 dev.position.y = 37.5; dev.position.z = -30; dev.rotation.y = 0.42;
