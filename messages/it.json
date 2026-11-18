@@ -1564,7 +1564,8 @@
             "stats": "Statistiche",
             "guestbook": "Libro degli ospiti",
             "about": "Informazioni su HIOS",
-            "composer": "Compositore Chiptune"
+            "composer": "Compositore Chiptune",
+            "radio": "Radioamatore"
         }
     },
     "Auth": {
@@ -1760,7 +1761,8 @@
             "stats": "Statistiche",
             "guestbook": "Libro degli ospiti",
             "about": "Informazioni su HIOS",
-            "projects": "Progetti"
+            "projects": "Progetti",
+            "radio": "Radioamatore"
         }
     },
     "Presets": {
@@ -3753,7 +3755,7 @@
             },
             "3": {
                 "heading": "Contatti",
-                "body": "Puoi segnalare errori e proporre miglioramenti su github.com/hios-open-systems/web. Per questioni di sicurezza, consulta /.well-known/security.txt. Altre domande: devsolutionsar@gmail.com."
+                "body": "Puoi segnalare errori e proporre miglioramenti su github.com/juanjparedez/web. Per questioni di sicurezza, consulta /.well-known/security.txt. Altre domande: contacto@openhios.dev."
             }
         }
     },
@@ -4751,5 +4753,10 @@
         "draft": "Bozza locale: non modifica il repository. Scarica le modifiche prima di chiudere o disconnettere. Immagini e link esterni sono disabilitati.",
         "image": "Immagine omessa",
         "select": "Scegli un file da leggere o per preparare una copia."
+    },
+    "Radio": {
+        "title": "Radioamatore: guida interattiva alla licenza",
+        "description": "Guida interattiva alla licenza di radioamatore argentina (ENACOM): elettricità, modulazione, antenne, propagazione, Morse e simulazione d'esame, con simulatori.",
+        "spanishOnly": "Questa guida per ora è in spagnolo: è pensata per l'esame argentino ENACOM. I simulatori funzionano in qualsiasi lingua."
     }
 }

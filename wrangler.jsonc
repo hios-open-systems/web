@@ -4,9 +4,11 @@
   // se mantienen; el GITHUB_CLIENT_SECRET va como Secret del Worker (dashboard).
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "hios-platform",
-  "account_id": "74517853847d3bfb25721012cf268858",
+  "account_id": "5f41ffae9202926d95a48448ea3965bd",
   "workers_dev": false,
   "preview_urls": false,
+  // openhios.dev must be an active zone in this same account before deploying.
+  "routes": [{ "pattern": "openhios.dev", "custom_domain": true }],
   "main": "worker.js",
   "triggers": { "crons": ["0 0 * * *"] },
   "compatibility_date": "2025-04-01",
@@ -82,7 +84,7 @@
     {
       "binding": "DB",
       "database_name": "hios-playground",
-      "database_id": "a3b55142-933d-451e-aa95-21eb1231516a",
+      "database_id": "7c113fd7-8cbf-4e33-a31d-bb10117e1e00",
       "migrations_dir": "migrations"
     }
   ],

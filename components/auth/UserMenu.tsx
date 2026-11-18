@@ -71,7 +71,7 @@ function UserPanel({
             {unreadCount > 0 ? <span className={styles.unreadBadge}>{unreadCount}</span> : null}
           </Link>
           <a
-            href="https://github.com/hios-open-systems/web"
+            href="https://github.com/juanjparedez/web"
             target="_blank"
             rel="noreferrer"
             className={styles.menuItem}

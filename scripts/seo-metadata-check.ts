@@ -11,6 +11,7 @@ const pageNamespaces: Record<string, [string, string, string?]> = {
   '/workbench': ['Workbench.landing', 'subtitle'], '/guestbook': ['Guestbook', 'subtitle'],
   '/calculators': ['Workbench.packs.embedded', 'description'],
   '/composer': ['Workbench.packs.chiptune', 'description'],
+  '/radio': ['Radio', 'description'],
   '/blog': ['Seo.blog', 'description'], '/prints': ['Seo.prints', 'description'],
   '/stats': ['Seo.stats', 'description'], '/colophon': ['Seo.colophon', 'description'],
   '/pinouts': ['Pinouts.meta.index', 'description'],

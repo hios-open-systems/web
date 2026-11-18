@@ -51,6 +51,7 @@ export function DesktopHeaderNav() {
     { href: `/${locale}/explore`, label: ws('explore') },
     { href: `/${locale}/prints`, label: sec('maker') },
     { href: `/${locale}/composer`, label: sec('composer') },
+    { href: `/${locale}/radio`, label: sec('radio') },
     { href: `/${locale}/tools`, label: sec('software') },
   ];
 

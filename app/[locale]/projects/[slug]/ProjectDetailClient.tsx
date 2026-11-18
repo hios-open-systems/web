@@ -527,7 +527,7 @@ export function ProjectDetailClient({
       {project.firmwareFiles && project.firmwareFiles.length > 0 && (
         <ProjectSection id="firmware" index={numberOf('firmware')} title={t('firmware_title')}
           description={t('firmware_description', { count: project.firmwareFiles.length, path: `projects/${slug}/` })}
-          actions={<a href={`https://github.com/hios-open-systems/web/tree/main/projects/${slug}`} target="_blank" rel="noopener noreferrer"><GithubOutlined /> GitHub ↗</a>}>
+          actions={<a href={`https://github.com/juanjparedez/web/tree/main/projects/${slug}`} target="_blank" rel="noopener noreferrer"><GithubOutlined /> GitHub ↗</a>}>
           <ProjectFirmwareExplorer files={project.firmwareFiles} slug={slug} />
         </ProjectSection>
       )}
@@ -568,7 +568,7 @@ export function ProjectDetailClient({
               <Button
                 size="small"
                 icon={<GithubOutlined />}
-                href={`https://github.com/hios-open-systems/web/tree/main/projects/${slug}`}
+                href={`https://github.com/juanjparedez/web/tree/main/projects/${slug}`}
                 target="_blank"
               >
                 {t('view_on_github')}

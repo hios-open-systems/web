@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync, readdirSync } from 'node:fs';
 
 // Read-only gate. Never print secret values or create a deployment.
-const account = '74517853847d3bfb25721012cf268858';
+const account = '5f41ffae9202926d95a48448ea3965bd';
 const key = process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY;
 if (!key || !/^[a-zA-Z0-9_-]{10,100}$/.test(key) || /^[123]x0+/.test(key)) {
   throw new Error('Configure a real NEXT_PUBLIC_TURNSTILE_SITEKEY before building and releasing.');
@@ -17,7 +17,9 @@ if (!assets.some(path => path.endsWith('.js') && readFileSync(`.open-next/assets
 const secrets = JSON.parse(execFileSync(process.execPath, [
   'node_modules/wrangler/bin/wrangler.js', 'secret', 'list', '--name', 'hios-platform',
 ], { encoding: 'utf8', env: { ...process.env, CLOUDFLARE_ACCOUNT_ID: account, WRANGLER_SEND_METRICS: 'false' }, stdio: ['ignore', 'pipe', 'pipe'] }));
-for (const name of ['GITHUB_CLIENT_SECRET', 'TURNSTILE_SECRET_KEY']) {
+for (const name of ['TURNSTILE_SECRET_KEY']) {
   if (!secrets.some(secret => secret.name === name)) throw new Error(`Missing production secret: ${name}`);
 }
+// GitHub login (and with it /admin) stays off until this secret is set; the public site works without it.
+if (!secrets.some(secret => secret.name === 'GITHUB_CLIENT_SECRET')) console.warn('GITHUB_CLIENT_SECRET not set: GitHub login and /admin are disabled.');
 console.log('Security release prerequisites present. Validate widget hostname and OAuth settings before release.');

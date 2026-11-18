@@ -27,6 +27,7 @@ export function Footer() {
     { href: `/${locale}/pinouts`, label: label('pinouts', 'Pinouts') },
     { href: `/${locale}/calculators`, label: label('calculators', 'Calculadoras') },
     { href: `/${locale}/composer`, label: t('sections.composer') },
+    { href: `/${locale}/radio`, label: t('sections.radio') },
     { href: `/${locale}/prints`, label: copy('prints') },
     { href: `/${locale}/blog`, label: copy('blog') },
     { href: `/${locale}/stats`, label: copy('stats') },
@@ -37,12 +38,12 @@ export function Footer() {
   const socialLinks = [
     {
       icon: <GithubOutlined />,
-      href: 'https://github.com/hios-open-systems/web',
+      href: 'https://github.com/juanjparedez/web',
       label: 'GitHub',
     },
     {
       icon: <MailOutlined />,
-      href: 'mailto:devsolutionsar@gmail.com',
+      href: 'mailto:contacto@openhios.dev',
       label: 'Email',
     },
   ];
