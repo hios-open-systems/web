@@ -3727,6 +3727,10 @@
         "maker": {
             "label": "Maker",
             "description": "3D-Modelle ansehen und STL-Teile herunterladen."
+        },
+        "radio": {
+            "label": "Amateurfunk",
+            "description": "Interaktiver Leitfaden und Prüfungssimulation für die argentinische Lizenz."
         }
     },
     "Footer": {
@@ -4757,6 +4761,7 @@
     "Radio": {
         "title": "Amateurfunk: interaktiver Lizenz-Leitfaden",
         "description": "Interaktiver Leitfaden zur argentinischen Amateurfunklizenz (ENACOM): Elektrotechnik, Modulation, Antennen, Ausbreitung, Morse und Probeprüfung mit Simulatoren.",
-        "spanishOnly": "Dieser Leitfaden ist vorerst auf Spanisch, da er auf die argentinische ENACOM-Prüfung abzielt. Die Simulatoren funktionieren in jeder Sprache."
+        "spanishOnly": "Dieser Leitfaden ist vorerst auf Spanisch, da er auf die argentinische ENACOM-Prüfung abzielt. Die Simulatoren funktionieren in jeder Sprache.",
+        "cta": "Leitfaden starten"
     }
 }

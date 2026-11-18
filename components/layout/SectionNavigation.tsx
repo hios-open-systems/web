@@ -42,6 +42,7 @@ export function DesktopHeaderNav() {
   const directLinks = [
     { href: `/${locale}/workbench`, label: t('workbench') },
     { href: `/${locale}/projects`, label: t('projects') },
+    { href: `/${locale}/radio`, label: sec('radio') },
     { href: `/${locale}/pinouts`, label: sec('pinouts') },
     { href: `/${locale}/calculators`, label: sec('calculators') },
     { href: `/${locale}/blog`, label: sec('devlog') },
@@ -51,7 +52,6 @@ export function DesktopHeaderNav() {
     { href: `/${locale}/explore`, label: ws('explore') },
     { href: `/${locale}/prints`, label: sec('maker') },
     { href: `/${locale}/composer`, label: sec('composer') },
-    { href: `/${locale}/radio`, label: sec('radio') },
     { href: `/${locale}/tools`, label: sec('software') },
   ];
 

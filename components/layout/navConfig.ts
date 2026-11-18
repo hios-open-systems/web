@@ -58,9 +58,9 @@ export function useNavGroups(): NavGroupConfig[] {
       label: t('projects'),
       items: [
         { href: `/${locale}/projects`, label: t('projects'), badge: 'PCB' },
+        { href: `/${locale}/radio`, label: sec('radio'), badge: 'HAM' },
         { href: `/${locale}/pinouts`, label: sec('pinouts'), badge: 'GPIO' },
         { href: `/${locale}/prints`, label: sec('maker'), badge: '3D' },
-        { href: `/${locale}/radio`, label: sec('radio'), badge: 'HAM' },
       ],
     },
     {

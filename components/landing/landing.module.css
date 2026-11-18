@@ -121,6 +121,10 @@
 .studioCard[data-studio='beatmaker'] {
   --studio-accent: #f59e0b;
 }
+.studioCard[data-studio='radio'] {
+  --studio-accent: #22d3ee;
+  grid-column: 1 / -1;
+}
 .studioCard:hover {
   color: var(--hios-text);
   transform: translateY(-3px);
@@ -463,7 +467,7 @@
 }
 .quickGrid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
 }
 .quickLink {
   display: flex;

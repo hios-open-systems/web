@@ -3727,6 +3727,10 @@
         "maker": {
             "label": "Maker",
             "description": "Visualizza modelli 3D e scarica i file STL."
+        },
+        "radio": {
+            "label": "Radioamatore",
+            "description": "Guida interattiva e simulazione d’esame per la licenza argentina."
         }
     },
     "Footer": {
@@ -4757,6 +4761,7 @@
     "Radio": {
         "title": "Radioamatore: guida interattiva alla licenza",
         "description": "Guida interattiva alla licenza di radioamatore argentina (ENACOM): elettricità, modulazione, antenne, propagazione, Morse e simulazione d'esame, con simulatori.",
-        "spanishOnly": "Questa guida per ora è in spagnolo: è pensata per l'esame argentino ENACOM. I simulatori funzionano in qualsiasi lingua."
+        "spanishOnly": "Questa guida per ora è in spagnolo: è pensata per l'esame argentino ENACOM. I simulatori funzionano in qualsiasi lingua.",
+        "cta": "Inizia la guida"
     }
 }
