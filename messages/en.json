@@ -3727,6 +3727,10 @@
         "maker": {
             "label": "Maker",
             "description": "View 3D models and download STL parts."
+        },
+        "radio": {
+            "label": "Ham radio",
+            "description": "Interactive guide and practice exam for the Argentine license."
         }
     },
     "Footer": {
@@ -4757,6 +4761,7 @@
     "Radio": {
         "title": "Ham radio: interactive licensing guide",
         "description": "Interactive guide to the Argentine amateur radio license (ENACOM): electricity, modulation, antennas, propagation, Morse and a mock exam, with hands-on simulators.",
-        "spanishOnly": "This guide is in Spanish for now: it targets the Argentine ENACOM exam. The simulators work in any language."
+        "spanishOnly": "This guide is in Spanish for now: it targets the Argentine ENACOM exam. The simulators work in any language.",
+        "cta": "Start the guide"
     }
 }

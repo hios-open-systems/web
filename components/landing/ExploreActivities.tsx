@@ -5,6 +5,7 @@ import { activities, type Activity } from '@/lib/workbench/discovery';
 import { SaveToSpace } from '@/components/workbench/SaveToSpace';
 import { ArrowRightOutlined, ArrowUpOutlined } from '@ant-design/icons';
 import { ActivityGraphic } from '@/components/ui/ActivityGraphic';
+import { RadioSpotlight } from './RadioSpotlight';
 import styles from './landing.module.css';
 
 const journeys = {
@@ -97,6 +98,7 @@ function StudioSpotlight({ locale }: { locale: string }) {
           <strong className={styles.studioCta}>{w('toolCta')} →</strong>
         </div>
       </Link>
+      <RadioSpotlight locale={locale} />
     </div>
   );
 }

@@ -3727,6 +3727,10 @@
         "maker": {
             "label": "Maker",
             "description": "Visor 3D y descarga de piezas STL."
+        },
+        "radio": {
+            "label": "Radioaficionado",
+            "description": "Guía interactiva y simulacro de examen para la licencia argentina."
         }
     },
     "Footer": {
@@ -4757,6 +4761,7 @@
     "Radio": {
         "title": "Radioaficionado: guía interactiva para la licencia",
         "description": "Guía para sacar la licencia de radioaficionado en Argentina (ENACOM): electricidad, modulación, antenas, propagación, Morse y simulacro de examen, con simuladores interactivos.",
-        "spanishOnly": "Esta guía está en español: apunta al examen de ENACOM (Argentina)."
+        "spanishOnly": "Esta guía está en español: apunta al examen de ENACOM (Argentina).",
+        "cta": "Empezar la guía"
     }
 }

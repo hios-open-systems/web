@@ -3,12 +3,13 @@
 import React from 'react';
 import Link from 'next/link';
 import { useLocale, useTranslations } from 'next-intl';
-import { ToolOutlined, ThunderboltOutlined, ReadOutlined, LineChartOutlined, PrinterOutlined } from '@ant-design/icons';
+import { ToolOutlined, ThunderboltOutlined, ReadOutlined, LineChartOutlined, PrinterOutlined, WifiOutlined } from '@ant-design/icons';
 import styles from './landing.module.css';
 
 const ITEMS = [
   { id: 'workbench', href: 'workbench', icon: <ToolOutlined /> },
   { id: 'maker', href: 'prints', icon: <PrinterOutlined /> },
+  { id: 'radio', href: 'radio', icon: <WifiOutlined /> },
   { id: 'ai', href: 'projects/hios-node-ai', icon: <ThunderboltOutlined /> },
   { id: 'blog', href: 'blog', icon: <ReadOutlined /> },
   { id: 'stats', href: 'stats', icon: <LineChartOutlined /> },
