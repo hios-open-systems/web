@@ -23,3 +23,6 @@
 .tool:hover { border-color: #22d3ee; }
 
 .steps { margin: 0; padding-left: 22px; display: grid; gap: 10px; max-width: var(--layout-reading); line-height: 1.6; }
+
+.pdf { display: inline-flex; align-items: center; min-height: var(--touch-target); padding: 6px 14px; border-radius: 10px; border: 1px solid var(--accent-2); color: var(--accent-2-text); font-weight: 600; text-decoration: none; }
+.pdf:hover { background: color-mix(in srgb, var(--accent-2) 10%, transparent); }

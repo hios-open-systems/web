@@ -39,3 +39,29 @@
 .fig :global(.fa2) { fill: var(--accent); }
 .fig text { fill: currentColor; font-family: var(--font-stack-mono); font-size: 13px; }
 .fig :global(.muted) { fill: var(--hios-text-muted); font-size: 12px; }
+
+/* Plan de bandas oficial. */
+.plan { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; }
+.planNote { margin: 0 0 6px; font-size: 0.9rem; color: var(--hios-text-secondary); max-width: var(--layout-reading); }
+.planBand { border: 1px solid var(--hios-border); border-radius: 10px; background: var(--hios-bg-secondary); }
+.planBand summary { cursor: pointer; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 10px 14px; min-height: var(--touch-target); }
+.planBand summary span { font-family: var(--font-stack-mono); font-size: 0.85rem; color: var(--hios-text-secondary); }
+.planStatus { color: var(--hios-text-muted) !important; }
+.planAccess { margin-left: auto; }
+.planBand[data-access='si'] .planAccess { color: var(--hios-success, #16a34a) !important; }
+.planBand[data-access='parcial'] .planAccess { color: var(--hios-warning) !important; }
+.planBand[data-access='no'] .planAccess { color: var(--hios-text-muted) !important; }
+.planScroll { overflow-x: auto; padding: 0 14px 10px; }
+.planScroll table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+.planScroll th, .planScroll td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--hios-border); vertical-align: top; }
+.planScroll td:nth-child(-n + 2) { font-family: var(--font-stack-mono); white-space: nowrap; }
+.planScroll td:nth-child(n + 4), .planScroll th:nth-child(n + 4) { text-align: center; width: 2.2em; }
+.planScroll tr[data-novicio='no'] td { color: var(--hios-text-muted); }
+.planNotes { margin: 0; padding: 0 14px 12px 34px; font-size: 0.82rem; color: var(--hios-text-secondary); display: grid; gap: 2px; }
+
+.table { max-width: var(--layout-reading); overflow-x: auto; }
+.table table { border-collapse: collapse; width: 100%; font-size: 0.93rem; }
+.table th, .table td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--hios-border); vertical-align: top; }
+.table th { font-family: var(--font-stack-mono); font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--hios-text-muted); }
+.cite { display: inline-block; margin-top: 4px; font-family: var(--font-stack-mono); font-size: 0.75rem; color: var(--hios-text-muted); }
+.key .cite, .def .cite { margin-left: 6px; }

@@ -3,6 +3,7 @@ import { PageIntro } from '@/components/ui/PageIntro';
 import { CHAPTERS } from '@/lib/radio/chapters';
 import { SpanishOnlyNotice } from './SpanishOnlyNotice';
 import { LicenseLadder } from './LicenseLadder';
+import { ProgramMap } from './ProgramMap';
 import { Callout } from './ui/Prose';
 import landing from './landing.module.css';
 import styles from './radio.module.css';
@@ -29,11 +30,15 @@ export function RadioLanding({ locale }: { locale: string }) {
       <PageIntro
         eyebrow="Guía · Argentina"
         title="Radioaficionado, de cero a la licencia"
-        description="Todo el temario del examen Novicio de ENACOM explicado con simuladores: movés un control y ves qué pasa. Teoría al hueso, herramientas para la estación y práctica para el examen."
+        description="Guía de estudio para el examen Novicio de ENACOM, ordenada según el Programa Básico de Estudios oficial: definiciones con unidades, diagramas, fórmulas con ejemplos resueltos y el banco de preguntas oficial de reglamentación."
         area="knowledge"
         compact
       />
       {locale !== 'es' ? <SpanishOnlyNotice /> : null}
+      <p className={landing.lead}>
+        <a href="/downloads/radio/guia-radioaficionado-novicio.pdf" download className={landing.pdf}>⬇ Descargar la guía completa en PDF</a>
+        {' '}Bloques A a D con diagramas, fórmulas, ejemplos y el banco de preguntas con respuestas.
+      </p>
 
       <section className={landing.block}>
         <h2>El camino: una categoría a la vez</h2>
@@ -56,6 +61,12 @@ export function RadioLanding({ locale }: { locale: string }) {
       </section>
 
       <section className={landing.block}>
+        <h2>Programa oficial de ENACOM, punto por punto</h2>
+        <p className={landing.lead}>Cada tema del Programa Básico de Estudios y la sección de la guía que lo explica.</p>
+        <ProgramMap base={base} />
+      </section>
+
+      <section className={landing.block}>
         <h2>Herramientas</h2>
         <div className={landing.tools}>
           {TOOLS.map((t) => (
@@ -70,12 +81,12 @@ export function RadioLanding({ locale }: { locale: string }) {
         <h2>Cómo sacar la licencia</h2>
         <ol className={landing.steps}>
           <li><strong>Elegí un Radio Club</strong> cerca tuyo: ahí se cursa, se hacen las prácticas y se rinde (Res. ENACOM 3635/2017, art. 4.2). La lista de instituciones está en el sitio de ENACOM, sección Radioaficionados.</li>
-          <li><strong>Estudiá los bloques A a D</strong> y practicá Morse básico. Esta guía cubre el temario; el club te da el material oficial.</li>
+          <li><strong>Estudiá los bloques A a D</strong> y practicá Morse básico. La guía sigue el programa oficial; el club puede ampliarlo.</li>
           <li><strong>Hacé las Prácticas Operativas</strong> en la estación del club, con un instructor.</li>
           <li><strong>Rendí</strong> Técnica, Reglamentación y Ética Operativa, y Telegrafía (art. 4.4.3).</li>
           <li><strong>El club presenta el trámite</strong> ante ENACOM y te asignan tu señal distintiva.</li>
         </ol>
-        <Callout tone="info"><p>Fuentes: Reglamento General de Radioaficionados (Res. ENACOM 3635/2017) y Res. ENACOM 1186/2024. El plan de bandas por categoría todavía está marcado como «a verificar» hasta contrastarlo con el Anexo A oficial.</p></Callout>
+        <Callout tone="info"><p>Fuentes: Reglamento General de Radioaficionados (Res. ENACOM 3635/2017, mod. Res. 1186/2024); Res. ENACOM 508/2018 con su Programa Básico de Estudios, Banco de Preguntas oficial y Plan de Bandas (Anexo A); banco técnico de Novicio del Cuyo Radio Club (LU1MA).</p></Callout>
       </section>
     </main>
   );

@@ -76,3 +76,21 @@ export function Sim({ name, label }: { name: WidgetName; label: string }) {
     </details>
   );
 }
+
+/** Tabla simple de referencia. */
+export function Table({ head, rows, cite }: { head: ReadonlyArray<string>; rows: ReadonlyArray<ReadonlyArray<string>>; cite?: string }) {
+  return (
+    <div className={styles.table}>
+      <table>
+        <thead><tr>{head.map((h) => <th key={h}>{h}</th>)}</tr></thead>
+        <tbody>{rows.map((r) => <tr key={r.join('|')}>{r.map((c, i) => <td key={i}>{c}</td>)}</tr>)}</tbody>
+      </table>
+      {cite ? <p className={styles.cite}>{cite}</p> : null}
+    </div>
+  );
+}
+
+/** Cita de la fuente de un dato (artículo o pregunta del banco oficial). */
+export function Cite({ children }: { children: ReactNode }) {
+  return <span className={styles.cite}>{children}</span>;
+}

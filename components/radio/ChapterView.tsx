@@ -5,8 +5,11 @@ import { chapterNeighbors, type Chapter } from '@/lib/radio/chapters';
 import { ChapterA } from './chapters/ChapterA';
 import { ChapterA2 } from './chapters/ChapterA2';
 import { ChapterB } from './chapters/ChapterB';
+import { ChapterB2 } from './chapters/ChapterB2';
 import { ChapterC } from './chapters/ChapterC';
+import { ChapterC2 } from './chapters/ChapterC2';
 import { ChapterD } from './chapters/ChapterD';
+import { ChapterD2 } from './chapters/ChapterD2';
 import { ChapterMorse } from './chapters/ChapterMorse';
 import { ChapterPractice } from './chapters/ChapterPractice';
 import { SpanishOnlyNotice } from './SpanishOnlyNotice';
@@ -14,9 +17,9 @@ import styles from './radio.module.css';
 
 const BODIES: Record<string, ComponentType[]> = {
   'a-electricidad': [ChapterA, ChapterA2],
-  'b-modulacion-equipos': [ChapterB],
-  'c-antenas-propagacion': [ChapterC],
-  'd-reglamento': [ChapterD],
+  'b-modulacion-equipos': [ChapterB, ChapterB2],
+  'c-antenas-propagacion': [ChapterC, ChapterC2],
+  'd-reglamento': [ChapterD, ChapterD2],
   morse: [ChapterMorse],
   practica: [ChapterPractice],
 };

@@ -1,5 +1,5 @@
 import { Section } from '../ui/Prose';
-import { Def, Defs, Eq, Example, Fig, Key, Sim } from '../ui/Teach';
+import { Def, Defs, Eq, Example, Fig, Key, Sim, Table } from '../ui/Teach';
 import { OhmCircuit, SineAnatomy, Wavelength, ReactanceVsFrequency, ResonanceCurve } from '../diagrams/basics';
 
 export function ChapterA() {
@@ -27,8 +27,14 @@ export function ChapterA() {
           <ul>
             <li>Con dos magnitudes conocidas se calculan las otras dos.</li>
             <li>Serie: R total = R1 + R2 + … Paralelo: 1/R total = 1/R1 + 1/R2 + …</li>
+            <li>Conductores (cobre) conducen; aislantes (vidrio, plástico) no; semiconductores (silicio) conducen según cómo se los polarice.</li>
           </ul>
         </Key>
+        <Defs>
+          <Def term="1.ª ley de Kirchhoff (nodos)">La suma de corrientes que entran a un nodo es igual a la suma de las que salen.</Def>
+          <Def term="2.ª ley de Kirchhoff (mallas)">En un lazo cerrado, la suma de las tensiones de las fuentes es igual a la suma de las caídas de tensión.</Def>
+          <Def term="Energía" symbol="E" unit="joule, J; kWh">Potencia por tiempo: E = P · t.</Def>
+        </Defs>
         <Sim name="ohm" label="ley de Ohm" />
       </Section>
 
@@ -56,6 +62,14 @@ export function ChapterA() {
           λ = c / f    →    λ (m) = 300 / f (MHz)
         </Eq>
         <Example title="¿Qué longitud de onda tiene 146 MHz?" steps={['λ = 300 / 146 = 2,05 m']} result="≈ 2 m: por eso se la llama «banda de 2 metros»." />
+        <Table
+          head={['Región', 'Frecuencias', 'Longitud de onda']}
+          rows={[
+            ['LF', '30–300 kHz', '10–1 km'], ['MF', '300 kHz–3 MHz', '1 km–100 m'], ['HF', '3–30 MHz', '100–10 m'],
+            ['VHF', '30–300 MHz', '10–1 m'], ['UHF', '300 MHz–3 GHz', '1 m–10 cm'], ['SHF', '3–30 GHz', '10–1 cm'],
+          ]}
+          cite="Regiones del espectro radioeléctrico (nomenclatura UIT)"
+        />
         <Sim name="wave" label="onda, período y longitud de onda" />
       </Section>
 

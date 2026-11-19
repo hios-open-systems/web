@@ -10,7 +10,10 @@ import { QUIZ } from '../lib/radio/quiz.ts';
 import { PHONETIC, Q_CODES, MORSE, KOCH_ORDER, textToMorse, morseToText, ditMs } from '../lib/radio/codes.ts';
 import { BANDS } from '../lib/radio/bands.ts';
 import { BANK_TECNICA } from '../lib/radio/bankTecnica.ts';
-import { BANK_REGLAMENTO } from '../lib/radio/bankReglamento.ts';
+import { OFFICIAL_RULES } from '../lib/radio/officialBank.ts';
+import { OFFICIAL_BAND_PLAN } from '../lib/radio/bandPlan.ts';
+import { PROGRAM } from '../lib/radio/program.ts';
+import { CHAPTERS } from '../lib/radio/chapters.ts';
 import { EXAM_QUESTIONS, questionsFor, buildMock, MOCK_LAYOUT } from '../lib/radio/exam.ts';
 
 const near = (a: number, b: number, tol: number, msg: string) =>
@@ -98,12 +101,21 @@ for (const b of BANDS) assert.ok(b.endMHz > b.startMHz, b.name);
 // Bancos de examen.
 assert.equal(BANK_TECNICA.length, 150, 'banco técnico completo');
 assert.deepEqual(BANK_TECNICA.map((q) => q.n), Array.from({ length: 150 }, (_, i) => i + 1), 'numeración 1..150');
-assert.equal(new Set(BANK_REGLAMENTO.map((q) => q.id)).size, BANK_REGLAMENTO.length, 'ids reglamento únicos');
+assert.equal(OFFICIAL_RULES.length, 181, 'banco oficial Novicio completo');
+assert.equal(new Set(OFFICIAL_RULES.map((q) => q.id)).size, OFFICIAL_RULES.length, 'ids oficiales únicos');
+for (const q of OFFICIAL_RULES) assert.ok(q.ok.length && q.ok.every((i) => i >= 0 && i < q.opts.length), `clave ${q.id}`);
+assert.deepEqual(OFFICIAL_RULES.find((q) => q.id === 'I.45')?.ok, [0, 2, 4, 6], 'I.45 = a, c, e y g');
+assert.deepEqual(OFFICIAL_RULES.find((q) => q.id === 'PBN.1')?.ok, [0, 3], 'PBN.1 = a y d');
+// Plan de bandas oficial: tramos ordenados y Novicio fuera de 30, 17 y 12 m.
+for (const b of OFFICIAL_BAND_PLAN) assert.ok(b.endMHz > b.startMHz && b.rows.length, `plan ${b.name}`);
+for (const n of ['30 m', '17 m', '12 m']) assert.ok(OFFICIAL_BAND_PLAN.filter((b) => b.name === n).every((b) => b.rows.every((r) => !r.cats.includes('N'))), `Novicio sin ${n}`);
+assert.ok(OFFICIAL_BAND_PLAN.find((b) => b.name === '2 m')?.rows.some((r) => r.cats.includes('N')), 'Novicio en 2 m');
 for (const q of EXAM_QUESTIONS) {
-  const opts = [q.answer, ...q.wrong];
+  const opts = q.options;
   assert.ok(q.q.trim() && opts.every((o) => o.trim()), `vacío ${q.key}`);
-  assert.equal(new Set(opts).size, opts.length, `opciones repetidas ${q.key}`);
-  assert.ok(q.wrong.length >= 2, `pocas opciones ${q.key}`);
+  // El banco oficial repite una opción en VII.5: lo dejamos literal.
+  if (q.key !== 'rVII.5') assert.equal(new Set(opts).size, opts.length, `opciones repetidas ${q.key}`);
+  assert.ok(opts.length >= 2 && q.correct.length >= 1, `opciones ${q.key}`);
 }
 assert.equal(new Set(EXAM_QUESTIONS.map((q) => q.key)).size, EXAM_QUESTIONS.length, 'keys únicas');
 for (const pool of ['A', 'B', 'C', 'D', 'repaso'] as const) assert.ok(questionsFor(pool).length > 0, `pool ${pool}`);
@@ -112,4 +124,12 @@ const mock = buildMock(() => ((seed = (seed * 16807) % 2147483647) / 2147483647)
 assert.equal(mock.length, MOCK_LAYOUT.tecnica + MOCK_LAYOUT.reglamento, 'largo simulacro');
 assert.equal(new Set(mock.map((q) => q.key)).size, mock.length, 'simulacro sin repetidas');
 
-console.log(`All radio self-tests passed (${QUIZ.length} propias, ${BANK_TECNICA.length} técnicas, ${BANK_REGLAMENTO.length} reglamento)`);
+// Cada punto del programa oficial apunta a secciones que existen.
+for (const it of PROGRAM.flatMap((g) => g.items)) {
+  for (const [href] of it.where) {
+    const [slug, id] = href.split('#');
+    assert.ok(CHAPTERS.find((c) => c.slug === slug)?.sections.some((s) => s.id === id), `programa ${it.code} → ${href}`);
+  }
+}
+
+console.log(`All radio self-tests passed (${QUIZ.length} propias, ${BANK_TECNICA.length} técnicas, ${OFFICIAL_RULES.length} reglamento oficial)`);
