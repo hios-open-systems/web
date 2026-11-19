@@ -1,0 +1,41 @@
+/* Bloques didácticos: definición, ecuación, figura, ejemplo y claves de examen. */
+.defs { display: grid; gap: 10px; margin: 0; max-width: var(--layout-reading); }
+.def { border-left: 3px solid var(--accent-2); padding: 4px 0 4px 14px; }
+.def dt { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.def dd { margin: 2px 0 0; line-height: 1.6; color: var(--hios-text-secondary); }
+.sym { font-family: var(--font-stack-mono); color: var(--accent-2-text); }
+.unit { font-family: var(--font-stack-mono); font-size: 0.85rem; color: var(--hios-text-muted); }
+
+.eq { max-width: var(--layout-reading); border: 1px solid var(--hios-border); background: var(--hios-bg-secondary); border-radius: 12px; padding: 14px 16px; }
+.eq > code { display: block; white-space: pre-wrap; font-family: var(--font-stack-mono); font-size: 1.2rem; color: var(--hios-text); }
+.eq ul { list-style: none; margin: 10px 0 0; padding: 10px 0 0; border-top: 1px solid var(--hios-border); display: grid; gap: 4px; font-size: 0.92rem; color: var(--hios-text-secondary); }
+.eq li code { display: inline-block; min-width: 3.2em; font-family: var(--font-stack-mono); color: var(--accent-2-text); }
+
+.example { max-width: var(--layout-reading); border: 1px dashed var(--hios-border); border-radius: 12px; padding: 12px 16px; }
+.example p { margin: 0 0 6px; }
+.example ol { margin: 0 0 6px; padding-left: 20px; display: grid; gap: 2px; }
+.example code { font-family: var(--font-stack-mono); font-size: 0.95rem; }
+.exampleTag, .keyTag { font-family: var(--font-stack-mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--hios-text-muted); }
+.result { font-weight: 600; }
+
+.fig { margin: 0; max-width: 620px; }
+.fig svg { display: block; width: 100%; height: auto; color: var(--hios-text); }
+.fig figcaption { margin-top: 6px; font-size: 0.88rem; color: var(--hios-text-secondary); }
+
+.key { max-width: var(--layout-reading); background: color-mix(in srgb, var(--accent) 8%, transparent); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 10px 16px; }
+.key ul { margin: 6px 0 0; padding-left: 20px; display: grid; gap: 4px; }
+
+.sim { max-width: 100%; }
+.sim summary { cursor: pointer; min-height: var(--touch-target); display: flex; align-items: center; font-weight: 600; color: var(--accent-2-text); }
+.sim[open] summary { margin-bottom: 10px; }
+
+/* Trazos de los diagramas estáticos: heredan el color del tema. */
+.fig :global(.ln) { stroke: currentColor; stroke-width: 2; fill: none; }
+.fig :global(.thin) { stroke: var(--hios-text-muted); stroke-width: 1; fill: none; }
+.fig :global(.dash) { stroke: var(--hios-text-muted); stroke-width: 1.2; stroke-dasharray: 4 4; fill: none; }
+.fig :global(.a1) { stroke: var(--accent-2); stroke-width: 2.5; fill: none; }
+.fig :global(.a2) { stroke: var(--accent); stroke-width: 2.5; fill: none; }
+.fig :global(.fa1) { fill: var(--accent-2); }
+.fig :global(.fa2) { fill: var(--accent); }
+.fig text { fill: currentColor; font-family: var(--font-stack-mono); font-size: 13px; }
+.fig :global(.muted) { fill: var(--hios-text-muted); font-size: 12px; }

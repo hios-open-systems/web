@@ -1,51 +1,112 @@
-import { Section, Prose, Formula } from '../ui/Prose';
-import { Widget } from '../widgets/Widget';
+import { Section } from '../ui/Prose';
+import { Def, Defs, Eq, Example, Fig, Key, Sim } from '../ui/Teach';
+import { OhmCircuit, SineAnatomy, Wavelength, ReactanceVsFrequency, ResonanceCurve } from '../diagrams/basics';
 
 export function ChapterA() {
   return (
     <>
       <Section id="ohm" kicker="A.1" title="Tensión, corriente, resistencia y potencia">
-        <Prose>
-          <p>La <strong>tensión</strong> (V, volts) es el empuje; la <strong>corriente</strong> (I, amperes) es cuánta carga pasa por segundo; la <strong>resistencia</strong> (R, ohms) es cuánto se opone el camino. La <strong>potencia</strong> (P, watts) es la energía por segundo que se entrega o se vuelve calor.</p>
-          <p><Formula>V = I · R</Formula> &nbsp; <Formula>P = V · I = I² · R = V² / R</Formula></p>
-          <p>Con dos datos sacás los otros dos. Ejemplo de examen: un transmisor de 100 W sobre una carga de 50 Ω tiene 70,7 V y 1,41 A en el cable.</p>
-        </Prose>
-        <Widget name="ohm" />
-      </Section>
-
-      <Section id="alterna" kicker="A.2" title="Alterna, frecuencia y longitud de onda">
-        <Prose>
-          <p>La continua (CC) no cambia de sentido; la alterna (CA) oscila. La <strong>frecuencia</strong> f es cuántos ciclos por segundo (Hz) y el <strong>período</strong> T = 1/f es lo que dura un ciclo.</p>
-          <p>Una onda de radio viaja a la velocidad de la luz. En un ciclo avanza una <strong>longitud de onda</strong>:</p>
-          <p><Formula>λ = c / f</Formula> &nbsp; → atajo: <Formula>λ (m) = 300 / f (MHz)</Formula></p>
-          <p>Por eso las bandas tienen nombres en metros: 7 MHz ≈ «40 m», 146 MHz ≈ «2 m». Y por eso las antenas de HF son enormes y las de UHF entran en la mano.</p>
-          <p>Valores de una senoidal: <strong>pico</strong> (Vp), <strong>pico a pico</strong> (Vpp = 2·Vp) y <strong>eficaz</strong> (Vrms = Vp/√2 ≈ 0,707·Vp). El RMS es el que produce el mismo calor que una continua: 220 V de la red son RMS, el pico es 311 V.</p>
-        </Prose>
-        <Widget name="wave" />
-      </Section>
-
-      <Section id="reactancia" kicker="A.3" title="Bobinas y capacitores en RF">
-        <Prose>
-          <p>En alterna, bobinas y capacitores se oponen a la corriente según la frecuencia. A esa oposición se la llama <strong>reactancia</strong> (X, en ohms) y no disipa calor: guarda energía y la devuelve.</p>
-          <p><Formula>XL = 2π f L</Formula> la bobina frena más cuanto más alta la frecuencia.</p>
-          <p><Formula>XC = 1 / (2π f C)</Formula> el capacitor deja pasar mejor las frecuencias altas y <strong>bloquea la continua</strong>.</p>
+        <Defs>
+          <Def term="Tensión" symbol="V" unit="volt, V">Diferencia de potencial eléctrico entre dos puntos. Es la causa de que circule corriente.</Def>
+          <Def term="Corriente" symbol="I" unit="ampere, A">Carga eléctrica que atraviesa una sección del conductor por segundo (1 A = 1 C/s).</Def>
+          <Def term="Resistencia" symbol="R" unit="ohm, Ω">Oposición al paso de la corriente. Convierte energía eléctrica en calor.</Def>
+          <Def term="Potencia" symbol="P" unit="watt, W">Energía entregada o disipada por segundo (1 W = 1 J/s).</Def>
+        </Defs>
+        <Fig caption="Circuito serie mínimo: la fuente impone V, la resistencia fija cuánta corriente I circula.">
+          <OhmCircuit />
+        </Fig>
+        <Eq vars={[['V', 'tensión [V]'], ['I', 'corriente [A]'], ['R', 'resistencia [Ω]'], ['P', 'potencia [W]']]}>
+          V = I · R    P = V · I = I²·R = V²/R
+        </Eq>
+        <Example
+          title="Un transmisor entrega 100 W a una carga de 50 Ω. ¿Qué tensión y corriente hay en la carga?"
+          steps={['V = √(P·R) = √(100 · 50) = 70,7 V', 'I = V / R = 70,7 / 50 = 1,41 A']}
+          result="V = 70,7 V eficaces; I = 1,41 A."
+        />
+        <Key>
           <ul>
-            <li><strong>Resistores</strong>: en RF importa que no sean inductivos. Los de alambre bobinado se comportan como bobinas; para cargas fantasma se usan de película o carbón.</li>
-            <li><strong>Bobinas</strong>: con núcleo de aire (estables, Q alto, grandes) o toroides de ferrita / hierro pulverizado (chicas, el campo queda adentro).</li>
-            <li><strong>Capacitores</strong>: en serie la capacidad total baja; en paralelo se suma (al revés que los resistores).</li>
+            <li>Con dos magnitudes conocidas se calculan las otras dos.</li>
+            <li>Serie: R total = R1 + R2 + … Paralelo: 1/R total = 1/R1 + 1/R2 + …</li>
           </ul>
-        </Prose>
-        <Widget name="reactance" />
+        </Key>
+        <Sim name="ohm" label="ley de Ohm" />
       </Section>
 
-      <Section id="resonancia" kicker="A.4" title="Resonancia, Q y selectividad">
-        <Prose>
-          <p>Hay una frecuencia en la que XL = XC: la <strong>frecuencia de resonancia</strong>. Ahí bobina y capacitor se pasan la energía de uno a otro como un péndulo.</p>
-          <p><Formula>f₀ = 1 / (2π √(L·C))</Formula></p>
-          <p>El <strong>factor Q</strong> mide qué tan «filosa» es la resonancia: <Formula>BW = f₀ / Q</Formula>. Q alto = elige una frecuencia y rechaza las vecinas. Es lo que hacía el viejo capacitor tándem al sintonizar: mover f₀.</p>
-          <p>El <strong>tanque paralelo</strong> tiene impedancia máxima en f₀ (se usa como selector en receptores y osciladores). El <strong>LC serie</strong> tiene impedancia mínima en f₀ (deja pasar o cortocircuita una frecuencia).</p>
-        </Prose>
-        <Widget name="resonance" />
+      <Section id="alterna" kicker="A.2" title="Corriente alterna, frecuencia y longitud de onda">
+        <Defs>
+          <Def term="Corriente continua (CC)" >Mantiene siempre el mismo sentido y valor.</Def>
+          <Def term="Corriente alterna (CA)">Cambia de sentido periódicamente. En radio la forma de referencia es la senoidal.</Def>
+          <Def term="Frecuencia" symbol="f" unit="hertz, Hz">Cantidad de ciclos completos por segundo.</Def>
+          <Def term="Período" symbol="T" unit="segundo, s">Duración de un ciclo. T = 1/f.</Def>
+        </Defs>
+        <Fig caption="Un ciclo de senoidal. Vp: valor pico. Vpp: pico a pico. Vrms: valor eficaz, el que produce el mismo calor que una CC del mismo valor.">
+          <SineAnatomy />
+        </Fig>
+        <Eq vars={[['Vpp', '= 2 · Vp'], ['Vrms', '= Vp / √2 ≈ 0,707 · Vp'], ['T', '= 1 / f']]}>Vrms = 0,707 · Vp</Eq>
+        <Example
+          title="La red domiciliaria es de 220 V. ¿Cuál es su valor pico?"
+          steps={['Los 220 V son eficaces (rms)', 'Vp = Vrms · √2 = 220 · 1,414 = 311 V']}
+          result="Vp = 311 V; Vpp = 622 V."
+        />
+        <Def term="Longitud de onda" symbol="λ" unit="metro, m">Distancia que recorre la onda durante un período. La onda viaja a c ≈ 300 000 km/s.</Def>
+        <Fig caption="La misma onda vista en el espacio: λ es la distancia entre dos crestas.">
+          <Wavelength />
+        </Fig>
+        <Eq vars={[['λ', 'longitud de onda [m]'], ['c', 'velocidad de la luz, 3·10⁸ m/s'], ['f', 'frecuencia [Hz]']]}>
+          λ = c / f    →    λ (m) = 300 / f (MHz)
+        </Eq>
+        <Example title="¿Qué longitud de onda tiene 146 MHz?" steps={['λ = 300 / 146 = 2,05 m']} result="≈ 2 m: por eso se la llama «banda de 2 metros»." />
+        <Sim name="wave" label="onda, período y longitud de onda" />
+      </Section>
+
+      <Section id="reactancia" kicker="A.3" title="Reactancia: bobinas y capacitores en CA">
+        <Defs>
+          <Def term="Inductancia" symbol="L" unit="henry, H">Propiedad de una bobina de oponerse a los cambios de corriente. Almacena energía en campo magnético.</Def>
+          <Def term="Capacidad" symbol="C" unit="farad, F">Propiedad de un capacitor de almacenar carga. Almacena energía en campo eléctrico.</Def>
+          <Def term="Reactancia" symbol="X" unit="ohm, Ω">Oposición de L o C a la corriente alterna. Depende de la frecuencia y no disipa potencia.</Def>
+          <Def term="Impedancia" symbol="Z" unit="ohm, Ω">Oposición total en CA: combinación de resistencia y reactancia.</Def>
+        </Defs>
+        <Fig caption="XL crece con la frecuencia; XC disminuye. Se igualan en f₀, la frecuencia de resonancia.">
+          <ReactanceVsFrequency />
+        </Fig>
+        <Eq vars={[['XL', 'reactancia inductiva [Ω]'], ['XC', 'reactancia capacitiva [Ω]'], ['f', 'frecuencia [Hz]'], ['L', 'inductancia [H]'], ['C', 'capacidad [F]']]}>
+          XL = 2π·f·L    XC = 1 / (2π·f·C)
+        </Eq>
+        <Key>
+          <ul>
+            <li>El capacitor bloquea la CC (f = 0 → XC infinita). La bobina deja pasar la CC (XL = 0).</li>
+            <li>Capacitores en paralelo se suman; en serie, 1/C total = 1/C1 + 1/C2 (al revés que los resistores).</li>
+            <li>En RF se usan resistores no inductivos (película o carbón), no de alambre bobinado.</li>
+          </ul>
+        </Key>
+        <Sim name="reactance" label="reactancia contra frecuencia" />
+      </Section>
+
+      <Section id="resonancia" kicker="A.4" title="Resonancia, factor Q y ancho de banda">
+        <Defs>
+          <Def term="Frecuencia de resonancia" symbol="f₀" unit="Hz">Frecuencia en la que XL = XC en un circuito LC.</Def>
+          <Def term="Factor de mérito" symbol="Q">Relación entre la energía almacenada y la disipada por ciclo. Q alto = resonancia angosta.</Def>
+          <Def term="Ancho de banda" symbol="BW" unit="Hz">Rango de frecuencias en el que la respuesta cae menos de 3 dB respecto del pico.</Def>
+        </Defs>
+        <Fig caption="Respuesta de un circuito resonante: máxima en f₀; el ancho de banda se mide a −3 dB (70,7 % del pico).">
+          <ResonanceCurve />
+        </Fig>
+        <Eq vars={[['f₀', 'frecuencia de resonancia [Hz]'], ['L', 'inductancia [H]'], ['C', 'capacidad [F]'], ['Q', 'factor de mérito (sin unidad)']]}>
+          f₀ = 1 / (2π·√(L·C))    BW = f₀ / Q
+        </Eq>
+        <Example
+          title="Un circuito resuena en 7 MHz con Q = 100. ¿Cuál es su ancho de banda?"
+          steps={['BW = f₀ / Q = 7 000 000 / 100']}
+          result="BW = 70 kHz."
+        />
+        <Key>
+          <ul>
+            <li>LC paralelo («tanque»): impedancia máxima en f₀. Selecciona una frecuencia en receptores y osciladores.</li>
+            <li>LC serie: impedancia mínima en f₀. Deja pasar (o cortocircuita) una frecuencia.</li>
+            <li>Si aumenta L o C, f₀ baja.</li>
+          </ul>
+        </Key>
+        <Sim name="resonance" label="resonancia y Q" />
       </Section>
     </>
   );
