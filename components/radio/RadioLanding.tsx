@@ -40,6 +40,7 @@ export function RadioLanding({ locale }: { locale: string }) {
       <p className={landing.lead}>
         <a href="/downloads/radio/guia-radioaficionado-novicio.pdf" download className={landing.pdf}>⬇ Descargar la guía completa en PDF</a>
         {' '}Bloques A a D con diagramas, fórmulas, ejemplos y el banco de preguntas con respuestas.
+        {' '}También podés <Link href={`${base}/imprimir`}>verla en una sola página para imprimir</Link>.
       </p>
 
       <section className={landing.block}>

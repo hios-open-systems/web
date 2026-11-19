@@ -35,7 +35,7 @@
 .lead { color: #333; }
 .steps { padding-left: 16pt; display: grid; gap: 4pt; }
 .contents { list-style: none; padding: 0; display: grid; gap: 8pt; }
-.contents ol { margin: 3pt 0 0; padding-left: 16pt; columns: 2; column-gap: 8mm; font-size: 9.5pt; color: #333; }
+.contents ol { margin: 3pt 0 0; padding-left: 16pt; column-gap: 8mm; font-size: 9.5pt; color: #333; }
 
 /* Bloques A–D: cada uno arranca en página nueva. */
 .block { break-before: page; }
@@ -54,7 +54,7 @@
 .doc [class*='teach_sim__'] { display: none; }
 
 .doc [class*='teach_defs__'] { display: block; border-top: 0.5pt solid var(--hios-border); }
-.doc [class*='teach_def__'] { display: grid; grid-template-columns: 44mm 1fr; gap: 0 4mm; border: 0; border-bottom: 0.5pt solid var(--hios-border); padding: 3pt 0; break-inside: avoid; }
+.doc [class*='teach_def__'] { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 4mm; border: 0; border-bottom: 0.5pt solid var(--hios-border); padding: 3pt 0; break-inside: avoid; }
 .doc [class*='teach_def__'] dd { margin: 0; color: #222; line-height: 1.4; }
 
 .doc [class*='teach_eq__'] { border-radius: 0; border: 0.5pt solid var(--hios-border); padding: 6pt 9pt; break-inside: avoid; }
@@ -85,13 +85,21 @@
 .doc [class*='radio_bank__'] { border: 0; border-radius: 0; background: none; padding: 0; }
 .doc [class*='radio_bank__'] > :first-child { font-weight: 700; display: flex; gap: 6pt; align-items: center; min-height: 0; }
 .doc [class*='radio_bankNote__'] { font-size: 8.5pt; }
-.doc [class*='radio_bankList__'] { display: block; columns: 2; column-gap: 7mm; font-size: 8.5pt; line-height: 1.35; }
+.doc [class*='radio_bankList__'] { display: block; column-gap: 7mm; font-size: 8.5pt; line-height: 1.35; }
 .doc [class*='radio_bankList__'] li { display: block; break-inside: avoid; border: 0; border-radius: 0; background: none; padding: 0 0 4pt; margin-bottom: 4pt; border-bottom: 0.5pt solid #e2e2e2; }
 .doc [class*='radio_bankList__'] li > * { display: block; }
 .doc [class*='radio_bankSource__'] { font-size: 7pt; }
 
 /* Tabla Morse. */
-.doc [class*='teach_mgrid__'] { grid-template-columns: repeat(6, 1fr); gap: 4pt; }
+.doc [class*='teach_mgrid__'] { gap: 4pt; }
 .doc [class*='teach_mcell__'] { padding: 4pt 6pt; border-radius: 3pt; background: #fff; border-color: #ccc; gap: 1pt 6pt; }
 .doc [class*='teach_mcell__'] strong { font-size: 14pt; }
 .doc [class*='teach_morse__'] h3 { font-size: 11pt; margin: 10pt 0 5pt; }
+
+/* Columnas sólo en papel o pantallas anchas. */
+@media print, (min-width: 720px) {
+  .doc [class*='teach_def__'] { grid-template-columns: 44mm minmax(0, 1fr); }
+  .doc [class*='teach_mgrid__'] { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .doc [class*='radio_bankList__'], .contents ol { columns: 2; }
+}
+.doc [class*='teach_table__'] { overflow-x: auto; }
