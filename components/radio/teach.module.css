@@ -1,0 +1,104 @@
+/* Bloques didácticos: definición, ecuación, figura, ejemplo y claves de examen. */
+.defs { display: grid; gap: 10px; margin: 0; max-width: var(--layout-reading); }
+.def { border-left: 3px solid var(--accent-2); padding: 4px 0 4px 14px; }
+.def dt { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.def dd { margin: 2px 0 0; line-height: 1.6; color: var(--hios-text-secondary); }
+.sym { font-family: var(--font-stack-mono); color: var(--accent-2-text); }
+.unit { font-family: var(--font-stack-mono); font-size: 0.85rem; color: var(--hios-text-muted); }
+
+.eq { max-width: var(--layout-reading); border: 1px solid var(--hios-border); background: var(--hios-bg-secondary); border-radius: 12px; padding: 14px 16px; }
+.eq > code { display: block; white-space: pre-wrap; font-family: var(--font-stack-mono); font-size: 1.2rem; color: var(--hios-text); }
+.eq ul { list-style: none; margin: 10px 0 0; padding: 10px 0 0; border-top: 1px solid var(--hios-border); display: grid; gap: 4px; font-size: 0.92rem; color: var(--hios-text-secondary); }
+.eq li code { display: inline-block; min-width: 3.2em; font-family: var(--font-stack-mono); color: var(--accent-2-text); }
+
+.example { max-width: var(--layout-reading); border: 1px dashed var(--hios-border); border-radius: 12px; padding: 12px 16px; }
+.example p { margin: 0 0 6px; }
+.example ol { margin: 0 0 6px; padding-left: 20px; display: grid; gap: 2px; }
+.example code { font-family: var(--font-stack-mono); font-size: 0.95rem; }
+.exampleTag, .keyTag { font-family: var(--font-stack-mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--hios-text-muted); }
+.result { font-weight: 600; }
+
+.fig { margin: 0; max-width: 620px; }
+.fig svg { display: block; width: 100%; height: auto; color: var(--hios-text); }
+.fig figcaption { margin-top: 6px; font-size: 0.88rem; color: var(--hios-text-secondary); }
+
+.key { max-width: var(--layout-reading); background: color-mix(in srgb, var(--accent) 8%, transparent); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 10px 16px; }
+.key ul { margin: 6px 0 0; padding-left: 20px; display: grid; gap: 4px; }
+
+.sim { max-width: 100%; }
+.sim summary { cursor: pointer; min-height: var(--touch-target); display: flex; align-items: center; font-weight: 600; color: var(--accent-2-text); }
+.sim[open] summary { margin-bottom: 10px; }
+
+/* Trazos de los diagramas estáticos: heredan el color del tema. */
+.fig :global(.ln) { stroke: currentColor; stroke-width: 2; fill: none; }
+.fig :global(.thin) { stroke: var(--hios-text-muted); stroke-width: 1; fill: none; }
+.fig :global(.dash) { stroke: var(--hios-text-muted); stroke-width: 1.2; stroke-dasharray: 4 4; fill: none; }
+.fig :global(.a1) { stroke: var(--accent-2); stroke-width: 2.5; fill: none; }
+.fig :global(.a2) { stroke: var(--accent); stroke-width: 2.5; fill: none; }
+.fig :global(.fa1) { fill: var(--accent-2); }
+.fig :global(.fa2) { fill: var(--accent); }
+.fig text { fill: currentColor; font-family: var(--font-stack-mono); font-size: 13px; }
+.fig :global(.muted) { fill: var(--hios-text-muted); font-size: 12px; }
+
+/* Plan de bandas oficial. */
+.plan { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; }
+.planNote { margin: 0 0 6px; font-size: 0.9rem; color: var(--hios-text-secondary); max-width: var(--layout-reading); }
+.planBand { border: 1px solid var(--hios-border); border-radius: 10px; background: var(--hios-bg-secondary); }
+.planBand summary { cursor: pointer; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 10px 14px; min-height: var(--touch-target); }
+.planBand summary span { font-family: var(--font-stack-mono); font-size: 0.85rem; color: var(--hios-text-secondary); }
+.planStatus { color: var(--hios-text-muted) !important; }
+.planAccess { margin-left: auto; }
+.planBand[data-access='si'] .planAccess { color: var(--hios-success, #16a34a) !important; }
+.planBand[data-access='parcial'] .planAccess { color: var(--hios-warning) !important; }
+.planBand[data-access='no'] .planAccess { color: var(--hios-text-muted) !important; }
+.planScroll { overflow-x: auto; padding: 0 14px 10px; }
+.planScroll table { border-collapse: collapse; width: 100%; font-size: 0.85rem; }
+.planScroll th, .planScroll td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--hios-border); vertical-align: top; }
+.planScroll td:nth-child(-n + 2) { font-family: var(--font-stack-mono); white-space: nowrap; }
+.planScroll td:nth-child(n + 4), .planScroll th:nth-child(n + 4) { text-align: center; width: 2.2em; }
+.planScroll tr[data-novicio='no'] td { color: var(--hios-text-muted); }
+.planNotes { margin: 0; padding: 0 14px 12px 34px; font-size: 0.82rem; color: var(--hios-text-secondary); display: grid; gap: 2px; }
+
+.table { max-width: var(--layout-reading); overflow-x: auto; }
+.table table { border-collapse: collapse; width: 100%; font-size: 0.93rem; }
+.table th, .table td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--hios-border); vertical-align: top; }
+.table th { font-family: var(--font-stack-mono); font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--hios-text-muted); }
+.cite { display: inline-block; margin-top: 4px; font-family: var(--font-stack-mono); font-size: 0.75rem; color: var(--hios-text-muted); }
+.key .cite, .def .cite { margin-left: 6px; }
+
+/* Tabla Morse. */
+.morse h3 { margin: 14px 0 8px; font-size: 1rem; }
+.mgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 6px; }
+.mcell { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: 'ch' 'code' 'note'; align-items: center; gap: 2px 10px; padding: 8px 10px; border: 1px solid var(--hios-border); border-radius: 8px; background: var(--hios-bg-secondary); break-inside: avoid; }
+.mcell strong { grid-area: ch; font-size: 1.5rem; font-family: var(--font-stack-mono); }
+.mcode { grid-area: code; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; min-height: 12px; margin: 4px 0 2px; }
+.dit, .dah { display: inline-block; height: 6px; border-radius: 3px; background: var(--accent-2); }
+.dit { width: 6px; }
+.dah { width: 14px; }
+.mgroup { display: inline-flex; align-items: center; gap: 3px; }
+.mcell[data-wide] { grid-column: span 2; }
+.mnote { grid-area: note; font-size: 0.78rem; color: var(--hios-text-secondary); }
+
+/* Tabla Morse interactiva. */
+button.mcell { font: inherit; color: inherit; text-align: left; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
+button.mcell:hover { border-color: var(--accent-2); }
+button.mcell:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
+.mcell[data-active] { border-color: var(--accent-2); background: color-mix(in srgb, var(--accent-2) 18%, var(--hios-bg-secondary)); }
+.keypad { display: grid; gap: 12px; }
+.composer { position: sticky; top: calc(var(--layout-header-height, 64px) + 8px); z-index: 2; display: grid; gap: 8px; padding: 12px 14px; border: 1px solid var(--hios-border); border-radius: 12px; background: var(--hios-bg-elevated, var(--hios-bg)); box-shadow: 0 6px 20px rgb(0 0 0 / 0.18); }
+.composerText { font-family: var(--font-stack-mono); font-size: 1.3rem; min-height: 1.6em; word-break: break-all; }
+.composerText span { font-family: inherit; font-size: 0.95rem; color: var(--hios-text-muted); }
+.composerCode { display: flex; flex-wrap: wrap; gap: 4px 12px; font-family: var(--font-stack-mono); color: var(--accent-2-text); min-height: 1.2em; }
+.composerCode span[data-on] { color: var(--accent); font-weight: 700; }
+.composerBar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.composerBar button { min-height: 36px; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--hios-border); background: var(--hios-bg-secondary); color: var(--hios-text); font: inherit; font-size: 0.85rem; cursor: pointer; }
+.composerBar button:first-child { background: var(--accent-2); border-color: var(--accent-2); color: #fff; }
+.composerBar button:disabled { opacity: 0.45; cursor: default; }
+.composerBar label { display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--hios-text-secondary); margin-left: auto; }
+@media (max-width: 640px) {
+  .composer { padding: 8px 10px; gap: 4px; }
+  .composerText { font-size: 1.1rem; }
+  .composerCode { font-size: 0.8rem; }
+  .composerBar { gap: 4px; }
+  .composerBar button { min-height: 34px; padding: 2px 10px; font-size: 0.8rem; }
+}

@@ -1,7 +1,7 @@
 // Une los bancos de preguntas en un solo formato para práctica y simulacro.
 
 import { BANK_TECNICA, type BankTopic } from './bankTecnica.ts';
-import { BANK_REGLAMENTO } from './bankReglamento.ts';
+import { OFFICIAL_RULES, OFFICIAL_CHAPTERS } from './officialBank.ts';
 import { QUIZ } from './quiz.ts';
 
 export type ExamPool = 'A' | 'B' | 'C' | 'D' | 'repaso';
@@ -12,8 +12,9 @@ export interface ExamQuestion {
   /** Etiqueta de origen, p. ej. «Banco técnico · Preg. 66». */
   source: string;
   q: string;
-  answer: string;
-  wrong: string[];
+  options: string[];
+  /** Índices de las opciones correctas. Puede haber más de una. */
+  correct: number[];
   explain?: string;
   warn?: string;
 }
@@ -38,22 +39,25 @@ export function blockOfTopic(n: number, topic: BankTopic): 'A' | 'B' | 'C' {
 export const EXAM_QUESTIONS: readonly ExamQuestion[] = [
   ...BANK_TECNICA.map((b): ExamQuestion => ({
     key: `t${b.n}`, pool: blockOfTopic(b.n, b.topic), source: `Banco técnico · Preg. ${b.n}`,
-    q: b.q, answer: b.answer, wrong: b.wrong, warn: b.fix,
+    q: b.q, options: [b.answer, ...b.wrong], correct: [0], warn: b.fix,
   })),
-  ...BANK_REGLAMENTO.map((r): ExamQuestion => ({
-    key: `r${r.id}`, pool: 'D', source: `Banco de Reglamentación · ${r.id}`,
-    q: r.q, answer: r.answer, wrong: r.wrong, explain: `Fuente: ${r.cite}.`,
-    warn: r.check === 'amsat' ? 'Depende del plan de bandas: respuesta tomada del resumen de AMSAT Argentina, a confirmar con el Anexo A oficial.'
-      : r.updated ? 'El banco 2018 tiene la versión vieja de esta pregunta: la Res. 1186/2024 la cambió.' : undefined,
+  ...OFFICIAL_RULES.map((r): ExamQuestion => ({
+    key: `r${r.id}`, pool: 'D', source: `Banco oficial ENACOM · ${r.id} · ${OFFICIAL_CHAPTERS[r.ch]}`,
+    q: r.q, options: r.opts, correct: r.ok, warn: r.note,
   })),
   ...QUIZ.map((q): ExamQuestion => ({
     key: `p${q.id}`, pool: 'repaso', source: `Repaso OpenHios · Bloque ${q.block}`,
-    q: q.q, answer: q.options[q.answer], wrong: q.options.filter((_, i) => i !== q.answer), explain: q.explain,
+    q: q.q, options: q.options, correct: [q.answer], explain: q.explain,
   })),
 ];
 
 export function questionsFor(pool: ExamPool): ExamQuestion[] {
   return EXAM_QUESTIONS.filter((q) => q.pool === pool);
+}
+
+/** Texto de la/s respuesta/s correcta/s. */
+export function answerText(q: ExamQuestion): string {
+  return q.correct.map((i) => q.options[i]).join(' · ');
 }
 
 export const MOCK_LAYOUT = { tecnica: 25, reglamento: 15, minutes: 45 } as const;

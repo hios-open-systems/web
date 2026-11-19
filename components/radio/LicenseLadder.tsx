@@ -4,7 +4,7 @@ const STEPS = [
   {
     name: 'Novicio', state: 'Disponible', active: true,
     req: 'Desde 9 años. Examen de Técnica, Reglamentación y Ética, y conocimientos generales de Morse (art. 4.4).',
-    gives: 'Hasta 200 W (art. 4.11.1). Bandas: según plan de bandas (a verificar).',
+    gives: 'Hasta 200 W (art. 4.11.1). Todas las bandas salvo 30, 17 y 12 m, con segmentos (Plan de Bandas, Anexo A).',
   },
   {
     name: 'General', state: 'Próximamente',

@@ -1,71 +1,83 @@
-import { Section, Prose, Formula, Callout } from '../ui/Prose';
-import { Widget } from '../widgets/Widget';
-import { BankList } from '../BankList';
+import { Section } from '../ui/Prose';
+import { Def, Defs, Eq, Example, Fig, Key, Sim } from '../ui/Teach';
+import { Reflection, DipolePattern } from '../diagrams/more';
 
+/** Bloque C, primera parte: ondas, líneas de transmisión, ROE, adaptación y antenas. */
 export function ChapterC() {
   return (
     <>
-      <Section id="coaxil" kicker="C.1" title="Impedancia y cable coaxil">
-        <Prose>
-          <p>Una línea de transmisión tiene una <strong>impedancia característica</strong> Z₀ que depende de su geometría, no de su largo. Los equipos y coaxiles de radioaficionado son de <strong>50 Ω</strong>: un compromiso entre la menor pérdida (~77 Ω) y la mayor potencia soportada (~30 Ω). La TV usa 75 Ω.</p>
-          <p>La pérdida sube con la frecuencia y con el largo, y baja con cables más gruesos. En HF un RG-58 alcanza; en VHF/UHF conviene RG-213 o LMR-400.</p>
-        </Prose>
-        <Widget name="coax" />
+      <Section id="ondas" kicker="C.1" title="Campos y ondas electromagnéticas">
+        <Defs>
+          <Def term="Campo eléctrico" symbol="E" unit="V/m">Lo crea una tensión entre conductores.</Def>
+          <Def term="Campo magnético" symbol="H" unit="A/m">Lo crea una corriente que circula.</Def>
+          <Def term="Onda electromagnética">Campos E y H perpendiculares entre sí y a la dirección de avance, que viajan a la velocidad de la luz.</Def>
+          <Def term="Polarización">Orientación del campo eléctrico: horizontal, vertical o circular. Las dos antenas deben coincidir.</Def>
+        </Defs>
       </Section>
 
-      <Section id="roe" kicker="C.2" title="ROE: ondas estacionarias">
-        <Prose>
-          <p>Si la antena no presenta 50 Ω, parte de la potencia rebota y vuelve. La onda que va y la que vuelve se suman y forman una <strong>onda estacionaria</strong>: puntos de tensión máxima y mínima fijos en el cable.</p>
-          <p><Formula>Γ = (Z − Z₀) / (Z + Z₀)</Formula> &nbsp; <Formula>ROE = (1 + |Γ|) / (1 − |Γ|)</Formula></p>
-          <p>ROE 1:1 es perfecto. Hasta 1,5:1 es excelente, 2:1 es aceptable (vuelve 11 %). Arriba de 3:1 muchos equipos bajan la potencia para protegerse.</p>
-        </Prose>
-        <Widget name="swr" />
-      </Section>
-
-      <Section id="adaptacion" kicker="C.3" title="Adaptación: baluns y acopladores">
-        <Prose>
+      <Section id="coaxil" kicker="C.2" title="Líneas de transmisión">
+        <Defs>
+          <Def term="Impedancia característica" symbol="Z₀" unit="Ω">Relación tensión/corriente de una línea infinita. Depende de la geometría y el dieléctrico, no del largo.</Def>
+          <Def term="Cable coaxil">Línea desbalanceada: conductor central y malla. En radioaficionados, 50 Ω; en TV, 75 Ω.</Def>
+          <Def term="Línea abierta (paralela)">Dos conductores paralelos: balanceada, de muy baja pérdida (300–600 Ω).</Def>
+          <Def term="Guía de onda">Tubo metálico que conduce microondas.</Def>
+          <Def term="Pérdida" unit="dB">Atenuación de la línea. Sube con la frecuencia y con el largo; baja con cables más gruesos.</Def>
+        </Defs>
+        <Key>
           <ul>
-            <li><strong>Balun 1:1</strong>: une el coaxil (desbalanceado) con un dipolo (balanceado). Evita que la malla irradie y meta RF en la casa.</li>
-            <li><strong>Balun / unun 4:1 y 9:1</strong>: además transforman impedancia. Se usan en antenas de hilo largo y end-fed.</li>
-            <li><strong>Acoplador (ATU)</strong>: una red de L y C que hace que el equipo «vea» 50 Ω. No arregla la antena: sólo protege al transmisor. Los automáticos (tipo ATU-100) conmutan bancos de L y C con relés.</li>
+            <li>En HF alcanza RG-58; en VHF/UHF conviene RG-213 o LMR-400.</li>
+            <li>Conectores: PL-259/SO-239 en HF; N y SMA en VHF/UHF.</li>
           </ul>
-        </Prose>
+        </Key>
+        <Sim name="coax" label="pérdida en cable coaxil" />
       </Section>
 
-      <Section id="antenas" kicker="C.4" title="Antenas básicas">
-        <Prose>
+      <Section id="roe" kicker="C.3" title="ROE: relación de onda estacionaria">
+        <Fig caption="Si la carga no es igual a Z₀, parte de la potencia se refleja. La suma de ambas ondas forma la onda estacionaria.">
+          <Reflection />
+        </Fig>
+        <Defs>
+          <Def term="Coeficiente de reflexión" symbol="Γ">Fracción de la tensión que vuelve. 0 = adaptado; 1 = todo vuelve.</Def>
+          <Def term="ROE (SWR)">Relación entre la tensión máxima y la mínima a lo largo de la línea. 1:1 es la adaptación perfecta.</Def>
+        </Defs>
+        <Eq vars={[['Γ', 'coeficiente de reflexión'], ['Z', 'impedancia de carga [Ω]'], ['Z₀', 'impedancia de la línea [Ω]']]}>
+          Γ = (Z − Z₀) / (Z + Z₀)    ROE = (1 + |Γ|) / (1 − |Γ|)
+        </Eq>
+        <Example
+          title="Una antena de 100 Ω se conecta a un coaxil de 50 Ω. ¿Qué ROE hay?"
+          steps={['Γ = (100 − 50) / (100 + 50) = 0,333', 'ROE = 1,333 / 0,667 = 2']}
+          result="ROE = 2:1 (vuelve el 11 % de la potencia). Para cargas resistivas: ROE = Z mayor / Z menor."
+        />
+        <Sim name="swr" label="ondas estacionarias" />
+      </Section>
+
+      <Section id="adaptacion" kicker="C.4" title="Adaptación de impedancias: baluns y acopladores">
+        <Defs>
+          <Def term="Balun">Transformador de balanceado a desbalanceado. El 1:1 une coaxil y dipolo; 4:1 y 9:1 además transforman la impedancia.</Def>
+          <Def term="Acoplador de antena (ATU)">Red de L y C que hace que el transmisor vea 50 Ω. Protege al equipo, pero no mejora la antena.</Def>
+        </Defs>
+      </Section>
+
+      <Section id="antenas" kicker="C.5" title="Antenas">
+        <Fig caption="Dipolo de media onda: irradia al máximo perpendicular al hilo y nada en la dirección del hilo.">
+          <DipolePattern />
+        </Fig>
+        <Defs>
+          <Def term="Ganancia" unit="dBi / dBd">Cuánto concentra la antena la potencia en una dirección, respecto de una antena isotrópica (dBi) o de un dipolo (dBd).</Def>
+          <Def term="Directividad">Capacidad de concentrar la radiación en una dirección.</Def>
+          <Def term="Diagrama de radiación">Gráfico de la intensidad irradiada según la dirección.</Def>
+          <Def term="Ancho de haz">Ángulo entre los puntos a −3 dB del lóbulo principal.</Def>
+          <Def term="PIRE" unit="W">Potencia isotrópica radiada equivalente: potencia entregada a la antena por su ganancia (en dBi).</Def>
+        </Defs>
+        <Eq vars={[['L', 'largo total del dipolo [m]'], ['f', 'frecuencia [MHz]'], ['0,95', 'factor de acortamiento típico']]}>L (m) ≈ 150 / f (MHz) · 0,95    dBi = dBd + 2,15</Eq>
+        <Example title="Dipolo para 7,1 MHz." steps={['L = 150 / 7,1 · 0,95 = 20,07 m', 'Cada rama: 10,03 m']} result="≈ 20 m en total; impedancia ≈ 73 Ω en el centro." />
+        <Key>
           <ul>
-            <li><strong>Dipolo λ/2</strong>: dos ramas de λ/4 alimentadas al centro. ~73 Ω, irradia de costado al hilo.</li>
-            <li><strong>Vertical λ/4</strong>: un irradiante + plano de tierra (radiales). Omnidireccional. La típica de VHF en el techo o el auto.</li>
-            <li><strong>Yagi-Uda</strong>: un dipolo + reflector + directores. Concentra la energía en una dirección. La <strong>ganancia</strong> se mide en dBi (vs. una antena isotrópica ideal) o dBd (vs. un dipolo): <Formula>dBi = dBd + 2,15</Formula>. Relación frente-espalda: cuánto más irradia adelante que atrás.</li>
+            <li>Tipos: dipolo, V invertida, monopolo (vertical λ/4 con radiales), lazo, Yagi-Uda, log-periódica, helicoidal, parabólica, panel.</li>
+            <li>Yagi: dipolo + reflector + directores. Más elementos = más ganancia y haz más angosto.</li>
           </ul>
-        </Prose>
-        <Widget name="antenna" />
-      </Section>
-
-      <Section id="ionosfera" kicker="C.5" title="Propagación en HF">
-        <Prose>
-          <p>Tres formas de llegar: <strong>onda terrestre</strong> (sigue el suelo, bandas bajas), <strong>onda espacial</strong> (línea de vista, VHF/UHF) y <strong>onda ionosférica</strong> (rebota en la ionosfera, HF).</p>
-          <ul>
-            <li><strong>Capa D</strong> (60–90 km): sólo de día. Absorbe 160 y 80 m.</li>
-            <li><strong>Capa E</strong> (90–130 km): de día; a veces aparece la E esporádica que abre 6 m y 10 m.</li>
-            <li><strong>F1 y F2</strong>: de día están separadas; de noche se juntan en una sola F. La F2 da el DX.</li>
-          </ul>
-          <p>La <strong>MUF</strong> es la frecuencia más alta que vuelve a tierra. Depende del sol: el <strong>ciclo solar</strong> de ~11 años hace que 10–15 m estén abiertas al mundo en el máximo y muertas en el mínimo. Regla práctica: de día bandas altas, de noche bandas bajas.</p>
-        </Prose>
-        <Widget name="ionosphere" />
-      </Section>
-
-      <Section id="alcance" kicker="C.6" title="Alcance en VHF/UHF: ¿llego?">
-        <Prose>
-          <p>En VHF/UHF manda la <strong>altura</strong>. Horizonte radioeléctrico: <Formula>d (km) ≈ 4,12 · (√h₁ + √h₂)</Formula> con alturas en metros. Con las antenas a la altura de la mano, el suelo y los edificios se comen la señal mucho antes del horizonte.</p>
-        </Prose>
-        <Callout tone="info"><p>Para el enlace de ~5 km con un familiar: probá con dos handies a nivel de calle y después con una antena en el techo. La diferencia es enorme, y es más barata que más potencia.</p></Callout>
-        <Widget name="link" />
-      </Section>
-
-      <Section id="banco" kicker="Examen" title="Preguntas del examen: bloque C">
-        <BankList pool="C" />
+        </Key>
+        <Sim name="antenna" label="largo de antena y diagrama" />
       </Section>
     </>
   );

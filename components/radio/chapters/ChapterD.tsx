@@ -1,8 +1,5 @@
-import { Section, Prose, Callout } from '../ui/Prose';
-import { Widget } from '../widgets/Widget';
-import { BankList } from '../BankList';
-import { OFFICIAL_FILES } from '@/lib/radio/bankReglamento';
-import styles from '../radio.module.css';
+import { Section } from '../ui/Prose';
+import { Def, Defs, Key, Table, Cite } from '../ui/Teach';
 
 const DISTRICTS: ReadonlyArray<readonly [string, string]> = [
   ['CABA', 'A · B · C'], ['Buenos Aires', 'D · E'], ['Santa Fe', 'F'], ['Chaco', 'GA–GO'], ['Formosa', 'GP–GZ'],
@@ -12,79 +9,90 @@ const DISTRICTS: ReadonlyArray<readonly [string, string]> = [
   ['Tierra del Fuego', 'XP–XZ'], ['Neuquén', 'Y'], ['Antártida e Islas', 'Z'],
 ];
 
+/** Bloque D, primera parte: organismos, licencia, señales distintivas y estaciones. */
 export function ChapterD() {
   return (
     <>
-      <Section id="licencia" kicker="D.1" title="La licencia en Argentina">
-        <Prose>
-          <p>La regula ENACOM con el <strong>Reglamento General de Radioaficionados</strong> (Res. ENACOM 3635/2017), modificado por la Res. 1186/2024. Citamos el artículo de cada dato.</p>
+      <Section id="organismos" kicker="D.1" title="Organismos y normas">
+        <Defs>
+          <Def term="UIT" symbol="ITU">Unión Internacional de Telecomunicaciones. Su Reglamento de Radiocomunicaciones (RR) atribuye las bandas a cada servicio. Las Conferencias Mundiales de Radiocomunicaciones (CMR) lo actualizan; el Grupo de Trabajo 5A trata el servicio de aficionados.</Def>
+          <Def term="IARU">International Amateur Radio Union: representa a los radioaficionados ante los foros internacionales y publica el plan de bandas de la Región 2 (Américas). <Cite>Banco I.46</Cite></Def>
+          <Def term="CITEL">Comisión Interamericana de Telecomunicaciones (OEA). En su marco funciona el permiso internacional IARP.</Def>
+          <Def term="CEPT">Conferencia Europea de Administraciones de Correos y Telecomunicaciones. Emite la licencia CEPT, válida en sus países miembros.</Def>
+          <Def term="ENACOM">Ente Nacional de Comunicaciones: Autoridad de Aplicación del Reglamento General de Radioaficionados. <Cite>Banco I.3</Cite></Def>
+          <Def term="CABFRA">Cuadro de Atribución de Bandas de Frecuencias de la República Argentina. El Plan de Bandas de radioaficionados se ajusta a él.</Def>
+        </Defs>
+        <Key>
           <ul>
-            <li>Categorías: <strong>Novicio, General, Superior y Especial</strong> (art. 4.1).</li>
-            <li>Novicio: desde los 9 años, argentino o extranjero con residencia permanente (art. 4.4.1–4.4.2).</li>
-            <li>Examen escrito de <strong>Técnica, Reglamentación y Ética Operativa</strong>, más <strong>Telegrafía</strong> (conocimientos generales de Morse), y Prácticas Operativas (art. 4.4.3).</li>
-            <li>Se rinde y se tramita en un <strong>Radio Club o Institución Autorizada</strong>, no online (art. 4.2).</li>
-            <li>Potencia máxima: Novicio 200 W, General 1000 W, Superior 1500 W, con límites por banda en el plan de bandas (art. 4.11).</li>
-            <li>Desde la Res. 1186/2024 la licencia <strong>no vence</strong>; el certificado de antecedentes penales se sigue presentando cada 5 años (arts. 1.5.5 y 4.3).</li>
+            <li>Norma de base: Reglamento General de Radioaficionados, Res. ENACOM 3635/2017, modificado por la Res. 1186/2024.</li>
+            <li>Alcance: Servicio de Aficionados y Servicio de Aficionados por Satélite. <Cite>Banco I.2</Cite></li>
+            <li>Radioescucha: persona autorizada sólo a recibir; no transmite. El certificado lo otorgan los Radio Clubes. <Cite>Banco V.1, III.5</Cite></li>
           </ul>
-        </Prose>
+        </Key>
       </Section>
 
-      <Section id="senales" kicker="D.2" title="Señales distintivas">
-        <Prose>
-          <p>Tu indicativo es un prefijo del país más un número, y un sufijo cuya primera letra indica dónde está tu estación (art. 8.1–8.2). Los sufijos de dos letras se reservan a Superior y Especial (art. 8.3), así que un Novicio recibe tres. Ejemplo de forma: <strong>LU1DXX</strong> → «D» = provincia de Buenos Aires.</p>
-          <p>Te identificás <strong>al empezar y cada 10 minutos</strong> (art. 1.5.8).</p>
-        </Prose>
-        <div className={styles.readouts} style={{ maxWidth: 'var(--layout-reading)' }}>
-          {DISTRICTS.map(([name, letters]) => (
-            <div key={name} className={styles.readout} style={{ background: 'var(--hios-bg-secondary)', borderColor: 'var(--hios-border)' }}>
-              <span style={{ color: 'var(--hios-text-muted)' }}>{name}</span>
-              <strong style={{ color: 'var(--hios-text)' }}>{letters}</strong>
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      <Section id="bandas" kicker="D.3" title="Bandas y frecuencias">
-        <Callout>
-          <p><strong>Pendiente de verificar.</strong> Los segmentos y potencias que puede usar cada categoría están en el Anexo A (Plan de Bandas) de ENACOM, que todavía no contrastamos con el texto oficial. El mapa muestra los límites UIT Región 2 y, marcado «a verificar», el resumen de AMSAT Argentina.</p>
-        </Callout>
-        <Widget name="bands" />
-      </Section>
-
-      <Section id="lenguaje" kicker="D.4" title="Fonético, código Q y RST">
-        <Prose>
-          <p>El <strong>alfabeto fonético ITU</strong> (Alfa, Bravo, Charlie…) evita confusiones al deletrear. El <strong>código Q</strong> son abreviaturas de tres letras que empiezan con Q; con signo de pregunta son pregunta, sin él son afirmación. El reporte <strong>RST</strong> es Legibilidad (1–5), Señal (1–9) y Tono (1–9, sólo en CW): «59» en fonía, «599» en CW.</p>
-        </Prose>
-        <Widget name="cards" />
-      </Section>
-
-      <Section id="repetidoras" kicker="D.5" title="Repetidoras y emergencias">
-        <Prose>
+      <Section id="licencia" kicker="D.2" title="Licencia, categorías y examen">
+        <Table
+          head={['Categoría', 'Requisito', 'Potencia máx.']}
+          rows={[
+            ['Novicio', 'Desde 9 años; aprobar examen', '200 W'],
+            ['General', 'Desde 13 años; 3 años como Novicio; Morse recepción 5 ppm', '1000 W'],
+            ['Superior', '3 años como General; Morse 10 ppm recepción y transmisión', '1500 W'],
+            ['Especial', 'Superior con 20 años de actividad ininterrumpida', '—'],
+          ]}
+          cite="Reglamento arts. 4.1, 4.4 y 4.11 · Banco IV.1, IV.3–IV.6, IV.8"
+        />
+        <Key>
           <ul>
-            <li>Una <strong>repetidora</strong> escucha en una frecuencia y retransmite en otra, desde un lugar alto. La diferencia es el <strong>offset</strong> (en 2 m suele ser 600 kHz; en 70 cm, 5 MHz).</li>
-            <li>Muchas sólo se abren con un <strong>subtono CTCSS</strong> (un tono subaudible). No es privacidad: cualquiera escucha.</li>
-            <li>Toda repetidora necesita autorización (art. 10.1). Está prohibido operar en simplex en la frecuencia de entrada de una repetidora y a ±15 kHz de ella (art. 10.18).</li>
-            <li>Cortesía: dejá un par de segundos entre cambios para que alguien con urgencia pueda entrar.</li>
-            <li>Los enlaces por internet (VoIP) entre estaciones y repetidoras están permitidos (art. 10.17).</li>
-            <li>Emergencias: las redes de emergencia funcionan en las frecuencias y plazos que fije la autoridad (art. 1.5.12) y las estaciones dan prioridad a colaborar cuando se lo piden (art. 1.5.13).</li>
+            <li>Cursos y exámenes: Radio Clubes e Instituciones Autorizadas. Las Instituciones Reconocidas dan cursos y prácticas, pero no toman examen. <Cite>Banco XII.1, III.14, III.15</Cite></li>
+            <li>Se puede rendir libre, sin hacer el curso. El examen es escrito (oral sólo para quien no puede escribir). <Cite>Banco XII.2, XII.3</Cite></li>
+            <li>Para Novicio la telegrafía es teórica. En el examen de Morse: 5 caracteres = 1 palabra; letra = 1 carácter; número o signo = 2. <Cite>Banco XII.19–XII.22</Cite></li>
+            <li>El certificado de aprobación vale 6 meses para presentarlo y no habilita a transmitir: hay que esperar la licencia. <Cite>Banco XII.17, XII.18</Cite></li>
+            <li>Desde la Res. 1186/2024 la licencia no vence; el certificado de antecedentes penales se presenta cada 5 años. El banco 2018 todavía dice «5 años». <Cite>Reglamento arts. 1.5.5 y 4.3</Cite></li>
           </ul>
-        </Prose>
-        <Callout tone="info"><p>Sin cifrado: en radioaficionados todo se transmite en claro. Los bancos de estudio listan «transmitir textos encriptados» como infracción (Cap. XIII); lo confirmamos contra el texto oficial junto con el plan de bandas.</p></Callout>
+        </Key>
       </Section>
 
-      <Section id="banco" kicker="Examen" title="Preguntas del examen: reglamentación">
-        <BankList pool="D" />
-      </Section>
-
-      <Section id="fuentes" kicker="D.6" title="Archivos oficiales para bajar">
-        <Prose>
-          <p>ENACOM publica el material del examen junto a la Res. 508/2018. Bajalos y guardalos: son la referencia final ante cualquier duda.</p>
+      <Section id="senales" kicker="D.3" title="Señales distintivas e identificación">
+        <Defs>
+          <Def term="Prefijo">Identifica al país. Argentina: LU y LW. <Cite>Banco VIII.1, VIII.2</Cite></Def>
+          <Def term="Número">Dígito entre prefijo y sufijo.</Def>
+          <Def term="Sufijo">Su primera letra (o letras) indica la provincia: la del domicilio de la estación fija, o la del DNI si sólo hay móviles. Sufijo de 2 letras: sólo Superior y Especial. <Cite>Banco VIII.3–VIII.6</Cite></Def>
+        </Defs>
+        <Table head={['Distrito', 'Letra del sufijo']} rows={DISTRICTS} cite="Reglamento art. 8.2" />
+        <Key>
           <ul>
-            {OFFICIAL_FILES.map((f) => <li key={f.url}><a href={f.url} target="_blank" rel="noreferrer">{f.name}</a></li>)}
-            <li><a href="https://www.enacom.gob.ar/radioaficionados_p127" target="_blank" rel="noreferrer">Página de Radioaficionados de ENACOM</a> (reglamento, normativa y lista de radio clubes)</li>
-            <li><a href="https://www.lu1ma.org.ar/index.php/biblioteca/" target="_blank" rel="noreferrer">Biblioteca del Cuyo Radio Club (LU1MA)</a>: bancos de preguntas técnicas por categoría y apuntes del curso</li>
+            <li>Transmitir la señal distintiva al empezar y cada 10 minutos. <Cite>Art. 1.5.8 · Banco I.41</Cite></li>
+            <li>Estación móvil: señal distintiva + ubicación geográfica + condición de móvil. <Cite>Banco IX.9</Cite></li>
+            <li>Estación de otro titular: señal del titular, luego la propia, y opera en las bandas de su propia categoría. <Cite>Banco IX.3, IX.4</Cite></li>
+            <li>Estación del Radio Club: señal del Club y la propia. Aspirante en práctica: señal del Club aclarando «en Práctica Operativa». <Cite>Banco III.2, III.4</Cite></li>
           </ul>
-        </Prose>
+        </Key>
+      </Section>
+
+      <Section id="estaciones" kicker="D.4" title="Estaciones, repetidoras y radiobalizas">
+        <Defs>
+          <Def term="Estación repetidora">Estación fija que retransmite automáticamente las comunicaciones. Necesita autorización de ENACOM. <Cite>Banco I.17, X.1</Cite></Def>
+          <Def term="Radiobaliza (radiofaro)">Transmisor que emite en forma continua para evaluar condiciones de propagación. No requiere categoría; una sola por emplazamiento; se notifica 15 días antes. <Cite>Banco I.27, XI.1–XI.3</Cite></Def>
+        </Defs>
+        <Table
+          head={['Repetidora: plazo', 'Valor']}
+          rows={[
+            ['Poner en marcha tras la autorización', '90 días'],
+            ['Informar el inicio de operación', '15 días corridos'],
+            ['Máximo fuera de servicio', '60 días'],
+            ['Dar de baja tras el cese', '15 días corridos (y desmantelar)'],
+          ]}
+          cite="Banco X.4, X.5, X.8, X.10, X.11"
+        />
+        <Key>
+          <ul>
+            <li>La repetidora se identifica con la señal del titular y la localidad. Subtono de acceso: permitido si ENACOM aprueba el código y es público. <Cite>Banco X.6, X.7</Cite></li>
+            <li>Prohibido operar en simplex en la entrada de una repetidora y a ±15 kHz de ella. Enlaces por internet permitidos. <Cite>Arts. 10.17 y 10.18</Cite></li>
+            <li>Todas las estaciones fijas se declaran. Traslado de más de 120 días: cambio de domicilio. Torre de antenas: trámite ante ANAC. <Cite>Banco IX.6–IX.8</Cite></li>
+            <li>Conexión a la línea telefónica: sólo en emergencias. Redes de emergencia: en las frecuencias y plazos que fije la autoridad. <Cite>Banco I.37, I.42</Cite></li>
+          </ul>
+        </Key>
       </Section>
     </>
   );

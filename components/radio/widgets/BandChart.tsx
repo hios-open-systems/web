@@ -18,8 +18,8 @@ export function BandChart() {
   const [filter, setFilter] = useState<Filter>('all');
   const visible = (b: Band) => filter === 'all' || b.novicio !== 'no';
   return (
-    <Instrument badge="BANDAS" title="Mapa de bandas de radioaficionado" hint="Escala logarítmica de 100 kHz a 2 GHz. Tocá una banda. Límites: atribución UIT Región 2. Lo que puede usar cada categoría en Argentina está pendiente de verificar contra el Anexo A de ENACOM.">
-      <Chips label="Filtro" value={filter} onChange={setFilter} options={[{ value: 'all', label: 'Todas' }, { value: 'novicio', label: 'Novicio (a verificar)' }]} />
+    <Instrument badge="BANDAS" title="Mapa de bandas de radioaficionado" hint="Escala logarítmica de 100 kHz a 2 GHz. Tocá una banda. Límites y acceso de Novicio: Plan de Bandas oficial de ENACOM (Anexo A, Res. 508/2018).">
+      <Chips label="Filtro" value={filter} onChange={setFilter} options={[{ value: 'all', label: 'Todas' }, { value: 'novicio', label: 'Novicio' }]} />
       <Screen>
         <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Espectro con bandas de radioaficionado">
           {(['LF', 'MF', 'HF', 'VHF', 'UHF'] as const).map((r, i) => {
@@ -56,7 +56,7 @@ export function BandChart() {
         { label: 'λ al centro', value: meters(wavelength(((picked.startMHz + picked.endMHz) / 2) * 1e6)) },
         { label: 'Propagación', value: picked.propagation },
         { label: 'Usos típicos', value: picked.uses },
-        { label: 'Novicio (AMSAT, a verificar)', value: `${ACCESS[picked.novicio]}${picked.note ? ` · ${picked.note}` : ''}`, tone: picked.novicio === 'si' ? 'good' : picked.novicio === 'parcial' ? 'warn' : 'bad' },
+        { label: 'Novicio (Anexo A)', value: `${ACCESS[picked.novicio]}${picked.note ? ` · ${picked.note}` : ''}`, tone: picked.novicio === 'si' ? 'good' : picked.novicio === 'parcial' ? 'warn' : 'bad' },
       ]} />
     </Instrument>
   );

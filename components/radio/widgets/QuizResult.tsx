@@ -1,4 +1,4 @@
-import type { ExamQuestion } from '@/lib/radio/exam';
+import { answerText, type ExamQuestion } from '@/lib/radio/exam';
 import styles from '../radio.module.css';
 
 const GOAL = 0.9;
@@ -23,7 +23,7 @@ export function QuizResult({ score, total, misses, onRestart }: {
             {misses.map((m) => (
               <li key={m.key}>
                 <span style={{ color: '#94a3b8', fontSize: '0.8rem' }}>{m.source}</span><br />
-                {m.q} <strong style={{ color: '#4ade80' }}>→ {m.answer}</strong>
+                {m.q} <strong style={{ color: '#4ade80' }}>→ {answerText(m)}</strong>
                 {m.warn ? <><br /><span style={{ color: '#facc15', fontSize: '0.85rem' }}>⚠ {m.warn}</span></> : null}
               </li>
             ))}

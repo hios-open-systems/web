@@ -2,7 +2,7 @@ import { Section, Prose, Callout } from '../ui/Prose';
 import { Widget } from '../widgets/Widget';
 import { MOCK_LAYOUT } from '@/lib/radio/exam';
 import { BANK_TECNICA_SOURCE } from '@/lib/radio/bankTecnica';
-import { BANK_REGLAMENTO_SOURCE } from '@/lib/radio/bankReglamento';
+import { OFFICIAL_BANK_SOURCE, OFFICIAL_PROGRAM_SOURCE } from '@/lib/radio/sources';
 
 export function ChapterPractice() {
   return (
@@ -14,7 +14,7 @@ export function ChapterPractice() {
             <li>Para Novicio: examen escrito de <strong>Técnica</strong> y de <strong>Reglamentación y Ética Operativa</strong>, conocimientos generales de <strong>Telegrafía</strong> y Prácticas Operativas (art. 4.4.3).</li>
             <li>Las preguntas salen de los bancos que ENACOM publicó con la Res. 508/2018. Cada club arma su examen de ahí, así que el formato exacto (cantidad, tiempo, aprobación) lo confirmás con tu club.</li>
           </ul>
-          <p>Practicamos con el <a href={BANK_TECNICA_SOURCE.url} target="_blank" rel="noreferrer">banco técnico de Novicio</a> (150 preguntas con clave) y con el <a href={BANK_REGLAMENTO_SOURCE.url} target="_blank" rel="noreferrer">banco de reglamentación</a> (sólo las preguntas cuya respuesta verificamos contra el Reglamento). Las preguntas están parafraseadas y cada una cita su número en el banco.</p>
+          <p>La Res. ENACOM 508/2018 aprobó un banco oficial sólo de Reglamentación y Ética Operativa. Para la parte técnica, el <a href={OFFICIAL_PROGRAM_SOURCE.url} target="_blank" rel="noreferrer">Programa Básico de Estudios</a> fija los temas y cada club arma sus preguntas técnicas. Para técnica usamos el <a href={BANK_TECNICA_SOURCE.url} target="_blank" rel="noreferrer">banco de Novicio del Cuyo Radio Club</a> (150 preguntas, parafraseadas con su número). Para reglamentación usamos el <a href={OFFICIAL_BANK_SOURCE.url} target="_blank" rel="noreferrer">banco oficial de ENACOM</a> completo para Novicio, con su texto y sus respuestas oficiales.</p>
         </Prose>
         <Callout tone="info"><p>El simulacro de acá usa {MOCK_LAYOUT.tecnica} preguntas técnicas, {MOCK_LAYOUT.reglamento} de reglamentación y {MOCK_LAYOUT.minutes} minutos. Es un formato de práctica, no el oficial.</p></Callout>
       </Section>
