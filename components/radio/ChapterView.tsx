@@ -1,33 +1,14 @@
 import Link from 'next/link';
-import type { ComponentType } from 'react';
 import { PageIntro } from '@/components/ui/PageIntro';
 import { chapterNeighbors, type Chapter } from '@/lib/radio/chapters';
-import { ChapterA } from './chapters/ChapterA';
-import { ChapterA2 } from './chapters/ChapterA2';
-import { ChapterB } from './chapters/ChapterB';
-import { ChapterB2 } from './chapters/ChapterB2';
-import { ChapterC } from './chapters/ChapterC';
-import { ChapterC2 } from './chapters/ChapterC2';
-import { ChapterD } from './chapters/ChapterD';
-import { ChapterD2 } from './chapters/ChapterD2';
-import { ChapterMorse } from './chapters/ChapterMorse';
-import { ChapterPractice } from './chapters/ChapterPractice';
+import { CHAPTER_BODIES } from './chapterBodies';
 import { SpanishOnlyNotice } from './SpanishOnlyNotice';
 import styles from './radio.module.css';
-
-const BODIES: Record<string, ComponentType[]> = {
-  'a-electricidad': [ChapterA, ChapterA2],
-  'b-modulacion-equipos': [ChapterB, ChapterB2],
-  'c-antenas-propagacion': [ChapterC, ChapterC2],
-  'd-reglamento': [ChapterD, ChapterD2],
-  morse: [ChapterMorse],
-  practica: [ChapterPractice],
-};
 
 export function ChapterView({ chapter, locale }: { chapter: Chapter; locale: string }) {
   const { prev, next } = chapterNeighbors(chapter.slug);
   const base = `/${locale}/radio`;
-  const parts = BODIES[chapter.slug] ?? [];
+  const parts = CHAPTER_BODIES[chapter.slug] ?? [];
   return (
     <main className={styles.page} lang="es">
       <PageIntro

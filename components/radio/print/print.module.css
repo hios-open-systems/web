@@ -1,0 +1,91 @@
+/* Guía imprimible: A4, tinta oscura sobre blanco, sin tarjetas ni sombras. Los colores no dependen del tema. */
+.doc {
+  --hios-text: #111;
+  --hios-text-secondary: #333;
+  --hios-text-muted: #666;
+  --hios-border: #cfcfcf;
+  --hios-bg-secondary: #f4f6f8;
+  --hios-bg-elevated: #fff;
+  --accent: #c2410c;
+  --accent-2: #0369a1;
+  --accent-2-text: #0369a1;
+  --layout-reading: 100%;
+  max-width: 182mm;
+  margin: 0 auto;
+  padding: 24px 16px;
+  background: #fff;
+  color: #111;
+  font-size: 10pt;
+  line-height: 1.45;
+}
+.doc h1, .doc h2, .doc h3 { break-after: avoid; color: #111; }
+.doc h2 { font-size: 13pt; margin: 14pt 0 6pt; }
+.doc p { margin: 0 0 6pt; }
+.doc a { color: inherit; text-decoration: none; }
+
+/* Portada, contenido y partes. */
+.cover { min-height: 250mm; display: flex; flex-direction: column; justify-content: center; gap: 10pt; break-after: page; border-left: 4pt solid var(--accent-2); padding-left: 14mm; }
+.cover h1 { font-size: 28pt; line-height: 1.1; margin: 0; }
+.coverKicker { font-family: var(--font-stack-mono); font-size: 9pt; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-2); }
+.coverLead { font-size: 13pt; max-width: 140mm; }
+.coverMeta { font-size: 9.5pt; color: #444; max-width: 140mm; }
+.coverFoot { margin-top: 30mm !important; font-family: var(--font-stack-mono); font-size: 9pt; color: #666; }
+.page { break-before: page; }
+.partTitle { font-size: 20pt; margin: 0 0 12pt; padding-bottom: 6pt; border-bottom: 1.5pt solid #111; }
+.lead { color: #333; }
+.steps { padding-left: 16pt; display: grid; gap: 4pt; }
+.contents { list-style: none; padding: 0; display: grid; gap: 8pt; }
+.contents ol { margin: 3pt 0 0; padding-left: 16pt; columns: 2; column-gap: 8mm; font-size: 9.5pt; color: #333; }
+
+/* Bloques A–D: cada uno arranca en página nueva. */
+.block { break-before: page; }
+.blockHead { border-bottom: 1.5pt solid #111; padding-bottom: 8pt; margin-bottom: 4pt; }
+.blockHead h1 { font-size: 22pt; margin: 2pt 0 4pt; }
+.blockHead p { color: #333; margin: 0; }
+.blockCode { font-family: var(--font-stack-mono); font-size: 9pt; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-2); }
+
+/* Secciones del contenido (componentes compartidos con la web). */
+.doc [class*='radio_section__'] { display: block; margin-top: 18pt; padding-top: 10pt; border-top: 0.5pt solid #bbb; }
+.doc [class*='radio_section__'] > h2, .doc [class*='radio_kicker__'] { break-after: avoid; }
+.doc [class*='radio_section__'] > h2 + * { break-before: avoid; }
+.doc [class*='radio_section__'] > * + * { margin-top: 7pt; }
+.doc [class*='radio_section__'] > h2 { font-size: 14pt; margin: 0; }
+.doc [class*='radio_kicker__'] { display: block; font-size: 8pt; }
+.doc [class*='teach_sim__'] { display: none; }
+
+.doc [class*='teach_defs__'] { display: block; border-top: 0.5pt solid var(--hios-border); }
+.doc [class*='teach_def__'] { display: grid; grid-template-columns: 44mm 1fr; gap: 0 4mm; border: 0; border-bottom: 0.5pt solid var(--hios-border); padding: 3pt 0; break-inside: avoid; }
+.doc [class*='teach_def__'] dd { margin: 0; color: #222; line-height: 1.4; }
+
+.doc [class*='teach_eq__'] { border-radius: 0; border: 0.5pt solid var(--hios-border); padding: 6pt 9pt; break-inside: avoid; }
+.doc [class*='teach_eq__'] > code { font-size: 11pt; }
+.doc [class*='teach_eq__'] ul { font-size: 9pt; margin-top: 4pt; padding-top: 4pt; gap: 1pt; }
+.doc [class*='teach_example__'] { border: 0; border-left: 2pt solid var(--accent-2); border-radius: 0; background: #f2f7fb; padding: 6pt 9pt; break-inside: avoid; }
+.doc [class*='teach_example__'] code { font-size: 9.5pt; }
+.doc [class*='teach_key__'], .doc [class*='radio_callout__'] { border-radius: 0; background: #fff6ec; padding: 6pt 9pt; break-inside: avoid; }
+.doc [class*='radio_callout__'][data-tone='info'] { background: #f2f7fb; }
+.doc [class*='teach_fig__'] { break-inside: avoid; max-width: 120mm; margin: 0 auto; }
+.doc [class*='teach_fig__'] svg { max-height: 62mm; }
+.doc [class*='teach_fig__'] figcaption { font-size: 8.5pt; text-align: center; }
+.doc [class*='teach_table__'] table { font-size: 9pt; }
+.doc [class*='teach_table__'] th, .doc [class*='teach_table__'] td { padding: 3pt 6pt; }
+.doc tr { break-inside: avoid; }
+.doc [class*='radio_prose__'] { font-size: 10pt; line-height: 1.45; }
+
+/* Plan de bandas. */
+.doc [class*='teach_plan__'] { display: block; }
+.doc [class*='teach_planBand__'] { border-radius: 0; background: none; border: 0.5pt solid var(--hios-border); margin-bottom: 6pt; }
+.doc [class*='teach_planBand__'] > :first-child { display: flex; flex-wrap: wrap; gap: 4pt 10pt; padding: 4pt 8pt; min-height: 0; background: var(--hios-bg-secondary); font-weight: 600; break-after: avoid; }
+.doc [class*='teach_planScroll__'] { padding: 0 8pt 4pt; overflow: visible; }
+.doc [class*='teach_planScroll__'] table { font-size: 8.5pt; }
+.doc [class*='teach_planScroll__'] th, .doc [class*='teach_planScroll__'] td { padding: 2pt 4pt; }
+.doc [class*='teach_planNotes__'] { font-size: 8pt; padding: 0 8pt 6pt 22pt; }
+
+/* Preguntas del banco: dos columnas compactas. */
+.doc [class*='radio_bank__'] { border: 0; border-radius: 0; background: none; padding: 0; }
+.doc [class*='radio_bank__'] > :first-child { font-weight: 700; display: flex; gap: 6pt; align-items: center; min-height: 0; }
+.doc [class*='radio_bankNote__'] { font-size: 8.5pt; }
+.doc [class*='radio_bankList__'] { display: block; columns: 2; column-gap: 7mm; font-size: 8.5pt; line-height: 1.35; }
+.doc [class*='radio_bankList__'] li { display: block; break-inside: avoid; border: 0; border-radius: 0; background: none; padding: 0 0 4pt; margin-bottom: 4pt; border-bottom: 0.5pt solid #e2e2e2; }
+.doc [class*='radio_bankList__'] li > * { display: block; }
+.doc [class*='radio_bankSource__'] { font-size: 7pt; }
