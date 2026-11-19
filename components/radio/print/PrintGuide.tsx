@@ -2,6 +2,7 @@ import { CHAPTERS, type Chapter } from '@/lib/radio/chapters';
 import { CHAPTER_BODIES } from '../chapterBodies';
 import { LicenseSteps, SOURCES_TEXT } from '../LicenseSteps';
 import { ProgramMap } from '../ProgramMap';
+import { MorseTable } from '../MorseTable';
 import s from './print.module.css';
 
 const BLOCKS = CHAPTERS.filter((c) => /^[A-D]$/.test(c.code));
@@ -25,6 +26,11 @@ export function PrintGuide() {
         </ul>
       </section>
       {BLOCKS.map((c) => <Block key={c.slug} chapter={c} />)}
+      <section className={s.page}>
+        <h1 className={s.partTitle}>Anexo: Alfabeto Morse</h1>
+        <p className={s.lead}>Código Morse internacional (ITU-R M.1677) con el alfabeto fonético. La raya dura tres puntos.</p>
+        <MorseTable />
+      </section>
       <section className={s.page}>
         <h1 className={s.partTitle}>Anexo: Programa oficial de ENACOM</h1>
         <p className={s.lead}>Cada punto del Programa Básico de Estudios y la sección de esta guía que lo explica.</p>
@@ -60,6 +66,7 @@ function Contents() {
             <ol>{c.sections.map((x) => <li key={x.id}>{x.title}</li>)}</ol>
           </li>
         ))}
+        <li><strong>Anexo: Alfabeto Morse</strong></li>
         <li><strong>Anexo: Programa oficial de ENACOM</strong></li>
       </ol>
     </nav>

@@ -1,5 +1,6 @@
 import { Section, Prose } from '../ui/Prose';
 import { Widget } from '../widgets/Widget';
+import { MorseTable } from '../MorseTable';
 
 export function ChapterMorse() {
   return (
@@ -14,10 +15,14 @@ export function ChapterMorse() {
           <p>Truco para aprender: no cuentes puntos y rayas. Cada letra es un <strong>sonido</strong> («di-dah» = A). Por eso el entrenador usa velocidad real desde el día uno y espacios largos entre letras (método Farnsworth) para darte tiempo a pensar.</p>
         </Prose>
       </Section>
-      <Section id="traductor" kicker="CW.2" title="Traductor texto ↔ Morse">
+      <Section id="alfabeto" kicker="CW.2" title="Alfabeto Morse">
+        <Prose><p>Código Morse internacional (ITU-R M.1677). Cada letra lleva su palabra del alfabeto fonético. La raya dura tres puntos.</p></Prose>
+        <MorseTable />
+      </Section>
+      <Section id="traductor" kicker="CW.3" title="Traductor texto ↔ Morse">
         <Widget name="morse" />
       </Section>
-      <Section id="entrenador" kicker="CW.3" title="Entrenador Koch">
+      <Section id="entrenador" kicker="CW.4" title="Entrenador Koch">
         <Widget name="koch" />
       </Section>
     </>

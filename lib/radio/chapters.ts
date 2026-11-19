@@ -74,6 +74,7 @@ export const CHAPTERS: readonly Chapter[] = [
     summary: 'Traductor con audio y entrenador por el método Koch.',
     sections: [
       { id: 'por-que', title: 'Por qué Morse todavía importa' },
+      { id: 'alfabeto', title: 'Alfabeto Morse' },
       { id: 'traductor', title: 'Traductor texto ↔ Morse' },
       { id: 'entrenador', title: 'Entrenador Koch' },
     ],

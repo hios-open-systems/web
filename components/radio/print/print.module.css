@@ -89,3 +89,9 @@
 .doc [class*='radio_bankList__'] li { display: block; break-inside: avoid; border: 0; border-radius: 0; background: none; padding: 0 0 4pt; margin-bottom: 4pt; border-bottom: 0.5pt solid #e2e2e2; }
 .doc [class*='radio_bankList__'] li > * { display: block; }
 .doc [class*='radio_bankSource__'] { font-size: 7pt; }
+
+/* Tabla Morse. */
+.doc [class*='teach_mgrid__'] { grid-template-columns: repeat(6, 1fr); gap: 4pt; }
+.doc [class*='teach_mcell__'] { padding: 4pt 6pt; border-radius: 3pt; background: #fff; border-color: #ccc; gap: 1pt 6pt; }
+.doc [class*='teach_mcell__'] strong { font-size: 14pt; }
+.doc [class*='teach_morse__'] h3 { font-size: 11pt; margin: 10pt 0 5pt; }

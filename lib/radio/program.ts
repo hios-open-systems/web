@@ -29,7 +29,7 @@ export const PROGRAM: readonly ProgramGroup[] = [
     { code: '3.c', title: 'Mediciones: instrumentos; tensión, corriente, potencia, ROE, intensidad de campo, espurias', where: [[`${B}#instrumentos`, 'B.5']] },
     { code: '3.d', title: 'Seguridad: tierra, pararrayos, cuerpo humano, alto voltaje', where: [[`${C}#seguridad`, 'C.8']] },
     { code: '3.e', title: 'Compatibilidad electromagnética e interferencias', where: [[`${C}#interferencias`, 'C.9']] },
-    { code: '3.f', title: 'Alfabeto fonético, código Q, señales de emergencia', where: [[`${D}#lenguaje`, 'D.7']] },
+    { code: '3.f', title: 'Alfabeto fonético, código Q, señales de emergencia', where: [[`${D}#lenguaje`, 'D.7'], ['morse#alfabeto', 'CW.2']] },
   ] },
   { code: '4', title: 'Prácticas operativas', items: [
     { code: '4', title: 'Contactos, operación en bandas, estaciones, repetidoras, radiobalizas, emergencias', where: [] },
