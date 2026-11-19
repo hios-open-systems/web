@@ -1,6 +1,6 @@
 import { Section, Prose } from '../ui/Prose';
 import { Widget } from '../widgets/Widget';
-import { MorseTable } from '../MorseTable';
+import { MorseKeypad } from '../MorseKeypad';
 
 export function ChapterMorse() {
   return (
@@ -16,8 +16,8 @@ export function ChapterMorse() {
         </Prose>
       </Section>
       <Section id="alfabeto" kicker="CW.2" title="Alfabeto Morse">
-        <Prose><p>Código Morse internacional (ITU-R M.1677). Cada letra lleva su palabra del alfabeto fonético. La raya dura tres puntos.</p></Prose>
-        <MorseTable />
+        <Prose><p>Código Morse internacional (ITU-R M.1677). Cada letra lleva su palabra del alfabeto fonético. La raya dura tres puntos. Tocá una letra para escucharla y armar un mensaje.</p></Prose>
+        <MorseKeypad />
       </Section>
       <Section id="traductor" kicker="CW.3" title="Traductor texto ↔ Morse">
         <Widget name="morse" />

@@ -78,3 +78,27 @@
 .mgroup { display: inline-flex; align-items: center; gap: 3px; }
 .mcell[data-wide] { grid-column: span 2; }
 .mnote { grid-area: note; font-size: 0.78rem; color: var(--hios-text-secondary); }
+
+/* Tabla Morse interactiva. */
+button.mcell { font: inherit; color: inherit; text-align: left; cursor: pointer; transition: border-color 0.15s, background 0.15s; }
+button.mcell:hover { border-color: var(--accent-2); }
+button.mcell:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; }
+.mcell[data-active] { border-color: var(--accent-2); background: color-mix(in srgb, var(--accent-2) 18%, var(--hios-bg-secondary)); }
+.keypad { display: grid; gap: 12px; }
+.composer { position: sticky; top: calc(var(--layout-header-height, 64px) + 8px); z-index: 2; display: grid; gap: 8px; padding: 12px 14px; border: 1px solid var(--hios-border); border-radius: 12px; background: var(--hios-bg-elevated, var(--hios-bg)); box-shadow: 0 6px 20px rgb(0 0 0 / 0.18); }
+.composerText { font-family: var(--font-stack-mono); font-size: 1.3rem; min-height: 1.6em; word-break: break-all; }
+.composerText span { font-family: inherit; font-size: 0.95rem; color: var(--hios-text-muted); }
+.composerCode { display: flex; flex-wrap: wrap; gap: 4px 12px; font-family: var(--font-stack-mono); color: var(--accent-2-text); min-height: 1.2em; }
+.composerCode span[data-on] { color: var(--accent); font-weight: 700; }
+.composerBar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.composerBar button { min-height: 36px; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--hios-border); background: var(--hios-bg-secondary); color: var(--hios-text); font: inherit; font-size: 0.85rem; cursor: pointer; }
+.composerBar button:first-child { background: var(--accent-2); border-color: var(--accent-2); color: #fff; }
+.composerBar button:disabled { opacity: 0.45; cursor: default; }
+.composerBar label { display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--hios-text-secondary); margin-left: auto; }
+@media (max-width: 640px) {
+  .composer { padding: 8px 10px; gap: 4px; }
+  .composerText { font-size: 1.1rem; }
+  .composerCode { font-size: 0.8rem; }
+  .composerBar { gap: 4px; }
+  .composerBar button { min-height: 34px; padding: 2px 10px; font-size: 0.8rem; }
+}
