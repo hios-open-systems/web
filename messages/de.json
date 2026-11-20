@@ -1962,6 +1962,7 @@
             "missingKey": "Gib einen Schlüssel für den HMAC ein."
         },
         "ohmsLaw": {
+            "learnCircuits": "Stromkreise Schritt für Schritt lernen: Reihen- und Parallelschaltungen und ein interaktives Labor.",
             "badge": "Elektronik",
             "title": "Ohmsches Gesetz",
             "subtitle": "Berechne Spannung, Strom, Widerstand und Leistung aus zwei bekannten Werten.",
@@ -2497,6 +2498,10 @@
             "resistor-color-code": {
                 "title": "Widerstandsfarbcode",
                 "description": "Wandle Farbringe in Widerstandswerte um oder berechne die Farben für einen bestimmten Wert."
+            },
+            "radio-basics": {
+                "title": "Elektrotechnik für den Amateurfunk",
+                "description": "Spannung, Stromstärke, Widerstand und Leistung verstehen. Reihen- und Parallelschaltungen mit Rechenbeispielen, interaktivem Labor und erklärten Übungen lernen."
             },
             "ohms-law": {
                 "title": "Ohmsches Gesetz",
@@ -4766,5 +4771,206 @@
         "draft": "Lokaler Entwurf: ändert das Repository nicht. Änderungen vor dem Schließen oder Trennen herunterladen. Externe Bilder und Links sind deaktiviert.",
         "image": "Bild ausgelassen",
         "select": "Datei zum Lesen oder Bearbeiten einer Kopie auswählen."
+    },
+    "RadioBasics": {
+        "badge": "Amateurfunk · Abschnitt 01",
+        "introTitle": "Eine Schaltung verstehen, bevor du Formeln auswendig lernst",
+        "intro": "Warum verhalten sich zwei Widerstände anders, wenn du die Leitungen anders verbindest? In diesem Abschnitt verfolgst du Ladung und Energie, berechnest eine Schaltung und überprüfst deine Vorhersagen im Labor.",
+        "scope": "Wir arbeiten mit Gleichstrom (DC), einer idealen Spannungsquelle und ohmschen Widerständen bei konstanter Temperatur. Die Quelle hält ihre Spannung konstant, die Leitungen haben keinen Widerstand und eine Erwärmung wird im Modell nicht berücksichtigt. Reale Geräte haben Grenzen; diese unterscheiden wir von unserem Modell.",
+        "navLabel": "Inhalt dieses Abschnitts",
+        "nav": {
+            "concepts": "Die Größen",
+            "ohm": "Ohmsches Gesetz",
+            "connections": "Reihe und parallel",
+            "laboratory": "Labor",
+            "power": "Leistung und Messung",
+            "practice": "Teste dein Wissen"
+        },
+        "concepts": {
+            "title": "Vier Größen, vier unterschiedliche Fragen",
+            "intro": "Eine Schaltung braucht eine Quelle, einen geschlossenen leitenden Pfad und einen Verbraucher, etwa einen Widerstand. In einem Metalldraht sind bereits bewegliche Elektronen vorhanden: Die Batterie muss ihn nicht erst mit Elektronen füllen. Die elektrische Ladung wird in Coulomb (C) gemessen, die Energie in Joule (J).",
+            "voltage": {
+                "title": "Spannung · Wie viel Energie pro Ladung?",
+                "unit": "V · Volt (V)",
+                "definition": "Die Spannung ist eine Potenzialdifferenz zwischen zwei Punkten: Sie gibt die Energie pro Ladungseinheit an. Eine Differenz von 12 V bedeutet 12 J pro übertragenem Coulomb. Deshalb fragen wir immer: „Spannung zwischen welchen beiden Punkten?“",
+                "example": "Eine Batterie kann bei geöffnetem Schalter 12 V zwischen ihren Anschlüssen aufrechterhalten. Es liegt eine Spannung an, obwohl kein Strom fließt.",
+                "caution": "Spannung ist keine Größe, die „durch die Leitung fließt“. Sie wird zwischen zwei Punkten gemessen.",
+                "formula": "1 V = 1 J/C"
+            },
+            "current": {
+                "title": "Stromstärke · Wie viel Ladung fließt pro Sekunde?",
+                "unit": "I · Ampere (A)",
+                "definition": "Die Stromstärke misst die Nettoladung, die pro Zeiteinheit durch einen Leiterquerschnitt fließt. Fließt jede Sekunde 1 Coulomb hindurch, beträgt die Stromstärke 1 Ampere. Eine Stromstärke von 40 mA entspricht 0,040 A: Jede Sekunde fließen 0,040 C hindurch.",
+                "example": "Wir zeichnen die technische Stromrichtung im äußeren Stromkreis vom Pluspol zum Minuspol ein. In Metallen bewegen sich die Elektronen in die entgegengesetzte Richtung.",
+                "caution": "Die Stromstärke ist nicht die Geschwindigkeit der Elektronen. Strom wird beim Durchfließen eines Widerstands auch nicht „verbraucht“.",
+                "formula": "I = ΔQ / Δt; 1 A = 1 C/s"
+            },
+            "resistance": {
+                "title": "Widerstand · Wie stark begrenzt er den Strom?",
+                "unit": "R · Ohm (Ω)",
+                "definition": "Bei einem ohmschen Widerstand sind Spannung und Stromstärke proportional. Die Konstante, die beide verknüpft, ist sein Widerstandswert: R = V/I. Bei gleicher Spannung lässt ein größerer Widerstand weniger Strom fließen. Das Bauteil heißt Widerstand; sein Widerstandswert ist eine Eigenschaft.",
+                "example": "Bei 12 V fließen durch einen Widerstand von 100 Ω 120 mA. Durch einen mit 200 Ω fließen 60 mA. Eine Verdopplung von R halbiert I, wenn V konstant bleibt.",
+                "caution": "Der Widerstand wandelt elektrische Energie in Wärme um. Die Ladung, die hineinfließt, fließt auch wieder heraus; Ladung wird nicht verbraucht.",
+                "formula": "1 Ω = 1 V/A"
+            },
+            "power": {
+                "title": "Leistung · Wie schnell wird Energie umgewandelt?",
+                "unit": "P · Watt (W)",
+                "definition": "Leistung ist die pro Zeiteinheit übertragene Energie. Ein Widerstand mit einer Verlustleistung von 2 W wandelt jede Sekunde 2 J elektrische Energie in Wärme um. Bei konstantem Gleichstrom berechnet man sie, indem man die Spannung am Bauteil mit der Stromstärke durch das Bauteil multipliziert.",
+                "example": "Ein Gerät, das 2 A aus einer 12-V-Quelle aufnimmt, erhält 24 W elektrische Leistung. Das bedeutet nicht, dass es 24 W Hochfrequenzleistung sendet: Es hat auch Verluste und weitere Verbraucher.",
+                "caution": "W misst Leistung; J und Wh messen Energie. Liegen 24 W eine Stunde lang an, sind das 24 Wh = 86 400 J.",
+                "formula": "P = V · I; 1 W = 1 J/s"
+            }
+        },
+        "ohm": {
+            "title": "Das ohmsche Gesetz: ein Zusammenhang, den du überprüfen kannst",
+            "intro": "Für einen ohmschen Widerstand mit konstantem R gilt V = I · R. Das ist keine allgemeingültige Regel für jedes Bauteil: Eine Diode hat zum Beispiel nicht an allen Arbeitspunkten einen konstanten Widerstand.",
+            "currentLabel": "Wenn du die Stromstärke suchst",
+            "voltageLabel": "Wenn du die Spannung suchst",
+            "resistanceLabel": "Wenn du den Widerstand suchst",
+            "workedTitle": "Ein Widerstand von 100 Ω an 12 V",
+            "stepOne": "Bestimme die gegebenen Werte und ihre Einheiten: V = 12 V und R = 100 Ω. Gesucht ist I in Ampere.",
+            "stepTwo": "Wähle die Gleichung und setze ein: I = V/R = 12/100 = 0,12 A = 120 mA.",
+            "stepThree": "Überprüfe: I · R = 0,12 × 100 = 12 V. Das Ergebnis ergibt wieder die Spannung der Quelle.",
+            "units": "Rechne vor der Berechnung in die Grundeinheiten um: 1 kΩ = 1 000 Ω; 1 mA = 0,001 A. Volt geteilt durch Ohm ergibt Ampere, nicht Milliampere.",
+            "prediction": "Zwei nützliche Vorhersagen: Bei festem R verdoppelt sich I, wenn du V verdoppelst. Bei festem V halbiert sich I, wenn du R verdoppelst. Ändere nicht zwei Variablen gleichzeitig, wenn du eine Ursache beobachten möchtest.",
+            "graphTitle": "So liest du ein Spannungs-Strom-Diagramm",
+            "graphText": "Jeder Punkt ist ein Wertepaar (V, I). Bei einem ohmschen Widerstand verläuft die Gerade durch den Ursprung: Mehr Spannung führt zu proportional mehr Strom. Bei gleicher Achsenskalierung ist die Gerade des kleineren Widerstands steiler, weil I/V = 1/R gilt.",
+            "voltageAxis": "Spannung (V)",
+            "currentAxis": "Stromstärke (mA)",
+            "graphDescription": "Stromstärke in Abhängigkeit von der Spannung für Widerstände von 100 und 200 Ohm zwischen null und zwölf Volt. Bei zwölf Volt betragen die Stromstärken 120 und 60 Milliampere."
+        },
+        "connections": {
+            "title": "Reihen- und Parallelschaltung: Auf die Verbindungen kommt es an",
+            "intro": "Ein Knoten umfasst alle Punkte, die durch ideale Leitungen ohne dazwischenliegende Bauteile verbunden sind: Sie haben dasselbe Potenzial. Um eine Schaltungsart zu erkennen, verfolge die Knoten und Strompfade. Dass zwei Widerstände nebeneinander gezeichnet sind, reicht nicht aus.",
+            "equivalent": "Der Ersatzwiderstand ist der Wert eines einzelnen Widerstands, der bei gleicher Spannung denselben Gesamtstrom aus der Quelle aufnehmen würde. Er ersetzt die gesamte Anordnung aus Sicht der Quelle; das bedeutet nicht, dass alle einzelnen Widerstände diesen Wert haben.",
+            "seriesTitle": "Reihenschaltung · ein einziger Strompfad",
+            "seriesBody": "Zwei Widerstände sind in Reihe geschaltet, wenn ihre Verbindungsstelle keine Abzweigung hat: Durch beide fließt derselbe Strom. Im stationären Zustand sammelt sich an dieser Verbindungsstelle keine Ladung an. Die Spannungsabfälle addieren sich zur Spannung der Quelle: Das ist die kirchhoffsche Maschenregel.",
+            "seriesDerivation": "Aus V = V₁ + V₂ = I·R₁ + I·R₂ = I·(R₁ + R₂) folgt Ersatzwiderstand R = R₁ + R₂. Die Spannung teilt sich im Verhältnis der Widerstandswerte auf; nicht immer in zwei gleiche Hälften.",
+            "seriesCheck": "Überprüfung: 4 + 8 = 12 V. Durch R1 fließen 40 mA und durch R2 ebenfalls. Am zweiten Widerstand fällt mehr Spannung ab, ohne dass die Stromstärke nach dem ersten abnimmt.",
+            "parallelTitle": "Parallelschaltung · zwei Pfade zwischen denselben Knoten",
+            "parallelBody": "Die beiden Anschlüsse von R1 sind mit denselben Knoten A und B verbunden wie die von R2. Deshalb liegt an beiden Widerständen dieselbe Spannung an. In A teilt sich der ankommende Strom auf; in B fließt er wieder zusammen. Das folgt aus der Ladungserhaltung: der kirchhoffschen Knotenregel.",
+            "parallelDerivation": "Es gilt Gesamtstrom I = I₁ + I₂ = V/R₁ + V/R₂ und zugleich Gesamtstrom I = V/Ersatzwiderstand R. Durch Division durch V erhalten wir 1/Ersatzwiderstand R = 1/R₁ + 1/R₂. Für zwei Widerstände vereinfacht sich der Ersatzwiderstand zu R₁·R₂/(R₁ + R₂).",
+            "parallelCheck": "Überprüfung: 120 + 60 = 180 mA. Durch den Zweig mit 100 Ω fließt doppelt so viel Strom wie durch den mit 200 Ω. Der Strom teilt sich nur dann gleichmäßig auf, wenn die Widerstände gleich sind.",
+            "exampleLabel": "Dieselbe Quelle: 12 V · Dieselben Widerstände: 100 Ω und 200 Ω",
+            "remember": "Schnelle Kontrolle: In Reihe ist der Ersatzwiderstand größer als jeder einzelne Widerstand. Parallel ist er kleiner als der kleinste Einzelwiderstand. Ein zusätzlicher Zweig schafft einen weiteren Strompfad und erhöht den Gesamtstrom, den die Schaltung aus einer idealen Spannungsquelle aufnimmt.",
+            "open": "Unterbrichst du den einzigen Pfad einer Reihenschaltung, fließt nirgendwo mehr Strom. Unterbrichst du einen Zweig einer Parallelschaltung, wird der andere weiterhin versorgt. Probiere es unten aus, bevor du weitermachst."
+        },
+        "experiments": {
+            "title": "Vorhersagen, verändern und erklären",
+            "intro": "Prüfe diese drei Ideen mit den Bedienelementen des Labors. Vergleiche die Zahlen und begründe das Ergebnis mit einer Regel für die Schaltung.",
+            "one": "Stelle in der Parallelschaltung mit 12 V und 100 Ω / 200 Ω den Wert von R2 auf 400 Ω. Welche Stromstärke ändert sich? Durch R1 fließen weiterhin 120 mA; durch R2 nur noch 30 mA, und die Quelle liefert 150 mA.",
+            "two": "Setze die Werte zurück und wechsle zur Reihenschaltung. Die Stromstärke sinkt auf 40 mA und die Spannungen betragen 4 V und 8 V. Trenne R2 ab: Beide Stromstärken fallen auf null.",
+            "three": "Vergleiche bei einem einzelnen Widerstand von 100 Ω die Werte für 6 V und 12 V. I steigt von 60 auf 120 mA; P steigt von 0,36 auf 1,44 W. Die Leistung vervierfacht sich, weil P = V²/R gilt."
+        },
+        "power": {
+            "title": "Von den Zahlen zum realen Bauteil",
+            "intro": "Für einen Widerstand kannst du P = V·I mit dem ohmschen Gesetz kombinieren. Daraus folgt P = I²·R = V²/R. Wähle die passende Formel anhand der bekannten Größen; alle drei beschreiben dieselbe Verlustleistung.",
+            "workedTitle": "Ist ein ¼-W-Widerstand geeignet?",
+            "workedBody": "Du möchtest 120 Ω an 12 V Gleichspannung anschließen. Zuerst I = 12/120 = 0,1 A. Dann P = 12 × 0,1 = 1,2 W. Ein Widerstand mit einer Nennleistung von 0,25 W müsste das 4,8-Fache seiner Nennleistung als Wärme abführen: Er ist nicht geeignet.",
+            "rating": "Die Nennleistung gibt an, welche Leistung unter festgelegten Bedingungen als Wärme abgeführt werden darf. Sie ist nicht die Leistung, die der Widerstand immer aufnimmt. Ein 2-W-Widerstand kann für 1,2 W eine erste Wahl sein. Temperatur, Einbau und die temperaturabhängige Reduzierung der zulässigen Leistung müssen aber im Datenblatt überprüft werden. Auch er kann sehr heiß werden.",
+            "conservation": "Auch die Energieerhaltung hilft bei der Überprüfung der Schaltung: In der Reihenschaltung mit 12 V, 100 Ω und 200 Ω gilt P₁ = 0,16 W und P₂ = 0,32 W. Die Quelle liefert 12 × 0,04 = 0,48 W, also genau die Summe. In der Parallelschaltung sind es 1,44 W + 0,72 W = 2,16 W.",
+            "measurementTitle": "So misst du mit einem Multimeter",
+            "voltmeterTitle": "Spannung: zwischen zwei Punkten",
+            "voltmeter": "Wähle Gleichspannung und schließe das Voltmeter parallel zum Bauteil an. Sein hochohmiger Eingang soll die Schaltung möglichst wenig beeinflussen.",
+            "ammeterTitle": "Stromstärke: im Strompfad",
+            "ammeter": "Schalte die Schaltung spannungsfrei, bevor du sie veränderst. Öffne den Strompfad und füge das Amperemeter in Reihe ein. Wähle den passenden Eingang und Messbereich: Das Messgerät hat einen niedrigen Innenwiderstand und kann mit einer Sicherung ausgestattet sein.",
+            "ohmmeter": "Schalte die Schaltung zum Messen des Widerstands spannungsfrei und entlade die Kondensatoren. Gibt es weitere parallele Strompfade, trenne mindestens einen Anschluss des Widerstands ab, damit du nicht die gesamte Anordnung misst.",
+            "meterWarning": "Schließe ein Multimeter im Strommessmodus nicht direkt zwischen die Anschlüsse einer Quelle an: Dadurch würdest du einen sehr niederohmigen Pfad schaffen. Dieser Abschnitt behandelt Übungen mit niedriger Gleichspannung, keine Messungen am Stromnetz.",
+            "rf": "Der Bezug zum Funk: Die 50 Ω einer Antenne oder eines Kabels beziehen sich meist auf die HF-Impedanz. Wir behandeln sie hier nicht als Gleichstromwiderstand. Bevor wir das Beispiel eines 100-W-Senders betrachten, beschäftigen wir uns mit Wechselstrom, Effektivwerten und Impedanz."
+        },
+        "quiz": {
+            "title": "Prüfe, ob du es erklären kannst",
+            "intro": "Wähle eine Antwort. Du siehst die Begründung auch dann, wenn deine Antwort falsch ist, und kannst es erneut versuchen.",
+            "correct": "Richtig",
+            "retry": "Sehen wir uns die Idee noch einmal an",
+            "reset": "Antworten zurücksetzen",
+            "score": "{correct} von {total} Antworten richtig",
+            "q1": {
+                "question": "Eine ideale 12-V-Batterie ist nicht angeschlossen. Was passiert?",
+                "a": "Zwischen ihren Anschlüssen liegen 12 V an und sie liefert 0 A.",
+                "b": "Ihre Spannung beträgt 0 V, weil kein Strom fließt.",
+                "c": "Sie liefert 12 A, obwohl der Stromkreis offen ist.",
+                "explanation": "Die Spannung vergleicht die Potenziale zweier Punkte. Sie kann auch ohne Strom bestehen. Der offene Stromkreis verhindert einen dauerhaften Ladungsfluss im äußeren Stromkreis, beseitigt aber nicht die Spannung der Batterie."
+            },
+            "q2": {
+                "question": "100 Ω und 200 Ω sind in Reihe an 12 V angeschlossen. Welche Stromstärke fließt durch jeden Widerstand?",
+                "a": "120 mA durch R1 und 60 mA durch R2.",
+                "b": "40 mA durch beide.",
+                "c": "40 mA durch R1 und 20 mA durch R2.",
+                "explanation": "Ersatzwiderstand R = 300 Ω; I = 12/300 = 0,04 A. Es gibt nur einen Strompfad, deshalb fließen dieselben 40 mA durch beide Widerstände. Die Spannungen an ihnen betragen 4 V und 8 V."
+            },
+            "q3": {
+                "question": "R1 = 100 Ω und R2 = 200 Ω sind parallel an 12 V angeschlossen. Du ersetzt R2 durch 400 Ω. Wie viel Strom fließt durch R1?",
+                "a": "60 mA: Auch seine Stromstärke halbiert sich.",
+                "b": "150 mA: Er erhält den gesamten Strom der Quelle.",
+                "c": "120 mA: Seine Spannung bleibt gleich.",
+                "explanation": "Die ideale Quelle hält in beiden Zweigen 12 V aufrecht. Für R1 gilt I = 12/100 = 120 mA. Nur die Stromstärke durch R2 sinkt auf 30 mA; der Gesamtstrom beträgt jetzt 150 mA. Jeder Zweig hat seine eigene Stromstärke."
+            },
+            "q4": {
+                "question": "Wenn du die Spannung an einem Widerstand mit konstantem Widerstandswert verdoppelst, wird seine Leistung …",
+                "a": "Vervierfacht.",
+                "b": "Verdoppelt.",
+                "c": "Unverändert bleiben.",
+                "explanation": "P = V²/R: Wenn du V verdoppelst, vervierfacht sich sein Quadrat. Du kannst es auch über P = V·I erklären: Sowohl V als auch I verdoppeln sich. Bei 100 Ω steigt die Leistung beim Wechsel von 6 V auf 12 V von 0,36 W auf 1,44 W."
+            }
+        },
+        "roadmap": {
+            "title": "So geht es weiter",
+            "intro": "Dies ist der erste ausgearbeitete Abschnitt. Die folgenden Abschnitte sind noch nicht veröffentlicht; wir werden sie mit eigenen Erklärungen, Grafiken und Übungen aufbauen.",
+            "wavesTitle": "Wellen und Frequenz",
+            "waves": "Zeitdiagramme: Amplitude, Periodendauer und Frequenz; Vergleich von Signalen; Wellenlänge und der Zusammenhang λ = v/f. Was sich beim Verändern der einzelnen Werte ändert und was gleich bleibt.",
+            "bandsTitle": "Frequenzbänder und Ausbreitung",
+            "bands": "Von Hz bis GHz; LF, MF, HF, VHF und UHF; der Zusammenhang mit Antennen und Ausbreitung. Wir unterscheiden die physikalische Bezeichnung eines Frequenzbands von den für Funkamateure in Argentinien zugelassenen Frequenzen und Betriebsarten und nutzen dafür aktuelle amtliche Quellen.",
+            "morseTitle": "Morsezeichen trainieren",
+            "morse": "Punkte und Striche mit Audio, Dauer und Abständen; Beispiele wie SOS und CQ; Hör- und Schreibübungen. Mit einem Binärbaum lässt sich jeder Punkt oder Strich bis zum Buchstaben verfolgen und gezielt nach Zweigen trainieren."
+        },
+        "lab": {
+            "title": "Gleichstromlabor",
+            "intro": "Ändere jeweils nur eine Sache und vergleiche, wie sich Stromstärke und Leistung verändern.",
+            "single": "Ein Widerstand",
+            "series": "Reihe",
+            "parallel": "Parallel",
+            "voltage": "Spannung der Quelle",
+            "resistanceOne": "Widerstand R1",
+            "resistanceTwo": "Widerstand R2",
+            "powered": "Quelle eingeschaltet",
+            "connected": "R2 angeschlossen",
+            "reset": "12 V · 100 Ω · 200 Ω wiederherstellen",
+            "equivalent": "Ersatzwiderstand",
+            "totalCurrent": "Gesamtstromstärke",
+            "totalPower": "Gesamtleistung",
+            "component": "Widerstand",
+            "potential": "Spannung",
+            "current": "Stromstärke",
+            "power": "Leistung",
+            "diagramTitle": "Gleichstromschaltung",
+            "diagramDescription": "Die technische Stromrichtung verläuft vom Pluspol der Quelle zurück zum Minuspol. In der Parallelschaltung liegen R1 und R2 zwischen denselben Knoten A und B.",
+            "idealNote": "Ideales Gleichstrommodell: widerstandslose Leitungen und eine Quelle mit konstanter Spannung. Die Pfeile zeigen die technische Stromrichtung, nicht die Geschwindigkeit der Elektronen.",
+            "open": "Offener Stromkreis",
+            "sourceOff": "Quelle ausgeschaltet: Sie liefert weder Spannung noch Strom.",
+            "openSeries": "Wenn du R2 abtrennst, wird der einzige Strompfad unterbrochen: Auch durch R1 fließt kein Strom mehr. Die Spannung der Quelle liegt am offenen Schalter an.",
+            "openParallel": "Der Zweig mit R2 ist unterbrochen. An R1 bleiben Spannung und Stromstärke unverändert; die Quelle liefert weniger Gesamtstrom.",
+            "singleWhy": "Ein einziger Strompfad: Die Stromstärke ergibt sich aus der Spannung der Quelle geteilt durch R1.",
+            "seriesWhy": "Ein einziger Strompfad: Durch beide Widerstände fließt derselbe Strom. Die Spannungsabfälle addieren sich zur Spannung der Quelle.",
+            "parallelWhy": "Zwei Pfade zwischen denselben Knoten: An beiden Widerständen liegt die Spannung der Quelle an. Die Ströme der Zweige addieren sich.",
+            "calculation": "So wird gerechnet",
+            "resistanceStep": "Zuerst der Ersatzwiderstand",
+            "currentStep": "Dann die Gesamtstromstärke",
+            "powerStep": "Zum Schluss die Gesamtleistung",
+            "powerNotice": "Wenn du die Schaltung aufbaust, muss die Nennleistung jedes Widerstands über seiner berechneten Verlustleistung liegen, mit ausreichender Reserve und unter Beachtung der Herstellerbedingungen.",
+            "source": "Quelle",
+            "node": "Knoten",
+            "disabledBranch": "Unterbrochener Zweig",
+            "branch": "Zweig R{number}"
+        },
+        "sources": {
+            "title": "Zum Vertiefen und Nachprüfen",
+            "intro": "Eigene Erklärungen und Beispiele, abgeglichen mit OpenStax, University Physics, Band 2 (auf Englisch). Beim Anklicken öffnen die Links die externe Website openstax.org.",
+            "current": "9.1 · Elektrischer Strom",
+            "ohm": "9.4 · Ohmsches Gesetz und Messung",
+            "connections": "10.2 · Widerstände in Reihen- und Parallelschaltung",
+            "limits": "Das Labor berechnet einen idealen stationären Zustand: Einschwingvorgänge, Toleranzen, Grenzen der Quelle und Temperatureinflüsse werden nicht simuliert. Es ist Lernmaterial, kein offizieller Lehrgang oder Prüfungsfragenkatalog."
+        }
     }
 }

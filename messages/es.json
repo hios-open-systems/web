@@ -1962,6 +1962,7 @@
             "missingKey": "Ingresá una clave para calcular el HMAC."
         },
         "ohmsLaw": {
+            "learnCircuits": "Estudiá los circuitos paso a paso: serie, paralelo y laboratorio interactivo.",
             "badge": "Electrónica",
             "title": "Ley de Ohm",
             "subtitle": "Calculá voltaje, corriente, resistencia y potencia a partir de dos valores conocidos.",
@@ -2497,6 +2498,10 @@
             "resistor-color-code": {
                 "title": "Código de resistencias",
                 "description": "Convertí bandas de colores en valores de resistencia, o calculá los colores a partir de un valor."
+            },
+            "radio-basics": {
+                "title": "Electricidad para radioaficionados",
+                "description": "Entendé tensión, corriente, resistencia y potencia. Estudiá serie y paralelo con ejemplos resueltos, un laboratorio interactivo y ejercicios explicados."
             },
             "ohms-law": {
                 "title": "Ley de Ohm",
@@ -4766,5 +4771,206 @@
         "draft": "Borrador local: no modifica el repositorio. Descargá los cambios antes de cerrar o desconectar. Imágenes y enlaces externos están desactivados.",
         "image": "Imagen omitida",
         "select": "Elegí un archivo para leerlo o preparar una copia."
+    },
+    "RadioBasics": {
+        "badge": "Radioafición · Sección 01",
+        "introTitle": "Entender un circuito, antes de memorizar fórmulas",
+        "intro": "¿Por qué dos resistencias se comportan distinto al cambiar los cables? En esta sección vas a seguir la carga y la energía, calcular un circuito y comprobar tus predicciones en el laboratorio.",
+        "scope": "Trabajamos con corriente continua (CC), una fuente ideal y resistores óhmicos a temperatura constante. La fuente mantiene su tensión, los cables no tienen resistencia y no modelamos el calentamiento. Los equipos reales tienen límites; los vamos a distinguir de este modelo.",
+        "navLabel": "Contenido de esta sección",
+        "nav": {
+            "concepts": "Las magnitudes",
+            "ohm": "Ley de Ohm",
+            "connections": "Serie y paralelo",
+            "laboratory": "Laboratorio",
+            "power": "Potencia y medición",
+            "practice": "Ponete a prueba"
+        },
+        "concepts": {
+            "title": "Cuatro magnitudes, cuatro preguntas diferentes",
+            "intro": "Un circuito necesita una fuente, un camino conductor cerrado y una carga, como un resistor. En un cable metálico ya hay electrones móviles: la batería no tiene que llenarlo de electrones. La carga eléctrica se mide en coulomb (C); la energía, en joule (J).",
+            "voltage": {
+                "title": "Tensión · ¿Cuánta energía por carga?",
+                "unit": "V · volt (V)",
+                "definition": "La tensión es una diferencia de potencial entre dos puntos: expresa energía por unidad de carga. Una diferencia de 12 V significa 12 J por cada coulomb transferido. Por eso siempre preguntamos «¿tensión entre qué dos puntos?».",
+                "example": "Una batería puede mantener 12 V entre sus bornes con el interruptor abierto. Hay tensión, aunque no circule corriente.",
+                "caution": "No es una cantidad que «pasa por el cable». Se mide entre dos puntos.",
+                "formula": "1 V = 1 J/C"
+            },
+            "current": {
+                "title": "Corriente · ¿Cuánta carga pasa por segundo?",
+                "unit": "I · ampere (A)",
+                "definition": "La corriente mide la carga neta que atraviesa una sección del conductor por unidad de tiempo. Si pasa 1 coulomb cada segundo, hay 1 ampere. Una corriente de 40 mA equivale a 0,040 A: pasan 0,040 C cada segundo.",
+                "example": "Dibujamos la corriente convencional saliendo del positivo y volviendo al negativo por el circuito exterior. En los metales, los electrones se desplazan en sentido contrario.",
+                "caution": "Corriente no significa velocidad de los electrones. Tampoco se «gasta» al atravesar un resistor.",
+                "formula": "I = ΔQ / Δt; 1 A = 1 C/s"
+            },
+            "resistance": {
+                "title": "Resistencia · ¿Cuánto limita la corriente?",
+                "unit": "R · ohm (Ω)",
+                "definition": "En un resistor óhmico, la tensión y la corriente son proporcionales. La constante que las relaciona es su resistencia: R = V/I. A la misma tensión, una resistencia mayor permite menos corriente. El componente físico es el resistor; su resistencia es una propiedad.",
+                "example": "Con 12 V, un resistor de 100 Ω conduce 120 mA. Uno de 200 Ω conduce 60 mA. Duplicar R reduce I a la mitad si V se mantiene.",
+                "caution": "El resistor transforma energía eléctrica en calor. La carga que entra también sale; no consume carga.",
+                "formula": "1 Ω = 1 V/A"
+            },
+            "power": {
+                "title": "Potencia · ¿A qué ritmo se transforma la energía?",
+                "unit": "P · watt (W)",
+                "definition": "La potencia es energía transferida por unidad de tiempo. Un resistor que disipa 2 W convierte 2 J de energía eléctrica en calor cada segundo. Para CC constante se calcula multiplicando la tensión del componente por su corriente.",
+                "example": "Un equipo que toma 2 A de una fuente de 12 V recibe 24 W eléctricos. Eso no significa que transmita 24 W de radiofrecuencia: también tiene pérdidas y otros consumos.",
+                "caution": "W mide potencia; J y Wh miden energía. Si 24 W se mantienen una hora, son 24 Wh = 86 400 J.",
+                "formula": "P = V · I; 1 W = 1 J/s"
+            }
+        },
+        "ohm": {
+            "title": "La ley de Ohm: una relación que podés comprobar",
+            "intro": "Para un resistor óhmico con R constante, V = I · R. No es una regla universal para cualquier componente: un diodo, por ejemplo, no tiene una resistencia constante en todos sus puntos de funcionamiento.",
+            "currentLabel": "Si buscás corriente",
+            "voltageLabel": "Si buscás tensión",
+            "resistanceLabel": "Si buscás resistencia",
+            "workedTitle": "Un resistor de 100 Ω conectado a 12 V",
+            "stepOne": "Identificá los datos y sus unidades: V = 12 V y R = 100 Ω. Queremos I, en amperes.",
+            "stepTwo": "Elegí la ecuación y sustituí: I = V/R = 12/100 = 0,12 A = 120 mA.",
+            "stepThree": "Comprobá: I · R = 0,12 × 100 = 12 V. El resultado recupera la tensión de la fuente.",
+            "units": "Antes de calcular, pasá a unidades base: 1 kΩ = 1 000 Ω; 1 mA = 0,001 A. Dividir volts por ohms da amperes, no miliamperes.",
+            "prediction": "Dos predicciones útiles: con R fija, duplicar V duplica I. Con V fija, duplicar R divide I por dos. No cambies dos variables a la vez si querés observar una causa.",
+            "graphTitle": "Cómo se lee un gráfico tensión–corriente",
+            "graphText": "Cada punto es una pareja (V, I). Para un resistor óhmico la recta pasa por el origen: más tensión produce proporcionalmente más corriente. Con los mismos ejes, la recta del resistor de menor resistencia es más inclinada porque I/V = 1/R.",
+            "voltageAxis": "Tensión (V)",
+            "currentAxis": "Corriente (mA)",
+            "graphDescription": "Corriente en función de la tensión para resistencias de 100 y 200 ohms, entre cero y doce volts. A doce volts las corrientes son 120 y 60 miliamperes."
+        },
+        "connections": {
+            "title": "Serie y paralelo: la diferencia está en las conexiones",
+            "intro": "Un nodo es el conjunto de puntos unidos por cable ideal, sin componentes entre ellos: tienen el mismo potencial. Para reconocer una conexión, seguí los nodos y los caminos; que dos resistores estén dibujados uno al lado del otro no alcanza.",
+            "equivalent": "La resistencia equivalente es el valor de un único resistor que pediría a la fuente la misma corriente total con la misma tensión. Reemplaza al conjunto visto desde la fuente; no significa que todos los resistores tengan esa resistencia.",
+            "seriesTitle": "Serie · un único camino",
+            "seriesBody": "Dos resistores están en serie cuando su unión no tiene una derivación: la misma corriente atraviesa ambos. En régimen estacionario no se acumula carga en esa unión. Las caídas de tensión se suman hasta completar la tensión de la fuente: es la ley de tensiones de Kirchhoff.",
+            "seriesDerivation": "Como V = V₁ + V₂ = I·R₁ + I·R₂ = I·(R₁ + R₂), resulta R equivalente = R₁ + R₂. La tensión se reparte en proporción a cada resistencia; no siempre por mitades.",
+            "seriesCheck": "Comprobación: 4 + 8 = 12 V. Pasan 40 mA por R1 y también por R2. La segunda tiene mayor caída de tensión, sin que se reduzca la corriente después de la primera.",
+            "parallelTitle": "Paralelo · dos caminos entre los mismos nodos",
+            "parallelBody": "Los dos extremos de R1 se conectan a los mismos nodos A y B que los de R2. Por eso ambos resistores tienen la misma tensión. En A, la corriente que llega se reparte; en B, vuelve a sumarse. Es conservación de carga: la ley de corrientes de Kirchhoff.",
+            "parallelDerivation": "Como I total = I₁ + I₂ = V/R₁ + V/R₂ y también I total = V/R equivalente, al dividir por V obtenemos 1/R equivalente = 1/R₁ + 1/R₂. Para dos resistores se simplifica a R₁·R₂/(R₁ + R₂).",
+            "parallelCheck": "Comprobación: 120 + 60 = 180 mA. La rama de 100 Ω lleva el doble de corriente que la de 200 Ω. La corriente se divide por igual solo cuando las resistencias son iguales.",
+            "exampleLabel": "La misma fuente: 12 V · Los mismos resistores: 100 Ω y 200 Ω",
+            "remember": "Control rápido: en serie, R equivalente es mayor que cualquiera de las resistencias. En paralelo, es menor que la más pequeña. Agregar una rama ofrece otro camino y aumenta la corriente total que pide el circuito a una fuente de tensión ideal.",
+            "open": "Si abrís el único camino de una serie, se detiene toda la corriente. Si abrís una rama del paralelo, la otra sigue alimentada. Probalo abajo antes de seguir."
+        },
+        "experiments": {
+            "title": "Predecí, cambiá y explicá",
+            "intro": "Usá los controles del laboratorio para probar estas tres ideas. Compará los números y justificá el resultado con una regla del circuito.",
+            "one": "En paralelo, con 12 V y 100 Ω / 200 Ω, llevá R2 a 400 Ω. ¿Qué corriente cambia? R1 sigue en 120 mA; R2 baja a 30 mA y la fuente entrega 150 mA.",
+            "two": "Restablecé los valores y pasá a serie. La corriente baja a 40 mA y las tensiones son 4 V y 8 V. Desconectá R2: ambas corrientes quedan en cero.",
+            "three": "En un solo resistor de 100 Ω, compará 6 V con 12 V. I pasa de 60 a 120 mA; P pasa de 0,36 a 1,44 W. La potencia se cuadruplica, porque P = V²/R."
+        },
+        "power": {
+            "title": "De los números a un componente real",
+            "intro": "Para un resistor podés combinar P = V·I con la ley de Ohm. Sale P = I²·R = V²/R. Elegí la expresión según lo que conocés; las tres describen la misma disipación.",
+            "workedTitle": "¿Sirve un resistor de ¼ W?",
+            "workedBody": "Querés conectar 120 Ω a 12 V CC. Primero I = 12/120 = 0,1 A. Luego P = 12 × 0,1 = 1,2 W. Un resistor nominal de 0,25 W tendría que disipar 4,8 veces su potencia nominal: no es adecuado.",
+            "rating": "La potencia nominal es una capacidad de disipación bajo condiciones especificadas, no lo que el resistor va a consumir siempre. Uno de 2 W puede ser una elección inicial para 1,2 W, pero hay que verificar temperatura, montaje y reducción de potencia admisible en la hoja de datos. También puede calentarse mucho.",
+            "conservation": "La energía también permite verificar el circuito: en la serie de 12 V, 100 Ω y 200 Ω, P₁ = 0,16 W y P₂ = 0,32 W. La fuente entrega 12 × 0,04 = 0,48 W, igual a la suma. En el paralelo, son 1,44 W + 0,72 W = 2,16 W.",
+            "measurementTitle": "Cómo se mide con un multímetro",
+            "voltmeterTitle": "Tensión: entre dos puntos",
+            "voltmeter": "Seleccioná tensión CC y conectá el voltímetro en paralelo con el componente. Su entrada de alta resistencia procura alterar muy poco el circuito.",
+            "ammeterTitle": "Corriente: dentro del camino",
+            "ammeter": "Desenergizá para modificar el circuito, abrí el camino e intercalá el amperímetro en serie. Elegí la entrada y el rango adecuados: tiene baja resistencia y puede incorporar un fusible.",
+            "ohmmeter": "Para medir resistencia, desenergizá el circuito y descargá los capacitores. Si hay otros caminos en paralelo, aislá al menos un terminal del resistor para no medir el conjunto.",
+            "meterWarning": "No pongas un multímetro en modo corriente directamente entre los bornes de una fuente: producirías un camino de muy baja resistencia. Esta sección se refiere a práctica de baja tensión CC; no a mediciones en la red eléctrica.",
+            "rf": "Conexión con radio: los 50 Ω de una antena o un cable suelen referirse a impedancia de RF. No los tratamos aquí como una resistencia de CC. Antes del ejemplo de un transmisor de 100 W vamos a estudiar CA, valores eficaces e impedancia."
+        },
+        "quiz": {
+            "title": "Comprobá si lo podés explicar",
+            "intro": "Elegí una respuesta. Vas a ver la razón, también si te equivocás; podés volver a intentarlo.",
+            "correct": "Correcto",
+            "retry": "Revisemos la idea",
+            "reset": "Reiniciar respuestas",
+            "score": "{correct} de {total} respuestas correctas",
+            "q1": {
+                "question": "Una batería ideal de 12 V está desconectada. ¿Qué ocurre?",
+                "a": "Tiene 12 V entre bornes y entrega 0 A.",
+                "b": "Tiene 0 V porque no circula corriente.",
+                "c": "Entrega 12 A aunque el circuito esté abierto.",
+                "explanation": "La tensión compara los potenciales de dos puntos. Puede existir sin corriente. El circuito abierto impide un flujo sostenido de carga por el exterior, pero no elimina la tensión de la batería."
+            },
+            "q2": {
+                "question": "En serie, 100 Ω y 200 Ω están conectados a 12 V. ¿Qué corriente atraviesa cada uno?",
+                "a": "120 mA por R1 y 60 mA por R2.",
+                "b": "40 mA por ambos.",
+                "c": "40 mA por R1 y 20 mA por R2.",
+                "explanation": "R equivalente = 300 Ω; I = 12/300 = 0,04 A. Hay un único camino, así que los mismos 40 mA atraviesan ambos resistores. Sus tensiones son 4 V y 8 V."
+            },
+            "q3": {
+                "question": "En paralelo a 12 V, R1 = 100 Ω y R2 = 200 Ω. Reemplazás R2 por 400 Ω. ¿Cuánto circula por R1?",
+                "a": "60 mA: su corriente también baja a la mitad.",
+                "b": "150 mA: recibe toda la corriente de la fuente.",
+                "c": "120 mA: conserva la misma tensión.",
+                "explanation": "La fuente ideal mantiene 12 V en ambas ramas. En R1, I = 12/100 = 120 mA. Solo R2 baja a 30 mA; la corriente total ahora es 150 mA. Cada rama tiene su propia corriente."
+            },
+            "q4": {
+                "question": "Si duplicás la tensión aplicada a un resistor de resistencia constante, su potencia…",
+                "a": "Se cuadruplica.",
+                "b": "Se duplica.",
+                "c": "Se mantiene igual.",
+                "explanation": "P = V²/R: al duplicar V, su cuadrado se multiplica por cuatro. También podés verlo como P = V·I: se duplican tanto V como I. En 100 Ω, pasar de 6 V a 12 V cambia 0,36 W por 1,44 W."
+            }
+        },
+        "roadmap": {
+            "title": "El recorrido que sigue",
+            "intro": "Esta es la primera sección desarrollada. Las siguientes todavía no están publicadas; las vamos a trabajar con explicaciones, gráficos y ejercicios propios.",
+            "wavesTitle": "Ondas y frecuencia",
+            "waves": "Gráficos en el tiempo: amplitud, período y frecuencia; comparación de señales; longitud de onda y la relación λ = v/f. Qué cambia y qué se mantiene al mover cada valor.",
+            "bandsTitle": "Bandas y propagación",
+            "bands": "De Hz a GHz; LF, MF, HF, VHF y UHF; relación con antenas y propagación. Separaremos el nombre físico de una banda de las frecuencias y modos autorizados para radioaficionados en Argentina, con fuentes oficiales vigentes.",
+            "morseTitle": "Morse con entrenamiento",
+            "morse": "Puntos y rayas con audio, duración y espaciado; ejemplos como SOS y CQ; pruebas de escucha y escritura. Un árbol binario permitirá recorrer cada punto o raya hasta llegar a la letra y entrenar por ramas."
+        },
+        "sources": {
+            "title": "Para profundizar y contrastar",
+            "intro": "Explicación y ejemplos propios, contrastados con OpenStax, University Physics, volumen 2 (en inglés). Los enlaces abren el sitio externo openstax.org al seleccionarlos.",
+            "current": "9.1 · Corriente eléctrica",
+            "ohm": "9.4 · Ley de Ohm y medición",
+            "connections": "10.2 · Resistores en serie y paralelo",
+            "limits": "El laboratorio calcula un régimen estacionario ideal: no simula transitorios, tolerancias, límites de la fuente ni variaciones térmicas. Es material de estudio, no un programa oficial ni un banco de examen."
+        },
+        "lab": {
+            "title": "Laboratorio de corriente continua",
+            "intro": "Cambiá una sola cosa por vez y compará qué pasa con la corriente y la potencia.",
+            "single": "Un resistor",
+            "series": "Serie",
+            "parallel": "Paralelo",
+            "voltage": "Tensión de la fuente",
+            "resistanceOne": "Resistencia R1",
+            "resistanceTwo": "Resistencia R2",
+            "powered": "Fuente encendida",
+            "connected": "R2 conectada",
+            "reset": "Restablecer 12 V · 100 Ω · 200 Ω",
+            "equivalent": "Resistencia equivalente",
+            "totalCurrent": "Corriente total",
+            "totalPower": "Potencia total",
+            "component": "Resistor",
+            "potential": "Tensión",
+            "current": "Corriente",
+            "power": "Potencia",
+            "diagramTitle": "Circuito de corriente continua",
+            "diagramDescription": "La corriente convencional sale del positivo de la fuente y regresa al negativo. En paralelo, R1 y R2 se conectan entre los mismos nodos A y B.",
+            "idealNote": "Modelo ideal de CC: cables sin resistencia y fuente de tensión constante. Las flechas indican corriente convencional, no velocidad de los electrones.",
+            "open": "Circuito abierto",
+            "sourceOff": "Fuente apagada: no entrega tensión ni corriente.",
+            "openSeries": "Al desconectar R2 se corta el único camino: tampoco circula corriente por R1. La tensión de la fuente queda sobre el interruptor abierto.",
+            "openParallel": "R2 queda abierta. R1 conserva la tensión y su corriente; la fuente entrega menos corriente total.",
+            "singleWhy": "Un solo camino: la corriente se obtiene dividiendo la tensión de la fuente por R1.",
+            "seriesWhy": "Un solo camino: la misma corriente atraviesa ambos resistores. Sus caídas de tensión suman la tensión de la fuente.",
+            "parallelWhy": "Dos caminos entre los mismos nodos: ambos resistores tienen la tensión de la fuente. Las corrientes de las ramas se suman.",
+            "calculation": "Así se calcula",
+            "resistanceStep": "Primero, la resistencia equivalente",
+            "currentStep": "Después, la corriente total",
+            "powerStep": "Por último, la potencia total",
+            "powerNotice": "Si lo armás físicamente, la potencia nominal de cada resistor debe superar su disipación calculada, con margen y según las condiciones del fabricante.",
+            "source": "Fuente",
+            "node": "Nodo",
+            "disabledBranch": "Rama desconectada",
+            "branch": "Rama R{number}"
+        }
     }
 }

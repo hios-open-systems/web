@@ -1,0 +1,51 @@
+'use client';
+
+import { useLocale, useTranslations } from 'next-intl';
+import styles from './radioBasics.module.css';
+
+function useWorkedExamples() {
+  const locale = useLocale();
+  const f = (value: number) => new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(value);
+  return {
+    series: ['Rₑq = 100 + 200 = 300 Ω', `I = 12 / 300 = ${f(0.04)} A = 40 mA`, `V₁ = ${f(0.04)} × 100 = 4 V`, `V₂ = ${f(0.04)} × 200 = 8 V`],
+    parallel: [`Rₑq = (100 × 200) / (100 + 200) ≈ ${f(200 / 3)} Ω`, 'I₁ = 12 / 100 = 120 mA', 'I₂ = 12 / 200 = 60 mA', 'I = 120 + 60 = 180 mA'],
+  };
+}
+
+function ConnectionExplanation({ mode }: { mode: 'series' | 'parallel' }) {
+  const t = useTranslations('RadioBasics.connections');
+  const examples = useWorkedExamples();
+  return (
+    <section className={styles.connection}>
+      <h3>{t(`${mode}Title`)}</h3>
+      <p>{t(`${mode}Body`)}</p>
+      <div className={styles.formula}>
+        <div>{mode === 'series' ? 'I = I₁ = I₂' : 'V = V₁ = V₂'}</div>
+        <div>{mode === 'series' ? 'V = V₁ + V₂' : 'I = I₁ + I₂'}</div>
+      </div>
+      <p>{t(`${mode}Derivation`)}</p>
+      <div className={styles.calculation}>
+        {examples[mode].map((line) => <div key={line}>{line}</div>)}
+      </div>
+      <p className={styles.takeaway}>{t(`${mode}Check`)}</p>
+    </section>
+  );
+}
+
+export function ConnectionsSection() {
+  const t = useTranslations('RadioBasics.connections');
+  return (
+    <section id="connections" className={styles.section} aria-labelledby="connections-title">
+      <h2 id="connections-title">{t('title')}</h2>
+      <p>{t('intro')}</p>
+      <p>{t('equivalent')}</p>
+      <p className={styles.exampleLabel}>{t('exampleLabel')}</p>
+      <div className={styles.connections}>
+        <ConnectionExplanation mode="series" />
+        <ConnectionExplanation mode="parallel" />
+      </div>
+      <p className={styles.takeaway}>{t('remember')}</p>
+      <p>{t('open')}</p>
+    </section>
+  );
+}

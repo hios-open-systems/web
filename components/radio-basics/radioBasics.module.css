@@ -1,0 +1,116 @@
+.lesson {
+  --lesson-cyan: var(--accent-2-text);
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 64px);
+  max-width: 1380px;
+  margin: 24px auto 0;
+  color: var(--hios-text);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.sidebar { position: sticky; top: 100px; align-self: start; }
+.eyebrow { color: var(--lesson-cyan); font: 500 .8125rem/1.6 var(--font-stack-mono); letter-spacing: .04em; }
+.navigation { display: grid; gap: 6px; margin-top: 20px; border-left: 1px solid var(--hios-border); }
+.navigation a { padding: 8px 0 8px 16px; color: var(--hios-text-secondary); font-size: .9375rem; line-height: 1.5; text-decoration: none; }
+.navigation a:hover { color: var(--lesson-cyan); background: var(--hios-bg-secondary); }
+.content { min-width: 0; }
+.content h2 { font-family: var(--font-stack-display); font-size: clamp(1.5rem, 2.3vw, 2rem); line-height: 1.3; letter-spacing: -.025em; margin: 0 0 20px; text-wrap: balance; }
+.content h3 { font-size: 1.125rem; line-height: 1.45; font-weight: 600; margin: 0 0 14px; }
+.content h4 { font-size: 1rem; line-height: 1.5; margin: 0; }
+.content p { margin: 0 0 18px; max-width: 85ch; }
+.content a { color: var(--lesson-cyan); text-underline-offset: 4px; }
+.welcome { padding: 0 0 36px; }
+.welcome h2 { max-width: 26ch; font-size: clamp(1.75rem, 3.4vw, 2.75rem); margin-top: 12px; }
+.lead { font-size: 1.125rem; }
+.scope { border-left: 2px solid var(--hios-border); padding-left: 18px; color: var(--hios-text-secondary); font-size: .9375rem; }
+.section { padding: 42px 0; border-top: 1px solid var(--hios-border); scroll-margin-top: 100px; }
+.section > .eyebrow { display: block; margin-bottom: 12px; }
+.concepts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; margin-top: 28px; }
+.concept { min-width: 0; background: var(--hios-bg-secondary); border-top: 2px solid var(--lesson-cyan); padding: 24px; border-radius: 0 0 12px 12px; }
+.concept[data-concept='current'], .concept[data-concept='power'] { border-top-color: var(--accent-text); }
+.concept .unit { color: var(--lesson-cyan); font: 500 .875rem var(--font-stack-mono); display: block; margin-bottom: 16px; }
+.concept h3 { font-size: 1.1875rem; }
+.concept p { font-size: 1rem; }
+.concept p:last-child { margin-bottom: 0; }
+.formula { font-family: var(--font-stack-mono); padding: 12px 0; margin-bottom: 16px; color: var(--lesson-cyan); font-size: .9375rem; line-height: 1.8; overflow-wrap: anywhere; }
+.takeaway { border-left: 2px solid var(--lesson-cyan); padding-left: 16px; }
+.concept .takeaway { color: var(--hios-text-secondary); }
+.formulas { display: flex; flex-wrap: wrap; gap: 16px 40px; margin: 28px 0; }
+.formulas div { display: flex; flex-direction: column; }
+.formulas span { color: var(--hios-text-secondary); font-size: .875rem; }
+.formulas strong { font-family: var(--font-stack-mono); color: var(--lesson-cyan); font-size: 1.125rem; }
+.worked { padding: 24px; margin: 24px 0; background: var(--hios-bg-secondary); border-radius: 12px; }
+.worked p:last-child { margin-bottom: 0; }
+.worked ol, .experiments { padding-left: 24px; margin: 0 0 20px; }
+.worked li, .experiments li { padding-left: 6px; margin-bottom: 14px; }
+.graph { margin: 28px 0 0; }
+.graphPlot { max-width: 580px; margin: 20px auto; }
+.graphPlot svg { display: block; width: 100%; height: auto; overflow: visible; }
+.graphPlot text { fill: var(--hios-text-secondary); font: 16px var(--font-stack-mono); }
+.gridLine { stroke: var(--hios-border); stroke-width: 1; }
+.axis { stroke: var(--hios-text-muted); stroke-width: 1.5; }
+.lineOne { stroke: var(--lesson-cyan); stroke-width: 3; }
+.lineTwo { stroke: var(--accent-text); stroke-width: 3; stroke-dasharray: 8 5; }
+.pointOne { fill: var(--lesson-cyan); }
+.pointTwo { fill: var(--accent-text); }
+.graphPlot .labelOne { fill: var(--lesson-cyan); }
+.graphPlot .labelTwo { fill: var(--accent-text); }
+.axisLabel { color: var(--hios-text-secondary); font-size: .875rem; margin: 0 !important; }
+.graph figcaption, .measurement figcaption { color: var(--hios-text-secondary); font-size: 1rem; }
+.exampleLabel { color: var(--lesson-cyan); font-weight: 500; margin-top: 28px !important; }
+.connections { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; margin-bottom: 20px; }
+.connection { min-width: 0; border-top: 2px solid var(--lesson-cyan); padding-top: 20px; }
+.connection p { font-size: 1rem; }
+.connection:nth-child(2) { border-top-color: var(--accent-text); }
+.calculation { font: .875rem/2 var(--font-stack-mono); padding: 16px 0; margin-bottom: 12px; overflow-wrap: anywhere; }
+.experiments { margin-top: 28px; }
+.experiments li::marker { color: var(--lesson-cyan); font-family: var(--font-stack-mono); }
+.measurements { margin: 36px 0 28px; }
+.measurement { min-width: 0; margin: 0; }
+.meter { display: block; width: 100%; max-width: 340px; color: var(--hios-text-secondary); margin: 8px auto; }
+.meterAccent { stroke: var(--lesson-cyan); }
+.meterFace { fill: var(--hios-bg); stroke: var(--lesson-cyan); }
+.meterText { fill: var(--hios-text); font: 20px var(--font-stack-mono); }
+.meterNodes { fill: var(--lesson-cyan); }
+.question { min-width: 0; margin: 28px 0; padding: 22px 24px 24px; border: 1px solid var(--hios-border); border-radius: 12px; }
+.question legend { width: auto; max-width: 100%; padding: 0 8px; font-size: 1.0625rem; line-height: 1.6; font-weight: 600; }
+.answers { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
+.answers :global(.ant-radio-wrapper) { margin: 0; font-size: 1rem; line-height: 1.6; align-items: start; }
+.answers :global(.ant-radio) { margin-top: 5px; }
+.quizFooter { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.quizFooter p { margin: 0; color: var(--lesson-cyan); }
+.roadmap { margin: 24px 0 0; }
+.roadmap > div { padding: 16px 0; border-bottom: 1px solid var(--hios-border); }
+.roadmap dt { font-weight: 600; margin-bottom: 6px; }
+.roadmap dd { margin: 0; color: var(--hios-text-secondary); }
+.sources { border-top: 1px solid var(--hios-border); padding: 30px 0 0; font-size: .875rem; color: var(--hios-text-secondary); }
+.sources ul { padding-left: 20px; margin-bottom: 20px; }
+.sources li { margin-bottom: 8px; }
+
+@media (max-width: 1120px) {
+  .lesson { grid-template-columns: minmax(0, 1fr); max-width: 960px; }
+  .sidebar { position: static; }
+  .sidebar > .eyebrow { display: none; }
+  .navigation { display: flex; flex-wrap: wrap; border-left: 0; border-bottom: 1px solid var(--hios-border); padding-bottom: 16px; margin: 0; gap: 4px 12px; }
+  .navigation a { padding: 8px 4px; }
+}
+
+@media (max-width: 680px) {
+  .lesson { margin-top: 12px; gap: 24px; }
+  .concepts, .connections { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .concept, .worked, .question { padding: 20px 16px; }
+  .section { padding: 30px 0; }
+  .formulas { gap: 18px 24px; }
+  .graphPlot { max-width: 100%; }
+  .measurement { max-width: 460px; }
+  .question legend { font-size: 1rem; }
+}
+
+@media print {
+  .lesson { display: block; }
+  .sidebar, .quizFooter { display: none; }
+  .section { break-inside: auto; }
+  .concept, .worked, .question, .measurement { break-inside: avoid; }
+}

@@ -40,6 +40,7 @@ export type WorkbenchToolId =
   | 'delay-calculator'
   | 'resistor-color-code'
   | 'ohms-law'
+  | 'radio-basics'
   | 'http-status-codes'
   | 'ascii-unicode'
   | 'note-frequency'
@@ -474,6 +475,15 @@ export const workbenchTools: WorkbenchTool[] = [
     sectionId: 'electronics',
     href: '/workbench/ohms-law',
     accent: '#f59e0b',
+    icon: 'chip',
+    featured: true,
+  },
+  {
+    id: 'radio-basics',
+    locality: 'local',
+    sectionId: 'electronics',
+    href: '/workbench/radio-basics',
+    accent: '#22d3ee',
     icon: 'chip',
     featured: true,
   },

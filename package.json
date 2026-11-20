@@ -47,6 +47,7 @@
     "test:padwebui": "node projects/pad/test/webui-selftest.cjs",
     "test:resistor": "node --experimental-strip-types scripts/resistor-selftest.ts",
     "test:ohms": "node --experimental-strip-types scripts/ohms-selftest.ts",
+    "test:dc-circuit": "node --experimental-strip-types scripts/dc-circuit-selftest.ts",
     "test:httpstatus": "node --experimental-strip-types scripts/httpstatus-selftest.ts",
     "test:charset": "node --experimental-strip-types scripts/charset-selftest.ts",
     "test:notefreq": "node --experimental-strip-types scripts/notefreq-selftest.ts",

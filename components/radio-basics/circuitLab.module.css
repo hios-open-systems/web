@@ -1,0 +1,72 @@
+.lab {
+  --dc-one: var(--accent-2-text);
+  --dc-two: var(--accent-text);
+  padding: clamp(16px, 3vw, 30px);
+  border: 1px solid var(--hios-border);
+  border-radius: 18px;
+  background: var(--hios-bg-elevated);
+  color: var(--hios-text);
+  min-width: 0;
+}
+.heading h3 { margin: 0 0 8px; font-size: 1.35rem; }
+.heading p { margin: 0 0 22px; color: var(--hios-text-secondary); font-size: 1rem; line-height: 1.65; }
+.workbench { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(230px, 0.8fr); gap: 32px; align-items: center; margin: 22px 0; }
+.figure { margin: 0; min-width: 0; }
+.diagram { display: block; width: 100%; max-width: 650px; margin-inline: auto; overflow: visible; color: var(--hios-text); font: 24px var(--font-stack-mono); }
+.diagram text { fill: currentColor; }
+.wire, .source, .openSwitch { fill: none; stroke: var(--hios-text-secondary); stroke-width: 2.7; stroke-linecap: round; stroke-linejoin: round; }
+.source { stroke: var(--hios-text); stroke-width: 4; }
+.openSwitch { stroke: var(--dc-two); stroke-width: 3; }
+.resistorOne, .resistorTwo { fill: var(--hios-bg-elevated); stroke-width: 3; }
+.resistorOne { stroke: var(--dc-one); }
+.resistorTwo { stroke: var(--dc-two); }
+.labelOne, .diagram .labelOne { color: var(--dc-one); fill: var(--dc-one); font-weight: 600; }
+.labelTwo, .diagram .labelTwo { color: var(--dc-two); fill: var(--dc-two); font-weight: 600; }
+.node { fill: var(--hios-text); }
+.currentArrow { color: var(--dc-one); fill: none; stroke: currentColor; stroke-width: 3; }
+.diagram .currentLabel { fill: var(--dc-one); }
+.figure figcaption { font-size: .875rem; line-height: 1.6; color: var(--hios-text-secondary); margin-top: 4px; }
+.controls { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.resetButton { height: auto; min-height: 36px; white-space: normal; }
+.controlLabel { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 14px; font-size: .9375rem; }
+.controlLabel output { font: 500 1rem var(--font-stack-mono); }
+.switchRow { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: .9375rem; }
+.switchRow label { flex: 1; }
+.switchRow button { min-height: 22px; }
+.readings { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 24px 0 16px; border-top: 1px solid var(--hios-border); border-bottom: 1px solid var(--hios-border); }
+.readings > div { padding: 18px 12px; }
+.readings > div:first-child { padding-left: 0; }
+.readings dt { font-size: .875rem; color: var(--hios-text-secondary); margin-bottom: 7px; }
+.readings dd { margin: 0; font: 500 clamp(1.2rem, 2.7vw, 1.75rem) var(--font-stack-mono); }
+.readings dd span { font-size: .875rem; color: var(--hios-text-secondary); }
+.tableWrap { overflow-x: auto; }
+.resultTable { width: 100%; border-collapse: collapse; font-size: .9375rem; text-align: right; }
+.resultTable th, .resultTable td { padding: 12px 8px; border-bottom: 1px solid var(--hios-border); }
+.resultTable thead th { color: var(--hios-text-secondary); font-weight: 500; font-size: .875rem; }
+.resultTable tr > :first-child { text-align: left; padding-left: 0; }
+.resultTable td { font-family: var(--font-stack-mono); font-variant-numeric: tabular-nums; }
+.resistance { display: inline-block; margin-left: 6px; font-weight: 400; color: var(--hios-text-secondary); }
+.calculations { margin-top: 24px; }
+.calculations h4 { font-size: 1rem; margin: 0 0 18px; }
+.calculations ol { padding-left: 24px; margin: 0; display: grid; gap: 16px; }
+.calculations li { padding-left: 4px; font-size: .9375rem; }
+.calculations li span { display: block; margin-bottom: 6px; color: var(--hios-text-secondary); }
+.calculations code { display: block; font: .9375rem/1.8 var(--font-stack-mono); overflow-wrap: anywhere; }
+.explanation { margin: 22px 0 0; padding-left: 14px; border-left: 3px solid var(--accent-2); line-height: 1.7; font-size: 1rem; }
+.note { color: var(--hios-text-secondary); font-size: .875rem; line-height: 1.7; margin-bottom: 0; }
+.srOnly { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+@media (max-width: 760px) {
+  .workbench { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .figure { max-width: 580px; width: 100%; justify-self: center; }
+  .controls { gap: 20px; }
+}
+@media (max-width: 420px) {
+  .lab { padding: 12px; border-radius: 12px; }
+  .readings { gap: 8px; }
+  .readings > div { padding: 15px 0; }
+  .readings dt { font-size: .875rem; overflow-wrap: anywhere; }
+  .readings dd { font-size: 1.15rem; }
+  .resultTable { font-size: .875rem; }
+  .resultTable th, .resultTable td { padding: 12px 3px; }
+  .resistance { display: block; margin-left: 0; font-size: .875rem; }
+}

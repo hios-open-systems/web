@@ -46,6 +46,7 @@ const TOOLS: Partial<Record<WorkbenchToolId, ComponentType>> = {
   'image-base64': dynamic(() => import('@/components/workbench/ImageBase64Tool').then((m) => m.ImageBase64Tool), { ssr: false }),
   'resistor-color-code': dynamic(() => import('@/components/workbench/ResistorColorCodeTool').then((m) => m.ResistorColorCodeTool), { ssr: false }),
   'ohms-law': dynamic(() => import('@/components/workbench/OhmsLawTool').then((m) => m.OhmsLawTool), { ssr: false }),
+  'radio-basics': dynamic(() => import('@/components/radio-basics/RadioBasicsTool').then((m) => m.RadioBasicsTool), { ssr: false }),
   'http-status-codes': dynamic(() => import('@/components/workbench/HttpStatusCodesTool').then((m) => m.HttpStatusCodesTool), { ssr: false }),
   'ascii-unicode': dynamic(() => import('@/components/workbench/AsciiUnicodeTool').then((m) => m.AsciiUnicodeTool), { ssr: false }),
   'ipv6-expand': dynamic(() => import('@/components/workbench/Ipv6ExpandTool').then((m) => m.Ipv6ExpandTool), { ssr: false }),

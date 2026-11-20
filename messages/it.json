@@ -1962,6 +1962,7 @@
             "missingKey": "Inserisci una chiave per calcolare HMAC."
         },
         "ohmsLaw": {
+            "learnCircuits": "Studia i circuiti passo dopo passo: serie, parallelo e laboratorio interattivo.",
             "badge": "Elettronica",
             "title": "Legge di Ohm",
             "subtitle": "Calcola tensione, corrente, resistenza e potenza a partire da due valori noti.",
@@ -2497,6 +2498,10 @@
             "resistor-color-code": {
                 "title": "Codice colori delle resistenze",
                 "description": "Converti le bande colorate in valori di resistenza o calcola i colori a partire da un valore."
+            },
+            "radio-basics": {
+                "title": "Elettricità per radioamatori",
+                "description": "Comprendi tensione, corrente, resistenza e potenza. Studia circuiti in serie e parallelo con esempi svolti, un laboratorio interattivo ed esercizi spiegati."
             },
             "ohms-law": {
                 "title": "Legge di Ohm",
@@ -4766,5 +4771,206 @@
         "draft": "Bozza locale: non modifica il repository. Scarica le modifiche prima di chiudere o disconnettere. Immagini e link esterni sono disabilitati.",
         "image": "Immagine omessa",
         "select": "Scegli un file da leggere o per preparare una copia."
+    },
+    "RadioBasics": {
+        "badge": "Radioamatori · Sezione 01",
+        "introTitle": "Capire un circuito prima di memorizzare le formule",
+        "intro": "Perché due resistori si comportano diversamente quando cambi i collegamenti? In questa sezione seguirai carica ed energia, calcolerai un circuito e verificherai le tue previsioni in laboratorio.",
+        "scope": "Lavoriamo in corrente continua (CC), con un generatore ideale e resistori ohmici a temperatura costante. Il generatore mantiene la tensione, i fili non hanno resistenza e il riscaldamento non viene simulato. Le apparecchiature reali hanno dei limiti, che distingueremo da questo modello.",
+        "navLabel": "Contenuti di questa sezione",
+        "nav": {
+            "concepts": "Le grandezze",
+            "ohm": "Legge di Ohm",
+            "connections": "Serie e parallelo",
+            "laboratory": "Laboratorio",
+            "power": "Potenza e misure",
+            "practice": "Mettiti alla prova"
+        },
+        "concepts": {
+            "title": "Quattro grandezze, quattro domande diverse",
+            "intro": "Un circuito richiede un generatore, un percorso conduttore chiuso e un carico, per esempio un resistore. Un filo metallico contiene già elettroni mobili: la batteria non deve riempirlo di elettroni. La carica elettrica si misura in coulomb (C); l’energia in joule (J).",
+            "voltage": {
+                "title": "Tensione · Quanta energia per carica?",
+                "unit": "V · volt (V)",
+                "definition": "La tensione è una differenza di potenziale tra due punti: esprime energia per unità di carica. Una differenza di 12 V corrisponde a 12 J per ogni coulomb trasferito. Per questo chiediamo sempre: «tensione tra quali due punti?».",
+                "example": "Una batteria può mantenere 12 V tra i suoi morsetti con l’interruttore aperto. C’è tensione anche se non circola corrente.",
+                "caution": "Non è una grandezza che «passa nel filo». Si misura tra due punti.",
+                "formula": "1 V = 1 J/C"
+            },
+            "current": {
+                "title": "Corrente · Quanta carica passa al secondo?",
+                "unit": "I · ampere (A)",
+                "definition": "La corrente misura la carica netta che attraversa una sezione del conduttore nell’unità di tempo. Se passa 1 coulomb al secondo, la corrente è 1 ampere. Una corrente di 40 mA equivale a 0,040 A: ogni secondo passano 0,040 C.",
+                "example": "Disegniamo la corrente convenzionale in uscita dal polo positivo e di ritorno al negativo attraverso il circuito esterno. Nei metalli gli elettroni si spostano nel verso opposto.",
+                "caution": "La corrente non è la velocità degli elettroni. Non si «consuma» nemmeno attraversando un resistore.",
+                "formula": "I = ΔQ / Δt; 1 A = 1 C/s"
+            },
+            "resistance": {
+                "title": "Resistenza · Quanto limita la corrente?",
+                "unit": "R · ohm (Ω)",
+                "definition": "In un resistore ohmico, tensione e corrente sono proporzionali. La costante che le lega è la resistenza: R = V/I. A parità di tensione, una resistenza maggiore lascia passare meno corrente. Il componente fisico è il resistore; la resistenza è una sua proprietà.",
+                "example": "A 12 V, un resistore da 100 Ω conduce 120 mA. Uno da 200 Ω conduce 60 mA. Raddoppiare R dimezza I se V rimane costante.",
+                "caution": "Il resistore trasforma energia elettrica in calore. La carica che entra esce anche: non consuma carica.",
+                "formula": "1 Ω = 1 V/A"
+            },
+            "power": {
+                "title": "Potenza · A quale ritmo si trasforma l’energia?",
+                "unit": "P · watt (W)",
+                "definition": "La potenza è l’energia trasferita nell’unità di tempo. Un resistore che dissipa 2 W trasforma in calore 2 J di energia elettrica ogni secondo. In CC costante si calcola moltiplicando la tensione ai capi del componente per la sua corrente.",
+                "example": "Un apparecchio che assorbe 2 A da un generatore a 12 V riceve 24 W elettrici. Non significa che trasmetta 24 W in radiofrequenza: ci sono anche perdite e altri consumi.",
+                "caution": "W misura la potenza; J e Wh misurano l’energia. Mantenere 24 W per un’ora corrisponde a 24 Wh = 86 400 J.",
+                "formula": "P = V · I; 1 W = 1 J/s"
+            }
+        },
+        "ohm": {
+            "title": "La legge di Ohm: una relazione verificabile",
+            "intro": "Per un resistore ohmico con R costante, V = I · R. Non è una regola universale per ogni componente: un diodo, per esempio, non ha una resistenza costante in tutti i punti di funzionamento.",
+            "currentLabel": "Per trovare la corrente",
+            "voltageLabel": "Per trovare la tensione",
+            "resistanceLabel": "Per trovare la resistenza",
+            "workedTitle": "Un resistore da 100 Ω collegato a 12 V",
+            "stepOne": "Individua i dati e le unità: V = 12 V e R = 100 Ω. Cerchiamo I, in ampere.",
+            "stepTwo": "Scegli l’equazione e sostituisci: I = V/R = 12/100 = 0,12 A = 120 mA.",
+            "stepThree": "Verifica: I · R = 0,12 × 100 = 12 V. Il risultato restituisce la tensione del generatore.",
+            "units": "Prima del calcolo passa alle unità di base: 1 kΩ = 1 000 Ω; 1 mA = 0,001 A. Dividendo volt per ohm si ottengono ampere, non milliampere.",
+            "prediction": "Due previsioni utili: con R fissa, raddoppiare V raddoppia I. Con V fissa, raddoppiare R dimezza I. Cambia una variabile alla volta per osservare una causa.",
+            "graphTitle": "Come leggere un grafico tensione–corrente",
+            "graphText": "Ogni punto è una coppia (V, I). Per un resistore ohmico la retta passa per l’origine: più tensione produce proporzionalmente più corrente. Con gli stessi assi, la retta del resistore con resistenza minore è più ripida perché I/V = 1/R.",
+            "voltageAxis": "Tensione (V)",
+            "currentAxis": "Corrente (mA)",
+            "graphDescription": "Corrente in funzione della tensione per resistenze da 100 e 200 ohm, da zero a dodici volt. A dodici volt le correnti sono 120 e 60 milliampere."
+        },
+        "connections": {
+            "title": "Serie e parallelo: la differenza è nei collegamenti",
+            "intro": "Un nodo è l’insieme dei punti collegati da un filo ideale, senza componenti intermedi: hanno lo stesso potenziale. Per riconoscere un collegamento segui nodi e percorsi; non basta disegnare due resistori uno accanto all’altro.",
+            "equivalent": "La resistenza equivalente è il valore di un unico resistore che assorbirebbe dal generatore la stessa corrente totale con la stessa tensione. Sostituisce la rete vista dal generatore; non significa che tutti i resistori abbiano quella resistenza.",
+            "seriesTitle": "Serie · un unico percorso",
+            "seriesBody": "Due resistori sono in serie quando la loro giunzione non ha una diramazione: la stessa corrente attraversa entrambi. In regime stazionario la carica non si accumula nella giunzione. Le cadute di tensione si sommano fino alla tensione del generatore: è la legge delle tensioni di Kirchhoff.",
+            "seriesDerivation": "Poiché V = V₁ + V₂ = I·R₁ + I·R₂ = I·(R₁ + R₂), la R equivalente = R₁ + R₂. La tensione si ripartisce in proporzione alle resistenze; non necessariamente a metà.",
+            "seriesCheck": "Verifica: 4 + 8 = 12 V. Passano 40 mA sia in R1 sia in R2. La seconda ha una caduta di tensione maggiore, senza che la corrente diminuisca dopo la prima.",
+            "parallelTitle": "Parallelo · due percorsi tra gli stessi nodi",
+            "parallelBody": "Le due estremità di R1 si collegano agli stessi nodi A e B di quelle di R2. Entrambi i resistori hanno quindi la stessa tensione. In A la corrente in arrivo si divide; in B si riunisce. È conservazione della carica: la legge delle correnti di Kirchhoff.",
+            "parallelDerivation": "Poiché I totale = I₁ + I₂ = V/R₁ + V/R₂ e anche I totale = V/R equivalente, dividendo per V otteniamo 1/R equivalente = 1/R₁ + 1/R₂. Per due resistori si semplifica in R₁·R₂/(R₁ + R₂).",
+            "parallelCheck": "Verifica: 120 + 60 = 180 mA. Nel ramo da 100 Ω scorre il doppio della corrente rispetto a quello da 200 Ω. La corrente si divide in parti uguali solo se le resistenze sono uguali.",
+            "exampleLabel": "Lo stesso generatore: 12 V · Gli stessi resistori: 100 Ω e 200 Ω",
+            "remember": "Controllo rapido: in serie la R equivalente è maggiore di ciascuna resistenza. In parallelo è minore della più piccola. Aggiungere un ramo offre un altro percorso e aumenta la corrente totale assorbita da un generatore ideale di tensione.",
+            "open": "Aprendo l’unico percorso di una serie si interrompe tutta la corrente. Aprendo un ramo del parallelo, l’altro resta alimentato. Provalo qui sotto prima di continuare."
+        },
+        "experiments": {
+            "title": "Prevedi, modifica e spiega",
+            "intro": "Usa i controlli del laboratorio per verificare queste tre idee. Confronta i numeri e giustifica il risultato con una regola del circuito.",
+            "one": "In parallelo, con 12 V e 100 Ω / 200 Ω, porta R2 a 400 Ω. Quale corrente cambia? R1 resta a 120 mA; R2 scende a 30 mA e il generatore eroga 150 mA.",
+            "two": "Ripristina i valori e passa alla serie. La corrente scende a 40 mA e le tensioni sono 4 V e 8 V. Scollega R2: entrambe le correnti diventano zero.",
+            "three": "Con un solo resistore da 100 Ω, confronta 6 V e 12 V. I passa da 60 a 120 mA; P da 0,36 a 1,44 W. La potenza quadruplica perché P = V²/R."
+        },
+        "power": {
+            "title": "Dai numeri a un componente reale",
+            "intro": "Per un resistore puoi combinare P = V·I con la legge di Ohm. Ottieni P = I²·R = V²/R. Scegli l’espressione in base ai dati noti: tutte e tre descrivono la stessa dissipazione.",
+            "workedTitle": "Va bene un resistore da ¼ W?",
+            "workedBody": "Vuoi collegare 120 Ω a 12 V CC. Prima I = 12/120 = 0,1 A. Poi P = 12 × 0,1 = 1,2 W. Un resistore da 0,25 W nominali dovrebbe dissipare 4,8 volte la sua potenza nominale: non è adatto.",
+            "rating": "La potenza nominale è una capacità di dissipazione in condizioni specificate, non il consumo costante del resistore. Uno da 2 W può essere una scelta iniziale per 1,2 W, ma bisogna verificare temperatura, montaggio e declassamento della potenza ammessa nella scheda tecnica. Può comunque scaldarsi molto.",
+            "conservation": "Anche l’energia consente di verificare il circuito: nella serie da 12 V con 100 Ω e 200 Ω, P₁ = 0,16 W e P₂ = 0,32 W. Il generatore eroga 12 × 0,04 = 0,48 W, pari alla loro somma. In parallelo sono 1,44 W + 0,72 W = 2,16 W.",
+            "measurementTitle": "Come misurare con un multimetro",
+            "voltmeterTitle": "Tensione: tra due punti",
+            "voltmeter": "Seleziona tensione CC e collega il voltmetro in parallelo al componente. La sua elevata resistenza d’ingresso serve ad alterare il circuito il meno possibile.",
+            "ammeterTitle": "Corrente: nel percorso",
+            "ammeter": "Togli alimentazione prima di modificare il circuito, apri il percorso e inserisci l’amperometro in serie. Scegli ingresso e portata adatti: ha bassa resistenza e può contenere un fusibile.",
+            "ohmmeter": "Per misurare la resistenza, togli alimentazione e scarica i condensatori. Se esistono altri percorsi in parallelo, isola almeno un terminale del resistore per non misurare l’intera rete.",
+            "meterWarning": "Non collegare un multimetro in modalità corrente direttamente ai morsetti di un generatore: creeresti un percorso a bassissima resistenza. Questa sezione riguarda esercitazioni in CC a bassa tensione, non misure sulla rete elettrica.",
+            "rf": "Collegamento alla radio: i 50 Ω di un’antenna o di un cavo si riferiscono di solito all’impedenza in RF. Qui non li trattiamo come una resistenza in CC. Prima dell’esempio di un trasmettitore da 100 W studieremo CA, valori efficaci e impedenza."
+        },
+        "quiz": {
+            "title": "Verifica se sai spiegarlo",
+            "intro": "Scegli una risposta. Vedrai il ragionamento anche in caso di errore; puoi riprovare.",
+            "correct": "Corretto",
+            "retry": "Rivediamo l’idea",
+            "reset": "Azzera le risposte",
+            "score": "{correct} risposte corrette su {total}",
+            "q1": {
+                "question": "Una batteria ideale da 12 V è scollegata. Che cosa accade?",
+                "a": "Ha 12 V ai morsetti ed eroga 0 A.",
+                "b": "Ha 0 V perché non circola corrente.",
+                "c": "Eroga 12 A anche a circuito aperto.",
+                "explanation": "La tensione confronta i potenziali di due punti. Può esistere senza corrente. Il circuito aperto impedisce un flusso esterno continuo di carica, ma non elimina la tensione della batteria."
+            },
+            "q2": {
+                "question": "In serie, 100 Ω e 200 Ω sono collegati a 12 V. Quale corrente attraversa ciascuno?",
+                "a": "120 mA in R1 e 60 mA in R2.",
+                "b": "40 mA in entrambi.",
+                "c": "40 mA in R1 e 20 mA in R2.",
+                "explanation": "R equivalente = 300 Ω; I = 12/300 = 0,04 A. Il percorso è unico, quindi gli stessi 40 mA attraversano entrambi i resistori. Le loro tensioni sono 4 V e 8 V."
+            },
+            "q3": {
+                "question": "In parallelo a 12 V, R1 = 100 Ω e R2 = 200 Ω. Sostituisci R2 con 400 Ω. Quanta corrente scorre in R1?",
+                "a": "60 mA: anche la sua corrente si dimezza.",
+                "b": "150 mA: riceve tutta la corrente del generatore.",
+                "c": "120 mA: mantiene la stessa tensione.",
+                "explanation": "Il generatore ideale mantiene 12 V su entrambi i rami. In R1, I = 12/100 = 120 mA. Solo R2 scende a 30 mA; la corrente totale diventa 150 mA. Ogni ramo ha la propria corrente."
+            },
+            "q4": {
+                "question": "Se raddoppi la tensione applicata a un resistore a resistenza costante, la potenza…",
+                "a": "Quadruplica.",
+                "b": "Raddoppia.",
+                "c": "Resta uguale.",
+                "explanation": "P = V²/R: raddoppiando V, il suo quadrato si moltiplica per quattro. Puoi anche considerare P = V·I: sia V sia I raddoppiano. In 100 Ω, passare da 6 V a 12 V porta 0,36 W a 1,44 W."
+            }
+        },
+        "roadmap": {
+            "title": "Il percorso successivo",
+            "intro": "Questa è la prima sezione sviluppata. Le successive non sono ancora pubblicate: le affronteremo con spiegazioni, grafici ed esercizi dedicati.",
+            "wavesTitle": "Onde e frequenza",
+            "waves": "Grafici nel tempo: ampiezza, periodo e frequenza; confronto tra segnali; lunghezza d’onda e relazione λ = v/f. Che cosa cambia e che cosa resta costante modificando ogni valore.",
+            "bandsTitle": "Bande e propagazione",
+            "bands": "Da Hz a GHz; LF, MF, HF, VHF e UHF; relazione con antenne e propagazione. Distingueremo il nome fisico di una banda dalle frequenze e modalità autorizzate per i radioamatori in Argentina, usando fonti ufficiali aggiornate.",
+            "morseTitle": "Allenamento Morse",
+            "morse": "Punti e linee con audio, durata e spaziatura; esempi come SOS e CQ; prove di ascolto e scrittura. Un albero binario permetterà di seguire ogni punto o linea fino alla lettera e allenarsi per rami."
+        },
+        "sources": {
+            "title": "Per approfondire e verificare",
+            "intro": "Spiegazioni ed esempi originali, verificati con OpenStax, University Physics, volume 2 (in inglese). Selezionando i collegamenti si apre il sito esterno openstax.org.",
+            "current": "9.1 · Corrente elettrica",
+            "ohm": "9.4 · Legge di Ohm e misure",
+            "connections": "10.2 · Resistori in serie e parallelo",
+            "limits": "Il laboratorio calcola un regime stazionario ideale: non simula transitori, tolleranze, limiti del generatore o variazioni termiche. È materiale di studio, non un programma ufficiale né una raccolta di domande d’esame."
+        },
+        "lab": {
+            "title": "Laboratorio di corrente continua",
+            "intro": "Cambia una sola cosa alla volta e confronta ciò che accade a corrente e potenza.",
+            "single": "Un resistore",
+            "series": "Serie",
+            "parallel": "Parallelo",
+            "voltage": "Tensione del generatore",
+            "resistanceOne": "Resistenza R1",
+            "resistanceTwo": "Resistenza R2",
+            "powered": "Generatore acceso",
+            "connected": "R2 collegata",
+            "reset": "Ripristina 12 V · 100 Ω · 200 Ω",
+            "equivalent": "Resistenza equivalente",
+            "totalCurrent": "Corrente totale",
+            "totalPower": "Potenza totale",
+            "component": "Resistore",
+            "potential": "Tensione",
+            "current": "Corrente",
+            "power": "Potenza",
+            "diagramTitle": "Circuito in corrente continua",
+            "diagramDescription": "La corrente convenzionale esce dal polo positivo del generatore e ritorna al negativo. In parallelo R1 e R2 sono collegati tra gli stessi nodi A e B.",
+            "idealNote": "Modello ideale in CC: fili senza resistenza e generatore a tensione costante. Le frecce indicano la corrente convenzionale, non la velocità degli elettroni.",
+            "open": "Circuito aperto",
+            "sourceOff": "Generatore spento: non eroga tensione né corrente.",
+            "openSeries": "Scollegando R2 si interrompe l’unico percorso: non circola corrente nemmeno in R1. La tensione del generatore si trova ai capi dell’interruttore aperto.",
+            "openParallel": "Il ramo R2 è aperto. R1 mantiene tensione e corrente; il generatore eroga meno corrente totale.",
+            "singleWhy": "Un solo percorso: la corrente si ottiene dividendo la tensione del generatore per R1.",
+            "seriesWhy": "Un solo percorso: la stessa corrente attraversa entrambi i resistori. La somma delle loro cadute di tensione è pari alla tensione del generatore.",
+            "parallelWhy": "Due percorsi tra gli stessi nodi: entrambi i resistori hanno la tensione del generatore. Le correnti dei rami si sommano.",
+            "calculation": "Come si calcola",
+            "resistanceStep": "Prima, la resistenza equivalente",
+            "currentStep": "Poi, la corrente totale",
+            "powerStep": "Infine, la potenza totale",
+            "powerNotice": "Se realizzi il circuito, la potenza nominale di ciascun resistore deve superare la dissipazione calcolata, con un margine e nelle condizioni specificate dal produttore.",
+            "source": "Generatore",
+            "node": "Nodo",
+            "disabledBranch": "Ramo scollegato",
+            "branch": "Ramo R{number}"
+        }
     }
 }

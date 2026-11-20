@@ -1962,6 +1962,7 @@
             "missingKey": "Enter a key to calculate the HMAC."
         },
         "ohmsLaw": {
+            "learnCircuits": "Study circuits step by step: series, parallel and an interactive laboratory.",
             "badge": "Electronics tool",
             "title": "Ohm’s law",
             "subtitle": "Calculate voltage, current, resistance and power from two known values.",
@@ -2497,6 +2498,10 @@
             "resistor-color-code": {
                 "title": "Resistor color code",
                 "description": "Convert color bands to resistance values, or calculate the bands for a given value."
+            },
+            "radio-basics": {
+                "title": "Electricity for amateur radio",
+                "description": "Understand voltage, current, resistance and power. Study series and parallel circuits with worked examples, an interactive laboratory and explained exercises."
             },
             "ohms-law": {
                 "title": "Ohm’s law",
@@ -4766,5 +4771,206 @@
         "draft": "Local draft: does not change the repository. Download your changes before closing or disconnecting. External images and links are disabled.",
         "image": "Image omitted",
         "select": "Choose a file to read or prepare a copy."
+    },
+    "RadioBasics": {
+        "badge": "Amateur radio · Section 01",
+        "introTitle": "Understand a circuit before memorizing formulas",
+        "intro": "Why do two resistors behave differently when you change the wiring? In this section you will follow charge and energy, calculate a circuit and test your predictions in the laboratory.",
+        "scope": "We work with direct current (DC), an ideal source and ohmic resistors at constant temperature. The source maintains its voltage, wires have no resistance and heating is not modeled. Real equipment has limits; we will distinguish them from this model.",
+        "navLabel": "Contents of this section",
+        "nav": {
+            "concepts": "The quantities",
+            "ohm": "Ohm’s law",
+            "connections": "Series and parallel",
+            "laboratory": "Laboratory",
+            "power": "Power and measurement",
+            "practice": "Test yourself"
+        },
+        "concepts": {
+            "title": "Four quantities, four different questions",
+            "intro": "A circuit needs a source, a closed conducting path and a load such as a resistor. A metal wire already contains mobile electrons: the battery does not have to fill it with electrons. Electric charge is measured in coulombs (C); energy in joules (J).",
+            "voltage": {
+                "title": "Voltage · How much energy per charge?",
+                "unit": "V · volt (V)",
+                "definition": "Voltage is an electric potential difference between two points: it expresses energy per unit charge. A difference of 12 V means 12 J per coulomb transferred. That is why we always ask ‘voltage between which two points?’.",
+                "example": "A battery can maintain 12 V across its terminals with the switch open. There is voltage even though no current flows.",
+                "caution": "It is not a quantity that ‘flows through the wire’. It is measured between two points.",
+                "formula": "1 V = 1 J/C"
+            },
+            "current": {
+                "title": "Current · How much charge passes each second?",
+                "unit": "I · ampere (A)",
+                "definition": "Current measures the net charge crossing a conductor’s cross section per unit time. If 1 coulomb passes each second, the current is 1 ampere. A current of 40 mA is 0.040 A: 0.040 C passes each second.",
+                "example": "We draw conventional current leaving the positive terminal and returning to the negative terminal through the external circuit. In metals, electrons drift in the opposite direction.",
+                "caution": "Current is not the speed of electrons. It is not ‘used up’ as it passes through a resistor either.",
+                "formula": "I = ΔQ / Δt; 1 A = 1 C/s"
+            },
+            "resistance": {
+                "title": "Resistance · How much does it limit current?",
+                "unit": "R · ohm (Ω)",
+                "definition": "In an ohmic resistor, voltage and current are proportional. The constant relating them is its resistance: R = V/I. At the same voltage, a higher resistance allows less current. The physical component is a resistor; resistance is one of its properties.",
+                "example": "At 12 V, a 100 Ω resistor carries 120 mA. A 200 Ω resistor carries 60 mA. Doubling R halves I if V is maintained.",
+                "caution": "The resistor converts electrical energy into heat. Charge entering it also leaves it; it does not consume charge.",
+                "formula": "1 Ω = 1 V/A"
+            },
+            "power": {
+                "title": "Power · How quickly is energy converted?",
+                "unit": "P · watt (W)",
+                "definition": "Power is energy transferred per unit time. A resistor dissipating 2 W converts 2 J of electrical energy into heat each second. For steady DC, multiply the component’s voltage by its current.",
+                "example": "Equipment drawing 2 A from a 12 V source receives 24 W of electrical power. That does not mean it transmits 24 W of radio-frequency power: it also has losses and other loads.",
+                "caution": "W measures power; J and Wh measure energy. Maintaining 24 W for one hour transfers 24 Wh = 86,400 J.",
+                "formula": "P = V · I; 1 W = 1 J/s"
+            }
+        },
+        "ohm": {
+            "title": "Ohm’s law: a relationship you can check",
+            "intro": "For an ohmic resistor with constant R, V = I · R. It is not a universal rule for every component: a diode, for example, does not have a constant resistance at every operating point.",
+            "currentLabel": "To find current",
+            "voltageLabel": "To find voltage",
+            "resistanceLabel": "To find resistance",
+            "workedTitle": "A 100 Ω resistor connected to 12 V",
+            "stepOne": "Identify the given quantities and units: V = 12 V and R = 100 Ω. We want I in amperes.",
+            "stepTwo": "Choose the equation and substitute: I = V/R = 12/100 = 0.12 A = 120 mA.",
+            "stepThree": "Check: I · R = 0.12 × 100 = 12 V. The result reproduces the source voltage.",
+            "units": "Convert to base units before calculating: 1 kΩ = 1,000 Ω; 1 mA = 0.001 A. Dividing volts by ohms gives amperes, not milliamperes.",
+            "prediction": "Two useful predictions: with R fixed, doubling V doubles I. With V fixed, doubling R halves I. Change one variable at a time to observe a cause.",
+            "graphTitle": "How to read a voltage–current graph",
+            "graphText": "Each point is a pair (V, I). For an ohmic resistor the line passes through the origin: more voltage produces proportionally more current. With the same axes, the lower-resistance line is steeper because I/V = 1/R.",
+            "voltageAxis": "Voltage (V)",
+            "currentAxis": "Current (mA)",
+            "graphDescription": "Current versus voltage for resistances of 100 and 200 ohms, from zero to twelve volts. At twelve volts the currents are 120 and 60 milliamperes."
+        },
+        "connections": {
+            "title": "Series and parallel: the connections make the difference",
+            "intro": "A node is the collection of points joined by ideal wire, with no components between them: they have the same electric potential. To identify a connection, follow the nodes and paths; drawing two resistors next to each other is not enough.",
+            "equivalent": "The equivalent resistance is the value of a single resistor that would draw the same total current from the source at the same voltage. It replaces the network as seen by the source; it does not mean every resistor has that resistance.",
+            "seriesTitle": "Series · one path",
+            "seriesBody": "Two resistors are in series when their junction has no branch: the same current passes through both. In steady state, charge does not build up at that junction. Their voltage drops add up to the source voltage: this is Kirchhoff’s voltage law.",
+            "seriesDerivation": "Since V = V₁ + V₂ = I·R₁ + I·R₂ = I·(R₁ + R₂), equivalent R = R₁ + R₂. The voltage divides in proportion to each resistance; not necessarily into equal halves.",
+            "seriesCheck": "Check: 4 + 8 = 12 V. R1 carries 40 mA and R2 also carries 40 mA. The second has a larger voltage drop, without the current decreasing after the first.",
+            "parallelTitle": "Parallel · two paths between the same nodes",
+            "parallelBody": "The two ends of R1 connect to the same nodes A and B as the ends of R2. Both resistors therefore have the same voltage. At A, the incoming current divides; at B, it recombines. This is conservation of charge: Kirchhoff’s current law.",
+            "parallelDerivation": "Since total I = I₁ + I₂ = V/R₁ + V/R₂ and also total I = V/equivalent R, dividing by V gives 1/equivalent R = 1/R₁ + 1/R₂. For two resistors this simplifies to R₁·R₂/(R₁ + R₂).",
+            "parallelCheck": "Check: 120 + 60 = 180 mA. The 100 Ω branch carries twice the current of the 200 Ω branch. Current divides equally only when the resistances are equal.",
+            "exampleLabel": "The same source: 12 V · The same resistors: 100 Ω and 200 Ω",
+            "remember": "Quick check: in series, equivalent R is larger than either resistance. In parallel, it is smaller than the smallest. Adding a branch provides another path and increases the total current the circuit draws from an ideal voltage source.",
+            "open": "Opening the only path in a series circuit stops all current. Opening one parallel branch leaves the other supplied. Try it below before continuing."
+        },
+        "experiments": {
+            "title": "Predict, change and explain",
+            "intro": "Use the laboratory controls to test these three ideas. Compare the numbers and justify the result using a circuit rule.",
+            "one": "In parallel, with 12 V and 100 Ω / 200 Ω, increase R2 to 400 Ω. Which current changes? R1 stays at 120 mA; R2 falls to 30 mA and the source supplies 150 mA.",
+            "two": "Reset the values and switch to series. Current falls to 40 mA and the voltages are 4 V and 8 V. Disconnect R2: both currents become zero.",
+            "three": "With a single 100 Ω resistor, compare 6 V with 12 V. I changes from 60 to 120 mA; P from 0.36 to 1.44 W. Power quadruples because P = V²/R."
+        },
+        "power": {
+            "title": "From numbers to a real component",
+            "intro": "For a resistor you can combine P = V·I with Ohm’s law. This gives P = I²·R = V²/R. Choose the expression using what you know; all three describe the same dissipation.",
+            "workedTitle": "Will a ¼ W resistor work?",
+            "workedBody": "You want to connect 120 Ω to 12 V DC. First I = 12/120 = 0.1 A. Then P = 12 × 0.1 = 1.2 W. A resistor rated at 0.25 W would have to dissipate 4.8 times its rated power: it is unsuitable.",
+            "rating": "Rated power is a dissipation capability under specified conditions, not how much the resistor always consumes. A 2 W part can be an initial choice for 1.2 W, but check temperature, mounting and power derating in its data sheet. It can still become very hot.",
+            "conservation": "Energy also lets you check the circuit: in the 12 V series circuit with 100 Ω and 200 Ω, P₁ = 0.16 W and P₂ = 0.32 W. The source supplies 12 × 0.04 = 0.48 W, equal to their sum. In parallel they are 1.44 W + 0.72 W = 2.16 W.",
+            "measurementTitle": "How to measure with a multimeter",
+            "voltmeterTitle": "Voltage: between two points",
+            "voltmeter": "Select DC voltage and connect the voltmeter in parallel with the component. Its high input resistance is designed to disturb the circuit very little.",
+            "ammeterTitle": "Current: in the path",
+            "ammeter": "Disconnect power before modifying the circuit, open the path and insert the ammeter in series. Select the appropriate input and range: it has low resistance and may include a fuse.",
+            "ohmmeter": "To measure resistance, disconnect power and discharge capacitors. If other parallel paths exist, isolate at least one resistor terminal so you do not measure the whole network.",
+            "meterWarning": "Do not put a multimeter set to current directly across a source’s terminals: that creates a very low-resistance path. This section concerns low-voltage DC practice, not mains measurements.",
+            "rf": "Connection to radio: the 50 Ω of an antenna or cable usually refers to RF impedance. We do not treat it here as a DC resistance. Before the example of a 100 W transmitter, we will study AC, RMS values and impedance."
+        },
+        "quiz": {
+            "title": "Check whether you can explain it",
+            "intro": "Choose an answer. You will see the reasoning even if your answer is incorrect; you can try again.",
+            "correct": "Correct",
+            "retry": "Let’s revisit the idea",
+            "reset": "Reset answers",
+            "score": "{correct} of {total} answers correct",
+            "q1": {
+                "question": "An ideal 12 V battery is disconnected. What happens?",
+                "a": "It has 12 V across its terminals and supplies 0 A.",
+                "b": "It has 0 V because no current flows.",
+                "c": "It supplies 12 A even with the circuit open.",
+                "explanation": "Voltage compares the electric potentials of two points. It can exist without current. An open circuit prevents a sustained external flow of charge but does not remove the battery’s voltage."
+            },
+            "q2": {
+                "question": "In series, 100 Ω and 200 Ω are connected to 12 V. What current passes through each?",
+                "a": "120 mA through R1 and 60 mA through R2.",
+                "b": "40 mA through both.",
+                "c": "40 mA through R1 and 20 mA through R2.",
+                "explanation": "Equivalent R = 300 Ω; I = 12/300 = 0.04 A. There is only one path, so the same 40 mA passes through both resistors. Their voltages are 4 V and 8 V."
+            },
+            "q3": {
+                "question": "In parallel at 12 V, R1 = 100 Ω and R2 = 200 Ω. You replace R2 with 400 Ω. What current passes through R1?",
+                "a": "60 mA: its current also halves.",
+                "b": "150 mA: it receives all the source current.",
+                "c": "120 mA: it keeps the same voltage.",
+                "explanation": "The ideal source maintains 12 V across both branches. In R1, I = 12/100 = 120 mA. Only R2 falls to 30 mA; total current is now 150 mA. Each branch has its own current."
+            },
+            "q4": {
+                "question": "If you double the voltage applied to a resistor with constant resistance, its power…",
+                "a": "Quadruples.",
+                "b": "Doubles.",
+                "c": "Stays the same.",
+                "explanation": "P = V²/R: doubling V multiplies its square by four. You can also see it as P = V·I: both V and I double. For 100 Ω, going from 6 V to 12 V changes 0.36 W to 1.44 W."
+            }
+        },
+        "roadmap": {
+            "title": "The path ahead",
+            "intro": "This is the first completed section. The following sections are not yet published; we will develop them with their own explanations, diagrams and exercises.",
+            "wavesTitle": "Waves and frequency",
+            "waves": "Time-domain graphs: amplitude, period and frequency; signal comparison; wavelength and the relationship λ = v/f. What changes and what stays the same as you adjust each value.",
+            "bandsTitle": "Bands and propagation",
+            "bands": "From Hz to GHz; LF, MF, HF, VHF and UHF; connections to antennas and propagation. We will separate the physical name of a band from frequencies and modes authorized for amateur radio in Argentina, using current official sources.",
+            "morseTitle": "Morse training",
+            "morse": "Dots and dashes with audio, timing and spacing; examples such as SOS and CQ; listening and writing tests. A binary tree will let you follow each dot or dash to the letter and train one branch at a time."
+        },
+        "sources": {
+            "title": "Read further and cross-check",
+            "intro": "Original explanations and examples, checked against OpenStax, University Physics, volume 2 (in English). Selecting the links opens the external site openstax.org.",
+            "current": "9.1 · Electrical current",
+            "ohm": "9.4 · Ohm’s law and measurement",
+            "connections": "10.2 · Resistors in series and parallel",
+            "limits": "The laboratory calculates an ideal steady state: it does not simulate transients, tolerances, source limits or temperature changes. This is study material, not an official syllabus or exam question bank."
+        },
+        "lab": {
+            "title": "Direct-current laboratory",
+            "intro": "Change one thing at a time and compare what happens to current and power.",
+            "single": "One resistor",
+            "series": "Series",
+            "parallel": "Parallel",
+            "voltage": "Source voltage",
+            "resistanceOne": "Resistance R1",
+            "resistanceTwo": "Resistance R2",
+            "powered": "Source on",
+            "connected": "R2 connected",
+            "reset": "Reset to 12 V · 100 Ω · 200 Ω",
+            "equivalent": "Equivalent resistance",
+            "totalCurrent": "Total current",
+            "totalPower": "Total power",
+            "component": "Resistor",
+            "potential": "Voltage",
+            "current": "Current",
+            "power": "Power",
+            "diagramTitle": "Direct-current circuit",
+            "diagramDescription": "Conventional current leaves the source’s positive terminal and returns to the negative terminal. In parallel, R1 and R2 connect between the same nodes A and B.",
+            "idealNote": "Ideal DC model: wires with no resistance and a constant-voltage source. Arrows indicate conventional current, not electron speed.",
+            "open": "Open circuit",
+            "sourceOff": "Source off: it supplies no voltage or current.",
+            "openSeries": "Disconnecting R2 breaks the only path: no current passes through R1 either. The source voltage appears across the open switch.",
+            "openParallel": "The R2 branch is open. R1 keeps its voltage and current; the source supplies less total current.",
+            "singleWhy": "One path: divide the source voltage by R1 to obtain current.",
+            "seriesWhy": "One path: the same current passes through both resistors. Their voltage drops add up to the source voltage.",
+            "parallelWhy": "Two paths between the same nodes: both resistors have the source voltage. Their branch currents add together.",
+            "calculation": "How to calculate it",
+            "resistanceStep": "First, equivalent resistance",
+            "currentStep": "Then, total current",
+            "powerStep": "Finally, total power",
+            "powerNotice": "For a physical circuit, each resistor’s rated power must exceed its calculated dissipation, with a margin and under the manufacturer’s specified conditions.",
+            "source": "Source",
+            "node": "Node",
+            "disabledBranch": "Disconnected branch",
+            "branch": "Branch R{number}"
+        }
     }
 }
