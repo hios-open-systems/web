@@ -5,7 +5,7 @@ import { verifyProduction } from './verify-production.mjs';
 
 const workflow = parse(readFileSync(new URL('../.github/workflows/ci.yml', import.meta.url), 'utf8'));
 assert.equal(workflow.jobs.build.needs, 'test', 'Publishing must depend on self-tests');
-assert.equal(workflow.concurrency['cancel-in-progress'], "${{ github.event_name == 'pull_request' }}");
+assert.equal(workflow.concurrency['cancel-in-progress'], false, 'Never cancel a production upload');
 assert.deepEqual(workflow.permissions, { contents: 'read' });
 const steps = workflow.jobs.build.steps;
 const deployIndex = steps.findIndex(step => step.run === 'npx opennextjs-cloudflare deploy');
@@ -13,7 +13,7 @@ assert.ok(deployIndex > 0);
 const guardIndex = steps.findIndex(step => step.name === 'Verify production deployment prerequisites');
 assert.equal(guardIndex, deployIndex - 1);
 assert.ok('workflow_dispatch' in workflow.on, 'Production deploy is a manual run');
-assert.deepEqual(Object.keys(workflow.on).sort(), ['pull_request', 'push', 'workflow_dispatch']);
+assert.deepEqual(Object.keys(workflow.on), ['workflow_dispatch'], 'CI runs only by hand; verify locally before pushing');
 assert.match(steps[guardIndex].run, /git\/ref\/heads\/main/);
 assert.match(steps[guardIndex].run, /GITHUB_SHA/);
 for (const step of steps.filter(step => step.env?.CLOUDFLARE_API_TOKEN || step.run === 'node scripts/verify-production.mjs')) {

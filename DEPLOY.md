@@ -41,9 +41,10 @@ prerequisites", antes de tocar producción.
 5. Comprobación de `/api/version` contra el SHA y respuesta HTML correcta de veinte
    rutas de calculadoras, QPSK y guías PAD/BTDAC/Speaker en los cuatro idiomas.
 
-Los pushes y PR corren las mismas pruebas pero nunca los pasos con credenciales.
-Los runs sobre `main` se serializan para no interrumpir un upload; los runs de PR
-obsoletos sí se cancelan. Los diagnósticos de Playwright se conservan siete días
+Los pushes y PR **no** corren CI (desde 2026-11-20, para ahorrar minutos del free
+tier): verificá localmente con `npm run lint`, `npm test` y `npm run build` antes de
+subir. El workflow solo corre a mano. Los runs se serializan y nunca se cancelan,
+para no interrumpir un upload. Los diagnósticos de Playwright se conservan siete días
 cuando falla una prueba.
 
 Los tests de navegador previos al deploy usan `next start`; el build comprueba el
