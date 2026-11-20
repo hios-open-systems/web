@@ -75,7 +75,7 @@ export function CircuitDiagram(props: Props) {
       ? props.settings.mode === 'series' ? 'openSeries' : 'openParallel'
       : `${props.settings.mode}Why`;
   return <svg viewBox="0 0 500 315" className={styles.diagram} role="img" aria-labelledby={`${arrowId}-title ${arrowId}-desc`}>
-    <title id={`${arrowId}-title`}>{t('diagramTitle')} · {t(props.settings.mode)}</title>
+    <title id={`${arrowId}-title`}>{`${t('diagramTitle')} · ${t(props.settings.mode)}`}</title>
     <desc id={`${arrowId}-desc`}>{t(description)}</desc>
     <defs><marker id={arrowId} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="currentColor" /></marker></defs>
     <Source voltage={props.result.sourceVoltage} format={props.format} />

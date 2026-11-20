@@ -5267,5 +5267,212 @@
         "englishLabel": "Término en inglés",
         "englishCodeLabel": "Significado en inglés (código Q)",
         "englishNote": "Las siglas como PTT se forman con iniciales de palabras. QSL y QSO son códigos convencionales de tres letras: sus letras no desarrollan una frase inglesa. En esas entradas mostramos una expresión inglesa equivalente a su significado habitual."
+    },
+    "RadioCourse": {
+        "eyebrow": "Curso · Electricidad básica",
+        "hubTitle": "Un tema por vez",
+        "hubIntro": "Elegí una lección y recorrela a tu ritmo. El laboratorio, el glosario y los documentos tienen su propio lugar de consulta.",
+        "start": "Empezar por tensión",
+        "lessonsLabel": "Lecciones",
+        "resourcesLabel": "Laboratorio y consulta",
+        "futureLabel": "Después de electricidad",
+        "futureIntro": "Seguiremos con ondas y frecuencia, bandas y propagación, y Morse con entrenamiento. Esos módulos todavía no están publicados.",
+        "backToCourse": "Índice del curso",
+        "navigation": "Navegación del curso",
+        "jump": "Cambiar de tema",
+        "previous": "Anterior",
+        "next": "Siguiente",
+        "lessonPosition": "Lección {current} de {total}",
+        "resource": "Recurso de consulta",
+        "simpleCircuitCaption": "Ejemplo de referencia: una fuente de 12 V alimenta un resistor de 100 Ω y circulan 120 mA. La tensión se mide entre dos puntos; la corriente recorre el camino cerrado.",
+        "pages": {
+            "voltage": {
+                "title": "Tensión",
+                "description": "Qué significa tener una diferencia de potencial entre dos puntos y por qué puede existir aunque no circule corriente."
+            },
+            "current": {
+                "title": "Corriente",
+                "description": "Cuánta carga pasa por segundo, cómo se mide y qué indican las flechas de corriente convencional."
+            },
+            "resistance": {
+                "title": "Resistencia",
+                "description": "Cómo limita la corriente un resistor y por qué la carga no se consume al atravesarlo."
+            },
+            "ohm": {
+                "title": "Ley de Ohm",
+                "description": "Relacioná tensión, corriente y resistencia con un cálculo paso a paso y un gráfico que podés interpretar."
+            },
+            "series": {
+                "title": "Circuitos en serie",
+                "description": "Un solo camino: seguí la misma corriente por dos resistores y calculá cómo se reparte la tensión."
+            },
+            "parallel": {
+                "title": "Circuitos en paralelo",
+                "description": "Dos ramas entre los mismos nodos: entendé por qué comparten tensión y sus corrientes se suman."
+            },
+            "power": {
+                "title": "Potencia",
+                "description": "Diferenciá potencia de energía, calculá la disipación y elegí la potencia nominal de un resistor."
+            },
+            "measurement": {
+                "title": "Medir con un multímetro",
+                "description": "Dónde se conecta el instrumento para medir tensión, corriente y resistencia en circuitos de baja tensión CC."
+            },
+            "practice": {
+                "title": "Ponete a prueba",
+                "description": "Resolvé cuatro situaciones y revisá el razonamiento detrás de cada respuesta."
+            },
+            "laboratory": {
+                "title": "Laboratorio de circuitos",
+                "description": "Modificá tensión y resistencias, cambiá las conexiones y comprobá tus predicciones con valores calculados."
+            },
+            "glossary": {
+                "title": "Glosario de radioafición",
+                "description": "Consultá siglas, códigos, bandas y tecnologías con su término en inglés, significado y ejemplos."
+            },
+            "sources": {
+                "title": "Documentos y fuentes",
+                "description": "Consultá las referencias del curso, la guía original de repaso y los documentos oficiales de ENACOM."
+            },
+            "bands": {
+                "title": "Bandas de frecuencia",
+                "description": "Compará bandas de radioafición, su propagación, antenas y tecnologías, y ubicá sus frecuencias en el espectro."
+            }
+        }
+    },
+    "RadioBands": {
+        "title": "Bandas de frecuencia",
+        "intro": "Compará las familias del espectro por sus límites de frecuencia. La escala crece de arriba hacia abajo: seleccioná una franja para ver su nombre completo y su longitud de onda aproximada.",
+        "chartLabel": "Espectro de frecuencias desde 3 kHz hasta 300 GHz, dividido en ocho décadas contiguas",
+        "axisLabel": "Frecuencia creciente",
+        "scale": "Escala logarítmica: cada tramo multiplica la frecuencia por 10. El mismo alto no implica el mismo ancho en MHz.",
+        "selectionHint": "Seleccioná una banda para consultar sus detalles.",
+        "range": "Frecuencias",
+        "wavelength": "Longitudes de onda aproximadas",
+        "wavelengthNote": "Valores aproximados en el espacio libre: λ = c/f, con c ≈ 300 000 000 m/s. A mayor frecuencia, menor longitud de onda.",
+        "limits": "La nomenclatura UIT excluye el límite inferior de cada intervalo e incluye el superior. Los límites compartidos se muestran una sola vez en el eje.",
+        "permissionNote": "Estas son familias generales del espectro, no bandas enteras autorizadas para radioaficionados. Los nombres en metros y las frecuencias de los ejemplos son referencias; los límites, modos y potencias permitidos dependen de la normativa y de la categoría. Para Argentina, consultá la normativa de ENACOM.",
+        "ituSource": "UIT · Nomenclatura de bandas V.431-9 (2025)",
+        "enacomSource": "ENACOM · Normativa y cuadro de bandas",
+        "sourcesNote": "Los enlaces abren los sitios externos itu.int y enacom.gob.ar solo al seleccionarlos.",
+        "bands": {
+            "vlf": {
+                "name": "Muy baja frecuencia",
+                "english": "Very Low Frequency",
+                "description": "Corresponde a ondas de aproximadamente 10 a 100 kilómetros de longitud. El nombre describe una familia del espectro, no un único canal."
+            },
+            "lf": {
+                "name": "Baja frecuencia",
+                "english": "Low Frequency",
+                "description": "Corresponde a longitudes de onda aproximadas de 1 a 10 kilómetros. Su frecuencia es diez veces mayor que la del punto equivalente de la franja VLF."
+            },
+            "mf": {
+                "name": "Frecuencia media",
+                "english": "Medium Frequency",
+                "description": "Corresponde a longitudes de onda aproximadas de 100 metros a 1 kilómetro. A partir de 1 MHz, un millón de oscilaciones por segundo se expresa como un megahertz."
+            },
+            "hf": {
+                "name": "Alta frecuencia",
+                "english": "High Frequency",
+                "description": "Incluye varias bandas de radioaficionados. En condiciones adecuadas, la propagación ionosférica permite comunicaciones a gran distancia. Como referencias: 40 m se ubica alrededor de 7 MHz y 20 m alrededor de 14 MHz."
+            },
+            "vhf": {
+                "name": "Muy alta frecuencia",
+                "english": "Very High Frequency",
+                "description": "La cobertura terrestre habitual depende mucho de la altura, el relieve y los obstáculos; también hay formas de propagación especiales. La banda amateur de 2 m se encuentra alrededor de 145 MHz."
+            },
+            "uhf": {
+                "name": "Ultra alta frecuencia",
+                "english": "Ultra High Frequency",
+                "description": "Sus ondas son más cortas que las de VHF. No implica una distancia fija de alcance ni un modo de transmisión determinado. La banda amateur de 70 cm se encuentra alrededor de 435 MHz."
+            },
+            "shf": {
+                "name": "Frecuencia superalta",
+                "english": "Super High Frequency",
+                "description": "Corresponde a ondas de aproximadamente 1 a 10 centímetros. Forma parte de las frecuencias habitualmente llamadas microondas."
+            },
+            "ehf": {
+                "name": "Frecuencia extremadamente alta",
+                "english": "Extremely High Frequency",
+                "description": "Corresponde a ondas de aproximadamente 1 a 10 milímetros, por eso se habla de ondas milimétricas. Su límite superior en esta clasificación es 300 GHz."
+            }
+        }
+    },
+    "RadioAmateurBands": {
+        "title": "Bandas de radioafición: frecuencia, propagación y equipo",
+        "intro": "Compará estas cinco bandas de uso habitual y ubicá sus frecuencias en el espectro de arriba. Seleccioná una para ver ejemplos de antenas y modos.",
+        "views": {
+            "amateur": "Bandas de radioafición",
+            "spectrum": "Familias del espectro"
+        },
+        "columns": {
+            "band": "Banda",
+            "range": "Rango de referencia",
+            "propagation": "Propagación habitual",
+            "use": "Usos frecuentes"
+        },
+        "detailTitle": "Antenas y tecnologías de la banda elegida",
+        "antennas": "Antenas frecuentes",
+        "modes": "Modos y tecnologías habituales",
+        "notes": "Qué tener en cuenta",
+        "conditions": "Son tendencias y ejemplos, no horarios, alcances ni usos exclusivos. La propagación depende de la hora, la estación del año, la actividad solar, el trayecto y la instalación.",
+        "permission": "Los rangos identifican bandas del cuadro publicado por ENACOM; no habilitan toda la banda para cualquier categoría o modo. Hay segmentos reservados y bandas de protección, y la emisión completa debe quedar dentro del segmento permitido.",
+        "referenceLabel": "Referencia argentina: Anexo A del cuadro de bandas de 2018, publicado por ENACOM. Se conserva la fecha del documento; la fecha de su enlace no lo convierte en una edición de 2021 o de 2026.",
+        "sourceLabel": "ENACOM · Cuadro de bandas original",
+        "propagationSource": "ARRL · Propagación en HF",
+        "indoorSource": "UIT · Propagación dentro de edificios",
+        "regulationSource": "Reglamento argentino · Apartados 1.5.9 y 13.4.2",
+        "antennaNote": "Una banda no obliga a usar una antena determinada. Importan la frecuencia, la adaptación, el patrón de radiación, la polarización y el espacio disponible.",
+        "buildingNote": "No hay una ventaja universal de VHF o UHF dentro de edificios. Los materiales, el espesor, las aberturas, el recorrido y las antenas cambian el resultado; una antena más corta no garantiza mejor penetración.",
+        "technologyTitle": "Banda, modulación, protocolo y cifrado",
+        "modulationLabel": "Modulación · modulation",
+        "modulation": "Es cómo se modifica una señal para transportar información. AM, FM y SSB son formas de modulación; HF, VHF y UHF indican familias de frecuencias. Una misma banda puede admitir distintos modos en sus segmentos.",
+        "protocolLabel": "Protocolo o estándar · protocol / standard",
+        "protocol": "Define cómo se organiza el intercambio entre equipos. DMR significa Digital Mobile Radio y es un estándar de voz y datos digitales. APRS significa Automatic Packet Reporting System y se utiliza para comunicar datos como posiciones o mensajes. Son tecnologías diferentes; no son nombres de bandas.",
+        "cipherTitle": "Cifrado · encryption",
+        "cipherText": "El cifrado busca ocultar el contenido a quien no pueda descifrarlo. Representar voz o datos digitalmente es otra operación: digital no significa cifrado. El Reglamento argentino tipifica «Transmitir textos encriptados» como infracción operativa en su apartado 13.4.2, y exige comunicaciones claras y entendibles en el 1.5.9.",
+        "sourcesNote": "Los enlaces de referencia abren enacom.gob.ar, argentina.gob.ar, arrl.org o itu.int solo cuando los seleccionás.",
+        "entries": {
+            "eighty": {
+                "name": "80 m",
+                "propagation": "Frecuentemente regional y nocturna; puede permitir trayectos más largos cuando las condiciones acompañan.",
+                "use": "Conversaciones regionales y nacionales, contactos de grupo y escucha en HF baja.",
+                "antennas": "Dipolo, V invertida o antena alimentada en un extremo con adaptación adecuada. El tamaño y la altura de la instalación influyen mucho en el comportamiento.",
+                "modes": "Fonía SSB, telegrafía CW y modos digitales como FT8, en sus segmentos habilitados.",
+                "notes": "En el cuadro argentino, la banda completa llega a 4,0 MHz: 3,5–3,8 MHz figura con carácter primario y 3,8–4,0 MHz con carácter secundario. De día la absorción ionosférica puede limitar especialmente la banda; no significa que siempre quede inutilizable."
+            },
+            "forty": {
+                "name": "40 m",
+                "propagation": "Suele favorecer contactos regionales de día y trayectos mayores de noche; depende de las condiciones.",
+                "use": "Una banda de HF muy utilizada para contactos regionales, nacionales y continentales.",
+                "antennas": "Dipolo, V invertida o antena alimentada en un extremo con adaptación adecuada. Una instalación baja puede favorecer trayectos regionales mediante incidencia casi vertical.",
+                "modes": "SSB, CW y modos digitales como FT8. La elección depende del objetivo y del segmento autorizado.",
+                "notes": "Puede ser útil durante muchas horas, pero un mismo enlace no está garantizado de día y de noche. La banda no determina por sí sola qué estaciones vas a poder escuchar."
+            },
+            "twenty": {
+                "name": "20 m",
+                "propagation": "Muy utilizada para larga distancia (DX) por la ionosfera, frecuentemente durante el día; también hay aperturas nocturnas.",
+                "use": "Contactos internacionales y enlaces de larga distancia cuando la propagación lo permite.",
+                "antennas": "Dipolo, vertical o Yagi direccional. Son alternativas: ninguna es obligatoria por tratarse de esta banda.",
+                "modes": "SSB, CW y modos digitales como FT8 aparecen en distintos segmentos. No todos están habilitados para todas las categorías en toda la banda.",
+                "notes": "El cuadro de referencia limita la categoría Novicio al segmento 14,070–14,099 MHz con CW y digimodos; no debe interpretarse el rango total de 20 m como permiso general de fonía para Novicio. Las aperturas dependen de la actividad solar, la estación del año y el trayecto."
+            },
+            "two": {
+                "name": "2 m",
+                "propagation": "Habitualmente terrestre directa o por repetidoras, condicionada por la altura, el relieve y los obstáculos.",
+                "use": "Equipos portátiles y móviles, comunicaciones locales, repetidoras, datos y satélites según el segmento.",
+                "antennas": "Vertical, ground-plane o colineal para FM y repetidoras; Yagi para enlaces dirigidos. En SSB/CW terrestre se acostumbra polarización horizontal; en FM, vertical.",
+                "modes": "FM analógica, voz digital como DMR y datos por paquetes como APRS. Son tecnologías distintas que pueden utilizar segmentos diferentes de la misma banda.",
+                "notes": "También existen formas especiales de propagación: no hay un alcance fijo asociado a VHF. El cuadro reserva 145,790–145,800 MHz como banda de protección, sin transmisión."
+            },
+            "seventy": {
+                "name": "70 cm",
+                "propagation": "Habitual para enlaces locales y repetidoras; su cobertura depende del entorno y de la instalación.",
+                "use": "Equipos bibanda, repetidoras, enlaces dirigidos y satélites en sus segmentos correspondientes.",
+                "antennas": "Vertical, ground-plane o colineal para cobertura local; Yagi para concentrar el enlace en una dirección. La polarización debe corresponder al enlace y al modo utilizados.",
+                "modes": "FM analógica y voz digital como DMR; también datos y satélites según el segmento. DMR no necesita Internet para toda comunicación local.",
+                "notes": "El cuadro argentino identifica al servicio de radioaficionados como primario y al de aficionados por satélite como secundario; reserva 435–438 MHz para satélites. Esto no equivale a afirmar que UHF atraviesa mejor los edificios que VHF."
+            }
+        }
     }
 }

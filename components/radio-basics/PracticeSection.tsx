@@ -31,13 +31,13 @@ function QuizQuestion({ id, correct, answer, onAnswer }: {
   );
 }
 
-export function PracticeSection() {
+export function PracticeSection({ showTitle = true }: { showTitle?: boolean }) {
   const t = useTranslations('RadioBasics.quiz');
   const [answers, setAnswers] = useState<Partial<Record<QuestionId, string>>>({});
   const correct = questions.filter((question) => answers[question.id] === question.correct).length;
   return (
-    <section id="practice" className={styles.section} aria-labelledby="practice-title">
-      <h2 id="practice-title">{t('title')}</h2>
+    <section id="practice" className={styles.section} aria-label={t('title')}>
+      {showTitle ? <h2 id="practice-title">{t('title')}</h2> : null}
       <p>{t('intro')}</p>
       {questions.map((question) => (
         <QuizQuestion key={question.id} {...question} answer={answers[question.id]}

@@ -5267,5 +5267,212 @@
         "englishLabel": "English term",
         "englishCodeLabel": "Meaning in English (Q code)",
         "englishNote": "Initialisms such as PTT are formed from the first letters of words. QSL and QSO are conventional three-letter codes: their letters do not expand into an English phrase. For these entries, we show an English expression equivalent to their usual meaning."
+    },
+    "RadioCourse": {
+        "eyebrow": "Course · Basic electricity",
+        "hubTitle": "One topic at a time",
+        "hubIntro": "Choose a lesson and work through it at your own pace. The laboratory, glossary and documents each have their own place for reference.",
+        "start": "Start with voltage",
+        "lessonsLabel": "Lessons",
+        "resourcesLabel": "Laboratory and reference",
+        "futureLabel": "After electricity",
+        "futureIntro": "We will continue with waves and frequency, bands and propagation, and Morse training. Those modules are not yet published.",
+        "backToCourse": "Course contents",
+        "navigation": "Course navigation",
+        "jump": "Change topic",
+        "previous": "Previous",
+        "next": "Next",
+        "lessonPosition": "Lesson {current} of {total}",
+        "resource": "Reference resource",
+        "simpleCircuitCaption": "Reference example: a 12 V source supplies a 100 Ω resistor, with 120 mA flowing. Voltage is measured between two points; current follows the closed path.",
+        "pages": {
+            "voltage": {
+                "title": "Voltage",
+                "description": "What an electric potential difference between two points means, and why it can exist even when no current flows."
+            },
+            "current": {
+                "title": "Current",
+                "description": "How much charge passes each second, how to measure it and what conventional-current arrows indicate."
+            },
+            "resistance": {
+                "title": "Resistance",
+                "description": "How a resistor limits current, and why charge is not consumed as it passes through."
+            },
+            "ohm": {
+                "title": "Ohm’s law",
+                "description": "Relate voltage, current and resistance using a step-by-step calculation and a graph you can interpret."
+            },
+            "series": {
+                "title": "Series circuits",
+                "description": "One path: follow the same current through two resistors and calculate how voltage divides."
+            },
+            "parallel": {
+                "title": "Parallel circuits",
+                "description": "Two branches between the same nodes: understand why they share a voltage and their currents add together."
+            },
+            "power": {
+                "title": "Power",
+                "description": "Distinguish power from energy, calculate dissipation and choose a resistor’s rated power."
+            },
+            "measurement": {
+                "title": "Measuring with a multimeter",
+                "description": "Where to connect the instrument to measure voltage, current and resistance in low-voltage DC circuits."
+            },
+            "practice": {
+                "title": "Test yourself",
+                "description": "Solve four situations and review the reasoning behind each answer."
+            },
+            "laboratory": {
+                "title": "Circuit laboratory",
+                "description": "Adjust voltage and resistances, change connections and check your predictions against calculated values."
+            },
+            "glossary": {
+                "title": "Amateur radio glossary",
+                "description": "Look up initialisms, codes, bands and technologies with their English terms, meanings and examples."
+            },
+            "sources": {
+                "title": "Documents and sources",
+                "description": "Consult the course references, the original revision guide and official ENACOM documents."
+            },
+            "bands": {
+                "title": "Frequency bands",
+                "description": "Compare amateur radio bands, their propagation, antennas and technologies, and locate their frequencies within the spectrum."
+            }
+        }
+    },
+    "RadioBands": {
+        "title": "Frequency bands",
+        "intro": "Compare spectrum families by their frequency limits. The scale increases from top to bottom: select a band to see its full name and approximate wavelength.",
+        "chartLabel": "Frequency spectrum from 3 kHz to 300 GHz, divided into eight consecutive decades",
+        "axisLabel": "Increasing frequency",
+        "scale": "Logarithmic scale: each interval multiplies frequency by 10. Equal height does not mean equal width in MHz.",
+        "selectionHint": "Select a band to view its details.",
+        "range": "Frequencies",
+        "wavelength": "Approximate wavelengths",
+        "wavelengthNote": "Approximate free-space values: λ = c/f, with c ≈ 300,000,000 m/s. Higher frequency means shorter wavelength.",
+        "limits": "ITU nomenclature excludes the lower limit of each interval and includes the upper limit. Shared boundaries appear only once on the axis.",
+        "permissionNote": "These are general spectrum families, not entire bands authorized for amateur radio. Names in meters and example frequencies are references; permitted frequency limits, modes and power depend on regulations and license category. For Argentina, consult ENACOM regulations.",
+        "ituSource": "ITU · Band nomenclature V.431-9 (2025)",
+        "enacomSource": "ENACOM · Regulations and band allocation chart",
+        "sourcesNote": "Links open the external sites itu.int and enacom.gob.ar only when selected.",
+        "bands": {
+            "vlf": {
+                "name": "Very low frequency",
+                "english": "Very Low Frequency",
+                "description": "Corresponds to wavelengths of approximately 10 to 100 kilometers. The name describes a spectrum family, not a single channel."
+            },
+            "lf": {
+                "name": "Low frequency",
+                "english": "Low Frequency",
+                "description": "Corresponds to approximate wavelengths of 1 to 10 kilometers. Its frequency is ten times that of the equivalent point in the VLF band."
+            },
+            "mf": {
+                "name": "Medium frequency",
+                "english": "Medium Frequency",
+                "description": "Corresponds to approximate wavelengths of 100 meters to 1 kilometer. One megahertz, or 1 MHz, means one million oscillations per second."
+            },
+            "hf": {
+                "name": "High frequency",
+                "english": "High Frequency",
+                "description": "Includes several amateur radio bands. Under suitable conditions, ionospheric propagation allows long-distance communication. As references, 40 m is around 7 MHz and 20 m around 14 MHz."
+            },
+            "vhf": {
+                "name": "Very high frequency",
+                "english": "Very High Frequency",
+                "description": "Typical terrestrial coverage depends strongly on height, terrain and obstacles; special forms of propagation also exist. The amateur 2 m band is around 145 MHz."
+            },
+            "uhf": {
+                "name": "Ultra high frequency",
+                "english": "Ultra High Frequency",
+                "description": "Its wavelengths are shorter than those of VHF. It does not imply a fixed communication range or a particular transmission mode. The amateur 70 cm band is around 435 MHz."
+            },
+            "shf": {
+                "name": "Super high frequency",
+                "english": "Super High Frequency",
+                "description": "Corresponds to wavelengths of approximately 1 to 10 centimeters. It is part of the frequencies commonly called microwaves."
+            },
+            "ehf": {
+                "name": "Extremely high frequency",
+                "english": "Extremely High Frequency",
+                "description": "Corresponds to wavelengths of approximately 1 to 10 millimeters, hence the term millimeter waves. Its upper limit in this classification is 300 GHz."
+            }
+        }
+    },
+    "RadioAmateurBands": {
+        "title": "Amateur radio bands: frequency, propagation and equipment",
+        "intro": "Compare these five commonly used bands and locate their frequencies in the spectrum above. Select one for examples of antennas and modes.",
+        "views": {
+            "amateur": "Amateur radio bands",
+            "spectrum": "Spectrum families"
+        },
+        "columns": {
+            "band": "Band",
+            "range": "Reference range",
+            "propagation": "Typical propagation",
+            "use": "Common uses"
+        },
+        "detailTitle": "Antennas and technologies for the selected band",
+        "antennas": "Common antennas",
+        "modes": "Common modes and technologies",
+        "notes": "Things to consider",
+        "conditions": "These are tendencies and examples, not guaranteed times, ranges or exclusive uses. Propagation depends on time of day, season, solar activity, path and installation.",
+        "permission": "The ranges identify bands in the chart published by ENACOM; they do not authorize every category or mode across the entire band. Reserved segments and guard bands exist, and the complete emission must remain within the permitted segment.",
+        "referenceLabel": "Argentine reference: Annex A of the 2018 band allocation chart, published by ENACOM. The document retains its original date; the date of its link does not turn it into a 2021 or 2026 edition.",
+        "sourceLabel": "ENACOM · Original band allocation chart",
+        "propagationSource": "ARRL · HF propagation",
+        "indoorSource": "ITU · Propagation inside buildings",
+        "regulationSource": "Argentine regulations · Sections 1.5.9 and 13.4.2",
+        "antennaNote": "A band does not require a particular antenna. Frequency, impedance matching, radiation pattern, polarization and available space all matter.",
+        "buildingNote": "Neither VHF nor UHF has a universal advantage inside buildings. Materials, thickness, openings, path and antennas affect the outcome; a shorter antenna does not guarantee better penetration.",
+        "technologyTitle": "Band, modulation, protocol and encryption",
+        "modulationLabel": "Modulation",
+        "modulation": "How a signal is modified to carry information. AM, FM and SSB are forms of modulation; HF, VHF and UHF identify frequency families. A single band may permit different modes in its segments.",
+        "protocolLabel": "Protocol or standard",
+        "protocol": "Defines how equipment organizes an exchange. DMR stands for Digital Mobile Radio and is a digital voice and data standard. APRS stands for Automatic Packet Reporting System and is used to communicate data such as positions or messages. These are different technologies, not band names.",
+        "cipherTitle": "Encryption",
+        "cipherText": "Encryption aims to hide content from anyone unable to decrypt it. Representing voice or data digitally is a different operation: digital does not mean encrypted. Argentina’s regulations classify ‘transmitting encrypted texts’ as an operating infraction in section 13.4.2 and require clear, understandable communications in section 1.5.9.",
+        "sourcesNote": "Reference links open enacom.gob.ar, argentina.gob.ar, arrl.org or itu.int only when selected.",
+        "entries": {
+            "eighty": {
+                "name": "80 m",
+                "propagation": "Often regional and nighttime; longer paths may be possible when conditions are favorable.",
+                "use": "Regional and national conversations, group contacts and listening on lower HF frequencies.",
+                "antennas": "A dipole, inverted V or end-fed antenna with suitable matching. Installation size and height strongly affect performance.",
+                "modes": "SSB voice, CW telegraphy and digital modes such as FT8, in their permitted segments.",
+                "notes": "In the Argentine chart, the full band extends to 4.0 MHz: 3.5–3.8 MHz has primary status and 3.8–4.0 MHz secondary status. Daytime ionospheric absorption can particularly limit this band; that does not mean it is always unusable."
+            },
+            "forty": {
+                "name": "40 m",
+                "propagation": "Often favors regional contacts by day and longer paths at night; conditions determine the outcome.",
+                "use": "An HF band widely used for regional, national and continental contacts.",
+                "antennas": "A dipole, inverted V or end-fed antenna with suitable matching. A low installation may favor regional paths through near-vertical incidence.",
+                "modes": "SSB, CW and digital modes such as FT8. The choice depends on the goal and the authorized segment.",
+                "notes": "It can be useful for many hours, but the same link is not guaranteed both day and night. The band alone does not determine which stations you will hear."
+            },
+            "twenty": {
+                "name": "20 m",
+                "propagation": "Widely used for long-distance (DX) ionospheric contacts, often during the day; nighttime openings also occur.",
+                "use": "International contacts and long-distance links when propagation allows.",
+                "antennas": "A dipole, vertical or directional Yagi. These are alternatives: none is mandatory for this band.",
+                "modes": "SSB, CW and digital modes such as FT8 appear in different segments. Not all are permitted for every category throughout the band.",
+                "notes": "The reference chart limits the Novicio (Novice) category to the 14.070–14.099 MHz segment with CW and digital modes; the full 20 m range must not be interpreted as general voice permission for Novicio. Openings depend on solar activity, season and path."
+            },
+            "two": {
+                "name": "2 m",
+                "propagation": "Usually direct terrestrial propagation or via repeaters, affected by height, terrain and obstacles.",
+                "use": "Handheld and mobile equipment, local communication, repeaters, data and satellites, depending on the segment.",
+                "antennas": "A vertical, ground-plane or collinear for FM and repeaters; a Yagi for directional links. Terrestrial SSB/CW commonly uses horizontal polarization; FM commonly uses vertical.",
+                "modes": "Analog FM, digital voice such as DMR and packet data such as APRS. These are different technologies that may use different segments of the same band.",
+                "notes": "Special propagation forms also exist: VHF has no fixed range. The chart reserves 145.790–145.800 MHz as a guard band, with no transmission."
+            },
+            "seventy": {
+                "name": "70 cm",
+                "propagation": "Common for local links and repeaters; coverage depends on the surroundings and installation.",
+                "use": "Dual-band equipment, repeaters, directional links and satellites in their corresponding segments.",
+                "antennas": "A vertical, ground-plane or collinear for local coverage; a Yagi to concentrate the link in one direction. Polarization must suit the link and mode used.",
+                "modes": "Analog FM and digital voice such as DMR; also data and satellites, depending on the segment. DMR does not require the Internet for every local communication.",
+                "notes": "The Argentine chart lists the amateur service as primary and the amateur-satellite service as secondary; it reserves 435–438 MHz for satellites. This does not mean that UHF penetrates buildings better than VHF."
+            }
+        }
     }
 }

@@ -56,8 +56,11 @@ export function verifyPageMetadata(html: string, route: string) {
   assert.equal(tags['og:url'], canonical, `${route}: social URL matches canonical`);
   assert.equal(tags['og:locale'], locale, route);
   assert.ok(tags['og:image'].endsWith(`/og/${locale}.png`), route);
-  const config = pageNamespaces[path] ?? (path.startsWith('/workbench/')
-    ? [`Workbench.packs.${segments[1]}`, 'description'] : undefined);
+  const radioChapter = segments[0] === 'workbench' && segments[1] === 'radio-basics' && segments.length === 3
+    ? segments[2] : undefined;
+  const config = pageNamespaces[path] ?? (radioChapter
+    ? [`RadioCourse.pages.${radioChapter}`, 'description']
+    : path.startsWith('/workbench/') ? [`Workbench.packs.${segments[1]}`, 'description'] : undefined);
   if (!config) return; // Articles and project descriptions retain their original content language.
   const [namespace, descriptionKey, titleKey = 'title'] = config;
   const translatedTitle = message(locale, `${namespace}.${titleKey}`);

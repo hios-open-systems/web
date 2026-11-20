@@ -5,6 +5,7 @@ import { getAllPostMeta } from '@/lib/blog';
 import { getProjectSlugs } from '@/lib/projects';
 import type { PagePath } from '@/lib/seo';
 import { createLocalizedSitemap } from '@/lib/seo-sitemap';
+import { radioPages, radioPagePath } from '@/config/radio-course';
 
 // Filesystem-backed catalogs are read at build time, including on Workers.
 export const dynamic = 'force-static';
@@ -30,6 +31,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/stats',
     '/colophon',
     ...workbenchTools.filter((tool) => !tool.external).map((tool) => tool.href as PagePath),
+    ...radioPages.map(({ id }) => radioPagePath(id)),
     ...getProjectSlugs().map((slug): PagePath => `/projects/${encodeURIComponent(slug)}`),
     ...getAllPostMeta().map((post): PagePath => `/blog/${encodeURIComponent(post.slug)}`),
   ];

@@ -1,6 +1,7 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
+import { ConceptCircuit } from './ConceptCircuit';
 import styles from './radioBasics.module.css';
 
 function useWorkedExamples() {
@@ -32,18 +33,15 @@ function ConnectionExplanation({ mode }: { mode: 'series' | 'parallel' }) {
   );
 }
 
-export function ConnectionsSection() {
+export function ConnectionLesson({ mode }: { mode: 'series' | 'parallel' }) {
   const t = useTranslations('RadioBasics.connections');
   return (
-    <section id="connections" className={styles.section} aria-labelledby="connections-title">
-      <h2 id="connections-title">{t('title')}</h2>
+    <section id={mode} aria-label={t(`${mode}Title`)}>
       <p>{t('intro')}</p>
       <p>{t('equivalent')}</p>
       <p className={styles.exampleLabel}>{t('exampleLabel')}</p>
-      <div className={styles.connections}>
-        <ConnectionExplanation mode="series" />
-        <ConnectionExplanation mode="parallel" />
-      </div>
+      <ConceptCircuit mode={mode} />
+      <ConnectionExplanation mode={mode} />
       <p className={styles.takeaway}>{t('remember')}</p>
       <p>{t('open')}</p>
     </section>

@@ -1,67 +1,58 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
-import { CircuitLab } from './CircuitLab';
-import { ConceptsSection, OhmSection } from './TheorySections';
-import { ConnectionsSection } from './ConnectionsSection';
-import { PowerSection } from './PowerSection';
-import { PracticeSection } from './PracticeSection';
-import { CourseRoadmap, LessonSources } from './LessonResources';
-import { RadioGlossary } from './RadioGlossary';
-import styles from './radioBasics.module.css';
+import { useEffect } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { Button } from 'antd';
+import { useLocale, useTranslations } from 'next-intl';
+import { radioLessons, radioResources, radioPagePath, type RadioPageId } from '@/config/radio-course';
+import styles from './radioCourse.module.css';
 
-const chapters = ['concepts', 'ohm', 'connections', 'laboratory', 'power', 'practice', 'glossary'] as const;
+const oldSections: Record<string, RadioPageId> = {
+  concepts: 'voltage', ohm: 'ohm', connections: 'series', laboratory: 'laboratory',
+  power: 'power', practice: 'practice', glossary: 'glossary',
+};
 
-function LessonNavigation() {
-  const t = useTranslations('RadioBasics');
-  return (
-    <aside className={styles.sidebar}>
-      <span className={styles.eyebrow}>{t('badge')}</span>
-      <nav aria-label={t('navLabel')} className={styles.navigation}>
-        {chapters.map((chapter) => <a key={chapter} href={`#${chapter}`}>{t(`nav.${chapter}`)}</a>)}
-      </nav>
-    </aside>
-  );
-}
-
-function LaboratorySection() {
-  const t = useTranslations('RadioBasics');
-  return (
-    <section id="laboratory" className={styles.section} aria-labelledby="laboratory-title">
-      <span className={styles.eyebrow}>{t('nav.laboratory')}</span>
-      <h2 id="laboratory-title">{t('experiments.title')}</h2>
-      <p>{t('experiments.intro')}</p>
-      <CircuitLab />
-      <ol className={styles.experiments}>
-        {(['one', 'two', 'three'] as const).map((key) => <li key={key}>{t(`experiments.${key}`)}</li>)}
-      </ol>
-    </section>
-  );
+function useLegacyCourseLinks() {
+  const locale = useLocale();
+  const router = useRouter();
+  useEffect(() => {
+    const page = oldSections[window.location.hash.slice(1)];
+    if (page) router.replace('/' + locale + radioPagePath(page));
+  }, [locale, router]);
 }
 
 export function RadioBasicsTool() {
-  const t = useTranslations('RadioBasics');
+  const t = useTranslations('RadioCourse');
+  const locale = useLocale();
+  const router = useRouter();
+  useLegacyCourseLinks();
   return (
-    <article className={styles.lesson}>
-      <LessonNavigation />
-      <div className={styles.content}>
-        <header className={styles.welcome}>
-          <span className={styles.eyebrow}>{t('badge')}</span>
-          <h2>{t('introTitle')}</h2>
-          <p className={styles.lead}>{t('intro')}</p>
-          <p className={styles.scope}>{t('scope')}</p>
-          <a href="#glossary">{t('glossaryLink')}</a>
-        </header>
-        <ConceptsSection />
-        <OhmSection />
-        <ConnectionsSection />
-        <LaboratorySection />
-        <PowerSection />
-        <PracticeSection />
-        <RadioGlossary />
-        <CourseRoadmap />
-        <LessonSources />
+    <div className={styles.home} data-testid="radio-course-home">
+      <div className={styles.homeIntro}>
+        <h2>{t('hubTitle')}</h2>
+        <p>{t('hubIntro')}</p>
+        <Button type="primary" size="large" onClick={() => router.push('/' + locale + radioPagePath('voltage'))}>{t('start')}</Button>
       </div>
-    </article>
+      <section aria-labelledby="radio-lessons-title">
+        <h2 id="radio-lessons-title">{t('lessonsLabel')}</h2>
+        <ol className={styles.lessonList} data-testid="radio-lesson-list">
+          {radioLessons.map(({ id }) => (
+            <li key={id}><Link href={'/' + locale + radioPagePath(id)}>
+              <h3>{t('pages.' + id + '.title')}</h3><p>{t('pages.' + id + '.description')}</p>
+            </Link></li>
+          ))}
+        </ol>
+      </section>
+      <section aria-labelledby="radio-resources-title">
+        <h2 id="radio-resources-title">{t('resourcesLabel')}</h2>
+        <div className={styles.resourceList} data-testid="radio-resource-list">
+          {radioResources.map(({ id }) => <Link key={id} href={'/' + locale + radioPagePath(id)}>
+            <h3>{t('pages.' + id + '.title')}</h3><p>{t('pages.' + id + '.description')}</p>
+          </Link>)}
+        </div>
+      </section>
+      <aside className={styles.future}><h2>{t('futureLabel')}</h2><p>{t('futureIntro')}</p></aside>
+    </div>
   );
 }

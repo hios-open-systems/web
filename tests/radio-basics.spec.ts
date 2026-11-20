@@ -11,8 +11,8 @@ test('DC lesson preserves the circuit laws when changing connections and opening
   page.on('request', (request) => {
     if (/^https?:/.test(request.url()) && new URL(request.url()).hostname !== '127.0.0.1') external.push(request.url());
   });
-  await page.goto('/es/workbench/radio-basics');
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Electricidad para radioaficionados');
+  await page.goto('/es/workbench/radio-basics/laboratory');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Laboratorio');
   const lab = page.getByTestId('dc-circuit-lab');
   const readings = lab.locator('dd');
   await expect(readings.nth(0)).toHaveText('66,67 Ω');
@@ -50,7 +50,7 @@ test('DC lesson preserves the circuit laws when changing connections and opening
 });
 
 test('practice explains mistakes, accepts a retry and resets answers', async ({ page }) => {
-  await page.goto('/es/workbench/radio-basics');
+  await page.goto('/es/workbench/radio-basics/practice');
   const practice = page.locator('#practice');
   await practice.getByRole('radio', { name: 'Tiene 0 V porque no circula corriente.' }).check();
   await expect(practice.getByText('Revisemos la idea', { exact: true })).toBeVisible();
@@ -67,25 +67,25 @@ test('practice explains mistakes, accepts a retry and resets answers', async ({ 
 
 test('lesson is discoverable from the electronics catalog and Ohm calculator', async ({ page }) => {
   await page.goto('/es/workbench/sections/electronics');
+  await expect(page.locator('[data-app-ready="true"]')).toBeVisible();
   await page.locator('a[href="/es/workbench/radio-basics"]').first().click();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Electricidad para radioaficionados');
   await page.goto('/es/workbench/ohms-law');
+  await expect(page.locator('[data-app-ready="true"]')).toBeVisible();
   await page.locator('a[href="/es/workbench/radio-basics"]').click();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Electricidad para radioaficionados');
-  await expect(page.getByRole('navigation', { name: 'Contenido de esta sección' })).toBeVisible();
+  await expect(page.getByTestId('radio-lesson-list').getByRole('link')).toHaveCount(9);
+  await expect(page.getByTestId('radio-resource-list').getByRole('link')).toHaveCount(4);
 });
 
 for (const locale of ['en', 'de', 'it']) {
-  test(`lesson and simulator render translated content in ${locale}`, async ({ page }) => {
+  test(`simulator renders translated content on its own page in ${locale}`, async ({ page }) => {
     const errors: string[] = [];
     page.on('pageerror', (error) => errors.push(error.message));
-    await page.goto(`/${locale}/workbench/radio-basics`);
+    await page.goto(`/${locale}/workbench/radio-basics/laboratory`);
     await expect(page.getByTestId('dc-circuit-lab')).toBeVisible();
-    await expect(page.locator('[data-tool-content]')).not.toContainText('RadioBasics.');
-    await expect(page.locator('[data-tool-content]')).not.toContainText('RadioGlossary.');
-    const glossary = page.getByTestId('radio-glossary');
-    await glossary.locator('#radio-glossary-search').fill('DMR');
-    await expect(glossary.locator('[data-glossary-entry="dmr"]')).toContainText('Digital Mobile Radio');
+    await expect(page.locator('[data-radio-page="laboratory"]')).not.toContainText('RadioBasics.');
+    await expect(page.getByTestId('radio-glossary')).toHaveCount(0);
     await expect(page.getByRole('heading', { level: 1 })).not.toContainText('Electricidad para radioaficionados');
     expect(errors).toEqual([]);
   });

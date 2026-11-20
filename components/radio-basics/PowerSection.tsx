@@ -5,34 +5,33 @@ import { useTranslations } from 'next-intl';
 import { MeterDiagram } from './MeterDiagram';
 import styles from './radioBasics.module.css';
 
-function MeasurementGuide() {
+export function MeasurementSection() {
   const t = useTranslations('RadioBasics.power');
   return (
-    <div className={styles.measurements}>
-      <h3>{t('measurementTitle')}</h3>
+    <section id="measurement" aria-label={t('measurementTitle')}>
       <div className={styles.connections}>
         <figure className={styles.measurement}>
-          <h4>{t('voltmeterTitle')}</h4>
+          <h2>{t('voltmeterTitle')}</h2>
           <MeterDiagram kind="voltage" />
           <figcaption>{t('voltmeter')}</figcaption>
         </figure>
         <figure className={styles.measurement}>
-          <h4>{t('ammeterTitle')}</h4>
+          <h2>{t('ammeterTitle')}</h2>
           <MeterDiagram kind="current" />
           <figcaption>{t('ammeter')}</figcaption>
         </figure>
       </div>
       <p>{t('ohmmeter')}</p>
       <Alert type="warning" showIcon message={t('meterWarning')} />
-    </div>
+    </section>
   );
 }
 
-export function PowerSection() {
+export function PowerSection({ showTitle = true }: { showTitle?: boolean }) {
   const t = useTranslations('RadioBasics.power');
   return (
-    <section id="power" className={styles.section} aria-labelledby="power-title">
-      <h2 id="power-title">{t('title')}</h2>
+    <section id="power" aria-label={t('title')}>
+      {showTitle ? <h2>{t('title')}</h2> : null}
       <p>{t('intro')}</p>
       <div className={styles.formula}>P = V · I = I² · R = V² / R</div>
       <div className={styles.worked}>
@@ -41,7 +40,6 @@ export function PowerSection() {
         <p>{t('rating')}</p>
       </div>
       <p>{t('conservation')}</p>
-      <MeasurementGuide />
       <p className={styles.takeaway}>{t('rf')}</p>
     </section>
   );

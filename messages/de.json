@@ -5267,5 +5267,212 @@
         "englishLabel": "Englischer Begriff",
         "englishCodeLabel": "Bedeutung auf Englisch (Q-Code)",
         "englishNote": "Abkürzungen wie PTT bestehen aus den Anfangsbuchstaben von Wörtern. QSL und QSO sind vereinbarte Codes aus drei Buchstaben: Ihre Buchstaben stehen nicht für die Wörter eines englischen Ausdrucks. Bei diesen Einträgen zeigen wir eine englische Formulierung, die ihrer üblichen Bedeutung entspricht."
+    },
+    "RadioCourse": {
+        "eyebrow": "Kurs · Grundlagen der Elektrotechnik",
+        "hubTitle": "Ein Thema nach dem anderen",
+        "hubIntro": "Wähle eine Lektion und arbeite sie in deinem eigenen Tempo durch. Labor, Glossar und Dokumente haben jeweils einen eigenen Bereich zum Nachschlagen.",
+        "start": "Mit Spannung beginnen",
+        "lessonsLabel": "Lektionen",
+        "resourcesLabel": "Labor und Nachschlagewerke",
+        "futureLabel": "Nach den Grundlagen der Elektrotechnik",
+        "futureIntro": "Danach folgen Wellen und Frequenz, Bänder und Ausbreitung sowie Morsen mit Übungen. Diese Module sind noch nicht veröffentlicht.",
+        "backToCourse": "Kursübersicht",
+        "navigation": "Kursnavigation",
+        "jump": "Thema wechseln",
+        "previous": "Zurück",
+        "next": "Weiter",
+        "lessonPosition": "Lektion {current} von {total}",
+        "resource": "Nachschlagewerk",
+        "simpleCircuitCaption": "Referenzbeispiel: Eine 12-V-Quelle versorgt einen Widerstand von 100 Ω; es fließen 120 mA. Spannung wird zwischen zwei Punkten gemessen, Strom fließt durch den geschlossenen Strompfad.",
+        "pages": {
+            "voltage": {
+                "title": "Spannung",
+                "description": "Was eine Potenzialdifferenz zwischen zwei Punkten bedeutet und warum sie auch ohne Stromfluss bestehen kann."
+            },
+            "current": {
+                "title": "Stromstärke",
+                "description": "Wie viel Ladung pro Sekunde fließt, wie man das misst und was die Pfeile der technischen Stromrichtung anzeigen."
+            },
+            "resistance": {
+                "title": "Widerstand",
+                "description": "Wie ein Widerstand den Strom begrenzt und warum die Ladung beim Durchfließen nicht verbraucht wird."
+            },
+            "ohm": {
+                "title": "Ohmsches Gesetz",
+                "description": "Verknüpfe Spannung, Stromstärke und Widerstand mit einer schrittweisen Rechnung und einem verständlichen Diagramm."
+            },
+            "series": {
+                "title": "Reihenschaltungen",
+                "description": "Ein einziger Strompfad: Verfolge denselben Strom durch zwei Widerstände und berechne, wie sich die Spannung aufteilt."
+            },
+            "parallel": {
+                "title": "Parallelschaltungen",
+                "description": "Zwei Zweige zwischen denselben Knoten: Verstehe, warum an beiden dieselbe Spannung anliegt und sich ihre Ströme addieren."
+            },
+            "power": {
+                "title": "Leistung",
+                "description": "Unterscheide Leistung und Energie, berechne die Verlustleistung und wähle die Nennleistung eines Widerstands."
+            },
+            "measurement": {
+                "title": "Mit dem Multimeter messen",
+                "description": "Wo das Messgerät angeschlossen wird, um Spannung, Stromstärke und Widerstand in Gleichstromkreisen mit niedriger Spannung zu messen."
+            },
+            "practice": {
+                "title": "Teste dein Wissen",
+                "description": "Löse vier Aufgaben und prüfe die Begründung jeder Antwort."
+            },
+            "laboratory": {
+                "title": "Schaltungslabor",
+                "description": "Verändere Spannung und Widerstandswerte, ändere die Verbindungen und überprüfe deine Vorhersagen anhand berechneter Werte."
+            },
+            "glossary": {
+                "title": "Amateurfunk-Glossar",
+                "description": "Schlage Abkürzungen, Codes, Bänder und Technologien mit englischen Begriffen, Bedeutungen und Beispielen nach."
+            },
+            "sources": {
+                "title": "Dokumente und Quellen",
+                "description": "Konsultiere die Kursquellen, den ursprünglichen Lernleitfaden und offizielle ENACOM-Dokumente."
+            },
+            "bands": {
+                "title": "Frequenzbänder",
+                "description": "Vergleiche Amateurfunkbänder, ihre Ausbreitung, Antennen und Technologien und ordne ihre Frequenzen im Spektrum ein."
+            }
+        }
+    },
+    "RadioBands": {
+        "title": "Frequenzbänder",
+        "intro": "Vergleiche die Spektralbereiche anhand ihrer Frequenzgrenzen. Die Skala steigt von oben nach unten: Wähle einen Bereich aus, um seinen vollständigen Namen und seine ungefähre Wellenlänge zu sehen.",
+        "chartLabel": "Frequenzspektrum von 3 kHz bis 300 GHz, unterteilt in acht aufeinanderfolgende Dekaden",
+        "axisLabel": "Steigende Frequenz",
+        "scale": "Logarithmische Skala: In jedem Abschnitt verzehnfacht sich die Frequenz. Gleiche Höhe bedeutet nicht gleiche Breite in MHz.",
+        "selectionHint": "Wähle einen Frequenzbereich aus, um seine Einzelheiten anzuzeigen.",
+        "range": "Frequenzen",
+        "wavelength": "Ungefähre Wellenlängen",
+        "wavelengthNote": "Näherungswerte im freien Raum: λ = c/f, mit c ≈ 300 000 000 m/s. Je höher die Frequenz, desto kürzer die Wellenlänge.",
+        "limits": "Die ITU-Nomenklatur schließt die untere Grenze jedes Intervalls aus und die obere Grenze ein. Gemeinsame Grenzen werden auf der Achse nur einmal dargestellt.",
+        "permissionNote": "Dies sind allgemeine Spektralbereiche, keine vollständig für den Amateurfunk zugelassenen Bänder. Die Namen in Metern und die Beispielfrequenzen dienen der Orientierung; zulässige Frequenzgrenzen, Betriebsarten und Leistungen hängen von den Vorschriften und der Lizenzklasse ab. Für Argentinien sind die Vorschriften von ENACOM maßgeblich.",
+        "ituSource": "ITU · Bezeichnungen der Frequenzbänder V.431-9 (2025)",
+        "enacomSource": "ENACOM · Vorschriften und Frequenzbandtabelle",
+        "sourcesNote": "Die Links öffnen die externen Websites itu.int und enacom.gob.ar erst beim Auswählen.",
+        "bands": {
+            "vlf": {
+                "name": "Sehr niedrige Frequenz · Längstwelle",
+                "english": "Very Low Frequency",
+                "description": "Entspricht Wellenlängen von ungefähr 10 bis 100 Kilometern. Der Name bezeichnet einen Spektralbereich, keinen einzelnen Kanal."
+            },
+            "lf": {
+                "name": "Niedrige Frequenz · Langwelle",
+                "english": "Low Frequency",
+                "description": "Entspricht ungefähren Wellenlängen von 1 bis 10 Kilometern. Die Frequenz ist zehnmal so hoch wie am entsprechenden Punkt im VLF-Bereich."
+            },
+            "mf": {
+                "name": "Mittlere Frequenz · Mittelwelle",
+                "english": "Medium Frequency",
+                "description": "Entspricht ungefähren Wellenlängen von 100 Metern bis 1 Kilometer. Ein Megahertz, also 1 MHz, bedeutet eine Million Schwingungen pro Sekunde."
+            },
+            "hf": {
+                "name": "Hohe Frequenz · Kurzwelle",
+                "english": "High Frequency",
+                "description": "Umfasst mehrere Amateurfunkbänder. Unter geeigneten Bedingungen ermöglicht die ionosphärische Ausbreitung Funkverbindungen über große Entfernungen. Als Orientierung: 40 m liegt bei etwa 7 MHz und 20 m bei etwa 14 MHz."
+            },
+            "vhf": {
+                "name": "Sehr hohe Frequenz · Ultrakurzwelle",
+                "english": "Very High Frequency",
+                "description": "Die übliche terrestrische Reichweite hängt stark von Höhe, Gelände und Hindernissen ab; es gibt auch besondere Ausbreitungsformen. Das 2-m-Amateurfunkband liegt bei etwa 145 MHz."
+            },
+            "uhf": {
+                "name": "Ultrahohe Frequenz · Dezimeterwelle",
+                "english": "Ultra High Frequency",
+                "description": "Die Wellen sind kürzer als im VHF-Bereich. Der Name legt weder eine feste Reichweite noch eine bestimmte Sendeart fest. Das 70-cm-Amateurfunkband liegt bei etwa 435 MHz."
+            },
+            "shf": {
+                "name": "Superhohe Frequenz · Zentimeterwelle",
+                "english": "Super High Frequency",
+                "description": "Entspricht Wellenlängen von ungefähr 1 bis 10 Zentimetern. Dieser Bereich gehört zu den Frequenzen, die üblicherweise als Mikrowellen bezeichnet werden."
+            },
+            "ehf": {
+                "name": "Extrem hohe Frequenz · Millimeterwelle",
+                "english": "Extremely High Frequency",
+                "description": "Entspricht Wellenlängen von ungefähr 1 bis 10 Millimetern, daher die Bezeichnung Millimeterwellen. Die obere Grenze dieser Einteilung liegt bei 300 GHz."
+            }
+        }
+    },
+    "RadioAmateurBands": {
+        "title": "Amateurfunkbänder: Frequenz, Ausbreitung und Ausrüstung",
+        "intro": "Vergleiche diese fünf häufig genutzten Bänder und ordne ihre Frequenzen im Spektrum oben ein. Wähle eines aus, um Beispiele für Antennen und Betriebsarten zu sehen.",
+        "views": {
+            "amateur": "Amateurfunkbänder",
+            "spectrum": "Bereiche des Frequenzspektrums"
+        },
+        "columns": {
+            "band": "Band",
+            "range": "Referenzbereich",
+            "propagation": "Typische Ausbreitung",
+            "use": "Häufige Anwendungen"
+        },
+        "detailTitle": "Antennen und Technologien im ausgewählten Band",
+        "antennas": "Häufig verwendete Antennen",
+        "modes": "Übliche Betriebsarten und Technologien",
+        "notes": "Was du beachten solltest",
+        "conditions": "Dies sind Tendenzen und Beispiele, keine festen Betriebszeiten, Reichweiten oder ausschließlichen Nutzungen. Die Ausbreitung hängt von der Tageszeit, der Jahreszeit, der Sonnenaktivität, der Funkstrecke und der Anlage ab.",
+        "permission": "Die Bereiche bezeichnen Bänder aus der von ENACOM veröffentlichten Bandtabelle. Sie geben nicht das gesamte Band für jede Lizenzklasse oder Betriebsart frei. Es gibt reservierte Segmente und Schutzbereiche, und die gesamte Aussendung muss innerhalb des zulässigen Segments liegen.",
+        "referenceLabel": "Argentinische Referenz: Anhang A der Bandtabelle von 2018, veröffentlicht von ENACOM. Maßgeblich bleibt das Datum des Dokuments; das Datum seines Links macht daraus keine Ausgabe von 2021 oder 2026.",
+        "sourceLabel": "ENACOM · Original-Bandtabelle",
+        "propagationSource": "ARRL · Ausbreitung im HF-Bereich",
+        "indoorSource": "ITU · Ausbreitung innerhalb von Gebäuden",
+        "regulationSource": "Argentinische Vorschriften · Abschnitte 1.5.9 und 13.4.2",
+        "antennaNote": "Ein Band schreibt keine bestimmte Antenne vor. Entscheidend sind die Frequenz, die Anpassung, das Strahlungsdiagramm, die Polarisation und der verfügbare Platz.",
+        "buildingNote": "Innerhalb von Gebäuden hat weder VHF noch UHF einen allgemeinen Vorteil. Materialien, Wandstärken, Öffnungen, der Ausbreitungsweg und die Antennen beeinflussen das Ergebnis; eine kürzere Antenne garantiert kein besseres Durchdringen von Gebäuden.",
+        "technologyTitle": "Band, Modulation, Protokoll und Verschlüsselung",
+        "modulationLabel": "Modulation · modulation",
+        "modulation": "Modulation beschreibt, wie ein Signal verändert wird, um Informationen zu übertragen. AM, FM und SSB sind Modulationsarten; HF, VHF und UHF bezeichnen Frequenzbereiche. In den einzelnen Segmenten eines Bands können unterschiedliche Betriebsarten zulässig sein.",
+        "protocolLabel": "Protokoll oder Standard · protocol / standard",
+        "protocol": "Legt fest, wie der Austausch zwischen Geräten organisiert wird. DMR steht für Digital Mobile Radio und ist ein Standard für digitale Sprach- und Datenübertragung. APRS steht für Automatic Packet Reporting System und wird zur Übermittlung von Daten wie Positionen oder Nachrichten verwendet. Es handelt sich um unterschiedliche Technologien, nicht um Bandbezeichnungen.",
+        "cipherTitle": "Verschlüsselung · encryption",
+        "cipherText": "Verschlüsselung soll Inhalte vor Personen verbergen, die sie nicht entschlüsseln können. Sprache oder Daten digital darzustellen ist ein anderer Vorgang: Digital bedeutet nicht verschlüsselt. Die argentinischen Vorschriften führen „verschlüsselte Texte senden“ in Abschnitt 13.4.2 als Betriebsverstoß auf und verlangen in Abschnitt 1.5.9 klare und verständliche Kommunikation.",
+        "sourcesNote": "Die Referenzlinks öffnen enacom.gob.ar, argentina.gob.ar, arrl.org oder itu.int erst beim Anklicken.",
+        "entries": {
+            "eighty": {
+                "name": "80 m",
+                "propagation": "Häufig regional und nachts; bei geeigneten Bedingungen sind auch größere Entfernungen möglich.",
+                "use": "Regionale und landesweite Gespräche, Gruppenverbindungen und Empfang im unteren HF-Bereich.",
+                "antennas": "Dipol, Inverted-V oder endgespeiste Antenne mit geeigneter Anpassung. Größe und Höhe der Anlage beeinflussen ihr Verhalten stark.",
+                "modes": "SSB-Sprechfunk, CW-Telegrafie und digitale Betriebsarten wie FT8 in den jeweils freigegebenen Segmenten.",
+                "notes": "In der argentinischen Bandtabelle reicht das gesamte Band bis 4,0 MHz: 3,5–3,8 MHz ist mit primärem und 3,8–4,0 MHz mit sekundärem Status aufgeführt. Tagsüber kann die ionosphärische Absorption dieses Band besonders stark einschränken; das bedeutet nicht, dass es dann immer unbrauchbar ist."
+            },
+            "forty": {
+                "name": "40 m",
+                "propagation": "Begünstigt häufig regionale Verbindungen am Tag und größere Entfernungen bei Nacht; dies hängt von den Bedingungen ab.",
+                "use": "Ein häufig genutztes HF-Band für regionale, landesweite und kontinentale Verbindungen.",
+                "antennas": "Dipol, Inverted-V oder endgespeiste Antenne mit geeigneter Anpassung. Eine niedrige Aufbauhöhe kann regionale Verbindungen durch nahezu senkrechte Abstrahlung begünstigen.",
+                "modes": "SSB, CW und digitale Betriebsarten wie FT8. Die Wahl hängt vom Ziel und vom zugelassenen Segment ab.",
+                "notes": "Das Band kann über viele Stunden nutzbar sein, doch dieselbe Verbindung ist nicht sowohl tagsüber als auch nachts garantiert. Das Band allein bestimmt nicht, welche Stationen du hören kannst."
+            },
+            "twenty": {
+                "name": "20 m",
+                "propagation": "Wird häufig für Weitverbindungen (DX) über die Ionosphäre genutzt, oft tagsüber; es gibt auch nächtliche Bandöffnungen.",
+                "use": "Internationale Kontakte und Weitverbindungen, wenn die Ausbreitungsbedingungen es zulassen.",
+                "antennas": "Dipol, Vertikalantenne oder Yagi-Richtantenne. Dies sind Alternativen; keine davon ist allein wegen dieses Bands vorgeschrieben.",
+                "modes": "SSB, CW und digitale Betriebsarten wie FT8 werden in unterschiedlichen Segmenten genutzt. Nicht alle sind für jede Lizenzklasse im gesamten Band zugelassen.",
+                "notes": "Die Referenztabelle beschränkt die Lizenzklasse Novicio auf das Segment 14,070–14,099 MHz mit CW und digitalen Betriebsarten. Der Gesamtbereich des 20-Meter-Bands darf nicht als allgemeine Sprechfunkerlaubnis für Novicio verstanden werden. Bandöffnungen hängen von der Sonnenaktivität, der Jahreszeit und der Funkstrecke ab."
+            },
+            "two": {
+                "name": "2 m",
+                "propagation": "Üblicherweise terrestrisch direkt oder über Relaisstationen, abhängig von Höhe, Gelände und Hindernissen.",
+                "use": "Hand- und Mobilfunkgeräte, lokale Verbindungen, Relaisstationen, Daten und Satelliten je nach Segment.",
+                "antennas": "Vertikal-, Groundplane- oder kollineare Antenne für FM und Relaisbetrieb; Yagi für gerichtete Verbindungen. Bei terrestrischem SSB/CW ist horizontale Polarisation üblich, bei FM vertikale.",
+                "modes": "Analoge FM, digitale Sprache etwa mit DMR und paketbasierte Datenübertragung etwa mit APRS. Dies sind unterschiedliche Technologien, die verschiedene Segmente desselben Bands nutzen können.",
+                "notes": "Es gibt auch besondere Ausbreitungsarten: VHF ist keine feste Reichweite zugeordnet. Die Bandtabelle reserviert 145,790–145,800 MHz als Schutzbereich, in dem nicht gesendet werden darf."
+            },
+            "seventy": {
+                "name": "70 cm",
+                "propagation": "Üblich für lokale Verbindungen und Relaisbetrieb; die Reichweite hängt von der Umgebung und der Anlage ab.",
+                "use": "Duobandgeräte, Relaisstationen, gerichtete Verbindungen und Satelliten in den jeweils vorgesehenen Segmenten.",
+                "antennas": "Vertikal-, Groundplane- oder kollineare Antenne für lokale Versorgung; Yagi, um die Abstrahlung in einer Richtung zu bündeln. Die Polarisation muss zur Verbindung und zur verwendeten Betriebsart passen.",
+                "modes": "Analoge FM und digitale Sprache etwa mit DMR; außerdem Daten und Satelliten je nach Segment. DMR benötigt nicht für jede lokale Verbindung eine Internetverbindung.",
+                "notes": "Die argentinische Bandtabelle weist dem Amateurfunkdienst primären und dem Amateurfunkdienst über Satelliten sekundären Status zu; sie reserviert 435–438 MHz für Satelliten. Daraus folgt nicht, dass UHF Gebäude besser durchdringt als VHF."
+            }
+        }
     }
 }

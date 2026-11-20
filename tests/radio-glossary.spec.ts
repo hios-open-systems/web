@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test.beforeEach(async ({ page }) => {
   await page.route('**/api/auth/me', (route) => route.fulfill({ json: { user: null } }));
-  await page.goto('/es/workbench/radio-basics');
+  await page.goto('/es/workbench/radio-basics/glossary');
 });
 
 test('glossary searches acronyms, meanings and band aliases', async ({ page }) => {
@@ -60,6 +60,7 @@ test('glossary paginates, filters bands and resets the current page on search', 
 });
 
 test('original Claude PDF is served locally with its review note', async ({ page, request }) => {
+  await page.goto('/es/workbench/radio-basics/sources');
   const link = page.getByRole('link', { name: 'Guía de repaso original de Claude · 50 páginas' });
   await expect(link).toHaveAttribute('href', '/downloads/radio/guia-radioaficionado-novicio.pdf');
   await expect(page.getByText(/en la página 41, I.40 conserva/)).toBeVisible();
@@ -67,3 +68,21 @@ test('original Claude PDF is served locally with its review note', async ({ page
   expect(response.status()).toBe(200);
   expect((await response.body()).subarray(0, 5).toString()).toBe('%PDF-');
 });
+
+for (const locale of ['en', 'de', 'it']) {
+  test(`glossary preserves English meanings and translated entries in ${locale}`, async ({ page }) => {
+    const errors: string[] = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await page.goto(`/${locale}/workbench/radio-basics/glossary`);
+    const glossary = page.getByTestId('radio-glossary');
+    await expect(glossary).toBeVisible();
+    await expect(page.locator('[data-radio-page="glossary"]')).not.toContainText('RadioGlossary.');
+    await expect(page.locator('[data-radio-page="glossary"]')).not.toContainText('RadioCourse.');
+    await glossary.locator('#radio-glossary-search').fill('DMR');
+    await expect(glossary.locator('[data-glossary-entry="dmr"]')).toContainText('Digital Mobile Radio');
+    await glossary.locator('#radio-glossary-search').fill('I acknowledge receipt');
+    await expect(glossary.locator('[data-glossary-entry="qsl"] [lang="en"]')).toHaveText('I acknowledge receipt.');
+    await expect(page.getByTestId('dc-circuit-lab')).toHaveCount(0);
+    expect(errors).toEqual([]);
+  });
+}

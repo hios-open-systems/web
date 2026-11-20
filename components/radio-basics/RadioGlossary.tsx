@@ -46,13 +46,13 @@ function GlossaryNotes() {
   );
 }
 
-export function RadioGlossary() {
+export function RadioGlossary({ showTitle = true }: { showTitle?: boolean }) {
   const t = useTranslations('RadioGlossary');
   const glossary = useRadioGlossary();
   const consult = (term: string) => { glossary.consult(term); revealGlossary(); };
   return (
-    <section id="glossary" className={lessonStyles.section} aria-labelledby="glossary-title" data-testid="radio-glossary">
-      <h2 id="glossary-title">{t('title')}</h2>
+    <section id="glossary" className={lessonStyles.section} aria-label={t('title')} data-testid="radio-glossary">
+      {showTitle ? <h2 id="glossary-title">{t('title')}</h2> : null}
       <p>{t('intro')}</p>
       <p className={styles.englishNote}>{t('englishNote')}</p>
       <GlossaryControls glossary={glossary} />

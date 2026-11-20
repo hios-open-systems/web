@@ -12,7 +12,7 @@
 .heading p { margin: 0 0 22px; color: var(--hios-text-secondary); font-size: 1rem; line-height: 1.65; }
 .workbench { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(230px, 0.8fr); gap: 32px; align-items: center; margin: 22px 0; }
 .figure { margin: 0; min-width: 0; }
-.diagram { display: block; width: 100%; max-width: 650px; margin-inline: auto; overflow: visible; color: var(--hios-text); font: 24px var(--font-stack-mono); }
+.diagram { --dc-one: var(--accent-2-text); --dc-two: var(--accent-text); display: block; width: 100%; max-width: 650px; margin-inline: auto; overflow: visible; color: var(--hios-text); font: 24px var(--font-stack-mono); }
 .diagram text { fill: currentColor; }
 .wire, .source, .openSwitch { fill: none; stroke: var(--hios-text-secondary); stroke-width: 2.7; stroke-linecap: round; stroke-linejoin: round; }
 .source { stroke: var(--hios-text); stroke-width: 4; }

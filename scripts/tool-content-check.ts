@@ -6,6 +6,7 @@ import { workbenchTools } from '../config/workbench.ts';
 interface Guide { intro: string; steps: string[]; tip?: string }
 interface Messages {
   Workbench: { packs: Record<string, { title: string; description: string }>; guides: Record<string, Guide> };
+  RadioCourse: { pages: Record<string, { title: string; description: string }> };
 }
 
 function encode(text: string): string {
@@ -15,7 +16,7 @@ function encode(text: string): string {
 
 /** The initial body must remain useful without executing the client tool. */
 export function verifyToolContent(html: string, route: string) {
-  const [, locale, section, toolId] = route.split('/');
+  const [, locale, section, toolId, chapter] = route.split('/');
   if (section !== 'workbench' || ['payload', 'snippets', 'serial-monitor', 'settings', 'feedback'].includes(toolId)) return;
   const tool = workbenchTools.find((entry) => entry.id === toolId && !entry.external);
   if (!tool) return;
@@ -24,6 +25,13 @@ export function verifyToolContent(html: string, route: string) {
     .replace(/<script\b[\s\S]*?<\/script>/g, '');
   const headings = [...body.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/g)];
   assert.equal(headings.length, 1, `${route}: one prerendered h1`);
+  if (toolId === 'radio-basics' && chapter) {
+    const lesson = messages.RadioCourse.pages[chapter];
+    assert.ok(lesson, `${route}: known radio course page`);
+    assert.equal(headings[0][1], encode(lesson.title), route);
+    assert.ok(body.includes(encode(lesson.description)), `${route}: prerendered lesson description`);
+    return;
+  }
   assert.equal(headings[0][1], encode(messages.Workbench.packs[toolId].title), route);
   assert.ok(body.includes(encode(messages.Workbench.packs[toolId].description)), `${route}: prerendered description`);
   const guideId = workbenchGuideIds[tool.id];

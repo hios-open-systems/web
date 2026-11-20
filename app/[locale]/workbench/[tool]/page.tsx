@@ -9,7 +9,7 @@ import { ToolPageIntro } from '@/components/workbench/ToolPageIntro';
 import { getWorkbenchTool, workbenchTools, type WorkbenchToolId } from '@/config/workbench';
 
 const dynamicToolIds = workbenchTools
-  .filter((tool) => !tool.external && !['payload', 'snippets', 'chiptune'].includes(tool.id))
+  .filter((tool) => !tool.external && !['payload', 'snippets', 'chiptune', 'radio-basics'].includes(tool.id))
   .map((tool) => tool.id);
 
 interface PageProps {
