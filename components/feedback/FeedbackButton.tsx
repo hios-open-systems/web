@@ -115,7 +115,7 @@ export function FeedbackButton({ toolSlug }: { toolSlug?: string }) {
                 title={t('widget.title')}
                 open={open}
                 onCancel={handleCancel}
-                destroyOnClose
+                destroyOnHidden
                 footer={[
                     <Button key="cancel" onClick={handleCancel} disabled={sending}>
                         {t('widget.cancel')}
