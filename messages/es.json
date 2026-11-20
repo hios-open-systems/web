@@ -4784,7 +4784,8 @@
             "connections": "Serie y paralelo",
             "laboratory": "Laboratorio",
             "power": "Potencia y medición",
-            "practice": "Ponete a prueba"
+            "practice": "Ponete a prueba",
+            "glossary": "Glosario"
         },
         "concepts": {
             "title": "Cuatro magnitudes, cuatro preguntas diferentes",
@@ -4931,7 +4932,10 @@
             "current": "9.1 · Corriente eléctrica",
             "ohm": "9.4 · Ley de Ohm y medición",
             "connections": "10.2 · Resistores en serie y paralelo",
-            "limits": "El laboratorio calcula un régimen estacionario ideal: no simula transitorios, tolerancias, límites de la fuente ni variaciones térmicas. Es material de estudio, no un programa oficial ni un banco de examen."
+            "limits": "El laboratorio calcula un régimen estacionario ideal: no simula transitorios, tolerancias, límites de la fuente ni variaciones térmicas. Es material de estudio, no un programa oficial ni un banco de examen.",
+            "originalGuide": "Guía de repaso original de Claude · 50 páginas",
+            "originalGuideNote": "Conservamos el archivo original como material de consulta. La revisión encontró erratas técnicas y respuestas reglamentarias desactualizadas: por ejemplo, en la página 41, I.40 conserva una duración de cinco años para repetidoras e I.43 permanece aunque fue suprimida por la Resolución ENACOM 1186/2024. Consultá también la normativa oficial.",
+            "enacom": "Normativa y documentos originales de ENACOM"
         },
         "lab": {
             "title": "Laboratorio de corriente continua",
@@ -4971,6 +4975,257 @@
             "node": "Nodo",
             "disabledBranch": "Rama desconectada",
             "branch": "Rama R{number}"
+        },
+        "glossaryLink": "Consultá los términos del curso en el glosario."
+    },
+    "RadioGlossary": {
+        "title": "Glosario de radioafición",
+        "intro": "Una referencia para consultar mientras estudiás o escuchás una comunicación. No todo es un comando: CQ es una señal de llamada; QSL pertenece al código Q; PTT es un control del equipo; DMR es un estándar digital.",
+        "search": "Buscar un término",
+        "searchPlaceholder": "CQ, PTT, DMR, interferencia, 2 metros…",
+        "category": "Filtrar por tema",
+        "all": "Todos los temas",
+        "categories": {
+            "signals": "Señales y códigos",
+            "operation": "Equipo y operación",
+            "bands": "Bandas",
+            "technology": "Modos y tecnologías"
+        },
+        "count": "{count} términos encontrados",
+        "example": "Ejemplo de uso",
+        "source": "Fuente",
+        "related": "Términos relacionados",
+        "empty": "No encontramos ese término. Probá otra palabra o elegí todos los temas.",
+        "clear": "Limpiar búsqueda y filtros",
+        "qclHint": "Si buscabas la confirmación de recepción, la abreviatura habitual es QSL. Conservamos «QCL» como tu consulta; no le asignamos ese significado.",
+        "qslSuggestion": "Consultar QSL",
+        "qNote": "Los códigos Q pueden preguntar o informar: QTH? pregunta por la ubicación; QTH seguido de un lugar la informa. Aquí indicamos el uso habitual en radioafición y aclaramos diferencias importantes.",
+        "bandNote": "Los rangos HF, VHF y UHF son familias del espectro, no bandas enteras habilitadas para radioaficionados. Los nombres en metros son aproximados: λ en metros ≈ 300 / f en MHz, en el espacio libre. Las frecuencias de referencia de los ejemplos no indican autorización para transmitir; los límites, modos y potencias se consultan en ENACOM según la categoría.",
+        "sourcesNote": "Referencias: ARRL para operación y códigos, UIT para nombres de bandas, ETSI para DMR y el manual de WSJT-X para FT8. Los enlaces abren el sitio externo indicado solo al seleccionarlos.",
+        "bandRules": "Consultar normativa y cuadro de bandas de ENACOM",
+        "entries": {
+            "cq": {
+                "term": "CQ",
+                "name": "Llamado general",
+                "meaning": "Invita a cualquier estación a responder. Es una señal de llamada, no un código Q. Primero se escucha y se comprueba que la frecuencia esté disponible.",
+                "example": "«CQ, CQ, aquí…», seguido de la señal distintiva de la estación que llama."
+            },
+            "qsl": {
+                "term": "QSL",
+                "name": "Confirmación de recepción",
+                "meaning": "Indica que se recibió una transmisión. En otro uso, una tarjeta o confirmación QSL documenta un contacto. QSL y QSO se refieren a cosas diferentes.",
+                "example": "«QSL, recibí tu reporte». El contacto es el QSO; su confirmación puede ser una QSL."
+            },
+            "qso": {
+                "term": "QSO",
+                "name": "Contacto por radio",
+                "meaning": "En el uso habitual de radioaficionados, es una comunicación entre estaciones. No exige que después se intercambien tarjetas QSL.",
+                "example": "«Hicimos un QSO en la banda de 2 metros»."
+            },
+            "qth": {
+                "term": "QTH",
+                "name": "Ubicación de la estación",
+                "meaning": "Se usa para preguntar o informar desde dónde opera una estación. En una conversación puede bastar la localidad; no equivale necesariamente a una dirección postal.",
+                "example": "«¿Cuál es tu QTH?» — «Mi QTH es Córdoba»."
+            },
+            "qrz": {
+                "term": "QRZ?",
+                "name": "¿Quién me llama?",
+                "meaning": "Pregunta qué estación está llamando. Se usa si recibiste una llamada y necesitás identificar al corresponsal; CQ se usa para iniciar un llamado general.",
+                "example": "Escuchaste que alguien te llamó, pero no entendiste su señal distintiva: «QRZ?»."
+            },
+            "qrl": {
+                "term": "QRL?",
+                "name": "¿Está ocupada la frecuencia?",
+                "meaning": "El significado general es «¿está ocupado?». En la práctica, se usa para comprobar si una frecuencia está en uso antes de llamar.",
+                "example": "Escuchá primero y preguntá «¿Está en uso esta frecuencia?»; en telegrafía se utiliza QRL?."
+            },
+            "qrm": {
+                "term": "QRM",
+                "name": "Interferencia",
+                "meaning": "Una emisión o señal no deseada dificulta recibir la comunicación. Conviene distinguirla del ruido atmosférico que habitualmente se describe como QRN.",
+                "example": "«Tengo QRM de otra estación cercana en frecuencia»."
+            },
+            "qrn": {
+                "term": "QRN",
+                "name": "Ruido estático",
+                "meaning": "En el uso habitual se refiere al ruido atmosférico que dificulta recibir, por ejemplo el producido por descargas eléctricas.",
+                "example": "«Hay mucho QRN por las tormentas»."
+            },
+            "qsb": {
+                "term": "QSB",
+                "name": "Desvanecimiento de la señal",
+                "meaning": "La intensidad de una señal recibida sube y baja. No significa necesariamente que el corresponsal esté cambiando su potencia.",
+                "example": "«Te recibo con QSB: por momentos llegás fuerte y después te perdés»."
+            },
+            "qsy": {
+                "term": "QSY",
+                "name": "Cambio de frecuencia",
+                "meaning": "Se usa para proponer o informar un cambio de frecuencia. Ambas estaciones deben acordar dónde continuarán y comprobar que puedan usarla.",
+                "example": "«Hagamos QSY a otra frecuencia y continuamos allí»."
+            },
+            "qrt": {
+                "term": "QRT",
+                "name": "Dejar de transmitir",
+                "meaning": "Indica o solicita el cese de transmisión. En una despedida suele significar que la estación termina su operación.",
+                "example": "«Me voy QRT, gracias por el contacto»."
+            },
+            "qrv": {
+                "term": "QRV",
+                "name": "Listo para comunicar",
+                "meaning": "Se usa para preguntar o indicar si una estación está preparada para comunicar.",
+                "example": "«Estoy QRV para la prueba de recepción»."
+            },
+            "qrp": {
+                "term": "QRP",
+                "name": "Reducción o baja potencia",
+                "meaning": "Como código Q se relaciona con reducir la potencia; en el uso amateur también describe operación con baja potencia. El límite numérico depende de la actividad o de sus reglas.",
+                "example": "«Hoy opero QRP». Para un concurso, verificá qué potencia máxima define su reglamento."
+            },
+            "seventyThree": {
+                "term": "73",
+                "name": "Saludos y buenos deseos",
+                "meaning": "Despedida tradicional de radioaficionados. Es una abreviatura operativa, no un código Q.",
+                "example": "«Gracias por el QSO, 73»."
+            },
+            "ptt": {
+                "term": "PTT",
+                "name": "Push-to-talk · pulsar para hablar",
+                "meaning": "Control que conmuta el equipo a transmisión mientras está activado. En un equipo de comunicación alternada se suelta para volver a recibir y escuchar al corresponsal.",
+                "example": "Pulsá PTT para hablar y soltalo al terminar tu intervención."
+            },
+            "rx": {
+                "term": "RX",
+                "name": "Recepción",
+                "meaning": "Abreviatura utilizada para la función o el estado de recibir señales. Al configurar tu equipo para usar una repetidora, RX es la frecuencia que escucha tu equipo: la salida de la repetidora.",
+                "example": "Una indicación RX encendida puede señalar que el equipo está recibiendo una señal."
+            },
+            "tx": {
+                "term": "TX",
+                "name": "Transmisión",
+                "meaning": "Abreviatura utilizada para transmitir. La frecuencia TX de tu equipo es aquella en la que emite; puede diferir de RX al usar una repetidora.",
+                "example": "El indicador TX se activa cuando el equipo transmite al accionar PTT."
+            },
+            "simplex": {
+                "term": "Simplex",
+                "name": "Comunicación directa alternada",
+                "meaning": "En el uso habitual amateur, dos estaciones transmiten y reciben por turnos en la misma frecuencia, sin una repetidora intermedia.",
+                "example": "Dos equipos portátiles se comunican directamente en una frecuencia permitida y libre."
+            },
+            "repeater": {
+                "term": "Repetidora",
+                "name": "Estación que retransmite",
+                "meaning": "Recibe una señal y vuelve a transmitirla. Una repetidora habitual de voz recibe en una frecuencia y transmite simultáneamente en otra; su ubicación puede ampliar la cobertura.",
+                "example": "Tu equipo transmite en la entrada de la repetidora y escucha su salida. Deben configurarse las frecuencias y los parámetros de acceso."
+            },
+            "squelch": {
+                "term": "Squelch",
+                "name": "Silenciador de recepción",
+                "meaning": "Silencia el audio cuando no se cumple la condición de apertura, como superar un umbral de señal. Un ajuste demasiado alto puede ocultar señales débiles; no aumenta la sensibilidad del receptor.",
+                "example": "Ajustá el umbral apenas lo necesario para silenciar el ruido cuando no hay señal."
+            },
+            "callsign": {
+                "term": "Señal distintiva",
+                "name": "Identificación de una estación",
+                "meaning": "Identificación asignada según la reglamentación. En inglés se llama call sign. No es el nombre personal del operador ni el nombre de un equipo.",
+                "example": "En un llamado se anuncia la señal distintiva propia para que el corresponsal identifique la estación."
+            },
+            "hf": {
+                "term": "HF",
+                "name": "High frequency · alta frecuencia",
+                "meaning": "Familia de frecuencias de 3 a 30 MHz. Incluye varias bandas de radioaficionados, como 40 y 20 metros. En condiciones adecuadas permite comunicaciones por propagación ionosférica a gran distancia.",
+                "example": "Una señal de 14 MHz pertenece a HF. La distancia alcanzable depende de la propagación, las antenas y otras condiciones."
+            },
+            "vhf": {
+                "term": "VHF",
+                "name": "Very high frequency · muy alta frecuencia",
+                "meaning": "Familia de 30 a 300 MHz. Incluye la banda amateur de 2 metros. La cobertura terrestre habitual depende mucho de la altura, el relieve y los obstáculos; también existen modos de propagación especiales.",
+                "example": "145 MHz pertenece a VHF. VHF no significa una distancia fija de alcance."
+            },
+            "uhf": {
+                "term": "UHF",
+                "name": "Ultra high frequency · ultra alta frecuencia",
+                "meaning": "Familia de 300 a 3 000 MHz. Incluye la banda amateur de 70 centímetros. A igual velocidad de propagación, una frecuencia mayor corresponde a una longitud de onda menor.",
+                "example": "435 MHz pertenece a UHF; su longitud de onda en espacio libre es aproximadamente 69 cm."
+            },
+            "fortyMeters": {
+                "term": "40 m",
+                "name": "Banda de cuarenta metros · HF",
+                "meaning": "Nombre de una banda amateur alrededor de 7 MHz. El nombre indica una longitud de onda aproximada, no una frecuencia única ni una medida exacta de la antena.",
+                "example": "A 7 MHz, λ ≈ 300/7 ≈ 42,9 m. El nombre convencional de la banda sigue siendo 40 metros."
+            },
+            "twentyMeters": {
+                "term": "20 m",
+                "name": "Banda de veinte metros · HF",
+                "meaning": "Nombre de una banda amateur alrededor de 14 MHz. Como otras bandas de HF, su propagación depende de la ionosfera; no todas las categorías tienen necesariamente los mismos permisos.",
+                "example": "A 14 MHz, λ ≈ 300/14 ≈ 21,4 m. El nombre identifica una banda, no una autorización de transmisión."
+            },
+            "twoMeters": {
+                "term": "2 m",
+                "name": "Banda de dos metros · VHF",
+                "meaning": "Banda amateur alrededor de 145 MHz, utilizada entre otras actividades para comunicaciones locales, repetidoras y satélites. El modo y el segmento se eligen según la actividad y las reglas aplicables.",
+                "example": "A 145 MHz, λ ≈ 2,07 m. Puede haber FM y modos digitales en una misma banda: banda y modo son conceptos diferentes."
+            },
+            "seventyCentimeters": {
+                "term": "70 cm",
+                "name": "Banda de setenta centímetros · UHF",
+                "meaning": "Banda amateur alrededor de 435 MHz. Puede utilizarse para enlaces locales, repetidoras, satélites y otras actividades según los segmentos y permisos correspondientes.",
+                "example": "A 435 MHz, λ ≈ 0,69 m. «70 cm» no significa que toda antena de esa banda deba medir 70 cm."
+            },
+            "dmr": {
+                "term": "DMR",
+                "name": "Digital Mobile Radio",
+                "meaning": "Estándar de radio digital de ETSI. En DMR Tier II, un canal de 12,5 kHz utiliza dos ranuras de tiempo. Para comunicar deben ser compatibles la configuración y los parámetros de acceso; compartir frecuencia no basta.",
+                "example": "Para una repetidora DMR se configuran, entre otros datos, frecuencia, color code, time slot y talkgroup. DMR puede utilizarse sin Internet en comunicaciones locales."
+            },
+            "colorCode": {
+                "term": "Color code",
+                "name": "Código de color en DMR",
+                "meaning": "Parámetro de acceso de DMR con valores de 0 a 15 que ayuda a distinguir sistemas en un canal. Debe coincidir con el sistema con el que se quiere comunicar; no es cifrado ni garantiza privacidad.",
+                "example": "Un equipo con el color code incorrecto puede no acceder a la repetidora aunque tenga la frecuencia correcta."
+            },
+            "timeSlot": {
+                "term": "Time slot · TS",
+                "name": "Ranura de tiempo en DMR",
+                "meaning": "En DMR Tier II se alternan dos ranuras, TS1 y TS2, dentro de un canal de 12,5 kHz. No son dos frecuencias diferentes; son turnos temporales de uso del canal.",
+                "example": "La red o repetidora indica en qué ranura se utiliza cada servicio o grupo de conversación."
+            },
+            "talkgroup": {
+                "term": "Talkgroup · TG",
+                "name": "Grupo de conversación en DMR",
+                "meaning": "Identificador que dirige una llamada a un grupo de estaciones. No es una frecuencia ni una ranura. La configuración del sistema determina qué usuarios o repetidoras participan y cómo se encaminan las llamadas.",
+                "example": "Dos usuarios pueden estar en la misma frecuencia y ranura, pero tener distintos grupos de conversación seleccionados."
+            },
+            "fm": {
+                "term": "FM",
+                "name": "Frequency modulation · modulación de frecuencia",
+                "meaning": "La información se representa mediante variaciones de la frecuencia instantánea de una portadora. En la voz FM analógica se modula con el audio del micrófono.",
+                "example": "Es habitual encontrar voz FM analógica en comunicaciones locales de VHF/UHF. «VHF» indica la familia de frecuencias; «FM», la modulación."
+            },
+            "am": {
+                "term": "AM",
+                "name": "Amplitude modulation · modulación de amplitud",
+                "meaning": "En AM convencional varía la amplitud de la portadora con el mensaje y se transmiten la portadora y dos bandas laterales.",
+                "example": "Una emisión AM analógica transporta el audio en las variaciones de amplitud de la señal de radio."
+            },
+            "ssb": {
+                "term": "SSB · BLU",
+                "name": "Single sideband · banda lateral única",
+                "meaning": "Modulación que transmite una sola banda lateral, normalmente con la portadora suprimida. USB es la banda lateral superior y LSB la inferior. Se utiliza mucho para voz en HF.",
+                "example": "Dos estaciones de voz en SSB necesitan sintonizar la señal y elegir la banda lateral adecuada para que el audio resulte inteligible."
+            },
+            "cw": {
+                "term": "CW",
+                "name": "Continuous wave · telegrafía por portadora",
+                "meaning": "En el uso amateur suele referirse a telegrafía Morse mediante el encendido y apagado de una portadora. Morse es el código; CW describe esta forma de transmitirlo.",
+                "example": "Una S en Morse se forma con tres puntos. En CW son tres emisiones cortas de portadora, separadas por los intervalos correspondientes."
+            },
+            "ft8": {
+                "term": "FT8",
+                "name": "Modo digital para señales débiles",
+                "meaning": "Intercambia mensajes breves estructurados mediante software, con turnos de transmisión y recepción de 15 segundos. Requiere sincronización horaria suficiente; no es un modo de conversación de voz.",
+                "example": "En un contacto típico se intercambian señales distintivas, localizador y reportes. Los 15 segundos son el turno completo, no necesariamente la duración de la señal emitida."
+            }
         }
     }
 }

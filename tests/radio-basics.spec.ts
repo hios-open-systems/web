@@ -82,6 +82,10 @@ for (const locale of ['en', 'de', 'it']) {
     await page.goto(`/${locale}/workbench/radio-basics`);
     await expect(page.getByTestId('dc-circuit-lab')).toBeVisible();
     await expect(page.locator('[data-tool-content]')).not.toContainText('RadioBasics.');
+    await expect(page.locator('[data-tool-content]')).not.toContainText('RadioGlossary.');
+    const glossary = page.getByTestId('radio-glossary');
+    await glossary.locator('#radio-glossary-search').fill('DMR');
+    await expect(glossary.locator('[data-glossary-entry="dmr"]')).toContainText('Digital Mobile Radio');
     await expect(page.getByRole('heading', { level: 1 })).not.toContainText('Electricidad para radioaficionados');
     expect(errors).toEqual([]);
   });

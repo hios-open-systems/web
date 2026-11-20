@@ -14,4 +14,8 @@ test('radio lesson and lab fit narrow screens and remain operable', async ({ pag
   await lab.getByRole('switch', { name: 'R2 conectada' }).click();
   await expect(lab.locator('dd').nth(1)).toHaveText('0 mA');
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  const glossary = page.getByTestId('radio-glossary');
+  await glossary.getByRole('textbox', { name: 'Buscar un término' }).fill('DMR');
+  await expect(glossary.locator('[data-glossary-entry="dmr"]')).toContainText('12,5 kHz');
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });

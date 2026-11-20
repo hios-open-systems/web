@@ -4784,7 +4784,8 @@
             "connections": "Reihe und parallel",
             "laboratory": "Labor",
             "power": "Leistung und Messung",
-            "practice": "Teste dein Wissen"
+            "practice": "Teste dein Wissen",
+            "glossary": "Glossar"
         },
         "concepts": {
             "title": "Vier Größen, vier unterschiedliche Fragen",
@@ -4970,7 +4971,261 @@
             "current": "9.1 · Elektrischer Strom",
             "ohm": "9.4 · Ohmsches Gesetz und Messung",
             "connections": "10.2 · Widerstände in Reihen- und Parallelschaltung",
-            "limits": "Das Labor berechnet einen idealen stationären Zustand: Einschwingvorgänge, Toleranzen, Grenzen der Quelle und Temperatureinflüsse werden nicht simuliert. Es ist Lernmaterial, kein offizieller Lehrgang oder Prüfungsfragenkatalog."
+            "limits": "Das Labor berechnet einen idealen stationären Zustand: Einschwingvorgänge, Toleranzen, Grenzen der Quelle und Temperatureinflüsse werden nicht simuliert. Es ist Lernmaterial, kein offizieller Lehrgang oder Prüfungsfragenkatalog.",
+            "originalGuide": "Original-Lernleitfaden von Claude · 50 Seiten",
+            "originalGuideNote": "Wir bewahren die Originaldatei als Nachschlagewerk auf. Bei der Überprüfung wurden technische Fehler und veraltete Antworten zu Vorschriften festgestellt: Auf Seite 41 nennt I.40 beispielsweise weiterhin eine Gültigkeitsdauer von fünf Jahren für Relaisstationen, und I.43 bleibt enthalten, obwohl es durch die ENACOM-Resolution 1186/2024 gestrichen wurde. Ziehe auch die offiziellen Vorschriften heran.",
+            "enacom": "Originalvorschriften und Dokumente von ENACOM"
+        },
+        "glossaryLink": "Schlage die Begriffe des Kurses im Glossar nach."
+    },
+    "RadioGlossary": {
+        "title": "Amateurfunkglossar",
+        "intro": "Ein Nachschlagewerk zum Lernen oder beim Mithören einer Funkverbindung. Nicht alles ist ein Befehl: CQ ist ein Rufsignal; QSL gehört zum Q-Code; PTT ist ein Bedienelement des Funkgeräts; DMR ist ein digitaler Standard.",
+        "search": "Begriff suchen",
+        "searchPlaceholder": "CQ, PTT, DMR, Störung, 2 Meter …",
+        "category": "Nach Thema filtern",
+        "all": "Alle Themen",
+        "categories": {
+            "signals": "Signale und Codes",
+            "operation": "Geräte und Betrieb",
+            "bands": "Frequenzbänder",
+            "technology": "Betriebsarten und Technologien"
+        },
+        "count": "{count} Begriffe gefunden",
+        "example": "Anwendungsbeispiel",
+        "source": "Quelle",
+        "related": "Verwandte Begriffe",
+        "empty": "Dieser Begriff wurde nicht gefunden. Versuche ein anderes Wort oder wähle alle Themen aus.",
+        "clear": "Suche und Filter zurücksetzen",
+        "qclHint": "Wenn du nach der Empfangsbestätigung gesucht hast: Die übliche Abkürzung ist QSL. Wir behalten „QCL“ als deine Suchanfrage bei, weisen ihr diese Bedeutung aber nicht zu.",
+        "qslSuggestion": "QSL nachschlagen",
+        "qNote": "Q-Codes können Fragen oder Mitteilungen ausdrücken: QTH? fragt nach dem Standort; QTH mit einer Ortsangabe teilt ihn mit. Hier beschreiben wir den üblichen Gebrauch im Amateurfunk und erläutern wichtige Unterschiede.",
+        "bandNote": "HF, VHF und UHF sind Bereiche des Frequenzspektrums und nicht vollständig für den Amateurfunk freigegeben. Die Bandnamen in Metern sind Näherungswerte: λ in Metern ≈ 300 / f in MHz, im freien Raum. Die Referenzfrequenzen in den Beispielen stellen keine Sendegenehmigung dar; die zulässigen Grenzen, Betriebsarten und Leistungen sind je nach Lizenzklasse bei ENACOM nachzuschlagen.",
+        "sourcesNote": "Referenzen: ARRL für Betrieb und Codes, ITU für die Bezeichnungen der Frequenzbereiche, ETSI für DMR und das WSJT-X-Handbuch für FT8. Die Links öffnen die jeweils angegebene externe Website erst beim Anklicken.",
+        "bandRules": "Vorschriften und Bandtabelle von ENACOM nachschlagen",
+        "entries": {
+            "cq": {
+                "term": "CQ",
+                "name": "Allgemeiner Anruf",
+                "meaning": "Lädt jede Station zum Antworten ein. CQ ist ein Rufsignal, kein Q-Code. Höre zuerst zu und prüfe, ob die Frequenz frei ist.",
+                "example": "„CQ, CQ, hier …“, gefolgt vom Rufzeichen der rufenden Station."
+            },
+            "qsl": {
+                "term": "QSL",
+                "name": "Empfangsbestätigung",
+                "meaning": "Bestätigt den Empfang einer Aussendung. Daneben dokumentiert eine QSL-Karte oder QSL-Bestätigung eine Funkverbindung. QSL und QSO bezeichnen unterschiedliche Dinge.",
+                "example": "„QSL, ich habe deinen Rapport empfangen.“ Die Verbindung ist das QSO; ihre Bestätigung kann eine QSL sein."
+            },
+            "qso": {
+                "term": "QSO",
+                "name": "Funkverbindung",
+                "meaning": "Bezeichnet im üblichen Sprachgebrauch von Funkamateuren eine Verbindung zwischen Stationen. Dafür müssen anschließend keine QSL-Karten ausgetauscht werden.",
+                "example": "„Wir hatten ein QSO auf dem 2-Meter-Band.“"
+            },
+            "qth": {
+                "term": "QTH",
+                "name": "Standort der Station",
+                "meaning": "Wird verwendet, um nach dem Standort einer Station zu fragen oder ihn mitzuteilen. In einem Gespräch kann der Ortsname genügen; eine vollständige Postanschrift ist damit nicht unbedingt gemeint.",
+                "example": "„Was ist dein QTH?“ — „Mein QTH ist Córdoba.“"
+            },
+            "qrz": {
+                "term": "QRZ?",
+                "name": "Wer ruft mich?",
+                "meaning": "Fragt, welche Station gerade ruft. Wird verwendet, wenn du einen Anruf empfangen hast und die Gegenstation identifizieren möchtest; CQ dient dazu, einen allgemeinen Anruf zu beginnen.",
+                "example": "Du hast gehört, dass dich jemand gerufen hat, aber sein Rufzeichen nicht verstanden: „QRZ?“"
+            },
+            "qrl": {
+                "term": "QRL?",
+                "name": "Ist die Frequenz belegt?",
+                "meaning": "Die allgemeine Bedeutung lautet „Sind Sie beschäftigt?“. In der Praxis wird damit vor einem Anruf geprüft, ob eine Frequenz bereits benutzt wird.",
+                "example": "Höre zuerst zu und frage „Ist diese Frequenz belegt?“; in der Telegrafie wird QRL? verwendet."
+            },
+            "qrm": {
+                "term": "QRM",
+                "name": "Störung durch andere Signale",
+                "meaning": "Eine unerwünschte Aussendung oder ein unerwünschtes Signal erschwert den Empfang der Funkverbindung. Davon zu unterscheiden ist atmosphärisches Rauschen, das üblicherweise als QRN bezeichnet wird.",
+                "example": "„Ich habe QRM von einer anderen Station auf einer benachbarten Frequenz.“"
+            },
+            "qrn": {
+                "term": "QRN",
+                "name": "Atmosphärische Störungen",
+                "meaning": "Bezieht sich im üblichen Gebrauch auf atmosphärisches Rauschen, das den Empfang erschwert, etwa durch elektrische Entladungen.",
+                "example": "„Durch die Gewitter gibt es viel QRN.“"
+            },
+            "qsb": {
+                "term": "QSB",
+                "name": "Schwund des Empfangssignals",
+                "meaning": "Die Stärke eines empfangenen Signals nimmt zu und ab. Das bedeutet nicht unbedingt, dass die Gegenstation ihre Sendeleistung verändert.",
+                "example": "„Ich empfange dich mit QSB: Zeitweise bist du stark, dann verschwindest du wieder.“"
+            },
+            "qsy": {
+                "term": "QSY",
+                "name": "Frequenzwechsel",
+                "meaning": "Wird verwendet, um einen Frequenzwechsel vorzuschlagen oder mitzuteilen. Beide Stationen müssen vereinbaren, wo sie die Verbindung fortsetzen, und prüfen, ob sie diese Frequenz nutzen dürfen und können.",
+                "example": "„Machen wir QSY auf eine andere Frequenz und setzen dort fort.“"
+            },
+            "qrt": {
+                "term": "QRT",
+                "name": "Senden einstellen",
+                "meaning": "Teilt das Einstellen der Aussendung mit oder fordert dazu auf. Bei einer Verabschiedung bedeutet es meist, dass die Station ihren Betrieb beendet.",
+                "example": "„Ich mache QRT, danke für die Verbindung.“"
+            },
+            "qrv": {
+                "term": "QRV",
+                "name": "Bereit für eine Funkverbindung",
+                "meaning": "Wird verwendet, um zu fragen oder mitzuteilen, ob eine Station für eine Funkverbindung bereit ist.",
+                "example": "„Ich bin QRV für den Empfangstest.“"
+            },
+            "qrp": {
+                "term": "QRP",
+                "name": "Leistung verringern oder mit geringer Leistung senden",
+                "meaning": "Als Q-Code bezieht sich QRP auf das Verringern der Leistung; im Amateurfunk bezeichnet es auch den Betrieb mit geringer Sendeleistung. Die konkrete Leistungsgrenze hängt von der Aktivität oder deren Regeln ab.",
+                "example": "„Heute arbeite ich QRP.“ Prüfe bei einem Wettbewerb, welche Höchstleistung die Ausschreibung festlegt."
+            },
+            "seventyThree": {
+                "term": "73",
+                "name": "Grüße und beste Wünsche",
+                "meaning": "Traditioneller Abschiedsgruß unter Funkamateuren. Es handelt sich um eine Betriebsabkürzung, nicht um einen Q-Code.",
+                "example": "„Danke für das QSO, 73.“"
+            },
+            "ptt": {
+                "term": "PTT",
+                "name": "Push-to-talk · zum Sprechen drücken",
+                "meaning": "Bedienelement, das das Funkgerät auf Senden schaltet, solange es betätigt wird. Bei einem Gerät im Wechselsprechbetrieb wird es losgelassen, um wieder zu empfangen und die Gegenstation zu hören.",
+                "example": "Drücke PTT zum Sprechen und lasse die Taste am Ende deines Durchgangs los."
+            },
+            "rx": {
+                "term": "RX",
+                "name": "Empfang",
+                "meaning": "Abkürzung für die Funktion oder den Zustand des Signalempfangs. Wenn du dein Funkgerät für eine Relaisstation einrichtest, ist RX die Frequenz, auf der dein Gerät empfängt: die Ausgabefrequenz der Relaisstation.",
+                "example": "Eine leuchtende RX-Anzeige kann darauf hinweisen, dass das Funkgerät ein Signal empfängt."
+            },
+            "tx": {
+                "term": "TX",
+                "name": "Senden",
+                "meaning": "Abkürzung für das Senden. Die TX-Frequenz deines Funkgeräts ist die Frequenz, auf der es aussendet; beim Relaisbetrieb kann sie von der RX-Frequenz abweichen.",
+                "example": "Die TX-Anzeige leuchtet auf, wenn das Funkgerät beim Betätigen von PTT sendet."
+            },
+            "simplex": {
+                "term": "Simplex",
+                "name": "Direkter Wechselsprechbetrieb",
+                "meaning": "Im üblichen Amateurfunkgebrauch senden und empfangen zwei Stationen abwechselnd auf derselben Frequenz, ohne eine Relaisstation dazwischen.",
+                "example": "Zwei Handfunkgeräte kommunizieren direkt auf einer zulässigen und freien Frequenz."
+            },
+            "repeater": {
+                "term": "Relaisstation",
+                "name": "Station zur Weiterübertragung",
+                "meaning": "Empfängt ein Signal und sendet es erneut aus. Eine übliche Sprachrelaisstation empfängt auf einer Frequenz und sendet gleichzeitig auf einer anderen; ihr Standort kann die Reichweite vergrößern.",
+                "example": "Dein Funkgerät sendet auf der Eingabefrequenz der Relaisstation und hört auf ihrer Ausgabefrequenz. Frequenzen und Zugangsparameter müssen eingestellt werden."
+            },
+            "squelch": {
+                "term": "Squelch",
+                "name": "Rauschsperre",
+                "meaning": "Schaltet den Ton stumm, solange die Öffnungsbedingung nicht erfüllt ist, etwa das Überschreiten einer Signalschwelle. Eine zu hohe Einstellung kann schwache Signale unterdrücken; sie erhöht nicht die Empfindlichkeit des Empfängers.",
+                "example": "Stelle die Schwelle nur so hoch ein, dass das Rauschen ohne Empfangssignal verstummt."
+            },
+            "callsign": {
+                "term": "Rufzeichen",
+                "name": "Kennung einer Station",
+                "meaning": "Nach den geltenden Vorschriften zugewiesene Kennung. Auf Englisch heißt sie call sign. Sie ist weder der persönliche Name des Bedieners noch der Name eines Funkgeräts.",
+                "example": "Bei einem Anruf wird das eigene Rufzeichen genannt, damit die Gegenstation die Station identifizieren kann."
+            },
+            "hf": {
+                "term": "HF",
+                "name": "High frequency · Kurzwellenbereich",
+                "meaning": "Frequenzbereich von 3 bis 30 MHz. Er umfasst mehrere Amateurfunkbänder, etwa 40 und 20 Meter. Unter geeigneten Bedingungen sind durch ionosphärische Ausbreitung Funkverbindungen über große Entfernungen möglich.",
+                "example": "Ein Signal auf 14 MHz gehört zum HF-Bereich. Die erreichbare Entfernung hängt von der Ausbreitung, den Antennen und weiteren Bedingungen ab."
+            },
+            "vhf": {
+                "term": "VHF",
+                "name": "Very high frequency · Ultrakurzwellenbereich",
+                "meaning": "Frequenzbereich von 30 bis 300 MHz. Er umfasst das 2-Meter-Amateurfunkband. Die übliche terrestrische Reichweite hängt stark von der Höhe, dem Gelände und Hindernissen ab; außerdem gibt es besondere Ausbreitungsarten.",
+                "example": "145 MHz liegt im VHF-Bereich. VHF bedeutet keine feste Reichweite."
+            },
+            "uhf": {
+                "term": "UHF",
+                "name": "Ultra high frequency · Dezimeterwellenbereich",
+                "meaning": "Frequenzbereich von 300 bis 3 000 MHz. Er umfasst das 70-Zentimeter-Amateurfunkband. Bei gleicher Ausbreitungsgeschwindigkeit entspricht eine höhere Frequenz einer kürzeren Wellenlänge.",
+                "example": "435 MHz liegt im UHF-Bereich; die Wellenlänge im freien Raum beträgt ungefähr 69 cm."
+            },
+            "fortyMeters": {
+                "term": "40 m",
+                "name": "40-Meter-Band · HF",
+                "meaning": "Bezeichnung eines Amateurfunkbands um 7 MHz. Der Name gibt eine ungefähre Wellenlänge an, keine einzelne Frequenz und auch keine genaue Antennenlänge.",
+                "example": "Bei 7 MHz gilt λ ≈ 300/7 ≈ 42,9 m. Die übliche Bandbezeichnung bleibt 40 Meter."
+            },
+            "twentyMeters": {
+                "term": "20 m",
+                "name": "20-Meter-Band · HF",
+                "meaning": "Bezeichnung eines Amateurfunkbands um 14 MHz. Wie bei anderen HF-Bändern hängt seine Ausbreitung von der Ionosphäre ab; nicht alle Lizenzklassen haben zwangsläufig dieselben Berechtigungen.",
+                "example": "Bei 14 MHz gilt λ ≈ 300/14 ≈ 21,4 m. Der Name bezeichnet ein Band und stellt keine Sendegenehmigung dar."
+            },
+            "twoMeters": {
+                "term": "2 m",
+                "name": "2-Meter-Band · VHF",
+                "meaning": "Amateurfunkband um 145 MHz, das unter anderem für lokale Verbindungen, Relaisstationen und Satelliten genutzt wird. Betriebsart und Bandsegment werden passend zur Aktivität und zu den geltenden Regeln gewählt.",
+                "example": "Bei 145 MHz gilt λ ≈ 2,07 m. Im selben Band kann es FM und digitale Betriebsarten geben: Band und Betriebsart sind unterschiedliche Begriffe."
+            },
+            "seventyCentimeters": {
+                "term": "70 cm",
+                "name": "70-Zentimeter-Band · UHF",
+                "meaning": "Amateurfunkband um 435 MHz. Es kann je nach Bandsegment und entsprechenden Berechtigungen für lokale Verbindungen, Relaisstationen, Satelliten und andere Aktivitäten genutzt werden.",
+                "example": "Bei 435 MHz gilt λ ≈ 0,69 m. „70 cm“ bedeutet nicht, dass jede Antenne für dieses Band 70 cm lang sein muss."
+            },
+            "dmr": {
+                "term": "DMR",
+                "name": "Digital Mobile Radio",
+                "meaning": "Digitalfunkstandard von ETSI. Bei DMR Tier II nutzt ein 12,5-kHz-Kanal zwei Zeitschlitze. Für eine Verbindung müssen Konfiguration und Zugangsparameter zusammenpassen; dieselbe Frequenz allein reicht nicht aus.",
+                "example": "Für eine DMR-Relaisstation werden unter anderem Frequenz, Color Code, Time Slot und Talkgroup eingestellt. DMR kann für lokale Verbindungen auch ohne Internet genutzt werden."
+            },
+            "colorCode": {
+                "term": "Color Code",
+                "name": "Farbcode bei DMR",
+                "meaning": "DMR-Zugangsparameter mit Werten von 0 bis 15, der hilft, Systeme auf einem Kanal zu unterscheiden. Er muss zum gewünschten System passen; er ist keine Verschlüsselung und gewährleistet keine Vertraulichkeit.",
+                "example": "Ein Funkgerät mit falschem Color Code kann möglicherweise nicht auf die Relaisstation zugreifen, obwohl die Frequenz richtig eingestellt ist."
+            },
+            "timeSlot": {
+                "term": "Time Slot · TS",
+                "name": "Zeitschlitz bei DMR",
+                "meaning": "Bei DMR Tier II wechseln sich innerhalb eines 12,5-kHz-Kanals zwei Zeitschlitze ab: TS1 und TS2. Das sind keine zwei verschiedenen Frequenzen, sondern zeitlich getrennte Nutzungsabschnitte desselben Kanals.",
+                "example": "Das Netz oder die Relaisstation gibt vor, in welchem Zeitschlitz ein Dienst oder eine Gesprächsgruppe genutzt wird."
+            },
+            "talkgroup": {
+                "term": "Talkgroup · TG",
+                "name": "Gesprächsgruppe bei DMR",
+                "meaning": "Eine Kennung, die einen Ruf an eine Gruppe von Stationen richtet. Sie ist weder eine Frequenz noch ein Zeitschlitz. Die Systemkonfiguration bestimmt, welche Nutzer oder Relaisstationen teilnehmen und wie die Rufe weitergeleitet werden.",
+                "example": "Zwei Nutzer können dieselbe Frequenz und denselben Zeitschlitz verwenden, aber unterschiedliche Gesprächsgruppen ausgewählt haben."
+            },
+            "fm": {
+                "term": "FM",
+                "name": "Frequency modulation · Frequenzmodulation",
+                "meaning": "Die Information wird durch Änderungen der momentanen Frequenz eines Trägers dargestellt. Bei analogem FM-Sprechfunk wird mit dem Audiosignal des Mikrofons moduliert.",
+                "example": "Analoger FM-Sprechfunk ist bei lokalen VHF/UHF-Verbindungen verbreitet. „VHF“ bezeichnet den Frequenzbereich, „FM“ die Modulationsart."
+            },
+            "am": {
+                "term": "AM",
+                "name": "Amplitude modulation · Amplitudenmodulation",
+                "meaning": "Bei herkömmlicher AM verändert die Nachricht die Amplitude des Trägers. Übertragen werden der Träger und zwei Seitenbänder.",
+                "example": "Eine analoge AM-Aussendung überträgt das Audiosignal durch Änderungen der Amplitude des Funksignals."
+            },
+            "ssb": {
+                "term": "SSB · BLU",
+                "name": "Single sideband · Einseitenbandmodulation",
+                "meaning": "Modulationsart, die nur ein Seitenband überträgt, normalerweise mit unterdrücktem Träger. USB ist das obere und LSB das untere Seitenband. SSB wird häufig für Sprechfunk im HF-Bereich verwendet.",
+                "example": "Für eine verständliche Sprachübertragung müssen zwei SSB-Stationen das Signal richtig abstimmen und das passende Seitenband wählen."
+            },
+            "cw": {
+                "term": "CW",
+                "name": "Continuous wave · Trägertelegrafie",
+                "meaning": "Im Amateurfunk bezeichnet CW meist Morsetelegrafie durch Ein- und Ausschalten eines Trägers. Morse ist der Code; CW beschreibt diese Art seiner Übertragung.",
+                "example": "Ein S im Morsecode besteht aus drei Punkten. Bei CW sind das drei kurze Trägeraussendungen, getrennt durch die entsprechenden Pausen."
+            },
+            "ft8": {
+                "term": "FT8",
+                "name": "Digitale Betriebsart für schwache Signale",
+                "meaning": "Tauscht mithilfe von Software kurze strukturierte Nachrichten aus, mit abwechselnden Sende- und Empfangszeitfenstern von 15 Sekunden. Dafür müssen die Uhren ausreichend genau synchronisiert sein; FT8 ist keine Betriebsart für Sprachgespräche.",
+                "example": "Bei einer typischen Verbindung werden Rufzeichen, Locator und Rapporte ausgetauscht. Die 15 Sekunden bezeichnen das vollständige Zeitfenster, nicht unbedingt die Dauer des ausgesendeten Signals."
+            }
         }
     }
 }

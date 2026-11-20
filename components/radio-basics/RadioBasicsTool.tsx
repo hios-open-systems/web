@@ -7,9 +7,10 @@ import { ConnectionsSection } from './ConnectionsSection';
 import { PowerSection } from './PowerSection';
 import { PracticeSection } from './PracticeSection';
 import { CourseRoadmap, LessonSources } from './LessonResources';
+import { RadioGlossary } from './RadioGlossary';
 import styles from './radioBasics.module.css';
 
-const chapters = ['concepts', 'ohm', 'connections', 'laboratory', 'power', 'practice'] as const;
+const chapters = ['concepts', 'ohm', 'connections', 'laboratory', 'power', 'practice', 'glossary'] as const;
 
 function LessonNavigation() {
   const t = useTranslations('RadioBasics');
@@ -49,6 +50,7 @@ export function RadioBasicsTool() {
           <h2>{t('introTitle')}</h2>
           <p className={styles.lead}>{t('intro')}</p>
           <p className={styles.scope}>{t('scope')}</p>
+          <a href="#glossary">{t('glossaryLink')}</a>
         </header>
         <ConceptsSection />
         <OhmSection />
@@ -56,6 +58,7 @@ export function RadioBasicsTool() {
         <LaboratorySection />
         <PowerSection />
         <PracticeSection />
+        <RadioGlossary />
         <CourseRoadmap />
         <LessonSources />
       </div>
