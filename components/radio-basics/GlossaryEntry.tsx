@@ -11,12 +11,17 @@ export function GlossaryEntry({ entry, entries, consult }: {
   const t = useTranslations('RadioGlossary');
   const source = glossarySources[entry.source];
   const related = entries.filter((candidate) => entry.related?.includes(candidate.id));
+  const qCode = entry.id.startsWith('q');
   return (
     <li className={styles.entry} data-glossary-entry={entry.id}>
       <div className={styles.entryHeading}>
         <h3><span className={styles.term}>{entry.term}</span><span>{entry.name}</span></h3>
         <Tag>{t(`categories.${entry.category}`)}</Tag>
       </div>
+      <p className={styles.english}>
+        <span>{t(qCode ? 'englishCodeLabel' : 'englishLabel')}: </span>
+        <span lang="en">{entry.english}</span>
+      </p>
       <p>{entry.meaning}</p>
       <p className={styles.example}><strong>{t('example')}: </strong>{entry.example}</p>
       <div className={styles.entryFooter}>

@@ -13,6 +13,7 @@ export function useRadioGlossary() {
   const [page, setPage] = useState(1);
   const entries: GlossaryEntry[] = glossaryEntries.map((entry) => ({
     ...entry, term: t(`entries.${entry.id}.term`), name: t(`entries.${entry.id}.name`),
+    english: t(`entries.${entry.id}.english`),
     meaning: t(`entries.${entry.id}.meaning`), example: t(`entries.${entry.id}.example`),
   }));
   const filtered = filterGlossary(entries, query, category);

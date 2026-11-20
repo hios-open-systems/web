@@ -19,6 +19,12 @@ test('glossary searches acronyms, meanings and band aliases', async ({ page }) =
   await search.fill('DMR');
   await expect(glossary.locator('[data-glossary-entry="dmr"]')).toContainText('12,5 kHz');
   await expect(glossary.locator('[data-glossary-entry="colorCode"]')).toContainText('0 a 15');
+  await search.fill('I acknowledge receipt');
+  const qsl = glossary.locator('[data-glossary-entry="qsl"]');
+  await expect(qsl.locator('[lang="en"]')).toHaveText('I acknowledge receipt.');
+  await expect(qsl).toContainText('Significado en inglés (código Q)');
+  await search.fill('High Frequency');
+  await expect(glossary.locator('[data-glossary-entry="hf"] [lang="en"]')).toHaveText('High Frequency');
 });
 
 test('glossary handles QCL cautiously and related terms reset filters', async ({ page }) => {

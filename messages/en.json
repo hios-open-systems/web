@@ -5008,224 +5008,264 @@
                 "term": "CQ",
                 "name": "General call",
                 "meaning": "Invites any station to reply. It is a calling signal, not a Q code. Listen first and check that the frequency is available.",
-                "example": "‘CQ, CQ, this is…’, followed by the calling station’s call sign."
+                "example": "‘CQ, CQ, this is…’, followed by the calling station’s call sign.",
+                "english": "General call"
             },
             "qsl": {
                 "term": "QSL",
                 "name": "Acknowledgment of reception",
                 "meaning": "Indicates that a transmission was received. In another use, a QSL card or confirmation documents a contact. QSL and QSO refer to different things.",
-                "example": "‘QSL, I received your report.’ The contact is the QSO; its confirmation can be a QSL."
+                "example": "‘QSL, I received your report.’ The contact is the QSO; its confirmation can be a QSL.",
+                "english": "I acknowledge receipt."
             },
             "qso": {
                 "term": "QSO",
                 "name": "Radio contact",
                 "meaning": "In common amateur radio usage, a communication between stations. It does not require a subsequent exchange of QSL cards.",
-                "example": "‘We had a QSO on the 2-meter band.’"
+                "example": "‘We had a QSO on the 2-meter band.’",
+                "english": "Radio contact"
             },
             "qth": {
                 "term": "QTH",
                 "name": "Station location",
                 "meaning": "Used to ask or state where a station is operating. In a conversation, the town or city may be sufficient; it does not necessarily mean a postal address.",
-                "example": "‘What is your QTH?’ — ‘My QTH is Córdoba.’"
+                "example": "‘What is your QTH?’ — ‘My QTH is Córdoba.’",
+                "english": "Station location"
             },
             "qrz": {
                 "term": "QRZ?",
                 "name": "Who is calling me?",
                 "meaning": "Asks which station is calling. Use it when you received a call and need to identify the other station; CQ is used to start a general call.",
-                "example": "You heard someone call you but could not make out their call sign: ‘QRZ?’"
+                "example": "You heard someone call you but could not make out their call sign: ‘QRZ?’",
+                "english": "Who is calling me?"
             },
             "qrl": {
                 "term": "QRL?",
                 "name": "Is the frequency in use?",
                 "meaning": "Its general meaning is ‘Are you busy?’. In practice, it is used to check whether a frequency is in use before calling.",
-                "example": "Listen first and ask ‘Is this frequency in use?’; in telegraphy, QRL? is used."
+                "example": "Listen first and ask ‘Is this frequency in use?’; in telegraphy, QRL? is used.",
+                "english": "Are you busy?"
             },
             "qrm": {
                 "term": "QRM",
                 "name": "Interference",
                 "meaning": "An unwanted emission or signal makes reception difficult. Distinguish it from atmospheric noise, which is commonly described as QRN.",
-                "example": "‘I have QRM from another station close in frequency.’"
+                "example": "‘I have QRM from another station close in frequency.’",
+                "english": "Interference from other signals"
             },
             "qrn": {
                 "term": "QRN",
                 "name": "Static noise",
                 "meaning": "In common usage, atmospheric noise that makes reception difficult, for example noise produced by electrical discharges.",
-                "example": "‘There is a lot of QRN from thunderstorms.’"
+                "example": "‘There is a lot of QRN from thunderstorms.’",
+                "english": "Atmospheric noise / static"
             },
             "qsb": {
                 "term": "QSB",
                 "name": "Signal fading",
                 "meaning": "The strength of a received signal rises and falls. It does not necessarily mean the other station is changing its power.",
-                "example": "‘Your signal has QSB: you are strong for a while, then fade away.’"
+                "example": "‘Your signal has QSB: you are strong for a while, then fade away.’",
+                "english": "Signal fading"
             },
             "qsy": {
                 "term": "QSY",
                 "name": "Change of frequency",
                 "meaning": "Used to propose or announce a change of frequency. Both stations should agree where to continue and check that they can use that frequency.",
-                "example": "‘Let’s QSY to another frequency and continue there.’"
+                "example": "‘Let’s QSY to another frequency and continue there.’",
+                "english": "Change frequency"
             },
             "qrt": {
                 "term": "QRT",
                 "name": "Stop transmitting",
                 "meaning": "Indicates or requests the end of transmission. At the end of a contact, it usually means the station is ending its operation.",
-                "example": "‘I’m going QRT, thanks for the contact.’"
+                "example": "‘I’m going QRT, thanks for the contact.’",
+                "english": "Stop transmitting"
             },
             "qrv": {
                 "term": "QRV",
                 "name": "Ready to communicate",
                 "meaning": "Used to ask or state whether a station is ready to communicate.",
-                "example": "‘I am QRV for the reception test.’"
+                "example": "‘I am QRV for the reception test.’",
+                "english": "Ready to communicate"
             },
             "qrp": {
                 "term": "QRP",
                 "name": "Reduced or low power",
                 "meaning": "As a Q code, it concerns reducing power; amateur usage also describes low-power operation. The numerical limit depends on the activity or its rules.",
-                "example": "‘I am operating QRP today.’ For a contest, check the maximum power defined by its rules."
+                "example": "‘I am operating QRP today.’ For a contest, check the maximum power defined by its rules.",
+                "english": "Reduce transmitter power / low-power operation"
             },
             "seventyThree": {
                 "term": "73",
                 "name": "Best regards",
                 "meaning": "A traditional amateur radio farewell. It is an operating abbreviation, not a Q code.",
-                "example": "‘Thanks for the QSO, 73.’"
+                "example": "‘Thanks for the QSO, 73.’",
+                "english": "Best regards"
             },
             "ptt": {
                 "term": "PTT",
                 "name": "Push-to-talk",
                 "meaning": "A control that switches the equipment to transmit while activated. With equipment that alternates transmission and reception, release it to return to receive and listen to the other station.",
-                "example": "Press PTT to speak and release it when you finish your turn."
+                "example": "Press PTT to speak and release it when you finish your turn.",
+                "english": "Push-to-talk"
             },
             "rx": {
                 "term": "RX",
                 "name": "Reception",
                 "meaning": "An abbreviation for the function or state of receiving signals. When configuring your radio to use a repeater, RX is the frequency your radio listens to: the repeater’s output.",
-                "example": "An illuminated RX indicator may show that the equipment is receiving a signal."
+                "example": "An illuminated RX indicator may show that the equipment is receiving a signal.",
+                "english": "Receive / receiver"
             },
             "tx": {
                 "term": "TX",
                 "name": "Transmission",
                 "meaning": "An abbreviation used for transmission. Your equipment’s TX frequency is where it emits; this can differ from RX when using a repeater.",
-                "example": "The TX indicator activates when the equipment transmits after you press PTT."
+                "example": "The TX indicator activates when the equipment transmits after you press PTT.",
+                "english": "Transmit / transmitter"
             },
             "simplex": {
                 "term": "Simplex",
                 "name": "Direct, alternating communication",
                 "meaning": "In common amateur usage, two stations take turns transmitting and receiving on the same frequency, without an intermediate repeater.",
-                "example": "Two handheld radios communicate directly on an available, permitted frequency."
+                "example": "Two handheld radios communicate directly on an available, permitted frequency.",
+                "english": "Simplex operation"
             },
             "repeater": {
                 "term": "Repeater",
                 "name": "A station that retransmits",
                 "meaning": "Receives a signal and transmits it again. A typical voice repeater receives on one frequency and simultaneously transmits on another; its location can extend coverage.",
-                "example": "Your radio transmits on the repeater’s input and listens on its output. Frequencies and access parameters must be configured."
+                "example": "Your radio transmits on the repeater’s input and listens on its output. Frequencies and access parameters must be configured.",
+                "english": "Repeater"
             },
             "squelch": {
                 "term": "Squelch",
                 "name": "Receiver audio muting",
                 "meaning": "Mutes audio when its opening condition is not met, such as exceeding a signal threshold. Setting it too high can hide weak signals; it does not increase receiver sensitivity.",
-                "example": "Set the threshold only as high as needed to silence noise when there is no signal."
+                "example": "Set the threshold only as high as needed to silence noise when there is no signal.",
+                "english": "Squelch"
             },
             "callsign": {
                 "term": "Call sign",
                 "name": "Station identification",
                 "meaning": "Identification assigned under the applicable regulations. In Spanish it is called señal distintiva. It is neither the operator’s personal name nor the name of a radio.",
-                "example": "When calling, announce your own call sign so the other operator can identify the station."
+                "example": "When calling, announce your own call sign so the other operator can identify the station.",
+                "english": "Call sign"
             },
             "hf": {
                 "term": "HF",
                 "name": "High frequency",
                 "meaning": "The frequency family from 3 to 30 MHz. It includes several amateur bands, such as 40 and 20 meters. Under suitable conditions, ionospheric propagation allows long-distance communication.",
-                "example": "A 14 MHz signal belongs to HF. The achievable distance depends on propagation, antennas and other conditions."
+                "example": "A 14 MHz signal belongs to HF. The achievable distance depends on propagation, antennas and other conditions.",
+                "english": "High Frequency"
             },
             "vhf": {
                 "term": "VHF",
                 "name": "Very high frequency",
                 "meaning": "The family from 30 to 300 MHz. It includes the amateur 2-meter band. Typical terrestrial coverage depends strongly on height, terrain and obstacles; special propagation modes also exist.",
-                "example": "145 MHz belongs to VHF. VHF does not imply a fixed communication range."
+                "example": "145 MHz belongs to VHF. VHF does not imply a fixed communication range.",
+                "english": "Very High Frequency"
             },
             "uhf": {
                 "term": "UHF",
                 "name": "Ultra high frequency",
                 "meaning": "The family from 300 to 3,000 MHz. It includes the amateur 70-centimeter band. At the same propagation speed, a higher frequency corresponds to a shorter wavelength.",
-                "example": "435 MHz belongs to UHF; its free-space wavelength is approximately 69 cm."
+                "example": "435 MHz belongs to UHF; its free-space wavelength is approximately 69 cm.",
+                "english": "Ultra High Frequency"
             },
             "fortyMeters": {
                 "term": "40 m",
                 "name": "Forty-meter band · HF",
                 "meaning": "The name of an amateur band around 7 MHz. The name indicates an approximate wavelength, not a single frequency or an exact antenna length.",
-                "example": "At 7 MHz, λ ≈ 300/7 ≈ 42.9 m. The conventional band name is still 40 meters."
+                "example": "At 7 MHz, λ ≈ 300/7 ≈ 42.9 m. The conventional band name is still 40 meters.",
+                "english": "40-metre band"
             },
             "twentyMeters": {
                 "term": "20 m",
                 "name": "Twenty-meter band · HF",
                 "meaning": "The name of an amateur band around 14 MHz. Like other HF bands, its propagation depends on the ionosphere; license categories do not necessarily all have the same privileges.",
-                "example": "At 14 MHz, λ ≈ 300/14 ≈ 21.4 m. The name identifies a band, not permission to transmit."
+                "example": "At 14 MHz, λ ≈ 300/14 ≈ 21.4 m. The name identifies a band, not permission to transmit.",
+                "english": "20-metre band"
             },
             "twoMeters": {
                 "term": "2 m",
                 "name": "Two-meter band · VHF",
                 "meaning": "An amateur band around 145 MHz, used for local contacts, repeaters, satellites and other activities. Choose the mode and segment according to the activity and applicable rules.",
-                "example": "At 145 MHz, λ ≈ 2.07 m. A band can contain FM and digital modes: band and mode are different concepts."
+                "example": "At 145 MHz, λ ≈ 2.07 m. A band can contain FM and digital modes: band and mode are different concepts.",
+                "english": "2-metre band"
             },
             "seventyCentimeters": {
                 "term": "70 cm",
                 "name": "Seventy-centimeter band · UHF",
                 "meaning": "An amateur band around 435 MHz. It can be used for local links, repeaters, satellites and other activities, subject to the relevant segments and permissions.",
-                "example": "At 435 MHz, λ ≈ 0.69 m. ‘70 cm’ does not mean every antenna for that band must be 70 cm long."
+                "example": "At 435 MHz, λ ≈ 0.69 m. ‘70 cm’ does not mean every antenna for that band must be 70 cm long.",
+                "english": "70-centimetre band"
             },
             "dmr": {
                 "term": "DMR",
                 "name": "Digital Mobile Radio",
                 "meaning": "An ETSI digital radio standard. In DMR Tier II, a 12.5 kHz channel uses two time slots. Communication requires compatible configuration and access parameters; sharing a frequency is not enough.",
-                "example": "A DMR repeater requires settings including frequency, color code, time slot and talkgroup. DMR can be used without the Internet for local communication."
+                "example": "A DMR repeater requires settings including frequency, color code, time slot and talkgroup. DMR can be used without the Internet for local communication.",
+                "english": "Digital Mobile Radio"
             },
             "colorCode": {
                 "term": "Color code",
                 "name": "DMR color code",
                 "meaning": "A DMR access parameter from 0 to 15 that helps distinguish systems on a channel. It must match the system you want to communicate with; it is not encryption and does not guarantee privacy.",
-                "example": "A radio with the wrong color code may not access the repeater even if its frequency is correct."
+                "example": "A radio with the wrong color code may not access the repeater even if its frequency is correct.",
+                "english": "Colour code / color code"
             },
             "timeSlot": {
                 "term": "Time slot · TS",
                 "name": "DMR time slot",
                 "meaning": "In DMR Tier II, two slots, TS1 and TS2, alternate within a 12.5 kHz channel. They are not two different frequencies; they are time divisions for using the channel.",
-                "example": "The network or repeater specifies which slot each service or talkgroup uses."
+                "example": "The network or repeater specifies which slot each service or talkgroup uses.",
+                "english": "Time slot"
             },
             "talkgroup": {
                 "term": "Talkgroup · TG",
                 "name": "DMR talkgroup",
                 "meaning": "An identifier that directs a call to a group of stations. It is neither a frequency nor a time slot. System configuration determines which users or repeaters participate and how calls are routed.",
-                "example": "Two users can be on the same frequency and slot but have different talkgroups selected."
+                "example": "Two users can be on the same frequency and slot but have different talkgroups selected.",
+                "english": "Talkgroup"
             },
             "fm": {
                 "term": "FM",
                 "name": "Frequency modulation",
                 "meaning": "Information is represented by variations in the instantaneous frequency of a carrier. In analog FM voice, the microphone audio modulates the carrier.",
-                "example": "Analog FM voice is common in local VHF/UHF contacts. ‘VHF’ identifies the frequency family; ‘FM’ identifies the modulation."
+                "example": "Analog FM voice is common in local VHF/UHF contacts. ‘VHF’ identifies the frequency family; ‘FM’ identifies the modulation.",
+                "english": "Frequency Modulation"
             },
             "am": {
                 "term": "AM",
                 "name": "Amplitude modulation",
                 "meaning": "In conventional AM, the carrier’s amplitude varies with the message, and the carrier and two sidebands are transmitted.",
-                "example": "An analog AM transmission carries audio in variations of the radio signal’s amplitude."
+                "example": "An analog AM transmission carries audio in variations of the radio signal’s amplitude.",
+                "english": "Amplitude Modulation"
             },
             "ssb": {
                 "term": "SSB · BLU",
                 "name": "Single sideband",
                 "meaning": "A modulation that transmits only one sideband, usually with the carrier suppressed. USB is the upper sideband and LSB the lower. It is widely used for voice on HF.",
-                "example": "Two stations using SSB voice must tune to the signal and select the appropriate sideband for intelligible audio."
+                "example": "Two stations using SSB voice must tune to the signal and select the appropriate sideband for intelligible audio.",
+                "english": "Single Sideband; USB: Upper Sideband; LSB: Lower Sideband"
             },
             "cw": {
                 "term": "CW",
                 "name": "Continuous wave · carrier-keyed telegraphy",
                 "meaning": "In amateur usage it usually refers to Morse telegraphy by switching a carrier on and off. Morse is the code; CW describes this way of transmitting it.",
-                "example": "An S in Morse consists of three dots. In CW, these are three short carrier emissions separated by the corresponding intervals."
+                "example": "An S in Morse consists of three dots. In CW, these are three short carrier emissions separated by the corresponding intervals.",
+                "english": "Continuous Wave"
             },
             "ft8": {
                 "term": "FT8",
                 "name": "A digital mode for weak signals",
                 "meaning": "Exchanges short structured messages using software, with 15-second transmit and receive periods. It requires adequate clock synchronization; it is not a voice conversation mode.",
-                "example": "A typical contact exchanges call signs, a locator and reports. The 15 seconds are the complete period, not necessarily the duration of the transmitted signal."
+                "example": "A typical contact exchanges call signs, a locator and reports. The 15 seconds are the complete period, not necessarily the duration of the transmitted signal.",
+                "english": "Franke–Taylor, 8-tone frequency-shift keying"
             }
-        }
+        },
+        "englishLabel": "English term",
+        "englishCodeLabel": "Meaning in English (Q code)",
+        "englishNote": "Initialisms such as PTT are formed from the first letters of words. QSL and QSO are conventional three-letter codes: their letters do not expand into an English phrase. For these entries, we show an English expression equivalent to their usual meaning."
     }
 }

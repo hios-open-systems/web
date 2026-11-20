@@ -54,6 +54,7 @@ export function RadioGlossary() {
     <section id="glossary" className={lessonStyles.section} aria-labelledby="glossary-title" data-testid="radio-glossary">
       <h2 id="glossary-title">{t('title')}</h2>
       <p>{t('intro')}</p>
+      <p className={styles.englishNote}>{t('englishNote')}</p>
       <GlossaryControls glossary={glossary} />
       <p role="status" className={styles.count}>{t('count', { count: glossary.filtered.length })}</p>
       {glossary.query.trim().toLowerCase() === 'qcl' ? (

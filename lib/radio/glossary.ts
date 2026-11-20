@@ -68,6 +68,7 @@ export interface GlossaryEntry extends EntryConfig {
   id: GlossaryEntryId;
   term: string;
   name: string;
+  english: string;
   meaning: string;
   example: string;
 }
@@ -76,7 +77,7 @@ export function filterGlossary(entries: readonly GlossaryEntry[], query: string,
   const words = normalizeSearch(query).split(/\s+/).filter(Boolean);
   return entries.filter((entry) => {
     if (category !== 'all' && category !== entry.category) return false;
-    const text = normalizeSearch(`${entry.term} ${entry.name} ${entry.meaning} ${entry.example} ${entry.keywords ?? ''}`);
+    const text = normalizeSearch(`${entry.term} ${entry.name} ${entry.english} ${entry.meaning} ${entry.example} ${entry.keywords ?? ''}`);
     return words.every((word) => text.includes(word));
   });
 }
