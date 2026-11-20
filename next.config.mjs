@@ -69,6 +69,7 @@ const nextConfig = {
 	// recorta imports de librerías con barrels grandes que engordan el bundle del
 	// server — y con él el cold-start del Worker, una de las causas del Error 1102.
 	experimental: {
+		globalNotFound: true,
 		optimizePackageImports: [
 			'antd',
 			'@ant-design/icons',
