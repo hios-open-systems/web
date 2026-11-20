@@ -1,18 +1,15 @@
 name: CI
 
+# Manual only: pushes and PRs no longer run CI. Verify locally before
+# pushing. Deploy: Actions → CI → "Run workflow" on main. It runs the full
+# validation first and publishes only if everything passes.
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-  # Deploy is manual: Actions → CI → "Run workflow" on main. It runs the full
-  # validation first and publishes only if everything passes.
   workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  # Never interrupt a production upload when a newer commit arrives.
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  # Never interrupt a production upload.
+  cancel-in-progress: false
 
 permissions:
   contents: read
