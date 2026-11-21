@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { butterworthLossDb } from '@/lib/radio/physics';
+import { filteredHarmonicsDbc } from '@/lib/radio/harmonics';
 import { Instrument, Screen, Controls, Readouts } from '../ui/Instrument';
 import { RangeField } from '../ui/RangeField';
 import { toPath } from '../ui/useAnimationTime';
@@ -23,10 +24,10 @@ export function HarmonicsLab() {
   const x = (f: number) => 20 + (f / fMax) * (W - 40);
   const curve: [number, number][] = [];
   for (let f = fMax / 300; f <= fMax; f += fMax / 300) curve.push([x(f), yDb(-butterworthLossDb(f, cutoff, order))]);
-  const out = RAW.map((lvl, i) => lvl - butterworthLossDb(fc * (i + 1), cutoff, order));
+  const out = filteredHarmonicsDbc(RAW, fc, cutoff, order);
   const worst = Math.max(...out.slice(1));
   return (
-    <Instrument badge="LPF" title="Por qué va un filtro pasa-bajos antes de la antena" hint="Barras grises: armónicas que salen del amplificador. Barras de color: lo que queda después del filtro. Ajustá el orden y el corte.">
+    <Instrument badge="LPF" title="Por qué va un filtro pasa-bajos antes de la antena" hint="Barras grises: armónicas que salen del amplificador. Barras de color: después del filtro. Cada espectro se mide respecto de su propia portadora (dBc). Ajustá el orden y el corte.">
       <Screen>
         <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Peor armónica ${fmt(worst)} dBc`}>
           {[0, -20, -40, -60, -80].map((d) => (

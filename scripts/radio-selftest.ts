@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import {
   wavelength, inductiveReactance, capacitiveReactance, resonantFrequency, bandwidth,
-  resonatorResponse, butterworthLossDb, reflection, magnitude, swr, returnLossDb,
+  resonatorResponse, resonanceHalfPowerEdges, butterworthLossDb, reflection, magnitude, swr, returnLossDb,
   reflectedPowerFraction, antennaLength, wattsToDbm, dbmToWatts, freeSpaceLossDb,
   radioHorizonKm, peakToRms, solveOhm, planeEarthLossDb, pathLossDb,
 } from '../lib/radio/physics.ts';
@@ -15,6 +16,8 @@ import { OFFICIAL_BAND_PLAN } from '../lib/radio/bandPlan.ts';
 import { PROGRAM } from '../lib/radio/program.ts';
 import { CHAPTERS } from '../lib/radio/chapters.ts';
 import { EXAM_QUESTIONS, questionsFor, buildMock, MOCK_LAYOUT } from '../lib/radio/exam.ts';
+import { filteredHarmonicsDbc } from '../lib/radio/harmonics.ts';
+import { sample, spectrum } from '../components/radio/widgets/modulation.ts';
 
 const near = (a: number, b: number, tol: number, msg: string) =>
   assert.ok(Math.abs(a - b) <= tol, `${msg}: ${a} vs ${b}`);
@@ -30,13 +33,74 @@ near(f0, 15.915e6, 1e4, 'f0 1µH/100pF');
 near(inductiveReactance(f0, L), capacitiveReactance(f0, C), 1e-6, 'XL = XC en f0');
 near(bandwidth(7e6, 100), 70e3, 1e-6, 'BW = f0/Q');
 near(resonatorResponse(f0, f0, 50), 1, 1e-12, 'respuesta pico');
-near(resonatorResponse(f0 + bandwidth(f0, 50) / 2, f0, 50), Math.SQRT1_2, 0.01, '-3 dB en ±BW/2');
+for (const center of [1.8e6, 7.1e6, 450e6]) {
+  for (const q of [2, 50, 300]) {
+    const { low, high } = resonanceHalfPowerEdges(center, q);
+    near(resonatorResponse(low, center, q), Math.SQRT1_2, 1e-10, 'corte inferior a media potencia');
+    near(resonatorResponse(high, center, q), Math.SQRT1_2, 1e-10, 'corte superior a media potencia');
+    near((low / center) * (high / center), 1, 1e-12, 'f₀ es media geométrica de los cortes');
+    near((high - low) / bandwidth(center, q), 1, 1e-10, 'separación de los cortes = f₀/Q');
+  }
+}
 
 // Butterworth: -3 dB en el corte, 6 dB/octava por orden lejos del corte.
 near(butterworthLossDb(10e6, 10e6, 5), 3.01, 0.01, 'LPF -3 dB en fc');
 near(butterworthLossDb(40e6, 10e6, 5) - butterworthLossDb(20e6, 10e6, 5), 30, 0.2, '30 dB/oct orden 5');
 
+// Un RC con corte en f deja pasar 1/2 de la potencia de f y 1/5 de la de 2f.
+// Una armónica de -20 dBc queda en -20 + 10·log10((1/5)/(1/2)), no -26,99 dBc.
+const filtered = filteredHarmonicsDbc([0, -20], 1e6, 1e6, 1);
+near(filtered[0], 0, 1e-12, 'portadora filtrada conserva referencia 0 dBc');
+near(filtered[1], -23.979400086720375, 1e-10, 'armónica relativa a portadora filtrada');
+const nearCutoff = filteredHarmonicsDbc([0, -15, -20, -28, -32], 146e6, 146e6 * 1.05, 1);
+near(Math.max(...nearCutoff.slice(1)), -18.850470089181584, 1e-10, 'peor armónica con pérdida de portadora');
+
+// Medición Fourier de la onda USB: fc = 24 y fm = 2 ciclos por pantalla.
+function usbAmplitude(cycles: number, level: number, time: number): number {
+  const count = 512;
+  let real = 0; let imaginary = 0;
+  for (let index = 0; index < count; index++) {
+    const u = index / count;
+    const value = sample('USB', u, time, level, 1).rf;
+    real += value * Math.cos(2 * Math.PI * cycles * u);
+    imaginary += value * Math.sin(2 * Math.PI * cycles * u);
+  }
+  return 2 * Math.hypot(real, imaginary) / count;
+}
+for (const time of [0, 1.25]) {
+  const level = 0.7;
+  const upper = spectrum('USB', level, 1).find((line) => line.offset === 1);
+  assert.ok(upper, 'espectro USB contiene fc + fm');
+  near(usbAmplitude(26, level, time), upper.amp, 1e-10, 'USB temporal coincide con espectro fc + fm');
+  for (const cycles of [22, 24, 28]) near(usbAmplitude(cycles, level, time), 0, 1e-10, 'USB sin portadora ni frecuencias extra');
+}
+near(usbAmplitude(26, 0, 0), 0, 1e-12, 'USB sin audio no transmite');
+
+// Fourier independently measures FM sidebands with the same beta passed to spectrum.
+function fmAmplitude(cycles: number, level: number, beta: number): number {
+  const count = 2048;
+  let real = 0; let imaginary = 0;
+  for (let index = 0; index < count; index++) {
+    const u = index / count;
+    const value = sample('FM', u, 0, level, beta).rf;
+    real += value * Math.cos(2 * Math.PI * cycles * u);
+    imaginary += value * Math.sin(2 * Math.PI * cycles * u);
+  }
+  return 2 * Math.hypot(real, imaginary) / count;
+}
+for (const [level, beta] of [[0, 5], [0.8, 0.2], [0.8, 1.5], [1, 5]]) {
+  for (const line of spectrum('FM', level, beta)) {
+    const measured = fmAmplitude(24 + 2 * line.offset, level, beta);
+    // The finite carrier/audio ratio admits tiny high-order negative-frequency terms.
+    near(measured, line.amp, 1e-6, 'onda FM coincide con amplitud del espectro');
+  }
+}
+
 // ROE.
+const openReflection = reflection(null);
+assert.deepEqual(openReflection, { re: 1, im: 0 }, 'circuito abierto ideal tiene Γ = +1');
+assert.equal(swr(magnitude(openReflection)), Infinity, 'circuito abierto ideal tiene ROE infinita');
+assert.equal(reflectedPowerFraction(magnitude(openReflection)), 1, 'circuito abierto devuelve el 100 % de la potencia');
 assert.equal(magnitude(reflection({ re: 50, im: 0 })), 0);
 near(swr(magnitude(reflection({ re: 100, im: 0 }))), 2, 1e-9, 'ROE 100 Ω');
 near(swr(magnitude(reflection({ re: 25, im: 0 }))), 2, 1e-9, 'ROE 25 Ω');
@@ -49,6 +113,16 @@ near(reflectedPowerFraction(1 / 3), 0.111, 0.001, 'potencia reflejada ROE 2');
 // Antenas: dipolo 7.1 MHz ≈ 20 m, cuarto de onda 146 MHz ≈ 49 cm.
 near(antennaLength(7.1e6, 0.5), 20.05, 0.05, 'dipolo 40 m');
 near(antennaLength(146e6, 0.25), 0.4876, 0.002, 'λ/4 2 m');
+
+// Recalcula el ejemplo impreso: las ramas se redondean desde el valor completo.
+const antennaChapter = readFileSync(new URL('../components/radio/chapters/ChapterC.tsx', import.meta.url), 'utf8');
+const printedDipole = /L = ([\d,]+) \/ ([\d,]+) · ([\d,]+) = ([\d,]+) m/.exec(antennaChapter);
+const printedArm = /Cada rama: ([\d,]+) m/.exec(antennaChapter);
+assert.ok(printedDipole && printedArm, 'ejemplo de dipolo con datos y resultados');
+const decimal = (text: string) => Number(text.replace(',', '.'));
+const dipoleMeters = decimal(printedDipole[1]) / decimal(printedDipole[2]) * decimal(printedDipole[3]);
+assert.equal(decimal(printedDipole[4]), Number(dipoleMeters.toFixed(2)), 'largo total impreso redondeado');
+assert.equal(decimal(printedArm[1]), Number((dipoleMeters / 2).toFixed(2)), 'rama impresa redondeada desde el valor sin truncar');
 
 // Decibeles y enlace.
 near(wattsToDbm(1), 30, 1e-9, '1 W = 30 dBm');

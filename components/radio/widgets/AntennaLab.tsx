@@ -21,8 +21,10 @@ export function AntennaLab() {
   const [k, setK] = useState(0.95);
   const total = antennaLength(f, kind === 'dipole' ? 0.5 : 0.25, k);
   const arm = kind === 'dipole' ? total / 2 : total;
-  const span = Math.max(total * 1.25, PERSON * 2.2);
-  const px = (m: number) => (m / span) * (W - 40);
+  const horizontalSpan = Math.max(total * 1.25, PERSON * 2.2);
+  const verticalSpan = Math.max(PERSON * 1.25, kind === 'vertical' ? total * 1.25 : 0);
+  const scale = Math.min((W - 80) / horizontalSpan, (H - 64) / verticalSpan);
+  const px = (m: number) => m * scale;
   const cx = kind === 'dipole' ? W / 2 : 120;
   const y = kind === 'dipole' ? 70 : H - 30;
   const curr: string[] = [];

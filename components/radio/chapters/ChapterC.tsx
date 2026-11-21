@@ -40,9 +40,8 @@ export function ChapterC() {
           <Def term="Coeficiente de reflexión" symbol="Γ">Fracción de la tensión que vuelve. 0 = adaptado; 1 = todo vuelve.</Def>
           <Def term="ROE (SWR)">Relación entre la tensión máxima y la mínima a lo largo de la línea. 1:1 es la adaptación perfecta.</Def>
         </Defs>
-        <Eq vars={[['Γ', 'coeficiente de reflexión'], ['Z', 'impedancia de carga [Ω]'], ['Z₀', 'impedancia de la línea [Ω]']]}>
-          Γ = (Z − Z₀) / (Z + Z₀)    ROE = (1 + |Γ|) / (1 − |Γ|)
-        </Eq>
+        <Eq vars={[['Γ', 'coeficiente de reflexión'], ['Z', 'impedancia de carga [Ω]'], ['Z₀', 'impedancia de la línea [Ω]']]}
+          lines={['Γ = (Z − Z₀) / (Z + Z₀)', 'ROE = (1 + |Γ|) / (1 − |Γ|)']} />
         <Example
           title="Una antena de 100 Ω se conecta a un coaxil de 50 Ω. ¿Qué ROE hay?"
           steps={['Γ = (100 − 50) / (100 + 50) = 0,333', 'ROE = 1,333 / 0,667 = 2']}
@@ -67,10 +66,11 @@ export function ChapterC() {
           <Def term="Directividad">Capacidad de concentrar la radiación en una dirección.</Def>
           <Def term="Diagrama de radiación">Gráfico de la intensidad irradiada según la dirección.</Def>
           <Def term="Ancho de haz">Ángulo entre los puntos a −3 dB del lóbulo principal.</Def>
-          <Def term="PIRE" unit="W">Potencia isotrópica radiada equivalente: potencia entregada a la antena por su ganancia (en dBi).</Def>
+          <Def term="PIRE" unit="W">Potencia isotrópica radiada equivalente: potencia entregada a la antena multiplicada por su ganancia lineal respecto de una isotrópica. Si la ganancia es G en dBi, el factor lineal es 10 elevado a G/10.</Def>
         </Defs>
-        <Eq vars={[['L', 'largo total del dipolo [m]'], ['f', 'frecuencia [MHz]'], ['0,95', 'factor de acortamiento típico']]}>L (m) ≈ 150 / f (MHz) · 0,95    dBi = dBd + 2,15</Eq>
-        <Example title="Dipolo para 7,1 MHz." steps={['L = 150 / 7,1 · 0,95 = 20,07 m', 'Cada rama: 10,03 m']} result="≈ 20 m en total; impedancia ≈ 73 Ω en el centro." />
+        <Eq vars={[['L', 'largo total del dipolo [m]'], ['f', 'frecuencia [MHz]'], ['0,95', 'factor de acortamiento típico']]}
+          lines={['L (m) ≈ 150 / f (MHz) · 0,95', 'dBi = dBd + 2,15']} />
+        <Example title="Dipolo para 7,1 MHz." steps={['L = 150 / 7,1 · 0,95 = 20,07 m', 'Cada rama: 10,04 m']} result="≈ 20 m en total; impedancia ≈ 73 Ω en el centro." />
         <Key>
           <ul>
             <li>Tipos: dipolo, V invertida, monopolo (vertical λ/4 con radiales), lazo, Yagi-Uda, log-periódica, helicoidal, parabólica, panel.</li>

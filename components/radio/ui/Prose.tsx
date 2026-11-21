@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { MathLine } from '@/components/common/MathLine';
 import styles from '../radio.module.css';
 
 export function Section({ id, kicker, title, children }: { id: string; kicker: string; title: string; children: ReactNode }) {
@@ -16,7 +17,7 @@ export function Prose({ children }: { children: ReactNode }) {
 }
 
 export function Formula({ children }: { children: ReactNode }) {
-  return <code className={styles.formula}>{children}</code>;
+  return <MathLine className={styles.formula}>{children}</MathLine>;
 }
 
 export function Callout({ children, tone = 'warn' }: { children: ReactNode; tone?: 'warn' | 'info' }) {

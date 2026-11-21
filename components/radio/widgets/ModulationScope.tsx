@@ -25,7 +25,7 @@ export function ModulationScope() {
   const t = useAnimationTime();
   const rf: [number, number][] = []; const msg: [number, number][] = [];
   for (let x = 0; x <= W; x += 1.5) {
-    const s = sample(mode, x / W, t, level, beta / 6);
+    const s = sample(mode, x / W, t, level, beta);
     rf.push([x, H / 2 - s.rf * (H / 2 - 14)]);
     msg.push([x, 22 - s.msg * 12]);
   }

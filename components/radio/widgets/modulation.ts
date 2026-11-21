@@ -42,9 +42,9 @@ export function sample(mode: Mode, u: number, t: number, level: number, beta: nu
     case 'AM':
       return { rf: ((1 + level * msg) / 2) * Math.sin(wc * ph), msg };
     case 'FM':
-      return { rf: Math.sin(wc * ph + beta * level * Math.sin(wm * ph) * 6), msg };
+      return { rf: Math.sin(wc * ph + beta * level * Math.sin(wm * ph)), msg };
     case 'USB':
-      return { rf: level * Math.sin((wc + wm * 2) * ph), msg };
+      return { rf: level * Math.sin((wc + wm) * ph), msg };
   }
 }
 

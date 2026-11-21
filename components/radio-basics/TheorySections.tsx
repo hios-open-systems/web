@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { MathLine } from '@/components/common/MathLine';
 import { OhmGraph } from './OhmGraph';
 import styles from './radioBasics.module.css';
 
@@ -31,7 +32,7 @@ export function OhmSection({ showTitle = true }: { showTitle?: boolean }) {
           ['voltageLabel', 'V = I · R'],
           ['resistanceLabel', 'R = V / I'],
         ] as const).map(([label, formula]) => (
-          <div key={label}><span>{t(label)}</span><strong>{formula}</strong></div>
+          <div key={label}><span>{t(label)}</span><strong><MathLine>{formula}</MathLine></strong></div>
         ))}
       </div>
       <OhmWorkedExample />

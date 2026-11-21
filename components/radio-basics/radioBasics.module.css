@@ -34,7 +34,7 @@
 .concept h3 { font-size: 1.1875rem; }
 .concept p { font-size: 1rem; }
 .concept p:last-child { margin-bottom: 0; }
-.formula { font-family: var(--font-stack-mono); padding: 12px 0; margin-bottom: 16px; color: var(--lesson-cyan); font-size: .9375rem; line-height: 1.8; overflow-wrap: anywhere; }
+.formula { font-family: var(--font-stack-mono); padding: 12px 0; margin-bottom: 16px; color: var(--lesson-cyan); font-size: .9375rem; line-height: 1.8; }
 .takeaway { border-left: 2px solid var(--lesson-cyan); padding-left: 16px; }
 .concept .takeaway { color: var(--hios-text-secondary); }
 .formulas { display: flex; flex-wrap: wrap; gap: 16px 40px; margin: 28px 0; }
@@ -64,7 +64,7 @@
 .connection { min-width: 0; border-top: 2px solid var(--lesson-cyan); padding-top: 20px; }
 .connection p { font-size: 1rem; }
 .connection:nth-child(2) { border-top-color: var(--accent-text); }
-.calculation { font: .875rem/2 var(--font-stack-mono); padding: 16px 0; margin-bottom: 12px; overflow-wrap: anywhere; }
+.calculation { font: .875rem/2 var(--font-stack-mono); padding: 16px 0; margin-bottom: 12px; }
 .experiments { margin-top: 28px; }
 .experiments li::marker { color: var(--lesson-cyan); font-family: var(--font-stack-mono); }
 .measurements { margin: 36px 0 28px; }

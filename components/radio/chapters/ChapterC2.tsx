@@ -45,7 +45,7 @@ export function ChapterC2() {
         </Eq>
         <Example
           title="Pérdida en el espacio libre a 5 km en 146 MHz."
-          steps={['20·log₁₀ 5 = 14,0', '20·log₁₀ 146 = 43,3', 'FSPL = 32,45 + 14,0 + 43,3']}
+          steps={['20·log₁₀ 5 ≈ 13,98', '20·log₁₀ 146 ≈ 43,29', 'FSPL ≈ 32,45 + 13,98 + 43,29 = 89,72 dB']}
           result="FSPL ≈ 89,7 dB. Con obstáculos y antenas bajas la pérdida real es bastante mayor."
         />
         <Key><p>Cálculo de enlace: potencia del TX + ganancias de antenas − pérdidas (cables, trayecto) ≥ sensibilidad del receptor + margen. Lluvia, niebla y vegetación suman pérdida en UHF y SHF.</p></Key>

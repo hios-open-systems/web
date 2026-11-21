@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { resonatorResponse, bandwidth } from '@/lib/radio/physics';
+import { resonatorResponse, bandwidth, resonanceHalfPowerEdges } from '@/lib/radio/physics';
 import { Instrument, Screen, Controls, Readouts, Chips } from '../ui/Instrument';
 import { RangeField } from '../ui/RangeField';
 import { toPath } from '../ui/useAnimationTime';
@@ -22,6 +22,7 @@ export function ResonanceLab() {
   const pts: [number, number][] = [];
   for (let x = 0; x <= W; x += 2) pts.push([x, H - 20 - resonatorResponse(fAt(x), f0, q) * (H - 50)]);
   const bw = bandwidth(f0, q);
+  const edges = resonanceHalfPowerEdges(f0, q);
   const y3 = H - 20 - Math.SQRT1_2 * (H - 50);
   return (
     <Instrument badge="LC · Q" title="Resonancia y selectividad" hint={kind === 'parallel'
@@ -30,7 +31,7 @@ export function ResonanceLab() {
       <Chips label="Tipo de circuito" value={kind} onChange={setKind} options={[{ value: 'parallel', label: 'Tanque paralelo' }, { value: 'series', label: 'LC serie' }]} />
       <Screen>
         <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`Curva de resonancia, ancho de banda ${si(bw, 'Hz')}`}>
-          <rect x={xAt(f0 - bw / 2)} y={10} width={Math.max(1, xAt(f0 + bw / 2) - xAt(f0 - bw / 2))} height={H - 30} fill="rgba(34,211,238,0.12)" />
+          <rect x={xAt(edges.low)} y={10} width={Math.max(1, xAt(edges.high) - xAt(edges.low))} height={H - 30} fill="rgba(34,211,238,0.12)" />
           <line x1={0} x2={W} y1={y3} y2={y3} stroke="var(--trace-4)" strokeDasharray="5 5" />
           <text x={8} y={y3 - 6} className={styles.svgLabel} fill="var(--trace-4)">-3 dB</text>
           <path d={toPath(pts)} fill="none" stroke="var(--trace-1)" strokeWidth={2.5} />
@@ -46,8 +47,8 @@ export function ResonanceLab() {
       </Controls>
       <Readouts items={[
         { label: 'Ancho de banda = f₀/Q', value: si(bw, 'Hz'), tone: 'good' },
-        { label: 'Corte inferior', value: si(f0 - bw / 2, 'Hz') },
-        { label: 'Corte superior', value: si(f0 + bw / 2, 'Hz') },
+        { label: 'Corte inferior', value: si(edges.low, 'Hz') },
+        { label: 'Corte superior', value: si(edges.high, 'Hz') },
         { label: 'Impedancia en f₀', value: kind === 'parallel' ? 'Máxima' : 'Mínima' },
       ]} />
     </Instrument>

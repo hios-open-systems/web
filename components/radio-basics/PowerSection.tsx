@@ -2,6 +2,7 @@
 
 import { Alert } from 'antd';
 import { useTranslations } from 'next-intl';
+import { MathLine } from '@/components/common/MathLine';
 import { MeterDiagram } from './MeterDiagram';
 import styles from './radioBasics.module.css';
 
@@ -33,7 +34,7 @@ export function PowerSection({ showTitle = true }: { showTitle?: boolean }) {
     <section id="power" aria-label={t('title')}>
       {showTitle ? <h2>{t('title')}</h2> : null}
       <p>{t('intro')}</p>
-      <div className={styles.formula}>P = V · I = I² · R = V² / R</div>
+      <MathLine className={styles.formula}>P = V · I = I² · R = V² / R</MathLine>
       <div className={styles.worked}>
         <h3>{t('workedTitle')}</h3>
         <p>{t('workedBody')}</p>

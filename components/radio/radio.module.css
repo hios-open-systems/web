@@ -20,7 +20,7 @@
 .prose li { margin-bottom: 6px; }
 .prose strong { color: var(--hios-text); }
 
-.formula { display: inline-block; font-family: var(--font-stack-mono); font-size: 1.05rem; padding: 6px 14px; border-radius: 10px; background: var(--hios-bg-secondary); border: 1px solid var(--hios-border); margin: 4px 0; }
+.formula { font-family: var(--font-stack-mono); font-size: 1.05rem; padding: 6px 14px; border-radius: 10px; background: var(--hios-bg-secondary); border: 1px solid var(--hios-border); margin: 4px 0; }
 .callout { border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); padding: 12px 16px; border-radius: 0 10px 10px 0; max-width: var(--layout-reading); }
 .callout[data-tone='info'] { border-left-color: var(--accent-2); background: color-mix(in srgb, var(--accent-2) 8%, transparent); }
 .callout p { margin: 0; }

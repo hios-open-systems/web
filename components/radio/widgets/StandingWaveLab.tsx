@@ -14,7 +14,7 @@ const PRESETS = [
   { value: '100', label: '100 Ω', r: 100, x: 0 },
   { value: '25', label: '25 Ω', r: 25, x: 0 },
   { value: 'reactive', label: '50 + j50 Ω', r: 50, x: 50 },
-  { value: 'open', label: 'Abierto', r: 1e6, x: 0 },
+  { value: 'open', label: 'Abierto', r: 1000, x: 0 },
   { value: 'short', label: 'Corto', r: 0, x: 0 },
 ] as const;
 
@@ -22,9 +22,10 @@ const PRESETS = [
 export function StandingWaveLab() {
   const [r, setR] = useState(100);
   const [x, setX] = useState(0);
+  const [open, setOpen] = useState(false);
   const [power, setPower] = useState(100);
   const t = useAnimationTime();
-  const g = reflection({ re: r, im: x });
+  const g = reflection(open ? null : { re: r, im: x });
   const mag = magnitude(g);
   const phase = Math.atan2(g.im, g.re);
   const k = (2 * Math.PI * 2) / W; // 2 longitudes de onda en pantalla
@@ -41,10 +42,10 @@ export function StandingWaveLab() {
   }
   const s = swr(mag);
   const refl = reflectedPowerFraction(mag);
-  const preset = PRESETS.find((p) => p.r === r && p.x === x)?.value ?? '';
+  const preset = open ? 'open' : PRESETS.find((p) => p.value !== 'open' && p.r === r && p.x === x)?.value ?? '';
   return (
     <Instrument badge="ROE" title="Ondas estacionarias en el coaxil" hint="Celeste: onda que va a la antena. Rosa: la que vuelve. Amarillo: lo que medís en la línea (la suma). Con 50 Ω no vuelve nada.">
-      <Chips label="Carga" value={preset} onChange={(v) => { const p = PRESETS.find((q) => q.value === v); if (p) { setR(p.r); setX(p.x); } }} options={PRESETS.map((p) => ({ value: p.value, label: p.label }))} />
+      <Chips label="Carga" value={preset} onChange={(v) => { const p = PRESETS.find((q) => q.value === v); if (p) { setR(p.r); setX(p.x); setOpen(p.value === 'open'); } }} options={PRESETS.map((p) => ({ value: p.value, label: p.label }))} />
       <Screen>
         <svg viewBox={`0 0 ${W + 40} ${H}`} role="img" aria-label={`ROE ${fmt(s)}:1`}>
           <rect x={0} y={MID - 58} width={W} height={116} fill="#0b1016" />
@@ -61,8 +62,8 @@ export function StandingWaveLab() {
         </svg>
       </Screen>
       <Controls>
-        <RangeField label="Resistencia de la antena" value={Math.max(1, Math.min(1000, r))} min={1} max={1000} log display={`${fmt(r)} Ω`} onChange={setR} />
-        <RangeField label="Reactancia (X)" value={x} min={-200} max={200} step={1} display={`${x >= 0 ? '+' : ''}${fmt(x)} Ω`} onChange={setX} />
+        <RangeField label="Resistencia de la antena" value={Math.max(1, Math.min(1000, r))} min={1} max={1000} log display={open ? 'Circuito abierto' : `${fmt(r)} Ω`} onChange={(value) => { setOpen(false); setR(value); }} />
+        <RangeField label="Reactancia (X)" value={x} min={-200} max={200} step={1} display={`${x >= 0 ? '+' : ''}${fmt(x)} Ω`} onChange={(value) => { setOpen(false); setX(value); }} />
         <RangeField label="Potencia directa" value={power} min={1} max={200} step={1} display={`${fmt(power)} W`} onChange={setPower} />
       </Controls>
       <Readouts items={[

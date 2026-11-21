@@ -1,0 +1,22 @@
+.line {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: pre;
+  word-break: normal;
+  overflow-wrap: normal;
+  font: inherit;
+  color: inherit;
+  scrollbar-width: thin;
+  overscroll-behavior-x: contain;
+}
+.line:focus-visible {
+  outline: 2px solid var(--accent-2-text);
+  outline-offset: 2px;
+}
+@media print {
+  .line { white-space: pre-wrap; overflow: visible; overflow-wrap: anywhere; }
+}

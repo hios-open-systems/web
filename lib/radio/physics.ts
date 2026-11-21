@@ -24,6 +24,13 @@ export function bandwidth(f0: number, q: number): number {
   return f0 / q;
 }
 
+/** Exact half-power edges; their geometric mean is f0 and separation is f0/Q. */
+export function resonanceHalfPowerEdges(f0: number, q: number): { low: number; high: number } {
+  const reciprocalQ = 1 / q;
+  const upperRatio = (Math.sqrt(4 + reciprocalQ * reciprocalQ) + reciprocalQ) / 2;
+  return { low: f0 / upperRatio, high: f0 * upperRatio };
+}
+
 /** Respuesta normalizada (0..1) de un resonador de segundo orden con factor Q. */
 export function resonatorResponse(frequencyHz: number, f0: number, q: number): number {
   const detune = frequencyHz / f0 - f0 / frequencyHz;
@@ -37,8 +44,9 @@ export function butterworthLossDb(frequencyHz: number, cutoffHz: number, order: 
 
 export interface Complex { re: number; im: number }
 
-/** Coeficiente de reflexión Γ = (ZL − Z0) / (ZL + Z0), con ZL complejo. */
-export function reflection(load: Complex, z0 = 50): Complex {
+/** Γ = (ZL − Z0) / (ZL + Z0); null represents an ideal open circuit. */
+export function reflection(load: Complex | null, z0 = 50): Complex {
+  if (load === null) return { re: 1, im: 0 };
   const nr = load.re - z0;
   const dr = load.re + z0;
   const den = dr * dr + load.im * load.im;

@@ -27,3 +27,13 @@ La recuperación del diseño no completa todo el temario. Quedan por desarrollar
 ## Verificación de la recuperación
 
 Pasaron `npm run lint`, `npx tsc --noEmit`, `npm run build`, las comprobaciones de circuitos, electrónica, traducciones, radio y espacios, y las validaciones de SEO y sitemap sobre las páginas generadas. Se verificaron las 31 pruebas de radio en cinco archivos (incluidos móvil y tableta), corrigiendo los selectores de descubrimiento para usar el catálogo Explorar actual. La revisión visual de portada, tensión, bandas y laboratorio no encontró desbordamientos, errores de ejecución ni conexiones externas implícitas.
+
+## Fórmulas en móvil
+
+El 21 de noviembre el usuario pidió revisar su lectura desde el celular. Cada ecuación completa usa `MathLine`: conserva números, índices, exponentes y denominadores juntos; si no entra, tiene desplazamiento horizontal propio y acceso con teclado. Separar ecuaciones independientes y desarrollar los cálculos largos del laboratorio en pasos breves. No aplicar cortes por carácter a las expresiones. El papel conserva el ajuste al ancho imprimible.
+
+La revisión también corrigió tres inconsistencias heredadas de los simuladores: la onda USB coincide con `fc + fm`, las armónicas filtradas se expresan respecto de su propia portadora en dBc y los límites de resonancia usan los puntos exactos de media potencia. Se cubren con pruebas numéricas en `scripts/radio-selftest.ts`. Las regresiones de lectura móvil están en `tests/mobile-radio-math.spec.ts` y forman parte de la validación de publicación.
+
+Al aclarar el usuario que desconfiaba de los resultados, se revisaron los ejemplos y los simuladores. El laboratorio conserva ahora las potencias pequeñas: 1 V sobre dos resistores de 1 kΩ en serie muestra 0,0005 W de total y 0,00025 W por resistor, en lugar de redondear a cero. El circuito abierto ideal muestra ROE infinita; el semidipolo de ejemplo se redondea a 10,04 m; las conversiones A→mA quedan explícitas. Se corrigieron además las definiciones de Q (factor 2π) y PIRE (ganancia lineal), y los pasos redondeados de la pérdida en espacio libre. La escala del dibujo de antenas contempla tanto su altura como su ancho.
+
+La versión corregida pasó las 49 pruebas de radio (incluidos resultados de simuladores y pantallas de 320, 390 y 768 px), los 55 grupos de self-tests, lint, TypeScript, build, SEO y sitemap.

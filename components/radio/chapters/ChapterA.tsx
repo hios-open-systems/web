@@ -15,9 +15,8 @@ export function ChapterA() {
         <Fig caption="Circuito serie mínimo: la fuente impone V, la resistencia fija cuánta corriente I circula.">
           <OhmCircuit />
         </Fig>
-        <Eq vars={[['V', 'tensión [V]'], ['I', 'corriente [A]'], ['R', 'resistencia [Ω]'], ['P', 'potencia [W]']]}>
-          V = I · R    P = V · I = I²·R = V²/R
-        </Eq>
+        <Eq vars={[['V', 'tensión [V]'], ['I', 'corriente [A]'], ['R', 'resistencia [Ω]'], ['P', 'potencia [W]']]}
+          lines={['V = I · R', 'P = V · I = I²·R = V²/R']} />
         <Example
           title="Un transmisor entrega 100 W a una carga de 50 Ω. ¿Qué tensión y corriente hay en la carga?"
           steps={['V = √(P·R) = √(100 · 50) = 70,7 V', 'I = V / R = 70,7 / 50 = 1,41 A']}
@@ -58,9 +57,8 @@ export function ChapterA() {
         <Fig caption="La misma onda vista en el espacio: λ es la distancia entre dos crestas.">
           <Wavelength />
         </Fig>
-        <Eq vars={[['λ', 'longitud de onda [m]'], ['c', 'velocidad de la luz, 3·10⁸ m/s'], ['f', 'frecuencia [Hz]']]}>
-          λ = c / f    →    λ (m) = 300 / f (MHz)
-        </Eq>
+        <Eq vars={[['λ', 'longitud de onda [m]'], ['c', 'velocidad de la luz, 3·10⁸ m/s'], ['f', 'frecuencia [Hz]']]}
+          lines={['λ = c / f', 'λ (m) = 300 / f (MHz)']} />
         <Example title="¿Qué longitud de onda tiene 146 MHz?" steps={['λ = 300 / 146 = 2,05 m']} result="≈ 2 m: por eso se la llama «banda de 2 metros»." />
         <Table
           head={['Región', 'Frecuencias', 'Longitud de onda']}
@@ -83,9 +81,8 @@ export function ChapterA() {
         <Fig caption="XL crece con la frecuencia; XC disminuye. Se igualan en f₀, la frecuencia de resonancia.">
           <ReactanceVsFrequency />
         </Fig>
-        <Eq vars={[['XL', 'reactancia inductiva [Ω]'], ['XC', 'reactancia capacitiva [Ω]'], ['f', 'frecuencia [Hz]'], ['L', 'inductancia [H]'], ['C', 'capacidad [F]']]}>
-          XL = 2π·f·L    XC = 1 / (2π·f·C)
-        </Eq>
+        <Eq vars={[['XL', 'reactancia inductiva [Ω]'], ['XC', 'reactancia capacitiva [Ω]'], ['f', 'frecuencia [Hz]'], ['L', 'inductancia [H]'], ['C', 'capacidad [F]']]}
+          lines={['XL = 2π·f·L', 'XC = 1 / (2π·f·C)']} />
         <Key>
           <ul>
             <li>El capacitor bloquea la CC (f = 0 → XC infinita). La bobina deja pasar la CC (XL = 0).</li>
@@ -99,15 +96,14 @@ export function ChapterA() {
       <Section id="resonancia" kicker="A.4" title="Resonancia, factor Q y ancho de banda">
         <Defs>
           <Def term="Frecuencia de resonancia" symbol="f₀" unit="Hz">Frecuencia en la que XL = XC en un circuito LC.</Def>
-          <Def term="Factor de mérito" symbol="Q">Relación entre la energía almacenada y la disipada por ciclo. Q alto = resonancia angosta.</Def>
+          <Def term="Factor de mérito" symbol="Q">2π veces la relación entre la energía almacenada y la disipada por ciclo. Q alto = resonancia angosta.</Def>
           <Def term="Ancho de banda" symbol="BW" unit="Hz">Rango de frecuencias en el que la respuesta cae menos de 3 dB respecto del pico.</Def>
         </Defs>
         <Fig caption="Respuesta de un circuito resonante: máxima en f₀; el ancho de banda se mide a −3 dB (70,7 % del pico).">
           <ResonanceCurve />
         </Fig>
-        <Eq vars={[['f₀', 'frecuencia de resonancia [Hz]'], ['L', 'inductancia [H]'], ['C', 'capacidad [F]'], ['Q', 'factor de mérito (sin unidad)']]}>
-          f₀ = 1 / (2π·√(L·C))    BW = f₀ / Q
-        </Eq>
+        <Eq vars={[['f₀', 'frecuencia de resonancia [Hz]'], ['L', 'inductancia [H]'], ['C', 'capacidad [F]'], ['Q', 'factor de mérito (sin unidad)']]}
+          lines={['f₀ = 1 / (2π·√(L·C))', 'BW = f₀ / Q']} />
         <Example
           title="Un circuito resuena en 7 MHz con Q = 100. ¿Cuál es su ancho de banda?"
           steps={['BW = f₀ / Q = 7 000 000 / 100']}

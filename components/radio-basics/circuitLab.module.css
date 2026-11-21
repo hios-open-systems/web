@@ -48,10 +48,10 @@
 .resistance { display: inline-block; margin-left: 6px; font-weight: 400; color: var(--hios-text-secondary); }
 .calculations { margin-top: 24px; }
 .calculations h4 { font-size: 1rem; margin: 0 0 18px; }
-.calculations ol { padding-left: 24px; margin: 0; display: grid; gap: 16px; }
+.calculations ol { padding-left: 24px; margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
 .calculations li { padding-left: 4px; font-size: .9375rem; }
 .calculations li span { display: block; margin-bottom: 6px; color: var(--hios-text-secondary); }
-.calculations code { display: block; font: .9375rem/1.8 var(--font-stack-mono); overflow-wrap: anywhere; }
+.calculations code { font: .9375rem/1.8 var(--font-stack-mono); }
 .explanation { margin: 22px 0 0; padding-left: 14px; border-left: 3px solid var(--accent-2); line-height: 1.7; font-size: 1rem; }
 .note { color: var(--hios-text-secondary); font-size: .875rem; line-height: 1.7; margin-bottom: 0; }
 .srOnly { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }

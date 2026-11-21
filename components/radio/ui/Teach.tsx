@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { MathLine } from '@/components/common/MathLine';
 import { Widget, type WidgetName } from '../widgets/Widget';
 import styles from '../teach.module.css';
 
@@ -21,10 +22,10 @@ export function Defs({ children }: { children: ReactNode }) {
 }
 
 /** Ecuación con la lista de variables y sus unidades. */
-export function Eq({ children, vars }: { children: ReactNode; vars?: ReadonlyArray<readonly [string, string]> }) {
+export function Eq({ children, lines, vars }: { children?: ReactNode; lines?: readonly string[]; vars?: ReadonlyArray<readonly [string, string]> }) {
   return (
     <div className={styles.eq}>
-      <code>{children}</code>
+      {(lines ?? [children]).map((line, index) => <MathLine key={index}>{line}</MathLine>)}
       {vars ? (
         <ul>
           {vars.map(([v, d]) => (
@@ -42,7 +43,7 @@ export function Example({ title, steps, result }: { title: string; steps: Readon
     <div className={styles.example}>
       <span className={styles.exampleTag}>Ejemplo</span>
       <p>{title}</p>
-      <ol>{steps.map((s) => <li key={s}><code>{s}</code></li>)}</ol>
+      <ol>{steps.map((s) => <li key={s}><MathLine>{s}</MathLine></li>)}</ol>
       <p className={styles.result}>{result}</p>
     </div>
   );

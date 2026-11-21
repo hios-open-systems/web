@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { MathLine } from '@/components/common/MathLine';
 import { ConceptCircuit } from './ConceptCircuit';
 import styles from './radioBasics.module.css';
 
@@ -13,7 +14,7 @@ export function ConceptLesson({ concept }: { concept: ElectricalConcept }) {
       <p className={styles.eyebrow}>{t(`${concept}.unit`)}</p>
       {concept === 'voltage' ? <p>{t('intro')}</p> : null}
       <p>{t(`${concept}.definition`)}</p>
-      <div className={styles.formula}>{t(`${concept}.formula`)}</div>
+      <MathLine className={styles.formula}>{t(`${concept}.formula`)}</MathLine>
       <ConceptCircuit />
       <p>{t(`${concept}.example`)}</p>
       <p className={styles.takeaway}>{t(`${concept}.caution`)}</p>

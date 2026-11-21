@@ -8,9 +8,13 @@ export function useDcCircuit() {
   const locale = useLocale();
   const [settings, setSettings] = useState<CircuitSettings>(DEFAULT_CIRCUIT);
   const result = calculateCircuit(settings);
-  const format = (value: number, digits = 2) => Number.isFinite(value)
-    ? new Intl.NumberFormat(locale, { maximumFractionDigits: digits }).format(value)
-    : '∞';
+  const format = (value: number, digits = 2) => {
+    if (!Number.isFinite(value)) return '∞';
+    const small = value !== 0 && Math.abs(value) < 10 ** (1 - digits);
+    return new Intl.NumberFormat(locale, small
+      ? { maximumSignificantDigits: 2 }
+      : { maximumFractionDigits: digits }).format(value);
+  };
   const update = <K extends keyof CircuitSettings>(key: K, value: CircuitSettings[K]) => {
     setSettings(previous => ({ ...previous, [key]: value }));
   };
