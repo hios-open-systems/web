@@ -6,7 +6,7 @@ import { MorseTable } from './MorseTable';
 import { playMorse, type MorseTiming } from './widgets/morseAudio';
 import styles from './teach.module.css';
 
-const TIMING: MorseTiming = { wpm: 18, farnsworth: 12, toneHz: 650 };
+const TIMING: MorseTiming = { wpm: 18, farnsworth: 12 };
 
 /** Tabla Morse interactiva: tocar una celda la hace sonar y la suma a un mensaje que se puede escuchar entero. */
 export function MorseKeypad() {

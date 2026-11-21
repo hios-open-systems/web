@@ -51,10 +51,53 @@ test('groups respect the selected alphabet, size and speed', async ({ page }) =>
   await trainer.getByLabel('Ejercicio').selectOption('group');
   await trainer.getByLabel('Letras para practicar').fill('K');
   await trainer.getByLabel('Letras por grupo').selectOption('2');
-  await trainer.getByRole('slider').press('ArrowRight');
+  await trainer.getByRole('slider', { name: /Velocidad/ }).press('ArrowRight');
   await expect(trainer.getByText(/450 pulsos\/min/)).toBeVisible();
   await trainer.getByRole('button', { name: 'Empezar' }).click();
   await expect(trainer.getByText('KK', { exact: true })).toBeVisible();
   await trainer.getByLabel('Letras para practicar').fill('');
   await expect(trainer.getByRole('button', { name: 'Empezar' })).toBeDisabled();
+});
+
+test('shared pitch and receiver noise drive the audio nodes and survive reload', async ({ page }) => {
+  await page.addInitScript(() => {
+    const originalOscillator = AudioContext.prototype.createOscillator;
+    AudioContext.prototype.createOscillator = function () {
+      const node = originalOscillator.call(this);
+      node.addEventListener('ended', () => {
+        document.documentElement.dataset.lastPitch = String(Math.round(node.frequency.value));
+      });
+      return node;
+    };
+    const originalSource = AudioContext.prototype.createBufferSource;
+    AudioContext.prototype.createBufferSource = function () {
+      const node = originalSource.call(this);
+      document.documentElement.dataset.noise = 'created';
+      node.addEventListener('ended', () => { document.documentElement.dataset.noise = 'ended'; });
+      return node;
+    };
+  });
+  const trainer = await open(page);
+  const tone = trainer.getByRole('slider', { name: /Tono/ });
+  const noise = trainer.getByLabel('Fondo de recepción');
+  await expect(tone).toHaveValue('650');
+  await trainer.getByRole('button', { name: 'E .', exact: true }).click();
+  await expect(trainer.getByText(/Tu turno/)).toBeVisible();
+  await expect(page.locator('html')).toHaveAttribute('data-last-pitch', '650');
+  expect(await page.locator('html').getAttribute('data-noise')).toBeNull();
+  await tone.press('End');
+  await noise.selectOption('3');
+  await expect(page.locator('#traductor').getByLabel('Fondo de recepción')).toHaveValue('3');
+  await page.reload();
+  await expect(tone).toHaveValue('1000');
+  await expect(noise).toHaveValue('3');
+  await trainer.getByRole('button', { name: 'S ...', exact: true }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-noise', 'created');
+  await tone.press('ArrowLeft');
+  await expect(trainer.getByText(/Tu turno/)).toBeVisible();
+  await expect(page.locator('html')).toHaveAttribute('data-last-pitch', '990');
+  await expect(page.locator('html')).toHaveAttribute('data-noise', 'ended');
+  await trainer.getByRole('button', { name: 'Restablecer sonido original' }).click();
+  await expect(tone).toHaveValue('650');
+  await expect(noise).toHaveValue('0');
 });

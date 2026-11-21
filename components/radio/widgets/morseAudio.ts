@@ -2,7 +2,9 @@
 
 import { ditMs } from '@/lib/radio/codes';
 
-export interface MorseTiming { wpm: number; farnsworth: number; toneHz: number }
+import { receiverNoise, tuneOscillator } from './morseSound';
+
+export interface MorseTiming { wpm: number; farnsworth: number }
 
 interface Step { on: boolean; ms: number; charIndex: number }
 
@@ -35,7 +37,8 @@ export function playMorse(code: string, timing: MorseTiming, onLetter?: (index: 
   const ctx = monitor?.context ?? new Ctx();
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
-  osc.frequency.value = timing.toneHz;
+  const untune = tuneOscillator(osc);
+  const stopNoise = receiverNoise(ctx);
   gain.gain.value = 0;
   osc.connect(gain).connect(ctx.destination);
   const start = ctx.currentTime + 0.05;
@@ -63,12 +66,16 @@ export function playMorse(code: string, timing: MorseTiming, onLetter?: (index: 
   }
   osc.start(start);
   osc.stop(at + 0.1);
-  timers.push(window.setTimeout(() => { osc.disconnect(); gain.disconnect(); onEnd?.(); if (!monitor) void ctx.close(); }, (at - ctx.currentTime) * 1000 + 150));
-  return () => {
-    timers.forEach((t) => window.clearTimeout(t));
-    try { osc.stop(); } catch { /* ya terminó */ }
-    osc.disconnect(); gain.disconnect();
+  let finished = false;
+  function finish() {
+    if (finished) return;
+    finished = true;
+    timers.forEach(t => window.clearTimeout(t));
+    untune(); stopNoise();
+    osc.stop(); osc.disconnect(); gain.disconnect();
     if (!monitor) void ctx.close();
     onEnd?.();
-  };
+  }
+  timers.push(window.setTimeout(finish, (at - ctx.currentTime) * 1000 + 150));
+  return finish;
 }

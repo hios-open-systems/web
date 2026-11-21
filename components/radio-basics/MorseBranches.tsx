@@ -16,7 +16,7 @@ export function MorseBranches() {
   useEffect(() => () => stop.current?.(), []);
   function listen() {
     stop.current?.();
-    stop.current = playMorse(code, { wpm: 12, farnsworth: 12, toneHz: 650 }, undefined, () => { stop.current = null; });
+    stop.current = playMorse(code, { wpm: 12, farnsworth: 12 }, undefined, () => { stop.current = null; });
   }
   return (
     <div>

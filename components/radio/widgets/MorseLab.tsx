@@ -1,5 +1,6 @@
 'use client';
 
+import { MorseSoundControls } from './MorseSoundControls';
 import { useEffect, useRef, useState } from 'react';
 import { textToMorse, morseToText } from '@/lib/radio/codes';
 import { Instrument, Controls, Chips } from '../ui/Instrument';
@@ -15,7 +16,6 @@ export function MorseLab() {
   const [input, setInput] = useState('CQ CQ DE LU1ABC K');
   const [wpm, setWpm] = useState(18);
   const [fw, setFw] = useState(10);
-  const [tone, setTone] = useState(650);
   const [playing, setPlaying] = useState(-2);
   const stopRef = useRef<(() => void) | null>(null);
   useEffect(() => () => stopRef.current?.(), []);
@@ -27,7 +27,7 @@ export function MorseLab() {
   const toggle = () => {
     if (stopRef.current) { stopRef.current(); stopRef.current = null; return; }
     setPlaying(-1);
-    stopRef.current = playMorse(code, { wpm, farnsworth: fw, toneHz: tone }, setPlaying, () => { setPlaying(-2); stopRef.current = null; });
+    stopRef.current = playMorse(code, { wpm, farnsworth: fw }, setPlaying, () => { setPlaying(-2); stopRef.current = null; });
   };
   const swap = (d: Dir) => { setDir(d); setInput(d === 'toMorse' ? morseToText(input) || input : textToMorse(input) || input); };
 
@@ -52,8 +52,8 @@ export function MorseLab() {
       <Controls>
         <RangeField label="Velocidad de caracteres" value={wpm} min={5} max={35} step={1} display={`${wpm} ppm`} onChange={setWpm} />
         <RangeField label="Velocidad efectiva (Farnsworth)" value={Math.min(fw, wpm)} min={3} max={wpm} step={1} display={`${Math.min(fw, wpm)} ppm`} onChange={setFw} />
-        <RangeField label="Tono" value={tone} min={400} max={1000} step={10} display={`${tone} Hz`} onChange={setTone} />
       </Controls>
+      <MorseSoundControls />
     </Instrument>
   );
 }

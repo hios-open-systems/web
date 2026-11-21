@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ditMs, morseToText, textToMorse } from '@/lib/radio/codes';
 import { playMorse } from './morseAudio';
+import { tuneOscillator } from './morseSound';
 import { MorseKeyer } from './morseKeyer';
 
 type Phase = 'idle' | 'listen' | 'send' | 'correct' | 'retry' | 'audioError';
@@ -49,7 +50,8 @@ export function useSendPractice() {
       ctx = new AudioContext();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
-      osc.frequency.value = 650; gain.gain.value = 0;
+      const untune = tuneOscillator(osc);
+      gain.gain.value = 0;
       osc.connect(gain).connect(ctx.destination); osc.start();
       let sequence = '', decoded = '';
       const input = new MorseKeyer(ditMs(speed), on => {
@@ -61,11 +63,11 @@ export function useSendPractice() {
         setPhase(decoded === word ? 'correct' : 'retry');
       });
       let stopPrompt: (() => void) | undefined;
-      cleanup.current = () => { stopPrompt?.(); input.stop(); void ctx.close(); };
+      cleanup.current = () => { stopPrompt?.(); input.stop(); untune(); void ctx.close(); };
       const failed = () => { if (id === generation.current) { reset(); setPhase('audioError'); } };
       void ctx.resume().then(() => {
         if (id !== generation.current) return;
-        stopPrompt = playMorse(textToMorse(word), { wpm: speed, farnsworth: speed, toneHz: 650 }, undefined, () => {
+        stopPrompt = playMorse(textToMorse(word), { wpm: speed, farnsworth: speed }, undefined, () => {
           stopPrompt = undefined;
           if (id === generation.current) { keyer.current = input; setPhase('send'); }
         }, { context: ctx, onMark: setModelPath });

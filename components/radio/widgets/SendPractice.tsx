@@ -1,5 +1,6 @@
 'use client';
 
+import { MorseSoundControls } from './MorseSoundControls';
 import { useRef } from 'react';
 import { textToMorse } from '@/lib/radio/codes';
 import { MorseTree } from '../MorseTree';
@@ -38,6 +39,7 @@ export function SendPractice() {
     <div className={s.practice}>
       <p>Escuchá el objetivo y repetilo. Mantené ← para una serie de puntos o → para rayas. Con ↓ o tu tecla manual, la duración de cada pulsación decide el signo. Dejá tres puntos de silencio entre letras.</p>
       <PracticeSettings settings={settings} reset={round.reset} />
+      <MorseSoundControls />
       <div className={s.display}>
         <span>Objetivo</span><strong>{round.phase === 'idle' ? '—' : round.target}</strong>
         <p role="status">{status[round.phase]}</p>
