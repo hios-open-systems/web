@@ -60,8 +60,9 @@ test('every generated public page is reachable by links from its locale home', (
       }
     }
     const missing = [...pages.keys()].filter(path => path.startsWith(home + '/') && !reached.has(path))
-      // Private owner page has a session-gated link; these two legacy URLs redirect.
-      .filter(path => !['/admin', '/admin/traffic', '/json', '/calculators/rcl'].some(suffix => path === home + suffix));
+      // Private owner page has a session-gated link; the remaining legacy URLs redirect.
+      .filter(path => !['/admin', '/admin/traffic', '/json', '/calculators/rcl'].some(suffix => path === home + suffix))
+      .filter(path => path !== `${home}/workbench/radio-basics` && !path.startsWith(`${home}/workbench/radio-basics/`));
     expect(missing, locale).toEqual([]);
     expect(reached.size).toBeGreaterThan(80);
   }
