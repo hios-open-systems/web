@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { MorseTree } from '@/components/radio/MorseTree';
 import { Button, Space } from 'antd';
 import { useTranslations } from 'next-intl';
 import { MORSE, morseToText } from '@/lib/radio/codes';
@@ -21,6 +22,7 @@ export function MorseBranches() {
     <div>
       <h2>{t('tree')}</h2>
       <p>{t('task')}</p>
+      <MorseTree code={code} choose={letter => setCode(MORSE[letter])} />
       <Space wrap>
         {['.', '-'].map(symbol => (
           <Button key={symbol} disabled={!letters.some(([, pattern]) => pattern.startsWith(code + symbol))}

@@ -15,6 +15,7 @@ El usuario pidió retomar este diseño el 20 de noviembre de 2026. Se recuperó 
 - `/[locale]/radio`: entrada principal e índice del curso.
 - `/[locale]/radio/lecciones/[chapter]`: lecciones y recursos del curso recuperado.
 - `/[locale]/radio/programa`: índice de la guía del programa Novicio ya existente, con sus capítulos, simuladores, Morse y práctica.
+- La lección de Morse y el entrenador comparten el árbol de las 26 letras. En `/[locale]/radio/morse#transmision` se puede escuchar un objetivo, transmitir con paletas o llave manual y comparar el resultado. La sección de Morse del programa en español reúne también alfabeto sonoro, traductor y recepción Koch.
 - Los capítulos originales `/[locale]/radio/[chapter]` y la versión para imprimir conservan sus direcciones.
 - `/[locale]/workbench/radio-basics` y sus lecciones redirigen a las rutas del curso.
 

@@ -5356,7 +5356,7 @@
                 "example": "Si el punto dura 100 ms, la A empieza con 100 ms de tono, sigue con 100 ms de silencio y termina con 300 ms de tono.",
                 "calculation": "100 ms + 100 ms + 300 ms = 500 ms",
                 "answer": "Para enviar otra letra, esperá 300 ms desde el final de la raya. Esa pausa separa las letras y se cuenta aparte.",
-                "link": "Abrir el entrenador de escucha",
+                "link": "Abrir la sección Morse y practicar transmisión",
                 "tree": "Explorá el árbol de letras",
                 "task": "Elegí punto y después raya para llegar a A. Agregá otro punto y escuchá cómo A se convierte en R.",
                 "dot": "Punto",

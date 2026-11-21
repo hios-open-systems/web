@@ -5356,7 +5356,7 @@
                 "example": "With a 100 ms dot, A starts with 100 ms of tone, followed by 100 ms of silence and 300 ms of tone.",
                 "calculation": "100 ms + 100 ms + 300 ms = 500 ms",
                 "answer": "To send another letter, wait 300 ms after the dash ends. This gap separates the letters and is counted separately.",
-                "link": "Open the listening trainer",
+                "link": "Open the Morse section and practise sending",
                 "tree": "Explore the letter tree",
                 "task": "Choose dot then dash to reach A. Add another dot and listen to A turn into R.",
                 "dot": "Dot",

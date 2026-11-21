@@ -30,9 +30,9 @@ export function timeline(code: string, { wpm, farnsworth }: MorseTiming): Step[]
 }
 
 /** Reproduce Morse con un oscilador. Devuelve una función para cortar. */
-export function playMorse(code: string, timing: MorseTiming, onLetter?: (index: number) => void, onEnd?: () => void): () => void {
+export function playMorse(code: string, timing: MorseTiming, onLetter?: (index: number) => void, onEnd?: () => void, monitor?: { context: AudioContext; onMark: (code: string) => void }): () => void {
   const Ctx = window.AudioContext ?? (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-  const ctx = new Ctx();
+  const ctx = monitor?.context ?? new Ctx();
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
   osc.frequency.value = timing.toneHz;
@@ -41,14 +41,21 @@ export function playMorse(code: string, timing: MorseTiming, onLetter?: (index: 
   const start = ctx.currentTime + 0.05;
   let at = start;
   const timers: number[] = [];
+  let prefix = '';
   let lastChar = -1;
   for (const step of timeline(code, timing)) {
     if (step.charIndex !== lastChar) {
+      prefix = '';
       const idx = step.charIndex;
       timers.push(window.setTimeout(() => onLetter?.(idx), (at - ctx.currentTime) * 1000));
       lastChar = idx;
     }
     if (step.on) {
+      if (monitor) {
+        prefix += step.ms < ditMs(timing.wpm) * 2 ? '.' : '-';
+        const path = prefix;
+        timers.push(window.setTimeout(() => monitor.onMark(path), (at - ctx.currentTime) * 1000));
+      }
       gain.gain.setTargetAtTime(0.3, at, 0.004); // rampa corta: sin "clicks"
       gain.gain.setTargetAtTime(0, at + step.ms / 1000, 0.004);
     }
@@ -56,11 +63,12 @@ export function playMorse(code: string, timing: MorseTiming, onLetter?: (index: 
   }
   osc.start(start);
   osc.stop(at + 0.1);
-  timers.push(window.setTimeout(() => { onEnd?.(); void ctx.close(); }, (at - ctx.currentTime) * 1000 + 150));
+  timers.push(window.setTimeout(() => { osc.disconnect(); gain.disconnect(); onEnd?.(); if (!monitor) void ctx.close(); }, (at - ctx.currentTime) * 1000 + 150));
   return () => {
     timers.forEach((t) => window.clearTimeout(t));
     try { osc.stop(); } catch { /* ya terminó */ }
-    void ctx.close();
+    osc.disconnect(); gain.disconnect();
+    if (!monitor) void ctx.close();
     onEnd?.();
   };
 }

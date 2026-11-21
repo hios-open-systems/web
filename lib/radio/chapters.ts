@@ -71,9 +71,10 @@ export const CHAPTERS: readonly Chapter[] = [
   },
   {
     slug: 'morse', code: 'CW', title: 'Código Morse',
-    summary: 'Traductor con audio y entrenador por el método Koch.',
+    summary: 'Alfabeto sonoro, traductor, práctica de escucha y entrenador de transmisión con árbol Morse.',
     sections: [
       { id: 'por-que', title: 'Por qué Morse todavía importa' },
+      { id: 'transmision', title: 'Entrenador de transmisión' },
       { id: 'alfabeto', title: 'Alfabeto Morse' },
       { id: 'traductor', title: 'Traductor texto ↔ Morse' },
       { id: 'entrenador', title: 'Entrenador Koch' },

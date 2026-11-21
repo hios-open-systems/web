@@ -1,0 +1,27 @@
+.practice { display: grid; gap: 1rem; min-width: 0; color: var(--hios-text); }
+.practice p, .practice h3 { margin: 0; }
+.settings { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); gap: 1rem; }
+.settings label { display: grid; align-content: start; gap: .35rem; font-size: .93rem; }
+.settings input, .settings select, .actions button, .pads button { font: inherit; color: inherit; background: var(--hios-bg-secondary); border: 1px solid var(--hios-border); border-radius: .5rem; padding: .55rem .75rem; min-width: 0; }
+.settings input[type=range] { width: 100%; padding: 0; accent-color: var(--accent-2-text); }
+.display { display: grid; gap: .45rem; background: var(--hios-bg-secondary); padding: 1rem 1.25rem; border-inline-start: 3px solid var(--accent-2-text); overflow-wrap: anywhere; }
+.display span, .settings small { color: var(--hios-text-secondary); font-size: .86rem; }
+.display strong, .display output { font-family: var(--font-stack-mono); }
+.display strong { font-size: clamp(1.6rem, 5vw, 2.8rem); }
+.actions, .pads { display: flex; flex-wrap: wrap; gap: .5rem; }
+.pads button { flex: 1 1 5rem; touch-action: none; user-select: none; }
+.pads b { display: block; font-size: 1.3rem; }
+.practice button:not(:disabled), .tree button { cursor: pointer; }
+.practice button:disabled { opacity: .55; }
+.pads:focus-visible, .tree button:focus-visible { outline: 2px solid var(--accent-2-text); outline-offset: 2px; }
+.treeScroll { overflow-x: auto; max-width: 100%; border: 1px solid var(--hios-border); background: var(--hios-bg-secondary); border-radius: .7rem; margin-block: .75rem; }
+.tree { position: relative; width: 100%; min-width: 700px; height: 290px; color: var(--hios-text); }
+.tree svg { width: 100%; height: 100%; display: block; }
+.tree line { stroke: var(--hios-text-muted); stroke-width: 1.5; }
+.tree line[data-lit=true] { stroke: var(--accent-2-text); stroke-width: 3.5; }
+.tree button, .root { position: absolute; transform: translate(-50%, -50%); }
+.root { left: 50%; top: 24px; color: var(--accent-2-text); }
+.tree button { display: grid; place-content: center; width: 36px; height: 38px; line-height: 1; border-radius: .55rem; border: 1px solid var(--hios-border); background: var(--hios-bg); color: inherit; font: 600 1rem/1 var(--font-stack-mono); }
+.tree button small { font-size: .75rem; }
+.tree button[data-lit=true] { border-color: var(--accent-2-text); color: var(--accent-2-text); }
+.tree button[aria-pressed=true] { outline: 2px solid var(--accent-2-text); }

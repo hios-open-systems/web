@@ -55,7 +55,7 @@ export function SignalLesson({ topic }: { topic: Topic }) {
       {topic === 'morse' && <MorseBranches />}
       {topic === 'waves' && <Link href={`/${locale}/radio/a-electricidad#alterna`}>{t('link')}</Link>}
       {topic === 'propagation' && <Link href={`/${locale}/radio/lecciones/bands`}>{t('link')}</Link>}
-      {topic === 'morse' && <Link href={`/${locale}/radio/morse#entrenador`}>{t('link')}</Link>}
+      {topic === 'morse' && <Link href={`/${locale}/radio/morse#transmision`}>{t('link')}</Link>}
     </section>
   );
 }

@@ -5356,7 +5356,7 @@
                 "example": "Con un punto da 100 ms, la A inizia con 100 ms di suono. Seguono 100 ms di silenzio e 300 ms di suono.",
                 "calculation": "100 ms + 100 ms + 300 ms = 500 ms",
                 "answer": "Prima della lettera successiva, attendi 300 ms dalla fine della linea. Questa pausa separa le lettere e si conta a parte.",
-                "link": "Apri l’esercizio di ascolto",
+                "link": "Apri la sezione Morse ed esercitati a trasmettere",
                 "tree": "Esplora l’albero delle lettere",
                 "task": "Scegli punto e poi linea per arrivare alla A. Aggiungi un punto e ascolta come la A diventa una R.",
                 "dot": "Punto",

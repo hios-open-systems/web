@@ -5356,7 +5356,7 @@
                 "example": "Bei einer Punktdauer von 100 ms beginnt das A mit 100 ms Ton. Es folgen 100 ms Pause und 300 ms Ton.",
                 "calculation": "100 ms + 100 ms + 300 ms = 500 ms",
                 "answer": "Vor dem nächsten Buchstaben folgen nach dem Strich 300 ms Stille. Diese Buchstabenpause wird gesondert gezählt.",
-                "link": "Hörtrainer öffnen",
+                "link": "Morsebereich öffnen und Geben üben",
                 "tree": "Den Buchstabenbaum erkunden",
                 "task": "Wähle Punkt und dann Strich für A. Ergänze einen Punkt und höre, wie aus A ein R wird.",
                 "dot": "Punkt",

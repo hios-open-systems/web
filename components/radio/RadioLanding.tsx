@@ -21,6 +21,7 @@ const TOOLS = [
   { href: 'd-reglamento#bandas', label: 'Mapa de bandas', badge: 'BANDAS' },
   { href: 'morse#alfabeto', label: 'Tabla Morse', badge: '·−' },
   { href: 'morse#traductor', label: 'Traductor Morse', badge: 'CW' },
+  { href: 'morse#transmision', label: 'Transmitir en Morse', badge: 'CW' },
   { href: 'morse#entrenador', label: 'Entrenador Koch', badge: 'KOCH' },
   { href: 'practica#quiz', label: 'Simulacro de examen', badge: 'QUIZ' },
 ];
