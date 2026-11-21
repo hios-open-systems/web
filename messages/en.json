@@ -1964,6 +1964,7 @@
             "missingKey": "Enter a key to calculate the HMAC."
         },
         "ohmsLaw": {
+            "courseLink": "Learn Ohm’s law step by step",
             "badge": "Electronics tool",
             "title": "Ohm’s law",
             "subtitle": "Calculate voltage, current, resistance and power from two known values.",
@@ -2496,6 +2497,10 @@
         "pagerPrev": "Previous",
         "pagerNext": "Next",
         "packs": {
+            "radio-basics": {
+                "title": "Electricity for amateur radio",
+                "description": "Understand voltage, current, resistance and power. Study series and parallel circuits with worked examples, an interactive laboratory and explained exercises."
+            },
             "resistor-color-code": {
                 "title": "Resistor color code",
                 "description": "Convert color bands to resistance values, or calculate the bands for a given value."
@@ -4763,5 +4768,709 @@
         "description": "Interactive guide to the Argentine amateur radio license (ENACOM): electricity, modulation, antennas, propagation, Morse and a mock exam, with hands-on simulators.",
         "spanishOnly": "This guide is in Spanish for now: it targets the Argentine ENACOM exam. The simulators work in any language.",
         "cta": "Start the guide"
+    },
+    "RadioBasics": {
+        "badge": "Amateur radio · Section 01",
+        "introTitle": "Understand a circuit before memorizing formulas",
+        "intro": "Why do two resistors behave differently when you change the wiring? In this section you will follow charge and energy, calculate a circuit and test your predictions in the laboratory.",
+        "scope": "We work with direct current (DC), an ideal source and ohmic resistors at constant temperature. The source maintains its voltage, wires have no resistance and heating is not modeled. Real equipment has limits; we will distinguish them from this model.",
+        "navLabel": "Contents of this section",
+        "nav": {
+            "concepts": "The quantities",
+            "ohm": "Ohm’s law",
+            "connections": "Series and parallel",
+            "laboratory": "Laboratory",
+            "power": "Power and measurement",
+            "practice": "Test yourself",
+            "glossary": "Glossary"
+        },
+        "concepts": {
+            "title": "Four quantities, four different questions",
+            "intro": "A circuit needs a source, a closed conducting path and a load such as a resistor. A metal wire already contains mobile electrons: the battery does not have to fill it with electrons. Electric charge is measured in coulombs (C); energy in joules (J).",
+            "voltage": {
+                "title": "Voltage · How much energy per charge?",
+                "unit": "V · volt (V)",
+                "definition": "Voltage is an electric potential difference between two points: it expresses energy per unit charge. A difference of 12 V means 12 J per coulomb transferred. That is why we always ask ‘voltage between which two points?’.",
+                "example": "A battery can maintain 12 V across its terminals with the switch open. There is voltage even though no current flows.",
+                "caution": "It is not a quantity that ‘flows through the wire’. It is measured between two points.",
+                "formula": "1 V = 1 J/C"
+            },
+            "current": {
+                "title": "Current · How much charge passes each second?",
+                "unit": "I · ampere (A)",
+                "definition": "Current measures the net charge crossing a conductor’s cross section per unit time. If 1 coulomb passes each second, the current is 1 ampere. A current of 40 mA is 0.040 A: 0.040 C passes each second.",
+                "example": "We draw conventional current leaving the positive terminal and returning to the negative terminal through the external circuit. In metals, electrons drift in the opposite direction.",
+                "caution": "Current is not the speed of electrons. It is not ‘used up’ as it passes through a resistor either.",
+                "formula": "I = ΔQ / Δt; 1 A = 1 C/s"
+            },
+            "resistance": {
+                "title": "Resistance · How much does it limit current?",
+                "unit": "R · ohm (Ω)",
+                "definition": "In an ohmic resistor, voltage and current are proportional. The constant relating them is its resistance: R = V/I. At the same voltage, a higher resistance allows less current. The physical component is a resistor; resistance is one of its properties.",
+                "example": "At 12 V, a 100 Ω resistor carries 120 mA. A 200 Ω resistor carries 60 mA. Doubling R halves I if V is maintained.",
+                "caution": "The resistor converts electrical energy into heat. Charge entering it also leaves it; it does not consume charge.",
+                "formula": "1 Ω = 1 V/A"
+            },
+            "power": {
+                "title": "Power · How quickly is energy converted?",
+                "unit": "P · watt (W)",
+                "definition": "Power is energy transferred per unit time. A resistor dissipating 2 W converts 2 J of electrical energy into heat each second. For steady DC, multiply the component’s voltage by its current.",
+                "example": "Equipment drawing 2 A from a 12 V source receives 24 W of electrical power. That does not mean it transmits 24 W of radio-frequency power: it also has losses and other loads.",
+                "caution": "W measures power; J and Wh measure energy. Maintaining 24 W for one hour transfers 24 Wh = 86,400 J.",
+                "formula": "P = V · I; 1 W = 1 J/s"
+            }
+        },
+        "ohm": {
+            "title": "Ohm’s law: a relationship you can check",
+            "intro": "For an ohmic resistor with constant R, V = I · R. It is not a universal rule for every component: a diode, for example, does not have a constant resistance at every operating point.",
+            "currentLabel": "To find current",
+            "voltageLabel": "To find voltage",
+            "resistanceLabel": "To find resistance",
+            "workedTitle": "A 100 Ω resistor connected to 12 V",
+            "stepOne": "Identify the given quantities and units: V = 12 V and R = 100 Ω. We want I in amperes.",
+            "stepTwo": "Choose the equation and substitute: I = V/R = 12/100 = 0.12 A = 120 mA.",
+            "stepThree": "Check: I · R = 0.12 × 100 = 12 V. The result reproduces the source voltage.",
+            "units": "Convert to base units before calculating: 1 kΩ = 1,000 Ω; 1 mA = 0.001 A. Dividing volts by ohms gives amperes, not milliamperes.",
+            "prediction": "Two useful predictions: with R fixed, doubling V doubles I. With V fixed, doubling R halves I. Change one variable at a time to observe a cause.",
+            "graphTitle": "How to read a voltage–current graph",
+            "graphText": "Each point is a pair (V, I). For an ohmic resistor the line passes through the origin: more voltage produces proportionally more current. With the same axes, the lower-resistance line is steeper because I/V = 1/R.",
+            "voltageAxis": "Voltage (V)",
+            "currentAxis": "Current (mA)",
+            "graphDescription": "Current versus voltage for resistances of 100 and 200 ohms, from zero to twelve volts. At twelve volts the currents are 120 and 60 milliamperes."
+        },
+        "connections": {
+            "title": "Series and parallel: the connections make the difference",
+            "intro": "A node is the collection of points joined by ideal wire, with no components between them: they have the same electric potential. To identify a connection, follow the nodes and paths; drawing two resistors next to each other is not enough.",
+            "equivalent": "The equivalent resistance is the value of a single resistor that would draw the same total current from the source at the same voltage. It replaces the network as seen by the source; it does not mean every resistor has that resistance.",
+            "seriesTitle": "Series · one path",
+            "seriesBody": "Two resistors are in series when their junction has no branch: the same current passes through both. In steady state, charge does not build up at that junction. Their voltage drops add up to the source voltage: this is Kirchhoff’s voltage law.",
+            "seriesDerivation": "Since V = V₁ + V₂ = I·R₁ + I·R₂ = I·(R₁ + R₂), equivalent R = R₁ + R₂. The voltage divides in proportion to each resistance; not necessarily into equal halves.",
+            "seriesCheck": "Check: 4 + 8 = 12 V. R1 carries 40 mA and R2 also carries 40 mA. The second has a larger voltage drop, without the current decreasing after the first.",
+            "parallelTitle": "Parallel · two paths between the same nodes",
+            "parallelBody": "The two ends of R1 connect to the same nodes A and B as the ends of R2. Both resistors therefore have the same voltage. At A, the incoming current divides; at B, it recombines. This is conservation of charge: Kirchhoff’s current law.",
+            "parallelDerivation": "Since total I = I₁ + I₂ = V/R₁ + V/R₂ and also total I = V/equivalent R, dividing by V gives 1/equivalent R = 1/R₁ + 1/R₂. For two resistors this simplifies to R₁·R₂/(R₁ + R₂).",
+            "parallelCheck": "Check: 120 + 60 = 180 mA. The 100 Ω branch carries twice the current of the 200 Ω branch. Current divides equally only when the resistances are equal.",
+            "exampleLabel": "The same source: 12 V · The same resistors: 100 Ω and 200 Ω",
+            "remember": "Quick check: in series, equivalent R is larger than either resistance. In parallel, it is smaller than the smallest. Adding a branch provides another path and increases the total current the circuit draws from an ideal voltage source.",
+            "open": "Opening the only path in a series circuit stops all current. Opening one parallel branch leaves the other supplied. Try it below before continuing."
+        },
+        "experiments": {
+            "title": "Predict, change and explain",
+            "intro": "Use the laboratory controls to test these three ideas. Compare the numbers and justify the result using a circuit rule.",
+            "one": "In parallel, with 12 V and 100 Ω / 200 Ω, increase R2 to 400 Ω. Which current changes? R1 stays at 120 mA; R2 falls to 30 mA and the source supplies 150 mA.",
+            "two": "Reset the values and switch to series. Current falls to 40 mA and the voltages are 4 V and 8 V. Disconnect R2: both currents become zero.",
+            "three": "With a single 100 Ω resistor, compare 6 V with 12 V. I changes from 60 to 120 mA; P from 0.36 to 1.44 W. Power quadruples because P = V²/R."
+        },
+        "power": {
+            "title": "From numbers to a real component",
+            "intro": "For a resistor you can combine P = V·I with Ohm’s law. This gives P = I²·R = V²/R. Choose the expression using what you know; all three describe the same dissipation.",
+            "workedTitle": "Will a ¼ W resistor work?",
+            "workedBody": "You want to connect 120 Ω to 12 V DC. First I = 12/120 = 0.1 A. Then P = 12 × 0.1 = 1.2 W. A resistor rated at 0.25 W would have to dissipate 4.8 times its rated power: it is unsuitable.",
+            "rating": "Rated power is a dissipation capability under specified conditions, not how much the resistor always consumes. A 2 W part can be an initial choice for 1.2 W, but check temperature, mounting and power derating in its data sheet. It can still become very hot.",
+            "conservation": "Energy also lets you check the circuit: in the 12 V series circuit with 100 Ω and 200 Ω, P₁ = 0.16 W and P₂ = 0.32 W. The source supplies 12 × 0.04 = 0.48 W, equal to their sum. In parallel they are 1.44 W + 0.72 W = 2.16 W.",
+            "measurementTitle": "How to measure with a multimeter",
+            "voltmeterTitle": "Voltage: between two points",
+            "voltmeter": "Select DC voltage and connect the voltmeter in parallel with the component. Its high input resistance is designed to disturb the circuit very little.",
+            "ammeterTitle": "Current: in the path",
+            "ammeter": "Disconnect power before modifying the circuit, open the path and insert the ammeter in series. Select the appropriate input and range: it has low resistance and may include a fuse.",
+            "ohmmeter": "To measure resistance, disconnect power and discharge capacitors. If other parallel paths exist, isolate at least one resistor terminal so you do not measure the whole network.",
+            "meterWarning": "Do not put a multimeter set to current directly across a source’s terminals: that creates a very low-resistance path. This section concerns low-voltage DC practice, not mains measurements.",
+            "rf": "Connection to radio: the 50 Ω of an antenna or cable usually refers to RF impedance. We do not treat it here as a DC resistance. Before the example of a 100 W transmitter, we will study AC, RMS values and impedance."
+        },
+        "quiz": {
+            "title": "Check whether you can explain it",
+            "intro": "Choose an answer. You will see the reasoning even if your answer is incorrect; you can try again.",
+            "correct": "Correct",
+            "retry": "Let’s revisit the idea",
+            "reset": "Reset answers",
+            "score": "{correct} of {total} answers correct",
+            "q1": {
+                "question": "An ideal 12 V battery is disconnected. What happens?",
+                "a": "It has 12 V across its terminals and supplies 0 A.",
+                "b": "It has 0 V because no current flows.",
+                "c": "It supplies 12 A even with the circuit open.",
+                "explanation": "Voltage compares the electric potentials of two points. It can exist without current. An open circuit prevents a sustained external flow of charge but does not remove the battery’s voltage."
+            },
+            "q2": {
+                "question": "In series, 100 Ω and 200 Ω are connected to 12 V. What current passes through each?",
+                "a": "120 mA through R1 and 60 mA through R2.",
+                "b": "40 mA through both.",
+                "c": "40 mA through R1 and 20 mA through R2.",
+                "explanation": "Equivalent R = 300 Ω; I = 12/300 = 0.04 A. There is only one path, so the same 40 mA passes through both resistors. Their voltages are 4 V and 8 V."
+            },
+            "q3": {
+                "question": "In parallel at 12 V, R1 = 100 Ω and R2 = 200 Ω. You replace R2 with 400 Ω. What current passes through R1?",
+                "a": "60 mA: its current also halves.",
+                "b": "150 mA: it receives all the source current.",
+                "c": "120 mA: it keeps the same voltage.",
+                "explanation": "The ideal source maintains 12 V across both branches. In R1, I = 12/100 = 120 mA. Only R2 falls to 30 mA; total current is now 150 mA. Each branch has its own current."
+            },
+            "q4": {
+                "question": "If you double the voltage applied to a resistor with constant resistance, its power…",
+                "a": "Quadruples.",
+                "b": "Doubles.",
+                "c": "Stays the same.",
+                "explanation": "P = V²/R: doubling V multiplies its square by four. You can also see it as P = V·I: both V and I double. For 100 Ω, going from 6 V to 12 V changes 0.36 W to 1.44 W."
+            }
+        },
+        "roadmap": {
+            "title": "The path ahead",
+            "intro": "This is the first completed section. The following sections are not yet published; we will develop them with their own explanations, diagrams and exercises.",
+            "wavesTitle": "Waves and frequency",
+            "waves": "Time-domain graphs: amplitude, period and frequency; signal comparison; wavelength and the relationship λ = v/f. What changes and what stays the same as you adjust each value.",
+            "bandsTitle": "Bands and propagation",
+            "bands": "From Hz to GHz; LF, MF, HF, VHF and UHF; connections to antennas and propagation. We will separate the physical name of a band from frequencies and modes authorized for amateur radio in Argentina, using current official sources.",
+            "morseTitle": "Morse training",
+            "morse": "Dots and dashes with audio, timing and spacing; examples such as SOS and CQ; listening and writing tests. A binary tree will let you follow each dot or dash to the letter and train one branch at a time."
+        },
+        "sources": {
+            "title": "Read further and cross-check",
+            "intro": "Original explanations and examples, checked against OpenStax, University Physics, volume 2 (in English). Selecting the links opens the external site openstax.org.",
+            "current": "9.1 · Electrical current",
+            "ohm": "9.4 · Ohm’s law and measurement",
+            "connections": "10.2 · Resistors in series and parallel",
+            "limits": "The laboratory calculates an ideal steady state: it does not simulate transients, tolerances, source limits or temperature changes. This is study material, not an official syllabus or exam question bank.",
+            "originalGuide": "Original Claude revision guide · 50 pages",
+            "originalGuideNote": "We retain the original file as reference material. Review found technical errors and outdated regulatory answers: for example, on page 41, I.40 retains a five-year duration for repeaters and I.43 remains although it was removed by ENACOM Resolution 1186/2024. Consult the official regulations as well.",
+            "enacom": "Original ENACOM regulations and documents"
+        },
+        "lab": {
+            "title": "Direct-current laboratory",
+            "intro": "Change one thing at a time and compare what happens to current and power.",
+            "single": "One resistor",
+            "series": "Series",
+            "parallel": "Parallel",
+            "voltage": "Source voltage",
+            "resistanceOne": "Resistance R1",
+            "resistanceTwo": "Resistance R2",
+            "powered": "Source on",
+            "connected": "R2 connected",
+            "reset": "Reset to 12 V · 100 Ω · 200 Ω",
+            "equivalent": "Equivalent resistance",
+            "totalCurrent": "Total current",
+            "totalPower": "Total power",
+            "component": "Resistor",
+            "potential": "Voltage",
+            "current": "Current",
+            "power": "Power",
+            "diagramTitle": "Direct-current circuit",
+            "diagramDescription": "Conventional current leaves the source’s positive terminal and returns to the negative terminal. In parallel, R1 and R2 connect between the same nodes A and B.",
+            "idealNote": "Ideal DC model: wires with no resistance and a constant-voltage source. Arrows indicate conventional current, not electron speed.",
+            "open": "Open circuit",
+            "sourceOff": "Source off: it supplies no voltage or current.",
+            "openSeries": "Disconnecting R2 breaks the only path: no current passes through R1 either. The source voltage appears across the open switch.",
+            "openParallel": "The R2 branch is open. R1 keeps its voltage and current; the source supplies less total current.",
+            "singleWhy": "One path: divide the source voltage by R1 to obtain current.",
+            "seriesWhy": "One path: the same current passes through both resistors. Their voltage drops add up to the source voltage.",
+            "parallelWhy": "Two paths between the same nodes: both resistors have the source voltage. Their branch currents add together.",
+            "calculation": "How to calculate it",
+            "resistanceStep": "First, equivalent resistance",
+            "currentStep": "Then, total current",
+            "powerStep": "Finally, total power",
+            "powerNotice": "For a physical circuit, each resistor’s rated power must exceed its calculated dissipation, with a margin and under the manufacturer’s specified conditions.",
+            "source": "Source",
+            "node": "Node",
+            "disabledBranch": "Disconnected branch",
+            "branch": "Branch R{number}"
+        },
+        "glossaryLink": "Look up the course terms in the glossary."
+    },
+    "RadioGlossary": {
+        "title": "Amateur radio glossary",
+        "intro": "A reference to consult while studying or listening to a contact. Not everything is a command: CQ is a calling signal; QSL belongs to the Q code; PTT is an equipment control; DMR is a digital standard.",
+        "search": "Search for a term",
+        "searchPlaceholder": "CQ, PTT, DMR, interference, 2 meters…",
+        "category": "Filter by topic",
+        "all": "All topics",
+        "categories": {
+            "signals": "Signals and codes",
+            "operation": "Equipment and operation",
+            "bands": "Bands",
+            "technology": "Modes and technologies"
+        },
+        "count": "{count} terms found",
+        "example": "Usage example",
+        "source": "Source",
+        "related": "Related terms",
+        "empty": "No matching term found. Try another word or select all topics.",
+        "clear": "Clear search and filters",
+        "qclHint": "If you were looking for acknowledgment of reception, the usual abbreviation is QSL. We keep ‘QCL’ as your search query; we do not assign that meaning to it.",
+        "qslSuggestion": "Look up QSL",
+        "qNote": "Q codes can ask a question or convey information: QTH? asks for location; QTH followed by a place gives it. Here we describe common amateur radio usage and explain important distinctions.",
+        "bandNote": "The HF, VHF and UHF ranges are spectrum families, not entire ranges authorized for amateur radio. Names in meters are approximate: λ in meters ≈ 300 / f in MHz, in free space. The reference frequencies in the examples do not constitute authorization to transmit; consult ENACOM for frequency limits, modes and power permitted for your license category.",
+        "sourcesNote": "References: ARRL for operation and codes, ITU for band names, ETSI for DMR and the WSJT-X manual for FT8. Links open the named external site only when selected.",
+        "bandRules": "Consult ENACOM regulations and band allocation chart",
+        "entries": {
+            "cq": {
+                "term": "CQ",
+                "name": "General call",
+                "meaning": "Invites any station to reply. It is a calling signal, not a Q code. Listen first and check that the frequency is available.",
+                "example": "‘CQ, CQ, this is…’, followed by the calling station’s call sign.",
+                "english": "General call"
+            },
+            "qsl": {
+                "term": "QSL",
+                "name": "Acknowledgment of reception",
+                "meaning": "Indicates that a transmission was received. In another use, a QSL card or confirmation documents a contact. QSL and QSO refer to different things.",
+                "example": "‘QSL, I received your report.’ The contact is the QSO; its confirmation can be a QSL.",
+                "english": "I acknowledge receipt."
+            },
+            "qso": {
+                "term": "QSO",
+                "name": "Radio contact",
+                "meaning": "In common amateur radio usage, a communication between stations. It does not require a subsequent exchange of QSL cards.",
+                "example": "‘We had a QSO on the 2-meter band.’",
+                "english": "Radio contact"
+            },
+            "qth": {
+                "term": "QTH",
+                "name": "Station location",
+                "meaning": "Used to ask or state where a station is operating. In a conversation, the town or city may be sufficient; it does not necessarily mean a postal address.",
+                "example": "‘What is your QTH?’ — ‘My QTH is Córdoba.’",
+                "english": "Station location"
+            },
+            "qrz": {
+                "term": "QRZ?",
+                "name": "Who is calling me?",
+                "meaning": "Asks which station is calling. Use it when you received a call and need to identify the other station; CQ is used to start a general call.",
+                "example": "You heard someone call you but could not make out their call sign: ‘QRZ?’",
+                "english": "Who is calling me?"
+            },
+            "qrl": {
+                "term": "QRL?",
+                "name": "Is the frequency in use?",
+                "meaning": "Its general meaning is ‘Are you busy?’. In practice, it is used to check whether a frequency is in use before calling.",
+                "example": "Listen first and ask ‘Is this frequency in use?’; in telegraphy, QRL? is used.",
+                "english": "Are you busy?"
+            },
+            "qrm": {
+                "term": "QRM",
+                "name": "Interference",
+                "meaning": "An unwanted emission or signal makes reception difficult. Distinguish it from atmospheric noise, which is commonly described as QRN.",
+                "example": "‘I have QRM from another station close in frequency.’",
+                "english": "Interference from other signals"
+            },
+            "qrn": {
+                "term": "QRN",
+                "name": "Static noise",
+                "meaning": "In common usage, atmospheric noise that makes reception difficult, for example noise produced by electrical discharges.",
+                "example": "‘There is a lot of QRN from thunderstorms.’",
+                "english": "Atmospheric noise / static"
+            },
+            "qsb": {
+                "term": "QSB",
+                "name": "Signal fading",
+                "meaning": "The strength of a received signal rises and falls. It does not necessarily mean the other station is changing its power.",
+                "example": "‘Your signal has QSB: you are strong for a while, then fade away.’",
+                "english": "Signal fading"
+            },
+            "qsy": {
+                "term": "QSY",
+                "name": "Change of frequency",
+                "meaning": "Used to propose or announce a change of frequency. Both stations should agree where to continue and check that they can use that frequency.",
+                "example": "‘Let’s QSY to another frequency and continue there.’",
+                "english": "Change frequency"
+            },
+            "qrt": {
+                "term": "QRT",
+                "name": "Stop transmitting",
+                "meaning": "Indicates or requests the end of transmission. At the end of a contact, it usually means the station is ending its operation.",
+                "example": "‘I’m going QRT, thanks for the contact.’",
+                "english": "Stop transmitting"
+            },
+            "qrv": {
+                "term": "QRV",
+                "name": "Ready to communicate",
+                "meaning": "Used to ask or state whether a station is ready to communicate.",
+                "example": "‘I am QRV for the reception test.’",
+                "english": "Ready to communicate"
+            },
+            "qrp": {
+                "term": "QRP",
+                "name": "Reduced or low power",
+                "meaning": "As a Q code, it concerns reducing power; amateur usage also describes low-power operation. The numerical limit depends on the activity or its rules.",
+                "example": "‘I am operating QRP today.’ For a contest, check the maximum power defined by its rules.",
+                "english": "Reduce transmitter power / low-power operation"
+            },
+            "seventyThree": {
+                "term": "73",
+                "name": "Best regards",
+                "meaning": "A traditional amateur radio farewell. It is an operating abbreviation, not a Q code.",
+                "example": "‘Thanks for the QSO, 73.’",
+                "english": "Best regards"
+            },
+            "ptt": {
+                "term": "PTT",
+                "name": "Push-to-talk",
+                "meaning": "A control that switches the equipment to transmit while activated. With equipment that alternates transmission and reception, release it to return to receive and listen to the other station.",
+                "example": "Press PTT to speak and release it when you finish your turn.",
+                "english": "Push-to-talk"
+            },
+            "rx": {
+                "term": "RX",
+                "name": "Reception",
+                "meaning": "An abbreviation for the function or state of receiving signals. When configuring your radio to use a repeater, RX is the frequency your radio listens to: the repeater’s output.",
+                "example": "An illuminated RX indicator may show that the equipment is receiving a signal.",
+                "english": "Receive / receiver"
+            },
+            "tx": {
+                "term": "TX",
+                "name": "Transmission",
+                "meaning": "An abbreviation used for transmission. Your equipment’s TX frequency is where it emits; this can differ from RX when using a repeater.",
+                "example": "The TX indicator activates when the equipment transmits after you press PTT.",
+                "english": "Transmit / transmitter"
+            },
+            "simplex": {
+                "term": "Simplex",
+                "name": "Direct, alternating communication",
+                "meaning": "In common amateur usage, two stations take turns transmitting and receiving on the same frequency, without an intermediate repeater.",
+                "example": "Two handheld radios communicate directly on an available, permitted frequency.",
+                "english": "Simplex operation"
+            },
+            "repeater": {
+                "term": "Repeater",
+                "name": "A station that retransmits",
+                "meaning": "Receives a signal and transmits it again. A typical voice repeater receives on one frequency and simultaneously transmits on another; its location can extend coverage.",
+                "example": "Your radio transmits on the repeater’s input and listens on its output. Frequencies and access parameters must be configured.",
+                "english": "Repeater"
+            },
+            "squelch": {
+                "term": "Squelch",
+                "name": "Receiver audio muting",
+                "meaning": "Mutes audio when its opening condition is not met, such as exceeding a signal threshold. Setting it too high can hide weak signals; it does not increase receiver sensitivity.",
+                "example": "Set the threshold only as high as needed to silence noise when there is no signal.",
+                "english": "Squelch"
+            },
+            "callsign": {
+                "term": "Call sign",
+                "name": "Station identification",
+                "meaning": "Identification assigned under the applicable regulations. In Spanish it is called señal distintiva. It is neither the operator’s personal name nor the name of a radio.",
+                "example": "When calling, announce your own call sign so the other operator can identify the station.",
+                "english": "Call sign"
+            },
+            "hf": {
+                "term": "HF",
+                "name": "High frequency",
+                "meaning": "The frequency family from 3 to 30 MHz. It includes several amateur bands, such as 40 and 20 meters. Under suitable conditions, ionospheric propagation allows long-distance communication.",
+                "example": "A 14 MHz signal belongs to HF. The achievable distance depends on propagation, antennas and other conditions.",
+                "english": "High Frequency"
+            },
+            "vhf": {
+                "term": "VHF",
+                "name": "Very high frequency",
+                "meaning": "The family from 30 to 300 MHz. It includes the amateur 2-meter band. Typical terrestrial coverage depends strongly on height, terrain and obstacles; special propagation modes also exist.",
+                "example": "145 MHz belongs to VHF. VHF does not imply a fixed communication range.",
+                "english": "Very High Frequency"
+            },
+            "uhf": {
+                "term": "UHF",
+                "name": "Ultra high frequency",
+                "meaning": "The family from 300 to 3,000 MHz. It includes the amateur 70-centimeter band. At the same propagation speed, a higher frequency corresponds to a shorter wavelength.",
+                "example": "435 MHz belongs to UHF; its free-space wavelength is approximately 69 cm.",
+                "english": "Ultra High Frequency"
+            },
+            "fortyMeters": {
+                "term": "40 m",
+                "name": "Forty-meter band · HF",
+                "meaning": "The name of an amateur band around 7 MHz. The name indicates an approximate wavelength, not a single frequency or an exact antenna length.",
+                "example": "At 7 MHz, λ ≈ 300/7 ≈ 42.9 m. The conventional band name is still 40 meters.",
+                "english": "40-metre band"
+            },
+            "twentyMeters": {
+                "term": "20 m",
+                "name": "Twenty-meter band · HF",
+                "meaning": "The name of an amateur band around 14 MHz. Like other HF bands, its propagation depends on the ionosphere; license categories do not necessarily all have the same privileges.",
+                "example": "At 14 MHz, λ ≈ 300/14 ≈ 21.4 m. The name identifies a band, not permission to transmit.",
+                "english": "20-metre band"
+            },
+            "twoMeters": {
+                "term": "2 m",
+                "name": "Two-meter band · VHF",
+                "meaning": "An amateur band around 145 MHz, used for local contacts, repeaters, satellites and other activities. Choose the mode and segment according to the activity and applicable rules.",
+                "example": "At 145 MHz, λ ≈ 2.07 m. A band can contain FM and digital modes: band and mode are different concepts.",
+                "english": "2-metre band"
+            },
+            "seventyCentimeters": {
+                "term": "70 cm",
+                "name": "Seventy-centimeter band · UHF",
+                "meaning": "An amateur band around 435 MHz. It can be used for local links, repeaters, satellites and other activities, subject to the relevant segments and permissions.",
+                "example": "At 435 MHz, λ ≈ 0.69 m. ‘70 cm’ does not mean every antenna for that band must be 70 cm long.",
+                "english": "70-centimetre band"
+            },
+            "dmr": {
+                "term": "DMR",
+                "name": "Digital Mobile Radio",
+                "meaning": "An ETSI digital radio standard. In DMR Tier II, a 12.5 kHz channel uses two time slots. Communication requires compatible configuration and access parameters; sharing a frequency is not enough.",
+                "example": "A DMR repeater requires settings including frequency, color code, time slot and talkgroup. DMR can be used without the Internet for local communication.",
+                "english": "Digital Mobile Radio"
+            },
+            "colorCode": {
+                "term": "Color code",
+                "name": "DMR color code",
+                "meaning": "A DMR access parameter from 0 to 15 that helps distinguish systems on a channel. It must match the system you want to communicate with; it is not encryption and does not guarantee privacy.",
+                "example": "A radio with the wrong color code may not access the repeater even if its frequency is correct.",
+                "english": "Colour code / color code"
+            },
+            "timeSlot": {
+                "term": "Time slot · TS",
+                "name": "DMR time slot",
+                "meaning": "In DMR Tier II, two slots, TS1 and TS2, alternate within a 12.5 kHz channel. They are not two different frequencies; they are time divisions for using the channel.",
+                "example": "The network or repeater specifies which slot each service or talkgroup uses.",
+                "english": "Time slot"
+            },
+            "talkgroup": {
+                "term": "Talkgroup · TG",
+                "name": "DMR talkgroup",
+                "meaning": "An identifier that directs a call to a group of stations. It is neither a frequency nor a time slot. System configuration determines which users or repeaters participate and how calls are routed.",
+                "example": "Two users can be on the same frequency and slot but have different talkgroups selected.",
+                "english": "Talkgroup"
+            },
+            "fm": {
+                "term": "FM",
+                "name": "Frequency modulation",
+                "meaning": "Information is represented by variations in the instantaneous frequency of a carrier. In analog FM voice, the microphone audio modulates the carrier.",
+                "example": "Analog FM voice is common in local VHF/UHF contacts. ‘VHF’ identifies the frequency family; ‘FM’ identifies the modulation.",
+                "english": "Frequency Modulation"
+            },
+            "am": {
+                "term": "AM",
+                "name": "Amplitude modulation",
+                "meaning": "In conventional AM, the carrier’s amplitude varies with the message, and the carrier and two sidebands are transmitted.",
+                "example": "An analog AM transmission carries audio in variations of the radio signal’s amplitude.",
+                "english": "Amplitude Modulation"
+            },
+            "ssb": {
+                "term": "SSB · BLU",
+                "name": "Single sideband",
+                "meaning": "A modulation that transmits only one sideband, usually with the carrier suppressed. USB is the upper sideband and LSB the lower. It is widely used for voice on HF.",
+                "example": "Two stations using SSB voice must tune to the signal and select the appropriate sideband for intelligible audio.",
+                "english": "Single Sideband; USB: Upper Sideband; LSB: Lower Sideband"
+            },
+            "cw": {
+                "term": "CW",
+                "name": "Continuous wave · carrier-keyed telegraphy",
+                "meaning": "In amateur usage it usually refers to Morse telegraphy by switching a carrier on and off. Morse is the code; CW describes this way of transmitting it.",
+                "example": "An S in Morse consists of three dots. In CW, these are three short carrier emissions separated by the corresponding intervals.",
+                "english": "Continuous Wave"
+            },
+            "ft8": {
+                "term": "FT8",
+                "name": "A digital mode for weak signals",
+                "meaning": "Exchanges short structured messages using software, with 15-second transmit and receive periods. It requires adequate clock synchronization; it is not a voice conversation mode.",
+                "example": "A typical contact exchanges call signs, a locator and reports. The 15 seconds are the complete period, not necessarily the duration of the transmitted signal.",
+                "english": "Franke–Taylor, 8-tone frequency-shift keying"
+            }
+        },
+        "englishLabel": "English term",
+        "englishCodeLabel": "Meaning in English (Q code)",
+        "englishNote": "Initialisms such as PTT are formed from the first letters of words. QSL and QSO are conventional three-letter codes: their letters do not expand into an English phrase. For these entries, we show an English expression equivalent to their usual meaning."
+    },
+    "RadioCourse": {
+        "eyebrow": "Course · Basic electricity",
+        "hubTitle": "One topic at a time",
+        "hubIntro": "Choose a lesson and work through it at your own pace. The laboratory, glossary and documents each have their own place for reference.",
+        "start": "Start with voltage",
+        "lessonsLabel": "Lessons",
+        "resourcesLabel": "Laboratory and reference",
+        "futureLabel": "Continue with the Novicio syllabus",
+        "futureIntro": "The Novicio study guide covers waves and propagation, regulations, Morse code and exam practice.",
+        "backToCourse": "Course contents",
+        "navigation": "Course navigation",
+        "jump": "Change topic",
+        "previous": "Previous",
+        "next": "Next",
+        "lessonPosition": "Lesson {current} of {total}",
+        "resource": "Reference resource",
+        "simpleCircuitCaption": "Reference example: a 12 V source supplies a 100 Ω resistor, with 120 mA flowing. Voltage is measured between two points; current follows the closed path.",
+        "pages": {
+            "voltage": {
+                "title": "Voltage",
+                "description": "What an electric potential difference between two points means, and why it can exist even when no current flows."
+            },
+            "current": {
+                "title": "Current",
+                "description": "How much charge passes each second, how to measure it and what conventional-current arrows indicate."
+            },
+            "resistance": {
+                "title": "Resistance",
+                "description": "How a resistor limits current, and why charge is not consumed as it passes through."
+            },
+            "ohm": {
+                "title": "Ohm’s law",
+                "description": "Relate voltage, current and resistance using a step-by-step calculation and a graph you can interpret."
+            },
+            "series": {
+                "title": "Series circuits",
+                "description": "One path: follow the same current through two resistors and calculate how voltage divides."
+            },
+            "parallel": {
+                "title": "Parallel circuits",
+                "description": "Two branches between the same nodes: understand why they share a voltage and their currents add together."
+            },
+            "power": {
+                "title": "Power",
+                "description": "Distinguish power from energy, calculate dissipation and choose a resistor’s rated power."
+            },
+            "measurement": {
+                "title": "Measuring with a multimeter",
+                "description": "Where to connect the instrument to measure voltage, current and resistance in low-voltage DC circuits."
+            },
+            "practice": {
+                "title": "Test yourself",
+                "description": "Solve four situations and review the reasoning behind each answer."
+            },
+            "laboratory": {
+                "title": "Circuit laboratory",
+                "description": "Adjust voltage and resistances, change connections and check your predictions against calculated values."
+            },
+            "glossary": {
+                "title": "Amateur radio glossary",
+                "description": "Look up initialisms, codes, bands and technologies with their English terms, meanings and examples."
+            },
+            "sources": {
+                "title": "Documents and sources",
+                "description": "Consult the course references, the original revision guide and official ENACOM documents."
+            },
+            "bands": {
+                "title": "Frequency bands",
+                "description": "Compare amateur radio bands, their propagation, antennas and technologies, and locate their frequencies within the spectrum."
+            }
+        },
+        "programLink": "Open the Novicio syllabus"
+    },
+    "RadioBands": {
+        "title": "Frequency bands",
+        "intro": "Compare spectrum families by their frequency limits. The scale increases from top to bottom: select a band to see its full name and approximate wavelength.",
+        "chartLabel": "Frequency spectrum from 3 kHz to 300 GHz, divided into eight consecutive decades",
+        "axisLabel": "Increasing frequency",
+        "scale": "Logarithmic scale: each interval multiplies frequency by 10. Equal height does not mean equal width in MHz.",
+        "selectionHint": "Select a band to view its details.",
+        "range": "Frequencies",
+        "wavelength": "Approximate wavelengths",
+        "wavelengthNote": "Approximate free-space values: λ = c/f, with c ≈ 300,000,000 m/s. Higher frequency means shorter wavelength.",
+        "limits": "ITU nomenclature excludes the lower limit of each interval and includes the upper limit. Shared boundaries appear only once on the axis.",
+        "permissionNote": "These are general spectrum families, not entire bands authorized for amateur radio. Names in meters and example frequencies are references; permitted frequency limits, modes and power depend on regulations and license category. For Argentina, consult ENACOM regulations.",
+        "ituSource": "ITU · Band nomenclature V.431-9 (2025)",
+        "enacomSource": "ENACOM · Regulations and band allocation chart",
+        "sourcesNote": "Links open the external sites itu.int and enacom.gob.ar only when selected.",
+        "bands": {
+            "vlf": {
+                "name": "Very low frequency",
+                "english": "Very Low Frequency",
+                "description": "Corresponds to wavelengths of approximately 10 to 100 kilometers. The name describes a spectrum family, not a single channel."
+            },
+            "lf": {
+                "name": "Low frequency",
+                "english": "Low Frequency",
+                "description": "Corresponds to approximate wavelengths of 1 to 10 kilometers. Its frequency is ten times that of the equivalent point in the VLF band."
+            },
+            "mf": {
+                "name": "Medium frequency",
+                "english": "Medium Frequency",
+                "description": "Corresponds to approximate wavelengths of 100 meters to 1 kilometer. One megahertz, or 1 MHz, means one million oscillations per second."
+            },
+            "hf": {
+                "name": "High frequency",
+                "english": "High Frequency",
+                "description": "Includes several amateur radio bands. Under suitable conditions, ionospheric propagation allows long-distance communication. As references, 40 m is around 7 MHz and 20 m around 14 MHz."
+            },
+            "vhf": {
+                "name": "Very high frequency",
+                "english": "Very High Frequency",
+                "description": "Typical terrestrial coverage depends strongly on height, terrain and obstacles; special forms of propagation also exist. The amateur 2 m band is around 145 MHz."
+            },
+            "uhf": {
+                "name": "Ultra high frequency",
+                "english": "Ultra High Frequency",
+                "description": "Its wavelengths are shorter than those of VHF. It does not imply a fixed communication range or a particular transmission mode. The amateur 70 cm band is around 435 MHz."
+            },
+            "shf": {
+                "name": "Super high frequency",
+                "english": "Super High Frequency",
+                "description": "Corresponds to wavelengths of approximately 1 to 10 centimeters. It is part of the frequencies commonly called microwaves."
+            },
+            "ehf": {
+                "name": "Extremely high frequency",
+                "english": "Extremely High Frequency",
+                "description": "Corresponds to wavelengths of approximately 1 to 10 millimeters, hence the term millimeter waves. Its upper limit in this classification is 300 GHz."
+            }
+        }
+    },
+    "RadioAmateurBands": {
+        "title": "Amateur radio bands: frequency, propagation and equipment",
+        "intro": "Compare these five commonly used bands and locate their frequencies in the spectrum above. Select one for examples of antennas and modes.",
+        "views": {
+            "amateur": "Amateur radio bands",
+            "spectrum": "Spectrum families"
+        },
+        "columns": {
+            "band": "Band",
+            "range": "Reference range",
+            "propagation": "Typical propagation",
+            "use": "Common uses"
+        },
+        "detailTitle": "Antennas and technologies for the selected band",
+        "antennas": "Common antennas",
+        "modes": "Common modes and technologies",
+        "notes": "Things to consider",
+        "conditions": "These are tendencies and examples, not guaranteed times, ranges or exclusive uses. Propagation depends on time of day, season, solar activity, path and installation.",
+        "permission": "The ranges identify bands in the chart published by ENACOM; they do not authorize every category or mode across the entire band. Reserved segments and guard bands exist, and the complete emission must remain within the permitted segment.",
+        "referenceLabel": "Argentine reference: Annex A of the 2018 band allocation chart, published by ENACOM. The document retains its original date; the date of its link does not turn it into a 2021 or 2026 edition.",
+        "sourceLabel": "ENACOM · Original band allocation chart",
+        "propagationSource": "ARRL · HF propagation",
+        "indoorSource": "ITU · Propagation inside buildings",
+        "regulationSource": "Argentine regulations · Sections 1.5.9 and 13.4.2",
+        "antennaNote": "A band does not require a particular antenna. Frequency, impedance matching, radiation pattern, polarization and available space all matter.",
+        "buildingNote": "Neither VHF nor UHF has a universal advantage inside buildings. Materials, thickness, openings, path and antennas affect the outcome; a shorter antenna does not guarantee better penetration.",
+        "technologyTitle": "Band, modulation, protocol and encryption",
+        "modulationLabel": "Modulation",
+        "modulation": "How a signal is modified to carry information. AM, FM and SSB are forms of modulation; HF, VHF and UHF identify frequency families. A single band may permit different modes in its segments.",
+        "protocolLabel": "Protocol or standard",
+        "protocol": "Defines how equipment organizes an exchange. DMR stands for Digital Mobile Radio and is a digital voice and data standard. APRS stands for Automatic Packet Reporting System and is used to communicate data such as positions or messages. These are different technologies, not band names.",
+        "cipherTitle": "Encryption",
+        "cipherText": "Encryption aims to hide content from anyone unable to decrypt it. Representing voice or data digitally is a different operation: digital does not mean encrypted. Argentina’s regulations classify ‘transmitting encrypted texts’ as an operating infraction in section 13.4.2 and require clear, understandable communications in section 1.5.9.",
+        "sourcesNote": "Reference links open enacom.gob.ar, argentina.gob.ar, arrl.org or itu.int only when selected.",
+        "entries": {
+            "eighty": {
+                "name": "80 m",
+                "propagation": "Often regional and nighttime; longer paths may be possible when conditions are favorable.",
+                "use": "Regional and national conversations, group contacts and listening on lower HF frequencies.",
+                "antennas": "A dipole, inverted V or end-fed antenna with suitable matching. Installation size and height strongly affect performance.",
+                "modes": "SSB voice, CW telegraphy and digital modes such as FT8, in their permitted segments.",
+                "notes": "In the Argentine chart, the full band extends to 4.0 MHz: 3.5–3.8 MHz has primary status and 3.8–4.0 MHz secondary status. Daytime ionospheric absorption can particularly limit this band; that does not mean it is always unusable."
+            },
+            "forty": {
+                "name": "40 m",
+                "propagation": "Often favors regional contacts by day and longer paths at night; conditions determine the outcome.",
+                "use": "An HF band widely used for regional, national and continental contacts.",
+                "antennas": "A dipole, inverted V or end-fed antenna with suitable matching. A low installation may favor regional paths through near-vertical incidence.",
+                "modes": "SSB, CW and digital modes such as FT8. The choice depends on the goal and the authorized segment.",
+                "notes": "It can be useful for many hours, but the same link is not guaranteed both day and night. The band alone does not determine which stations you will hear."
+            },
+            "twenty": {
+                "name": "20 m",
+                "propagation": "Widely used for long-distance (DX) ionospheric contacts, often during the day; nighttime openings also occur.",
+                "use": "International contacts and long-distance links when propagation allows.",
+                "antennas": "A dipole, vertical or directional Yagi. These are alternatives: none is mandatory for this band.",
+                "modes": "SSB, CW and digital modes such as FT8 appear in different segments. Not all are permitted for every category throughout the band.",
+                "notes": "The reference chart limits the Novicio (Novice) category to the 14.070–14.099 MHz segment with CW and digital modes; the full 20 m range must not be interpreted as general voice permission for Novicio. Openings depend on solar activity, season and path."
+            },
+            "two": {
+                "name": "2 m",
+                "propagation": "Usually direct terrestrial propagation or via repeaters, affected by height, terrain and obstacles.",
+                "use": "Handheld and mobile equipment, local communication, repeaters, data and satellites, depending on the segment.",
+                "antennas": "A vertical, ground-plane or collinear for FM and repeaters; a Yagi for directional links. Terrestrial SSB/CW commonly uses horizontal polarization; FM commonly uses vertical.",
+                "modes": "Analog FM, digital voice such as DMR and packet data such as APRS. These are different technologies that may use different segments of the same band.",
+                "notes": "Special propagation forms also exist: VHF has no fixed range. The chart reserves 145.790–145.800 MHz as a guard band, with no transmission."
+            },
+            "seventy": {
+                "name": "70 cm",
+                "propagation": "Common for local links and repeaters; coverage depends on the surroundings and installation.",
+                "use": "Dual-band equipment, repeaters, directional links and satellites in their corresponding segments.",
+                "antennas": "A vertical, ground-plane or collinear for local coverage; a Yagi to concentrate the link in one direction. Polarization must suit the link and mode used.",
+                "modes": "Analog FM and digital voice such as DMR; also data and satellites, depending on the segment. DMR does not require the Internet for every local communication.",
+                "notes": "The Argentine chart lists the amateur service as primary and the amateur-satellite service as secondary; it reserves 435–438 MHz for satellites. This does not mean that UHF penetrates buildings better than VHF."
+            }
+        }
     }
 }

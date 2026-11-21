@@ -40,6 +40,7 @@ export type WorkbenchToolId =
   | 'delay-calculator'
   | 'resistor-color-code'
   | 'ohms-law'
+  | 'radio-basics'
   | 'http-status-codes'
   | 'ascii-unicode'
   | 'note-frequency'
@@ -476,6 +477,15 @@ export const workbenchTools: WorkbenchTool[] = [
     accent: '#f59e0b',
     icon: 'chip',
     featured: true,
+  },
+  {
+    id: 'radio-basics',
+    locality: 'local',
+    sectionId: 'electronics',
+    href: '/radio',
+    accent: '#0891b2',
+    icon: 'circuits',
+    external: true,
   },
   {
     id: 'http-status-codes',

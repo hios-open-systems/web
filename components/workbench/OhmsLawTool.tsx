@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
+import Link from 'next/link';
 import { Card, Col, InputNumber, Row, Space, Typography } from 'antd';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { solve, type OhmsInput, type OhmsValues } from '@/lib/algorithms/ohmsLaw';
 import { HowItWorks } from './HowItWorks';
 import { ToolHeader } from './ToolHeader';
@@ -29,6 +30,7 @@ function fmt(n: number): string {
 
 export function OhmsLawTool() {
   const t = useTranslations('Workbench.ohmsLaw');
+  const locale = useLocale();
   const [vals, setVals] = useState<Record<Field, number | null>>({ v: 12, i: null, r: 4, p: null });
   useToolBridge('ohms-law', data => { const next = parseOhms(data.values ?? ''); if (next) setVals(next); }, { values: JSON.stringify(vals) });
 
@@ -120,6 +122,7 @@ export function OhmsLawTool() {
         </Card>
       ) : null}
 
+      <Link href={`/${locale}/radio`}>{t('courseLink')}</Link>
       <HowItWorks algorithmId="ohmsLaw" />
     </Space>
   );

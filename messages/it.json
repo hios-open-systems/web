@@ -1964,6 +1964,7 @@
             "missingKey": "Inserisci una chiave per calcolare HMAC."
         },
         "ohmsLaw": {
+            "courseLink": "Impara la legge di Ohm passo dopo passo",
             "badge": "Elettronica",
             "title": "Legge di Ohm",
             "subtitle": "Calcola tensione, corrente, resistenza e potenza a partire da due valori noti.",
@@ -2496,6 +2497,10 @@
         "pagerPrev": "Precedente",
         "pagerNext": "Successivo",
         "packs": {
+            "radio-basics": {
+                "title": "Elettricità per radioamatori",
+                "description": "Comprendi tensione, corrente, resistenza e potenza. Studia circuiti in serie e parallelo con esempi svolti, un laboratorio interattivo ed esercizi spiegati."
+            },
             "resistor-color-code": {
                 "title": "Codice colori delle resistenze",
                 "description": "Converti le bande colorate in valori di resistenza o calcola i colori a partire da un valore."
@@ -4763,5 +4768,709 @@
         "description": "Guida interattiva alla licenza di radioamatore argentina (ENACOM): elettricità, modulazione, antenne, propagazione, Morse e simulazione d'esame, con simulatori.",
         "spanishOnly": "Questa guida per ora è in spagnolo: è pensata per l'esame argentino ENACOM. I simulatori funzionano in qualsiasi lingua.",
         "cta": "Inizia la guida"
+    },
+    "RadioBasics": {
+        "badge": "Radioamatori · Sezione 01",
+        "introTitle": "Capire un circuito prima di memorizzare le formule",
+        "intro": "Perché due resistori si comportano diversamente quando cambi i collegamenti? In questa sezione seguirai carica ed energia, calcolerai un circuito e verificherai le tue previsioni in laboratorio.",
+        "scope": "Lavoriamo in corrente continua (CC), con un generatore ideale e resistori ohmici a temperatura costante. Il generatore mantiene la tensione, i fili non hanno resistenza e il riscaldamento non viene simulato. Le apparecchiature reali hanno dei limiti, che distingueremo da questo modello.",
+        "navLabel": "Contenuti di questa sezione",
+        "nav": {
+            "concepts": "Le grandezze",
+            "ohm": "Legge di Ohm",
+            "connections": "Serie e parallelo",
+            "laboratory": "Laboratorio",
+            "power": "Potenza e misure",
+            "practice": "Mettiti alla prova",
+            "glossary": "Glossario"
+        },
+        "concepts": {
+            "title": "Quattro grandezze, quattro domande diverse",
+            "intro": "Un circuito richiede un generatore, un percorso conduttore chiuso e un carico, per esempio un resistore. Un filo metallico contiene già elettroni mobili: la batteria non deve riempirlo di elettroni. La carica elettrica si misura in coulomb (C); l’energia in joule (J).",
+            "voltage": {
+                "title": "Tensione · Quanta energia per carica?",
+                "unit": "V · volt (V)",
+                "definition": "La tensione è una differenza di potenziale tra due punti: esprime energia per unità di carica. Una differenza di 12 V corrisponde a 12 J per ogni coulomb trasferito. Per questo chiediamo sempre: «tensione tra quali due punti?».",
+                "example": "Una batteria può mantenere 12 V tra i suoi morsetti con l’interruttore aperto. C’è tensione anche se non circola corrente.",
+                "caution": "Non è una grandezza che «passa nel filo». Si misura tra due punti.",
+                "formula": "1 V = 1 J/C"
+            },
+            "current": {
+                "title": "Corrente · Quanta carica passa al secondo?",
+                "unit": "I · ampere (A)",
+                "definition": "La corrente misura la carica netta che attraversa una sezione del conduttore nell’unità di tempo. Se passa 1 coulomb al secondo, la corrente è 1 ampere. Una corrente di 40 mA equivale a 0,040 A: ogni secondo passano 0,040 C.",
+                "example": "Disegniamo la corrente convenzionale in uscita dal polo positivo e di ritorno al negativo attraverso il circuito esterno. Nei metalli gli elettroni si spostano nel verso opposto.",
+                "caution": "La corrente non è la velocità degli elettroni. Non si «consuma» nemmeno attraversando un resistore.",
+                "formula": "I = ΔQ / Δt; 1 A = 1 C/s"
+            },
+            "resistance": {
+                "title": "Resistenza · Quanto limita la corrente?",
+                "unit": "R · ohm (Ω)",
+                "definition": "In un resistore ohmico, tensione e corrente sono proporzionali. La costante che le lega è la resistenza: R = V/I. A parità di tensione, una resistenza maggiore lascia passare meno corrente. Il componente fisico è il resistore; la resistenza è una sua proprietà.",
+                "example": "A 12 V, un resistore da 100 Ω conduce 120 mA. Uno da 200 Ω conduce 60 mA. Raddoppiare R dimezza I se V rimane costante.",
+                "caution": "Il resistore trasforma energia elettrica in calore. La carica che entra esce anche: non consuma carica.",
+                "formula": "1 Ω = 1 V/A"
+            },
+            "power": {
+                "title": "Potenza · A quale ritmo si trasforma l’energia?",
+                "unit": "P · watt (W)",
+                "definition": "La potenza è l’energia trasferita nell’unità di tempo. Un resistore che dissipa 2 W trasforma in calore 2 J di energia elettrica ogni secondo. In CC costante si calcola moltiplicando la tensione ai capi del componente per la sua corrente.",
+                "example": "Un apparecchio che assorbe 2 A da un generatore a 12 V riceve 24 W elettrici. Non significa che trasmetta 24 W in radiofrequenza: ci sono anche perdite e altri consumi.",
+                "caution": "W misura la potenza; J e Wh misurano l’energia. Mantenere 24 W per un’ora corrisponde a 24 Wh = 86 400 J.",
+                "formula": "P = V · I; 1 W = 1 J/s"
+            }
+        },
+        "ohm": {
+            "title": "La legge di Ohm: una relazione verificabile",
+            "intro": "Per un resistore ohmico con R costante, V = I · R. Non è una regola universale per ogni componente: un diodo, per esempio, non ha una resistenza costante in tutti i punti di funzionamento.",
+            "currentLabel": "Per trovare la corrente",
+            "voltageLabel": "Per trovare la tensione",
+            "resistanceLabel": "Per trovare la resistenza",
+            "workedTitle": "Un resistore da 100 Ω collegato a 12 V",
+            "stepOne": "Individua i dati e le unità: V = 12 V e R = 100 Ω. Cerchiamo I, in ampere.",
+            "stepTwo": "Scegli l’equazione e sostituisci: I = V/R = 12/100 = 0,12 A = 120 mA.",
+            "stepThree": "Verifica: I · R = 0,12 × 100 = 12 V. Il risultato restituisce la tensione del generatore.",
+            "units": "Prima del calcolo passa alle unità di base: 1 kΩ = 1 000 Ω; 1 mA = 0,001 A. Dividendo volt per ohm si ottengono ampere, non milliampere.",
+            "prediction": "Due previsioni utili: con R fissa, raddoppiare V raddoppia I. Con V fissa, raddoppiare R dimezza I. Cambia una variabile alla volta per osservare una causa.",
+            "graphTitle": "Come leggere un grafico tensione–corrente",
+            "graphText": "Ogni punto è una coppia (V, I). Per un resistore ohmico la retta passa per l’origine: più tensione produce proporzionalmente più corrente. Con gli stessi assi, la retta del resistore con resistenza minore è più ripida perché I/V = 1/R.",
+            "voltageAxis": "Tensione (V)",
+            "currentAxis": "Corrente (mA)",
+            "graphDescription": "Corrente in funzione della tensione per resistenze da 100 e 200 ohm, da zero a dodici volt. A dodici volt le correnti sono 120 e 60 milliampere."
+        },
+        "connections": {
+            "title": "Serie e parallelo: la differenza è nei collegamenti",
+            "intro": "Un nodo è l’insieme dei punti collegati da un filo ideale, senza componenti intermedi: hanno lo stesso potenziale. Per riconoscere un collegamento segui nodi e percorsi; non basta disegnare due resistori uno accanto all’altro.",
+            "equivalent": "La resistenza equivalente è il valore di un unico resistore che assorbirebbe dal generatore la stessa corrente totale con la stessa tensione. Sostituisce la rete vista dal generatore; non significa che tutti i resistori abbiano quella resistenza.",
+            "seriesTitle": "Serie · un unico percorso",
+            "seriesBody": "Due resistori sono in serie quando la loro giunzione non ha una diramazione: la stessa corrente attraversa entrambi. In regime stazionario la carica non si accumula nella giunzione. Le cadute di tensione si sommano fino alla tensione del generatore: è la legge delle tensioni di Kirchhoff.",
+            "seriesDerivation": "Poiché V = V₁ + V₂ = I·R₁ + I·R₂ = I·(R₁ + R₂), la R equivalente = R₁ + R₂. La tensione si ripartisce in proporzione alle resistenze; non necessariamente a metà.",
+            "seriesCheck": "Verifica: 4 + 8 = 12 V. Passano 40 mA sia in R1 sia in R2. La seconda ha una caduta di tensione maggiore, senza che la corrente diminuisca dopo la prima.",
+            "parallelTitle": "Parallelo · due percorsi tra gli stessi nodi",
+            "parallelBody": "Le due estremità di R1 si collegano agli stessi nodi A e B di quelle di R2. Entrambi i resistori hanno quindi la stessa tensione. In A la corrente in arrivo si divide; in B si riunisce. È conservazione della carica: la legge delle correnti di Kirchhoff.",
+            "parallelDerivation": "Poiché I totale = I₁ + I₂ = V/R₁ + V/R₂ e anche I totale = V/R equivalente, dividendo per V otteniamo 1/R equivalente = 1/R₁ + 1/R₂. Per due resistori si semplifica in R₁·R₂/(R₁ + R₂).",
+            "parallelCheck": "Verifica: 120 + 60 = 180 mA. Nel ramo da 100 Ω scorre il doppio della corrente rispetto a quello da 200 Ω. La corrente si divide in parti uguali solo se le resistenze sono uguali.",
+            "exampleLabel": "Lo stesso generatore: 12 V · Gli stessi resistori: 100 Ω e 200 Ω",
+            "remember": "Controllo rapido: in serie la R equivalente è maggiore di ciascuna resistenza. In parallelo è minore della più piccola. Aggiungere un ramo offre un altro percorso e aumenta la corrente totale assorbita da un generatore ideale di tensione.",
+            "open": "Aprendo l’unico percorso di una serie si interrompe tutta la corrente. Aprendo un ramo del parallelo, l’altro resta alimentato. Provalo qui sotto prima di continuare."
+        },
+        "experiments": {
+            "title": "Prevedi, modifica e spiega",
+            "intro": "Usa i controlli del laboratorio per verificare queste tre idee. Confronta i numeri e giustifica il risultato con una regola del circuito.",
+            "one": "In parallelo, con 12 V e 100 Ω / 200 Ω, porta R2 a 400 Ω. Quale corrente cambia? R1 resta a 120 mA; R2 scende a 30 mA e il generatore eroga 150 mA.",
+            "two": "Ripristina i valori e passa alla serie. La corrente scende a 40 mA e le tensioni sono 4 V e 8 V. Scollega R2: entrambe le correnti diventano zero.",
+            "three": "Con un solo resistore da 100 Ω, confronta 6 V e 12 V. I passa da 60 a 120 mA; P da 0,36 a 1,44 W. La potenza quadruplica perché P = V²/R."
+        },
+        "power": {
+            "title": "Dai numeri a un componente reale",
+            "intro": "Per un resistore puoi combinare P = V·I con la legge di Ohm. Ottieni P = I²·R = V²/R. Scegli l’espressione in base ai dati noti: tutte e tre descrivono la stessa dissipazione.",
+            "workedTitle": "Va bene un resistore da ¼ W?",
+            "workedBody": "Vuoi collegare 120 Ω a 12 V CC. Prima I = 12/120 = 0,1 A. Poi P = 12 × 0,1 = 1,2 W. Un resistore da 0,25 W nominali dovrebbe dissipare 4,8 volte la sua potenza nominale: non è adatto.",
+            "rating": "La potenza nominale è una capacità di dissipazione in condizioni specificate, non il consumo costante del resistore. Uno da 2 W può essere una scelta iniziale per 1,2 W, ma bisogna verificare temperatura, montaggio e declassamento della potenza ammessa nella scheda tecnica. Può comunque scaldarsi molto.",
+            "conservation": "Anche l’energia consente di verificare il circuito: nella serie da 12 V con 100 Ω e 200 Ω, P₁ = 0,16 W e P₂ = 0,32 W. Il generatore eroga 12 × 0,04 = 0,48 W, pari alla loro somma. In parallelo sono 1,44 W + 0,72 W = 2,16 W.",
+            "measurementTitle": "Come misurare con un multimetro",
+            "voltmeterTitle": "Tensione: tra due punti",
+            "voltmeter": "Seleziona tensione CC e collega il voltmetro in parallelo al componente. La sua elevata resistenza d’ingresso serve ad alterare il circuito il meno possibile.",
+            "ammeterTitle": "Corrente: nel percorso",
+            "ammeter": "Togli alimentazione prima di modificare il circuito, apri il percorso e inserisci l’amperometro in serie. Scegli ingresso e portata adatti: ha bassa resistenza e può contenere un fusibile.",
+            "ohmmeter": "Per misurare la resistenza, togli alimentazione e scarica i condensatori. Se esistono altri percorsi in parallelo, isola almeno un terminale del resistore per non misurare l’intera rete.",
+            "meterWarning": "Non collegare un multimetro in modalità corrente direttamente ai morsetti di un generatore: creeresti un percorso a bassissima resistenza. Questa sezione riguarda esercitazioni in CC a bassa tensione, non misure sulla rete elettrica.",
+            "rf": "Collegamento alla radio: i 50 Ω di un’antenna o di un cavo si riferiscono di solito all’impedenza in RF. Qui non li trattiamo come una resistenza in CC. Prima dell’esempio di un trasmettitore da 100 W studieremo CA, valori efficaci e impedenza."
+        },
+        "quiz": {
+            "title": "Verifica se sai spiegarlo",
+            "intro": "Scegli una risposta. Vedrai il ragionamento anche in caso di errore; puoi riprovare.",
+            "correct": "Corretto",
+            "retry": "Rivediamo l’idea",
+            "reset": "Azzera le risposte",
+            "score": "{correct} risposte corrette su {total}",
+            "q1": {
+                "question": "Una batteria ideale da 12 V è scollegata. Che cosa accade?",
+                "a": "Ha 12 V ai morsetti ed eroga 0 A.",
+                "b": "Ha 0 V perché non circola corrente.",
+                "c": "Eroga 12 A anche a circuito aperto.",
+                "explanation": "La tensione confronta i potenziali di due punti. Può esistere senza corrente. Il circuito aperto impedisce un flusso esterno continuo di carica, ma non elimina la tensione della batteria."
+            },
+            "q2": {
+                "question": "In serie, 100 Ω e 200 Ω sono collegati a 12 V. Quale corrente attraversa ciascuno?",
+                "a": "120 mA in R1 e 60 mA in R2.",
+                "b": "40 mA in entrambi.",
+                "c": "40 mA in R1 e 20 mA in R2.",
+                "explanation": "R equivalente = 300 Ω; I = 12/300 = 0,04 A. Il percorso è unico, quindi gli stessi 40 mA attraversano entrambi i resistori. Le loro tensioni sono 4 V e 8 V."
+            },
+            "q3": {
+                "question": "In parallelo a 12 V, R1 = 100 Ω e R2 = 200 Ω. Sostituisci R2 con 400 Ω. Quanta corrente scorre in R1?",
+                "a": "60 mA: anche la sua corrente si dimezza.",
+                "b": "150 mA: riceve tutta la corrente del generatore.",
+                "c": "120 mA: mantiene la stessa tensione.",
+                "explanation": "Il generatore ideale mantiene 12 V su entrambi i rami. In R1, I = 12/100 = 120 mA. Solo R2 scende a 30 mA; la corrente totale diventa 150 mA. Ogni ramo ha la propria corrente."
+            },
+            "q4": {
+                "question": "Se raddoppi la tensione applicata a un resistore a resistenza costante, la potenza…",
+                "a": "Quadruplica.",
+                "b": "Raddoppia.",
+                "c": "Resta uguale.",
+                "explanation": "P = V²/R: raddoppiando V, il suo quadrato si moltiplica per quattro. Puoi anche considerare P = V·I: sia V sia I raddoppiano. In 100 Ω, passare da 6 V a 12 V porta 0,36 W a 1,44 W."
+            }
+        },
+        "roadmap": {
+            "title": "Il percorso successivo",
+            "intro": "Questa è la prima sezione sviluppata. Le successive non sono ancora pubblicate: le affronteremo con spiegazioni, grafici ed esercizi dedicati.",
+            "wavesTitle": "Onde e frequenza",
+            "waves": "Grafici nel tempo: ampiezza, periodo e frequenza; confronto tra segnali; lunghezza d’onda e relazione λ = v/f. Che cosa cambia e che cosa resta costante modificando ogni valore.",
+            "bandsTitle": "Bande e propagazione",
+            "bands": "Da Hz a GHz; LF, MF, HF, VHF e UHF; relazione con antenne e propagazione. Distingueremo il nome fisico di una banda dalle frequenze e modalità autorizzate per i radioamatori in Argentina, usando fonti ufficiali aggiornate.",
+            "morseTitle": "Allenamento Morse",
+            "morse": "Punti e linee con audio, durata e spaziatura; esempi come SOS e CQ; prove di ascolto e scrittura. Un albero binario permetterà di seguire ogni punto o linea fino alla lettera e allenarsi per rami."
+        },
+        "sources": {
+            "title": "Per approfondire e verificare",
+            "intro": "Spiegazioni ed esempi originali, verificati con OpenStax, University Physics, volume 2 (in inglese). Selezionando i collegamenti si apre il sito esterno openstax.org.",
+            "current": "9.1 · Corrente elettrica",
+            "ohm": "9.4 · Legge di Ohm e misure",
+            "connections": "10.2 · Resistori in serie e parallelo",
+            "limits": "Il laboratorio calcola un regime stazionario ideale: non simula transitori, tolleranze, limiti del generatore o variazioni termiche. È materiale di studio, non un programma ufficiale né una raccolta di domande d’esame.",
+            "originalGuide": "Guida di ripasso originale di Claude · 50 pagine",
+            "originalGuideNote": "Conserviamo il file originale come materiale di consultazione. La revisione ha rilevato errori tecnici e risposte normative non aggiornate: per esempio, a pagina 41, I.40 mantiene una durata di cinque anni per i ripetitori e I.43 resta presente nonostante sia stato soppresso dalla Risoluzione ENACOM 1186/2024. Consulta anche la normativa ufficiale.",
+            "enacom": "Normativa e documenti originali di ENACOM"
+        },
+        "lab": {
+            "title": "Laboratorio di corrente continua",
+            "intro": "Cambia una sola cosa alla volta e confronta ciò che accade a corrente e potenza.",
+            "single": "Un resistore",
+            "series": "Serie",
+            "parallel": "Parallelo",
+            "voltage": "Tensione del generatore",
+            "resistanceOne": "Resistenza R1",
+            "resistanceTwo": "Resistenza R2",
+            "powered": "Generatore acceso",
+            "connected": "R2 collegata",
+            "reset": "Ripristina 12 V · 100 Ω · 200 Ω",
+            "equivalent": "Resistenza equivalente",
+            "totalCurrent": "Corrente totale",
+            "totalPower": "Potenza totale",
+            "component": "Resistore",
+            "potential": "Tensione",
+            "current": "Corrente",
+            "power": "Potenza",
+            "diagramTitle": "Circuito in corrente continua",
+            "diagramDescription": "La corrente convenzionale esce dal polo positivo del generatore e ritorna al negativo. In parallelo R1 e R2 sono collegati tra gli stessi nodi A e B.",
+            "idealNote": "Modello ideale in CC: fili senza resistenza e generatore a tensione costante. Le frecce indicano la corrente convenzionale, non la velocità degli elettroni.",
+            "open": "Circuito aperto",
+            "sourceOff": "Generatore spento: non eroga tensione né corrente.",
+            "openSeries": "Scollegando R2 si interrompe l’unico percorso: non circola corrente nemmeno in R1. La tensione del generatore si trova ai capi dell’interruttore aperto.",
+            "openParallel": "Il ramo R2 è aperto. R1 mantiene tensione e corrente; il generatore eroga meno corrente totale.",
+            "singleWhy": "Un solo percorso: la corrente si ottiene dividendo la tensione del generatore per R1.",
+            "seriesWhy": "Un solo percorso: la stessa corrente attraversa entrambi i resistori. La somma delle loro cadute di tensione è pari alla tensione del generatore.",
+            "parallelWhy": "Due percorsi tra gli stessi nodi: entrambi i resistori hanno la tensione del generatore. Le correnti dei rami si sommano.",
+            "calculation": "Come si calcola",
+            "resistanceStep": "Prima, la resistenza equivalente",
+            "currentStep": "Poi, la corrente totale",
+            "powerStep": "Infine, la potenza totale",
+            "powerNotice": "Se realizzi il circuito, la potenza nominale di ciascun resistore deve superare la dissipazione calcolata, con un margine e nelle condizioni specificate dal produttore.",
+            "source": "Generatore",
+            "node": "Nodo",
+            "disabledBranch": "Ramo scollegato",
+            "branch": "Ramo R{number}"
+        },
+        "glossaryLink": "Consulta i termini del corso nel glossario."
+    },
+    "RadioGlossary": {
+        "title": "Glossario per radioamatori",
+        "intro": "Un riferimento da consultare mentre studi o ascolti una comunicazione. Non tutto è un comando: CQ è un segnale di chiamata; QSL appartiene al codice Q; PTT è un comando dell’apparato; DMR è uno standard digitale.",
+        "search": "Cerca un termine",
+        "searchPlaceholder": "CQ, PTT, DMR, interferenza, 2 metri…",
+        "category": "Filtra per argomento",
+        "all": "Tutti gli argomenti",
+        "categories": {
+            "signals": "Segnali e codici",
+            "operation": "Apparati e attività",
+            "bands": "Bande",
+            "technology": "Modi e tecnologie"
+        },
+        "count": "{count} termini trovati",
+        "example": "Esempio d’uso",
+        "source": "Fonte",
+        "related": "Termini correlati",
+        "empty": "Nessun termine trovato. Prova un’altra parola o seleziona tutti gli argomenti.",
+        "clear": "Cancella ricerca e filtri",
+        "qclHint": "Se cercavi la conferma di ricezione, l’abbreviazione abituale è QSL. Manteniamo «QCL» come tua ricerca, senza attribuirle quel significato.",
+        "qslSuggestion": "Consulta QSL",
+        "qNote": "I codici Q possono porre domande o fornire informazioni: QTH? chiede la posizione; QTH seguito da un luogo la comunica. Qui descriviamo l’uso abituale tra radioamatori e chiariamo le differenze importanti.",
+        "bandNote": "Gli intervalli HF, VHF e UHF sono famiglie dello spettro, non intervalli interamente autorizzati ai radioamatori. I nomi in metri sono approssimativi: λ in metri ≈ 300 / f in MHz, nello spazio libero. Le frequenze degli esempi non costituiscono un’autorizzazione a trasmettere; limiti, modi e potenze vanno verificati presso ENACOM in base alla categoria di licenza.",
+        "sourcesNote": "Riferimenti: ARRL per attività e codici, UIT per i nomi delle bande, ETSI per DMR e il manuale di WSJT-X per FT8. I collegamenti aprono il sito esterno indicato solo quando vengono selezionati.",
+        "bandRules": "Consulta normativa e tabella delle bande di ENACOM",
+        "entries": {
+            "cq": {
+                "term": "CQ",
+                "name": "Chiamata generale",
+                "meaning": "Invita qualsiasi stazione a rispondere. È un segnale di chiamata, non un codice Q. Prima si ascolta e si verifica che la frequenza sia libera.",
+                "example": "«CQ, CQ, qui…», seguito dal nominativo della stazione che chiama.",
+                "english": "General call"
+            },
+            "qsl": {
+                "term": "QSL",
+                "name": "Conferma di ricezione",
+                "meaning": "Indica che una trasmissione è stata ricevuta. In un altro uso, una cartolina o conferma QSL documenta un contatto. QSL e QSO indicano cose diverse.",
+                "example": "«QSL, ho ricevuto il tuo rapporto». Il contatto è il QSO; la sua conferma può essere una QSL.",
+                "english": "I acknowledge receipt."
+            },
+            "qso": {
+                "term": "QSO",
+                "name": "Contatto radio",
+                "meaning": "Nell’uso abituale dei radioamatori, è una comunicazione tra stazioni. Non richiede un successivo scambio di cartoline QSL.",
+                "example": "«Abbiamo fatto un QSO sulla banda dei 2 metri».",
+                "english": "Radio contact"
+            },
+            "qth": {
+                "term": "QTH",
+                "name": "Posizione della stazione",
+                "meaning": "Si usa per chiedere o comunicare da dove opera una stazione. In una conversazione può bastare la località; non equivale necessariamente a un indirizzo postale.",
+                "example": "«Qual è il tuo QTH?» — «Il mio QTH è Córdoba».",
+                "english": "Station location"
+            },
+            "qrz": {
+                "term": "QRZ?",
+                "name": "Chi mi chiama?",
+                "meaning": "Chiede quale stazione sta chiamando. Si usa se hai ricevuto una chiamata e devi identificare il corrispondente; CQ serve invece ad avviare una chiamata generale.",
+                "example": "Hai sentito qualcuno chiamarti, ma non hai capito il suo nominativo: «QRZ?».",
+                "english": "Who is calling me?"
+            },
+            "qrl": {
+                "term": "QRL?",
+                "name": "La frequenza è occupata?",
+                "meaning": "Il significato generale è «sei occupato?». Nella pratica si usa per verificare se una frequenza è in uso prima di chiamare.",
+                "example": "Ascolta prima e chiedi «La frequenza è in uso?»; in telegrafia si usa QRL?.",
+                "english": "Are you busy?"
+            },
+            "qrm": {
+                "term": "QRM",
+                "name": "Interferenza",
+                "meaning": "Un’emissione o un segnale indesiderato rende difficile ricevere la comunicazione. Va distinto dal rumore atmosferico, abitualmente indicato con QRN.",
+                "example": "«Ho QRM da un’altra stazione vicina in frequenza».",
+                "english": "Interference from other signals"
+            },
+            "qrn": {
+                "term": "QRN",
+                "name": "Rumore statico",
+                "meaning": "Nell’uso abituale indica il rumore atmosferico che ostacola la ricezione, per esempio quello prodotto da scariche elettriche.",
+                "example": "«C’è molto QRN a causa dei temporali».",
+                "english": "Atmospheric noise / static"
+            },
+            "qsb": {
+                "term": "QSB",
+                "name": "Affievolimento del segnale",
+                "meaning": "L’intensità di un segnale ricevuto aumenta e diminuisce. Non significa necessariamente che il corrispondente stia cambiando la potenza.",
+                "example": "«Ti ricevo con QSB: a tratti arrivi forte e poi scompari».",
+                "english": "Signal fading"
+            },
+            "qsy": {
+                "term": "QSY",
+                "name": "Cambio di frequenza",
+                "meaning": "Si usa per proporre o annunciare un cambio di frequenza. Le due stazioni devono concordare dove continuare e verificare di poter usare la frequenza.",
+                "example": "«Facciamo QSY su un’altra frequenza e continuiamo lì».",
+                "english": "Change frequency"
+            },
+            "qrt": {
+                "term": "QRT",
+                "name": "Cessare la trasmissione",
+                "meaning": "Indica o richiede la cessazione della trasmissione. Nel saluto finale significa spesso che la stazione termina l’attività.",
+                "example": "«Vado QRT, grazie per il contatto».",
+                "english": "Stop transmitting"
+            },
+            "qrv": {
+                "term": "QRV",
+                "name": "Pronto a comunicare",
+                "meaning": "Si usa per chiedere o indicare se una stazione è pronta a comunicare.",
+                "example": "«Sono QRV per la prova di ricezione».",
+                "english": "Ready to communicate"
+            },
+            "qrp": {
+                "term": "QRP",
+                "name": "Riduzione o bassa potenza",
+                "meaning": "Come codice Q riguarda la riduzione della potenza; nell’uso radioamatoriale descrive anche l’attività a bassa potenza. Il limite numerico dipende dall’attività o dal suo regolamento.",
+                "example": "«Oggi opero QRP». Per un contest, verifica la potenza massima definita dal regolamento.",
+                "english": "Reduce transmitter power / low-power operation"
+            },
+            "seventyThree": {
+                "term": "73",
+                "name": "Saluti e auguri",
+                "meaning": "Saluto finale tradizionale dei radioamatori. È un’abbreviazione operativa, non un codice Q.",
+                "example": "«Grazie per il QSO, 73».",
+                "english": "Best regards"
+            },
+            "ptt": {
+                "term": "PTT",
+                "name": "Premi per parlare",
+                "meaning": "Comando che porta l’apparato in trasmissione mentre è attivato. In un apparato che alterna trasmissione e ricezione, si rilascia per tornare a ricevere e ascoltare il corrispondente.",
+                "example": "Premi PTT per parlare e rilascialo al termine del tuo intervento.",
+                "english": "Push-to-talk"
+            },
+            "rx": {
+                "term": "RX",
+                "name": "Ricezione",
+                "meaning": "Abbreviazione per la funzione o lo stato di ricezione dei segnali. Quando configuri il tuo apparato per usare un ripetitore, RX è la frequenza ascoltata dal tuo apparato: l’uscita del ripetitore.",
+                "example": "Un indicatore RX acceso può segnalare che l’apparato sta ricevendo un segnale.",
+                "english": "Receive / receiver"
+            },
+            "tx": {
+                "term": "TX",
+                "name": "Trasmissione",
+                "meaning": "Abbreviazione usata per la trasmissione. La frequenza TX del tuo apparato è quella su cui emette; può essere diversa dalla RX quando si usa un ripetitore.",
+                "example": "L’indicatore TX si accende quando l’apparato trasmette azionando PTT.",
+                "english": "Transmit / transmitter"
+            },
+            "simplex": {
+                "term": "Simplex",
+                "name": "Comunicazione diretta alternata",
+                "meaning": "Nell’uso radioamatoriale abituale, due stazioni trasmettono e ricevono a turno sulla stessa frequenza, senza un ripetitore intermedio.",
+                "example": "Due radio portatili comunicano direttamente su una frequenza consentita e libera.",
+                "english": "Simplex operation"
+            },
+            "repeater": {
+                "term": "Ripetitore",
+                "name": "Stazione che ritrasmette",
+                "meaning": "Riceve un segnale e lo ritrasmette. Un tipico ripetitore per voce riceve su una frequenza e trasmette contemporaneamente su un’altra; la sua posizione può ampliare la copertura.",
+                "example": "Il tuo apparato trasmette sull’ingresso del ripetitore e ascolta la sua uscita. Occorre configurare frequenze e parametri di accesso.",
+                "english": "Repeater"
+            },
+            "squelch": {
+                "term": "Squelch",
+                "name": "Silenziatore del ricevitore",
+                "meaning": "Silenzia l’audio quando non è soddisfatta la condizione di apertura, per esempio il superamento di una soglia di segnale. Una soglia troppo alta può nascondere segnali deboli; non aumenta la sensibilità del ricevitore.",
+                "example": "Regola la soglia solo quanto basta per silenziare il rumore quando non c’è segnale.",
+                "english": "Squelch"
+            },
+            "callsign": {
+                "term": "Nominativo",
+                "name": "Identificazione di una stazione",
+                "meaning": "Identificazione assegnata secondo la normativa. In inglese è chiamata call sign. Non è il nome personale dell’operatore né quello di un apparato.",
+                "example": "Durante una chiamata si annuncia il proprio nominativo per consentire al corrispondente di identificare la stazione.",
+                "english": "Call sign"
+            },
+            "hf": {
+                "term": "HF",
+                "name": "Alta frequenza",
+                "meaning": "Famiglia di frequenze da 3 a 30 MHz. Comprende varie bande radioamatoriali, come i 40 e i 20 metri. In condizioni adatte consente comunicazioni a grande distanza tramite propagazione ionosferica.",
+                "example": "Un segnale a 14 MHz appartiene alle HF. La distanza raggiungibile dipende da propagazione, antenne e altre condizioni.",
+                "english": "High Frequency"
+            },
+            "vhf": {
+                "term": "VHF",
+                "name": "Frequenza molto alta",
+                "meaning": "Famiglia da 30 a 300 MHz. Comprende la banda radioamatoriale dei 2 metri. La copertura terrestre abituale dipende molto da altezza, rilievi e ostacoli; esistono anche modi di propagazione particolari.",
+                "example": "145 MHz appartiene alle VHF. VHF non significa una distanza di copertura fissa.",
+                "english": "Very High Frequency"
+            },
+            "uhf": {
+                "term": "UHF",
+                "name": "Frequenza ultra alta",
+                "meaning": "Famiglia da 300 a 3 000 MHz. Comprende la banda radioamatoriale dei 70 centimetri. A parità di velocità di propagazione, una frequenza maggiore corrisponde a una lunghezza d’onda minore.",
+                "example": "435 MHz appartiene alle UHF; la lunghezza d’onda nello spazio libero è circa 69 cm.",
+                "english": "Ultra High Frequency"
+            },
+            "fortyMeters": {
+                "term": "40 m",
+                "name": "Banda dei quaranta metri · HF",
+                "meaning": "Nome di una banda radioamatoriale intorno a 7 MHz. Il nome indica una lunghezza d’onda approssimativa, non un’unica frequenza né una lunghezza esatta dell’antenna.",
+                "example": "A 7 MHz, λ ≈ 300/7 ≈ 42,9 m. Il nome convenzionale della banda resta 40 metri.",
+                "english": "40-metre band"
+            },
+            "twentyMeters": {
+                "term": "20 m",
+                "name": "Banda dei venti metri · HF",
+                "meaning": "Nome di una banda radioamatoriale intorno a 14 MHz. Come per altre bande HF, la propagazione dipende dalla ionosfera; le categorie di licenza non hanno necessariamente gli stessi permessi.",
+                "example": "A 14 MHz, λ ≈ 300/14 ≈ 21,4 m. Il nome identifica una banda, non un’autorizzazione a trasmettere.",
+                "english": "20-metre band"
+            },
+            "twoMeters": {
+                "term": "2 m",
+                "name": "Banda dei due metri · VHF",
+                "meaning": "Banda radioamatoriale intorno a 145 MHz, usata tra l’altro per comunicazioni locali, ripetitori e satelliti. Modo e segmento si scelgono secondo l’attività e le regole applicabili.",
+                "example": "A 145 MHz, λ ≈ 2,07 m. Nella stessa banda possono esserci FM e modi digitali: banda e modo sono concetti diversi.",
+                "english": "2-metre band"
+            },
+            "seventyCentimeters": {
+                "term": "70 cm",
+                "name": "Banda dei settanta centimetri · UHF",
+                "meaning": "Banda radioamatoriale intorno a 435 MHz. Può essere usata per collegamenti locali, ripetitori, satelliti e altre attività secondo segmenti e autorizzazioni pertinenti.",
+                "example": "A 435 MHz, λ ≈ 0,69 m. «70 cm» non significa che ogni antenna per questa banda debba essere lunga 70 cm.",
+                "english": "70-centimetre band"
+            },
+            "dmr": {
+                "term": "DMR",
+                "name": "Radio mobile digitale",
+                "meaning": "Standard di radio digitale di ETSI. In DMR Tier II un canale da 12,5 kHz utilizza due intervalli temporali. Per comunicare devono essere compatibili configurazione e parametri di accesso: condividere la frequenza non basta.",
+                "example": "Per un ripetitore DMR si configurano, tra gli altri parametri, frequenza, color code, time slot e talkgroup. DMR può funzionare senza Internet nelle comunicazioni locali.",
+                "english": "Digital Mobile Radio"
+            },
+            "colorCode": {
+                "term": "Color code",
+                "name": "Codice colore in DMR",
+                "meaning": "Parametro di accesso DMR con valori da 0 a 15 che aiuta a distinguere i sistemi su un canale. Deve coincidere con quello del sistema con cui si vuole comunicare; non è cifratura e non garantisce riservatezza.",
+                "example": "Un apparato con un color code errato potrebbe non accedere al ripetitore anche con la frequenza corretta.",
+                "english": "Colour code / color code"
+            },
+            "timeSlot": {
+                "term": "Time slot · TS",
+                "name": "Intervallo temporale in DMR",
+                "meaning": "In DMR Tier II si alternano due intervalli, TS1 e TS2, all’interno di un canale da 12,5 kHz. Non sono due frequenze diverse, ma turni temporali di utilizzo del canale.",
+                "example": "La rete o il ripetitore indica l’intervallo utilizzato da ciascun servizio o gruppo di conversazione.",
+                "english": "Time slot"
+            },
+            "talkgroup": {
+                "term": "Talkgroup · TG",
+                "name": "Gruppo di conversazione in DMR",
+                "meaning": "Identificatore che indirizza una chiamata a un gruppo di stazioni. Non è una frequenza né un intervallo temporale. La configurazione del sistema determina quali utenti o ripetitori partecipano e come vengono instradate le chiamate.",
+                "example": "Due utenti possono usare la stessa frequenza e lo stesso intervallo, ma avere selezionato gruppi di conversazione diversi.",
+                "english": "Talkgroup"
+            },
+            "fm": {
+                "term": "FM",
+                "name": "Modulazione di frequenza",
+                "meaning": "L’informazione è rappresentata da variazioni della frequenza istantanea di una portante. Nella voce FM analogica la portante viene modulata con l’audio del microfono.",
+                "example": "La voce FM analogica è comune nelle comunicazioni locali VHF/UHF. «VHF» indica la famiglia di frequenze; «FM» la modulazione.",
+                "english": "Frequency Modulation"
+            },
+            "am": {
+                "term": "AM",
+                "name": "Modulazione di ampiezza",
+                "meaning": "Nell’AM convenzionale l’ampiezza della portante varia con il messaggio e vengono trasmesse la portante e due bande laterali.",
+                "example": "Una trasmissione AM analogica trasporta l’audio nelle variazioni di ampiezza del segnale radio.",
+                "english": "Amplitude Modulation"
+            },
+            "ssb": {
+                "term": "SSB · BLU",
+                "name": "Banda laterale unica",
+                "meaning": "Modulazione che trasmette una sola banda laterale, normalmente con portante soppressa. USB è la banda laterale superiore e LSB quella inferiore. È molto usata per la voce in HF.",
+                "example": "Due stazioni in fonia SSB devono sintonizzare il segnale e scegliere la banda laterale corretta affinché l’audio sia intelligibile.",
+                "english": "Single Sideband; USB: Upper Sideband; LSB: Lower Sideband"
+            },
+            "cw": {
+                "term": "CW",
+                "name": "Telegrafia mediante portante",
+                "meaning": "Nell’uso radioamatoriale indica solitamente la telegrafia Morse ottenuta accendendo e spegnendo una portante. Morse è il codice; CW descrive questo modo di trasmetterlo.",
+                "example": "Una S in Morse è composta da tre punti. In CW sono tre brevi emissioni di portante separate dai relativi intervalli.",
+                "english": "Continuous Wave"
+            },
+            "ft8": {
+                "term": "FT8",
+                "name": "Modo digitale per segnali deboli",
+                "meaning": "Scambia messaggi brevi e strutturati tramite software, con turni di trasmissione e ricezione di 15 secondi. Richiede una sincronizzazione oraria adeguata; non è un modo per conversazioni vocali.",
+                "example": "In un contatto tipico si scambiano nominativi, localizzatore e rapporti. I 15 secondi sono il turno completo, non necessariamente la durata del segnale trasmesso.",
+                "english": "Franke–Taylor, 8-tone frequency-shift keying"
+            }
+        },
+        "englishLabel": "Termine in inglese",
+        "englishCodeLabel": "Significato in inglese (codice Q)",
+        "englishNote": "Le sigle come PTT sono formate dalle iniziali di parole. QSL e QSO sono codici convenzionali di tre lettere: le loro lettere non corrispondono alle parole di una frase inglese. In queste voci mostriamo un’espressione inglese equivalente al loro significato abituale."
+    },
+    "RadioCourse": {
+        "eyebrow": "Corso · Elettricità di base",
+        "hubTitle": "Un argomento alla volta",
+        "hubIntro": "Scegli una lezione e seguila al tuo ritmo. Laboratorio, glossario e documenti hanno ciascuno uno spazio dedicato alla consultazione.",
+        "start": "Inizia dalla tensione",
+        "lessonsLabel": "Lezioni",
+        "resourcesLabel": "Laboratorio e consultazione",
+        "futureLabel": "Proseguire con il programma Novicio",
+        "futureIntro": "La guida al programma Novicio comprende onde e propagazione, regolamenti, codice Morse ed esercizi d’esame.",
+        "backToCourse": "Indice del corso",
+        "navigation": "Navigazione del corso",
+        "jump": "Cambia argomento",
+        "previous": "Precedente",
+        "next": "Successivo",
+        "lessonPosition": "Lezione {current} di {total}",
+        "resource": "Risorsa di consultazione",
+        "simpleCircuitCaption": "Esempio di riferimento: un generatore da 12 V alimenta un resistore da 100 Ω e circolano 120 mA. La tensione si misura tra due punti; la corrente segue il percorso chiuso.",
+        "pages": {
+            "voltage": {
+                "title": "Tensione",
+                "description": "Che cosa significa una differenza di potenziale tra due punti e perché può esistere anche senza corrente."
+            },
+            "current": {
+                "title": "Corrente",
+                "description": "Quanta carica passa al secondo, come si misura e che cosa indicano le frecce della corrente convenzionale."
+            },
+            "resistance": {
+                "title": "Resistenza",
+                "description": "Come un resistore limita la corrente e perché la carica non si consuma attraversandolo."
+            },
+            "ohm": {
+                "title": "Legge di Ohm",
+                "description": "Collega tensione, corrente e resistenza con un calcolo passo dopo passo e un grafico da interpretare."
+            },
+            "series": {
+                "title": "Circuiti in serie",
+                "description": "Un solo percorso: segui la stessa corrente in due resistori e calcola come si ripartisce la tensione."
+            },
+            "parallel": {
+                "title": "Circuiti in parallelo",
+                "description": "Due rami tra gli stessi nodi: comprendi perché hanno la stessa tensione e le loro correnti si sommano."
+            },
+            "power": {
+                "title": "Potenza",
+                "description": "Distingui potenza ed energia, calcola la dissipazione e scegli la potenza nominale di un resistore."
+            },
+            "measurement": {
+                "title": "Misurare con un multimetro",
+                "description": "Dove collegare lo strumento per misurare tensione, corrente e resistenza nei circuiti CC a bassa tensione."
+            },
+            "practice": {
+                "title": "Mettiti alla prova",
+                "description": "Risolvi quattro situazioni e rivedi il ragionamento alla base di ogni risposta."
+            },
+            "laboratory": {
+                "title": "Laboratorio di circuiti",
+                "description": "Modifica tensione e resistenze, cambia i collegamenti e verifica le tue previsioni con i valori calcolati."
+            },
+            "glossary": {
+                "title": "Glossario per radioamatori",
+                "description": "Consulta sigle, codici, bande e tecnologie con il termine inglese, il significato e gli esempi."
+            },
+            "sources": {
+                "title": "Documenti e fonti",
+                "description": "Consulta i riferimenti del corso, la guida originale di ripasso e i documenti ufficiali di ENACOM."
+            },
+            "bands": {
+                "title": "Bande di frequenza",
+                "description": "Confronta le bande radioamatoriali, la propagazione, le antenne e le tecnologie, e individua le loro frequenze nello spettro."
+            }
+        },
+        "programLink": "Apri il programma Novicio"
+    },
+    "RadioBands": {
+        "title": "Bande di frequenza",
+        "intro": "Confronta le famiglie dello spettro in base ai limiti di frequenza. La scala cresce dall’alto verso il basso: seleziona una fascia per vedere il nome completo e la lunghezza d’onda approssimativa.",
+        "chartLabel": "Spettro delle frequenze da 3 kHz a 300 GHz, suddiviso in otto decadi contigue",
+        "axisLabel": "Frequenza crescente",
+        "scale": "Scala logaritmica: ogni intervallo moltiplica la frequenza per 10. La stessa altezza non implica la stessa ampiezza in MHz.",
+        "selectionHint": "Seleziona una banda per consultarne i dettagli.",
+        "range": "Frequenze",
+        "wavelength": "Lunghezze d’onda approssimative",
+        "wavelengthNote": "Valori approssimativi nello spazio libero: λ = c/f, con c ≈ 300 000 000 m/s. A frequenza maggiore corrisponde una lunghezza d’onda minore.",
+        "limits": "La nomenclatura UIT esclude il limite inferiore di ogni intervallo e include quello superiore. I limiti condivisi sono mostrati una sola volta sull’asse.",
+        "permissionNote": "Queste sono famiglie generali dello spettro, non bande interamente autorizzate ai radioamatori. I nomi in metri e le frequenze degli esempi sono riferimenti; limiti, modi e potenze consentiti dipendono dalla normativa e dalla categoria di licenza. Per l’Argentina, consulta la normativa di ENACOM.",
+        "ituSource": "UIT · Nomenclatura delle bande V.431-9 (2025)",
+        "enacomSource": "ENACOM · Normativa e tabella delle bande",
+        "sourcesNote": "I collegamenti aprono i siti esterni itu.int ed enacom.gob.ar solo quando vengono selezionati.",
+        "bands": {
+            "vlf": {
+                "name": "Frequenza molto bassa",
+                "english": "Very Low Frequency",
+                "description": "Corrisponde a onde lunghe circa da 10 a 100 chilometri. Il nome descrive una famiglia dello spettro, non un singolo canale."
+            },
+            "lf": {
+                "name": "Bassa frequenza",
+                "english": "Low Frequency",
+                "description": "Corrisponde a lunghezze d’onda approssimative da 1 a 10 chilometri. La frequenza è dieci volte quella del punto equivalente nella fascia VLF."
+            },
+            "mf": {
+                "name": "Media frequenza",
+                "english": "Medium Frequency",
+                "description": "Corrisponde a lunghezze d’onda approssimative da 100 metri a 1 chilometro. Un megahertz, cioè 1 MHz, equivale a un milione di oscillazioni al secondo."
+            },
+            "hf": {
+                "name": "Alta frequenza",
+                "english": "High Frequency",
+                "description": "Comprende varie bande radioamatoriali. In condizioni adatte la propagazione ionosferica consente comunicazioni a grande distanza. Come riferimenti: i 40 m si trovano intorno a 7 MHz e i 20 m intorno a 14 MHz."
+            },
+            "vhf": {
+                "name": "Frequenza molto alta",
+                "english": "Very High Frequency",
+                "description": "La copertura terrestre abituale dipende molto da altezza, rilievi e ostacoli; esistono anche forme particolari di propagazione. La banda radioamatoriale dei 2 m si trova intorno a 145 MHz."
+            },
+            "uhf": {
+                "name": "Frequenza ultra alta",
+                "english": "Ultra High Frequency",
+                "description": "Le sue onde sono più corte di quelle VHF. Non implica una portata fissa né uno specifico modo di trasmissione. La banda radioamatoriale dei 70 cm si trova intorno a 435 MHz."
+            },
+            "shf": {
+                "name": "Frequenza super alta",
+                "english": "Super High Frequency",
+                "description": "Corrisponde a onde lunghe circa da 1 a 10 centimetri. Fa parte delle frequenze abitualmente chiamate microonde."
+            },
+            "ehf": {
+                "name": "Frequenza estremamente alta",
+                "english": "Extremely High Frequency",
+                "description": "Corrisponde a onde lunghe circa da 1 a 10 millimetri, da cui il nome onde millimetriche. Il limite superiore in questa classificazione è 300 GHz."
+            }
+        }
+    },
+    "RadioAmateurBands": {
+        "title": "Bande radioamatoriali: frequenza, propagazione e apparati",
+        "intro": "Confronta queste cinque bande di uso comune e individua le loro frequenze nello spettro in alto. Selezionane una per vedere esempi di antenne e modi.",
+        "views": {
+            "amateur": "Bande radioamatoriali",
+            "spectrum": "Famiglie dello spettro"
+        },
+        "columns": {
+            "band": "Banda",
+            "range": "Intervallo di riferimento",
+            "propagation": "Propagazione abituale",
+            "use": "Usi frequenti"
+        },
+        "detailTitle": "Antenne e tecnologie della banda selezionata",
+        "antennas": "Antenne comuni",
+        "modes": "Modi e tecnologie abituali",
+        "notes": "Aspetti da considerare",
+        "conditions": "Sono tendenze ed esempi, non orari, portate o usi esclusivi garantiti. La propagazione dipende dall’ora, dalla stagione, dall’attività solare, dal percorso e dall’installazione.",
+        "permission": "Gli intervalli identificano bande della tabella pubblicata da ENACOM; non autorizzano tutta la banda per qualsiasi categoria o modo. Esistono segmenti riservati e bande di guardia, e l’intera emissione deve rimanere nel segmento consentito.",
+        "referenceLabel": "Riferimento argentino: Allegato A della tabella delle bande del 2018, pubblicato da ENACOM. Si mantiene la data del documento: la data del collegamento non ne fa un’edizione del 2021 o del 2026.",
+        "sourceLabel": "ENACOM · Tabella originale delle bande",
+        "propagationSource": "ARRL · Propagazione in HF",
+        "indoorSource": "UIT · Propagazione all’interno degli edifici",
+        "regulationSource": "Regolamento argentino · Paragrafi 1.5.9 e 13.4.2",
+        "antennaNote": "Una banda non impone un’antenna specifica. Contano frequenza, adattamento d’impedenza, diagramma di radiazione, polarizzazione e spazio disponibile.",
+        "buildingNote": "Non esiste un vantaggio universale di VHF o UHF all’interno degli edifici. Materiali, spessore, aperture, percorso e antenne modificano il risultato: un’antenna più corta non garantisce una penetrazione migliore.",
+        "technologyTitle": "Banda, modulazione, protocollo e cifratura",
+        "modulationLabel": "Modulazione · modulation",
+        "modulation": "È il modo in cui si modifica un segnale per trasportare informazioni. AM, FM e SSB sono forme di modulazione; HF, VHF e UHF indicano famiglie di frequenze. Una stessa banda può ammettere modi diversi nei suoi segmenti.",
+        "protocolLabel": "Protocollo o standard · protocol / standard",
+        "protocol": "Definisce come si organizza lo scambio tra apparati. DMR significa Digital Mobile Radio ed è uno standard per voce e dati digitali. APRS significa Automatic Packet Reporting System e serve a comunicare dati come posizioni o messaggi. Sono tecnologie differenti, non nomi di bande.",
+        "cipherTitle": "Cifratura · encryption",
+        "cipherText": "La cifratura mira a nascondere il contenuto a chi non può decifrarlo. Rappresentare digitalmente voce o dati è un’altra operazione: digitale non significa cifrato. Il Regolamento argentino classifica «trasmettere testi cifrati» come infrazione operativa al paragrafo 13.4.2 e richiede comunicazioni chiare e comprensibili al paragrafo 1.5.9.",
+        "sourcesNote": "I collegamenti di riferimento aprono enacom.gob.ar, argentina.gob.ar, arrl.org o itu.int solo quando vengono selezionati.",
+        "entries": {
+            "eighty": {
+                "name": "80 m",
+                "propagation": "Spesso regionale e notturna; può consentire percorsi più lunghi quando le condizioni sono favorevoli.",
+                "use": "Conversazioni regionali e nazionali, contatti di gruppo e ascolto sulle frequenze HF più basse.",
+                "antennas": "Dipolo, V invertita o antenna alimentata a un’estremità con adattamento adeguato. Dimensioni e altezza dell’installazione influiscono molto sul comportamento.",
+                "modes": "Fonia SSB, telegrafia CW e modi digitali come FT8, nei segmenti autorizzati.",
+                "notes": "Nella tabella argentina la banda completa arriva a 4,0 MHz: 3,5–3,8 MHz ha statuto primario e 3,8–4,0 MHz secondario. Di giorno l’assorbimento ionosferico può limitare particolarmente questa banda; non significa che sia sempre inutilizzabile."
+            },
+            "forty": {
+                "name": "40 m",
+                "propagation": "Tende a favorire contatti regionali di giorno e percorsi più lunghi di notte; dipende dalle condizioni.",
+                "use": "Una banda HF molto utilizzata per contatti regionali, nazionali e continentali.",
+                "antennas": "Dipolo, V invertita o antenna alimentata a un’estremità con adattamento adeguato. Un’installazione bassa può favorire percorsi regionali tramite incidenza quasi verticale.",
+                "modes": "SSB, CW e modi digitali come FT8. La scelta dipende dall’obiettivo e dal segmento autorizzato.",
+                "notes": "Può essere utile per molte ore, ma lo stesso collegamento non è garantito sia di giorno sia di notte. La banda da sola non determina quali stazioni potrai ascoltare."
+            },
+            "twenty": {
+                "name": "20 m",
+                "propagation": "Molto utilizzata per contatti a grande distanza (DX) tramite la ionosfera, spesso di giorno; esistono anche aperture notturne.",
+                "use": "Contatti internazionali e collegamenti a grande distanza quando la propagazione lo permette.",
+                "antennas": "Dipolo, verticale o Yagi direzionale. Sono alternative: nessuna è obbligatoria per questa banda.",
+                "modes": "SSB, CW e modi digitali come FT8 si trovano in segmenti diversi. Non tutti sono consentiti a tutte le categorie nell’intera banda.",
+                "notes": "La tabella di riferimento limita la categoria Novicio al segmento 14,070–14,099 MHz con CW e modi digitali; l’intervallo totale dei 20 m non va interpretato come permesso generale di fonia per Novicio. Le aperture dipendono dall’attività solare, dalla stagione e dal percorso."
+            },
+            "two": {
+                "name": "2 m",
+                "propagation": "Abitualmente terrestre diretta o tramite ripetitori, condizionata da altezza, rilievi e ostacoli.",
+                "use": "Apparati portatili e mobili, comunicazioni locali, ripetitori, dati e satelliti secondo il segmento.",
+                "antennas": "Verticale, ground-plane o collineare per FM e ripetitori; Yagi per collegamenti direzionali. In SSB/CW terrestre si usa abitualmente la polarizzazione orizzontale; in FM quella verticale.",
+                "modes": "FM analogica, voce digitale come DMR e dati a pacchetto come APRS. Sono tecnologie differenti che possono usare segmenti diversi della stessa banda.",
+                "notes": "Esistono anche forme particolari di propagazione: VHF non ha una portata fissa. La tabella riserva 145,790–145,800 MHz come banda di guardia, senza trasmissioni."
+            },
+            "seventy": {
+                "name": "70 cm",
+                "propagation": "Comune per collegamenti locali e ripetitori; la copertura dipende dall’ambiente e dall’installazione.",
+                "use": "Apparati bibanda, ripetitori, collegamenti direzionali e satelliti nei segmenti corrispondenti.",
+                "antennas": "Verticale, ground-plane o collineare per copertura locale; Yagi per concentrare il collegamento in una direzione. La polarizzazione deve corrispondere al collegamento e al modo utilizzati.",
+                "modes": "FM analogica e voce digitale come DMR; anche dati e satelliti secondo il segmento. DMR non richiede Internet per ogni comunicazione locale.",
+                "notes": "La tabella argentina identifica il servizio di radioamatore come primario e quello di radioamatore via satellite come secondario; riserva 435–438 MHz ai satelliti. Questo non equivale ad affermare che UHF attraversi gli edifici meglio di VHF."
+            }
+        }
     }
 }

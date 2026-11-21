@@ -1,12 +1,11 @@
-// 404 global. Se renderiza FUERA del segmento [locale] (ej. cuando el locale es
-// inválido y app/[locale]/layout.tsx hace notFound()), así que no hay root layout
-// que lo envuelva: tiene que traer su propio <html>/<body>.
+// A global 404 bypasses the locale root layout and supplies its own document.
+// Enabled with experimental.globalNotFound for this Next.js 15 application.
 //
 // A propósito SIN Ant Design ni chrome: es una página barata. Renderizar el chrome
 // completo acá era justo lo que los escáneres de /*.php usaban para quemar CPU (1102).
 // Colores hardcodeados a la paleta "ink" (sin globals.css acá): #0b0e14 / #e8eaed,
 // accent default #f59e0b. Mono del sistema — cero webfonts.
-export default function NotFound() {
+export default function GlobalNotFound() {
   return (
     <html lang="en" data-theme="dark">
       <body

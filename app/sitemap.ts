@@ -5,6 +5,7 @@ import { getAllPostMeta } from '@/lib/blog';
 import { getProjectSlugs } from '@/lib/projects';
 import type { PagePath } from '@/lib/seo';
 import { CHAPTERS } from '@/lib/radio/chapters';
+import { radioPages, radioPagePath } from '@/config/radio-course';
 import { createLocalizedSitemap } from '@/lib/seo-sitemap';
 
 // Filesystem-backed catalogs are read at build time, including on Workers.
@@ -20,6 +21,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/calculators',
     '/composer',
     '/radio',
+    '/radio/programa',
+    ...radioPages.map(({ id }) => radioPagePath(id)),
     ...CHAPTERS.map((c): PagePath => `/radio/${c.slug}`),
     '/radio/imprimir',
     '/pinouts',

@@ -30,7 +30,7 @@ export function RadioLanding({ locale }: { locale: string }) {
   return (
     <main className={styles.page} lang="es">
       <PageIntro
-        eyebrow="Guía · Argentina"
+        eyebrow={<Link href={base}>← Índice del curso · Guía de Argentina</Link>}
         title="Radioaficionado, de cero a la licencia"
         description="Guía de estudio para el examen Novicio de ENACOM, ordenada según el Programa Básico de Estudios oficial: definiciones con unidades, diagramas, fórmulas con ejemplos resueltos y el banco de preguntas oficial de reglamentación."
         area="knowledge"

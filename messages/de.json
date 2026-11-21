@@ -1964,6 +1964,7 @@
             "missingKey": "Gib einen Schlüssel für den HMAC ein."
         },
         "ohmsLaw": {
+            "courseLink": "Das Ohmsche Gesetz Schritt für Schritt lernen",
             "badge": "Elektronik",
             "title": "Ohmsches Gesetz",
             "subtitle": "Berechne Spannung, Strom, Widerstand und Leistung aus zwei bekannten Werten.",
@@ -2496,6 +2497,10 @@
         "pagerPrev": "Zurück",
         "pagerNext": "Weiter",
         "packs": {
+            "radio-basics": {
+                "title": "Elektrotechnik für den Amateurfunk",
+                "description": "Spannung, Stromstärke, Widerstand und Leistung verstehen. Reihen- und Parallelschaltungen mit Rechenbeispielen, interaktivem Labor und erklärten Übungen lernen."
+            },
             "resistor-color-code": {
                 "title": "Widerstandsfarbcode",
                 "description": "Wandle Farbringe in Widerstandswerte um oder berechne die Farben für einen bestimmten Wert."
@@ -4763,5 +4768,709 @@
         "description": "Interaktiver Leitfaden zur argentinischen Amateurfunklizenz (ENACOM): Elektrotechnik, Modulation, Antennen, Ausbreitung, Morse und Probeprüfung mit Simulatoren.",
         "spanishOnly": "Dieser Leitfaden ist vorerst auf Spanisch, da er auf die argentinische ENACOM-Prüfung abzielt. Die Simulatoren funktionieren in jeder Sprache.",
         "cta": "Leitfaden starten"
+    },
+    "RadioBasics": {
+        "badge": "Amateurfunk · Abschnitt 01",
+        "introTitle": "Eine Schaltung verstehen, bevor du Formeln auswendig lernst",
+        "intro": "Warum verhalten sich zwei Widerstände anders, wenn du die Leitungen anders verbindest? In diesem Abschnitt verfolgst du Ladung und Energie, berechnest eine Schaltung und überprüfst deine Vorhersagen im Labor.",
+        "scope": "Wir arbeiten mit Gleichstrom (DC), einer idealen Spannungsquelle und ohmschen Widerständen bei konstanter Temperatur. Die Quelle hält ihre Spannung konstant, die Leitungen haben keinen Widerstand und eine Erwärmung wird im Modell nicht berücksichtigt. Reale Geräte haben Grenzen; diese unterscheiden wir von unserem Modell.",
+        "navLabel": "Inhalt dieses Abschnitts",
+        "nav": {
+            "concepts": "Die Größen",
+            "ohm": "Ohmsches Gesetz",
+            "connections": "Reihe und parallel",
+            "laboratory": "Labor",
+            "power": "Leistung und Messung",
+            "practice": "Teste dein Wissen",
+            "glossary": "Glossar"
+        },
+        "concepts": {
+            "title": "Vier Größen, vier unterschiedliche Fragen",
+            "intro": "Eine Schaltung braucht eine Quelle, einen geschlossenen leitenden Pfad und einen Verbraucher, etwa einen Widerstand. In einem Metalldraht sind bereits bewegliche Elektronen vorhanden: Die Batterie muss ihn nicht erst mit Elektronen füllen. Die elektrische Ladung wird in Coulomb (C) gemessen, die Energie in Joule (J).",
+            "voltage": {
+                "title": "Spannung · Wie viel Energie pro Ladung?",
+                "unit": "V · Volt (V)",
+                "definition": "Die Spannung ist eine Potenzialdifferenz zwischen zwei Punkten: Sie gibt die Energie pro Ladungseinheit an. Eine Differenz von 12 V bedeutet 12 J pro übertragenem Coulomb. Deshalb fragen wir immer: „Spannung zwischen welchen beiden Punkten?“",
+                "example": "Eine Batterie kann bei geöffnetem Schalter 12 V zwischen ihren Anschlüssen aufrechterhalten. Es liegt eine Spannung an, obwohl kein Strom fließt.",
+                "caution": "Spannung ist keine Größe, die „durch die Leitung fließt“. Sie wird zwischen zwei Punkten gemessen.",
+                "formula": "1 V = 1 J/C"
+            },
+            "current": {
+                "title": "Stromstärke · Wie viel Ladung fließt pro Sekunde?",
+                "unit": "I · Ampere (A)",
+                "definition": "Die Stromstärke misst die Nettoladung, die pro Zeiteinheit durch einen Leiterquerschnitt fließt. Fließt jede Sekunde 1 Coulomb hindurch, beträgt die Stromstärke 1 Ampere. Eine Stromstärke von 40 mA entspricht 0,040 A: Jede Sekunde fließen 0,040 C hindurch.",
+                "example": "Wir zeichnen die technische Stromrichtung im äußeren Stromkreis vom Pluspol zum Minuspol ein. In Metallen bewegen sich die Elektronen in die entgegengesetzte Richtung.",
+                "caution": "Die Stromstärke ist nicht die Geschwindigkeit der Elektronen. Strom wird beim Durchfließen eines Widerstands auch nicht „verbraucht“.",
+                "formula": "I = ΔQ / Δt; 1 A = 1 C/s"
+            },
+            "resistance": {
+                "title": "Widerstand · Wie stark begrenzt er den Strom?",
+                "unit": "R · Ohm (Ω)",
+                "definition": "Bei einem ohmschen Widerstand sind Spannung und Stromstärke proportional. Die Konstante, die beide verknüpft, ist sein Widerstandswert: R = V/I. Bei gleicher Spannung lässt ein größerer Widerstand weniger Strom fließen. Das Bauteil heißt Widerstand; sein Widerstandswert ist eine Eigenschaft.",
+                "example": "Bei 12 V fließen durch einen Widerstand von 100 Ω 120 mA. Durch einen mit 200 Ω fließen 60 mA. Eine Verdopplung von R halbiert I, wenn V konstant bleibt.",
+                "caution": "Der Widerstand wandelt elektrische Energie in Wärme um. Die Ladung, die hineinfließt, fließt auch wieder heraus; Ladung wird nicht verbraucht.",
+                "formula": "1 Ω = 1 V/A"
+            },
+            "power": {
+                "title": "Leistung · Wie schnell wird Energie umgewandelt?",
+                "unit": "P · Watt (W)",
+                "definition": "Leistung ist die pro Zeiteinheit übertragene Energie. Ein Widerstand mit einer Verlustleistung von 2 W wandelt jede Sekunde 2 J elektrische Energie in Wärme um. Bei konstantem Gleichstrom berechnet man sie, indem man die Spannung am Bauteil mit der Stromstärke durch das Bauteil multipliziert.",
+                "example": "Ein Gerät, das 2 A aus einer 12-V-Quelle aufnimmt, erhält 24 W elektrische Leistung. Das bedeutet nicht, dass es 24 W Hochfrequenzleistung sendet: Es hat auch Verluste und weitere Verbraucher.",
+                "caution": "W misst Leistung; J und Wh messen Energie. Liegen 24 W eine Stunde lang an, sind das 24 Wh = 86 400 J.",
+                "formula": "P = V · I; 1 W = 1 J/s"
+            }
+        },
+        "ohm": {
+            "title": "Das ohmsche Gesetz: ein Zusammenhang, den du überprüfen kannst",
+            "intro": "Für einen ohmschen Widerstand mit konstantem R gilt V = I · R. Das ist keine allgemeingültige Regel für jedes Bauteil: Eine Diode hat zum Beispiel nicht an allen Arbeitspunkten einen konstanten Widerstand.",
+            "currentLabel": "Wenn du die Stromstärke suchst",
+            "voltageLabel": "Wenn du die Spannung suchst",
+            "resistanceLabel": "Wenn du den Widerstand suchst",
+            "workedTitle": "Ein Widerstand von 100 Ω an 12 V",
+            "stepOne": "Bestimme die gegebenen Werte und ihre Einheiten: V = 12 V und R = 100 Ω. Gesucht ist I in Ampere.",
+            "stepTwo": "Wähle die Gleichung und setze ein: I = V/R = 12/100 = 0,12 A = 120 mA.",
+            "stepThree": "Überprüfe: I · R = 0,12 × 100 = 12 V. Das Ergebnis ergibt wieder die Spannung der Quelle.",
+            "units": "Rechne vor der Berechnung in die Grundeinheiten um: 1 kΩ = 1 000 Ω; 1 mA = 0,001 A. Volt geteilt durch Ohm ergibt Ampere, nicht Milliampere.",
+            "prediction": "Zwei nützliche Vorhersagen: Bei festem R verdoppelt sich I, wenn du V verdoppelst. Bei festem V halbiert sich I, wenn du R verdoppelst. Ändere nicht zwei Variablen gleichzeitig, wenn du eine Ursache beobachten möchtest.",
+            "graphTitle": "So liest du ein Spannungs-Strom-Diagramm",
+            "graphText": "Jeder Punkt ist ein Wertepaar (V, I). Bei einem ohmschen Widerstand verläuft die Gerade durch den Ursprung: Mehr Spannung führt zu proportional mehr Strom. Bei gleicher Achsenskalierung ist die Gerade des kleineren Widerstands steiler, weil I/V = 1/R gilt.",
+            "voltageAxis": "Spannung (V)",
+            "currentAxis": "Stromstärke (mA)",
+            "graphDescription": "Stromstärke in Abhängigkeit von der Spannung für Widerstände von 100 und 200 Ohm zwischen null und zwölf Volt. Bei zwölf Volt betragen die Stromstärken 120 und 60 Milliampere."
+        },
+        "connections": {
+            "title": "Reihen- und Parallelschaltung: Auf die Verbindungen kommt es an",
+            "intro": "Ein Knoten umfasst alle Punkte, die durch ideale Leitungen ohne dazwischenliegende Bauteile verbunden sind: Sie haben dasselbe Potenzial. Um eine Schaltungsart zu erkennen, verfolge die Knoten und Strompfade. Dass zwei Widerstände nebeneinander gezeichnet sind, reicht nicht aus.",
+            "equivalent": "Der Ersatzwiderstand ist der Wert eines einzelnen Widerstands, der bei gleicher Spannung denselben Gesamtstrom aus der Quelle aufnehmen würde. Er ersetzt die gesamte Anordnung aus Sicht der Quelle; das bedeutet nicht, dass alle einzelnen Widerstände diesen Wert haben.",
+            "seriesTitle": "Reihenschaltung · ein einziger Strompfad",
+            "seriesBody": "Zwei Widerstände sind in Reihe geschaltet, wenn ihre Verbindungsstelle keine Abzweigung hat: Durch beide fließt derselbe Strom. Im stationären Zustand sammelt sich an dieser Verbindungsstelle keine Ladung an. Die Spannungsabfälle addieren sich zur Spannung der Quelle: Das ist die kirchhoffsche Maschenregel.",
+            "seriesDerivation": "Aus V = V₁ + V₂ = I·R₁ + I·R₂ = I·(R₁ + R₂) folgt Ersatzwiderstand R = R₁ + R₂. Die Spannung teilt sich im Verhältnis der Widerstandswerte auf; nicht immer in zwei gleiche Hälften.",
+            "seriesCheck": "Überprüfung: 4 + 8 = 12 V. Durch R1 fließen 40 mA und durch R2 ebenfalls. Am zweiten Widerstand fällt mehr Spannung ab, ohne dass die Stromstärke nach dem ersten abnimmt.",
+            "parallelTitle": "Parallelschaltung · zwei Pfade zwischen denselben Knoten",
+            "parallelBody": "Die beiden Anschlüsse von R1 sind mit denselben Knoten A und B verbunden wie die von R2. Deshalb liegt an beiden Widerständen dieselbe Spannung an. In A teilt sich der ankommende Strom auf; in B fließt er wieder zusammen. Das folgt aus der Ladungserhaltung: der kirchhoffschen Knotenregel.",
+            "parallelDerivation": "Es gilt Gesamtstrom I = I₁ + I₂ = V/R₁ + V/R₂ und zugleich Gesamtstrom I = V/Ersatzwiderstand R. Durch Division durch V erhalten wir 1/Ersatzwiderstand R = 1/R₁ + 1/R₂. Für zwei Widerstände vereinfacht sich der Ersatzwiderstand zu R₁·R₂/(R₁ + R₂).",
+            "parallelCheck": "Überprüfung: 120 + 60 = 180 mA. Durch den Zweig mit 100 Ω fließt doppelt so viel Strom wie durch den mit 200 Ω. Der Strom teilt sich nur dann gleichmäßig auf, wenn die Widerstände gleich sind.",
+            "exampleLabel": "Dieselbe Quelle: 12 V · Dieselben Widerstände: 100 Ω und 200 Ω",
+            "remember": "Schnelle Kontrolle: In Reihe ist der Ersatzwiderstand größer als jeder einzelne Widerstand. Parallel ist er kleiner als der kleinste Einzelwiderstand. Ein zusätzlicher Zweig schafft einen weiteren Strompfad und erhöht den Gesamtstrom, den die Schaltung aus einer idealen Spannungsquelle aufnimmt.",
+            "open": "Unterbrichst du den einzigen Pfad einer Reihenschaltung, fließt nirgendwo mehr Strom. Unterbrichst du einen Zweig einer Parallelschaltung, wird der andere weiterhin versorgt. Probiere es unten aus, bevor du weitermachst."
+        },
+        "experiments": {
+            "title": "Vorhersagen, verändern und erklären",
+            "intro": "Prüfe diese drei Ideen mit den Bedienelementen des Labors. Vergleiche die Zahlen und begründe das Ergebnis mit einer Regel für die Schaltung.",
+            "one": "Stelle in der Parallelschaltung mit 12 V und 100 Ω / 200 Ω den Wert von R2 auf 400 Ω. Welche Stromstärke ändert sich? Durch R1 fließen weiterhin 120 mA; durch R2 nur noch 30 mA, und die Quelle liefert 150 mA.",
+            "two": "Setze die Werte zurück und wechsle zur Reihenschaltung. Die Stromstärke sinkt auf 40 mA und die Spannungen betragen 4 V und 8 V. Trenne R2 ab: Beide Stromstärken fallen auf null.",
+            "three": "Vergleiche bei einem einzelnen Widerstand von 100 Ω die Werte für 6 V und 12 V. I steigt von 60 auf 120 mA; P steigt von 0,36 auf 1,44 W. Die Leistung vervierfacht sich, weil P = V²/R gilt."
+        },
+        "power": {
+            "title": "Von den Zahlen zum realen Bauteil",
+            "intro": "Für einen Widerstand kannst du P = V·I mit dem ohmschen Gesetz kombinieren. Daraus folgt P = I²·R = V²/R. Wähle die passende Formel anhand der bekannten Größen; alle drei beschreiben dieselbe Verlustleistung.",
+            "workedTitle": "Ist ein ¼-W-Widerstand geeignet?",
+            "workedBody": "Du möchtest 120 Ω an 12 V Gleichspannung anschließen. Zuerst I = 12/120 = 0,1 A. Dann P = 12 × 0,1 = 1,2 W. Ein Widerstand mit einer Nennleistung von 0,25 W müsste das 4,8-Fache seiner Nennleistung als Wärme abführen: Er ist nicht geeignet.",
+            "rating": "Die Nennleistung gibt an, welche Leistung unter festgelegten Bedingungen als Wärme abgeführt werden darf. Sie ist nicht die Leistung, die der Widerstand immer aufnimmt. Ein 2-W-Widerstand kann für 1,2 W eine erste Wahl sein. Temperatur, Einbau und die temperaturabhängige Reduzierung der zulässigen Leistung müssen aber im Datenblatt überprüft werden. Auch er kann sehr heiß werden.",
+            "conservation": "Auch die Energieerhaltung hilft bei der Überprüfung der Schaltung: In der Reihenschaltung mit 12 V, 100 Ω und 200 Ω gilt P₁ = 0,16 W und P₂ = 0,32 W. Die Quelle liefert 12 × 0,04 = 0,48 W, also genau die Summe. In der Parallelschaltung sind es 1,44 W + 0,72 W = 2,16 W.",
+            "measurementTitle": "So misst du mit einem Multimeter",
+            "voltmeterTitle": "Spannung: zwischen zwei Punkten",
+            "voltmeter": "Wähle Gleichspannung und schließe das Voltmeter parallel zum Bauteil an. Sein hochohmiger Eingang soll die Schaltung möglichst wenig beeinflussen.",
+            "ammeterTitle": "Stromstärke: im Strompfad",
+            "ammeter": "Schalte die Schaltung spannungsfrei, bevor du sie veränderst. Öffne den Strompfad und füge das Amperemeter in Reihe ein. Wähle den passenden Eingang und Messbereich: Das Messgerät hat einen niedrigen Innenwiderstand und kann mit einer Sicherung ausgestattet sein.",
+            "ohmmeter": "Schalte die Schaltung zum Messen des Widerstands spannungsfrei und entlade die Kondensatoren. Gibt es weitere parallele Strompfade, trenne mindestens einen Anschluss des Widerstands ab, damit du nicht die gesamte Anordnung misst.",
+            "meterWarning": "Schließe ein Multimeter im Strommessmodus nicht direkt zwischen die Anschlüsse einer Quelle an: Dadurch würdest du einen sehr niederohmigen Pfad schaffen. Dieser Abschnitt behandelt Übungen mit niedriger Gleichspannung, keine Messungen am Stromnetz.",
+            "rf": "Der Bezug zum Funk: Die 50 Ω einer Antenne oder eines Kabels beziehen sich meist auf die HF-Impedanz. Wir behandeln sie hier nicht als Gleichstromwiderstand. Bevor wir das Beispiel eines 100-W-Senders betrachten, beschäftigen wir uns mit Wechselstrom, Effektivwerten und Impedanz."
+        },
+        "quiz": {
+            "title": "Prüfe, ob du es erklären kannst",
+            "intro": "Wähle eine Antwort. Du siehst die Begründung auch dann, wenn deine Antwort falsch ist, und kannst es erneut versuchen.",
+            "correct": "Richtig",
+            "retry": "Sehen wir uns die Idee noch einmal an",
+            "reset": "Antworten zurücksetzen",
+            "score": "{correct} von {total} Antworten richtig",
+            "q1": {
+                "question": "Eine ideale 12-V-Batterie ist nicht angeschlossen. Was passiert?",
+                "a": "Zwischen ihren Anschlüssen liegen 12 V an und sie liefert 0 A.",
+                "b": "Ihre Spannung beträgt 0 V, weil kein Strom fließt.",
+                "c": "Sie liefert 12 A, obwohl der Stromkreis offen ist.",
+                "explanation": "Die Spannung vergleicht die Potenziale zweier Punkte. Sie kann auch ohne Strom bestehen. Der offene Stromkreis verhindert einen dauerhaften Ladungsfluss im äußeren Stromkreis, beseitigt aber nicht die Spannung der Batterie."
+            },
+            "q2": {
+                "question": "100 Ω und 200 Ω sind in Reihe an 12 V angeschlossen. Welche Stromstärke fließt durch jeden Widerstand?",
+                "a": "120 mA durch R1 und 60 mA durch R2.",
+                "b": "40 mA durch beide.",
+                "c": "40 mA durch R1 und 20 mA durch R2.",
+                "explanation": "Ersatzwiderstand R = 300 Ω; I = 12/300 = 0,04 A. Es gibt nur einen Strompfad, deshalb fließen dieselben 40 mA durch beide Widerstände. Die Spannungen an ihnen betragen 4 V und 8 V."
+            },
+            "q3": {
+                "question": "R1 = 100 Ω und R2 = 200 Ω sind parallel an 12 V angeschlossen. Du ersetzt R2 durch 400 Ω. Wie viel Strom fließt durch R1?",
+                "a": "60 mA: Auch seine Stromstärke halbiert sich.",
+                "b": "150 mA: Er erhält den gesamten Strom der Quelle.",
+                "c": "120 mA: Seine Spannung bleibt gleich.",
+                "explanation": "Die ideale Quelle hält in beiden Zweigen 12 V aufrecht. Für R1 gilt I = 12/100 = 120 mA. Nur die Stromstärke durch R2 sinkt auf 30 mA; der Gesamtstrom beträgt jetzt 150 mA. Jeder Zweig hat seine eigene Stromstärke."
+            },
+            "q4": {
+                "question": "Wenn du die Spannung an einem Widerstand mit konstantem Widerstandswert verdoppelst, wird seine Leistung …",
+                "a": "Vervierfacht.",
+                "b": "Verdoppelt.",
+                "c": "Unverändert bleiben.",
+                "explanation": "P = V²/R: Wenn du V verdoppelst, vervierfacht sich sein Quadrat. Du kannst es auch über P = V·I erklären: Sowohl V als auch I verdoppeln sich. Bei 100 Ω steigt die Leistung beim Wechsel von 6 V auf 12 V von 0,36 W auf 1,44 W."
+            }
+        },
+        "roadmap": {
+            "title": "So geht es weiter",
+            "intro": "Dies ist der erste ausgearbeitete Abschnitt. Die folgenden Abschnitte sind noch nicht veröffentlicht; wir werden sie mit eigenen Erklärungen, Grafiken und Übungen aufbauen.",
+            "wavesTitle": "Wellen und Frequenz",
+            "waves": "Zeitdiagramme: Amplitude, Periodendauer und Frequenz; Vergleich von Signalen; Wellenlänge und der Zusammenhang λ = v/f. Was sich beim Verändern der einzelnen Werte ändert und was gleich bleibt.",
+            "bandsTitle": "Frequenzbänder und Ausbreitung",
+            "bands": "Von Hz bis GHz; LF, MF, HF, VHF und UHF; der Zusammenhang mit Antennen und Ausbreitung. Wir unterscheiden die physikalische Bezeichnung eines Frequenzbands von den für Funkamateure in Argentinien zugelassenen Frequenzen und Betriebsarten und nutzen dafür aktuelle amtliche Quellen.",
+            "morseTitle": "Morsezeichen trainieren",
+            "morse": "Punkte und Striche mit Audio, Dauer und Abständen; Beispiele wie SOS und CQ; Hör- und Schreibübungen. Mit einem Binärbaum lässt sich jeder Punkt oder Strich bis zum Buchstaben verfolgen und gezielt nach Zweigen trainieren."
+        },
+        "lab": {
+            "title": "Gleichstromlabor",
+            "intro": "Ändere jeweils nur eine Sache und vergleiche, wie sich Stromstärke und Leistung verändern.",
+            "single": "Ein Widerstand",
+            "series": "Reihe",
+            "parallel": "Parallel",
+            "voltage": "Spannung der Quelle",
+            "resistanceOne": "Widerstand R1",
+            "resistanceTwo": "Widerstand R2",
+            "powered": "Quelle eingeschaltet",
+            "connected": "R2 angeschlossen",
+            "reset": "12 V · 100 Ω · 200 Ω wiederherstellen",
+            "equivalent": "Ersatzwiderstand",
+            "totalCurrent": "Gesamtstromstärke",
+            "totalPower": "Gesamtleistung",
+            "component": "Widerstand",
+            "potential": "Spannung",
+            "current": "Stromstärke",
+            "power": "Leistung",
+            "diagramTitle": "Gleichstromschaltung",
+            "diagramDescription": "Die technische Stromrichtung verläuft vom Pluspol der Quelle zurück zum Minuspol. In der Parallelschaltung liegen R1 und R2 zwischen denselben Knoten A und B.",
+            "idealNote": "Ideales Gleichstrommodell: widerstandslose Leitungen und eine Quelle mit konstanter Spannung. Die Pfeile zeigen die technische Stromrichtung, nicht die Geschwindigkeit der Elektronen.",
+            "open": "Offener Stromkreis",
+            "sourceOff": "Quelle ausgeschaltet: Sie liefert weder Spannung noch Strom.",
+            "openSeries": "Wenn du R2 abtrennst, wird der einzige Strompfad unterbrochen: Auch durch R1 fließt kein Strom mehr. Die Spannung der Quelle liegt am offenen Schalter an.",
+            "openParallel": "Der Zweig mit R2 ist unterbrochen. An R1 bleiben Spannung und Stromstärke unverändert; die Quelle liefert weniger Gesamtstrom.",
+            "singleWhy": "Ein einziger Strompfad: Die Stromstärke ergibt sich aus der Spannung der Quelle geteilt durch R1.",
+            "seriesWhy": "Ein einziger Strompfad: Durch beide Widerstände fließt derselbe Strom. Die Spannungsabfälle addieren sich zur Spannung der Quelle.",
+            "parallelWhy": "Zwei Pfade zwischen denselben Knoten: An beiden Widerständen liegt die Spannung der Quelle an. Die Ströme der Zweige addieren sich.",
+            "calculation": "So wird gerechnet",
+            "resistanceStep": "Zuerst der Ersatzwiderstand",
+            "currentStep": "Dann die Gesamtstromstärke",
+            "powerStep": "Zum Schluss die Gesamtleistung",
+            "powerNotice": "Wenn du die Schaltung aufbaust, muss die Nennleistung jedes Widerstands über seiner berechneten Verlustleistung liegen, mit ausreichender Reserve und unter Beachtung der Herstellerbedingungen.",
+            "source": "Quelle",
+            "node": "Knoten",
+            "disabledBranch": "Unterbrochener Zweig",
+            "branch": "Zweig R{number}"
+        },
+        "sources": {
+            "title": "Zum Vertiefen und Nachprüfen",
+            "intro": "Eigene Erklärungen und Beispiele, abgeglichen mit OpenStax, University Physics, Band 2 (auf Englisch). Beim Anklicken öffnen die Links die externe Website openstax.org.",
+            "current": "9.1 · Elektrischer Strom",
+            "ohm": "9.4 · Ohmsches Gesetz und Messung",
+            "connections": "10.2 · Widerstände in Reihen- und Parallelschaltung",
+            "limits": "Das Labor berechnet einen idealen stationären Zustand: Einschwingvorgänge, Toleranzen, Grenzen der Quelle und Temperatureinflüsse werden nicht simuliert. Es ist Lernmaterial, kein offizieller Lehrgang oder Prüfungsfragenkatalog.",
+            "originalGuide": "Original-Lernleitfaden von Claude · 50 Seiten",
+            "originalGuideNote": "Wir bewahren die Originaldatei als Nachschlagewerk auf. Bei der Überprüfung wurden technische Fehler und veraltete Antworten zu Vorschriften festgestellt: Auf Seite 41 nennt I.40 beispielsweise weiterhin eine Gültigkeitsdauer von fünf Jahren für Relaisstationen, und I.43 bleibt enthalten, obwohl es durch die ENACOM-Resolution 1186/2024 gestrichen wurde. Ziehe auch die offiziellen Vorschriften heran.",
+            "enacom": "Originalvorschriften und Dokumente von ENACOM"
+        },
+        "glossaryLink": "Schlage die Begriffe des Kurses im Glossar nach."
+    },
+    "RadioGlossary": {
+        "title": "Amateurfunkglossar",
+        "intro": "Ein Nachschlagewerk zum Lernen oder beim Mithören einer Funkverbindung. Nicht alles ist ein Befehl: CQ ist ein Rufsignal; QSL gehört zum Q-Code; PTT ist ein Bedienelement des Funkgeräts; DMR ist ein digitaler Standard.",
+        "search": "Begriff suchen",
+        "searchPlaceholder": "CQ, PTT, DMR, Störung, 2 Meter …",
+        "category": "Nach Thema filtern",
+        "all": "Alle Themen",
+        "categories": {
+            "signals": "Signale und Codes",
+            "operation": "Geräte und Betrieb",
+            "bands": "Frequenzbänder",
+            "technology": "Betriebsarten und Technologien"
+        },
+        "count": "{count} Begriffe gefunden",
+        "example": "Anwendungsbeispiel",
+        "source": "Quelle",
+        "related": "Verwandte Begriffe",
+        "empty": "Dieser Begriff wurde nicht gefunden. Versuche ein anderes Wort oder wähle alle Themen aus.",
+        "clear": "Suche und Filter zurücksetzen",
+        "qclHint": "Wenn du nach der Empfangsbestätigung gesucht hast: Die übliche Abkürzung ist QSL. Wir behalten „QCL“ als deine Suchanfrage bei, weisen ihr diese Bedeutung aber nicht zu.",
+        "qslSuggestion": "QSL nachschlagen",
+        "qNote": "Q-Codes können Fragen oder Mitteilungen ausdrücken: QTH? fragt nach dem Standort; QTH mit einer Ortsangabe teilt ihn mit. Hier beschreiben wir den üblichen Gebrauch im Amateurfunk und erläutern wichtige Unterschiede.",
+        "bandNote": "HF, VHF und UHF sind Bereiche des Frequenzspektrums und nicht vollständig für den Amateurfunk freigegeben. Die Bandnamen in Metern sind Näherungswerte: λ in Metern ≈ 300 / f in MHz, im freien Raum. Die Referenzfrequenzen in den Beispielen stellen keine Sendegenehmigung dar; die zulässigen Grenzen, Betriebsarten und Leistungen sind je nach Lizenzklasse bei ENACOM nachzuschlagen.",
+        "sourcesNote": "Referenzen: ARRL für Betrieb und Codes, ITU für die Bezeichnungen der Frequenzbereiche, ETSI für DMR und das WSJT-X-Handbuch für FT8. Die Links öffnen die jeweils angegebene externe Website erst beim Anklicken.",
+        "bandRules": "Vorschriften und Bandtabelle von ENACOM nachschlagen",
+        "entries": {
+            "cq": {
+                "term": "CQ",
+                "name": "Allgemeiner Anruf",
+                "meaning": "Lädt jede Station zum Antworten ein. CQ ist ein Rufsignal, kein Q-Code. Höre zuerst zu und prüfe, ob die Frequenz frei ist.",
+                "example": "„CQ, CQ, hier …“, gefolgt vom Rufzeichen der rufenden Station.",
+                "english": "General call"
+            },
+            "qsl": {
+                "term": "QSL",
+                "name": "Empfangsbestätigung",
+                "meaning": "Bestätigt den Empfang einer Aussendung. Daneben dokumentiert eine QSL-Karte oder QSL-Bestätigung eine Funkverbindung. QSL und QSO bezeichnen unterschiedliche Dinge.",
+                "example": "„QSL, ich habe deinen Rapport empfangen.“ Die Verbindung ist das QSO; ihre Bestätigung kann eine QSL sein.",
+                "english": "I acknowledge receipt."
+            },
+            "qso": {
+                "term": "QSO",
+                "name": "Funkverbindung",
+                "meaning": "Bezeichnet im üblichen Sprachgebrauch von Funkamateuren eine Verbindung zwischen Stationen. Dafür müssen anschließend keine QSL-Karten ausgetauscht werden.",
+                "example": "„Wir hatten ein QSO auf dem 2-Meter-Band.“",
+                "english": "Radio contact"
+            },
+            "qth": {
+                "term": "QTH",
+                "name": "Standort der Station",
+                "meaning": "Wird verwendet, um nach dem Standort einer Station zu fragen oder ihn mitzuteilen. In einem Gespräch kann der Ortsname genügen; eine vollständige Postanschrift ist damit nicht unbedingt gemeint.",
+                "example": "„Was ist dein QTH?“ — „Mein QTH ist Córdoba.“",
+                "english": "Station location"
+            },
+            "qrz": {
+                "term": "QRZ?",
+                "name": "Wer ruft mich?",
+                "meaning": "Fragt, welche Station gerade ruft. Wird verwendet, wenn du einen Anruf empfangen hast und die Gegenstation identifizieren möchtest; CQ dient dazu, einen allgemeinen Anruf zu beginnen.",
+                "example": "Du hast gehört, dass dich jemand gerufen hat, aber sein Rufzeichen nicht verstanden: „QRZ?“",
+                "english": "Who is calling me?"
+            },
+            "qrl": {
+                "term": "QRL?",
+                "name": "Ist die Frequenz belegt?",
+                "meaning": "Die allgemeine Bedeutung lautet „Sind Sie beschäftigt?“. In der Praxis wird damit vor einem Anruf geprüft, ob eine Frequenz bereits benutzt wird.",
+                "example": "Höre zuerst zu und frage „Ist diese Frequenz belegt?“; in der Telegrafie wird QRL? verwendet.",
+                "english": "Are you busy?"
+            },
+            "qrm": {
+                "term": "QRM",
+                "name": "Störung durch andere Signale",
+                "meaning": "Eine unerwünschte Aussendung oder ein unerwünschtes Signal erschwert den Empfang der Funkverbindung. Davon zu unterscheiden ist atmosphärisches Rauschen, das üblicherweise als QRN bezeichnet wird.",
+                "example": "„Ich habe QRM von einer anderen Station auf einer benachbarten Frequenz.“",
+                "english": "Interference from other signals"
+            },
+            "qrn": {
+                "term": "QRN",
+                "name": "Atmosphärische Störungen",
+                "meaning": "Bezieht sich im üblichen Gebrauch auf atmosphärisches Rauschen, das den Empfang erschwert, etwa durch elektrische Entladungen.",
+                "example": "„Durch die Gewitter gibt es viel QRN.“",
+                "english": "Atmospheric noise / static"
+            },
+            "qsb": {
+                "term": "QSB",
+                "name": "Schwund des Empfangssignals",
+                "meaning": "Die Stärke eines empfangenen Signals nimmt zu und ab. Das bedeutet nicht unbedingt, dass die Gegenstation ihre Sendeleistung verändert.",
+                "example": "„Ich empfange dich mit QSB: Zeitweise bist du stark, dann verschwindest du wieder.“",
+                "english": "Signal fading"
+            },
+            "qsy": {
+                "term": "QSY",
+                "name": "Frequenzwechsel",
+                "meaning": "Wird verwendet, um einen Frequenzwechsel vorzuschlagen oder mitzuteilen. Beide Stationen müssen vereinbaren, wo sie die Verbindung fortsetzen, und prüfen, ob sie diese Frequenz nutzen dürfen und können.",
+                "example": "„Machen wir QSY auf eine andere Frequenz und setzen dort fort.“",
+                "english": "Change frequency"
+            },
+            "qrt": {
+                "term": "QRT",
+                "name": "Senden einstellen",
+                "meaning": "Teilt das Einstellen der Aussendung mit oder fordert dazu auf. Bei einer Verabschiedung bedeutet es meist, dass die Station ihren Betrieb beendet.",
+                "example": "„Ich mache QRT, danke für die Verbindung.“",
+                "english": "Stop transmitting"
+            },
+            "qrv": {
+                "term": "QRV",
+                "name": "Bereit für eine Funkverbindung",
+                "meaning": "Wird verwendet, um zu fragen oder mitzuteilen, ob eine Station für eine Funkverbindung bereit ist.",
+                "example": "„Ich bin QRV für den Empfangstest.“",
+                "english": "Ready to communicate"
+            },
+            "qrp": {
+                "term": "QRP",
+                "name": "Leistung verringern oder mit geringer Leistung senden",
+                "meaning": "Als Q-Code bezieht sich QRP auf das Verringern der Leistung; im Amateurfunk bezeichnet es auch den Betrieb mit geringer Sendeleistung. Die konkrete Leistungsgrenze hängt von der Aktivität oder deren Regeln ab.",
+                "example": "„Heute arbeite ich QRP.“ Prüfe bei einem Wettbewerb, welche Höchstleistung die Ausschreibung festlegt.",
+                "english": "Reduce transmitter power / low-power operation"
+            },
+            "seventyThree": {
+                "term": "73",
+                "name": "Grüße und beste Wünsche",
+                "meaning": "Traditioneller Abschiedsgruß unter Funkamateuren. Es handelt sich um eine Betriebsabkürzung, nicht um einen Q-Code.",
+                "example": "„Danke für das QSO, 73.“",
+                "english": "Best regards"
+            },
+            "ptt": {
+                "term": "PTT",
+                "name": "Zum Sprechen drücken",
+                "meaning": "Bedienelement, das das Funkgerät auf Senden schaltet, solange es betätigt wird. Bei einem Gerät im Wechselsprechbetrieb wird es losgelassen, um wieder zu empfangen und die Gegenstation zu hören.",
+                "example": "Drücke PTT zum Sprechen und lasse die Taste am Ende deines Durchgangs los.",
+                "english": "Push-to-talk"
+            },
+            "rx": {
+                "term": "RX",
+                "name": "Empfang",
+                "meaning": "Abkürzung für die Funktion oder den Zustand des Signalempfangs. Wenn du dein Funkgerät für eine Relaisstation einrichtest, ist RX die Frequenz, auf der dein Gerät empfängt: die Ausgabefrequenz der Relaisstation.",
+                "example": "Eine leuchtende RX-Anzeige kann darauf hinweisen, dass das Funkgerät ein Signal empfängt.",
+                "english": "Receive / receiver"
+            },
+            "tx": {
+                "term": "TX",
+                "name": "Senden",
+                "meaning": "Abkürzung für das Senden. Die TX-Frequenz deines Funkgeräts ist die Frequenz, auf der es aussendet; beim Relaisbetrieb kann sie von der RX-Frequenz abweichen.",
+                "example": "Die TX-Anzeige leuchtet auf, wenn das Funkgerät beim Betätigen von PTT sendet.",
+                "english": "Transmit / transmitter"
+            },
+            "simplex": {
+                "term": "Simplex",
+                "name": "Direkter Wechselsprechbetrieb",
+                "meaning": "Im üblichen Amateurfunkgebrauch senden und empfangen zwei Stationen abwechselnd auf derselben Frequenz, ohne eine Relaisstation dazwischen.",
+                "example": "Zwei Handfunkgeräte kommunizieren direkt auf einer zulässigen und freien Frequenz.",
+                "english": "Simplex operation"
+            },
+            "repeater": {
+                "term": "Relaisstation",
+                "name": "Station zur Weiterübertragung",
+                "meaning": "Empfängt ein Signal und sendet es erneut aus. Eine übliche Sprachrelaisstation empfängt auf einer Frequenz und sendet gleichzeitig auf einer anderen; ihr Standort kann die Reichweite vergrößern.",
+                "example": "Dein Funkgerät sendet auf der Eingabefrequenz der Relaisstation und hört auf ihrer Ausgabefrequenz. Frequenzen und Zugangsparameter müssen eingestellt werden.",
+                "english": "Repeater"
+            },
+            "squelch": {
+                "term": "Squelch",
+                "name": "Rauschsperre",
+                "meaning": "Schaltet den Ton stumm, solange die Öffnungsbedingung nicht erfüllt ist, etwa das Überschreiten einer Signalschwelle. Eine zu hohe Einstellung kann schwache Signale unterdrücken; sie erhöht nicht die Empfindlichkeit des Empfängers.",
+                "example": "Stelle die Schwelle nur so hoch ein, dass das Rauschen ohne Empfangssignal verstummt.",
+                "english": "Squelch"
+            },
+            "callsign": {
+                "term": "Rufzeichen",
+                "name": "Kennung einer Station",
+                "meaning": "Nach den geltenden Vorschriften zugewiesene Kennung. Auf Englisch heißt sie call sign. Sie ist weder der persönliche Name des Bedieners noch der Name eines Funkgeräts.",
+                "example": "Bei einem Anruf wird das eigene Rufzeichen genannt, damit die Gegenstation die Station identifizieren kann.",
+                "english": "Call sign"
+            },
+            "hf": {
+                "term": "HF",
+                "name": "Kurzwellenbereich",
+                "meaning": "Frequenzbereich von 3 bis 30 MHz. Er umfasst mehrere Amateurfunkbänder, etwa 40 und 20 Meter. Unter geeigneten Bedingungen sind durch ionosphärische Ausbreitung Funkverbindungen über große Entfernungen möglich.",
+                "example": "Ein Signal auf 14 MHz gehört zum HF-Bereich. Die erreichbare Entfernung hängt von der Ausbreitung, den Antennen und weiteren Bedingungen ab.",
+                "english": "High Frequency"
+            },
+            "vhf": {
+                "term": "VHF",
+                "name": "Ultrakurzwellenbereich",
+                "meaning": "Frequenzbereich von 30 bis 300 MHz. Er umfasst das 2-Meter-Amateurfunkband. Die übliche terrestrische Reichweite hängt stark von der Höhe, dem Gelände und Hindernissen ab; außerdem gibt es besondere Ausbreitungsarten.",
+                "example": "145 MHz liegt im VHF-Bereich. VHF bedeutet keine feste Reichweite.",
+                "english": "Very High Frequency"
+            },
+            "uhf": {
+                "term": "UHF",
+                "name": "Dezimeterwellenbereich",
+                "meaning": "Frequenzbereich von 300 bis 3 000 MHz. Er umfasst das 70-Zentimeter-Amateurfunkband. Bei gleicher Ausbreitungsgeschwindigkeit entspricht eine höhere Frequenz einer kürzeren Wellenlänge.",
+                "example": "435 MHz liegt im UHF-Bereich; die Wellenlänge im freien Raum beträgt ungefähr 69 cm.",
+                "english": "Ultra High Frequency"
+            },
+            "fortyMeters": {
+                "term": "40 m",
+                "name": "40-Meter-Band · HF",
+                "meaning": "Bezeichnung eines Amateurfunkbands um 7 MHz. Der Name gibt eine ungefähre Wellenlänge an, keine einzelne Frequenz und auch keine genaue Antennenlänge.",
+                "example": "Bei 7 MHz gilt λ ≈ 300/7 ≈ 42,9 m. Die übliche Bandbezeichnung bleibt 40 Meter.",
+                "english": "40-metre band"
+            },
+            "twentyMeters": {
+                "term": "20 m",
+                "name": "20-Meter-Band · HF",
+                "meaning": "Bezeichnung eines Amateurfunkbands um 14 MHz. Wie bei anderen HF-Bändern hängt seine Ausbreitung von der Ionosphäre ab; nicht alle Lizenzklassen haben zwangsläufig dieselben Berechtigungen.",
+                "example": "Bei 14 MHz gilt λ ≈ 300/14 ≈ 21,4 m. Der Name bezeichnet ein Band und stellt keine Sendegenehmigung dar.",
+                "english": "20-metre band"
+            },
+            "twoMeters": {
+                "term": "2 m",
+                "name": "2-Meter-Band · VHF",
+                "meaning": "Amateurfunkband um 145 MHz, das unter anderem für lokale Verbindungen, Relaisstationen und Satelliten genutzt wird. Betriebsart und Bandsegment werden passend zur Aktivität und zu den geltenden Regeln gewählt.",
+                "example": "Bei 145 MHz gilt λ ≈ 2,07 m. Im selben Band kann es FM und digitale Betriebsarten geben: Band und Betriebsart sind unterschiedliche Begriffe.",
+                "english": "2-metre band"
+            },
+            "seventyCentimeters": {
+                "term": "70 cm",
+                "name": "70-Zentimeter-Band · UHF",
+                "meaning": "Amateurfunkband um 435 MHz. Es kann je nach Bandsegment und entsprechenden Berechtigungen für lokale Verbindungen, Relaisstationen, Satelliten und andere Aktivitäten genutzt werden.",
+                "example": "Bei 435 MHz gilt λ ≈ 0,69 m. „70 cm“ bedeutet nicht, dass jede Antenne für dieses Band 70 cm lang sein muss.",
+                "english": "70-centimetre band"
+            },
+            "dmr": {
+                "term": "DMR",
+                "name": "Digitaler Mobilfunk",
+                "meaning": "Digitalfunkstandard von ETSI. Bei DMR Tier II nutzt ein 12,5-kHz-Kanal zwei Zeitschlitze. Für eine Verbindung müssen Konfiguration und Zugangsparameter zusammenpassen; dieselbe Frequenz allein reicht nicht aus.",
+                "example": "Für eine DMR-Relaisstation werden unter anderem Frequenz, Color Code, Time Slot und Talkgroup eingestellt. DMR kann für lokale Verbindungen auch ohne Internet genutzt werden.",
+                "english": "Digital Mobile Radio"
+            },
+            "colorCode": {
+                "term": "Color Code",
+                "name": "Farbcode bei DMR",
+                "meaning": "DMR-Zugangsparameter mit Werten von 0 bis 15, der hilft, Systeme auf einem Kanal zu unterscheiden. Er muss zum gewünschten System passen; er ist keine Verschlüsselung und gewährleistet keine Vertraulichkeit.",
+                "example": "Ein Funkgerät mit falschem Color Code kann möglicherweise nicht auf die Relaisstation zugreifen, obwohl die Frequenz richtig eingestellt ist.",
+                "english": "Colour code / color code"
+            },
+            "timeSlot": {
+                "term": "Time Slot · TS",
+                "name": "Zeitschlitz bei DMR",
+                "meaning": "Bei DMR Tier II wechseln sich innerhalb eines 12,5-kHz-Kanals zwei Zeitschlitze ab: TS1 und TS2. Das sind keine zwei verschiedenen Frequenzen, sondern zeitlich getrennte Nutzungsabschnitte desselben Kanals.",
+                "example": "Das Netz oder die Relaisstation gibt vor, in welchem Zeitschlitz ein Dienst oder eine Gesprächsgruppe genutzt wird.",
+                "english": "Time slot"
+            },
+            "talkgroup": {
+                "term": "Talkgroup · TG",
+                "name": "Gesprächsgruppe bei DMR",
+                "meaning": "Eine Kennung, die einen Ruf an eine Gruppe von Stationen richtet. Sie ist weder eine Frequenz noch ein Zeitschlitz. Die Systemkonfiguration bestimmt, welche Nutzer oder Relaisstationen teilnehmen und wie die Rufe weitergeleitet werden.",
+                "example": "Zwei Nutzer können dieselbe Frequenz und denselben Zeitschlitz verwenden, aber unterschiedliche Gesprächsgruppen ausgewählt haben.",
+                "english": "Talkgroup"
+            },
+            "fm": {
+                "term": "FM",
+                "name": "Frequenzmodulation",
+                "meaning": "Die Information wird durch Änderungen der momentanen Frequenz eines Trägers dargestellt. Bei analogem FM-Sprechfunk wird mit dem Audiosignal des Mikrofons moduliert.",
+                "example": "Analoger FM-Sprechfunk ist bei lokalen VHF/UHF-Verbindungen verbreitet. „VHF“ bezeichnet den Frequenzbereich, „FM“ die Modulationsart.",
+                "english": "Frequency Modulation"
+            },
+            "am": {
+                "term": "AM",
+                "name": "Amplitudenmodulation",
+                "meaning": "Bei herkömmlicher AM verändert die Nachricht die Amplitude des Trägers. Übertragen werden der Träger und zwei Seitenbänder.",
+                "example": "Eine analoge AM-Aussendung überträgt das Audiosignal durch Änderungen der Amplitude des Funksignals.",
+                "english": "Amplitude Modulation"
+            },
+            "ssb": {
+                "term": "SSB · BLU",
+                "name": "Einseitenbandmodulation",
+                "meaning": "Modulationsart, die nur ein Seitenband überträgt, normalerweise mit unterdrücktem Träger. USB ist das obere und LSB das untere Seitenband. SSB wird häufig für Sprechfunk im HF-Bereich verwendet.",
+                "example": "Für eine verständliche Sprachübertragung müssen zwei SSB-Stationen das Signal richtig abstimmen und das passende Seitenband wählen.",
+                "english": "Single Sideband; USB: Upper Sideband; LSB: Lower Sideband"
+            },
+            "cw": {
+                "term": "CW",
+                "name": "Trägertelegrafie",
+                "meaning": "Im Amateurfunk bezeichnet CW meist Morsetelegrafie durch Ein- und Ausschalten eines Trägers. Morse ist der Code; CW beschreibt diese Art seiner Übertragung.",
+                "example": "Ein S im Morsecode besteht aus drei Punkten. Bei CW sind das drei kurze Trägeraussendungen, getrennt durch die entsprechenden Pausen.",
+                "english": "Continuous Wave"
+            },
+            "ft8": {
+                "term": "FT8",
+                "name": "Digitale Betriebsart für schwache Signale",
+                "meaning": "Tauscht mithilfe von Software kurze strukturierte Nachrichten aus, mit abwechselnden Sende- und Empfangszeitfenstern von 15 Sekunden. Dafür müssen die Uhren ausreichend genau synchronisiert sein; FT8 ist keine Betriebsart für Sprachgespräche.",
+                "example": "Bei einer typischen Verbindung werden Rufzeichen, Locator und Rapporte ausgetauscht. Die 15 Sekunden bezeichnen das vollständige Zeitfenster, nicht unbedingt die Dauer des ausgesendeten Signals.",
+                "english": "Franke–Taylor, 8-tone frequency-shift keying"
+            }
+        },
+        "englishLabel": "Englischer Begriff",
+        "englishCodeLabel": "Bedeutung auf Englisch (Q-Code)",
+        "englishNote": "Abkürzungen wie PTT bestehen aus den Anfangsbuchstaben von Wörtern. QSL und QSO sind vereinbarte Codes aus drei Buchstaben: Ihre Buchstaben stehen nicht für die Wörter eines englischen Ausdrucks. Bei diesen Einträgen zeigen wir eine englische Formulierung, die ihrer üblichen Bedeutung entspricht."
+    },
+    "RadioCourse": {
+        "eyebrow": "Kurs · Grundlagen der Elektrotechnik",
+        "hubTitle": "Ein Thema nach dem anderen",
+        "hubIntro": "Wähle eine Lektion und arbeite sie in deinem eigenen Tempo durch. Labor, Glossar und Dokumente haben jeweils einen eigenen Bereich zum Nachschlagen.",
+        "start": "Mit Spannung beginnen",
+        "lessonsLabel": "Lektionen",
+        "resourcesLabel": "Labor und Nachschlagewerke",
+        "futureLabel": "Mit dem Novicio-Programm weitermachen",
+        "futureIntro": "Der Novicio-Leitfaden behandelt Wellen und Ausbreitung, Vorschriften, Morsezeichen und Prüfungsübungen.",
+        "backToCourse": "Kursübersicht",
+        "navigation": "Kursnavigation",
+        "jump": "Thema wechseln",
+        "previous": "Zurück",
+        "next": "Weiter",
+        "lessonPosition": "Lektion {current} von {total}",
+        "resource": "Nachschlagewerk",
+        "simpleCircuitCaption": "Referenzbeispiel: Eine 12-V-Quelle versorgt einen Widerstand von 100 Ω; es fließen 120 mA. Spannung wird zwischen zwei Punkten gemessen, Strom fließt durch den geschlossenen Strompfad.",
+        "pages": {
+            "voltage": {
+                "title": "Spannung",
+                "description": "Was eine Potenzialdifferenz zwischen zwei Punkten bedeutet und warum sie auch ohne Stromfluss bestehen kann."
+            },
+            "current": {
+                "title": "Stromstärke",
+                "description": "Wie viel Ladung pro Sekunde fließt, wie man das misst und was die Pfeile der technischen Stromrichtung anzeigen."
+            },
+            "resistance": {
+                "title": "Widerstand",
+                "description": "Wie ein Widerstand den Strom begrenzt und warum die Ladung beim Durchfließen nicht verbraucht wird."
+            },
+            "ohm": {
+                "title": "Ohmsches Gesetz",
+                "description": "Verknüpfe Spannung, Stromstärke und Widerstand mit einer schrittweisen Rechnung und einem verständlichen Diagramm."
+            },
+            "series": {
+                "title": "Reihenschaltungen",
+                "description": "Ein einziger Strompfad: Verfolge denselben Strom durch zwei Widerstände und berechne, wie sich die Spannung aufteilt."
+            },
+            "parallel": {
+                "title": "Parallelschaltungen",
+                "description": "Zwei Zweige zwischen denselben Knoten: Verstehe, warum an beiden dieselbe Spannung anliegt und sich ihre Ströme addieren."
+            },
+            "power": {
+                "title": "Leistung",
+                "description": "Unterscheide Leistung und Energie, berechne die Verlustleistung und wähle die Nennleistung eines Widerstands."
+            },
+            "measurement": {
+                "title": "Mit dem Multimeter messen",
+                "description": "Wo das Messgerät angeschlossen wird, um Spannung, Stromstärke und Widerstand in Gleichstromkreisen mit niedriger Spannung zu messen."
+            },
+            "practice": {
+                "title": "Teste dein Wissen",
+                "description": "Löse vier Aufgaben und prüfe die Begründung jeder Antwort."
+            },
+            "laboratory": {
+                "title": "Schaltungslabor",
+                "description": "Verändere Spannung und Widerstandswerte, ändere die Verbindungen und überprüfe deine Vorhersagen anhand berechneter Werte."
+            },
+            "glossary": {
+                "title": "Amateurfunk-Glossar",
+                "description": "Schlage Abkürzungen, Codes, Bänder und Technologien mit englischen Begriffen, Bedeutungen und Beispielen nach."
+            },
+            "sources": {
+                "title": "Dokumente und Quellen",
+                "description": "Konsultiere die Kursquellen, den ursprünglichen Lernleitfaden und offizielle ENACOM-Dokumente."
+            },
+            "bands": {
+                "title": "Frequenzbänder",
+                "description": "Vergleiche Amateurfunkbänder, ihre Ausbreitung, Antennen und Technologien und ordne ihre Frequenzen im Spektrum ein."
+            }
+        },
+        "programLink": "Novicio-Programm öffnen"
+    },
+    "RadioBands": {
+        "title": "Frequenzbänder",
+        "intro": "Vergleiche die Spektralbereiche anhand ihrer Frequenzgrenzen. Die Skala steigt von oben nach unten: Wähle einen Bereich aus, um seinen vollständigen Namen und seine ungefähre Wellenlänge zu sehen.",
+        "chartLabel": "Frequenzspektrum von 3 kHz bis 300 GHz, unterteilt in acht aufeinanderfolgende Dekaden",
+        "axisLabel": "Steigende Frequenz",
+        "scale": "Logarithmische Skala: In jedem Abschnitt verzehnfacht sich die Frequenz. Gleiche Höhe bedeutet nicht gleiche Breite in MHz.",
+        "selectionHint": "Wähle einen Frequenzbereich aus, um seine Einzelheiten anzuzeigen.",
+        "range": "Frequenzen",
+        "wavelength": "Ungefähre Wellenlängen",
+        "wavelengthNote": "Näherungswerte im freien Raum: λ = c/f, mit c ≈ 300 000 000 m/s. Je höher die Frequenz, desto kürzer die Wellenlänge.",
+        "limits": "Die ITU-Nomenklatur schließt die untere Grenze jedes Intervalls aus und die obere Grenze ein. Gemeinsame Grenzen werden auf der Achse nur einmal dargestellt.",
+        "permissionNote": "Dies sind allgemeine Spektralbereiche, keine vollständig für den Amateurfunk zugelassenen Bänder. Die Namen in Metern und die Beispielfrequenzen dienen der Orientierung; zulässige Frequenzgrenzen, Betriebsarten und Leistungen hängen von den Vorschriften und der Lizenzklasse ab. Für Argentinien sind die Vorschriften von ENACOM maßgeblich.",
+        "ituSource": "ITU · Bezeichnungen der Frequenzbänder V.431-9 (2025)",
+        "enacomSource": "ENACOM · Vorschriften und Frequenzbandtabelle",
+        "sourcesNote": "Die Links öffnen die externen Websites itu.int und enacom.gob.ar erst beim Auswählen.",
+        "bands": {
+            "vlf": {
+                "name": "Sehr niedrige Frequenz · Längstwelle",
+                "english": "Very Low Frequency",
+                "description": "Entspricht Wellenlängen von ungefähr 10 bis 100 Kilometern. Der Name bezeichnet einen Spektralbereich, keinen einzelnen Kanal."
+            },
+            "lf": {
+                "name": "Niedrige Frequenz · Langwelle",
+                "english": "Low Frequency",
+                "description": "Entspricht ungefähren Wellenlängen von 1 bis 10 Kilometern. Die Frequenz ist zehnmal so hoch wie am entsprechenden Punkt im VLF-Bereich."
+            },
+            "mf": {
+                "name": "Mittlere Frequenz · Mittelwelle",
+                "english": "Medium Frequency",
+                "description": "Entspricht ungefähren Wellenlängen von 100 Metern bis 1 Kilometer. Ein Megahertz, also 1 MHz, bedeutet eine Million Schwingungen pro Sekunde."
+            },
+            "hf": {
+                "name": "Hohe Frequenz · Kurzwelle",
+                "english": "High Frequency",
+                "description": "Umfasst mehrere Amateurfunkbänder. Unter geeigneten Bedingungen ermöglicht die ionosphärische Ausbreitung Funkverbindungen über große Entfernungen. Als Orientierung: 40 m liegt bei etwa 7 MHz und 20 m bei etwa 14 MHz."
+            },
+            "vhf": {
+                "name": "Sehr hohe Frequenz · Ultrakurzwelle",
+                "english": "Very High Frequency",
+                "description": "Die übliche terrestrische Reichweite hängt stark von Höhe, Gelände und Hindernissen ab; es gibt auch besondere Ausbreitungsformen. Das 2-m-Amateurfunkband liegt bei etwa 145 MHz."
+            },
+            "uhf": {
+                "name": "Ultrahohe Frequenz · Dezimeterwelle",
+                "english": "Ultra High Frequency",
+                "description": "Die Wellen sind kürzer als im VHF-Bereich. Der Name legt weder eine feste Reichweite noch eine bestimmte Sendeart fest. Das 70-cm-Amateurfunkband liegt bei etwa 435 MHz."
+            },
+            "shf": {
+                "name": "Superhohe Frequenz · Zentimeterwelle",
+                "english": "Super High Frequency",
+                "description": "Entspricht Wellenlängen von ungefähr 1 bis 10 Zentimetern. Dieser Bereich gehört zu den Frequenzen, die üblicherweise als Mikrowellen bezeichnet werden."
+            },
+            "ehf": {
+                "name": "Extrem hohe Frequenz · Millimeterwelle",
+                "english": "Extremely High Frequency",
+                "description": "Entspricht Wellenlängen von ungefähr 1 bis 10 Millimetern, daher die Bezeichnung Millimeterwellen. Die obere Grenze dieser Einteilung liegt bei 300 GHz."
+            }
+        }
+    },
+    "RadioAmateurBands": {
+        "title": "Amateurfunkbänder: Frequenz, Ausbreitung und Ausrüstung",
+        "intro": "Vergleiche diese fünf häufig genutzten Bänder und ordne ihre Frequenzen im Spektrum oben ein. Wähle eines aus, um Beispiele für Antennen und Betriebsarten zu sehen.",
+        "views": {
+            "amateur": "Amateurfunkbänder",
+            "spectrum": "Bereiche des Frequenzspektrums"
+        },
+        "columns": {
+            "band": "Band",
+            "range": "Referenzbereich",
+            "propagation": "Typische Ausbreitung",
+            "use": "Häufige Anwendungen"
+        },
+        "detailTitle": "Antennen und Technologien im ausgewählten Band",
+        "antennas": "Häufig verwendete Antennen",
+        "modes": "Übliche Betriebsarten und Technologien",
+        "notes": "Was du beachten solltest",
+        "conditions": "Dies sind Tendenzen und Beispiele, keine festen Betriebszeiten, Reichweiten oder ausschließlichen Nutzungen. Die Ausbreitung hängt von der Tageszeit, der Jahreszeit, der Sonnenaktivität, der Funkstrecke und der Anlage ab.",
+        "permission": "Die Bereiche bezeichnen Bänder aus der von ENACOM veröffentlichten Bandtabelle. Sie geben nicht das gesamte Band für jede Lizenzklasse oder Betriebsart frei. Es gibt reservierte Segmente und Schutzbereiche, und die gesamte Aussendung muss innerhalb des zulässigen Segments liegen.",
+        "referenceLabel": "Argentinische Referenz: Anhang A der Bandtabelle von 2018, veröffentlicht von ENACOM. Maßgeblich bleibt das Datum des Dokuments; das Datum seines Links macht daraus keine Ausgabe von 2021 oder 2026.",
+        "sourceLabel": "ENACOM · Original-Bandtabelle",
+        "propagationSource": "ARRL · Ausbreitung im HF-Bereich",
+        "indoorSource": "ITU · Ausbreitung innerhalb von Gebäuden",
+        "regulationSource": "Argentinische Vorschriften · Abschnitte 1.5.9 und 13.4.2",
+        "antennaNote": "Ein Band schreibt keine bestimmte Antenne vor. Entscheidend sind die Frequenz, die Anpassung, das Strahlungsdiagramm, die Polarisation und der verfügbare Platz.",
+        "buildingNote": "Innerhalb von Gebäuden hat weder VHF noch UHF einen allgemeinen Vorteil. Materialien, Wandstärken, Öffnungen, der Ausbreitungsweg und die Antennen beeinflussen das Ergebnis; eine kürzere Antenne garantiert kein besseres Durchdringen von Gebäuden.",
+        "technologyTitle": "Band, Modulation, Protokoll und Verschlüsselung",
+        "modulationLabel": "Modulation · modulation",
+        "modulation": "Modulation beschreibt, wie ein Signal verändert wird, um Informationen zu übertragen. AM, FM und SSB sind Modulationsarten; HF, VHF und UHF bezeichnen Frequenzbereiche. In den einzelnen Segmenten eines Bands können unterschiedliche Betriebsarten zulässig sein.",
+        "protocolLabel": "Protokoll oder Standard · protocol / standard",
+        "protocol": "Legt fest, wie der Austausch zwischen Geräten organisiert wird. DMR steht für Digital Mobile Radio und ist ein Standard für digitale Sprach- und Datenübertragung. APRS steht für Automatic Packet Reporting System und wird zur Übermittlung von Daten wie Positionen oder Nachrichten verwendet. Es handelt sich um unterschiedliche Technologien, nicht um Bandbezeichnungen.",
+        "cipherTitle": "Verschlüsselung · encryption",
+        "cipherText": "Verschlüsselung soll Inhalte vor Personen verbergen, die sie nicht entschlüsseln können. Sprache oder Daten digital darzustellen ist ein anderer Vorgang: Digital bedeutet nicht verschlüsselt. Die argentinischen Vorschriften führen „verschlüsselte Texte senden“ in Abschnitt 13.4.2 als Betriebsverstoß auf und verlangen in Abschnitt 1.5.9 klare und verständliche Kommunikation.",
+        "sourcesNote": "Die Referenzlinks öffnen enacom.gob.ar, argentina.gob.ar, arrl.org oder itu.int erst beim Anklicken.",
+        "entries": {
+            "eighty": {
+                "name": "80 m",
+                "propagation": "Häufig regional und nachts; bei geeigneten Bedingungen sind auch größere Entfernungen möglich.",
+                "use": "Regionale und landesweite Gespräche, Gruppenverbindungen und Empfang im unteren HF-Bereich.",
+                "antennas": "Dipol, Inverted-V oder endgespeiste Antenne mit geeigneter Anpassung. Größe und Höhe der Anlage beeinflussen ihr Verhalten stark.",
+                "modes": "SSB-Sprechfunk, CW-Telegrafie und digitale Betriebsarten wie FT8 in den jeweils freigegebenen Segmenten.",
+                "notes": "In der argentinischen Bandtabelle reicht das gesamte Band bis 4,0 MHz: 3,5–3,8 MHz ist mit primärem und 3,8–4,0 MHz mit sekundärem Status aufgeführt. Tagsüber kann die ionosphärische Absorption dieses Band besonders stark einschränken; das bedeutet nicht, dass es dann immer unbrauchbar ist."
+            },
+            "forty": {
+                "name": "40 m",
+                "propagation": "Begünstigt häufig regionale Verbindungen am Tag und größere Entfernungen bei Nacht; dies hängt von den Bedingungen ab.",
+                "use": "Ein häufig genutztes HF-Band für regionale, landesweite und kontinentale Verbindungen.",
+                "antennas": "Dipol, Inverted-V oder endgespeiste Antenne mit geeigneter Anpassung. Eine niedrige Aufbauhöhe kann regionale Verbindungen durch nahezu senkrechte Abstrahlung begünstigen.",
+                "modes": "SSB, CW und digitale Betriebsarten wie FT8. Die Wahl hängt vom Ziel und vom zugelassenen Segment ab.",
+                "notes": "Das Band kann über viele Stunden nutzbar sein, doch dieselbe Verbindung ist nicht sowohl tagsüber als auch nachts garantiert. Das Band allein bestimmt nicht, welche Stationen du hören kannst."
+            },
+            "twenty": {
+                "name": "20 m",
+                "propagation": "Wird häufig für Weitverbindungen (DX) über die Ionosphäre genutzt, oft tagsüber; es gibt auch nächtliche Bandöffnungen.",
+                "use": "Internationale Kontakte und Weitverbindungen, wenn die Ausbreitungsbedingungen es zulassen.",
+                "antennas": "Dipol, Vertikalantenne oder Yagi-Richtantenne. Dies sind Alternativen; keine davon ist allein wegen dieses Bands vorgeschrieben.",
+                "modes": "SSB, CW und digitale Betriebsarten wie FT8 werden in unterschiedlichen Segmenten genutzt. Nicht alle sind für jede Lizenzklasse im gesamten Band zugelassen.",
+                "notes": "Die Referenztabelle beschränkt die Lizenzklasse Novicio auf das Segment 14,070–14,099 MHz mit CW und digitalen Betriebsarten. Der Gesamtbereich des 20-Meter-Bands darf nicht als allgemeine Sprechfunkerlaubnis für Novicio verstanden werden. Bandöffnungen hängen von der Sonnenaktivität, der Jahreszeit und der Funkstrecke ab."
+            },
+            "two": {
+                "name": "2 m",
+                "propagation": "Üblicherweise terrestrisch direkt oder über Relaisstationen, abhängig von Höhe, Gelände und Hindernissen.",
+                "use": "Hand- und Mobilfunkgeräte, lokale Verbindungen, Relaisstationen, Daten und Satelliten je nach Segment.",
+                "antennas": "Vertikal-, Groundplane- oder kollineare Antenne für FM und Relaisbetrieb; Yagi für gerichtete Verbindungen. Bei terrestrischem SSB/CW ist horizontale Polarisation üblich, bei FM vertikale.",
+                "modes": "Analoge FM, digitale Sprache etwa mit DMR und paketbasierte Datenübertragung etwa mit APRS. Dies sind unterschiedliche Technologien, die verschiedene Segmente desselben Bands nutzen können.",
+                "notes": "Es gibt auch besondere Ausbreitungsarten: VHF ist keine feste Reichweite zugeordnet. Die Bandtabelle reserviert 145,790–145,800 MHz als Schutzbereich, in dem nicht gesendet werden darf."
+            },
+            "seventy": {
+                "name": "70 cm",
+                "propagation": "Üblich für lokale Verbindungen und Relaisbetrieb; die Reichweite hängt von der Umgebung und der Anlage ab.",
+                "use": "Duobandgeräte, Relaisstationen, gerichtete Verbindungen und Satelliten in den jeweils vorgesehenen Segmenten.",
+                "antennas": "Vertikal-, Groundplane- oder kollineare Antenne für lokale Versorgung; Yagi, um die Abstrahlung in einer Richtung zu bündeln. Die Polarisation muss zur Verbindung und zur verwendeten Betriebsart passen.",
+                "modes": "Analoge FM und digitale Sprache etwa mit DMR; außerdem Daten und Satelliten je nach Segment. DMR benötigt nicht für jede lokale Verbindung eine Internetverbindung.",
+                "notes": "Die argentinische Bandtabelle weist dem Amateurfunkdienst primären und dem Amateurfunkdienst über Satelliten sekundären Status zu; sie reserviert 435–438 MHz für Satelliten. Daraus folgt nicht, dass UHF Gebäude besser durchdringt als VHF."
+            }
+        }
     }
 }

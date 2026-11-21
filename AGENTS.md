@@ -8,6 +8,8 @@ HIOS (HI Open Systems) web platform - showcases open hardware projects with docu
 
 **AI Context & Internal Notes:** See `docs/ai-context/` for design specs and prompts.
 
+**Radio course design:** Follow `docs/ai-context/radio-course-design.md`. The user chose a short course index, separate pages for each concept, and dedicated laboratory, glossary and band resources. Preserve this design when adding material; change it only at the user's request.
+
 **Live site:** https://openhios.dev/
 
 ## Commands

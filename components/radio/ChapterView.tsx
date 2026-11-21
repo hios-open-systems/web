@@ -8,11 +8,12 @@ import styles from './radio.module.css';
 export function ChapterView({ chapter, locale }: { chapter: Chapter; locale: string }) {
   const { prev, next } = chapterNeighbors(chapter.slug);
   const base = `/${locale}/radio`;
+  const index = `${base}/programa`;
   const parts = CHAPTER_BODIES[chapter.slug] ?? [];
   return (
     <main className={styles.page} lang="es">
       <PageIntro
-        eyebrow={<Link href={base} style={{ color: 'inherit' }}>Radioaficionado · Novicio</Link>}
+        eyebrow={<Link href={index} style={{ color: 'inherit' }}>Radioaficionado · Novicio</Link>}
         title={`${chapter.code.length === 1 ? `Bloque ${chapter.code}: ` : ''}${chapter.title}`}
         description={chapter.summary}
         area="knowledge"
@@ -27,8 +28,8 @@ export function ChapterView({ chapter, locale }: { chapter: Chapter; locale: str
         <div className={styles.content}>
           {parts.map((Part, i) => <Part key={i} />)}
           <nav className={styles.pager} aria-label="Capítulos">
-            {prev ? <Link href={`${base}/${prev.slug}`}>← {prev.title}</Link> : <Link href={base}>← Índice</Link>}
-            {next ? <Link href={`${base}/${next.slug}`}>{next.title} →</Link> : <Link href={base}>Índice →</Link>}
+            {prev ? <Link href={`${base}/${prev.slug}`}>← {prev.title}</Link> : <Link href={index}>← Índice</Link>}
+            {next ? <Link href={`${base}/${next.slug}`}>{next.title} →</Link> : <Link href={index}>Índice →</Link>}
           </nav>
         </div>
       </div>

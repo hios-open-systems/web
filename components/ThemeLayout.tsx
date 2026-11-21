@@ -41,7 +41,7 @@ function ThemedLayout({ children, currentVersion }: { children: React.ReactNode;
                 <DynamicFavicon />
                 <UsageEventTracker />
                 <CommandPalette />
-                <Layout style={{ minHeight: '100vh', background: bgColor }}>
+                <Layout data-app-ready={mounted} style={{ minHeight: '100vh', background: bgColor }}>
                     <Header />
                     <Layout.Content>
                         <HandoffNotice />

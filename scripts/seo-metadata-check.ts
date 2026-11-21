@@ -11,7 +11,8 @@ const pageNamespaces: Record<string, [string, string, string?]> = {
   '/workbench': ['Workbench.landing', 'subtitle'], '/guestbook': ['Guestbook', 'subtitle'],
   '/calculators': ['Workbench.packs.embedded', 'description'],
   '/composer': ['Workbench.packs.chiptune', 'description'],
-  '/radio': ['Radio', 'description'],
+  '/radio': ['Workbench.packs.radio-basics', 'description'],
+  '/radio/programa': ['Radio', 'description'],
   '/blog': ['Seo.blog', 'description'], '/prints': ['Seo.prints', 'description'],
   '/stats': ['Seo.stats', 'description'], '/colophon': ['Seo.colophon', 'description'],
   '/pinouts': ['Pinouts.meta.index', 'description'],
@@ -57,8 +58,9 @@ export function verifyPageMetadata(html: string, route: string) {
   assert.equal(tags['og:url'], canonical, `${route}: social URL matches canonical`);
   assert.equal(tags['og:locale'], locale, route);
   assert.ok(tags['og:image'].endsWith(`/og/${locale}.png`), route);
-  const config = pageNamespaces[path] ?? (path.startsWith('/workbench/')
-    ? [`Workbench.packs.${segments[1]}`, 'description'] : undefined);
+  const config = pageNamespaces[path] ?? (path.startsWith('/radio/lecciones/')
+    ? [`RadioCourse.pages.${segments[2]}`, 'description'] : path.startsWith('/workbench/')
+      ? [`Workbench.packs.${segments[1]}`, 'description'] : undefined);
   if (!config) return; // Articles and project descriptions retain their original content language.
   const [namespace, descriptionKey, titleKey = 'title'] = config;
   const translatedTitle = message(locale, `${namespace}.${titleKey}`);
