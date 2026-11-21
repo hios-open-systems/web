@@ -5,6 +5,8 @@ export function inspectMobileLayout() {
     const style = getComputedStyle(element);
     if (!rect.width || !rect.height || style.visibility === 'hidden' ||
         element.closest('[aria-hidden="true"], [hidden], .ant-tabs-nav-list, .slick-list')) return [];
+    // Screen-reader-only text (1px clipped box) is not visible, so its nowrap text cannot overflow.
+    if (style.position === 'absolute' && style.overflow === 'hidden' && rect.width <= 1 && rect.height <= 1) return [];
     let parent = element.parentElement;
     while (parent && parent !== document.body) {
       const css = getComputedStyle(parent);
