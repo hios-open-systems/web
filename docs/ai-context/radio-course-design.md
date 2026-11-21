@@ -20,9 +20,9 @@ El usuario pidió retomar este diseño el 20 de noviembre de 2026. Se recuperó 
 
 El catálogo Explorar y la calculadora de Ohm enlazan al curso. Las fuentes mantienen el PDF de repaso original (`guia-radioaficionado-novicio.pdf`, con las erratas advertidas). Se comprobó que el archivo existente era idéntico al del avance recuperado; no se reemplazó.
 
-## Alcance pendiente
+## Alcance del curso
 
-La recuperación del diseño no completa todo el temario. Quedan por desarrollar en el mismo formato las próximas lecciones de ondas, propagación y Morse. El programa existente sigue disponible como material complementario. La propuesta de frecuencias licenciadas/no licenciadas y canales de emergencia requiere un trabajo separado con fuentes oficiales vigentes para Argentina.
+El índice reúne doce lecciones. Después de la práctica de electricidad se estudian ondas, propagación y Morse, con diagramas y ejemplos resueltos. El árbol Morse permite formar una letra y escucharla. El programa existente sigue disponible como material complementario. La propuesta de frecuencias licenciadas/no licenciadas y canales de emergencia requiere un trabajo separado con fuentes oficiales vigentes para Argentina.
 
 ## Verificación de la recuperación
 

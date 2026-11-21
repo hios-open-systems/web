@@ -4913,16 +4913,6 @@
                 "explanation": "P = V²/R: raddoppiando V, il suo quadrato si moltiplica per quattro. Puoi anche considerare P = V·I: sia V sia I raddoppiano. In 100 Ω, passare da 6 V a 12 V porta 0,36 W a 1,44 W."
             }
         },
-        "roadmap": {
-            "title": "Il percorso successivo",
-            "intro": "Questa è la prima sezione sviluppata. Le successive non sono ancora pubblicate: le affronteremo con spiegazioni, grafici ed esercizi dedicati.",
-            "wavesTitle": "Onde e frequenza",
-            "waves": "Grafici nel tempo: ampiezza, periodo e frequenza; confronto tra segnali; lunghezza d’onda e relazione λ = v/f. Che cosa cambia e che cosa resta costante modificando ogni valore.",
-            "bandsTitle": "Bande e propagazione",
-            "bands": "Da Hz a GHz; LF, MF, HF, VHF e UHF; relazione con antenne e propagazione. Distingueremo il nome fisico di una banda dalle frequenze e modalità autorizzate per i radioamatori in Argentina, usando fonti ufficiali aggiornate.",
-            "morseTitle": "Allenamento Morse",
-            "morse": "Punti e linee con audio, durata e spaziatura; esempi come SOS e CQ; prove di ascolto e scrittura. Un albero binario permetterà di seguire ogni punto o linea fino alla lettera e allenarsi per rami."
-        },
         "sources": {
             "title": "Per approfondire e verificare",
             "intro": "Spiegazioni ed esempi originali, verificati con OpenStax, University Physics, volume 2 (in inglese). Selezionando i collegamenti si apre il sito esterno openstax.org.",
@@ -5334,6 +5324,45 @@
             "bands": {
                 "title": "Bande di frequenza",
                 "description": "Confronta le bande radioamatoriali, la propagazione, le antenne e le tecnologie, e individua le loro frequenze nello spettro."
+            },
+            "waves": {
+                "title": "Onde e frequenza",
+                "description": "Misura un ciclo nel tempo e nello spazio.",
+                "definition": "Un’antenna emette un’onda elettromagnetica. In un punto fisso l’ampiezza indica lo scostamento massimo del campo dal valore di equilibrio. Il periodo T è il tempo tra due creste successive e la frequenza f conta i cicli al secondo (Hz).",
+                "caption": "La curva mostra il campo nello spazio in un dato istante. La distanza tra due creste consecutive è la lunghezza d’onda λ.",
+                "question": "Quanto è lunga un’onda a 10 MHz?",
+                "example": "Nell’aria l’onda percorre circa 300 metri in un microsecondo. A 10 MHz compie dieci cicli in questo intervallo.",
+                "calculation": "λ = v / f ≈ (300 m/µs) / (10 MHz) = 30 m",
+                "answer": "Ogni ciclo dura 0,1 µs. Raddoppiando la frequenza a 20 MHz, il periodo scende a 0,05 µs e la lunghezza d’onda a 15 m.",
+                "link": "Sperimenta con il simulatore di onde"
+            },
+            "propagation": {
+                "title": "Propagazione radio",
+                "description": "Segui il percorso di un segnale tra due antenne.",
+                "definition": "Un segnale può seguire più percorsi. In VHF e UHF spesso prevale quello diretto. In HF la ionosfera può curvare il percorso dell’onda fino a farla tornare a terra oltre l’orizzonte. Il fenomeno dipende dalla frequenza, dall’ora e dalle condizioni della ionosfera.",
+                "caption": "La linea retta unisce le sommità delle antenne sopra il terreno. Una collina che interseca la linea può attenuare il segnale.",
+                "question": "Cosa cambia alzando un’antenna?",
+                "example": "Su terreno libero e con rifrazione atmosferica tipica, moltiplica la radice quadrata dell’altezza in metri per 4,12 per stimare l’orizzonte radio in chilometri. Per due antenne si sommano i rispettivi orizzonti.",
+                "calculation": "4,12 × (√4 + √9) km ≈ 20,6 km",
+                "answer": "Con altezze di 4 e 9 m l’orizzonte complessivo è di circa 21 km. Alzando la prima antenna a 16 m si arriva a circa 29 km. Edifici, rilievi e perdite incidono sulla portata effettiva.",
+                "link": "Confronta la propagazione per banda"
+            },
+            "morse": {
+                "title": "Codice Morse",
+                "description": "Leggi e ascolta come suoni e pause formano una lettera.",
+                "definition": "Un punto dura un’unità di tempo e una linea ne dura tre. La pausa dura un’unità tra gli elementi di una lettera, tre tra lettere e sette tra parole.",
+                "caption": "Andamento temporale della A. Il livello alto indica il suono, quello basso il silenzio. Da sinistra si leggono punto, pausa e linea.",
+                "question": "Quanto dura la lettera A?",
+                "example": "Con un punto da 100 ms, la A inizia con 100 ms di suono. Seguono 100 ms di silenzio e 300 ms di suono.",
+                "calculation": "100 ms + 100 ms + 300 ms = 500 ms",
+                "answer": "Prima della lettera successiva, attendi 300 ms dalla fine della linea. Questa pausa separa le lettere e si conta a parte.",
+                "link": "Apri l’esercizio di ascolto",
+                "tree": "Esplora l’albero delle lettere",
+                "task": "Scegli punto e poi linea per arrivare alla A. Aggiungi un punto e ascolta come la A diventa una R.",
+                "dot": "Punto",
+                "dash": "Linea",
+                "listen": "Ascolta",
+                "reset": "Ricomincia"
             }
         },
         "programLink": "Apri il programma Novicio"

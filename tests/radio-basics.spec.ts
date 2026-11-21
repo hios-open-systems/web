@@ -75,7 +75,7 @@ test('lesson is discoverable from the Explore catalog and Ohm calculator', async
   await expect(page.locator('[data-app-ready="true"]')).toBeVisible();
   await page.locator('main a[href="/es/radio"]').click();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Electricidad para radioaficionados');
-  await expect(page.getByTestId('radio-lesson-list').getByRole('link')).toHaveCount(9);
+  await expect(page.getByTestId('radio-lesson-list').getByRole('link')).toHaveCount(12);
   await expect(page.getByTestId('radio-resource-list').getByRole('link')).toHaveCount(4);
 });
 

@@ -81,10 +81,6 @@
 .answers :global(.ant-radio) { margin-top: 5px; }
 .quizFooter { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .quizFooter p { margin: 0; color: var(--lesson-cyan); }
-.roadmap { margin: 24px 0 0; }
-.roadmap > div { padding: 16px 0; border-bottom: 1px solid var(--hios-border); }
-.roadmap dt { font-weight: 600; margin-bottom: 6px; }
-.roadmap dd { margin: 0; color: var(--hios-text-secondary); }
 .sources { border-top: 1px solid var(--hios-border); padding: 30px 0 0; font-size: .875rem; color: var(--hios-text-secondary); }
 .sources ul { padding-left: 20px; margin-bottom: 20px; }
 .sources li { margin-bottom: 8px; }

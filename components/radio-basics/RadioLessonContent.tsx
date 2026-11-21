@@ -8,7 +8,8 @@ import { PowerSection, MeasurementSection } from './PowerSection';
 import { LaboratorySection } from './LaboratorySection';
 import { PracticeSection } from './PracticeSection';
 import { RadioGlossary } from './RadioGlossary';
-import { CourseRoadmap, LessonSources } from './LessonResources';
+import { SignalLesson } from './SignalLesson';
+import { LessonSources } from './LessonResources';
 import { RadioBands } from './RadioBands';
 
 export function RadioLessonContent({ page }: { page: RadioPageId }) {
@@ -32,9 +33,13 @@ export function RadioLessonContent({ page }: { page: RadioPageId }) {
       return <RadioBands />;
     case 'practice':
       return <PracticeSection showTitle={false} />;
+    case 'waves':
+    case 'propagation':
+    case 'morse':
+      return <SignalLesson topic={page} />;
     case 'glossary':
       return <RadioGlossary showTitle={false} />;
     case 'sources':
-      return <><LessonSources /><CourseRoadmap /></>;
+      return <LessonSources />;
   }
 }

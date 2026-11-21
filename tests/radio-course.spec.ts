@@ -3,7 +3,7 @@ import es from '../messages/es.json';
 
 const COURSE = '/es/radio';
 const LESSON_BASE = `${COURSE}/lecciones`;
-const LESSONS = ['voltage', 'current', 'resistance', 'ohm', 'series', 'parallel', 'power', 'measurement', 'practice'] as const;
+const LESSONS = ['voltage', 'current', 'resistance', 'ohm', 'series', 'parallel', 'power', 'measurement', 'practice', 'waves', 'propagation', 'morse'] as const;
 const RESOURCES = ['bands', 'laboratory', 'glossary', 'sources'] as const;
 
 test.beforeEach(async ({ page }) => {
@@ -18,7 +18,7 @@ test('course home is an index and lessons have their own content, URLs and navig
   const home = page.getByTestId('radio-course-home');
   await expect(home).toBeVisible();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Electricidad para radioaficionados');
-  await expect(page.getByTestId('radio-lesson-list').getByRole('link')).toHaveCount(9);
+  await expect(page.getByTestId('radio-lesson-list').getByRole('link')).toHaveCount(12);
   await expect(page.getByTestId('radio-resource-list').getByRole('link')).toHaveCount(4);
   await expect(home.locator('[data-concept]')).toHaveCount(0);
   await expect(page.getByTestId('dc-circuit-lab')).toHaveCount(0);
@@ -138,4 +138,24 @@ test('old course URLs redirect to the recovered index and standalone lessons', a
     await expect(page).toHaveURL(destination);
   }
   await expect(page.getByTestId('radio-band-spectrum')).toBeVisible();
+});
+
+test('the signal lessons lead from wave size to range and Morse timing', async ({ page }) => {
+  await page.goto(COURSE);
+  await page.getByTestId('radio-lesson-list').getByRole('link', { name: /Ondas y frecuencia/ }).click();
+  const lesson = page.locator('[data-radio-lesson]');
+  for (const topic of ['waves', 'propagation', 'morse'] as const) {
+    await expect(page).toHaveURL(`${LESSON_BASE}/${topic}`);
+    await expect(lesson.getByRole('img')).toHaveAccessibleName(es.RadioCourse.pages[topic].caption);
+    await expect(lesson).toContainText(es.RadioCourse.pages[topic].calculation);
+    if (topic !== 'morse') await page.locator('[data-direction="next"]').click();
+  }
+  await lesson.getByRole('button', { name: 'Punto', exact: true }).click();
+  await lesson.getByRole('button', { name: 'Raya', exact: true }).click();
+  await expect(lesson.locator('[aria-live]')).toHaveText('·− = A');
+  await lesson.getByRole('button', { name: 'Escuchar' }).click();
+  await lesson.getByRole('button', { name: 'Punto', exact: true }).click();
+  await expect(lesson.locator('[aria-live]')).toHaveText('·−· = R');
+  await lesson.getByRole('button', { name: 'Volver al inicio' }).click();
+  await expect(lesson.getByRole('button', { name: 'Escuchar' })).toBeDisabled();
 });

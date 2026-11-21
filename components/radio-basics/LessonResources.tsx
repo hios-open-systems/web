@@ -3,21 +3,6 @@
 import { useTranslations } from 'next-intl';
 import styles from './radioBasics.module.css';
 
-export function CourseRoadmap() {
-  const t = useTranslations('RadioBasics.roadmap');
-  return (
-    <section className={styles.section} aria-labelledby="roadmap-title">
-      <h2 id="roadmap-title">{t('title')}</h2>
-      <p>{t('intro')}</p>
-      <dl className={styles.roadmap}>
-        {(['waves', 'bands', 'morse'] as const).map((topic) => (
-          <div key={topic}><dt>{t(`${topic}Title`)}</dt><dd>{t(topic)}</dd></div>
-        ))}
-      </dl>
-    </section>
-  );
-}
-
 export function LessonSources() {
   const t = useTranslations('RadioBasics.sources');
   return (

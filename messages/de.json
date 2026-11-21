@@ -4913,16 +4913,6 @@
                 "explanation": "P = V²/R: Wenn du V verdoppelst, vervierfacht sich sein Quadrat. Du kannst es auch über P = V·I erklären: Sowohl V als auch I verdoppeln sich. Bei 100 Ω steigt die Leistung beim Wechsel von 6 V auf 12 V von 0,36 W auf 1,44 W."
             }
         },
-        "roadmap": {
-            "title": "So geht es weiter",
-            "intro": "Dies ist der erste ausgearbeitete Abschnitt. Die folgenden Abschnitte sind noch nicht veröffentlicht; wir werden sie mit eigenen Erklärungen, Grafiken und Übungen aufbauen.",
-            "wavesTitle": "Wellen und Frequenz",
-            "waves": "Zeitdiagramme: Amplitude, Periodendauer und Frequenz; Vergleich von Signalen; Wellenlänge und der Zusammenhang λ = v/f. Was sich beim Verändern der einzelnen Werte ändert und was gleich bleibt.",
-            "bandsTitle": "Frequenzbänder und Ausbreitung",
-            "bands": "Von Hz bis GHz; LF, MF, HF, VHF und UHF; der Zusammenhang mit Antennen und Ausbreitung. Wir unterscheiden die physikalische Bezeichnung eines Frequenzbands von den für Funkamateure in Argentinien zugelassenen Frequenzen und Betriebsarten und nutzen dafür aktuelle amtliche Quellen.",
-            "morseTitle": "Morsezeichen trainieren",
-            "morse": "Punkte und Striche mit Audio, Dauer und Abständen; Beispiele wie SOS und CQ; Hör- und Schreibübungen. Mit einem Binärbaum lässt sich jeder Punkt oder Strich bis zum Buchstaben verfolgen und gezielt nach Zweigen trainieren."
-        },
         "lab": {
             "title": "Gleichstromlabor",
             "intro": "Ändere jeweils nur eine Sache und vergleiche, wie sich Stromstärke und Leistung verändern.",
@@ -5334,6 +5324,45 @@
             "bands": {
                 "title": "Frequenzbänder",
                 "description": "Vergleiche Amateurfunkbänder, ihre Ausbreitung, Antennen und Technologien und ordne ihre Frequenzen im Spektrum ein."
+            },
+            "waves": {
+                "title": "Wellen und Frequenz",
+                "description": "Miss eine Schwingung in Zeit und Raum.",
+                "definition": "Eine Antenne sendet eine elektromagnetische Welle aus. An einem festen Ort gibt die Amplitude die maximale Auslenkung des Feldes an. Die Periodendauer T ist die Zeit zwischen zwei aufeinanderfolgenden Maxima. Die Frequenz f zählt die Schwingungen pro Sekunde (Hz).",
+                "caption": "Die Kurve zeigt das Feld zu einem Zeitpunkt an verschiedenen Orten. Der Abstand benachbarter Wellenberge ist die Wellenlänge λ.",
+                "question": "Wie lang ist eine Welle bei 10 MHz?",
+                "example": "In Luft legt die Welle in einer Mikrosekunde etwa 300 Meter zurück. Bei 10 MHz durchläuft sie in dieser Zeit zehn Perioden.",
+                "calculation": "λ = v / f ≈ (300 m/µs) / (10 MHz) = 30 m",
+                "answer": "Eine Periode dauert 0,1 µs. Bei der doppelten Frequenz von 20 MHz sinkt die Periodendauer auf 0,05 µs und die Wellenlänge auf 15 m.",
+                "link": "Mit dem Wellensimulator experimentieren"
+            },
+            "propagation": {
+                "title": "Ausbreitung von Funkwellen",
+                "description": "Verfolge den Weg zwischen zwei Antennen.",
+                "definition": "Ein Funksignal kann mehrere Wege nehmen. Bei VHF und UHF überwiegt oft der direkte Weg. Bei Kurzwelle kann die Ionosphäre eine Welle so brechen, dass sie hinter dem Horizont wieder auf die Erde trifft. Das hängt von Frequenz, Tageszeit und Zustand der Ionosphäre ab.",
+                "caption": "Die gerade Linie verbindet die Antennenspitzen über dem Gelände. Ragt ein Hügel in diese Linie, kann er das Signal schwächen.",
+                "question": "Was bringt eine höhere Antenne?",
+                "example": "Bei freiem Gelände und typischer atmosphärischer Brechung ergibt die Quadratwurzel der Antennenhöhe in Metern mal 4,12 den ungefähren Funkhorizont in Kilometern. Für zwei Antennen addiert man beide Horizonte.",
+                "calculation": "4,12 × (√4 + √9) km ≈ 20,6 km",
+                "answer": "Bei 4 und 9 m Höhe beträgt der gemeinsame Horizont rund 21 km. Erhöht man die erste Antenne auf 16 m, sind es etwa 29 km. Gebäude, Gelände und Verluste beeinflussen die tatsächliche Reichweite.",
+                "link": "Ausbreitung nach Frequenzband vergleichen"
+            },
+            "morse": {
+                "title": "Morsecode",
+                "description": "Lies und höre, wie Töne und Pausen einen Buchstaben bilden.",
+                "definition": "Ein Punkt dauert eine Zeiteinheit, ein Strich drei. Die Pause zwischen den Elementen eines Buchstabens dauert eine Einheit, zwischen Buchstaben drei und zwischen Wörtern sieben.",
+                "caption": "Zeitverlauf des Buchstabens A. Oben ist der Ton an, unten ist er aus. Von links nach rechts folgen Punkt, Pause und Strich.",
+                "question": "Wie lange dauert ein A?",
+                "example": "Bei einer Punktdauer von 100 ms beginnt das A mit 100 ms Ton. Es folgen 100 ms Pause und 300 ms Ton.",
+                "calculation": "100 ms + 100 ms + 300 ms = 500 ms",
+                "answer": "Vor dem nächsten Buchstaben folgen nach dem Strich 300 ms Stille. Diese Buchstabenpause wird gesondert gezählt.",
+                "link": "Hörtrainer öffnen",
+                "tree": "Den Buchstabenbaum erkunden",
+                "task": "Wähle Punkt und dann Strich für A. Ergänze einen Punkt und höre, wie aus A ein R wird.",
+                "dot": "Punkt",
+                "dash": "Strich",
+                "listen": "Anhören",
+                "reset": "Neu beginnen"
             }
         },
         "programLink": "Novicio-Programm öffnen"

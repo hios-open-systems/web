@@ -58,3 +58,14 @@ test('radio course pages fit narrow screens and remain operable', async ({ page 
   await expect(amateurDetail).toContainText('DMR');
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
+
+test('new signal lessons fit the mobile reading column', async ({ page }) => {
+  await page.goto('/es/radio');
+  await page.getByTestId('radio-lesson-list').getByRole('link', { name: /Ondas y frecuencia/ }).click();
+  for (const topic of ['waves', 'propagation', 'morse'] as const) {
+    await expect(page.locator('#radio-page-title')).toHaveText(es.RadioCourse.pages[topic].title);
+    await expect(page.locator('[data-radio-lesson] figure')).toBeVisible();
+    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    if (topic !== 'morse') await page.locator('[data-direction="next"]').click();
+  }
+});

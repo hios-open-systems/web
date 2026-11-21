@@ -4913,16 +4913,6 @@
                 "explanation": "P = V²/R: doubling V multiplies its square by four. You can also see it as P = V·I: both V and I double. For 100 Ω, going from 6 V to 12 V changes 0.36 W to 1.44 W."
             }
         },
-        "roadmap": {
-            "title": "The path ahead",
-            "intro": "This is the first completed section. The following sections are not yet published; we will develop them with their own explanations, diagrams and exercises.",
-            "wavesTitle": "Waves and frequency",
-            "waves": "Time-domain graphs: amplitude, period and frequency; signal comparison; wavelength and the relationship λ = v/f. What changes and what stays the same as you adjust each value.",
-            "bandsTitle": "Bands and propagation",
-            "bands": "From Hz to GHz; LF, MF, HF, VHF and UHF; connections to antennas and propagation. We will separate the physical name of a band from frequencies and modes authorized for amateur radio in Argentina, using current official sources.",
-            "morseTitle": "Morse training",
-            "morse": "Dots and dashes with audio, timing and spacing; examples such as SOS and CQ; listening and writing tests. A binary tree will let you follow each dot or dash to the letter and train one branch at a time."
-        },
         "sources": {
             "title": "Read further and cross-check",
             "intro": "Original explanations and examples, checked against OpenStax, University Physics, volume 2 (in English). Selecting the links opens the external site openstax.org.",
@@ -5334,6 +5324,45 @@
             "bands": {
                 "title": "Frequency bands",
                 "description": "Compare amateur radio bands, their propagation, antennas and technologies, and locate their frequencies within the spectrum."
+            },
+            "waves": {
+                "title": "Waves and frequency",
+                "description": "Measure one cycle in time and in space.",
+                "definition": "An antenna emits an electromagnetic wave. At a fixed point, amplitude measures the peak departure of the field from equilibrium. The period T is the time between successive crests and frequency f counts cycles per second (Hz).",
+                "caption": "The curve shows the field across space at one instant. The distance between adjacent crests is one wavelength, λ.",
+                "question": "How long is a 10 MHz wave?",
+                "example": "In air the wave travels about 300 metres in one microsecond. At 10 MHz it completes ten cycles in that time.",
+                "calculation": "λ = v / f ≈ (300 m/µs) / (10 MHz) = 30 m",
+                "answer": "Each cycle lasts 0.1 µs. Doubling the frequency to 20 MHz halves the period to 0.05 µs and the wavelength to 15 m.",
+                "link": "Experiment with the wave simulator"
+            },
+            "propagation": {
+                "title": "Radio propagation",
+                "description": "Trace a signal from one antenna to another.",
+                "definition": "Signals can follow several paths. The direct path often dominates at VHF and UHF. At HF the ionosphere can bend a wave back to Earth beyond the horizon. This depends on frequency, time of day and ionospheric conditions.",
+                "caption": "The straight line joins the antenna tips above the terrain. A hill crossing that line can weaken the signal.",
+                "question": "What changes when you raise an antenna?",
+                "example": "Over open terrain with typical atmospheric refraction, multiply the square root of antenna height in metres by 4.12 to estimate its radio horizon in kilometres. Add the two horizons for a pair of antennas.",
+                "calculation": "4.12 × (√4 + √9) km ≈ 20.6 km",
+                "answer": "At heights of 4 and 9 m the combined horizon is about 21 km. Raising the first antenna to 16 m increases it to about 29 km. Buildings, terrain and losses affect actual range.",
+                "link": "Compare propagation across bands"
+            },
+            "morse": {
+                "title": "Morse code",
+                "description": "Read and hear how tones and silences form a letter.",
+                "definition": "A dot lasts one unit and a dash lasts three. Silence lasts one unit between elements of a letter, three between letters and seven between words.",
+                "caption": "Timing of the letter A. High means tone and low means silence. From left to right the trace shows a dot, a gap and a dash.",
+                "question": "How long does A last?",
+                "example": "With a 100 ms dot, A starts with 100 ms of tone, followed by 100 ms of silence and 300 ms of tone.",
+                "calculation": "100 ms + 100 ms + 300 ms = 500 ms",
+                "answer": "To send another letter, wait 300 ms after the dash ends. This gap separates the letters and is counted separately.",
+                "link": "Open the listening trainer",
+                "tree": "Explore the letter tree",
+                "task": "Choose dot then dash to reach A. Add another dot and listen to A turn into R.",
+                "dot": "Dot",
+                "dash": "Dash",
+                "listen": "Listen",
+                "reset": "Start over"
             }
         },
         "programLink": "Open the Novicio syllabus"

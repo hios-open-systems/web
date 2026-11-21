@@ -8,6 +8,9 @@ export const radioLessons = [
   { id: 'power' },
   { id: 'measurement' },
   { id: 'practice' },
+  { id: 'waves' },
+  { id: 'propagation' },
+  { id: 'morse' },
 ] as const;
 
 export const radioResources = [
