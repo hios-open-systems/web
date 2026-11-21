@@ -101,3 +101,24 @@ test('shared pitch and receiver noise drive the audio nodes and survive reload',
   await expect(tone).toHaveValue('650');
   await expect(noise).toHaveValue('0');
 });
+
+test('translator direction buttons never corrupt the input and any dash notation plays', async ({ page }) => {
+  await page.goto('/es/radio/morse');
+  const lab = page.locator('figure').filter({ hasText: 'Traductor Morse ↔ texto' });
+  const direction = lab.getByRole('group', { name: 'Dirección' });
+  const text = lab.getByLabel('Texto a traducir');
+  await expect(text).toHaveValue('CQ CQ DE LU1ABC K');
+  await direction.getByRole('button', { name: 'Texto → Morse' }).click();
+  await expect(text).toHaveValue('CQ CQ DE LU1ABC K');
+  await direction.getByRole('button', { name: 'Morse → texto' }).click();
+  const morse = lab.getByLabel('Morse a traducir');
+  await expect(morse).toHaveValue(/^-\.-\. --\.- \/ /);
+  const converted = await morse.inputValue();
+  await direction.getByRole('button', { name: 'Morse → texto' }).click();
+  await expect(morse).toHaveValue(converted);
+  await morse.fill('−·−· −−·−');
+  await expect(lab.locator('[aria-live]')).toHaveText('CQ');
+  await expect(lab.getByRole('button', { name: '▶ Escuchar' })).toBeEnabled();
+  await morse.fill('hola');
+  await expect(lab.getByRole('button', { name: '▶ Escuchar' })).toBeDisabled();
+});

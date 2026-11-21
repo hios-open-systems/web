@@ -20,8 +20,9 @@ export function MorseLab() {
   const stopRef = useRef<(() => void) | null>(null);
   useEffect(() => () => stopRef.current?.(), []);
 
-  const code = dir === 'toMorse' ? textToMorse(input) : input.trim();
-  const output = dir === 'toMorse' ? code : morseToText(input);
+  const output = dir === 'toMorse' ? textToMorse(input) : morseToText(input);
+  // Re-encodes what was understood so that − — · _ play like - and . do.
+  const code = dir === 'toMorse' ? output : textToMorse(output);
   const letters = code.split(' ');
 
   const toggle = () => {
@@ -29,7 +30,13 @@ export function MorseLab() {
     setPlaying(-1);
     stopRef.current = playMorse(code, { wpm, farnsworth: fw }, setPlaying, () => { setPlaying(-2); stopRef.current = null; });
   };
-  const swap = (d: Dir) => { setDir(d); setInput(d === 'toMorse' ? morseToText(input) || input : textToMorse(input) || input); };
+  const swap = (d: Dir) => {
+    // Chips also fire for the active option; converting again would corrupt the input.
+    if (d === dir) return;
+    stopRef.current?.();
+    setDir(d);
+    setInput(d === 'toMorse' ? morseToText(input) || input : textToMorse(input) || input);
+  };
 
   return (
     <Instrument badge="CW" title="Traductor Morse ↔ texto" hint="Escribí texto o Morse (puntos, rayas, espacio entre letras y / entre palabras). Tocá Escuchar: la letra que suena se ilumina.">
